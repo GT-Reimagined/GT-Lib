@@ -8,12 +8,11 @@ import muramasa.antimatter.gui.ICanSyncData;
 import muramasa.antimatter.gui.IGuiElement;
 import muramasa.antimatter.gui.Widget;
 import muramasa.antimatter.util.Utils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -105,7 +104,7 @@ public class TextBoxWidget extends Widget {
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    @Environment(Environment.EnvType.CLIENT)
     protected void initTextBox(){
         textBox = new EditBox(Minecraft.getInstance().font, this.realX(), this.realY(), this.getW(), this.getH(), Utils.literal(""));
         this.textBox.setMaxLength(32500);

@@ -28,8 +28,6 @@ import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.material.MaterialRecipe;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
@@ -45,6 +43,7 @@ import tesseract.TesseractCapUtils;
 import tesseract.api.gt.IEnergyItem;
 import tesseract.api.gt.IGTNode;
 import tesseract.api.wrapper.ItemStackWrapper;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.*;
 
@@ -165,7 +164,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    @Environment(Environment.EnvType.CLIENT)
     ClientLevel getWorld(){
         return Minecraft.getInstance().level;
     }

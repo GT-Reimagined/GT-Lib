@@ -18,8 +18,6 @@ import muramasa.antimatter.recipe.ingredient.*;
 import muramasa.antimatter.recipe.serializer.CustomRecipeSerializer;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.Utils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +26,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.*;
 import java.util.function.Predicate;

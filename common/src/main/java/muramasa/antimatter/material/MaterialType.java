@@ -14,8 +14,6 @@ import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
@@ -23,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -211,7 +210,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
 
     public static ImmutableMap<Item, Tuple<MaterialType, Material>> tooltipCache;
 
-    @Environment(EnvType.CLIENT)
+    @Environment(Environment.EnvType.CLIENT)
     public static void buildTooltips() {
         ImmutableMap.Builder<Item, Tuple<MaterialType, Material>> builder = ImmutableMap.builder();
         AntimatterAPI.all(MaterialType.class, t -> {

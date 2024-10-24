@@ -2,9 +2,8 @@ package muramasa.antimatter.integration.jeirei.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import muramasa.antimatter.gui.widget.InfoRenderWidget;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 ;
 ;
@@ -18,6 +17,6 @@ public interface IInfoRenderer<T extends InfoRenderWidget<T>> {
      * @param top
      * @return offset that was rendered.
      */
-    @Environment(EnvType.CLIENT)
+    @Environment(Environment.EnvType.CLIENT)
     int drawInfo(T instance, PoseStack stack, Font renderer, int left, int top);
 }
