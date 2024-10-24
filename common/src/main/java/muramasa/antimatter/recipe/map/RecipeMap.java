@@ -18,8 +18,6 @@ import muramasa.antimatter.recipe.ingredient.*;
 import muramasa.antimatter.recipe.serializer.CustomRecipeSerializer;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.Utils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +26,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -593,8 +593,8 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     public static boolean isIngredientSpecial(Ingredient i) {
         Class<? extends Ingredient> clazz = i.getClass();
         if (clazz == RecipeIngredient.class) return false;
-        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && !RecipeUtil.isNBTIngredient(clazz)
-        && !RecipeUtil.isCompoundIngredient(clazz));
+        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && !RecipeUtil.INSTANCE.isNBTIngredient(clazz)
+        && !RecipeUtil.INSTANCE.isCompoundIngredient(clazz));
     }
 
     protected static class Branch {

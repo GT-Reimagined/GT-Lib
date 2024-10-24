@@ -59,11 +59,11 @@ public class AntimatterRecipeProvider extends RecipeProvider {
     }
 
     public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, Class configClass, String configFieldName, String recipeDomain, String recipeName) {
-        RecipeUtil.addConditionalRecipe(consumer, builtRecipe, configClass, configFieldName, recipeDomain, recipeName);
+        RecipeUtil.INSTANCE.addConditionalRecipe(consumer, builtRecipe, configClass, configFieldName, recipeDomain, recipeName);
     }
 
     public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, String config, String configField, String recipeDomain, String recipeName) {
-        RecipeUtil.addConditionalRecipe(consumer, builtRecipe, config, configField, recipeDomain, recipeName);
+        RecipeUtil.INSTANCE.addConditionalRecipe(consumer, builtRecipe, config, configField, recipeDomain, recipeName);
     }
 
     public AntimatterShapedRecipeBuilder getItemRecipe(String groupName, boolean customCriterion, ItemLike output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
@@ -94,7 +94,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
                     recipeBuilder.addCriterion(id, hasSafeItem((TagKey<Item>) tag));
                     criteria.add(id);
                 } else if (o instanceof ItemLike itemLike){
-                    String id = "has_" + AntimatterPlatformUtils.getIdFromItem(itemLike.asItem()).getPath();
+                    String id = "has_" + AntimatterPlatformUtils.INSTANCE.getIdFromItem(itemLike.asItem()).getPath();
                     if (criteria.contains(id)) continue;
                     recipeBuilder.addCriterion(id, hasSafeItem(itemLike));
                     criteria.add(id);
@@ -129,7 +129,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
             try {
                 if (input instanceof ItemLike l) {
                     builder.requires(l);
-                    String id = "has_" + AntimatterPlatformUtils.getIdFromItem(l.asItem()).getPath();
+                    String id = "has_" + AntimatterPlatformUtils.INSTANCE.getIdFromItem(l.asItem()).getPath();
                     if (criteria.contains(id)) continue;
                     builder.unlockedBy(id, hasSafeItem(l));
                     criteria.add(id);

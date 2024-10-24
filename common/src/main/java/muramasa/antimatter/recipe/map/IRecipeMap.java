@@ -14,8 +14,6 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.Utils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +21,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.item.ExtendedItemContainer;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -74,7 +73,7 @@ public interface IRecipeMap extends ISharedAntimatterObject {
     }
 
     @NotNull
-    @Environment(EnvType.CLIENT)
+    @Environment(Environment.EnvType.CLIENT)
     default IRecipeInfoRenderer getInfoRenderer() {
         return InfoRenderers.DEFAULT_RENDERER;
     }

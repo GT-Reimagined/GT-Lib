@@ -21,7 +21,7 @@ import muramasa.antimatter.gui.BarDir;
 import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.SlotData;
 import muramasa.antimatter.gui.SlotType;
-import muramasa.antimatter.integration.jei.AntimatterJEIPlugin;
+import muramasa.antimatter.integration.jei.JEIPlatformHelper;
 import muramasa.antimatter.integration.jeirei.renderer.IRecipeInfoRenderer;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.IRecipe;
@@ -82,7 +82,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
             }
         } else {
-            Item item = iconId == null ? Data.DEBUG_SCANNER : AntimatterPlatformUtils.getItemFromID(iconId);
+            Item item = iconId == null ? Data.DEBUG_SCANNER : AntimatterPlatformUtils.INSTANCE.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
             this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
         }
@@ -203,7 +203,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 slotCount = Math.min(slotCount, fluids.size());
                 for (int s = 0; s < slotCount; s++) {
                     IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
-                    AntimatterJEIPlugin.addFluidIngredients(slot, Arrays.asList(fluids.get(s).getStacks()));
+                    JEIPlatformHelper.INSTANCE.addFluidIngredients(slot, Arrays.asList(fluids.get(s).getStacks()));
                     slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                     int finalS = s;
                     slot.addTooltipCallback((ing, list) -> {
@@ -223,7 +223,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 for (int s = 0; s < slotCount; s++) {
                     IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
                     slot.setFluidRenderer((int)fluids[s].getFluidAmount(), true, 16, 16);
-                    AntimatterJEIPlugin.addFluidIngredients(slot, Collections.singletonList(fluids[s]));
+                    JEIPlatformHelper.INSTANCE.addFluidIngredients(slot, Collections.singletonList(fluids[s]));
                     int finalS = s;
                     slot.addTooltipCallback((ing, list) -> {
                         FluidHolder stack = fluids[finalS];
@@ -239,7 +239,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         list.remove(2);
         list.remove(1);
         long mb = (stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier);
-        if (AntimatterPlatformUtils.isFabric()){
+        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
             list.add(Utils.translatable("antimatter.tooltip.fluid.amount", Utils.literal(mb + " " + intToSuperScript(stack.getFluidAmount() % 81L) + "/₈₁ L")).withStyle(ChatFormatting.BLUE));
         } else {
             list.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
@@ -247,7 +247,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         list.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
         list.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
-        if (Utils.hasNoConsumeTag(AntimatterJEIPlugin.getIngredient(ing.getDisplayedIngredient().get())))
+        if (Utils.hasNoConsumeTag(JEIPlatformHelper.INSTANCE.getIngredient(ing.getDisplayedIngredient().get())))
             list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
         list.add(component);
     }

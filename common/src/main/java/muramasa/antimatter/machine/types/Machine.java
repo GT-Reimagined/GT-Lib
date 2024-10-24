@@ -32,8 +32,6 @@ import muramasa.antimatter.texture.IOverlayTexturer;
 import muramasa.antimatter.texture.ITextureHandler;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.util.Utils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +45,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.*;
 import java.util.function.*;
@@ -698,7 +697,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
         structures.put(tier, func.apply(new StructureBuilder<>()));
     }
 
-    @Environment(EnvType.CLIENT)
+    @Environment(Environment.EnvType.CLIENT)
     public boolean renderAsTesr() {
         return renderTesr;
     }

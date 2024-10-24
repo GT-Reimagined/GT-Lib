@@ -1,6 +1,5 @@
 package muramasa.antimatter.gui;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.IGuiHandler;
@@ -58,7 +57,7 @@ public abstract class MenuHandler<T extends AbstractContainerMenu & IAntimatterC
     }
 
     static <T extends AbstractContainerMenu> MenuType<T> create(TriFunction<Integer, Inventory, FriendlyByteBuf, T> factory) {
-        return AntimatterPlatformUtils.create(factory);
+        return AntimatterPlatformUtils.INSTANCE.create(factory);
     }
 
     public abstract T onContainerCreate(int windowId, Inventory inv, FriendlyByteBuf data);

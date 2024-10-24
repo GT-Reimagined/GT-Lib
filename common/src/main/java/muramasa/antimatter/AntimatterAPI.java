@@ -1,7 +1,6 @@
 package muramasa.antimatter;
 
 import com.mojang.datafixers.util.Either;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.*;
@@ -405,7 +404,7 @@ public final class AntimatterAPI {
         Antimatter.LOGGER.info("Registration event " + event);
         Side side = getSIDE();
         if (!REGISTRATION_EVENTS_HANDLED.add(event)) {
-            if (AntimatterPlatformUtils.isForge() && AntimatterPlatformUtils.getActiveNamespace().equals(Ref.ID))
+            if (AntimatterPlatformUtils.INSTANCE.isForge() && AntimatterPlatformUtils.INSTANCE.getActiveNamespace().equals(Ref.ID))
                 return;
             throw new IllegalStateException("The RegistrationEvent " + event.name() + " has already been handled");
         }

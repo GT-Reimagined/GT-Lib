@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.math.*;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.item.ItemBattery;
@@ -85,21 +84,21 @@ public class RenderHelper {
 
 
     public static void registerBatteryPropertyOverrides(ItemBattery battery) {
-        ModelUtils.registerProperty(battery, new ResourceLocation(Ref.ID, "battery"), (stack, world, living, some_int) -> {
+        ModelUtils.INSTANCE.registerProperty(battery, new ResourceLocation(Ref.ID, "battery"), (stack, world, living, some_int) -> {
             Optional<IEnergyHandlerItem> handler = TesseractCapUtils.INSTANCE.getEnergyHandlerItem(stack);
             return handler.map(h -> ((float) h.getEnergy() / (float) h.getCapacity())).orElse(1.0F);
         });
     }
 
     public static void registerProbePropertyOverrides(MaterialArmor armor) {
-        ModelUtils.registerProperty(armor, new ResourceLocation(Ref.ID, "probe"), (stack, world, living, some_int) -> {
+        ModelUtils.INSTANCE.registerProperty(armor, new ResourceLocation(Ref.ID, "probe"), (stack, world, living, some_int) -> {
             CompoundTag nbt = stack.getTag();
             return nbt != null && nbt.contains("theoneprobe") && nbt.getBoolean("theoneprobe") ? 1.0F : 0.0F;
         });
     }
 
     public static void registerProperty(Item item, ResourceLocation location, ClampedItemPropertyFunction function){
-        ModelUtils.registerProperty(item, location, function);
+        ModelUtils.INSTANCE.registerProperty(item, location, function);
     }
 
     public static void drawFluid(PoseStack mstack, Minecraft mc, int posX, int posY, int width, int height, int scaledAmount, FluidHolder stack) {

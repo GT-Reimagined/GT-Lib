@@ -39,7 +39,7 @@ public class MapItemStackIngredient extends AbstractMapIngredient {
         if (a.getItem() != b.getItem()) return false;
         if (aTag.isEmpty() != bTag.isEmpty()) return false;
         if (!aTag.equals(bTag)) return false;
-        return AntimatterPlatformUtils.areCapsCompatible(a, b);
+        return AntimatterPlatformUtils.INSTANCE.areCapsCompatible(a, b);
     }
 
     protected static final Set<String> CUSTOM_TAGS = ImmutableSet.of(Ref.KEY_STACK_NO_CONSUME, Ref.KEY_STACK_IGNORE_NBT);
@@ -62,7 +62,7 @@ public class MapItemStackIngredient extends AbstractMapIngredient {
         boolean nbt = stack.hasTag();
         long tempHash = 1;
 
-        tempHash = 31 * tempHash + AntimatterPlatformUtils.getIdFromItem(stack.getItem()).hashCode();
+        tempHash = 31 * tempHash + AntimatterPlatformUtils.INSTANCE.getIdFromItem(stack.getItem()).hashCode();
         if (nbt && stack.getTag() != null) {
             CompoundTag newNbt = filterTags(stack.getTag());
             if (!newNbt.isEmpty()) tempHash = 31 * tempHash + newNbt.hashCode();
