@@ -65,7 +65,7 @@ dependencies{
     }
     modImplementation("net.feltmc:felt-enchanting-api:1.1.0") { transitive false }
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-beta.11"))
-    modImplementation("dev.trinsdar:ct-fabric-fluid-support:${project.ct_fabric_fluid_support_hash}")
+    modImplementation("dev.trinsdar:ct-fabric-fluid-support:1.0.2")
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin:${rootProject.rei_version}"
     modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-common-api:${rootProject.jei_version}")
