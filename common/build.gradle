@@ -1,5 +1,5 @@
 plugins {
-    id "xyz.wagyourtail.unimined" version "1.3.9-SNAPSHOT"
+    id "xyz.wagyourtail.unimined" version "1.3.10-SNAPSHOT"
     id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
 }
 archivesBaseName = "${rootProject.antimatter_archive_base_name}-common"
@@ -65,12 +65,12 @@ dependencies{
     }
     modImplementation("net.feltmc:felt-enchanting-api:1.1.0") { transitive false }
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-beta.11"))
-    modImplementation("io.github.trinsdar:CT-Fabric-Fluid-Support:${project.ct_fabric_fluid_support_hash}")
+    modImplementation("dev.trinsdar:ct-fabric-fluid-support:${project.ct_fabric_fluid_support_hash}")
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin:${rootProject.rei_version}"
     modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-common-api:${rootProject.jei_version}")
-    modCompileOnly("io.github.trinsdar:arrp:0.6.7")
-    implementation("com.gtnewhorizon.structurelib:structurelib-common:${project.structurelib_version}-${project.minecraft_version}")
+    modCompileOnly("dev.trinsdar:arrp:0.6.7")
+    implementation("org.gt-reimagined:structurelib-common:${project.structurelib_version}-${project.minecraft_version}")
     modImplementation "maven.modrinth:carbon-config:${project.carbon_config_fabric_version}"
     modCompileOnly("curse.maven:the-one-probe-fabric-581847:${project.top_fabric_file}")
     modImplementation("earth.terrarium:botarium-common-1.18.2:${project.botarium_version}")
@@ -84,6 +84,7 @@ dependencies{
 publishing {
     publications {
         mavenJava(org.gradle.api.publish.maven.MavenPublication) {
+            artifactId = project.name
             from components.java
         }
     }

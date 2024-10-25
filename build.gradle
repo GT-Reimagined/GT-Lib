@@ -12,16 +12,10 @@ plugins {
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 def isCI = System.getenv("GITHUB_ACTION")
-def isRELEASE = System.getenv("GITHUB_RELEASE")
 def gitHash() {
     String hash = System.getenv("GITHUB_SHA")
     if (hash != null) return hash.substring(0,8)
     return ""
-}
-
-def isAntimatterCI() {
-    String val = System.getenv("GITHUB_WORKFLOW")
-    return val != null && val.toLowerCase().startsWith("antimatter")
 }
 
 subprojects {
@@ -51,10 +45,7 @@ subprojects {
     }
 
     if (isCI) {
-        vif (!isRELEASE){
-            version = version + "-" + gitHash()
-            println("Not in CI Release mode")
-        }
+        version = version + "-" + gitHash()
         println("In CI mode")
     }
 }

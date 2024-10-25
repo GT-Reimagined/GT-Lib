@@ -1,16 +1,11 @@
+plugins {
+    id "fabric-loom" version "1.6.+"
+    id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
+}
 archivesBaseName = "${rootProject.antimatter_archive_base_name}-fabric"
-version = "${project.mod_version}-${rootProject.minecraft_version}"
 
 def generatedResources = file("src/generated/resources")
 def accessWidenerFile = project(":antimatter-common").file("src/main/resources/antimatter.accesswidener")
-
-configurations {
-    common
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
-}
 
 repositories {
     maven {
@@ -21,14 +16,18 @@ repositories {
 
 loom {
     accessWidenerPath = accessWidenerFile
+    mixin {
+        defaultRefmapName = "antimatter.refmap.json"
+    }
 }
 
 dependencies{
+    implementation(expectPlatform.annotationsDep)
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     modCompileOnly("dev.latvian.mods:kubejs-fabric:${rootProject.kubejs_version}")
-    common(project(path: ":tesseract-common", configuration: "namedElements")) { transitive false }
-    implementation(project(path: ":tesseract-fabric", configuration: "namedElements")) { transitive false }
+    implementation(project(path: ":tesseract-common")) { transitive false }
+    implementation(project(path: ":tesseract-fabric")) { transitive false }
     afterEvaluate {
         include(project(path: ":tesseract-fabric"))
     }
@@ -49,12 +48,10 @@ dependencies{
         exclude(group: "com.terraformersmc")
     }
     modImplementation(include("net.feltmc:felt-enchanting-api:1.1.0")) { transitive false }
-    modImplementation(include("com.gtnewhorizon.structurelib:structurelib-fabric:${project.structurelib_version}-${project.minecraft_version}"))
-    common(project(path: ":antimatter-common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":antimatter-common", configuration: "transformProductionFabric")) { transitive false }
-    modImplementation(include("io.github.trinsdar:arrp:0.6.7"))
+    modImplementation(include("org.gt-reimagined:structurelib-fabric:${project.structurelib_version}-${project.minecraft_version}"))
+    modImplementation(include("dev.trinsdar:arrp:0.6.7"))
     modCompileOnly("com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.2:${rootProject.crafttweaker_version}")
-    modCompileOnly(include("io.github.trinsdar:CT-Fabric-Fluid-Support:${project.ct_fabric_fluid_support_hash}"))
+    modCompileOnly(include("dev.trinsdar:ct-fabric-fluid-support:${project.ct_fabric_fluid_support_hash}"))
     modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
     modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}"){
         exclude(group: "mezz.jei", module: "jei-1.18.2-fabric-api")
@@ -81,26 +78,10 @@ dependencies{
     //include("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin.coreLibrariesVersion}")
 }
 
-architectury {
-    fabric()
-}
 
-task copyAccessWidener(type: Copy) {
-    from accessWidenerFile
-    into generatedResources
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDir copyAccessWidener
-        }
-    }
-}
 
 processResources {
-    dependsOn copyAccessWidener
-
+    from project(":antimatter-common").sourceSets.main.resources
     def toReplace = [
             "version"             : project.mod_version
     ]
@@ -110,15 +91,18 @@ processResources {
         expand toReplace
     }
 }
+tasks.withType(JavaCompile) {
+    source(project(":common").sourceSets.main.allSource)
+}
+
 sourcesJar {
-    from(project(':antimatter-common').sourceSets.main.allSource) {
-        exclude("antimatter.accesswidener") // duplicate on fabric, unneeded on forge
-    }
+    from(project(':antimatter-common').sourceSets.main.allSource)
 }
 
 publishing {
     publications {
         mavenJava(org.gradle.api.publish.maven.MavenPublication) {
+            artifactId = project.name
             from components.java
         }
     }
