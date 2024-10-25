@@ -112,7 +112,7 @@ Dependency include(Object dep){
     }
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     source(project(":antimatter-common").sourceSets.main.allSource)
     /*expectPlatform.insertAgent(it, "forge", ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",
                                              "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/minecraftforge/api/distmarker/Dist",
