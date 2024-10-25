@@ -70,14 +70,6 @@ mixin {
 
 jarJar.enable()
 
-configurations {
-    include
-    jarJar.extendsFrom(include)
-    /*include {
-        jarJar.ranged(it, "[${it}")
-    }*/
-}
-
 dependencies {
     implementation(expectPlatform.annotationsDep)
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
@@ -86,6 +78,7 @@ dependencies {
     afterEvaluate {
         jarJar(project(path: ":tesseract-forge")){
             jarJar.ranged(it, "[${project(":tesseract-forge").version},)")
+            transitive = false
         }
     }
 
@@ -113,8 +106,17 @@ dependencies {
     //include("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin.coreLibrariesVersion}")
 }
 
+Dependency include(Object dep){
+    dependencies.jarJar(dep){
+        jarJar.ranged(it, "[${it.version},)")
+    }
+}
+
 tasks.withType(JavaCompile) {
     source(project(":antimatter-common").sourceSets.main.allSource)
+    /*expectPlatform.insertAgent(it, "forge", ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",
+                                             "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/minecraftforge/api/distmarker/Dist",
+                                             "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType.SERVER": "DEDICATED_SERVER",])*/
 }
 
 processResources {
