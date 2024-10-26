@@ -57,7 +57,7 @@ dependencies{
     modImplementation(include("dev.trinsdar:arrp:0.6.7"))
     modCompileOnly("com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.2:${rootProject.crafttweaker_version}")
     modCompileOnly(include("dev.trinsdar:ct-fabric-fluid-support:1.0.2"))
-    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+    modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
     modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}"){
         exclude(group: "mezz.jei", module: "jei-1.18.2-fabric-api")
     }

@@ -75,9 +75,11 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
 
     long getPower();
 
-    int @Nullable [] getOutputChances();
+    @Nullable
+    int[] getOutputChances();
 
-    int @Nullable [] getInputChances();
+    @Nullable
+    int[] getInputChances();
 
     default long getTotalPower(){
         return getDuration() * getPower();
