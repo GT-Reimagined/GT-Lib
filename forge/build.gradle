@@ -88,6 +88,7 @@ dependencies {
     //modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
     implementation fg.deobf("mezz.jei:jei-1.18.2:9.7.2.1001")
     compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
+    compileOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:6.5.133")
     implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${rootProject.crafttweaker_version}")
     implementation fg.deobf(include("dev.trinsdar:arrp-forge:0.6.7"))
     implementation fg.deobf(include("dev.trinsdar:terraform-utils-v1:3.1.5"))
