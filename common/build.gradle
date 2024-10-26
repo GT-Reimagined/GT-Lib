@@ -13,7 +13,8 @@ configurations {
 
 unimined.minecraft {
     version minecraft_version
-    accessWidener {
+    fabric {
+        loader(project.fabric_loader_version)
         accessWidener(file("src/main/resources/antimatter.accesswidener"))
     }
 
@@ -50,10 +51,9 @@ repositories {
     maven { url "https://maven.bai.lol" }
 }
 
-apply from: 'https://raw.githubusercontent.com/GregTech-Intergalactical/GradleSripts/main/common.gradle'
+//apply from: 'https://raw.githubusercontent.com/GregTech-Intergalactical/GradleSripts/main/common.gradle'
 dependencies{
     implementation(expectPlatform.annotationsDep)
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     compileOnly("com.blamejared.crafttweaker:CraftTweaker-common-1.18.2:${rootProject.crafttweaker_version}")
     modCompileOnly("dev.latvian.mods:kubejs-fabric:${rootProject.kubejs_version}")
     implementation(project(path: ":tesseract-common"))
