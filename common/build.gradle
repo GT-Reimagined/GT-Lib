@@ -1,46 +1,16 @@
 plugins {
-    id "xyz.wagyourtail.unimined" version "1.3.10-SNAPSHOT"
+    id "fabric-loom"
     id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
 }
 archivesBaseName = "${rootProject.antimatter_archive_base_name}-common"
 
-configurations {
-    modCompileOnly
-    compileOnly.extendsFrom modCompileOnly
-    modRuntimeOnly
-    runtimeOnly.extendsFrom modRuntimeOnly
-}
 
-unimined.minecraft {
-    version minecraft_version
-    fabric {
-        loader(project.fabric_loader_version)
-        accessWidener(file("src/main/resources/antimatter.accesswidener"))
-    }
+def accessWidenerFile = file("src/main/resources/antimatter.accesswidener")
 
-    defaultRemapJar = false
-
-    mappings {
-        intermediary()
-        mojmap()
-        devFallbackNamespace "official"
-        devNamespace "mojmap"
-        parchment(rootProject.minecraft_version, rootProject.mappings_version)
-    }
-
-    mods {
-        remap(configurations.modCompileOnly){
-            catchAWNamespaceAssertion()
-            namespace("intermediary")
-        }
-        remap(configurations.modRuntimeOnly){
-            catchAWNamespaceAssertion()
-            namespace("intermediary")
-        }
-        modImplementation {
-            catchAWNamespaceAssertion()
-            namespace("intermediary")
-        }
+loom {
+    accessWidenerPath = accessWidenerFile
+    mixin {
+        defaultRefmapName = "antimatter.refmap.json"
     }
 }
 
@@ -53,6 +23,11 @@ repositories {
 
 //apply from: 'https://raw.githubusercontent.com/GregTech-Intergalactical/GradleSripts/main/common.gradle'
 dependencies{
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.mappings_version}@zip")
+    }
     implementation(expectPlatform.annotationsDep)
     compileOnly("com.blamejared.crafttweaker:CraftTweaker-common-1.18.2:${rootProject.crafttweaker_version}")
     modCompileOnly("dev.latvian.mods:kubejs-fabric:${rootProject.kubejs_version}")
@@ -67,19 +42,18 @@ dependencies{
     modImplementation("net.feltmc:felt-enchanting-api:1.1.0") { transitive false }
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-beta.11"))
     modImplementation("dev.trinsdar:ct-fabric-fluid-support:1.0.2")
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin:${rootProject.rei_version}"
-    modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-common-api:${rootProject.jei_version}")
+    //modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+    modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}")
     modCompileOnly("dev.trinsdar:arrp:0.6.7")
     implementation("org.gt-reimagined:structurelib-common:${project.structurelib_version}-${project.minecraft_version}")
     modImplementation "maven.modrinth:carbon-config:${project.carbon_config_fabric_version}"
     modCompileOnly("curse.maven:the-one-probe-fabric-581847:${project.top_fabric_file}")
-    modImplementation("earth.terrarium:botarium-common-1.18.2:${project.botarium_version}")
-    modImplementation "com.teamresourceful.resourcefullib:resourcefullib-common-1.18.2:${project.resourcefullib_version}"
+    modImplementation("earth.terrarium:botarium-fabric-1.18.2:${project.botarium_version}")
+    modImplementation "com.teamresourceful.resourcefullib:resourcefullib-fabric-1.18.2:${project.resourcefullib_version}"
     modCompileOnly("com.simibubi.create:create-fabric-${minecraft_version}:0.5.0.i-944+1.18.2"){
         transitive = false
     }
-
 }
 
 publishing {
