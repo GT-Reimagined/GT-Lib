@@ -34,8 +34,8 @@ project(':tesseract-fabric').setProjectDir(new File("TesseractAPI/fabric"))
 
 include("antimatter-common")
 include("antimatter-fabric")
-//include("antimatter-forge")
+include("antimatter-forge")
 
 project(':antimatter-common').setProjectDir(new File("common"))
-//project(':antimatter-forge').setProjectDir(new File("forge"))
+project(':antimatter-forge').setProjectDir(new File("forge"))
 project(':antimatter-fabric').setProjectDir(new File("fabric"))

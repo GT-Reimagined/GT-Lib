@@ -94,7 +94,6 @@ dependencies {
     implementation fg.deobf(include("earth.terrarium:botarium-forge-1.18.2:${project.botarium_version}"))
     implementation fg.deobf(include("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
     implementation fg.deobf(include("com.teamresourceful.resourcefullib:resourcefullib-forge-1.18.2:${project.resourcefullib_version}"))
-    implementation fg.deobf(include("io.github.llamalad7:mixinextras-forge:0.2.0-beta.11"))
     implementation(fg.deobf("maven.modrinth:carbon-config:${project.carbon_config_forge_version}"))
     jarJar("maven.modrinth:carbon-config:${project.carbon_config_forge_version}"){
         jarJar.ranged(it, "[1.18.2-1.2.6,)")
@@ -106,6 +105,9 @@ dependencies {
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
         jarJar.ranged(it, "[0.4.1,)")
+    }
+    compileOnly fg.deobf("com.simibubi.create:create-${minecraft_version}:0.5.1.i-435:all"){
+        transitive = false
     }
     //include("org.jetbrains.kotlin:kotlin-reflect:${kotlin.coreLibrariesVersion}")
     //include("org.jetbrains.kotlin:kotlin-stdlib:${kotlin.coreLibrariesVersion}")
