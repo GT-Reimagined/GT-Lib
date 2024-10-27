@@ -1,122 +1,92 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'xyz.wagyourtail.unimined' version "1.3.10-SNAPSHOT"
     id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
 }
 
 archivesBaseName = "${rootProject.antimatter_archive_base_name}-forge"
 
-minecraft {
-    // Change to your preferred mappings
-    mappings channel: "parchment", version: "${rootProject.mappings_version}-${rootProject.minecraft_version}"
-    // Add your AccessTransformer
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        // applies to all the run configs below
-        configureEach {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        server {
-            workingDirectory project.file('run/server')
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        data {
-            // example of overriding the workingDirectory set in configureEach above
-            workingDirectory project.file('run-data')
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
-    }
+configurations {
+    modCompileOnly
+    compileOnly.extendsFrom modCompileOnly
+    modRuntimeOnly
+    runtimeOnly.extendsFrom modRuntimeOnly
 }
 
-mixin {
-    add sourceSets.main, "antimatter.refmap.json"
-    config "antimatter.mixins.json"
-    config "antimatter-forge.mixins.json"
-    config "antimatter.rei.mixins.json"
-    debug.verbose = true
-    debug.export = true
+unimined.minecraft {
+    version(project.minecraft_version)
+    minecraftForge {
+        loader(project.forge_version)
+        mixinConfig = [
+                "antimatter.mixins.json",
+                "antimatter-forge.mixins.json",
+                "antimatter.rei.mixins.json"
+        ]
+    }
+    defaultRemapJar = true
+
+    mappings {
+        searge()
+        mojmap()
+        devFallbackNamespace "official"
+        devNamespace "mojmap"
+        parchment(rootProject.minecraft_version, rootProject.mappings_version)
+    }
+
+    mods {
+        remap(configurations.modCompileOnly){
+            catchAWNamespaceAssertion()
+            namespace("searge")
+        }
+        remap(configurations.modRuntimeOnly){
+            catchAWNamespaceAssertion()
+            namespace("searge")
+        }
+        modImplementation {
+            catchAWNamespaceAssertion()
+            namespace("searge")
+        }
+    }
 }
 
 jarJar.enable()
 
 dependencies {
     implementation(expectPlatform.annotationsDep)
-    minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
     implementation(project(path: ":tesseract-forge"))
     implementation(project(path: ":tesseract-common"))
     afterEvaluate {
-        jarJar(project(path: ":tesseract-forge")){
-            jarJar.ranged(it, "[${project(":tesseract-forge").version},)")
-            transitive = false
-        }
+        include(project(path: ":tesseract-forge"))
     }
 
     //MIXIN
     annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
     //modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
     //modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
-    implementation fg.deobf("mezz.jei:jei-1.18.2:9.7.2.1001")
-    compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
-    compileOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:6.5.133")
-    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${rootProject.crafttweaker_version}")
-    implementation fg.deobf(include("dev.trinsdar:arrp-forge:0.6.7"))
-    implementation fg.deobf(include("dev.trinsdar:terraform-utils-v1:3.1.5"))
-    implementation fg.deobf(include("earth.terrarium:botarium-forge-1.18.2:${project.botarium_version}"))
-    implementation fg.deobf(include("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
-    implementation fg.deobf(include("com.teamresourceful.resourcefullib:resourcefullib-forge-1.18.2:${project.resourcefullib_version}"))
-    implementation fg.deobf("maven.modrinth:carbon-config:${project.carbon_config_forge_version}")
+    modImplementation("mezz.jei:jei-1.18.2:9.7.2.1001")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
+    modCompileOnly("me.shedaniel.cloth:cloth-config-forge:6.5.133")
+    modImplementation("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${rootProject.crafttweaker_version}")
+    modImplementation(include("dev.trinsdar:arrp-forge:0.6.7"))
+    modImplementation(include("dev.trinsdar:terraform-utils-v1:3.1.5"))
+    modImplementation(include("earth.terrarium:botarium-forge-1.18.2:${project.botarium_version}"))
+    modImplementation(include("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
+    modImplementation(include("com.teamresourceful.resourcefullib:resourcefullib-forge-1.18.2:${project.resourcefullib_version}"))
+    modImplementation("maven.modrinth:carbon-config:${project.carbon_config_forge_version}")
     jarJar("maven.modrinth:carbon-config:${project.carbon_config_forge_version}"){
         jarJar.ranged(it, "[1.18.2-1.2.6,)")
     }
-    implementation fg.deobf("dev.latvian.mods:kubejs-forge:${rootProject.kubejs_version}")
-    implementation fg.deobf("dev.latvian.mods:rhino-forge:${rootProject.rhino_version}")
-    implementation fg.deobf("dev.architectury:architectury-forge:${rootProject.architectury_version}")
-    implementation fg.deobf("curse.maven:the-one-probe-245211:${rootProject.top_forge_file}")
+    modImplementation("dev.latvian.mods:kubejs-forge:${rootProject.kubejs_version}")
+    modImplementation("dev.latvian.mods:rhino-forge:${rootProject.rhino_version}")
+    modImplementation("dev.architectury:architectury-forge:${rootProject.architectury_version}")
+    modImplementation("curse.maven:the-one-probe-245211:${rootProject.top_forge_file}")
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
-    compileOnly fg.deobf("com.simibubi.create:create-${minecraft_version}:0.5.1.i-435:all"){
+    modCompileOnly("com.simibubi.create:create-${minecraft_version}:0.5.1.i-435:all"){
         transitive = false
     }
     //include("org.jetbrains.kotlin:kotlin-reflect:${kotlin.coreLibrariesVersion}")
     //include("org.jetbrains.kotlin:kotlin-stdlib:${kotlin.coreLibrariesVersion}")
     //include("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin.coreLibrariesVersion}")
-}
-
-Dependency include(Object dep){
-    dependencies.jarJar(dep){
-        jarJar.ranged(it, "[${it.version},)")
-    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -140,10 +110,6 @@ sourcesJar {
     from(project(':antimatter-common').sourceSets.main.allSource)
 }
 
-tasks.named('jarJar', Jar).configure {
-    archiveClassifier.set("")
-}
-
 tasks.named('jar', Jar).configure {
     manifest {
         attributes([
@@ -156,10 +122,6 @@ tasks.named('jar', Jar).configure {
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
-    archiveClassifier.set "thin"
 }
 
 publishing {
