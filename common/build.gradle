@@ -40,7 +40,7 @@ dependencies{
         transitive = false
     }
     modImplementation("net.feltmc:felt-enchanting-api:1.1.0") { transitive false }
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-beta.11"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     modImplementation("dev.trinsdar:ct-fabric-fluid-support:1.0.2")
     //modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
