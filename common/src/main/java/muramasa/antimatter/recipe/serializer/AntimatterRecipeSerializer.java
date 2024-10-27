@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
+import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.RecipeTag;
 import muramasa.antimatter.recipe.RecipeUtil;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AntimatterRecipeSerializer implements RecipeSerializer<Recipe> {
+public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> {
 
     public static final AntimatterRecipeSerializer INSTANCE = new AntimatterRecipeSerializer();
 

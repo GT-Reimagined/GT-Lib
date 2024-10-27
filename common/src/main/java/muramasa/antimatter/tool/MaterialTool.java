@@ -282,7 +282,7 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
         }
         return damage(stack, amount);
     }
-    @Override
+    //@Override
     public int getEnchantability(ItemStack stack) {
         return getTier(stack).getEnchantmentValue();
     }

@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.item.IContainerItem;
+import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -50,7 +51,7 @@ public class ContainerItemShapelessRecipe extends ShapelessRecipe {
         return nonnulllist;
     }
 
-    public static class Serializer implements RecipeSerializer<ContainerItemShapelessRecipe> {
+    public static class Serializer extends BaseRecipeSerializer<ContainerItemShapelessRecipe> {
         public Serializer() {
         }
 

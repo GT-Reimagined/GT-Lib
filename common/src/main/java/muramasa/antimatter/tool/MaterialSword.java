@@ -232,7 +232,7 @@ public class MaterialSword extends SwordItem implements IAntimatterTool, IContai
         return (entity instanceof Player && ((Player) entity).isCreative()) ? 0 : damage(stack, amount);
     }
 
-    @Override
+    //@Override
     public int getEnchantability(ItemStack stack) {
         return getTier(stack).getEnchantmentValue();
     }

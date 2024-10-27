@@ -4,6 +4,7 @@ import muramasa.antimatter.util.Utils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import tesseract.api.item.ContainerItemHandler;
@@ -27,6 +28,11 @@ public class ItemStackHandler implements ExtendedItemContainer, ContainerItemHan
 
     public void setSize(int size) {
         this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return ExtendedItemContainer.super.stillValid(player);
     }
 
     @Override

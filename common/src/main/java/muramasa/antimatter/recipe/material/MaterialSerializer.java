@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
+import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.recipe.ingredient.PropertyIngredient;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -25,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class MaterialSerializer implements RecipeSerializer<MaterialRecipe> {
+public class MaterialSerializer extends BaseRecipeSerializer<MaterialRecipe> {
 
     public static final MaterialSerializer INSTANCE = new MaterialSerializer();
 

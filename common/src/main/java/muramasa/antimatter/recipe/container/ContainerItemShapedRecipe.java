@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.item.IContainerItem;
+import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -64,7 +65,7 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
         return false;
     }
 
-    public static class Serializer implements RecipeSerializer<ContainerItemShapedRecipe> {
+    public static class Serializer extends BaseRecipeSerializer<ContainerItemShapedRecipe> {
         public Serializer() {
         }
 
