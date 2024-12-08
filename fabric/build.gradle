@@ -2,7 +2,7 @@ plugins {
     id "fabric-loom"
     id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
 }
-archivesBaseName = "${rootProject.antimatter_archive_base_name}-fabric"
+archivesBaseName = "${project.antimatter_archive_base_name}-fabric"
 
 def generatedResources = file("src/generated/resources")
 def accessWidenerFile = project(":antimatter-common").file("src/main/resources/antimatter.accesswidener")
@@ -22,21 +22,21 @@ loom {
 }
 
 dependencies{
-    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.mappings_version}@zip")
+        parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.mappings_version}@zip")
     }
     implementation(expectPlatform.annotationsDep)
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    modCompileOnly("dev.latvian.mods:kubejs-fabric:${rootProject.kubejs_version}")
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modCompileOnly("dev.latvian.mods:kubejs-fabric:${project.kubejs_version}")
     implementation(project(path: ":tesseract-common")) { transitive false }
     implementation(project(path: ":tesseract-fabric")) { transitive false }
     afterEvaluate {
         include(project(path: ":tesseract-fabric"))
     }
-    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:${rootProject.port_lib_version}-beta+1.18.2-stable")){
+    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:${project.port_lib_version}-beta+1.18.2-stable")){
         exclude(group: "net.fabricmc.fabric-api")
         exclude(group: "com.github.LlamaLad7")
     }
@@ -55,13 +55,13 @@ dependencies{
     modImplementation(include("net.feltmc:felt-enchanting-api:1.1.0")) { transitive false }
     modImplementation(include("org.gt-reimagined:structurelib-fabric:${project.structurelib_version}-${project.minecraft_version}"))
     modImplementation(include("dev.trinsdar:arrp:0.6.7"))
-    modCompileOnly("com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.2:${rootProject.crafttweaker_version}")
+    modCompileOnly("com.blamejared.crafttweaker:CraftTweaker-fabric-1.18.2:${project.crafttweaker_version}")
     modCompileOnly(include("dev.trinsdar:ct-fabric-fluid-support:1.0.2"))
-    modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
-    modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}"){
+    modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+    modCompileOnly("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}"){
         exclude(group: "mezz.jei", module: "jei-1.18.2-fabric-api")
     }
-    modImplementation("teamreborn:energy:${rootProject.energy_version}") {
+    modImplementation("teamreborn:energy:${project.energy_version}") {
         transitive = false
     }
     implementation(annotationProcessor(include("io.github.llamalad7:mixinextras-fabric:0.2.0-beta.11")))
@@ -69,11 +69,11 @@ dependencies{
         transitive = false
     }
     modImplementation("com.teamresourceful.resourcefullib:resourcefullib-fabric-1.18.2:${project.resourcefullib_version}")
-    modRuntimeOnly("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") {
+    modRuntimeOnly("com.terraformersmc:modmenu:${project.mod_menu_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    implementation("com.electronwill.night-config:toml:${rootProject.nightconfig_version}")
-    implementation("com.electronwill.night-config:core:${rootProject.nightconfig_version}")
+    implementation("com.electronwill.night-config:toml:${project.nightconfig_version}")
+    implementation("com.electronwill.night-config:core:${project.nightconfig_version}")
     modImplementation "maven.modrinth:carbon-config:${project.carbon_config_fabric_version}"
     modCompileOnly("curse.maven:the-one-probe-fabric-581847:${project.top_fabric_file}")
     modCompileOnly "lol.bai.megane:megane-reborn-energy:${project.megane_version}"
@@ -99,7 +99,7 @@ processResources {
         expand toReplace
     }
 }
-tasks.withType(JavaCompile) {
+tasks.named('compileJava', JavaCompile) {
     source(project(":antimatter-common").sourceSets.main.allSource)
 }
 
@@ -116,19 +116,13 @@ publishing {
     }
 
     repositories {
-        def isCI = System.getenv("GITHUB_ACTION")
-        def isRELEASE = System.getenv("GITHUB_RELEASE")
-        if (isCI && isRELEASE) {
+        def isCI = System.getenv("CI")
+        if (isCI) {
             maven {
-                name = "GTMaven"
-                url = "https://repo.repsy.io/mvn/trinsdar/gregtech-intergalactical/"
-                credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
-                }
+                url System.getenv("local_maven_url")
             }
         } else {
-            maven { url "file:///${project.projectDir}/mcmodsrepo"}
+            mavenLocal()
         }
     }
 }

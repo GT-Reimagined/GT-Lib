@@ -2,7 +2,7 @@ plugins {
     id "fabric-loom"
     id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
 }
-archivesBaseName = "${rootProject.antimatter_archive_base_name}-common"
+archivesBaseName = "${project.antimatter_archive_base_name}-common"
 
 
 def accessWidenerFile = file("src/main/resources/antimatter.accesswidener")
@@ -23,16 +23,16 @@ repositories {
 
 //apply from: 'https://raw.githubusercontent.com/GregTech-Intergalactical/GradleSripts/main/common.gradle'
 dependencies{
-    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.mappings_version}@zip")
+        parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.mappings_version}@zip")
     }
     implementation(expectPlatform.annotationsDep)
-    compileOnly("com.blamejared.crafttweaker:CraftTweaker-common-1.18.2:${rootProject.crafttweaker_version}")
-    modCompileOnly("dev.latvian.mods:kubejs-fabric:${rootProject.kubejs_version}")
+    compileOnly("com.blamejared.crafttweaker:CraftTweaker-common-1.18.2:${project.crafttweaker_version}")
+    modCompileOnly("dev.latvian.mods:kubejs-fabric:${project.kubejs_version}")
     implementation(project(path: ":tesseract-common"))
-    modImplementation("io.github.fabricators_of_create:Porting-Lib:${rootProject.port_lib_version}-beta+1.18.2-stable"){
+    modImplementation("io.github.fabricators_of_create:Porting-Lib:${project.port_lib_version}-beta+1.18.2-stable"){
         exclude(group: "net.fabricmc.fabric-api")
         exclude(group: "com.github.LlamaLad7")
     }
@@ -43,8 +43,8 @@ dependencies{
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     modImplementation("dev.trinsdar:ct-fabric-fluid-support:1.0.2")
     //modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
-    modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}")
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+    modCompileOnly("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
     modCompileOnly("dev.trinsdar:arrp:0.6.7")
     implementation("org.gt-reimagined:structurelib-common:${project.structurelib_version}-${project.minecraft_version}")
     modImplementation "maven.modrinth:carbon-config:${project.carbon_config_fabric_version}"
@@ -65,19 +65,13 @@ publishing {
     }
 
     repositories {
-        def isCI = System.getenv("GITHUB_ACTION")
-        def isRELEASE = System.getenv("GITHUB_RELEASE")
-        if (isCI && isRELEASE) {
+        def isCI = System.getenv("CI")
+        if (isCI) {
             maven {
-                name = "GTMaven"
-                url = "https://repo.repsy.io/mvn/trinsdar/gregtech-intergalactical/"
-                credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
-                }
+                url System.getenv("local_maven_url")
             }
         } else {
-            maven { url "file:///${project.projectDir}/mcmodsrepo"}
+            mavenLocal()
         }
     }
 }
