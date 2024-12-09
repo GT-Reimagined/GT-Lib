@@ -46,11 +46,17 @@ dependencies {
     implementation(project(path: ":tesseract-forge"))
     implementation(project(path: ":tesseract-common"))
     compileOnly(project(":antimatter-common"))
-    jarJar(project(path: ":tesseract-forge"))
+    jarJar("org.gt-reimagined:tesseract-forge:0.2.4-1.18.2"){
+        version {
+            strictly("[0.2.4-1.18.2,)")
+            prefer("[0.2.4-1.18.2,)")
+        }
+    }
 
     //MIXIN
     annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
     implementation("org.jetbrains:annotations:26.0.1")
+    compileOnly("org.lwjgl:lwjgl-opengl:3.2.2")
     //modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
     //modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
     modImplementation("mezz.jei:jei-1.18.2:9.7.2.1001")
