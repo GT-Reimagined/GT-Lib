@@ -122,15 +122,16 @@ sourcesJar {
 
 tasks.create("platformJar", ExpectPlatformJar){
     platformName = "forge"
+    from(jarJar)
     inputFiles = sourceSets.main.output
-    archiveClassifier.set "platform"
+    archiveClassifier.set "dev"
     remap = ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",
              "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/minecraftforge/api/distmarker/Dist",
              "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType.SERVER": "DEDICATED_SERVER"]
 }
 
 tasks.named('reobfJar', Jar).configure {
-    //input.set(platformJar.archiveFile)
+    input.set(platformJar.archiveFile)
     dependsOn platformJar
     manifest {
         attributes([
