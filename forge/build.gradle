@@ -1,3 +1,4 @@
+import xyz.wagyourtail.unimined.expect.task.ExpectPlatformJar
 plugins {
     id "net.neoforged.moddev.legacyforge"
     id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
@@ -18,12 +19,16 @@ neoForge {
     runs {
         client {
             client()
+
         }
         data {
             data()
         }
         server {
             server()
+            /*expectPlatform.insertAgent(it, "forge", ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",
+                                                     "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/minecraftforge/api/distmarker/Dist",
+                                                     "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType.SERVER": "DEDICATED_SERVER",])*/
         }
     }
     mods {
@@ -99,9 +104,6 @@ Dependency include(Object dep){
 
 tasks.named('compileJava', JavaCompile) {
     source(project(":antimatter-common").sourceSets.main.allSource)
-    /*expectPlatform.insertAgent(it, "forge", ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",
-                                             "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/minecraftforge/api/distmarker/Dist",
-                                             "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType.SERVER": "DEDICATED_SERVER",])*/
 }
 
 processResources {
@@ -118,14 +120,25 @@ sourcesJar {
     from(project(':antimatter-common').sourceSets.main.allSource)
 }
 
-tasks.named('jar', Jar).configure {
+tasks.create("platformJar", ExpectPlatformJar){
+    platformName = "forge"
+    inputFiles = sourceSets.main.output
+    archiveClassifier.set "platform"
+    remap = ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",
+             "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/minecraftforge/api/distmarker/Dist",
+             "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType.SERVER": "DEDICATED_SERVER"]
+}
+
+tasks.named('reobfJar', Jar).configure {
+    //input.set(platformJar.archiveFile)
+    dependsOn platformJar
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,
                 'Specification-Vendor'    : "Trinsdar",
                 'Specification-Version'   : '1', // We are version 1 of ourselves
                 'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Version'  : project.version,
                 'Implementation-Vendor'   : "Trinsdar",
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
