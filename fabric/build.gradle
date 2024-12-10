@@ -1,3 +1,5 @@
+import xyz.wagyourtail.unimined.expect.task.ExpectPlatformJar
+
 plugins {
     id "fabric-loom"
     id 'xyz.wagyourtail.unimined.expect-platform' version '1.0.5'
@@ -105,6 +107,26 @@ tasks.named('compileJava', JavaCompile) {
 
 sourcesJar {
     from(project(':antimatter-common').sourceSets.main.allSource)
+}
+
+tasks.create("platformJar", ExpectPlatformJar){
+    platformName = "fabric"
+    inputFiles = sourceSets.main.output
+    archiveClassifier.set "dev"
+    remap = [
+            "xyz/wagyourtail/unimined/expect/annotation/Environment": "net/fabricmc/api/Environment",
+            "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/fabricmc/api/EnvType",
+    ]
+}
+
+remapJar {
+    inputFile.set platformJar.archiveFile
+    dependsOn platformJar
+    archiveClassifier.set null
+}
+
+jar{
+    archiveClassifier.set "dev-unmapped"
 }
 
 publishing {
