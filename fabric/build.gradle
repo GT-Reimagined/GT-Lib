@@ -23,6 +23,14 @@ loom {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDir generatedResources
+        }
+    }
+}
+
 dependencies{
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
@@ -88,10 +96,18 @@ dependencies{
     //include("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin.coreLibrariesVersion}")
 }
 
+// The AW file is needed in :fabric project resources when the game is run.
+task copyAccessWidener(type: Copy) {
+    from accessWidenerFile
+    into generatedResources
+}
 
 
 processResources {
-    from project(":antimatter-common").sourceSets.main.resources
+    dependsOn copyAccessWidener
+    from(project(":antimatter-common").sourceSets.main.resources){
+        exclude("antimatter.accesswidener")
+    }
     def toReplace = [
             "version"             : project.mod_version
     ]
@@ -106,7 +122,10 @@ tasks.named('compileJava', JavaCompile) {
 }
 
 sourcesJar {
-    from(project(':antimatter-common').sourceSets.main.allSource)
+    mustRunAfter copyAccessWidener
+    from(project(':antimatter-common').sourceSets.main.allSource){
+        exclude("antimatter.accesswidener")
+    }
 }
 
 tasks.create("platformJar", ExpectPlatformJar){
