@@ -155,11 +155,7 @@ publishing {
     repositories {
         def isCI = System.getenv("CI")
         def isRELEASE = System.getenv("GITHUB_RELEASE")
-        if (isCI) {
-            maven {
-                url System.getenv("local_maven_url")
-            }
-        } else if (isRELEASE){
+        if (isRELEASE){
             maven {
                 name = "GTMaven"
                 url = "https://repo.repsy.io/mvn/trinsdar/gregtech-intergalactical/"
@@ -167,6 +163,10 @@ publishing {
                     username = System.getenv("MAVEN_USERNAME")
                     password = System.getenv("MAVEN_PASSWORD")
                 }
+            }
+        } else if (isCI) {
+            maven {
+                url System.getenv("local_maven_url")
             }
         } else {
             mavenLocal()
