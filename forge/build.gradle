@@ -51,12 +51,7 @@ dependencies {
     implementation(project(path: ":tesseract-forge"))
     implementation(project(path: ":tesseract-common"))
     compileOnly(project(":antimatter-common"))
-    jarJar("org.gt-reimagined:tesseract-forge:0.2.4-1.18.2"){
-        version {
-            strictly("[0.2.4-1.18.2,)")
-            prefer("[0.2.4-1.18.2,)")
-        }
-    }
+    jarJar("org.gt-reimagined:tesseract-forge:0.2.4-1.18.2")
 
     //MIXIN
     annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
@@ -68,11 +63,11 @@ dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}")
     modCompileOnly("me.shedaniel.cloth:cloth-config-forge:6.5.133")
     modImplementation("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${project.crafttweaker_version}")
-    modImplementation(include("dev.trinsdar:arrp-forge:0.6.7"))
-    modImplementation(include("dev.trinsdar:terraform-utils-v1:3.1.5"))
-    modImplementation(include("earth.terrarium:botarium-forge-1.18.2:${project.botarium_version}"))
-    modImplementation(include("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
-    modImplementation(include("com.teamresourceful.resourcefullib:resourcefullib-forge-1.18.2:${project.resourcefullib_version}"))
+    modImplementation(jarJar("dev.trinsdar:arrp-forge:0.6.7"))
+    modImplementation(jarJar("dev.trinsdar:terraform-utils-v1:3.1.5"))
+    modImplementation(jarJar("earth.terrarium:botarium-forge-1.18.2:${project.botarium_version}"))
+    modImplementation(jarJar("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
+    modImplementation(jarJar("com.teamresourceful.resourcefullib:resourcefullib-forge-1.18.2:${project.resourcefullib_version}"))
     modImplementation("maven.modrinth:carbon-config:${project.carbon_config_forge_version}")
     jarJar("maven.modrinth:carbon-config:${project.carbon_config_forge_version}"){
         version {
@@ -84,21 +79,12 @@ dependencies {
     modImplementation("dev.architectury:architectury-forge:${project.architectury_version}")
     modImplementation("curse.maven:the-one-probe-245211:${project.top_forge_file}")
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
     modCompileOnly("com.simibubi.create:create-${minecraft_version}:0.5.1.i-435:all")
     modImplementation("curse.maven:jade-324717:5079263")
     //include("org.jetbrains.kotlin:kotlin-reflect:${kotlin.coreLibrariesVersion}")
     //include("org.jetbrains.kotlin:kotlin-stdlib:${kotlin.coreLibrariesVersion}")
     //include("org.jetbrains.kotlin:kotlin-stdlib-common:${kotlin.coreLibrariesVersion}")
-}
-
-Dependency include(Object dep){
-    dependencies.jarJar(dep){
-        version {
-            strictly("[${it.version},)")
-            prefer(it.version)
-        }
-    }
 }
 
 tasks.named('compileJava', JavaCompile) {
