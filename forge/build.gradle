@@ -38,8 +38,10 @@ neoForge {
     }
 }
 
+def mainRefmapFile;
+
 mixin {
-    add sourceSets.main, "antimatter.refmap.json"
+    mainRefmapFile = add sourceSets.main, "antimatter.refmap.json"
     config "antimatter.mixins.json"
     config "antimatter-forge.mixins.json"
     config "antimatter.rei.mixins.json"
@@ -108,6 +110,7 @@ sourcesJar {
 tasks.create("platformJar", ExpectPlatformJar){
     platformName = "forge"
     from(jarJar)
+    from(mainRefmapFile)
     inputFiles = sourceSets.main.output
     archiveClassifier.set "dev"
     remap = ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",

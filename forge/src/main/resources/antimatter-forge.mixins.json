@@ -15,5 +15,6 @@
     "client.IAntimatterBakedModelMixin",
     "client.SimpleBakedModel$BuilderAccessor"
   ],
-  "minVersion" : "0.8"
+  "minVersion" : "0.8",
+  "refmap" : "antimatter.refmap.json"
 }
