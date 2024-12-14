@@ -50,8 +50,8 @@ mixin {
 
 dependencies {
     implementation(expectPlatform.annotationsDep)
-    implementation(project(path: ":tesseract-forge"))
-    implementation(project(path: ":tesseract-common"))
+    implementation(project(":tesseract-forge"))
+    compileOnly(project(":tesseract-common"))
     compileOnly(project(":antimatter-common"))
     jarJar("org.gt-reimagined:tesseract-forge:0.2.4-1.18.2")
 

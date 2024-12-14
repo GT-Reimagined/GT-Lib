@@ -41,8 +41,9 @@ dependencies{
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modCompileOnly("dev.latvian.mods:kubejs-fabric:${project.kubejs_version}")
-    implementation(project(path: ":tesseract-common")) { transitive false }
-    implementation(project(path: ":tesseract-fabric")) { transitive false }
+    compileOnly(project(":tesseract-common"))
+    compileOnly(project(":antimatter-common"))
+    implementation(project(":tesseract-fabric"))
     afterEvaluate {
         include(project(path: ":tesseract-fabric"))
     }
