@@ -13,6 +13,7 @@ import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.client.AntimatterModelManager;
 import muramasa.antimatter.client.glu.Util;
 import muramasa.antimatter.cover.CoverFactory;
+import muramasa.antimatter.cover.CoverReplacements;
 import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.cover.IHaveCover;
 import muramasa.antimatter.data.AntimatterDefaultTools;
@@ -408,7 +409,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
             if (Utils.isPlayerHolding(player, InteractionHand.MAIN_HAND, getToolType(), AntimatterDefaultTools.CROWBAR, AntimatterDefaultTools.SCREWDRIVER)) {
                 return Shapes.block();
             }
-            if (!player.getMainHandItem().isEmpty() && player.getMainHandItem().getItem() instanceof IHaveCover) {
+            if (!player.getMainHandItem().isEmpty() && (player.getMainHandItem().getItem() instanceof IHaveCover || CoverReplacements.hasReplacement(player.getMainHandItem().getItem()))) {
                 return Shapes.block();
             }
         }

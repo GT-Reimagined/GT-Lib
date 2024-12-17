@@ -10,6 +10,7 @@ import muramasa.antimatter.behaviour.IBehaviour;
 import muramasa.antimatter.block.IInfoProvider;
 import muramasa.antimatter.blockentity.BlockEntityBase;
 import muramasa.antimatter.client.RenderHelper;
+import muramasa.antimatter.cover.CoverReplacements;
 import muramasa.antimatter.cover.IHaveCover;
 import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.item.ICustomDurability;
@@ -65,9 +66,9 @@ public class ClientEvents {
         Player player = MC.player;
         Level world = player.getCommandSenderWorld();
         ItemStack stack = player.getMainHandItem();
-        if (stack.isEmpty() || (!(stack.getItem() instanceof IBasicAntimatterTool) && !(stack.getItem() instanceof IHaveCover)))
+        if (stack.isEmpty() || (!(stack.getItem() instanceof IBasicAntimatterTool) && !(stack.getItem() instanceof IHaveCover) && !CoverReplacements.hasReplacement(stack.getItem())))
             return false;
-        if (stack.getItem() instanceof IHaveCover) {
+        if (stack.getItem() instanceof IHaveCover || CoverReplacements.hasReplacement(stack.getItem())) {
             if (player.isCrouching()) return false;
             RenderHelper.onDrawHighlight(player, levelRenderer, camera, target, partialTick, poseStack, bufferSource, b -> b instanceof BlockMachine || b instanceof BlockPipe, BehaviourExtendedHighlight.COVER_FUNCTION);
             return true;
