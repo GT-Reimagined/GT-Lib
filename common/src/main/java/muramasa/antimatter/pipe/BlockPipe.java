@@ -354,6 +354,13 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
                 if (ok) {
                     return InteractionResult.SUCCESS;
                 }
+            } else if (CoverReplacements.hasReplacement(stack.getItem())){
+                CoverFactory factory = CoverReplacements.getReplacement(stack.getItem());
+                Direction dir = Utils.getInteractSide(hit);
+                boolean ok = tile.getCoverHandler().map(i -> i.placeCover(player, Utils.getInteractSide(hit), stack, factory.get().get(i, null, dir, factory))).orElse(false);
+                if (ok) {
+                    return InteractionResult.SUCCESS;
+                }
             }
             AntimatterToolType type = Utils.getToolType(player);
             if (type == AntimatterDefaultTools.CROWBAR) {
