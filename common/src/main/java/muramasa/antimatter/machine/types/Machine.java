@@ -125,7 +125,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
     /**
      * Energy data
      **/
-    protected ToIntFunction<Tier> efficiency = t -> 100 - (5 * t.getIntegerId());
+    protected ToIntFunction<Tier> efficiency = t -> 100 - (5 * (4 - t.getIntegerId()));
     //How many amps this machine requires.
     protected int amps = 1;
 
