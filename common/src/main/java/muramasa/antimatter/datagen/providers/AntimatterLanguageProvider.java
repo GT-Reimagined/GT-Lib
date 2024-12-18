@@ -328,6 +328,7 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
         add("machine.power.capacity", "Capacity");
         add("machine.tank.capacity", "Stores %sMb of fluid");
         add("machine.structure.form", "Right click structure to form it after placing blocks");
+        add("machine.generator.efficiency", "Efficiency: %s");
         add("generic.amp", "Amperage");
         add("antimatter.tooltip.formula", "Hold Shift to show formula.");
         add("antimatter.tooltip.chemical_formula", "Formula");
