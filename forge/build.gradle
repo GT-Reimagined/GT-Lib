@@ -58,7 +58,6 @@ dependencies {
     //MIXIN
     annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
     implementation("org.jetbrains:annotations:26.0.1")
-    compileOnly("org.lwjgl:lwjgl-opengl:3.2.2")
     //modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
     //modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
     modImplementation("mezz.jei:jei-1.18.2:9.7.2.1001")
