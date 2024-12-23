@@ -21,13 +21,5 @@ public class ModCommonEvents {
         AntimatterDynamics.runAssetProvidersDynamically();
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onResourcePackAfterVanilla(RRPEvent.AfterVanilla event){
-        AntimatterDynamics.addResourcePacks(event::addPack);
-    }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onResourcePackBeforeUser(RRPEvent.BeforeUser event){
-        AntimatterDynamics.addDataPacks(event::addPack);
-    }
 }
