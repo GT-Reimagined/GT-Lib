@@ -493,7 +493,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         FluidHolder mFluid = tile.fluidHandler.map(f -> f.getInputTanks().getTank(0).getStoredFluid()).orElse(FluidHooks.emptyFluid());
         if (mFluid.isEmpty()) return false;
         long fluidAmount = mFluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier;
-        if (toInsert > 0 && toConsume > 0 && fluidAmount > toConsume) {
+        if (toInsert > 0 && toConsume > 0 && fluidAmount >= toConsume) {
             long tFluidAmountToUse = Math.min(fluidAmount / toConsume, (handler.getCapacity() - handler.getEnergy()) / toInsert);
             if (tFluidAmountToUse > 0 && handler.insertInternal(tFluidAmountToUse * toInsert, true) == tFluidAmountToUse * toInsert) {
                 if (tile.getLevel().getGameTime() % 10 == 0 && !simulate){
