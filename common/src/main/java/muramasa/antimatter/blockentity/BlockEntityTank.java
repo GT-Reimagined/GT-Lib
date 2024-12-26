@@ -57,7 +57,7 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
         if (AntimatterPlatformUtils.INSTANCE.isFabric()){
             fluidAmount.append(" ").append(intToSuperScript((int) (instance.stack.getFluidAmount() % 81L))).append("/₈₁");
         }
-        renderer.draw(stack, fluidAmount.toString() + " mb", left, top + 8, 16448255);
+        renderer.draw(stack, fluidAmount.toString() + " mb", left, top + 8, 0xFAFAFF);
         return 16;
     }
 

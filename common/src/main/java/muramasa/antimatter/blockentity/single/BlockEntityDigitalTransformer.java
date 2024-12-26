@@ -102,11 +102,11 @@ public class BlockEntityDigitalTransformer<T extends BlockEntityDigitalTransform
 
     @Override
     public int drawInfo(DigitalTransformerWidget widget, PoseStack stack, Font renderer, int left, int top) {
-        renderer.draw(stack, "Control Panel", left + 43, top + 21, 16448255);
-        renderer.draw(stack, "VOLT: " + widget.voltage, left + 43, top + 40, 16448255);
-        renderer.draw(stack, "TIER: " + Tier.getTier(widget.voltage < 0 ? -widget.voltage : widget.voltage).getId().toUpperCase(), left + 43, top + 48, 16448255);
-        renderer.draw(stack, "AMP: " + widget.amperage, left + 43, top + 56, 16448255);
-        renderer.draw(stack, "SUM: " + (widget.amperage * widget.voltage), left + 43, top + 64, 16448255);
+        renderer.draw(stack, "Control Panel", left + 43, top + 21, 0xFAFAFF);
+        renderer.draw(stack, "VOLT: " + widget.voltage, left + 43, top + 40, 0xFAFAFF);
+        renderer.draw(stack, "TIER: " + Tier.getTier(widget.voltage < 0 ? -widget.voltage : widget.voltage).getId().toUpperCase(), left + 43, top + 48, 0xFAFAFF);
+        renderer.draw(stack, "AMP: " + widget.amperage, left + 43, top + 56, 0xFAFAFF);
+        renderer.draw(stack, "SUM: " + (widget.amperage * widget.voltage), left + 43, top + 64, 0xFAFAFF);
         return 72;
     }
 

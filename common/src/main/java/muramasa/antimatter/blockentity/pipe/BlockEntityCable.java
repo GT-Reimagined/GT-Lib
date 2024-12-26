@@ -132,11 +132,11 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
 
     @Override
     public int drawInfo(InfoRenderWidget.TesseractGTWidget instance, PoseStack stack, Font renderer, int left, int top) {
-        renderer.draw(stack, "Amp average: " + instance.ampAverage, left, top, 16448255);
-       // renderer.draw(stack, "Cable average: " + instance.cableAverage, left, top + 8, 16448255);
-        renderer.draw(stack, "Average extracted: " + ((double) instance.voltAverage) / 20, left, top + 16, 16448255);
-        renderer.draw(stack, "Average inserted: " + ((double) (instance.voltAverage - instance.loss)) / 20, left, top + 24, 16448255);
-        renderer.draw(stack, "Loss average: " + (double) instance.loss / 20, left, top + 32, 16448255);
+        renderer.draw(stack, "Amp average: " + instance.ampAverage, left, top, 0xFAFAFF);
+       // renderer.draw(stack, "Cable average: " + instance.cableAverage, left, top + 8, 0xFAFAFF);
+        renderer.draw(stack, "Average extracted: " + ((double) instance.voltAverage) / 20, left, top + 16, 0xFAFAFF);
+        renderer.draw(stack, "Average inserted: " + ((double) (instance.voltAverage - instance.loss)) / 20, left, top + 24, 0xFAFAFF);
+        renderer.draw(stack, "Loss average: " + (double) instance.loss / 20, left, top + 32, 0xFAFAFF);
         return 40;
     }
 }
