@@ -1,5 +1,7 @@
 package muramasa.antimatter.cover;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.ICoverHandler;
@@ -15,6 +17,7 @@ import muramasa.antimatter.registration.ITextureProvider;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.AntimatterToolType;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.Dir;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
@@ -32,6 +35,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.item.ExtendedItemContainer;
@@ -39,10 +44,13 @@ import tesseract.api.item.ExtendedItemContainer;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuProvider, IGuiHandler {
     ResourceLocation PIPE_COVER_MODEL = new ResourceLocation(Ref.ID, "block/cover/cover_pipe");
+    Cache<Direction, VoxelShape> DEFAULT_SHAPES = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
     default void onPlace() {
 
@@ -220,6 +228,21 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
          * t.getTintIndex())); }); }
          */
         return quads;
+    }
+
+    default VoxelShape getShape(Direction side) throws ExecutionException {
+        return DEFAULT_SHAPES.get(side, () -> makeShapes(side));
+    }
+
+    default VoxelShape makeShapes(Direction side) {
+        return switch (side){
+            case DOWN -> Shapes.box(0, 0, 0, 1, 0.0625f, 1);
+            case UP -> Shapes.box(0, 0.9375, 0, 1, 1, 1);
+            case NORTH -> Shapes.box(0, 0, 0, 1, 1, 0.0625f);
+            case SOUTH -> Shapes.box(0, 0, 0.9375, 1, 1, 1);
+            case WEST -> Shapes.box(0, 0, 0, 0.0625f, 1, 1);
+            case EAST -> Shapes.box(0.9375, 0, 0, 1, 1, 1);
+        };
     }
 
     default boolean isEmpty() {
