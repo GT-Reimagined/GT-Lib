@@ -405,9 +405,6 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     public VoxelShape getOrCreateShape(BlockEntityPipe<?> tile) throws ExecutionException {
         int config = getShapeConfig(tile);
-        if (!tile.getBlockState().getValue(TICKING)){
-            return getPipeShapes().get(config, () -> makeShapes((short) config));
-        }
         String[] coverIds = new String[6];
         ICover[] covers = new ICover[6];
         boolean allEmpty = true;
