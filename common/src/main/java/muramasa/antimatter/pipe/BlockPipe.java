@@ -97,7 +97,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     public BlockPipe(String prefix, T type, PipeSize size, int modelId, Properties properties) {
-        super(type.domain, prefix + "_" + size.getId(), size.ordinal() < 6 ? properties.noOcclusion() : properties);
+        super(type.domain, prefix + "_" + size.getId(), size.ordinal() < 6 ? properties.noOcclusion().dynamicShape() : properties);
         pipeShapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build());
         shapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).maximumSize(1000).build());
         this.type = type;
