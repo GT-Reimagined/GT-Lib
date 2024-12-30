@@ -416,7 +416,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
                 if (cover.isEmpty()) {
                     coverIds[s.get3DDataValue()] = "";
                 } else {
-                    coverIds[s.get3DDataValue()] = cover.getLoc().toString();
+                    coverIds[s.get3DDataValue()] = cover.getIdForCache().toString();
                     allEmpty = false;
                 }
             }

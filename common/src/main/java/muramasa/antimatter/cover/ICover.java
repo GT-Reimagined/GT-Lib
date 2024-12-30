@@ -245,6 +245,10 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
         };
     }
 
+    default ResourceLocation getIdForCache(){
+        return new ResourceLocation(Ref.ID, "cover");
+    }
+
     default boolean isEmpty() {
         return this == empty;
     }
