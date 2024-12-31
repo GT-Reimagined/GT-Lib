@@ -32,6 +32,7 @@ import java.util.List;
 
 public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
 
+    public static final int INSULATION_COLOR = 0x404040;
     public final boolean insulated;
 
     public BlockCable(T type, PipeSize size, boolean insulated) {
@@ -40,12 +41,12 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
         String prefix = insulated ? "cable" : "wire";
         this.side = new Texture(Ref.ID, "block/pipe/" + prefix + "_side");
         this.faces = new Texture[]{
-                new Texture(Ref.ID, "block/pipe/" + prefix + "_vtiny"),
-                new Texture(Ref.ID, "block/pipe/" + prefix + "_tiny"),
-                new Texture(Ref.ID, "block/pipe/" + prefix + "_small"),
-                new Texture(Ref.ID, "block/pipe/" + prefix + "_normal"),
-                new Texture(Ref.ID, "block/pipe/" + prefix + "_large"),
-                new Texture(Ref.ID, "block/pipe/" + prefix + "_huge")
+                new Texture(Ref.ID, "block/pipe/" + "wire_vtiny"),
+                new Texture(Ref.ID, "block/pipe/" + "wire_tiny"),
+                new Texture(Ref.ID, "block/pipe/" + "wire_small"),
+                new Texture(Ref.ID, "block/pipe/" + "wire_normal"),
+                new Texture(Ref.ID, "block/pipe/" + "wire_large"),
+                new Texture(Ref.ID, "block/pipe/" + "wire_huge")
         };
     }
 
@@ -71,7 +72,7 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
         if (!(state.getBlock() instanceof BlockCable) && world == null || pos == null) return -1;
         BlockEntityPipe<?> pipe = getTilePipe(world, pos);
         if (insulated && pipe != null && pipe.getPipeColor() != -1 && i == 0) return pipe.getPipeColor();
-        if (insulated) return i == 1 ? getRGB() : -1;
+        if (insulated) return i == 1 ? getRGB() : i == 0 ? INSULATION_COLOR : -1;
         return i == 0 || i == 1 ? getRGB() : -1;
     }
 
@@ -80,7 +81,7 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
         if (insulated && stack.getTag() != null && stack.getTag().contains(Ref.KEY_PIPE_TILE_COLOR) && i == 0){
             return stack.getTag().getInt(Ref.KEY_PIPE_TILE_COLOR);
         }
-        return insulated ? i == 1 ? getRGB() : -1 : getRGB();
+        return insulated ? i == 1 ? getRGB() : i == 0 ? INSULATION_COLOR : -1 : getRGB();
     }
 
     @Override
