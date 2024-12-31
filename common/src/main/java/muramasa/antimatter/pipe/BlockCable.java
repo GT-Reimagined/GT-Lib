@@ -2,6 +2,7 @@ package muramasa.antimatter.pipe;
 
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.pipe.BlockEntityCable;
+import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.pipe.types.Cable;
 import muramasa.antimatter.texture.Texture;
@@ -68,11 +69,17 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
         if (!(state.getBlock() instanceof BlockCable) && world == null || pos == null) return -1;
-        return insulated ? i == 1 ? getRGB() : -1 : i == 0 || i == 1 ? getRGB() : -1;
+        BlockEntityPipe<?> pipe = getTilePipe(world, pos);
+        if (insulated && pipe != null && pipe.getPipeColor() != -1 && i == 0) return pipe.getPipeColor();
+        if (insulated) return i == 1 ? getRGB() : -1;
+        return i == 0 || i == 1 ? getRGB() : -1;
     }
 
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
+        if (insulated && stack.getTag() != null && stack.getTag().contains(Ref.KEY_PIPE_TILE_COLOR) && i == 0){
+            return stack.getTag().getInt(Ref.KEY_PIPE_TILE_COLOR);
+        }
         return insulated ? i == 1 ? getRGB() : -1 : getRGB();
     }
 
