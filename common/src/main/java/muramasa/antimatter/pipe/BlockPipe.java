@@ -2,16 +2,12 @@ package muramasa.antimatter.pipe;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
 import muramasa.antimatter.*;
 import muramasa.antimatter.block.AntimatterItemBlock;
-import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.client.AntimatterModelManager;
-import muramasa.antimatter.client.glu.Util;
 import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.CoverReplacements;
 import muramasa.antimatter.cover.ICover;
@@ -34,19 +30,16 @@ import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.blockentity.BlockEntityTickable;
 import muramasa.antimatter.tool.AntimatterToolType;
 import muramasa.antimatter.util.Utils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -94,9 +87,8 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     protected Texture overlay;
     protected Texture[] faces;
 
-    public static long ticksTotal;
-
-    protected static Map<PipeSize, Cache<Integer, VoxelShape>> shapes = new Object2ObjectLinkedOpenHashMap<>();
+    protected static Map<PipeSize, Cache<Integer, VoxelShape>> pipeShapes = new Object2ObjectLinkedOpenHashMap<>();
+    protected static Map<PipeSize, Cache<PipeShapeKey, VoxelShape>> shapes = new Object2ObjectLinkedOpenHashMap<>();
 
     public static final BooleanProperty TICKING = BooleanProperty.create("ticking");
 
@@ -105,9 +97,9 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     public BlockPipe(String prefix, T type, PipeSize size, int modelId, Properties properties) {
-        super(type.domain, prefix + "_" + size.getId(), size.ordinal() < 6 ? properties.noOcclusion() : properties);
-        shapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build());
-
+        super(type.domain, prefix + "_" + size.getId(), size.ordinal() < 6 ? properties.noOcclusion().dynamicShape() : properties);
+        pipeShapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build());
+        shapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).maximumSize(1000).build());
         this.type = type;
         this.size = size;
         side = new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_side");
@@ -124,20 +116,8 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         AntimatterAPI.register(BlockPipe.class, this);
         registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false).setValue(TICKING, false));
         this.modelId = modelId;
-        //long time = System.nanoTime();
-        //buildShapes();
-        //time = System.nanoTime() - time;
-        //ticksTotal += time;
     }
 
-
-    private void buildShapes() {
-        if (size.ordinal() > 5) return;
-        //recursiveShapeBuild(0, (short) 0);
-        /*if (!getShapes().containsKey(0)) {
-            getShapes().get(0, Shapes.create(size.getAABB()));
-        }*/
-    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
@@ -194,20 +174,12 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         }
     }
 
-    protected Cache<Integer, VoxelShape> getShapes(){
-        return shapes.get(size);
+    public Cache<Integer, VoxelShape> getPipeShapes(){
+        return pipeShapes.get(size);
     }
 
-    private void recursiveShapeBuild(int index, short acc) {
-        if (index > 11) {
-            /*if (!getShapes().(acc)) {
-                getShapes().put(acc, makeShapes(acc));
-            }*/
-            return;
-        }
-        short which = (short) (acc | (1 << index));
-        recursiveShapeBuild(index + 1, which);
-        recursiveShapeBuild(index + 1, acc);
+    protected Cache<PipeShapeKey, VoxelShape> getShapes(){
+        return shapes.get(size);
     }
 
     private VoxelShape makeShapes(short which) {
@@ -225,18 +197,6 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
             shape = Shapes.or(shape, Shapes.box(0, 0.4375 - offset, 0.4375 - offset, 0.4375 - offset, 0.5625 + offset, 0.5625 + offset));
         if ((which & (1 << 5)) > 0)
             shape = Shapes.or(shape, Shapes.box(0.5625 + offset, 0.4375 - offset, 0.4375 - offset, 1, 0.5625 + offset, 0.5625 + offset));
-        if ((which & (1 << 6)) > 0)
-            shape = Shapes.or(shape, Shapes.box(0, 0, 0, 1, 0.0625f, 1));
-        if ((which & (1 << 7)) > 0)
-            shape = Shapes.or(shape, Shapes.box(0, 0.9375, 0, 1, 1, 1));
-        if ((which & (1 << 8)) > 0)
-            shape = Shapes.or(shape, Shapes.box(0, 0, 0, 1, 1, 0.0625f));
-        if ((which & (1 << 9)) > 0)
-            shape = Shapes.or(shape, Shapes.box(0, 0, 0.9375, 1, 1, 1));
-        if ((which & (1 << 10)) > 0)
-            shape = Shapes.or(shape, Shapes.box(0, 0, 0, 0.0625f, 1, 1));
-        if ((which & (1 << 11)) > 0)
-            shape = Shapes.or(shape, Shapes.box(0.9375, 0, 0, 1, 1, 1));
         return shape;
     }
 
@@ -420,10 +380,13 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
                 return Shapes.block();
             }
         }
-        int config = getShapeConfig(state, world, new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()), pos);
+        BlockEntityPipe<?> tile = getTilePipe(world, pos);
+        if (tile == null) {
+            return Shapes.block();
+        }
         VoxelShape shape = null;
         try {
-            shape = getShapes().get(config, () -> makeShapes((short) config));
+            shape = getOrCreateShape(tile);
         } catch (ExecutionException e) {
             Antimatter.LOGGER.error(e);
         }
@@ -440,19 +403,43 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         return tile instanceof BlockEntityPipe ? (BlockEntityPipe<?>) tile : null;
     }
 
-    public int getShapeConfig(BlockState state, BlockGetter world, BlockPos.MutableBlockPos mut, BlockPos pos){
+    public VoxelShape getOrCreateShape(BlockEntityPipe<?> tile) throws ExecutionException {
+        int config = getShapeConfig(tile);
+        String[] coverIds = new String[6];
+        ICover[] covers = new ICover[6];
+        boolean allEmpty = true;
+        if (tile.coverHandler.isPresent()){
+            var coverHandler = tile.coverHandler.get();
+            for (Direction s : Direction.values()) {
+                ICover cover = coverHandler.get(s);
+                covers[s.get3DDataValue()] = cover;
+                if (cover.isEmpty()) {
+                    coverIds[s.get3DDataValue()] = "";
+                } else {
+                    coverIds[s.get3DDataValue()] = cover.getIdForCache().toString();
+                    allEmpty = false;
+                }
+            }
+        }
+        if (allEmpty) return getPipeShapes().get(config, () -> makeShapes((short) config));
+        PipeShapeKey key = new PipeShapeKey(config, coverIds[0], coverIds[1], coverIds[2], coverIds[3], coverIds[4], coverIds[5]);
+        return getShapes().get(key, () -> {
+            VoxelShape core = getPipeShapes().get(config, () -> makeShapes((short) config));
+            for (ICover cover : covers) {
+                if (!cover.isEmpty()) {
+                    core = Shapes.or(core, cover.getShape(cover.side()));
+                }
+            }
+            return core;
+        });
+    }
+
+    public int getShapeConfig(BlockEntityPipe<?> tile) {
         int ct = 0;
-        BlockEntityPipe<?> tile = getTilePipe(world, pos);
         if (tile != null) {
             for (int s = 0; s < 6; s++) {
                 if (tile.canConnect(s)) {
                     ct += 1 << s;
-                }
-                if (tile.coverHandler.isPresent()){
-                    var coverHandler = tile.coverHandler.get();
-                    if (!coverHandler.get(Direction.from3DDataValue(s)).isEmpty()){
-                        ct += 1 << (s + 6);
-                    }
                 }
             }
         }
@@ -464,17 +451,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         int ct = 0;
         BlockEntityPipe<?> tile = getTilePipe(world, pos);
         if (tile != null) {
-            for (int s = 0; s < 6; s++) {
-                if (tile.canConnect(s)) {
-                    ct += 1 << s;
-                }
-                /*if (tile.coverHandler.isPresent()){
-                    var coverHandler = tile.coverHandler.get();
-                    if (!coverHandler.get(Direction.from3DDataValue(s)).isEmpty()){
-                        ct += 1 << (s + 6);
-                    }
-                }*/
-            }
+            ct = getShapeConfig(tile);
         }
         return config.set(pos, new int[]{getPipeID(ct, 0)});
     }
