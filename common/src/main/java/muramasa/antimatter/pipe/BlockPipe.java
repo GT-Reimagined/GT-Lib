@@ -182,7 +182,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         return shapes.get(size);
     }
 
-    private VoxelShape makeShapes(short which) {
+    public VoxelShape makeShapes(short which) {
         float offset = 0.0625f * size.ordinal();
         VoxelShape shape = Shapes.create(size.getAABB());
         if ((which & (1)) > 0)
