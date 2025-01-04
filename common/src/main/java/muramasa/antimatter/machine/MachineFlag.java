@@ -17,15 +17,8 @@ public enum MachineFlag {
     STEAM,
     MULTI, //Has structure
     HATCH,
-    FAKE_INPUTS,
     ITEM, //Can store items
-    ITEM_INPUT,
-    ITEM_OUTPUT,
     CELL,
-    CELL_INPUT,
-    CELL_OUTPUT,
-    FLUID_INPUT,
-    FLUID_OUTPUT,
     FLUID,
     EU, //Needs power
     RF, //Uses RF instead of EU
@@ -36,27 +29,6 @@ public enum MachineFlag {
     COVERABLE,
     PARTIAL_AMPS,
     UNCULLED;
-
-    public static final MachineFlag[] VALUES;
-
-    static {
-        VALUES = values();
-    }
-
-    @Deprecated
-    public void add(Machine<?> machine) {
-        machine.addFlags(this);
-    }
-
-    @Deprecated
-    public void remove(Machine<?> machine) {
-        machine.removeFlags(this);
-    }
-
-    @Deprecated
-    public Set<Machine<?>> getTypes() {
-        return new HashSet<>(Machine.getTypes(this));
-    }
 
     @Override
     public String toString() {
