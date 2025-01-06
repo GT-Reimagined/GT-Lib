@@ -75,10 +75,6 @@ public class AMCreationEvent extends EventJS {
         }
     }
 
-    public MachineFlag machineFlag(String id){
-        return MachineFlag.valueOf(id);
-    }
-
     public MaterialType type(String type) {
         return AntimatterAPI.get(MaterialType.class, type);
     }

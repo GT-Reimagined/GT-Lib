@@ -376,7 +376,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         return getMachineTier();
     }
 
-    public boolean has(MachineFlag flag) {
+    public boolean has(String flag) {
         return getMachineType().has(flag);
     }
 

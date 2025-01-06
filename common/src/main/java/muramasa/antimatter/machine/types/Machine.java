@@ -612,23 +612,9 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
         return tierRecipeMaps.get("");
     }
 
-    public T addFlags(MachineFlag... flags) {
-        for (MachineFlag flag : flags) {
-            FLAG_MAP.computeIfAbsent(flag.toString(), s -> new ObjectOpenHashSet<>()).add(this);
-        }
-        return (T) this;
-    }
-
     public T addFlags(String... flags) {
         for (String flag : flags) {
             FLAG_MAP.computeIfAbsent(flag, s -> new ObjectOpenHashSet<>()).add(this);
-        }
-        return (T) this;
-    }
-
-    public T removeFlags(MachineFlag... flags) {
-        for (MachineFlag flag : flags) {
-            FLAG_MAP.computeIfAbsent(flag.toString(), s -> new ObjectOpenHashSet<>()).remove(this);
         }
         return (T) this;
     }
@@ -640,7 +626,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
         return (T) this;
     }
 
-    public void setFlags(MachineFlag... flags) {
+    public void setFlags(String... flags) {
         FLAG_MAP.forEach((s, m) -> m.remove(this));
         addFlags(flags);
     }
@@ -731,16 +717,6 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
      * @param flag the flag.
      * @return if it has it;.
      */
-    public boolean has(MachineFlag flag) {
-        return has(flag.toString());
-    }
-
-    /**
-     * Whether or not this machine has the given machine flag.
-     *
-     * @param flag the flag.
-     * @return if it has it;.
-     */
     public boolean has(String flag) {
         return FLAG_MAP.containsKey(flag) && FLAG_MAP.get(flag).contains(this);
     }
@@ -772,11 +748,11 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
         return Optional.ofNullable(machine);
     }
 
-    public static Collection<Machine<?>> getTypes(MachineFlag... flags) {
+    public static Collection<Machine<?>> getTypes(String... flags) {
         List<Machine<?>> types = new ObjectArrayList<>();
-        for (MachineFlag flag : flags) {
-            if (FLAG_MAP.containsKey(flag.toString())){
-                types.addAll(FLAG_MAP.get(flag.toString()));
+        for (var flag : flags) {
+            if (FLAG_MAP.containsKey(flag)){
+                types.addAll(FLAG_MAP.get(flag));
             }
 
         }
