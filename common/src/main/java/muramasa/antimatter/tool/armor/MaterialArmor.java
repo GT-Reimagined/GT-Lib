@@ -45,6 +45,11 @@ public class MaterialArmor extends ArmorItem implements IAntimatterArmor, Dyeabl
     }
 
     @Override
+    public String getDomain() {
+        return domain;
+    }
+
+    @Override
     public AntimatterArmorType getAntimatterArmorType() {
         return type;
     }

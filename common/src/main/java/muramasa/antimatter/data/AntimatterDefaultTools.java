@@ -44,10 +44,10 @@ public class AntimatterDefaultTools {
     public static final AntimatterToolType SCISSORS = AntimatterAPI.register(AntimatterToolType.class, new AntimatterToolType(Ref.ID, "scissors", 1, 2, 2, 1.0f, -1.5f, false));
     public static final AntimatterToolType PLUNGER = AntimatterAPI.register(AntimatterToolType.class, new AntimatterToolType(Ref.ID, "plunger", 5, 5, 10, 0.0F, -2.9F, false)).setUseSound(SoundEvents.BUCKET_EMPTY).setHasSecondary(false).setRepairable(false);
     public static final AntimatterToolType SCYTHE = AntimatterAPI.register(AntimatterToolType.class, new AntimatterToolType(Ref.ID, "scythe", 1, 2, 5, 6.5f, -3.1f, false)).setMaterialTypeItem(SCYTHE_BLADE);
-    public static final AntimatterArmorType HELMET = new AntimatterArmorType(Ref.ID, "helmet", 40, 0, 0.0F, 0.0F, EquipmentSlot.HEAD);
-    public static final AntimatterArmorType CHESTPLATE = new AntimatterArmorType(Ref.ID, "chestplate", 40, 0, 0.0F, 0.0F, EquipmentSlot.CHEST);
-    public static final AntimatterArmorType LEGGINGS = new AntimatterArmorType(Ref.ID, "leggings", 40, 0, 0.0F, 0.0F, EquipmentSlot.LEGS);
-    public static final AntimatterArmorType BOOTS = new AntimatterArmorType(Ref.ID, "boots", 40, 0, 0.0F, 0.0F, EquipmentSlot.FEET);
+    public static final AntimatterArmorType HELMET = new AntimatterArmorType(Ref.SHARED_ID, "helmet", 40, 0, 0.0F, 0.0F, EquipmentSlot.HEAD);
+    public static final AntimatterArmorType CHESTPLATE = new AntimatterArmorType(Ref.SHARED_ID, "chestplate", 40, 0, 0.0F, 0.0F, EquipmentSlot.CHEST);
+    public static final AntimatterArmorType LEGGINGS = new AntimatterArmorType(Ref.SHARED_ID, "leggings", 40, 0, 0.0F, 0.0F, EquipmentSlot.LEGS);
+    public static final AntimatterArmorType BOOTS = new AntimatterArmorType(Ref.SHARED_ID, "boots", 40, 0, 0.0F, 0.0F, EquipmentSlot.FEET);
 
     public static void init(Side side){
         AXE.addBehaviour(BehaviourLogStripping.INSTANCE, BehaviourTreeFelling.INSTANCE);
