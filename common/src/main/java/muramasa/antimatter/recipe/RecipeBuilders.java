@@ -52,7 +52,7 @@ public class RecipeBuilders {
         @Override
         public ItemStack build(CraftingContainer inv, MaterialRecipe.Result mats) {
             int dye = ((DyeColor) mats.mats.get("secondary")).getMaterialColor().col;
-            IAntimatterTool type = AntimatterAPI.get(IAntimatterTool.class, id);
+            IAntimatterTool type = AntimatterAPI.get(IAntimatterTool.class, id, Ref.SHARED_ID);
             ItemStack stack = type.asItemStack(type.getAntimatterItemTier().getPrimary(), NULL);
             stack.getOrCreateTagElement(Ref.TAG_TOOL_DATA).putInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR, dye);
             return stack;

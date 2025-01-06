@@ -83,6 +83,11 @@ public class MaterialSword extends SwordItem implements IAntimatterTool, IContai
         return type.isPowered() ? String.join("_", type.getId(), Ref.VN[energyTier].toLowerCase(Locale.ENGLISH)) : type.getId();
     }
 
+    @Override
+    public String getDomain() {
+        return domain;
+    }
+
     @NotNull
     @Override
     public AntimatterToolType getAntimatterToolType() {

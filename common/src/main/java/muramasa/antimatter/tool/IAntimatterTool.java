@@ -12,10 +12,7 @@ import muramasa.antimatter.item.ICustomDurability;
 import muramasa.antimatter.item.ItemBattery;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialTags;
-import muramasa.antimatter.registration.IColorHandler;
-import muramasa.antimatter.registration.IModelProvider;
-import muramasa.antimatter.registration.ISharedAntimatterObject;
-import muramasa.antimatter.registration.ITextureProvider;
+import muramasa.antimatter.registration.*;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -55,7 +52,7 @@ import java.util.*;
 
 import static muramasa.antimatter.material.Material.NULL;
 
-public interface IAntimatterTool extends ISharedAntimatterObject, IBasicAntimatterTool, IEnergyItem, ICustomDurability {
+public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool, IEnergyItem, ICustomDurability {
 
     AntimatterItemTier getAntimatterItemTier();
 
