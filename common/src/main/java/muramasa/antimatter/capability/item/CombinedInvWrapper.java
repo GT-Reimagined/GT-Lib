@@ -1,7 +1,5 @@
 package muramasa.antimatter.capability.item;
 
-import muramasa.antimatter.blockentity.multi.BlockEntityHatch;
-import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

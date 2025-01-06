@@ -2,7 +2,11 @@ package muramasa.antimatter.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import muramasa.antimatter.capability.IGuiHandler;
-import muramasa.antimatter.gui.*;
+import muramasa.antimatter.gui.ButtonOverlay;
+import muramasa.antimatter.gui.GuiInstance;
+import muramasa.antimatter.gui.ICanSyncData;
+import muramasa.antimatter.gui.IGuiElement;
+import muramasa.antimatter.gui.Widget;
 import muramasa.antimatter.gui.event.GuiEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

@@ -1,16 +1,5 @@
 package muramasa.antimatter.machine;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import muramasa.antimatter.machine.types.Machine;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public final class MachineFlag {
     public static final String BASIC = "basic"; //
     public static final String STEAM = "steam";

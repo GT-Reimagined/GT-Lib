@@ -1,7 +1,6 @@
 package muramasa.antimatter.tool.behaviour;
 
 import muramasa.antimatter.behaviour.IItemUse;
-import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.tool.IBasicAntimatterTool;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -27,8 +26,6 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Iterator;
 
 public class BehaviourTorchPlacing implements IItemUse<IBasicAntimatterTool> {
     public static final BehaviourTorchPlacing INSTANCE = new BehaviourTorchPlacing();

@@ -10,7 +10,6 @@ import muramasa.antimatter.block.BlockStorage;
 import muramasa.antimatter.block.IInfoProvider;
 import muramasa.antimatter.blockentity.BlockEntityBase;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
-import muramasa.antimatter.dynamic.BlockDynamic;
 import muramasa.antimatter.machine.MachineFlag;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.ore.BlockOre;

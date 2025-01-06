@@ -10,7 +10,6 @@ import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.CoverStone;
 import muramasa.antimatter.item.ItemStoneCover;
 import muramasa.antimatter.material.Material;
-import muramasa.antimatter.registration.ITextureProvider;
 import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.texture.Texture;
 import net.minecraft.world.level.block.Block;

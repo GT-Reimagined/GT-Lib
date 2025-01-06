@@ -6,7 +6,6 @@ import muramasa.antimatter.behaviour.IAddInformation;
 import muramasa.antimatter.behaviour.IBlockDestroyed;
 import muramasa.antimatter.behaviour.IDestroySpeed;
 import muramasa.antimatter.behaviour.IItemRightClick;
-import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.tool.IBasicAntimatterTool;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.BlockPos;

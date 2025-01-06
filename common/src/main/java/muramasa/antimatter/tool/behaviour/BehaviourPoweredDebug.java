@@ -1,7 +1,6 @@
 package muramasa.antimatter.tool.behaviour;
 
 import muramasa.antimatter.behaviour.IItemUse;
-import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.tool.IBasicAntimatterTool;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;

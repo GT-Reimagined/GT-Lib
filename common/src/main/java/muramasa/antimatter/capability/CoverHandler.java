@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.client.dynamic.DynamicTexturer;
 import muramasa.antimatter.client.dynamic.DynamicTexturers;
 import muramasa.antimatter.cover.CoverFactory;
@@ -29,7 +28,11 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.unimined.expect.annotation.Environment;
 import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static muramasa.antimatter.data.AntimatterDefaultTools.WRENCH;

@@ -1,8 +1,8 @@
 package muramasa.antimatter.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import muramasa.antimatter.gui.container.ContainerMultiMachine;
 import muramasa.antimatter.blockentity.multi.BlockEntityBasicMultiMachine;
+import muramasa.antimatter.gui.container.ContainerMultiMachine;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 

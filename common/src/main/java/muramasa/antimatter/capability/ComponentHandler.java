@@ -2,12 +2,12 @@ package muramasa.antimatter.capability;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import muramasa.antimatter.blockentity.BlockEntityBase;
+import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.blockentity.multi.BlockEntityMultiMachine;
 import muramasa.antimatter.capability.machine.MachineEnergyHandler;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.capability.machine.MachineItemHandler;
 import muramasa.antimatter.structure.StructureCache;
-import muramasa.antimatter.blockentity.BlockEntityMachine;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

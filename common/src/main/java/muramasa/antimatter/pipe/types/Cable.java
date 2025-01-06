@@ -1,12 +1,12 @@
 package muramasa.antimatter.pipe.types;
 
 import lombok.Getter;
+import muramasa.antimatter.blockentity.pipe.BlockEntityCable;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.pipe.BlockCable;
 import muramasa.antimatter.pipe.PipeSize;
-import muramasa.antimatter.blockentity.pipe.BlockEntityCable;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Set;

@@ -1,9 +1,7 @@
 package muramasa.antimatter.mixin;
 
 import com.google.gson.JsonElement;
-import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.datagen.providers.AntimatterRecipeProvider;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;

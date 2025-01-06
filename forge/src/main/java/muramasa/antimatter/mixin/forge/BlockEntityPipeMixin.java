@@ -4,8 +4,6 @@ import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.forge.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import muramasa.antimatter.blockentity.BlockEntityTickable;
-import muramasa.antimatter.blockentity.pipe.BlockEntityFluidPipe;
-import muramasa.antimatter.blockentity.pipe.BlockEntityItemPipe;
 import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.capability.Holder;
 import muramasa.antimatter.capability.forge.AntimatterCaps;

@@ -3,8 +3,8 @@ package muramasa.antimatter.capability.fluid;
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import muramasa.antimatter.capability.FluidHandler;
 import muramasa.antimatter.blockentity.pipe.BlockEntityFluidPipe;
+import muramasa.antimatter.capability.FluidHandler;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 

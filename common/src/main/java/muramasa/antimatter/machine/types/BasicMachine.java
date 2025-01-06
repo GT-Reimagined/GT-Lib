@@ -1,11 +1,15 @@
 package muramasa.antimatter.machine.types;
 
 import muramasa.antimatter.Data;
-import muramasa.antimatter.cover.CoverOutput;
-import muramasa.antimatter.gui.screen.AntimatterContainerScreen;
-import muramasa.antimatter.gui.widget.*;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.blockentity.multi.BlockEntityMultiMachine;
+import muramasa.antimatter.cover.CoverOutput;
+import muramasa.antimatter.gui.screen.AntimatterContainerScreen;
+import muramasa.antimatter.gui.widget.IOWidget;
+import muramasa.antimatter.gui.widget.MachineStateWidget;
+import muramasa.antimatter.gui.widget.ProgressWidget;
+import muramasa.antimatter.gui.widget.TextWidget;
+import muramasa.antimatter.gui.widget.WidgetSupplier;
 
 import static muramasa.antimatter.machine.MachineFlag.*;
 

@@ -7,7 +7,6 @@ import muramasa.antimatter.block.BlockStoneStair;
 import muramasa.antimatter.block.BlockStoneWall;
 import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.CoverStone;
-import muramasa.antimatter.data.AntimatterMaterials;
 import muramasa.antimatter.item.ItemStoneCover;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.registration.ITextureProvider;

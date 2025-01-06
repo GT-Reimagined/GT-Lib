@@ -19,7 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class TextButtonWidget<T> extends ButtonWidget {
     T state;

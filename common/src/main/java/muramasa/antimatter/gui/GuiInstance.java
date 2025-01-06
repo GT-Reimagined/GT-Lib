@@ -7,9 +7,12 @@ import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.gui.container.IAntimatterContainer;
 import muramasa.antimatter.gui.core.RTree;
 import muramasa.antimatter.gui.event.GuiEvents;
-import muramasa.antimatter.gui.event.IGuiEvent;
 import muramasa.antimatter.gui.screen.AntimatterContainerScreen;
-import muramasa.antimatter.gui.widget.*;
+import muramasa.antimatter.gui.widget.ButtonWidget;
+import muramasa.antimatter.gui.widget.CycleButtonWidget;
+import muramasa.antimatter.gui.widget.SwitchButtonWidget;
+import muramasa.antimatter.gui.widget.TextButtonWidget;
+import muramasa.antimatter.gui.widget.WidgetSupplier;
 import muramasa.antimatter.network.AntimatterNetwork;
 import muramasa.antimatter.network.packets.AbstractGuiEventPacket;
 import muramasa.antimatter.network.packets.ClientboundGuiSyncPacket;
@@ -24,8 +27,19 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.unimined.expect.annotation.Environment;
 import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 
 public class GuiInstance implements ICanSyncData {

@@ -2,7 +2,12 @@ package muramasa.antimatter.datagen.providers;
 
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.block.*;
+import muramasa.antimatter.block.BlockFrame;
+import muramasa.antimatter.block.BlockStone;
+import muramasa.antimatter.block.BlockStoneSlab;
+import muramasa.antimatter.block.BlockStoneStair;
+import muramasa.antimatter.block.BlockStoneWall;
+import muramasa.antimatter.block.BlockStorage;
 import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
 import muramasa.antimatter.data.AntimatterMaterials;

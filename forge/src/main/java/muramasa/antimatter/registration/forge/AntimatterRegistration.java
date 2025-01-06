@@ -1,7 +1,11 @@
 package muramasa.antimatter.registration.forge;
 
 import com.google.gson.JsonObject;
-import muramasa.antimatter.*;
+import muramasa.antimatter.Antimatter;
+import muramasa.antimatter.AntimatterAPI;
+import muramasa.antimatter.Data;
+import muramasa.antimatter.MaterialDataInit;
+import muramasa.antimatter.Ref;
 import muramasa.antimatter.block.AntimatterItemBlock;
 import muramasa.antimatter.event.MaterialEvent;
 import muramasa.antimatter.fluid.AntimatterFluid;
@@ -9,7 +13,11 @@ import muramasa.antimatter.integration.kubejs.AntimatterKubeJS;
 import muramasa.antimatter.recipe.forge.condition.ConfigCondition;
 import muramasa.antimatter.recipe.forge.condition.TomlConfigCondition;
 import muramasa.antimatter.recipe.ingredient.IAntimatterIngredientSerializer;
-import muramasa.antimatter.registration.*;
+import muramasa.antimatter.registration.IAntimatterRegistrar;
+import muramasa.antimatter.registration.IItemBlockProvider;
+import muramasa.antimatter.registration.IRegistryEntryProvider;
+import muramasa.antimatter.registration.RegistrationEvent;
+import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.tool.AntimatterToolType;
 import muramasa.antimatter.tool.IAntimatterArmor;
 import muramasa.antimatter.tool.IAntimatterTool;

@@ -2,7 +2,6 @@ package muramasa.antimatter.tool;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.function.Consumer;
 

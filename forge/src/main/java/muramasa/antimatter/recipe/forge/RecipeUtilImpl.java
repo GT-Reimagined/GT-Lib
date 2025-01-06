@@ -15,7 +15,6 @@ import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.NBTIngredient;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.function.Consumer;
 

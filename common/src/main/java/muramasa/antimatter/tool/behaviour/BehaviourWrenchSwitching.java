@@ -1,12 +1,9 @@
 package muramasa.antimatter.tool.behaviour;
 
-import muramasa.antimatter.Ref;
 import muramasa.antimatter.behaviour.IItemRightClick;
 import muramasa.antimatter.tool.AntimatterToolType;
 import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.tool.IBasicAntimatterTool;
-import muramasa.antimatter.util.Utils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;

@@ -1,21 +1,11 @@
 package muramasa.antimatter.blockentity.pipe;
 
-import muramasa.antimatter.Ref;
-import muramasa.antimatter.capability.machine.DefaultHeatHandler;
 import muramasa.antimatter.pipe.types.HeatPipe;
-import muramasa.antimatter.util.int3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import tesseract.TesseractCapUtils;
 import tesseract.TesseractGraphWrappers;
-import tesseract.api.heat.HeatTransaction;
 import tesseract.api.heat.IHeatHandler;
 import tesseract.api.heat.IHeatPipe;
-
-import java.util.Optional;
 
 public class BlockEntityHeatPipe<T extends HeatPipe<T>> extends BlockEntityPipe<T> implements IHeatPipe {
 

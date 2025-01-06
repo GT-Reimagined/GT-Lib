@@ -1,7 +1,10 @@
 package muramasa.antimatter.forge;
 
 
-import muramasa.antimatter.*;
+import muramasa.antimatter.Antimatter;
+import muramasa.antimatter.AntimatterAPI;
+import muramasa.antimatter.AntimatterMod;
+import muramasa.antimatter.Ref;
 import muramasa.antimatter.common.event.forge.ARRPEvents;
 import muramasa.antimatter.datagen.AntimatterDynamics;
 import muramasa.antimatter.event.forge.AntimatterCraftingEvent;
@@ -16,9 +19,7 @@ import muramasa.antimatter.registration.Side;
 import net.devtech.arrp.ARRP;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;

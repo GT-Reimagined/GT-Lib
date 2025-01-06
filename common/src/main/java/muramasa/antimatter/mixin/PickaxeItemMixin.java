@@ -1,18 +1,16 @@
 package muramasa.antimatter.mixin;
 
-import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.tool.AntimatterToolType;
-import muramasa.antimatter.tool.IBasicAntimatterTool;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
-
-import java.util.function.Consumer;
 
 import static muramasa.antimatter.tool.behaviour.BehaviourTorchPlacing.tryPlace;
 

@@ -3,7 +3,12 @@ package muramasa.antimatter.network;
 import com.teamresourceful.resourcefullib.common.networking.NetworkChannel;
 import com.teamresourceful.resourcefullib.common.networking.base.NetworkDirection;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.network.packets.*;
+import muramasa.antimatter.network.packets.ClientboundGuiSyncPacket;
+import muramasa.antimatter.network.packets.CoverGuiEventPacket;
+import muramasa.antimatter.network.packets.FakeTilePacket;
+import muramasa.antimatter.network.packets.ServerboundGuiSyncPacket;
+import muramasa.antimatter.network.packets.StructureCheckPacket;
+import muramasa.antimatter.network.packets.TileGuiEventPacket;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class AntimatterNetwork {

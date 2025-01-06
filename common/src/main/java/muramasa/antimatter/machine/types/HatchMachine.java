@@ -2,15 +2,12 @@ package muramasa.antimatter.machine.types;
 
 import lombok.Getter;
 import muramasa.antimatter.Data;
+import muramasa.antimatter.blockentity.multi.BlockEntityHatch;
 import muramasa.antimatter.blockentity.multi.BlockEntityMultiMachine;
 import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.gui.widget.TankIconWidget;
 import muramasa.antimatter.machine.Tier;
-import muramasa.antimatter.blockentity.multi.BlockEntityHatch;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.Property;
 
 import static muramasa.antimatter.machine.MachineFlag.*;
 

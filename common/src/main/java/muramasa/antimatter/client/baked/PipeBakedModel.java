@@ -2,6 +2,7 @@ package muramasa.antimatter.client.baked;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import muramasa.antimatter.Ref;
+import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.capability.pipe.PipeCoverHandler;
 import muramasa.antimatter.client.RenderHelper;
 import muramasa.antimatter.cover.BaseCover;
@@ -9,7 +10,6 @@ import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.dynamic.DynamicBakedModel;
 import muramasa.antimatter.pipe.BlockPipe;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;

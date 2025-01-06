@@ -15,8 +15,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import tesseract.TesseractGraphWrappers;
-import tesseract.api.ITickingController;
 
 import java.util.List;
 

@@ -1,19 +1,11 @@
 package muramasa.antimatter.capability.machine;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import muramasa.antimatter.capability.IComponentHandler;
-import muramasa.antimatter.capability.fluid.FluidTank;
-import muramasa.antimatter.capability.fluid.FluidTanks;
 import muramasa.antimatter.blockentity.multi.BlockEntityMultiMachine;
-import org.apache.commons.lang3.SerializationUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import muramasa.antimatter.capability.IComponentHandler;
+import muramasa.antimatter.capability.fluid.FluidTanks;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MultiMachineFluidHandler<T extends BlockEntityMultiMachine<T>> extends MachineFluidHandler<T> {

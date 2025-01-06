@@ -1,7 +1,6 @@
 package muramasa.antimatter.item;
 
 import lombok.Getter;
-import muramasa.antimatter.block.BlockStone;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.registration.ITextureProvider;
 import net.minecraft.core.Direction;

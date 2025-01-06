@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability;
 
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.Optional;

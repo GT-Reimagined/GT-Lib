@@ -3,7 +3,6 @@ package muramasa.antimatter.cover;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.item.Item;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class CoverReplacements {

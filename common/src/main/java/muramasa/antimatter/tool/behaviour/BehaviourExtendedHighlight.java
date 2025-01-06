@@ -7,7 +7,6 @@ import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.capability.ICoverHandlerProvider;
 import muramasa.antimatter.client.RenderHelper;
 import muramasa.antimatter.cover.ICover;
-import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.tool.IBasicAntimatterTool;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

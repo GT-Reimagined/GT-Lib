@@ -1,8 +1,8 @@
 package muramasa.antimatter.pipe.types;
 
+import muramasa.antimatter.blockentity.pipe.BlockEntityHeatPipe;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.pipe.BlockHeatPipe;
-import muramasa.antimatter.blockentity.pipe.BlockEntityHeatPipe;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Set;

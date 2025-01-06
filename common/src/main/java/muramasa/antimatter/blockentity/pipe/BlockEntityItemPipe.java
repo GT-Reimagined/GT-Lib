@@ -28,7 +28,12 @@ import tesseract.api.item.IItemPipe;
 import tesseract.api.item.PlatformItemHandler;
 import tesseract.graph.Connectivity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<T>
         implements IItemPipe, Dispatch.Sided<ExtendedItemContainer>, IPreTickTile {

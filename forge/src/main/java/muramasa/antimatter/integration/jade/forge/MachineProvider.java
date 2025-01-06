@@ -13,14 +13,12 @@ import muramasa.antimatter.capability.machine.MachineRecipeHandler;
 import muramasa.antimatter.machine.MachineState;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import snownee.jade.VanillaPlugin;
 
 public class MachineProvider implements IComponentProvider, IServerDataProvider<BlockEntity> {
     public static MachineProvider INSTANCE = new MachineProvider();

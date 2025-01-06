@@ -1,17 +1,12 @@
 package muramasa.antimatter.recipe;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import muramasa.antimatter.machine.BlockMachine;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.Proxy;
 import muramasa.antimatter.recipe.map.RecipeBuilder;
-import muramasa.antimatter.tool.IAntimatterTool;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import java.util.List;
 import java.util.function.BiFunction;

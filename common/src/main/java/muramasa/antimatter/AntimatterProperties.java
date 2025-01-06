@@ -1,12 +1,12 @@
 package muramasa.antimatter;
 
+import muramasa.antimatter.blockentity.BlockEntityMachine.DynamicKey;
 import muramasa.antimatter.client.dynamic.DynamicTexturer;
 import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.machine.MachineState;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.blockentity.BlockEntityMachine.DynamicKey;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 

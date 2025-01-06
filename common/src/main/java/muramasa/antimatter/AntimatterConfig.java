@@ -1,12 +1,14 @@
 package muramasa.antimatter;
 
 import carbonconfiglib.api.ConfigType;
-import carbonconfiglib.config.*;
+import carbonconfiglib.config.Config;
+import carbonconfiglib.config.ConfigEntry;
+import carbonconfiglib.config.ConfigHandler;
+import carbonconfiglib.config.ConfigSection;
+import carbonconfiglib.config.ConfigSettings;
 import carbonconfiglib.impl.ReloadMode;
 import carbonconfiglib.utils.AutomationType;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import tesseract.Tesseract;
 
 public class AntimatterConfig {
 

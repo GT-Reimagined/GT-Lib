@@ -1,11 +1,9 @@
 package muramasa.antimatter.cover;
 
-import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.blockentity.multi.BlockEntityHatch;
 import muramasa.antimatter.blockentity.multi.BlockEntityMultiMachine;
 import muramasa.antimatter.capability.ComponentHandler;
 import muramasa.antimatter.capability.ICoverHandler;
-import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.machine.MachineState;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.structure.StructureCache;

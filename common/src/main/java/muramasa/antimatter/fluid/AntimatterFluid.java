@@ -1,6 +1,11 @@
 package muramasa.antimatter.fluid;
 
-import earth.terrarium.botarium.common.registry.fluid.*;
+import earth.terrarium.botarium.common.registry.fluid.BotariumFlowingFluid;
+import earth.terrarium.botarium.common.registry.fluid.BotariumLiquidBlock;
+import earth.terrarium.botarium.common.registry.fluid.BotariumSourceFluid;
+import earth.terrarium.botarium.common.registry.fluid.FluidData;
+import earth.terrarium.botarium.common.registry.fluid.FluidProperties;
+import earth.terrarium.botarium.common.registry.fluid.FluidRegistry;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.registration.IRegistryEntryProvider;

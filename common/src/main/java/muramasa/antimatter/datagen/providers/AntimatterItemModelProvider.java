@@ -6,8 +6,6 @@ import muramasa.antimatter.datagen.IAntimatterProvider;
 import muramasa.antimatter.datagen.builder.AntimatterBlockModelBuilder;
 import muramasa.antimatter.datagen.builder.AntimatterItemModelBuilder;
 import muramasa.antimatter.fluid.AntimatterFluid;
-import muramasa.antimatter.tool.IAntimatterArmor;
-import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;

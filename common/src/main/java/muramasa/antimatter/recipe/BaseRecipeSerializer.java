@@ -1,6 +1,5 @@
 package muramasa.antimatter.recipe;
 
-import muramasa.antimatter.recipe.material.MaterialSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;

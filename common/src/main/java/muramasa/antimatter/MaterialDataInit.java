@@ -5,14 +5,12 @@ import muramasa.antimatter.data.AntimatterMaterialTypes;
 import muramasa.antimatter.data.AntimatterMaterials;
 import muramasa.antimatter.event.MaterialEvent;
 import muramasa.antimatter.material.MaterialTags;
-import muramasa.antimatter.tool.AntimatterToolType;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.util.List;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static muramasa.antimatter.data.AntimatterMaterialTypes.*;
-import static muramasa.antimatter.data.AntimatterMaterialTypes.PICKAXE_HEAD;
 import static muramasa.antimatter.material.MaterialTags.MOLTEN;
 import static muramasa.antimatter.material.MaterialTags.QUARTZ_LIKE_BLOCKS;
 import static net.minecraft.world.item.Tiers.*;

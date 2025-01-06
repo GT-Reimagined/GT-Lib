@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import static muramasa.antimatter.gui.SlotType.*;
-import static muramasa.antimatter.gui.SlotType.FL_OUT;
 
 public class AntimatterJEIREIPlugin{
     private static final List<Consumer<List<ItemLike>>> ITEMS_TO_HIDE = new ArrayList<>();
