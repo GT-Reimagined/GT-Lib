@@ -9,9 +9,9 @@
 			"to": [16, 12, 12],
 			"faces": {
 				"north": {"uv": [0, 4, 16, 12], "texture": "#all", "tintindex": 0},
-				"east": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 1},
+				"east": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 0},
 				"south": {"uv": [0, 4, 16, 12], "texture": "#all", "tintindex": 0},
-				"west": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 1},
+				"west": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 0},
 				"up": {"uv": [0, 4, 16, 12], "texture": "#all", "tintindex": 0},
 				"down": {"uv": [0, 4, 16, 12], "texture": "#all", "tintindex": 0}
 			}
@@ -20,7 +20,7 @@
 			"from": [4, 4, 0],
 			"to": [12, 12, 4],
 			"faces": {
-				"north": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 1},
+				"north": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 0},
 				"east": {"uv": [0, 4, 4, 12], "texture": "#all", "tintindex": 0},
 				"west": {"uv": [12, 4, 16, 12], "texture": "#all", "tintindex": 0},
 				"up": {"uv": [4, 0, 12, 4], "texture": "#all", "tintindex": 0},
@@ -35,8 +35,36 @@
 				"east": {"uv": [4, 0, 12, 4], "texture": "#all", "tintindex": 0},
 				"south": {"uv": [4, 0, 12, 4], "texture": "#all", "tintindex": 0},
 				"west": {"uv": [4, 0, 12, 4], "texture": "#all", "tintindex": 0},
-				"up": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 1}
+				"up": {"uv": [4, 4, 12, 12], "texture": "#all", "tintindex": 0}
 			}
-		}
+		},
+    {
+      "from": [5, 16.01, 5],
+      "to": [11, 16.01, 11],
+      "faces": {
+        "up": {"uv": [5, 5, 11, 11], "texture": "#overlay", "tintindex": 1}
+      }
+    },
+    {
+      "from": [5, 5, -0.01],
+      "to": [11, 11, -0.01],
+      "faces": {
+        "north": {"uv": [5, 5, 11, 11], "texture": "#overlay", "tintindex": 1}
+      }
+    },
+    {
+      "from": [16.01, 5, 5],
+      "to": [16.01, 11, 11],
+      "faces": {
+        "east": {"uv": [5, 5, 11, 11], "texture": "#overlay", "tintindex": 1}
+      }
+    },
+    {
+      "from": [-0.01, 5, 5],
+      "to": [-0.01, 11, 11],
+      "faces": {
+        "west": {"uv": [5, 5, 11, 11], "texture": "#overlay", "tintindex": 1}
+      }
+    }
 	]
 }
