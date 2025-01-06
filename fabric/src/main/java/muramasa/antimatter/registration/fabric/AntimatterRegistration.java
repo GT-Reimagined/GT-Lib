@@ -72,7 +72,7 @@ public class AntimatterRegistration {
             Registry.register(Registry.ITEM, new ResourceLocation(d, id), i);
             AntimatterAPIImpl.registerItemTransferAPI(i);
         });
-        if (domain.equals(Ref.SHARED_ID)) registerTools(domain);
+        registerTools(domain);
         AntimatterAPI.all(BlockEntityType.class, domain, (t, d, i) -> {
             Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(d, i), t);
         });
@@ -112,16 +112,16 @@ public class AntimatterRegistration {
     }
 
     public static void registerTools(String domain) {
-        AntimatterAPI.all(AntimatterToolType.class, t -> {
+        AntimatterAPI.all(AntimatterToolType.class, domain, t -> {
             List<IAntimatterTool> tools = t.isPowered() ? t.instantiatePoweredTools(domain) : t.instantiateTools(domain);
             for (IAntimatterTool i : tools) {
                 Registry.register(Registry.ITEM, new ResourceLocation(domain, i.getId()), i.getItem());
             }
         });
-        AntimatterAPI.all(AntimatterArmorType.class, t -> {
+        AntimatterAPI.all(AntimatterArmorType.class, domain, t -> {
             List<IAntimatterArmor> i = t.instantiateTools();
             i.forEach(a -> {
-                Registry.register(Registry.ITEM, new ResourceLocation(Ref.SHARED_ID, a.getId()), a.getItem());
+                Registry.register(Registry.ITEM, new ResourceLocation(domain, a.getId()), a.getItem());
             });
 
         });
