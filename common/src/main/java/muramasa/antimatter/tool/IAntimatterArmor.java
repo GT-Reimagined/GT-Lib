@@ -6,10 +6,7 @@ import muramasa.antimatter.datagen.builder.AntimatterItemModelBuilder;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialTags;
-import muramasa.antimatter.registration.IColorHandler;
-import muramasa.antimatter.registration.IModelProvider;
-import muramasa.antimatter.registration.ISharedAntimatterObject;
-import muramasa.antimatter.registration.ITextureProvider;
+import muramasa.antimatter.registration.*;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.armor.AntimatterArmorType;
 import net.minecraft.network.chat.Component;
@@ -26,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public interface IAntimatterArmor extends ISharedAntimatterObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
+public interface IAntimatterArmor extends IAntimatterObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
     AntimatterArmorType getAntimatterArmorType();
 
     Material getMat();

@@ -1,11 +1,13 @@
 package muramasa.antimatter.tool.armor;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.material.IMaterialTag;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialTags;
+import muramasa.antimatter.registration.IAntimatterObject;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.tool.IAntimatterArmor;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
@@ -26,15 +28,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class AntimatterArmorType implements ISharedAntimatterObject {
+public class AntimatterArmorType implements IAntimatterObject {
     private final String domain, id;
+    @Getter
     private final List<Component> tooltip = new ObjectArrayList<>();
+    @Getter
     private final boolean repairable;
+    @Getter
     private final int durabilityFactor, extraArmor;
+    @Getter
     private final float extraToughness, extraKnockback;
+    @Getter
     private final CreativeModeTab itemGroup;
+    @Getter
     private EquipmentSlot slot;
+    @Getter
     private SoundEvent event;
+    @Getter
     int overlayLayers;
     @Nullable
     private IMaterialTag materialRequirement;
@@ -69,7 +79,7 @@ public class AntimatterArmorType implements ISharedAntimatterObject {
     public List<IAntimatterArmor> instantiateTools() {
         List<IAntimatterArmor> armors = new ArrayList<>();
         MaterialTags.ARMOR.all().forEach(m -> {
-            armors.add(new MaterialArmor(Ref.SHARED_ID, this, m, slot, prepareInstantiation(Ref.SHARED_ID)));
+            armors.add(new MaterialArmor(domain, this, m, slot, prepareInstantiation(domain)));
         });
         return armors;
     }
@@ -115,11 +125,8 @@ public class AntimatterArmorType implements ISharedAntimatterObject {
     }
 
     public ItemStack getToolStack(Material primary) {
-        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterArmor.class, primary.getId() + "_" + id)).asItemStack();
-    }
-
-    public List<Component> getTooltip() {
-        return tooltip;
+        IAntimatterArmor armor = AntimatterAPI.get(IAntimatterArmor.class, primary.getId() + "_" + id, domain);
+        return Objects.requireNonNull(armor).asItemStack();
     }
 
     @Override
@@ -132,39 +139,4 @@ public class AntimatterArmorType implements ISharedAntimatterObject {
         return id;
     }
 
-    public boolean isRepairable() {
-        return repairable;
-    }
-
-    public int getOverlayLayers() {
-        return overlayLayers;
-    }
-
-    public int getDurabilityFactor() {
-        return durabilityFactor;
-    }
-
-    public int getExtraArmor() {
-        return extraArmor;
-    }
-
-    public float getExtraToughness() {
-        return extraToughness;
-    }
-
-    public float getExtraKnockback() {
-        return extraKnockback;
-    }
-
-    public CreativeModeTab getItemGroup() {
-        return itemGroup;
-    }
-
-    public EquipmentSlot getSlot() {
-        return slot;
-    }
-
-    public SoundEvent getEvent() {
-        return event;
-    }
 }

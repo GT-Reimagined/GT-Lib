@@ -15,6 +15,7 @@ import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.material.MaterialTypeItem;
 import muramasa.antimatter.material.data.ToolData;
+import muramasa.antimatter.registration.IAntimatterObject;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
@@ -38,7 +39,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class AntimatterToolType implements ISharedAntimatterObject {
+public class AntimatterToolType implements IAntimatterObject {
 
     private final String domain, id;
     @Getter
@@ -165,6 +166,11 @@ public class AntimatterToolType implements ISharedAntimatterObject {
 
     public AntimatterToolType(String domain, String id, AntimatterToolType inheritType) {
         this(domain, id, inheritType.useDurability, inheritType.attackDurability, inheritType.craftingDurability, inheritType.baseAttackDamage, inheritType.baseAttackSpeed, false);
+    }
+
+    @Override
+    public String getDomain() {
+        return domain;
     }
 
     /* IAntimatterTool Instantiations */
@@ -371,7 +377,7 @@ public class AntimatterToolType implements ISharedAntimatterObject {
 
     public ItemStack getToolStack(Material primary, Material secondary) {
         String id = simple ? primary.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id)).asItemStack(primary, secondary);
+        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id, domain)).asItemStack(primary, secondary);
     }
 
     public ItemStack getToolStack(Material primary) {
@@ -390,7 +396,7 @@ public class AntimatterToolType implements ISharedAntimatterObject {
             }
         }
         String id = simple ? primary.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id)).asItemStack(primary, Material.NULL);
+        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id, domain)).asItemStack(primary, Material.NULL);
     }
 
     public Item getToolItem(Material material){
@@ -398,7 +404,7 @@ public class AntimatterToolType implements ISharedAntimatterObject {
             return replacements.get(material.getId()).get();
         }
         String id = simple ? material.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id)).getItem();
+        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id, domain)).getItem();
     }
 
     @Override

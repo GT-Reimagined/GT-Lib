@@ -166,7 +166,7 @@ public class PropertyIngredient extends Ingredient {
         if (optionalTools.size() > 0) {
             JsonObject map = new JsonObject();
             for (Object2BooleanMap.Entry<AntimatterToolType> entry : optionalTools.object2BooleanEntrySet()) {
-                map.addProperty(entry.getKey().getId(), entry.getBooleanValue());
+                map.addProperty(entry.getKey().getLoc().toString(), entry.getBooleanValue());
             }
             obj.add("tools", map);
         }
@@ -241,7 +241,7 @@ public class PropertyIngredient extends Ingredient {
             size = buffer.readVarInt();
             Object2BooleanMap<AntimatterToolType> map = new Object2BooleanOpenHashMap<>(size);
             for (int i = 0; i < size; i++) {
-                map.put(AntimatterAPI.get(AntimatterToolType.class, buffer.readUtf()), buffer.readBoolean());
+                map.put(AntimatterAPI.get(AntimatterToolType.class, buffer.readUtf(), buffer.readUtf()), buffer.readBoolean());
             }
             size = buffer.readVarInt();
             Set<Material> fixedMats = new ObjectArraySet<>(size);
@@ -288,7 +288,8 @@ public class PropertyIngredient extends Ingredient {
             Object2BooleanMap<AntimatterToolType> map = new Object2BooleanOpenHashMap<>();
             if (json.has("tools")) {
                 for (Map.Entry<String, JsonElement> entry : GsonHelper.getAsJsonObject(json, "tools").entrySet()) {
-                    map.put(AntimatterAPI.get(AntimatterToolType.class, entry.getKey()), entry.getValue().getAsBoolean());
+                    ResourceLocation location = new ResourceLocation(entry.getKey());
+                    map.put(AntimatterAPI.get(AntimatterToolType.class, location.getPath(), location.getNamespace()), entry.getValue().getAsBoolean());
                 }
             }
             Set<Material> fixedMats = Collections.emptySet();
@@ -317,6 +318,7 @@ public class PropertyIngredient extends Ingredient {
             buffer.writeVarInt(ingredient.optionalTools.size());
             for (Object2BooleanMap.Entry<AntimatterToolType> entry : ingredient.optionalTools.object2BooleanEntrySet()) {
                 buffer.writeUtf(entry.getKey().getId());
+                buffer.writeUtf(entry.getKey().getDomain());
                 buffer.writeBoolean(entry.getBooleanValue());
             }
             buffer.writeVarInt(ingredient.fixedMats.size());
