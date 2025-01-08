@@ -1,6 +1,6 @@
 package muramasa.antimatter.machine;
 
-public final class MachineFlag {
+public class MachineFlag {
     public static final String BASIC = "basic"; //
     public static final String STEAM = "steam";
     public static final String MULTI = "multi"; //Has structure
