@@ -45,6 +45,8 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
             AntimatterAPI.all(BlockOre.class, o -> {
                 this.tag(getForgelikeBlockTag(String.join("", getConventionalStoneType(o.getStoneType()), "_", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o).replace(replace);
                 this.tag(getForgelikeBlockTag(String.join("", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o).replace(replace);
+                this.tag(getForgelikeBlockTag(getConventionalMaterialType(o.getOreType()))).add(o).replace(replace);
+                this.tag(getForgelikeBlockTag(getConventionalStoneType(o.getStoneType()) + "_" + getConventionalMaterialType(o.getOreType()))).add(o).replace(replace);
 
                 if (o.getStoneType() == AntimatterStoneTypes.SAND || o.getStoneType() == AntimatterStoneTypes.SAND_RED || o.getStoneType() == AntimatterStoneTypes.GRAVEL)
                     this.tag(BlockTags.MINEABLE_WITH_SHOVEL).add(o).replace(replace);
