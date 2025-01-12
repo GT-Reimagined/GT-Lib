@@ -384,7 +384,7 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
         add("antimatter.tooltip.energy", "Energy");
         add("antimatter.tooltip.heat_capacity", "Heat capacity");
         add("antimatter.tooltip.heat_capacity_total", "Heat capacity (total)");
-        add("antimatter.tooltip.material_modid", "Added by: %s");
+        add("antimatter.tooltip.material_modid", "Material added by: %s");
         add("antimatter.tooltip.occurrence", "Indicates occurrence of %s");
         add("antimatter.tooltip.behaviour.aoe_enabled", "%s Enabled");
         add("antimatter.tooltip.behaviour.aoe_disabled", "%s Disabled");
