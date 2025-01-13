@@ -9,7 +9,7 @@
 			"to": [14, 14, 16],
 			"color": 0,
 			"faces": {
-				"north": {"uv": [2, 2, 14, 14], "texture": "#all", "tintindex": 1},
+				"north": {"uv": [2, 2, 14, 14], "texture": "#all", "tintindex": 0},
 				"east": {"uv": [2, 2, 16, 14], "texture": "#all", "tintindex": 0},
 				"south": {"uv": [2, 2, 14, 14], "texture": "#all", "tintindex": 0},
 				"west": {"uv": [0, 2, 14, 14], "texture": "#all", "tintindex": 0},
