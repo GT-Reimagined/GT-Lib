@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 public class MultiMachineItemHandler<T extends BlockEntityMultiMachine<T>> extends MachineItemHandler<T> {
 
-    Optional<ITrackedHandler> inputs = Optional.empty();
-    Optional<ITrackedHandler> outputs = Optional.empty();
+    protected Optional<ITrackedHandler> inputs = Optional.empty();
+    protected Optional<ITrackedHandler> outputs = Optional.empty();
 
     public MultiMachineItemHandler(T tile) {
         super(tile);
@@ -40,7 +40,7 @@ public class MultiMachineItemHandler<T extends BlockEntityMultiMachine<T>> exten
         outputs = Optional.of(calculateOutputs());
     }
 
-    private ITrackedHandler calculateInputs() {
+    protected ITrackedHandler calculateInputs() {
         List<ExtendedItemContainer> handlers = tile.getComponentsByHandlerId(inputComponentString()).stream().filter(t -> t.getItemHandler().isPresent()).map(t -> t.getItemHandler().get()).sorted(this::compareInputBuses).map(MachineItemHandler::getInputHandler).collect(Collectors.toList());
         handlers.add(super.getInputHandler());
         return new MultiTrackedItemHandler(handlers.toArray(new ExtendedItemContainer[0]));
@@ -62,7 +62,7 @@ public class MultiMachineItemHandler<T extends BlockEntityMultiMachine<T>> exten
         return 0;
     }
 
-    private ITrackedHandler calculateOutputs() {
+    protected ITrackedHandler calculateOutputs() {
         List<ExtendedItemContainer> handlers = tile.getComponentsByHandlerId(outputComponentString()).stream().filter(t -> t.getItemHandler().isPresent()).map(t -> t.getItemHandler().get()).sorted(this::compareOutputBuses).map(MachineItemHandler::getOutputHandler).collect(Collectors.toList());
         handlers.add(super.getOutputHandler());
         return new MultiTrackedItemHandler(handlers.toArray(new ExtendedItemContainer[0]));
