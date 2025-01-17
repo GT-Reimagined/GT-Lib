@@ -171,7 +171,7 @@ public class Recipe implements IRecipe {
     public ItemStack[] getOutputItems(boolean chance) {
         if (hasOutputItems()) {
             ItemStack[] outputs = itemsOutput.clone();
-            if (outputChances != null) {
+            if (outputChances != null || !chance) {
                 List<ItemStack> evaluated = new ObjectArrayList<>();
                 for (int i = 0; i < outputs.length; i++) {
                     if (!chance || Ref.RNG.nextInt(10000) < outputChances[i]) {
