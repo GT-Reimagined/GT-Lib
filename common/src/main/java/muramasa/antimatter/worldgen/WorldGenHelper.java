@@ -11,7 +11,11 @@ import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialType;
 import muramasa.antimatter.ore.StoneType;
 import muramasa.antimatter.worldgen.feature.FeatureOre;
+import muramasa.antimatter.worldgen.vein.VeinSavedData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -91,7 +95,16 @@ public class WorldGenHelper {
                 : AntimatterMaterialTypes.ORE_SMALL.get().get(material, stone).asState();
         if (!ORE_PREDICATE.test(existing))
             return false;
-        return setState(world, pos, oreState);
+        boolean setState = setState(world, pos, oreState);
+        if (setState && (type == AntimatterMaterialTypes.ORE || type == AntimatterMaterialTypes.ORE_SMALL)){
+            ServerLevel serverLevel = null;
+            if (world instanceof ServerLevel serverLevel1) serverLevel = serverLevel1;
+            if (world instanceof WorldGenRegion worldGenRegion) serverLevel = worldGenRegion.getLevel();
+            if (serverLevel != null) {
+                VeinSavedData.getOrCreate(serverLevel).addOreToChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()), material, pos);
+            }
+        }
+        return setState;
     }
 
     /**

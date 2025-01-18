@@ -62,17 +62,8 @@ public class FeatureOre extends AntimatterFeature<NoneFeatureConfiguration> {
         List<Triple<BlockPos, Material, Boolean>> ores = ORES.remove(world.getChunk(pos).getPos());
         if (ores == null) return false;
         for (Triple<BlockPos, Material, Boolean> o : ores) {
-            setOre(world, o.getLeft(), world.getBlockState(o.getLeft()), o.getMiddle(), o.getRight() ? AntimatterMaterialTypes.ORE : AntimatterMaterialTypes.ORE_SMALL);
+            WorldGenHelper.setOre(world, o.getLeft(), world.getBlockState(o.getLeft()), o.getMiddle(), o.getRight() ? AntimatterMaterialTypes.ORE : AntimatterMaterialTypes.ORE_SMALL);
         }
         return true;
-    }
-
-    private static boolean setOre(LevelAccessor world, BlockPos pos, BlockState existing, Material material,
-                                  MaterialType<?> type) {
-        boolean setOre = WorldGenHelper.setOre(world, pos, existing, material, type);
-        if (setOre && world instanceof ServerLevel serverLevel && type == AntimatterMaterialTypes.ORE){
-            VeinSavedData.getOrCreate(serverLevel).addOreToChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()), material, pos);
-        }
-        return setOre;
     }
 }

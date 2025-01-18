@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static muramasa.antimatter.worldgen.VeinLayerResult.*;
+import static muramasa.antimatter.worldgen.WorldGenHelper.setOre;
 
 /**
  * Most of the WorldGenVeinLayer code is from the GTNewHorizons GT5 fork, refactored for 1.12 and somewhat optimised
@@ -337,25 +338,25 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
             int tZ = rand.nextInt(16) + posZ;
             int tY = rand.nextInt(224) - 54; // Y height can vary from -54 to 170 for small ores.
             pos.set(tX, tY, tZ);
-            WorldGenHelper.setOre(world, pos, world.getBlockState(pos), materials[0], AntimatterMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), materials[0], AntimatterMaterialTypes.ORE_SMALL);
 
             tX = rand.nextInt(16) + posX;
             tZ = rand.nextInt(16) + posZ;
             tY = rand.nextInt(224) - 54; // Y height can vary from -54 to 170 for small ores.
             pos.set(tX, tY, tZ);
-            WorldGenHelper.setOre(world, pos, world.getBlockState(pos), materials[1], AntimatterMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), materials[1], AntimatterMaterialTypes.ORE_SMALL);
 
             tX = rand.nextInt(16) + posX;
             tZ = rand.nextInt(16) + posZ;
             tY = rand.nextInt(224) - 54; // Y height can vary from -54 to 170 for small ores.
             pos.set(tX, tY, tZ);
-            WorldGenHelper.setOre(world, pos, world.getBlockState(pos), materials[2], AntimatterMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), materials[2], AntimatterMaterialTypes.ORE_SMALL);
 
             tX = rand.nextInt(16) + posX;
             tZ = rand.nextInt(16) + posZ;
             tY = rand.nextInt(254) - 54; // Y height can vary from -54 to 200 for small ores.
             pos.set(tX, tY, tZ);
-            WorldGenHelper.setOre(world, pos, world.getBlockState(pos), materials[3], AntimatterMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), materials[3], AntimatterMaterialTypes.ORE_SMALL);
         }
         if (AntimatterConfig.ORE_VEIN_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()){
             for (int rockCount = 0; rockCount < nRocks; rockCount++) {
@@ -543,15 +544,6 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
         return true;
     }
 
-    private static boolean setOre(LevelAccessor world, BlockPos pos, BlockState existing, Material material,
-                                 MaterialType<?> type) {
-        boolean setOre = WorldGenHelper.setOre(world, pos, existing, material, type);
-        if (setOre && world instanceof ServerLevel serverLevel && type == AntimatterMaterialTypes.ORE){
-            VeinSavedData.getOrCreate(serverLevel).addOreToChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()), material, pos);
-        }
-        return setOre;
-    }
-
     boolean generateByFunction(LevelAccessor world, XSTR rand,
                                        int tMinY, int wXVein, int eXVein, int nZVein, int sZVein, // vein
                                        int wX, int eX, int nZ, int sZ) { // vein & current chunk intersection
@@ -576,11 +568,11 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
                         continue;
                     pos.set(x, y, z);
                     if (rand.nextInt(100) < 10) { // let each 10th be sproradic
-                        if (WorldGenHelper.setOre(world, pos, world.getBlockState(pos), materials[3], AntimatterMaterialTypes.ORE))
+                        if (setOre(world, pos, world.getBlockState(pos), materials[3], AntimatterMaterialTypes.ORE))
                             placeCount[3]++;
                     } else {
                         int oreIndex = (p > 0.5) ? 0 : (p > 0.2 ? 1 : 2);
-                        if (WorldGenHelper.setOre(world, pos, world.getBlockState(pos), materials[oreIndex], AntimatterMaterialTypes.ORE))
+                        if (setOre(world, pos, world.getBlockState(pos), materials[oreIndex], AntimatterMaterialTypes.ORE))
                             placeCount[oreIndex]++;
                     }
                 }
