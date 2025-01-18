@@ -49,31 +49,33 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     public T asDust(IMaterialTag... tags) {
-        return asDust(295, tags);
+        flags(AntimatterMaterialTypes.DUST, AntimatterMaterialTypes.DUST_SMALL, AntimatterMaterialTypes.DUST_TINY);
+        flags(tags);
+        return (T) this;
     }
 
     public T asDust(int meltingPoint, IMaterialTag... tags) {
-        flags(AntimatterMaterialTypes.DUST, AntimatterMaterialTypes.DUST_SMALL, AntimatterMaterialTypes.DUST_TINY);
-        flags(tags);
         MaterialTags.MELTING_POINT.add(material, meltingPoint);
         if (meltingPoint > 295) {
 //            asFluid();//TODO disabled due to Sodium having a fluid
         }
-        return (T) this;
+        return asDust(tags);
     }
 
     public T asSolid(IMaterialTag... tags) {
-        return asSolid(295, tags);
-    }
-
-    public T asSolid(int meltingPoint, IMaterialTag... tags){
-        asDust(meltingPoint, tags);
+        asDust(tags);
         flags(AntimatterMaterialTypes.INGOT, AntimatterMaterialTypes.NUGGET, AntimatterMaterialTypes.BLOCK).asFluid();
         return (T) this;
     }
 
+    public T asSolid(int meltingPoint, IMaterialTag... tags){
+        MaterialTags.MELTING_POINT.add(material, meltingPoint);
+        return asSolid(tags);
+    }
+
     public T asMetal(IMaterialTag... tags) {
-        return asMetal(295, tags);
+        flags(METAL);
+        return asSolid(tags);
     }
 
     public T asMetal(int meltingPoint, IMaterialTag... tags) {
@@ -127,38 +129,36 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     public T asFluid() {
-        return asFluid(0);
+        flags(AntimatterMaterialTypes.LIQUID);
+        return (T) this;
     }
 
     public T asFluid(int fuelPower) {
-        int meltingPoint = this.has(MaterialTags.MELTING_POINT) ? MaterialTags.MELTING_POINT.getInt(this.material) : 295;
-        return asFluid(fuelPower, Math.max(meltingPoint, 295));
+        MaterialTags.FUEL_POWER.add(this.material, fuelPower);
+        return asFluid();
     }
 
     public T asFluid(int fuelPower, int temp) {
-        flags(AntimatterMaterialTypes.LIQUID);
-        MaterialTags.FUEL_POWER.add(this.material, fuelPower);
         MaterialTags.LIQUID_TEMPERATURE.add(this.material, temp);
         if (temp >= 400 && material.has(METAL)){
             flags(MOLTEN);
         }
-        return (T) this;
+        return asFluid(fuelPower);
     }
 
     public T asGas() {
-        return asGas(0);
+        flags(AntimatterMaterialTypes.GAS);
+        return (T) this;
     }
 
     public T asGas(int fuelPower) {
-        int meltingPoint = this.has(MaterialTags.MELTING_POINT) ? MaterialTags.MELTING_POINT.getInt(this.material) : 295;
-        return asGas(fuelPower, Math.max(meltingPoint, 295));
+        MaterialTags.FUEL_POWER.add(this.material, fuelPower);
+        return asGas();
     }
 
     public T asGas(int fuelPower,int temp) {
-        flags(AntimatterMaterialTypes.GAS);
-        MaterialTags.FUEL_POWER.add(this.material, fuelPower);
         MaterialTags.GAS_TEMPERATURE.add(this.material, temp);
-        return (T) this;
+        return asGas(fuelPower);
     }
 
     public T fluidDensity(int density){

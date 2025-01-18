@@ -58,11 +58,11 @@ public class MaterialTags {
     public static final DoubleMaterialTag DIRECT_SMELT_INTO = new DoubleMaterialTag("direct_smelt_into");
     public static final DoubleMaterialTag ARC_SMELT_INTO = new DoubleMaterialTag("arc_smelt_into");
     public static final DoubleMaterialTag MACERATE_INTO = new DoubleMaterialTag("macerate_into");
-    public static final NumberMaterialTag MELTING_POINT = new NumberMaterialTag("melting_point");
+    public static final NumberMaterialTag MELTING_POINT = (NumberMaterialTag) new NumberMaterialTag("melting_point").setDefaultValue(m -> 295);
     public static final NumberMaterialTag MINING_LEVEL = new NumberMaterialTag("mining_level");
-    public static final NumberMaterialTag FUEL_POWER = new NumberMaterialTag("fuel_power");
-    public static final NumberMaterialTag LIQUID_TEMPERATURE = new NumberMaterialTag("liquid_temperature");
-    public static final NumberMaterialTag GAS_TEMPERATURE = new NumberMaterialTag("gas_temperature");
+    public static final NumberMaterialTag FUEL_POWER = (NumberMaterialTag) new NumberMaterialTag("fuel_power").setDefaultValue(m -> 0);
+    public static final NumberMaterialTag LIQUID_TEMPERATURE = (NumberMaterialTag) new NumberMaterialTag("liquid_temperature").setDefaultValue(mat -> Math.max(MELTING_POINT.get(mat), 295));
+    public static final NumberMaterialTag GAS_TEMPERATURE = (NumberMaterialTag) new NumberMaterialTag("gas_temperature").setDefaultValue(mat -> Math.max(MELTING_POINT.get(mat), 295));
     public static final NumberMaterialTag FLUID_DENSITY = new NumberMaterialTag("fluid_density");
     public static final NumberMaterialTag ORE_MULTI = new NumberMaterialTag("ore_multi");
     public static final NumberMaterialTag SMELTING_MULTI = new NumberMaterialTag("smelting_multi");
