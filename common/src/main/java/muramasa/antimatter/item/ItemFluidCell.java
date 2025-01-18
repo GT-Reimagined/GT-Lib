@@ -3,6 +3,7 @@ package muramasa.antimatter.item;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
+import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.client.AntimatterTextureStitcher;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
@@ -61,6 +62,7 @@ import java.util.function.BiPredicate;
 public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContainerItem, IFluidItem{
 
     public final Material material;
+    @Getter
     private final int capacity;
 
     private final Fluid stack;
@@ -71,7 +73,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
     private static final String TAG_FLUID = "Fluid";
 
     public ItemFluidCell(String domain, Material material, int capacity) {
-        super(domain, "cell_".concat(material.getId()));
+        super(domain, material.getId() + "_cell");
         AntimatterTextureStitcher.addStitcher(t -> {
             t.accept(new ResourceLocation(domain, "item/other/" + getId() + "_cover"));
             t.accept(new ResourceLocation(domain, "item/other/" + getId() + "_fluid"));
@@ -79,10 +81,6 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
         this.material = material;
         this.capacity = capacity;
         this.stack = Fluids.EMPTY;
-    }
-
-    public int getCapacity() {
-        return capacity;
     }
 
     public int getMaxTemp() {
