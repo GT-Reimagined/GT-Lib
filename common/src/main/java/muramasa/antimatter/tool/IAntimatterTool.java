@@ -6,6 +6,7 @@ import muramasa.antimatter.Data;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.energy.ItemEnergyHandler;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
+import muramasa.antimatter.integration.curios.ICuriosHelper;
 import muramasa.antimatter.item.ICustomDurability;
 import muramasa.antimatter.item.ItemBattery;
 import muramasa.antimatter.material.Material;
@@ -218,7 +219,7 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
 
     default void refillTool(ItemStack stack, Player player){
         if (this.getAntimatterToolType().isPowered()) {
-            Streams.concat(player.getInventory().items.stream(), player.getInventory().offhand.stream()).forEach(s -> {
+            Streams.concat(player.getInventory().items.stream(), player.getInventory().offhand.stream(), ICuriosHelper.INSTANCE.getCuriosItems("belt", player)).forEach(s -> {
                 if (this.getCurrentEnergy(stack) < getMaxEnergy(stack)){
                     if (s.getItem() instanceof ItemBattery battery && battery.getTier().getIntegerId() == this.getEnergyTier()){
                         IEnergyHandlerItem batteryHandler = TesseractCapUtils.INSTANCE.getEnergyHandlerItem(s).orElse(null);
