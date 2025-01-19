@@ -102,84 +102,84 @@ public class AntimatterMaterialTypes {
     public static MaterialTypeFluid<MaterialTypeFluid.IFluidGetter> GAS = new MaterialTypeFluid<>("gas", 1, true, -1);
 
     static {
-        AntimatterMaterialTypes.BEARING_ROCK.set((m, s) -> {
-            if (m == null || s == null || !s.doesGenerateOre() || !AntimatterMaterialTypes.BEARING_ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.BEARING_ROCK, m, s);
+        BEARING_ROCK.set((m, s) -> {
+            if (m == null || s == null || !s.doesGenerateOre() || !BEARING_ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(BEARING_ROCK, m, s);
             BlockSurfaceRock rock = AntimatterAPI.get(BlockSurfaceRock.class, "surface_rock_" + m.getId() + "_" + s.getId());
             return new MaterialTypeBlock.Container(rock != null ? rock.defaultBlockState() : Blocks.AIR.defaultBlockState());
         });
-        AntimatterMaterialTypes.ROCK.set((m) -> {
+        ROCK.set((m) -> {
             StoneType s = AntimatterAPI.get(StoneType.class, m.getId());
-            if (s == null || !AntimatterMaterialTypes.ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.ROCK, m, s);
+            if (s == null || !ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ROCK, m, s);
             BlockSurfaceRock rock = AntimatterAPI.get(BlockSurfaceRock.class, "surface_rock_" + s.getId());
             return new MaterialTypeBlock.Container(rock != null ? rock.defaultBlockState() : Blocks.AIR.defaultBlockState());
         });
-        AntimatterMaterialTypes.ORE.set((m, s) -> {
+        ORE.set((m, s) -> {
             if (m != null && s != null) {
-                Item item = AntimatterAPI.getReplacement(AntimatterMaterialTypes.ORE, m, s);
+                Item item = AntimatterAPI.getReplacement(ORE, m, s);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
-            if (m == null || s == null || !s.doesGenerateOre() || !AntimatterMaterialTypes.ORE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.ORE, m, s);
-            BlockOre block = AntimatterAPI.get(BlockOre.class, AntimatterMaterialTypes.ORE.getId() + "_" + m.getId() + "_" + s.getId());
+            if (m == null || s == null || !s.doesGenerateOre() || !ORE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE, m, s);
+            BlockOre block = AntimatterAPI.get(BlockOre.class, ORE.getId() + "_" + m.getId() + "_" + s.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
-        AntimatterMaterialTypes.ORE_SMALL.set((m, s) -> {
+        ORE_SMALL.set((m, s) -> {
             if (m != null && s != null) {
-                Item item = AntimatterAPI.getReplacement(AntimatterMaterialTypes.ORE_SMALL, m, s);
+                Item item = AntimatterAPI.getReplacement(ORE_SMALL, m, s);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
-            if (m == null || s == null || !AntimatterMaterialTypes.ORE_SMALL.allowGen(m))
-                return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.ORE_SMALL, m, s);
-            BlockOre block = AntimatterAPI.get(BlockOre.class, AntimatterMaterialTypes.ORE_SMALL.getId() + "_" + m.getId() + "_" + Utils.getConventionalStoneType(s));
+            if (m == null || s == null || !ORE_SMALL.allowGen(m))
+                return MaterialTypeBlock.getEmptyBlockAndLog(ORE_SMALL, m, s);
+            BlockOre block = AntimatterAPI.get(BlockOre.class, ORE_SMALL.getId() + "_" + m.getId() + "_" + Utils.getConventionalStoneType(s));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
-        AntimatterMaterialTypes.ORE_STONE.set(m -> {
-            if (m == null || !AntimatterMaterialTypes.ORE_STONE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.ORE_STONE, m);
-            BlockOreStone block = AntimatterAPI.get(BlockOreStone.class, AntimatterMaterialTypes.ORE_STONE.getId() + "_" + m.getId());
+        ORE_STONE.set(m -> {
+            if (m == null || !ORE_STONE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE_STONE, m);
+            BlockOreStone block = AntimatterAPI.get(BlockOreStone.class, ORE_STONE.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
-        AntimatterMaterialTypes.BLOCK.set(m -> {
+        BLOCK.set(m -> {
             if (m != null) {
-                Item item = AntimatterAPI.getReplacement(AntimatterMaterialTypes.BLOCK, m);
+                Item item = AntimatterAPI.getReplacement(BLOCK, m);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
-            if (m == null || !AntimatterMaterialTypes.BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.BLOCK, m);
-            BlockStorage block = AntimatterAPI.get(BlockStorage.class, AntimatterMaterialTypes.BLOCK.getId() + "_" + m.getId());
+            if (m == null || !BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(BLOCK, m);
+            BlockStorage block = AntimatterAPI.get(BlockStorage.class, BLOCK.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
-        AntimatterMaterialTypes.RAW_ORE_BLOCK.set(m -> {
+        RAW_ORE_BLOCK.set(m -> {
             if (m != null) {
-                Item item = AntimatterAPI.getReplacement(AntimatterMaterialTypes.RAW_ORE_BLOCK, m);
+                Item item = AntimatterAPI.getReplacement(RAW_ORE_BLOCK, m);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
-            if (m == null || !AntimatterMaterialTypes.RAW_ORE_BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.RAW_ORE_BLOCK, m);
-            BlockStorage block = AntimatterAPI.get(BlockStorage.class, AntimatterMaterialTypes.RAW_ORE_BLOCK.getId() + "_" + m.getId());
+            if (m == null || !RAW_ORE_BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(RAW_ORE_BLOCK, m);
+            BlockStorage block = AntimatterAPI.get(BlockStorage.class, RAW_ORE_BLOCK.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
-        AntimatterMaterialTypes.FRAME.set(m -> {
-            if (m == null || !AntimatterMaterialTypes.FRAME.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(AntimatterMaterialTypes.FRAME, m);
-            BlockFrame block = AntimatterAPI.get(BlockFrame.class, AntimatterMaterialTypes.FRAME.getId() + "_" + m.getId());
+        FRAME.set(m -> {
+            if (m == null || !FRAME.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(FRAME, m);
+            BlockFrame block = AntimatterAPI.get(BlockFrame.class, FRAME.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
 
-        AntimatterMaterialTypes.LIQUID.set((m, i) -> {
-            if (m == null || !AntimatterMaterialTypes.LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(AntimatterMaterialTypes.LIQUID, m);
+        LIQUID.set((m, i) -> {
+            if (m == null || !LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(LIQUID, m);
             if (m.getId().equals("water")) return FluidPlatformUtils.createFluidStack(Fluids.WATER, i);
             else if (m.getId().equals("lava")) return FluidPlatformUtils.createFluidStack(Fluids.LAVA, i);
-            AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, AntimatterMaterialTypes.LIQUID.getId() + "_" + m.getId());
+            AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, LIQUID.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return FluidPlatformUtils.createFluidStack(fluid.getFluid(), i);
         });
-        AntimatterMaterialTypes.GAS.set((m, i) -> {
-            if (m == null || !AntimatterMaterialTypes.GAS.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(AntimatterMaterialTypes.GAS, m);
-            AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, AntimatterMaterialTypes.GAS.getId() + "_" + m.getId());
+        GAS.set((m, i) -> {
+            if (m == null || !GAS.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(GAS, m);
+            AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, GAS.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return FluidPlatformUtils.createFluidStack(fluid.getFluid(), i);
         });
@@ -187,105 +187,105 @@ public class AntimatterMaterialTypes {
 
     public static void init() {
 
-        AntimatterMaterialTypes.NUGGET.replacement(AntimatterMaterials.Iron, () -> Items.IRON_NUGGET);
-        AntimatterMaterialTypes.NUGGET.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_NUGGET);
-        AntimatterMaterialTypes.INGOT.replacement(AntimatterMaterials.Iron, () -> Items.IRON_INGOT);
-        AntimatterMaterialTypes.INGOT.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_INGOT);
-        AntimatterMaterialTypes.INGOT.replacement(AntimatterMaterials.Netherite, () -> Items.NETHERITE_INGOT);
-        AntimatterMaterialTypes.INGOT.replacement(AntimatterMaterials.Copper, () -> Items.COPPER_INGOT);
-        AntimatterMaterialTypes.INGOT.replacement(AntimatterMaterials.NetheriteScrap, () -> Items.NETHERITE_SCRAP);
+        NUGGET.replacement(AntimatterMaterials.Iron, () -> Items.IRON_NUGGET);
+        NUGGET.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_NUGGET);
+        INGOT.replacement(AntimatterMaterials.Iron, () -> Items.IRON_INGOT);
+        INGOT.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_INGOT);
+        INGOT.replacement(AntimatterMaterials.Netherite, () -> Items.NETHERITE_INGOT);
+        INGOT.replacement(AntimatterMaterials.Copper, () -> Items.COPPER_INGOT);
+        INGOT.replacement(AntimatterMaterials.NetheriteScrap, () -> Items.NETHERITE_SCRAP);
 
 
-        AntimatterMaterialTypes.DUST.replacement(AntimatterMaterials.Redstone, () -> Items.REDSTONE);
-        AntimatterMaterialTypes.DUST.replacement(AntimatterMaterials.Glowstone, () -> Items.GLOWSTONE_DUST);
-        AntimatterMaterialTypes.DUST.replacement(AntimatterMaterials.Blaze, () -> Items.BLAZE_POWDER);
-        AntimatterMaterialTypes.DUST.replacement(AntimatterMaterials.Sugar, () -> Items.SUGAR);
-        AntimatterMaterialTypes.RAW_ORE.replacement(AntimatterMaterials.Iron, () -> Items.RAW_IRON);
-        AntimatterMaterialTypes.RAW_ORE.replacement(AntimatterMaterials.Copper, () -> Items.RAW_COPPER);
-        AntimatterMaterialTypes.RAW_ORE.replacement(AntimatterMaterials.Gold, () -> Items.RAW_GOLD);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.Flint, () -> Items.FLINT);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.Diamond, () -> Items.DIAMOND);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.Emerald, () -> Items.EMERALD);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.Lapis, () -> Items.LAPIS_LAZULI);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.Quartz, () -> Items.QUARTZ);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.Coal, () -> Items.COAL);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.Charcoal, () -> Items.CHARCOAL);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.EnderEye, () -> Items.ENDER_EYE);
-        AntimatterMaterialTypes.GEM.replacement(AntimatterMaterials.EnderPearl, () -> Items.ENDER_PEARL);
+        DUST.replacement(AntimatterMaterials.Redstone, () -> Items.REDSTONE);
+        DUST.replacement(AntimatterMaterials.Glowstone, () -> Items.GLOWSTONE_DUST);
+        DUST.replacement(AntimatterMaterials.Blaze, () -> Items.BLAZE_POWDER);
+        DUST.replacement(AntimatterMaterials.Sugar, () -> Items.SUGAR);
+        RAW_ORE.replacement(AntimatterMaterials.Iron, () -> Items.RAW_IRON);
+        RAW_ORE.replacement(AntimatterMaterials.Copper, () -> Items.RAW_COPPER);
+        RAW_ORE.replacement(AntimatterMaterials.Gold, () -> Items.RAW_GOLD);
+        GEM.replacement(AntimatterMaterials.Flint, () -> Items.FLINT);
+        GEM.replacement(AntimatterMaterials.Diamond, () -> Items.DIAMOND);
+        GEM.replacement(AntimatterMaterials.Emerald, () -> Items.EMERALD);
+        GEM.replacement(AntimatterMaterials.Lapis, () -> Items.LAPIS_LAZULI);
+        GEM.replacement(AntimatterMaterials.Quartz, () -> Items.QUARTZ);
+        GEM.replacement(AntimatterMaterials.Coal, () -> Items.COAL);
+        GEM.replacement(AntimatterMaterials.Charcoal, () -> Items.CHARCOAL);
+        GEM.replacement(AntimatterMaterials.EnderEye, () -> Items.ENDER_EYE);
+        GEM.replacement(AntimatterMaterials.EnderPearl, () -> Items.ENDER_PEARL);
 
-        AntimatterMaterialTypes.ROD.replacement(AntimatterMaterials.Blaze, () -> Items.BLAZE_ROD);
-        AntimatterMaterialTypes.ROD.replacement(AntimatterMaterials.Bone, () -> Items.BONE);
-        AntimatterMaterialTypes.ROD.replacement(AntimatterMaterials.Wood, () -> Items.STICK);
+        ROD.replacement(AntimatterMaterials.Blaze, () -> Items.BLAZE_ROD);
+        ROD.replacement(AntimatterMaterials.Bone, () -> Items.BONE);
+        ROD.replacement(AntimatterMaterials.Wood, () -> Items.STICK);
 
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Coal, () -> Items.COAL_BLOCK);
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Iron, () -> Items.IRON_BLOCK);
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Copper, () -> Items.COPPER_BLOCK);
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_BLOCK);
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Diamond, () -> Items.DIAMOND_BLOCK);
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Emerald, () -> Items.EMERALD_BLOCK);
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Lapis, () -> Items.LAPIS_BLOCK);
-        AntimatterMaterialTypes.BLOCK.replacement(AntimatterMaterials.Netherite, () -> Items.NETHERITE_BLOCK);
-        AntimatterMaterialTypes.RAW_ORE_BLOCK.replacement(AntimatterMaterials.Iron, () -> Items.RAW_IRON_BLOCK);
-        AntimatterMaterialTypes.RAW_ORE_BLOCK.replacement(AntimatterMaterials.Copper, () -> Items.RAW_COPPER_BLOCK);
-        AntimatterMaterialTypes.RAW_ORE_BLOCK.replacement(AntimatterMaterials.Gold, () -> Items.RAW_GOLD_BLOCK);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Coal, AntimatterStoneTypes.STONE, () -> Items.COAL_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Coal, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COAL_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Iron, AntimatterStoneTypes.STONE, () -> Items.IRON_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Iron, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_IRON_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Copper, AntimatterStoneTypes.STONE, () -> Items.COPPER_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Copper, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COPPER_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Gold, AntimatterStoneTypes.STONE, () -> Items.GOLD_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Gold, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_GOLD_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Redstone, AntimatterStoneTypes.STONE, () -> Items.REDSTONE_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Redstone, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_REDSTONE_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Emerald, AntimatterStoneTypes.STONE, () -> Items.EMERALD_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Emerald, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_EMERALD_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Lapis, AntimatterStoneTypes.STONE, () -> Items.LAPIS_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Lapis, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_LAPIS_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.STONE, () -> Items.DIAMOND_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_DIAMOND_ORE);
-        AntimatterMaterialTypes.ORE.replacement(AntimatterMaterials.Quartz, AntimatterStoneTypes.NETHERRACK, () -> Items.NETHER_QUARTZ_ORE);
+        BLOCK.replacement(AntimatterMaterials.Coal, () -> Items.COAL_BLOCK);
+        BLOCK.replacement(AntimatterMaterials.Iron, () -> Items.IRON_BLOCK);
+        BLOCK.replacement(AntimatterMaterials.Copper, () -> Items.COPPER_BLOCK);
+        BLOCK.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_BLOCK);
+        BLOCK.replacement(AntimatterMaterials.Diamond, () -> Items.DIAMOND_BLOCK);
+        BLOCK.replacement(AntimatterMaterials.Emerald, () -> Items.EMERALD_BLOCK);
+        BLOCK.replacement(AntimatterMaterials.Lapis, () -> Items.LAPIS_BLOCK);
+        BLOCK.replacement(AntimatterMaterials.Netherite, () -> Items.NETHERITE_BLOCK);
+        RAW_ORE_BLOCK.replacement(AntimatterMaterials.Iron, () -> Items.RAW_IRON_BLOCK);
+        RAW_ORE_BLOCK.replacement(AntimatterMaterials.Copper, () -> Items.RAW_COPPER_BLOCK);
+        RAW_ORE_BLOCK.replacement(AntimatterMaterials.Gold, () -> Items.RAW_GOLD_BLOCK);
+        ORE.replacement(AntimatterMaterials.Coal, AntimatterStoneTypes.STONE, () -> Items.COAL_ORE);
+        ORE.replacement(AntimatterMaterials.Coal, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COAL_ORE);
+        ORE.replacement(AntimatterMaterials.Iron, AntimatterStoneTypes.STONE, () -> Items.IRON_ORE);
+        ORE.replacement(AntimatterMaterials.Iron, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_IRON_ORE);
+        ORE.replacement(AntimatterMaterials.Copper, AntimatterStoneTypes.STONE, () -> Items.COPPER_ORE);
+        ORE.replacement(AntimatterMaterials.Copper, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COPPER_ORE);
+        ORE.replacement(AntimatterMaterials.Gold, AntimatterStoneTypes.STONE, () -> Items.GOLD_ORE);
+        ORE.replacement(AntimatterMaterials.Gold, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_GOLD_ORE);
+        ORE.replacement(AntimatterMaterials.Redstone, AntimatterStoneTypes.STONE, () -> Items.REDSTONE_ORE);
+        ORE.replacement(AntimatterMaterials.Redstone, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_REDSTONE_ORE);
+        ORE.replacement(AntimatterMaterials.Emerald, AntimatterStoneTypes.STONE, () -> Items.EMERALD_ORE);
+        ORE.replacement(AntimatterMaterials.Emerald, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_EMERALD_ORE);
+        ORE.replacement(AntimatterMaterials.Lapis, AntimatterStoneTypes.STONE, () -> Items.LAPIS_ORE);
+        ORE.replacement(AntimatterMaterials.Lapis, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_LAPIS_ORE);
+        ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.STONE, () -> Items.DIAMOND_ORE);
+        ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_DIAMOND_ORE);
+        ORE.replacement(AntimatterMaterials.Quartz, AntimatterStoneTypes.NETHERRACK, () -> Items.NETHER_QUARTZ_ORE);
 
-        AntimatterMaterialTypes.ROTOR.dependents(AntimatterMaterialTypes.PLATE, AntimatterMaterialTypes.SCREW, AntimatterMaterialTypes.RING);
-        AntimatterMaterialTypes.SCREW.dependents(AntimatterMaterialTypes.BOLT);
-        AntimatterMaterialTypes.BOLT.dependents(AntimatterMaterialTypes.ROD);
-        AntimatterMaterialTypes.RING.dependents(AntimatterMaterialTypes.ROD);
-        AntimatterMaterialTypes.ROD_LONG.dependents(ROD);
-        AntimatterMaterialTypes.ROD.dependents(ROD_LONG);
-        AntimatterMaterialTypes.CRUSHED.dependents(AntimatterMaterialTypes.CRUSHED_PURIFIED, AntimatterMaterialTypes.CRUSHED_REFINED, AntimatterMaterialTypes.DUST_IMPURE);
-        AntimatterMaterialTypes.DUST_PURE.dependents(AntimatterMaterialTypes.DUST);
-        AntimatterMaterialTypes.DUST_IMPURE.dependents(AntimatterMaterialTypes.DUST_PURE);
-        AntimatterMaterialTypes.DUST.dependents(AntimatterMaterialTypes.DUST_SMALL, AntimatterMaterialTypes.DUST_TINY);
-        AntimatterMaterialTypes.GEAR_SMALL.dependents(AntimatterMaterialTypes.PLATE);
-        AntimatterMaterialTypes.GEAR.dependents(AntimatterMaterialTypes.PLATE, AntimatterMaterialTypes.ROD);
-        AntimatterMaterialTypes.GEM_EXQUISITE.dependents(GEM_FLAWLESS, GEM_FLAWED, GEM_CHIPPED,  GEM);
+        ROTOR.dependents(PLATE, SCREW, RING);
+        SCREW.dependents(BOLT);
+        BOLT.dependents(ROD);
+        RING.dependents(ROD);
+        ROD_LONG.dependents(ROD);
+        ROD.dependents(ROD_LONG);
+        CRUSHED.dependents(CRUSHED_PURIFIED, CRUSHED_REFINED, DUST_IMPURE);
+        DUST_PURE.dependents(DUST);
+        DUST_IMPURE.dependents(DUST_PURE);
+        DUST.dependents(DUST_SMALL, DUST_TINY);
+        GEAR_SMALL.dependents(PLATE);
+        GEAR.dependents(PLATE, ROD);
+        GEM_EXQUISITE.dependents(GEM_FLAWLESS, GEM_FLAWED, GEM_CHIPPED,  GEM);
 
-        AntimatterMaterialTypes.WIRE_FINE.setIgnoreTextureSets();
-        AntimatterMaterialTypes.DUST_TINY.setHidden();
-        AntimatterMaterialTypes.DUST_SMALL.setHidden();
-        AntimatterMaterialTypes.DRILLBIT.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.CHAINSAWBIT.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.WRENCHBIT.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.BUZZSAW_BLADE.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.PICKAXE_HEAD.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.SHOVEL_HEAD.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.SWORD_BLADE.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.AXE_HEAD.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.HOE_HEAD.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.HAMMER_HEAD.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.FILE_HEAD.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.SAW_BLADE.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.SCREWDRIVER_TIP.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.SCYTHE_BLADE.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.RAW_ORE.unSplitName();
-        AntimatterMaterialTypes.RAW_ORE_BLOCK.unSplitName();
-        AntimatterMaterialTypes.BEARING_ROCK.unSplitName().setIgnoreTextureSets();
-        AntimatterMaterialTypes.ROCK.unSplitName().setIgnoreTextureSets();
+        WIRE_FINE.setIgnoreTextureSets();
+        DUST_TINY.setHidden();
+        DUST_SMALL.setHidden();
+        DRILLBIT.unSplitName().setIgnoreTextureSets();
+        CHAINSAWBIT.unSplitName().setIgnoreTextureSets();
+        WRENCHBIT.unSplitName().setIgnoreTextureSets();
+        BUZZSAW_BLADE.unSplitName().setIgnoreTextureSets();
+        PICKAXE_HEAD.unSplitName().setIgnoreTextureSets();
+        SHOVEL_HEAD.unSplitName().setIgnoreTextureSets();
+        SWORD_BLADE.unSplitName().setIgnoreTextureSets();
+        AXE_HEAD.unSplitName().setIgnoreTextureSets();
+        HOE_HEAD.unSplitName().setIgnoreTextureSets();
+        HAMMER_HEAD.unSplitName().setIgnoreTextureSets();
+        FILE_HEAD.unSplitName().setIgnoreTextureSets();
+        SAW_BLADE.unSplitName().setIgnoreTextureSets();
+        SCREWDRIVER_TIP.unSplitName().setIgnoreTextureSets();
+        SCYTHE_BLADE.unSplitName().setIgnoreTextureSets();
+        RAW_ORE.unSplitName();
+        RAW_ORE_BLOCK.unSplitName();
+        BEARING_ROCK.unSplitName().setIgnoreTextureSets();
+        ROCK.unSplitName().setIgnoreTextureSets();
     }
 
     public static void postInit() {
-        AntimatterMaterialTypes.LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> AntimatterAPI.register(AntimatterFluid.class, new AntimatterMaterialFluid(Ref.SHARED_ID, m, AntimatterMaterialTypes.LIQUID)));
-        AntimatterMaterialTypes.GAS.all().forEach(m -> AntimatterAPI.register(AntimatterFluid.class, new AntimatterMaterialFluid(Ref.SHARED_ID, m, AntimatterMaterialTypes.GAS)));
-        AntimatterMaterialTypes.ORE_STONE.all().forEach(m -> AntimatterAPI.register(StoneType.class, new StoneType(ID, m.getId(), m, new Texture(m.materialDomain(), "block/stone/" + m.getId()), SoundType.STONE, false).setGenerateOre(false).setStateSupplier(() -> ORE_STONE.get().get(m).asState())));
+        LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> AntimatterAPI.register(AntimatterFluid.class, new AntimatterMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
+        GAS.all().forEach(m -> AntimatterAPI.register(AntimatterFluid.class, new AntimatterMaterialFluid(Ref.SHARED_ID, m, GAS)));
+        ORE_STONE.all().forEach(m -> AntimatterAPI.register(StoneType.class, new StoneType(ID, m.getId(), m, new Texture(m.materialDomain(), "block/stone/" + m.getId()), SoundType.STONE, false).setGenerateOre(false).setStateSupplier(() -> ORE_STONE.get().get(m).asState())));
     }
 }
