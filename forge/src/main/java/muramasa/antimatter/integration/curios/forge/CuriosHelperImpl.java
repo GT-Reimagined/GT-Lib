@@ -22,6 +22,7 @@ public class CuriosHelperImpl implements ICuriosHelper {
         }
         List<ItemStack> stacks = new ArrayList<>();
         var curioMap = handler.getCurios();
+        if (!curioMap.containsKey(slotType)) return Stream.empty();
         var stacksHandler = curioMap.get(slotType).getStacks();
         for (int i = 0; i < stacksHandler.getSlots(); i++) {
             if (!stacksHandler.getStackInSlot(i).isEmpty()) {
