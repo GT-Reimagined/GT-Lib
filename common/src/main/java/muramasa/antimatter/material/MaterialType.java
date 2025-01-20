@@ -27,7 +27,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static muramasa.antimatter.util.Utils.getLocalizedMaterialType;
+import static muramasa.antimatter.util.Utils.getLocalizedType;
 
 public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, IRegistryEntryProvider {
 
@@ -40,6 +45,8 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
     protected boolean generating = true, blockType, visible, splitName;
     protected final Set<Material> materials = new ObjectLinkedOpenHashSet<>(); //Linked to preserve insertion order for JEI
     protected final Map<MaterialType<?>, TagKey<?>> tagMap = new Object2ObjectOpenHashMap<>();
+    @Getter
+    protected Function<Material, String> lang;
     protected T getter;
     private boolean hidden = false;
     @Getter
@@ -56,6 +63,14 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
         this.layers = layers;
         this.splitName = id.contains("_");
         this.tagMap.put(this, tagFromString(Utils.getConventionalMaterialType(this)));
+        this.lang = m -> {
+            String[] split = getLocalizedMaterialType(this);
+            if (split.length > 1) {
+                return String.join("", split[0], " ", getLocalizedType(m), " ", split[1]);
+            } else {
+                return String.join("", getLocalizedType(m), " ", split[0]);
+            }
+        };
         register(MaterialType.class, getId());
     }
 
@@ -112,9 +127,6 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
                 }
             }
         }
-        stack.getItem().builtInRegistryHolder().tags().forEach(t -> {
-
-        });
         return null;
     }
 
@@ -155,6 +167,15 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
         splitName = false;
         this.tagMap.put(this, tagFromString(Utils.getConventionalMaterialType(this)));
         return this;
+    }
+
+    public MaterialType<T> setLang(Function<Material, String> lang) {
+        this.lang = lang;
+        return this;
+    }
+
+    public MaterialType<T> setLang(BiFunction<MaterialType<?>, Material, String> lang){
+        return setLang(m -> lang.apply(this, m));
     }
 
     @Override

@@ -12,6 +12,7 @@ import muramasa.antimatter.fluid.AntimatterMaterialFluid;
 import muramasa.antimatter.item.CoverMaterialItem;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialItem;
+import muramasa.antimatter.material.MaterialType;
 import muramasa.antimatter.material.MaterialTypeBlock;
 import muramasa.antimatter.material.MaterialTypeFluid;
 import muramasa.antimatter.material.MaterialTypeItem;
@@ -28,7 +29,13 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Fluids;
 import tesseract.FluidPlatformUtils;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 import static muramasa.antimatter.Ref.*;
+import static muramasa.antimatter.data.AntimatterMaterials.Wood;
+import static muramasa.antimatter.material.MaterialTags.RUBBERTOOLS;
+import static muramasa.antimatter.material.MaterialTags.WOOD;
 
 public class AntimatterMaterialTypes {
     //Item Types
@@ -100,6 +107,8 @@ public class AntimatterMaterialTypes {
     //Fluid Types
     public static MaterialTypeFluid<MaterialTypeFluid.IFluidGetter> LIQUID = new MaterialTypeFluid<>("liquid", 1, true, -1);
     public static MaterialTypeFluid<MaterialTypeFluid.IFluidGetter> GAS = new MaterialTypeFluid<>("gas", 1, true, -1);
+
+    public static final BiFunction<MaterialType<?>, Material, String> UNSPLIT_FUNCTION = (t, m) -> m.getDisplayNameString() + " " + Utils.lowerUnderscoreToUpperSpaced(t.getId());
 
     static {
         BEARING_ROCK.set((m, s) -> {
@@ -186,7 +195,54 @@ public class AntimatterMaterialTypes {
     }
 
     public static void init() {
+        replacements();
+        dependents();
+        Function<Material, String> d = m -> m.has(RUBBERTOOLS) ? "Pulp" : "Dust";
+        DUST.setLang(m -> m.getDisplayNameString() + " " + d.apply(m));
+        DUST_TINY.setLang(m -> "Tiny " + m.getDisplayNameString() +  " " + d.apply(m)).setHidden();
+        DUST_SMALL.setLang(m -> "Small " + m.getDisplayNameString() + " " + d.apply(m)).setHidden();
+        DUST_IMPURE.setLang(m -> "Impure " + m.getDisplayNameString() +  " " + d.apply(m));
+        DUST_PURE.setLang(m -> "Pure " + m.getDisplayNameString() + " " + d.apply(m));
+        Function<Material, String> n = m -> m.getElement() != null ? "Native " : "";
+        BEARING_ROCK.unSplitName().setLang(m -> n.apply(m) + m.getDisplayNameString() + " Bearing Rock").setIgnoreTextureSets();
+        ROCK.unSplitName().setIgnoreTextureSets();
+        CRUSHED.setLang(m -> "Crushed " + n.apply(m) + m.getDisplayNameString() + " Ore");
+        CRUSHED_PURIFIED.setLang(m -> "Purified " + n.apply(m) + m.getDisplayNameString() + " Ore");
+        CRUSHED_REFINED.setLang(m -> "Refined " + n.apply(m) + m.getDisplayNameString() + " Ore");
+        RAW_ORE.unSplitName().setLang(m -> "Raw " + n.apply(m) + m.getDisplayNameString());
+        INGOT.setLang(m -> m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Bar" : "Ingot"));
+        NUGGET.setLang(m -> m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Chip" : "Nugget"));
+        GEM.setLang(Material::getDisplayNameString);
+        GEM_EXQUISITE.setLang(m -> "Exquisite " + m.getDisplayNameString());
+        GEM_FLAWLESS.setLang(m -> "Flawless " + m.getDisplayNameString());
+        GEM_FLAWED.setLang(m -> "Flawed " + m.getDisplayNameString());
+        GEM_CHIPPED.setLang(m -> "Chipped " + m.getDisplayNameString());
+        Function<Material, String> p = m -> m == Wood ? "Plank" : m.has(RUBBERTOOLS) ? "Sheet" : "Plate";
+        PLATE.setLang(m -> m.getDisplayNameString() + " " + p.apply(m));
+        PLATE_DENSE.setLang(m -> "Dense " + m.getDisplayNameString() + " " + p.apply(m));
+        PLATE_TINY.setLang(m -> "Tiny " + m.getDisplayNameString() + " " + p.apply(m));
+        ITEM_CASING.setLang(m -> m.getDisplayNameString() + " Item Casings");
+        FOIL.setLang(m -> (m.has(RUBBERTOOLS) ? "Thin " : "") + m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Sheet" : "Foil"));
+        WIRE_FINE.setIgnoreTextureSets();
+        DRILLBIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        CHAINSAWBIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        WRENCHBIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        BUZZSAW_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        PICKAXE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        SHOVEL_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        SWORD_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        AXE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        HOE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        HAMMER_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        FILE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        SAW_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        SCREWDRIVER_TIP.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        SCYTHE_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        RAW_ORE_BLOCK.unSplitName().setLang(m -> "Block of Raw " + n.apply(m) + m.getDisplayNameString());
+        BLOCK.setLang(m -> "Block of " + m.getDisplayNameString());
+    }
 
+    private static void replacements(){
         NUGGET.replacement(AntimatterMaterials.Iron, () -> Items.IRON_NUGGET);
         NUGGET.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_NUGGET);
         INGOT.replacement(AntimatterMaterials.Iron, () -> Items.IRON_INGOT);
@@ -215,7 +271,7 @@ public class AntimatterMaterialTypes {
 
         ROD.replacement(AntimatterMaterials.Blaze, () -> Items.BLAZE_ROD);
         ROD.replacement(AntimatterMaterials.Bone, () -> Items.BONE);
-        ROD.replacement(AntimatterMaterials.Wood, () -> Items.STICK);
+        ROD.replacement(Wood, () -> Items.STICK);
 
         BLOCK.replacement(AntimatterMaterials.Coal, () -> Items.COAL_BLOCK);
         BLOCK.replacement(AntimatterMaterials.Iron, () -> Items.IRON_BLOCK);
@@ -245,7 +301,9 @@ public class AntimatterMaterialTypes {
         ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.STONE, () -> Items.DIAMOND_ORE);
         ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_DIAMOND_ORE);
         ORE.replacement(AntimatterMaterials.Quartz, AntimatterStoneTypes.NETHERRACK, () -> Items.NETHER_QUARTZ_ORE);
+    }
 
+    private static void dependents() {
         ROTOR.dependents(PLATE, SCREW, RING);
         SCREW.dependents(BOLT);
         BOLT.dependents(ROD);
@@ -259,28 +317,6 @@ public class AntimatterMaterialTypes {
         GEAR_SMALL.dependents(PLATE);
         GEAR.dependents(PLATE, ROD);
         GEM_EXQUISITE.dependents(GEM_FLAWLESS, GEM_FLAWED, GEM_CHIPPED,  GEM);
-
-        WIRE_FINE.setIgnoreTextureSets();
-        DUST_TINY.setHidden();
-        DUST_SMALL.setHidden();
-        DRILLBIT.unSplitName().setIgnoreTextureSets();
-        CHAINSAWBIT.unSplitName().setIgnoreTextureSets();
-        WRENCHBIT.unSplitName().setIgnoreTextureSets();
-        BUZZSAW_BLADE.unSplitName().setIgnoreTextureSets();
-        PICKAXE_HEAD.unSplitName().setIgnoreTextureSets();
-        SHOVEL_HEAD.unSplitName().setIgnoreTextureSets();
-        SWORD_BLADE.unSplitName().setIgnoreTextureSets();
-        AXE_HEAD.unSplitName().setIgnoreTextureSets();
-        HOE_HEAD.unSplitName().setIgnoreTextureSets();
-        HAMMER_HEAD.unSplitName().setIgnoreTextureSets();
-        FILE_HEAD.unSplitName().setIgnoreTextureSets();
-        SAW_BLADE.unSplitName().setIgnoreTextureSets();
-        SCREWDRIVER_TIP.unSplitName().setIgnoreTextureSets();
-        SCYTHE_BLADE.unSplitName().setIgnoreTextureSets();
-        RAW_ORE.unSplitName();
-        RAW_ORE_BLOCK.unSplitName();
-        BEARING_ROCK.unSplitName().setIgnoreTextureSets();
-        ROCK.unSplitName().setIgnoreTextureSets();
     }
 
     public static void postInit() {
