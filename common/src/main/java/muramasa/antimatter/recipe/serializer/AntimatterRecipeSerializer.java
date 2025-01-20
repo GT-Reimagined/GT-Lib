@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> implements IAntimatterRecipeSerializer<Recipe> {
+public class AntimatterRecipeSerializer extends BaseRecipeSerializer<IRecipe> implements IAntimatterRecipeSerializer<IRecipe> {
 
     public static final AntimatterRecipeSerializer INSTANCE = new AntimatterRecipeSerializer();
 
@@ -51,7 +51,7 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> imp
     }
 
     @Override
-    public RecipeType<Recipe> getRecipeType() {
+    public RecipeType<IRecipe> getRecipeType() {
         return Recipe.RECIPE_TYPE;
     }
 
@@ -237,8 +237,8 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> imp
     }
 
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, Recipe recipe) {
-        buffer.writeUtf(recipe.mapId);
+    public void toNetwork(FriendlyByteBuf buffer, IRecipe recipe) {
+        buffer.writeUtf(recipe.getMapId());
         buffer.writeInt(!recipe.hasInputItems() ? 0 : recipe.getInputItems().size());
         if (recipe.hasInputItems()) {
             recipe.getInputItems().forEach(t -> RecipeUtil.INSTANCE.write(buffer, t));
