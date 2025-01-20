@@ -49,6 +49,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.Deserializers;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -184,33 +186,38 @@ public class AntimatterDynamics {
         Antimatter.LOGGER.info("Compiling GT recipes");
         long time = System.nanoTime();
 
-        for (RecipeMap m : AntimatterAPI.all(RecipeMap.class)) {
+        Set<RecipeType<? extends IRecipe>> recipeTypes = new HashSet<>();
+        for (RecipeMap<?> m : AntimatterAPI.all(RecipeMap.class)) {
             if (m.getProxy() != null) {
                 List<net.minecraft.world.item.crafting.Recipe<?>> recipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(m.getProxy().loc());
                 recipes.forEach(recipe -> m.compileRecipe(m.getProxy().handler().apply(recipe, m.RB())));
             }
         }
 
-        List<IRecipe> recipes = manager.getAllRecipesFor(Recipe.RECIPE_TYPE);
-        Map<String, List<IRecipe>> map = recipes.stream().collect(Collectors.groupingBy(IRecipe::getMapId));
+        for (RecipeType<? extends IRecipe> recipeType : RecipeMap.getRecipeTypes()) {
+            List<IRecipe> recipes = (List<IRecipe>) manager.getAllRecipesFor(recipeType);
+            Map<String, List<IRecipe>> map = recipes.stream().collect(Collectors.groupingBy(IRecipe::getMapId));
 
-        for (Map.Entry<String, List<IRecipe>> entry : map.entrySet()) {
-            String[] split = entry.getKey().split(":");
-            String name;
-            if (split.length == 2) {
-                name = split[1];
-            } else if (split.length == 1) {
-                name = split[0];
-            } else {
-                continue;
-            }
-            IRecipeMap rmap = AntimatterAPI.get(IRecipeMap.class, name);
-            if (rmap != null){
-                entry.getValue().forEach(rmap::compileRecipe);
-                //entry.getValue().forEach(rmap::add);
-                //rmap.compile(manager);
+            for (Map.Entry<String, List<IRecipe>> entry : map.entrySet()) {
+                String[] split = entry.getKey().split(":");
+                String name;
+                if (split.length == 2) {
+                    name = split[1];
+                } else if (split.length == 1) {
+                    name = split[0];
+                } else {
+                    continue;
+                }
+                IRecipeMap rmap = AntimatterAPI.get(IRecipeMap.class, name);
+                if (rmap != null){
+                    entry.getValue().forEach(rmap::compileRecipe);
+                    //entry.getValue().forEach(rmap::add);
+                    //rmap.compile(manager);
+                }
             }
         }
+
+
         time = System.nanoTime() - time;
         int size = AntimatterAPI.all(IRecipeMap.class).stream().mapToInt(t -> t.getRecipes(false).size()).sum();
 

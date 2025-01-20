@@ -5,6 +5,7 @@ import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.gui.GuiData;
@@ -12,7 +13,9 @@ import muramasa.antimatter.integration.jeirei.renderer.IRecipeInfoRenderer;
 import muramasa.antimatter.integration.jeirei.renderer.InfoRenderers;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
+import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.recipe.IRecipe;
+import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.AbstractMapIngredient;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
@@ -22,7 +25,8 @@ import muramasa.antimatter.recipe.ingredient.MapItemStackIngredient;
 import muramasa.antimatter.recipe.ingredient.MapTagIngredient;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.ingredient.SpecialIngredientWrapper;
-import muramasa.antimatter.recipe.serializer.CustomRecipeSerializer;
+import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
+import muramasa.antimatter.recipe.serializer.IAntimatterRecipeSerializer;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.unimined.expect.annotation.Environment;
@@ -39,6 +44,7 @@ import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -71,13 +77,15 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     private Proxy PROXY;
 
     @Nullable
-    private CustomRecipeSerializer recipeSerializer;
-
-    @Nullable
     private Supplier<Object> icon;
 
     @Environment(EnvType.CLIENT)
     private IRecipeInfoRenderer infoRenderer;
+
+    @Getter
+    private IAntimatterRecipeSerializer<? extends IRecipe> recipeSerializer = AntimatterRecipeSerializer.INSTANCE;
+
+    private static final Set<RecipeType<? extends IRecipe>> RECIPE_TYPES = new HashSet<>(Collections.singleton(Recipe.RECIPE_TYPE));
 
     // Data allows you to set related data to the map, e.g. which tier the gui
     // displays.
@@ -117,19 +125,9 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
         return this;
     }
 
-    public RecipeMap<B> setSerializer(CustomRecipeSerializer recipeSerializer){
-        this.recipeSerializer = recipeSerializer;
-        return this;
-    }
-
     @Nullable
     public Object getIcon() {
         return this.icon != null ? this.icon.get() : null;
-    }
-
-    @Nullable
-    public CustomRecipeSerializer getRecipeSerializer() {
-        return recipeSerializer;
     }
 
     @NotNull
@@ -195,6 +193,21 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     @Override
     public String getId() {
         return loc.getPath();
+    }
+
+    @Override
+    public RecipeType<? extends IRecipe> getRecipeType() {
+        return recipeSerializer.getRecipeType();
+    }
+
+    public static Set<RecipeType<? extends IRecipe>> getRecipeTypes() {
+        return Collections.unmodifiableSet(RECIPE_TYPES);
+    }
+
+    public<T extends IRecipe> RecipeMap<B>  setRecipeSerializer(IAntimatterRecipeSerializer<T> serializer) {
+        this.recipeSerializer = serializer;
+        RECIPE_TYPES.add(serializer.getRecipeType());
+        return this;
     }
 
     public B RB() {

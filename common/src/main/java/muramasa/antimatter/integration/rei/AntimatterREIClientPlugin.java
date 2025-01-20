@@ -36,6 +36,7 @@ import muramasa.antimatter.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 
@@ -129,7 +130,7 @@ public class AntimatterREIClientPlugin implements REIClientPlugin {
     @Override
     public void registerDisplays(DisplayRegistry registry) {
         // regular recipes
-        registry.registerRecipeFiller(IRecipe.class, type -> Objects.equals(Recipe.RECIPE_TYPE, type), r -> !r.isHidden(), RecipeMapDisplay::new);
+        registry.registerRecipeFiller(IRecipe.class, type -> RecipeMap.getRecipeTypes().contains(type), r -> !r.isHidden(), RecipeMapDisplay::new);
         AntimatterJEIREIPlugin.getREGISTRY().values().forEach(t -> {
             var m = t.map;
             if (m instanceof RecipeMap<?> rm){
