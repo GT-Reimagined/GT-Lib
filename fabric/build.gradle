@@ -122,6 +122,12 @@ tasks.named('compileJava', JavaCompile) {
     source(project(":antimatter-common").sourceSets.main.allSource)
 }
 
+tasks.withType(JavaExec).configureEach {
+    expectPlatform.insertAgent(it, "fabric", [
+            "xyz/wagyourtail/unimined/expect/annotation/Environment": "net/fabricmc/api/Environment",
+            "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/fabricmc/api/EnvType",])
+}
+
 sourcesJar {
     mustRunAfter copyAccessWidener
     from(project(':antimatter-common').sourceSets.main.allSource){

@@ -26,9 +26,6 @@ neoForge {
         }
         server {
             server()
-            /*expectPlatform.insertAgent(it, "forge", ["xyz/wagyourtail/unimined/expect/annotation/Environment": "net/minecraftforge/api/distmarker/OnlyIn",
-                                                     "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType": "net/minecraftforge/api/distmarker/Dist",
-                                                     "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType.SERVER": "DEDICATED_SERVER",])*/
         }
     }
     mods {
@@ -91,6 +88,13 @@ dependencies {
 
 tasks.named('compileJava', JavaCompile) {
     source(project(":antimatter-common").sourceSets.main.allSource)
+}
+
+tasks.withType(JavaExec).configureEach {
+    expectPlatform.insertAgent(it, "forge", [
+            "xyz/wagyourtail/unimined/expect/annotation/Environment"                : "net/minecraftforge/api/distmarker/OnlyIn",
+            "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType"       : "net/minecraftforge/api/distmarker/Dist",
+            "xyz/wagyourtail/unimined/expect/annotation/Environment\$EnvType.SERVER": "DEDICATED_SERVER",])
 }
 
 processResources {
