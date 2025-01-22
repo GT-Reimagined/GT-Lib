@@ -95,8 +95,6 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
 
     Set<RecipeTag> getTags();
 
-    Map<ItemStack, Integer> getChancesWithStacks();
-
     String getMapId();
 
     default JsonObject toJson() {

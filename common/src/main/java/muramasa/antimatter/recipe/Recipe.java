@@ -49,7 +49,6 @@ public class Recipe implements IRecipe {
     private boolean hidden, fake;
     @Getter
     private Set<RecipeTag> tags = new ObjectOpenHashSet<>();
-    private Map<ItemStack, Integer> itemsWithChances = null;
     public ResourceLocation id;
     public String mapId;
     //Used for recipe validators, e.g. cleanroom.
@@ -235,28 +234,6 @@ public class Recipe implements IRecipe {
     @Override
     public boolean isFake() {
         return fake;
-    }
-
-    //todo fix tis
-    public Map<ItemStack, Integer> getChancesWithStacks(){
-        if (itemsWithChances == null) {
-            if (itemsOutput != null){
-                ImmutableMap.Builder<ItemStack, Integer> map = ImmutableMap.builder();
-                if (hasOutputChances()){
-                    for (int i = 0; i < itemsOutput.length; i++) {
-                        map.put(itemsOutput[i], outputChances[i]);
-                    }
-                } else {
-                    for (ItemStack itemStack : itemsOutput) {
-                        map.put(itemStack, 10000);
-                    }
-                }
-                itemsWithChances = map.build();
-            } else {
-                itemsWithChances = ImmutableMap.of();
-            }
-        }
-        return itemsWithChances;
     }
 
     @Override
