@@ -246,11 +246,6 @@ public class AntimatterToolType implements IAntimatterObject {
     }
 
     @Deprecated
-    public AntimatterToolType setMaterialType(MaterialTypeItem<?> materialTypeItem){
-        return setMaterialTypeItem(materialTypeItem);
-    }
-
-    @Deprecated
     public AntimatterToolType setRepairability(boolean repairable){
         return setRepairable(repairable);
     }

@@ -1415,8 +1415,6 @@ public class Utils {
     }
 
     @Nullable
-    //@Deprecated // Ready to use the methods above instead
-    //Not deprecated so you don't have to call methods multiple times.
     public static AntimatterToolType getToolType(Player player) {
         ItemStack stack = player.getMainHandItem();
         for (AntimatterToolType ty : AntimatterAPI.all(AntimatterToolType.class)) {

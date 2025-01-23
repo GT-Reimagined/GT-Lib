@@ -171,39 +171,6 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         return (T) this;
     }
 
-    @Deprecated
-    public T addTools(float toolDamage, float toolSpeed, int toolDurability, int toolQuality) {
-        return addTools(toolDamage, toolSpeed, toolDurability, toolQuality, ImmutableMap.of());
-    }
-
-    @Deprecated
-    public T addTools(float toolDamage, float toolSpeed, int toolDurability, int toolQuality, ImmutableMap<Enchantment, Integer> toolEnchantment, AntimatterToolType... toolTypes) {
-        if (has(AntimatterMaterialTypes.INGOT))
-            flags(AntimatterMaterialTypes.PLATE, AntimatterMaterialTypes.ROD, AntimatterMaterialTypes.SCREW, AntimatterMaterialTypes.BOLT); //TODO: We need to add bolt for now since screws depends on bolt, need to find time to change it
-        else flags(AntimatterMaterialTypes.ROD);
-        List<AntimatterToolType> toolTypesList = toolTypes.length > 0 ? Arrays.asList(toolTypes) : AntimatterAPI.all(AntimatterToolType.class);
-        MaterialTags.TOOLS.add(this.material, new ToolData(toolDamage, toolSpeed, toolDurability, toolQuality, Wood, toolEnchantment, toolTypesList));
-        MaterialTags.MINING_LEVEL.add(this.material, toolQuality - 1);
-        for (AntimatterToolType type : toolTypesList){
-            if (type.getMaterialTypeItem() != null && material != Flint && material != NULL && !material.has(RUBBERTOOLS) && material != Wood){
-                flags(type.getMaterialTypeItem());
-            }
-        }
-        return (T) this;
-    }
-
-    @Deprecated
-    public T addTools(Material derivedMaterial, ImmutableMap<Enchantment, Integer> toolEnchantment) {
-        ToolData data = MaterialTags.TOOLS.get(derivedMaterial);
-        return addTools(data.toolDamage(), data.toolSpeed(), data.toolDurability(), data.toolQuality(), toolEnchantment);
-    }
-
-    @Deprecated
-    public T addTools(Material derivedMaterial) {
-        ToolData data = MaterialTags.TOOLS.get(derivedMaterial);
-        return addTools(data.toolDamage(), data.toolSpeed(), data.toolDurability(), data.toolQuality());
-    }
-
     public T setAllowedTypes(AntimatterToolType... toolTypes) {
         if (!has(MaterialTags.TOOLS)) return (T) this;
         ToolData data = MaterialTags.TOOLS.get(this.material);
