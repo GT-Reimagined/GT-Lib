@@ -9,10 +9,10 @@ import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
 @ZenCodeType.Name("mods.antimatter.Machines")
-public class RecipeManager implements IRecipeManager<IRecipe> {
+public class RecipeManager implements IRecipeManager<Recipe> {
 
     @Override
-    public RecipeType<IRecipe> getRecipeType() {
+    public RecipeType<Recipe> getRecipeType() {
         return Recipe.RECIPE_TYPE;
     }
 

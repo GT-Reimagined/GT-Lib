@@ -12,7 +12,6 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.recipe.IRecipe;
-import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.RecipeTag;
 import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
@@ -26,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.FluidPlatformUtils;
 import tesseract.TesseractGraphWrappers;
@@ -35,28 +35,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AntimatterRecipeSerializer extends BaseRecipeSerializer<IRecipe> implements IAntimatterRecipeSerializer<IRecipe> {
-
-    public static final AntimatterRecipeSerializer INSTANCE = new AntimatterRecipeSerializer();
-
-    private AntimatterRecipeSerializer() {
-        super(Ref.ID, "machine");
-    }
+public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends BaseRecipeSerializer<T> implements IAntimatterRecipeSerializer<T> {
 
     protected AntimatterRecipeSerializer(String domain, String id){
         super(domain, id);
     }
 
-    public static void init() {
-    }
+    @Override
+    public abstract RecipeType<T> getRecipeType();
+
+    public abstract T createRecipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidHolder[] fluidsOutput, int duration, long power, int special, int amps);
 
     @Override
-    public RecipeType<IRecipe> getRecipeType() {
-        return Recipe.RECIPE_TYPE;
-    }
-
-    @Override
-    public Recipe fromJson(ResourceLocation recipeId, JsonObject json) {
+    public T fromJson(ResourceLocation recipeId, JsonObject json) {
         try {
             String mapId = json.get("map").getAsString();
             RecipeMap<?> map = AntimatterAPI.get(RecipeMap.class, mapId);
@@ -88,7 +79,7 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<IRecipe> im
             int duration = json.get("duration").getAsInt();
             int amps = json.has("amps") ? json.get("amps").getAsInt() : 1;
             int special = json.has("special") ? json.get("special").getAsInt() : 0;
-            Recipe r = new Recipe(list, outputs, fluidInputs, fluidOutputs, duration, eut, special, amps);
+            T r = createRecipe(list, outputs, fluidInputs, fluidOutputs, duration, eut, special, amps);
             if (json.has("outputChances")) {
                 List<Integer> chances = new ObjectArrayList<>();
                 for (JsonElement el : json.getAsJsonArray("outputChances")) {
@@ -164,7 +155,7 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<IRecipe> im
 
     @Nullable
     @Override
-    public Recipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+    public T fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
         String mapId = buffer.readUtf();
         int size = buffer.readInt();
         List<Ingredient> ings = new ObjectArrayList<>(size);
@@ -215,7 +206,7 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<IRecipe> im
         boolean hidden = buffer.readBoolean();
         boolean fake = buffer.readBoolean();
 
-        Recipe r = new Recipe(
+        T r = createRecipe(
                 ings,
                 out.length == 0 ? null : out,
                 in,
@@ -237,7 +228,7 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<IRecipe> im
     }
 
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, IRecipe recipe) {
+    public void toNetwork(FriendlyByteBuf buffer, T recipe) {
         buffer.writeUtf(recipe.getMapId());
         buffer.writeInt(!recipe.hasInputItems() ? 0 : recipe.getInputItems().size());
         if (recipe.hasInputItems()) {

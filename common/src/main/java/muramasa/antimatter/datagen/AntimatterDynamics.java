@@ -186,7 +186,6 @@ public class AntimatterDynamics {
         Antimatter.LOGGER.info("Compiling GT recipes");
         long time = System.nanoTime();
 
-        Set<RecipeType<? extends IRecipe>> recipeTypes = new HashSet<>();
         for (RecipeMap<?> m : AntimatterAPI.all(RecipeMap.class)) {
             if (m.getProxy() != null) {
                 List<net.minecraft.world.item.crafting.Recipe<?>> recipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(m.getProxy().loc());
@@ -195,7 +194,7 @@ public class AntimatterDynamics {
         }
 
         for (RecipeType<? extends IRecipe> recipeType : RecipeMap.getRecipeTypes()) {
-            List<IRecipe> recipes = (List<IRecipe>) manager.getAllRecipesFor(recipeType);
+            List<? extends IRecipe> recipes = manager.getAllRecipesFor(recipeType);
             Map<String, List<IRecipe>> map = recipes.stream().collect(Collectors.groupingBy(IRecipe::getMapId));
 
             for (Map.Entry<String, List<IRecipe>> entry : map.entrySet()) {

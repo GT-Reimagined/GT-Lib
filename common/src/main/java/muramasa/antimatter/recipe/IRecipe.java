@@ -1,12 +1,11 @@
 package muramasa.antimatter.recipe;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
-import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
+import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Container>{
@@ -29,6 +27,8 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
     void addInputChances(int[] chances);
 
     void setHidden(boolean hidden);
+
+    void setFake(boolean fake);
 
     void addTags(Set<RecipeTag> tags);
 
@@ -103,7 +103,7 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
         if (recipeMap != null) {
             recipeMap.getRecipeSerializer().toJson(json, this);
         } else {
-            AntimatterRecipeSerializer.INSTANCE.toJson(json, this);
+            MachineRecipeSerializer.INSTANCE.toJson(json, this);
         }
         return json;
     }

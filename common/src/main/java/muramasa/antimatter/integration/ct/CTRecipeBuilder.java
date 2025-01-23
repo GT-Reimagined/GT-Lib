@@ -8,6 +8,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.AntimatterAPI;
+import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeBuilder;
@@ -81,7 +82,7 @@ public class CTRecipeBuilder {
     }
 
     public void build(String domain, String id, long duration, long power, long special, int amps) {
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(manager, recipeBuilder.recipeMapOnly().add(domain, id, duration, power, special, amps)));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(manager, (Recipe) recipeBuilder.recipeMapOnly().add(domain, id, duration, power, special, amps)));
     }
 
     public void build(String id, long duration, long power, long special, int amps) {

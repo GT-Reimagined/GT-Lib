@@ -1,7 +1,6 @@
 package muramasa.antimatter.recipe;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -11,7 +10,7 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
-import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
+import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -25,7 +24,6 @@ import tesseract.TesseractGraphWrappers;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,7 +60,7 @@ public class Recipe implements IRecipe {
         
     }
 
-    public static final RecipeType<IRecipe> RECIPE_TYPE = RecipeType.register("antimatter_machine");
+    public static final RecipeType<Recipe> RECIPE_TYPE = RecipeType.register("antimatter_machine");
 
     public Recipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidHolder[] fluidsOutput, int duration, long power, int special, int amps) {
         this.itemsInput = ImmutableList.copyOf(stacksInput);
@@ -326,7 +324,7 @@ public class Recipe implements IRecipe {
 
     @Override
     public net.minecraft.world.item.crafting.RecipeSerializer<?> getSerializer() {
-        return AntimatterRecipeSerializer.INSTANCE;
+        return MachineRecipeSerializer.INSTANCE;
     }
 
     @NotNull

@@ -13,7 +13,6 @@ import muramasa.antimatter.integration.jeirei.renderer.IRecipeInfoRenderer;
 import muramasa.antimatter.integration.jeirei.renderer.InfoRenderers;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
-import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.RecipeUtil;
@@ -25,8 +24,8 @@ import muramasa.antimatter.recipe.ingredient.MapItemStackIngredient;
 import muramasa.antimatter.recipe.ingredient.MapTagIngredient;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.ingredient.SpecialIngredientWrapper;
-import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
 import muramasa.antimatter.recipe.serializer.IAntimatterRecipeSerializer;
+import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.resources.ResourceLocation;
@@ -83,7 +82,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     private IRecipeInfoRenderer infoRenderer;
 
     @Getter
-    private IAntimatterRecipeSerializer<? extends IRecipe> recipeSerializer = AntimatterRecipeSerializer.INSTANCE;
+    private IAntimatterRecipeSerializer<? extends IRecipe> recipeSerializer = MachineRecipeSerializer.INSTANCE;
 
     private static final Set<RecipeType<? extends IRecipe>> RECIPE_TYPES = new HashSet<>(Collections.singleton(Recipe.RECIPE_TYPE));
 
