@@ -30,8 +30,11 @@ public class MaterialSerializer extends BaseRecipeSerializer<MaterialRecipe> {
 
     public static final MaterialSerializer INSTANCE = new MaterialSerializer();
 
+    public MaterialSerializer() {
+        super(Ref.ID, "material");
+    }
+
     public static void init(){
-        AntimatterAPI.register(RecipeSerializer.class, "material", Ref.ID, INSTANCE);
     }
 
     private static final int MAX_HEIGHT = 3;

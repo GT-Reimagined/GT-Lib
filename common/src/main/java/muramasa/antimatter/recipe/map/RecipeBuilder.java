@@ -1,6 +1,5 @@
 package muramasa.antimatter.recipe.map;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
@@ -11,9 +10,7 @@ import muramasa.antimatter.datagen.AntimatterDynamics;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.RecipeTag;
-import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
-import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.advancements.Advancement;
@@ -102,14 +99,18 @@ public class RecipeBuilder {
         }
         if (ingredientInput == null) ingredientInput = Collections.emptyList();
         if (this.amps < 1) this.amps = 1;
+        IRecipe recipe = buildRecipe();
         if (!recipeMapOnly){
             ResourceLocation advancementID = advancementBuilder != null ? new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath()) : null;
             if (advancementBuilder != null){
                 this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
             }
-            AntimatterDynamics.FINISHED_RECIPE_CONSUMER.accept(new Result(this.id, advancementID));
+            AntimatterDynamics.FINISHED_RECIPE_CONSUMER.accept(new Result(this.id, recipe, advancementID));
         }
-        if (amps < 1) amps = 1;
+        return recipe;
+    }
+
+    protected IRecipe buildRecipe(){
         Recipe recipe = new Recipe(
                 ingredientInput,
                 itemsOutput != null ? itemsOutput.toArray(new ItemStack[0]) : null,
@@ -122,10 +123,8 @@ public class RecipeBuilder {
         recipe.setHidden(hidden);
         recipe.setFake(fake);
         recipe.addTags(new ObjectOpenHashSet<>(tags));
-        if (recipeMapOnly){
-            recipe.setId(this.id);
-            recipe.setMapId(this.recipeMap.getId());
-        }
+        recipe.setId(this.id);
+        recipe.setMapId(this.recipeMap.getId());
         return recipe;
     }
 
@@ -376,80 +375,20 @@ public class RecipeBuilder {
     private class Result implements FinishedRecipe{
         ResourceLocation id;
         ResourceLocation advancementID = null;
-        public Result(ResourceLocation id){
+        IRecipe recipe;
+        public Result(ResourceLocation id, IRecipe recipe){
             this.id = id;
+            this.recipe = recipe;
         }
 
-        public Result(ResourceLocation id, ResourceLocation advancementID){
+        public Result(ResourceLocation id, IRecipe recipe, ResourceLocation advancementID){
             this.id = id;
+            this.recipe = recipe;
             this.advancementID = advancementID;
         }
         @Override
         public void serializeRecipeData(JsonObject json) {
-            json.addProperty("map", recipeMap.getId());
-            if (recipeMap.getRecipeSerializer() != null){
-                recipeMap.getRecipeSerializer().toJson(id, json, RecipeBuilder.this);
-                return;
-            }
-            JsonArray array = new JsonArray();
-            for (Ingredient ingredient : ingredientInput) {
-                array.add(ingredient.toJson());
-            }
-            if (!array.isEmpty()){
-                json.add("inputItems", array);
-            }
-            array = new JsonArray();
-            for (ItemStack stack : itemsOutput){
-                array.add(RecipeUtil.INSTANCE.itemstackToJson(stack));
-            }
-            if (!array.isEmpty()){
-                json.add("outputItems", array);
-            }
-            array = new JsonArray();
-            for (FluidIngredient f : fluidsInput) {
-                array.add(f.toJson());
-            }
-            if (!array.isEmpty()){
-                json.add("inputFluids", array);
-            }
-            array = new JsonArray();
-            for (FluidHolder stack : fluidsOutput){
-                array.add(RecipeUtil.fluidstackToJson(stack));
-            }
-            if (!array.isEmpty()){
-                json.add("outputFluids", array);
-            }
-            json.addProperty("eu", power);
-            json.addProperty("duration", duration);
-            json.addProperty("amps", amps);
-            json.addProperty("special", special);
-            array = new JsonArray();
-            if (outputChances != null) {
-                for (int d : outputChances){
-                    array.add(d);
-                }
-            }
-            if (!array.isEmpty()){
-                json.add("outputChances", array);
-            }
-            array = new JsonArray();
-            if (inputChances != null) {
-                for (int d : inputChances){
-                    array.add(d);
-                }
-            }
-            if (!array.isEmpty()){
-                json.add("inputChances", array);
-            }
-            json.addProperty("hidden", hidden);
-            json.addProperty("fake", fake);
-            array = new JsonArray();
-            for (RecipeTag tag : tags){
-                array.add(tag.getLoc().toString());
-            }
-            if (!array.isEmpty()){
-                json.add("tags", array);
-            }
+            recipeMap.getRecipeSerializer().toJson(json, recipe);
         }
 
         @Override
@@ -459,7 +398,7 @@ public class RecipeBuilder {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return AntimatterRecipeSerializer.INSTANCE;
+            return recipeMap.getRecipeSerializer();
         }
 
         @Nullable

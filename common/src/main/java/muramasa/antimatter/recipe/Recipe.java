@@ -1,15 +1,16 @@
 package muramasa.antimatter.recipe;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import lombok.Getter;
+import lombok.Setter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
-import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
+import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -23,7 +24,6 @@ import tesseract.TesseractGraphWrappers;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,26 +34,33 @@ public class Recipe implements IRecipe {
     @NotNull
     private final List<FluidIngredient> fluidsInput;
     private final FluidHolder[] fluidsOutput;
+    @Getter
     private final int duration;
     private final int special;
+    @Getter
     private final long power;
+    @Getter
     private final int amps;
     private int[] outputChances, inputChances;
+    @Getter
+    @Setter
     private boolean hidden, fake;
+    @Getter
     private Set<RecipeTag> tags = new ObjectOpenHashSet<>();
-    private Map<ItemStack, Integer> itemsWithChances = null;
     public ResourceLocation id;
     public String mapId;
     //Used for recipe validators, e.g. cleanroom.
     public final List<IRecipeValidator> validators = Collections.emptyList();
 
+    //After data reload this is false.
+    @Getter
     private boolean valid;
 
     public static void init() {
         
     }
 
-    public static final RecipeType<IRecipe> RECIPE_TYPE = RecipeType.register("antimatter_machine");
+    public static final RecipeType<Recipe> RECIPE_TYPE = RecipeType.register("antimatter_machine");
 
     public Recipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidHolder[] fluidsOutput, int duration, long power, int special, int amps) {
         this.itemsInput = ImmutableList.copyOf(stacksInput);
@@ -67,18 +74,9 @@ public class Recipe implements IRecipe {
         this.valid = true;
     }
 
-    //After data reload this is false.
-    public boolean isValid() {
-        return valid;
-    }
-
     public void invalidate() {
         if (this.id != null)
             this.valid = false;
-    }
-
-    public int getAmps() {
-        return amps;
     }
 
     public void addOutputChances(int[] chances) {
@@ -90,20 +88,12 @@ public class Recipe implements IRecipe {
         this.inputChances = chances;
     }
 
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
-    }
-
-    public void setFake(boolean fake){
-        this.fake = fake;
-    }
-
     public void addTags(Set<RecipeTag> tags) {
         this.tags = tags;
     }
 
     public boolean hasInputItems() {
-        return itemsInput.size() > 0;
+        return !itemsInput.isEmpty();
     }
 
     public boolean hasOutputItems() {
@@ -111,7 +101,7 @@ public class Recipe implements IRecipe {
     }
 
     public boolean hasInputFluids() {
-        return fluidsInput.size() > 0;
+        return !fluidsInput.isEmpty();
     }
 
     public boolean hasOutputFluids() {
@@ -171,7 +161,7 @@ public class Recipe implements IRecipe {
     public ItemStack[] getOutputItems(boolean chance) {
         if (hasOutputItems()) {
             ItemStack[] outputs = itemsOutput.clone();
-            if (outputChances != null || !chance) {
+            if (outputChances != null) {
                 List<ItemStack> evaluated = new ObjectArrayList<>();
                 for (int i = 0; i < outputs.length; i++) {
                     if (!chance || Ref.RNG.nextInt(10000) < outputChances[i]) {
@@ -226,22 +216,12 @@ public class Recipe implements IRecipe {
         return hasOutputFluids() ? fluidsOutput.clone() : null;
     }
 
-    public int getDuration() {
-        return duration;
-    }
-
-    public long getPower() {
-        return power;
-    }
-
-    @Nullable
-    public int[] getOutputChances() {
+    public int @Nullable [] getOutputChances() {
         return outputChances;
     }
 
-    @Nullable
     @Override
-    public int[] getInputChances() {
+    public int @Nullable [] getInputChances() {
         return inputChances;
     }
 
@@ -249,45 +229,15 @@ public class Recipe implements IRecipe {
         return special;
     }
 
-    public boolean isHidden() {
-        return hidden;
-    }
-
     @Override
     public boolean isFake() {
         return fake;
     }
 
-    public Set<RecipeTag> getTags() {
-        return tags;
-    }
-
-    //todo fix tis
-    public Map<ItemStack, Integer> getChancesWithStacks(){
-        if (itemsWithChances == null) {
-            if (itemsOutput != null){
-                ImmutableMap.Builder<ItemStack, Integer> map = ImmutableMap.builder();
-                if (hasOutputChances()){
-                    for (int i = 0; i < itemsOutput.length; i++) {
-                        map.put(itemsOutput[i], outputChances[i]);
-                    }
-                } else {
-                    for (ItemStack itemStack : itemsOutput) {
-                        map.put(itemStack, 10000);
-                    }
-                }
-                itemsWithChances = map.build();
-            } else {
-                itemsWithChances = ImmutableMap.of();
-            }
-        }
-        return itemsWithChances;
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        if (itemsInput.size() > 0) {
+        if (!itemsInput.isEmpty()) {
             builder.append("\nInput Items: { ");
             for (int i = 0; i < itemsInput.size(); i++) {
                 builder.append("\n Item ").append(i);
@@ -305,7 +255,7 @@ public class Recipe implements IRecipe {
             }
             builder.append(" }\n");
         }
-        if (fluidsInput != null) {
+        if (!fluidsInput.isEmpty()) {
             builder.append("Input Fluids: { ");
             //for (int i = 0; i < fluidsInput.size(); i++) {
             //    builder.append(fluidsInput.get(i).getFluid().getRegistryName()).append(": ").append(fluidsInput[i].getAmount()).append("mb");
@@ -374,7 +324,7 @@ public class Recipe implements IRecipe {
 
     @Override
     public net.minecraft.world.item.crafting.RecipeSerializer<?> getSerializer() {
-        return AntimatterRecipeSerializer.INSTANCE;
+        return MachineRecipeSerializer.INSTANCE;
     }
 
     @NotNull

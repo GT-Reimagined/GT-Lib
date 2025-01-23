@@ -11,7 +11,7 @@ import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.recipe.BaseRecipeSerializer;
-import muramasa.antimatter.recipe.Recipe;
+import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.RecipeTag;
 import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
@@ -23,8 +23,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.FluidPlatformUtils;
 import tesseract.TesseractGraphWrappers;
@@ -34,23 +35,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> {
+public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends BaseRecipeSerializer<T> implements IAntimatterRecipeSerializer<T> {
 
-    public static final AntimatterRecipeSerializer INSTANCE = new AntimatterRecipeSerializer();
-
-    public static void init() {
-        AntimatterAPI.register(RecipeSerializer.class, "machine", Ref.ID, INSTANCE);
+    protected AntimatterRecipeSerializer(String domain, String id){
+        super(domain, id);
     }
 
     @Override
-    public Recipe fromJson(ResourceLocation recipeId, JsonObject json) {
+    public abstract RecipeType<T> getRecipeType();
+
+    public abstract T createRecipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidHolder[] fluidsOutput, int duration, long power, int special, int amps);
+
+    @Override
+    public T fromJson(ResourceLocation recipeId, JsonObject json) {
         try {
             String mapId = json.get("map").getAsString();
             RecipeMap<?> map = AntimatterAPI.get(RecipeMap.class, mapId);
             if (map == null) throw new IllegalStateException("Recipe map: " + mapId + " is unknown");
-            if (map.getRecipeSerializer() != null){
-                return map.getRecipeSerializer().fromJson(recipeId, json);
-            }
+            if (map.getRecipeSerializer().getRecipeType() != this.getRecipeType()) throw new IllegalStateException("Recipe map: " + mapId + " doesn't use recipe type: " + this.getRecipeType());
             List<Ingredient> list = new ObjectArrayList<>();
             if (json.has("inputItems")) {
                 JsonArray array = json.getAsJsonArray("inputItems");
@@ -77,7 +79,7 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> {
             int duration = json.get("duration").getAsInt();
             int amps = json.has("amps") ? json.get("amps").getAsInt() : 1;
             int special = json.has("special") ? json.get("special").getAsInt() : 0;
-            Recipe r = new Recipe(list, outputs, fluidInputs, fluidOutputs, duration, eut, special, amps);
+            T r = createRecipe(list, outputs, fluidInputs, fluidOutputs, duration, eut, special, amps);
             if (json.has("outputChances")) {
                 List<Integer> chances = new ObjectArrayList<>();
                 for (JsonElement el : json.getAsJsonArray("outputChances")) {
@@ -153,12 +155,8 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> {
 
     @Nullable
     @Override
-    public Recipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+    public T fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
         String mapId = buffer.readUtf();
-        RecipeMap<?> map = AntimatterAPI.get(RecipeMap.class, mapId);
-        if (map != null && map.getRecipeSerializer() != null){
-            return map.getRecipeSerializer().fromNetwork(recipeId, buffer);
-        }
         int size = buffer.readInt();
         List<Ingredient> ings = new ObjectArrayList<>(size);
         if (size > 0) {
@@ -208,7 +206,7 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> {
         boolean hidden = buffer.readBoolean();
         boolean fake = buffer.readBoolean();
 
-        Recipe r = new Recipe(
+        T r = createRecipe(
                 ings,
                 out.length == 0 ? null : out,
                 in,
@@ -230,13 +228,8 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> {
     }
 
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, Recipe recipe) {
-        buffer.writeUtf(recipe.mapId);
-        RecipeMap<?> map = AntimatterAPI.get(RecipeMap.class, recipe.mapId);
-        if (map != null && map.getRecipeSerializer() != null){
-            map.getRecipeSerializer().toNetwork(buffer, recipe);
-            return;
-        }
+    public void toNetwork(FriendlyByteBuf buffer, T recipe) {
+        buffer.writeUtf(recipe.getMapId());
         buffer.writeInt(!recipe.hasInputItems() ? 0 : recipe.getInputItems().size());
         if (recipe.hasInputItems()) {
             recipe.getInputItems().forEach(t -> RecipeUtil.INSTANCE.write(buffer, t));
@@ -267,5 +260,74 @@ public class AntimatterRecipeSerializer extends BaseRecipeSerializer<Recipe> {
         buffer.writeInt(recipe.getAmps());
         buffer.writeBoolean(recipe.isHidden());
         buffer.writeBoolean(recipe.isFake());
+    }
+
+    @Override
+    public void toJson(JsonObject json, IRecipe recipe) {
+        json.addProperty("recipeID", recipe.getId().toString());
+        json.addProperty("map", recipe.getMapId());
+        JsonArray array = new JsonArray();
+        for (Ingredient ingredient : recipe.getInputItems()) {
+            array.add(ingredient.toJson());
+        }
+        if (!array.isEmpty()){
+            json.add("inputItems", array);
+        }
+        array = new JsonArray();
+        if (recipe.getOutputItems(false) != null){
+            for (ItemStack stack : recipe.getOutputItems(false)){
+                array.add(RecipeUtil.INSTANCE.itemstackToJson(stack));
+            }
+        }
+        if (!array.isEmpty()){
+            json.add("outputItems", array);
+        }
+        array = new JsonArray();
+        for (FluidIngredient f : recipe.getInputFluids()) {
+            array.add(f.toJson());
+        }
+        if (!array.isEmpty()){
+            json.add("inputFluids", array);
+        }
+        array = new JsonArray();
+        if (recipe.getOutputFluids() != null){
+            for (FluidHolder stack : recipe.getOutputFluids()){
+                array.add(RecipeUtil.fluidstackToJson(stack));
+            }
+        }
+        if (!array.isEmpty()){
+            json.add("outputFluids", array);
+        }
+        array = new JsonArray();
+        json.addProperty("eu", recipe.getPower());
+        json.addProperty("duration", recipe.getDuration());
+        json.addProperty("amps", recipe.getAmps());
+        json.addProperty("special", recipe.getSpecialValue());
+        if (recipe.hasOutputChances()) {
+            for (int d : recipe.getOutputChances()){
+                array.add(d);
+            }
+        }
+        if (!array.isEmpty()){
+            json.add("outputChances", array);
+        }
+
+        if (recipe.hasInputChances()) {
+            for (int d : recipe.getInputChances()){
+                array.add(d);
+            }
+        }
+        if (!array.isEmpty()){
+            json.add("inputChances", array);
+        }
+        json.addProperty("hidden", recipe.isHidden());
+        json.addProperty("fake", recipe.isFake());
+        array = new JsonArray();
+        for (RecipeTag tag : recipe.getTags()){
+            array.add(tag.getLoc().toString());
+        }
+        if (!array.isEmpty()){
+            json.add("tags", array);
+        }
     }
 }

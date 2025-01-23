@@ -25,7 +25,6 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
     public static final Serializer INSTANCE = new Serializer();
 
     public static void init(){
-        AntimatterAPI.register(RecipeSerializer.class, "container_shaped", Ref.ID, INSTANCE);
     }
 
     public ContainerItemShapedRecipe(ResourceLocation resourceLocation, String string, int i, int j, NonNullList<Ingredient> nonNullList, ItemStack itemStack) {
@@ -67,6 +66,7 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
 
     public static class Serializer extends BaseRecipeSerializer<ContainerItemShapedRecipe> {
         public Serializer() {
+            super(Ref.ID, "container_shaped");
         }
 
         public ContainerItemShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

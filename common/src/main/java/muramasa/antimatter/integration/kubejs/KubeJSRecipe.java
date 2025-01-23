@@ -104,10 +104,6 @@ public class KubeJSRecipe extends RecipeJS {
     @Override
     public void deserialize() {
         this.map = GsonHelper.getAsString(json, "map");
-        RecipeMap<?> map = AntimatterAPI.get(RecipeMap.class, this.map);
-        if (map != null && map.getRecipeSerializer() != null){
-            //return map.getRecipeSerializer().fromJson(id, json);
-        }
         for (JsonElement e : GsonHelper.getAsJsonArray(json, "inputItems", new JsonArray())) {
             this.inputItems.add(RecipeIngredientJS.fromJson(e));
         }

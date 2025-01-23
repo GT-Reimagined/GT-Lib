@@ -12,12 +12,14 @@ import muramasa.antimatter.integration.jeirei.renderer.IRecipeInfoRenderer;
 import muramasa.antimatter.integration.jeirei.renderer.InfoRenderers;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.IRecipe;
+import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.item.ExtendedItemContainer;
@@ -43,6 +45,8 @@ public interface IRecipeMap extends ISharedAntimatterObject {
     Collection<IRecipe> getRecipes(boolean filterHidden);
     boolean acceptsItem(ItemStack item);
     boolean acceptsFluid(FluidHolder fluid);
+
+    RecipeType<? extends IRecipe> getRecipeType();
 
     @Nullable
     default Tier getGuiTier() {
