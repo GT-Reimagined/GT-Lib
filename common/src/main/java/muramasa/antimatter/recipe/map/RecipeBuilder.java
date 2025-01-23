@@ -39,7 +39,7 @@ public class RecipeBuilder {
 
     private static String CURRENT_MOD_ID = Ref.SHARED_ID;
 
-    private RecipeMap<? extends RecipeBuilder> recipeMap;
+    protected RecipeMap<? extends RecipeBuilder> recipeMap;
     protected List<ItemStack> itemsOutput = new ObjectArrayList<>();
     protected List<Ingredient> ingredientInput = new ObjectArrayList<>();
     protected List<FluidIngredient> fluidsInput = new ObjectArrayList<>();
