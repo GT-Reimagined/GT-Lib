@@ -130,6 +130,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
      * Texture Members
      **/
     protected ITextureHandler baseTexture;
+    @Getter
     protected IOverlayTexturer overlayTextures;
     protected IOverlayModeler overlayModels;
     @Getter
