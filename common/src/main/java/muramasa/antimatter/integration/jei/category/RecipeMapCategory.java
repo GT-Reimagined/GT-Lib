@@ -100,7 +100,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         background = guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
         progressBar = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
         progressBackground = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
-        Object icon = subCategory.icon();
+        Object icon = subCategory.icon().get();
         if (icon != null) {
             if (icon instanceof ItemStack itemStack) {
                 this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
