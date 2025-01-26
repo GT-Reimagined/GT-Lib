@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.ImmutableMap.of;
+import static muramasa.antimatter.data.AntimatterMaterialTypes.CHUNK;
 import static muramasa.antimatter.data.AntimatterMaterialTypes.INGOT;
 import static muramasa.antimatter.material.MaterialTags.*;
 
@@ -33,6 +34,9 @@ public class MaterialRecipes {
             if (m.has(AntimatterMaterialTypes.NUGGET) && m != AntimatterMaterials.Iron && m != AntimatterMaterials.Gold){
                 provider.addItemRecipe(consumer, Ref.ID, m.getId() + "_ingot", "ingots", AntimatterMaterialTypes.INGOT.get(m), ImmutableMap.of('I', AntimatterMaterialTypes.NUGGET.getMaterialTag(m)), "III", "III", "III");
                 provider.shapeless(consumer,"nugget_" + m.getId() + "_from_ingot", "ingots", AntimatterMaterialTypes.NUGGET.get(m, 9), AntimatterMaterialTypes.INGOT.getMaterialTag(m));
+            }
+            if (m.has(AntimatterMaterialTypes.CHUNK)){
+                provider.addItemRecipe(consumer, Ref.ID, "", "ingots", INGOT.get(m), ImmutableMap.of('I', CHUNK.getMaterialTag(m)), "II", "II");
             }
         });
         AntimatterMaterialTypes.RAW_ORE.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.INGOT)).forEach(m -> {
@@ -51,8 +55,15 @@ public class MaterialRecipes {
         });
         AntimatterMaterialTypes.DUST.all().forEach(m -> {
             if (m.has(MaterialTags.HAS_CUSTOM_SMELTING)) return;
-            if (!DIRECT_SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.INGOT)) return;
-            addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST, AntimatterMaterialTypes.INGOT, 1, m, DIRECT_SMELT_INTO.getMapping(m));
+            if (DIRECT_SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.INGOT)) {
+                addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST, AntimatterMaterialTypes.INGOT, 1, m, DIRECT_SMELT_INTO.getMapping(m));
+            }
+            if (DIRECT_SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.NUGGET)) {
+                addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST_TINY, AntimatterMaterialTypes.NUGGET, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
+            }
+            if (DIRECT_SMELT_INTO.getMapping(m).has(CHUNK)) {
+                addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST_SMALL, CHUNK, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
+            }
         });
     }
 

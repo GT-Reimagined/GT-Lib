@@ -64,7 +64,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
 
     public T asSolid(IMaterialTag... tags) {
         asDust(tags);
-        flags(AntimatterMaterialTypes.INGOT, AntimatterMaterialTypes.NUGGET, AntimatterMaterialTypes.BLOCK).asFluid();
+        flags(AntimatterMaterialTypes.INGOT, AntimatterMaterialTypes.NUGGET, AntimatterMaterialTypes.CHUNK, AntimatterMaterialTypes.BLOCK).asFluid();
         return (T) this;
     }
 

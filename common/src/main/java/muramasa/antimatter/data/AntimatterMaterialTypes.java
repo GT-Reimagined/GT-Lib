@@ -62,6 +62,7 @@ public class AntimatterMaterialTypes {
     public static MaterialTypeItem<?> INGOT = new MaterialTypeItem<>("ingot", 2, true, U);
     public static MaterialTypeItem<?> INGOT_HOT = new MaterialTypeItem<>("ingot_hot", 2, true, U);
     public static MaterialTypeItem<?> NUGGET = new MaterialTypeItem<>("nugget", 2, true, Ref.U9);
+    public static MaterialTypeItem<?> CHUNK = new MaterialTypeItem<>("chunk", 2, true, U4);
     public static MaterialTypeItem<?> GEM = new MaterialTypeItem<>("gem", 2, true, U);
     public static MaterialTypeItem<?> GEM_EXQUISITE = new MaterialTypeItem<>("gem_exquisite", 2, true, U * 4);
     public static MaterialTypeItem<?> GEM_FLAWLESS = new MaterialTypeItem<>("gem_flawless", 2, true, U * 2);
