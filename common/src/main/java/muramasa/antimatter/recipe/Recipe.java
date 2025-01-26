@@ -46,7 +46,7 @@ public class Recipe implements IRecipe {
     @Setter
     private boolean hidden, fake;
     @Getter
-    private Set<RecipeTag> tags = new ObjectOpenHashSet<>();
+    private Set<String> tags = new ObjectOpenHashSet<>();
     public ResourceLocation id;
     public String mapId;
     //Used for recipe validators, e.g. cleanroom.
@@ -88,7 +88,7 @@ public class Recipe implements IRecipe {
         this.inputChances = chances;
     }
 
-    public void addTags(Set<RecipeTag> tags) {
+    public void addTags(Set<String> tags) {
         this.tags = tags;
     }
 

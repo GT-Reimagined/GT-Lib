@@ -30,7 +30,7 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
 
     void setFake(boolean fake);
 
-    void addTags(Set<RecipeTag> tags);
+    void addTags(Set<String> tags);
 
     boolean hasInputItems();
 
@@ -93,7 +93,7 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
 
     boolean isFake();
 
-    Set<RecipeTag> getTags();
+    Set<String> getTags();
 
     String getMapId();
 

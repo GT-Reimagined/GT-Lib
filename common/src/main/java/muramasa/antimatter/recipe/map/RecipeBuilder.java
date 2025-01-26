@@ -9,7 +9,6 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.datagen.AntimatterDynamics;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.Recipe;
-import muramasa.antimatter.recipe.RecipeTag;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
@@ -49,7 +48,7 @@ public class RecipeBuilder {
     protected long power;
     protected int amps;
     protected boolean hidden, fake;
-    protected Set<RecipeTag> tags = new ObjectOpenHashSet<>();
+    protected Set<String> tags = new ObjectOpenHashSet<>();
     protected ResourceLocation id;
     protected boolean recipeMapOnly = false;
 
@@ -316,7 +315,7 @@ public class RecipeBuilder {
         return this;
     }
 
-    public RecipeBuilder tags(RecipeTag... tags) {
+    public RecipeBuilder tags(String... tags) {
         this.tags = new ObjectOpenHashSet<>(tags);
         return this;
     }

@@ -9,10 +9,8 @@ import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterAPI;
-import muramasa.antimatter.Ref;
 import muramasa.antimatter.recipe.BaseRecipeSerializer;
 import muramasa.antimatter.recipe.IRecipe;
-import muramasa.antimatter.recipe.RecipeTag;
 import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
@@ -98,10 +96,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             r.setFake(json.get("fake").getAsBoolean());
             if (json.has("tags")){
                 JsonArray array = json.getAsJsonArray("tags");
-                Set<RecipeTag> tags = Streams.stream(array).map(e -> {
-                    String[] strings = e.getAsString().split(":", 1);
-                    return AntimatterAPI.get(RecipeTag.class, strings[1], strings[0]);
-                }).collect(Collectors.toSet());
+                Set<String> tags = Streams.stream(array).map(JsonElement::getAsString).collect(Collectors.toSet());
                 r.addTags(tags);
             }
             r.setIds(recipeId, mapId);
@@ -323,8 +318,8 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         json.addProperty("hidden", recipe.isHidden());
         json.addProperty("fake", recipe.isFake());
         array = new JsonArray();
-        for (RecipeTag tag : recipe.getTags()){
-            array.add(tag.getLoc().toString());
+        for (String tag : recipe.getTags()){
+            array.add(tag);
         }
         if (!array.isEmpty()){
             json.add("tags", array);
