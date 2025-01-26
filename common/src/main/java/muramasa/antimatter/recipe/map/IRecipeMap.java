@@ -26,6 +26,7 @@ import tesseract.api.item.ExtendedItemContainer;
 import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -47,6 +48,8 @@ public interface IRecipeMap extends ISharedAntimatterObject {
     boolean acceptsFluid(FluidHolder fluid);
 
     RecipeType<? extends IRecipe> getRecipeType();
+
+    Map<String, SubCategory> getSubCategories();
 
     @Nullable
     default Tier getGuiTier() {

@@ -82,6 +82,9 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     private IRecipeInfoRenderer infoRenderer;
 
     @Getter
+    private Map<String, SubCategory> subCategories = new Object2ObjectOpenHashMap<>();
+
+    @Getter
     private IAntimatterRecipeSerializer<? extends IRecipe> recipeSerializer = MachineRecipeSerializer.INSTANCE;
 
     private static final Set<RecipeType<? extends IRecipe>> RECIPE_TYPES = new HashSet<>(Collections.singleton(Recipe.RECIPE_TYPE));
@@ -206,6 +209,11 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     public<T extends IRecipe> RecipeMap<B>  setRecipeSerializer(IAntimatterRecipeSerializer<T> serializer) {
         this.recipeSerializer = serializer;
         RECIPE_TYPES.add(serializer.getRecipeType());
+        return this;
+    }
+
+    public RecipeMap<B> addSubCategory(String id, SubCategory subCategory) {
+        subCategories.put(id, subCategory);
         return this;
     }
 

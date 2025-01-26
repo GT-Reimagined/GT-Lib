@@ -29,6 +29,7 @@ import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeMap;
+import muramasa.antimatter.recipe.map.SubCategory;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import muramasa.antimatter.util.int4;
@@ -84,6 +85,34 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         } else {
             Item item = iconId == null ? Data.DEBUG_SCANNER : AntimatterPlatformUtils.INSTANCE.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
+            this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
+        }
+        this.gui = gui;
+        this.infoRenderer = map.getInfoRenderer();
+    }
+
+    public RecipeMapCategory(IRecipeMap map, RecipeType<IRecipe> type, GuiData gui, Tier defaultTier, ResourceLocation subCategoryId, SubCategory subCategory) {
+        loc = subCategoryId;
+        this.type = type;
+        this.guiTier = map.getGuiTier() == null ? defaultTier : map.getGuiTier();
+        title = Utils.translatable(subCategory.langKey()).getString();
+        int4 area = gui.getArea(), progress = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
+        background = guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
+        progressBar = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
+        progressBackground = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
+        Object icon = subCategory.icon();
+        if (icon != null) {
+            if (icon instanceof ItemStack itemStack) {
+                this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
+            }
+            if (icon instanceof ItemLike item) {
+                this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
+            }
+            if (icon instanceof ResourceLocation resourceLocation){
+                this.icon = guiHelper.drawableBuilder(resourceLocation, 0, 0, 16, 16).setTextureSize(16, 16).build();
+            }
+        } else {
+            Item item = Data.DEBUG_SCANNER;
             this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
         }
         this.gui = gui;

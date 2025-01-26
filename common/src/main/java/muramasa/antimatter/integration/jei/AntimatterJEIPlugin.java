@@ -1,5 +1,6 @@
 package muramasa.antimatter.integration.jei;
 
+import com.google.common.collect.ImmutableList;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -53,6 +54,7 @@ import xyz.wagyourtail.unimined.expect.annotation.Environment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -132,6 +134,17 @@ public class AntimatterJEIPlugin implements IModPlugin {
                 RECIPE_TYPES.put(type.getUid().toString(), type);
                 registry.addRecipeCategories(new RecipeMapCategory(tuple.map, type, tuple.gui, tuple.tier, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)));
                 registeredMachineCats.add(tuple.map.getLoc());
+                if (!tuple.map.getSubCategories().isEmpty()){
+                    tuple.map.getSubCategories().forEach((s, subCategory) -> {
+                        ResourceLocation subCategoryId = new ResourceLocation(Ref.SHARED_ID, s);
+                        if (!registeredMachineCats.contains(subCategoryId)) {
+                            RecipeType<IRecipe> subType = new RecipeType<>(subCategoryId, IRecipe.class);
+                            RECIPE_TYPES.put(subType.getUid().toString(), subType);
+                            registeredMachineCats.add(subCategoryId);
+                            registry.addRecipeCategories(new RecipeMapCategory(tuple.map, subType, tuple.gui, tuple.tier, subCategoryId, subCategory));
+                        }
+                    });
+                }
             }
         });
 
@@ -144,7 +157,30 @@ public class AntimatterJEIPlugin implements IModPlugin {
         if (AntimatterAPI.isModLoaded(Ref.MOD_REI)) return;
         if (helpers == null) helpers = registration.getJeiHelpers();
         AntimatterJEIREIPlugin.getREGISTRY().forEach((id, tuple) -> {
-            registration.addRecipes(RECIPE_TYPES.get(id.toString()), getRecipes(tuple.map));
+            if (tuple.map.getSubCategories().isEmpty()) {
+                registration.addRecipes(RECIPE_TYPES.get(id.toString()), getRecipes(tuple.map));
+            } else {
+                List<IRecipe> recipes = getRecipes(tuple.map);
+                List<IRecipe> mainRecipes = new ArrayList<>();
+                Map<String, List<IRecipe>> recipeMap = new HashMap<>();
+                for (IRecipe recipe : recipes) {
+                    boolean found = false;
+                    for (var entry : tuple.map.getSubCategories().entrySet()) {
+                        if (entry.getValue().predicate().test(recipe)){
+                            found = true;
+                            recipeMap.computeIfAbsent(entry.getKey(), (s) -> new ArrayList<>()).add(recipe);
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        mainRecipes.add(recipe);
+                    }
+                }
+                registration.addRecipes(RECIPE_TYPES.get(id.toString()), mainRecipes);
+                for (var entry : recipeMap.entrySet()) {
+                    registration.addRecipes(RECIPE_TYPES.get(Ref.SHARED_ID + ":" + entry.getKey()), entry.getValue());
+                }
+            }
         });
         MultiMachineInfoCategory.registerRecipes(registration);
     }
@@ -184,7 +220,12 @@ public class AntimatterJEIPlugin implements IModPlugin {
             if (!type.has(RECIPE)) return;
             IRecipeMap map = type.getRecipeMap(tier);
             if (map == null) return; //incase someone adds tier specific recipe maps without a fallback
-            runtime.getRecipesGui().showCategories(List.of(map.getLoc()));
+            List<ResourceLocation> categories = new ArrayList<>();
+            categories.add(map.getLoc());
+            if (!map.getSubCategories().isEmpty()){
+                map.getSubCategories().keySet().forEach(s -> categories.add(new ResourceLocation(Ref.SHARED_ID, s)));
+            }
+            runtime.getRecipesGui().showCategories(ImmutableList.copyOf(categories));
         }
     }
 
@@ -218,6 +259,9 @@ public class AntimatterJEIPlugin implements IModPlugin {
                 ItemLike item = AntimatterPlatformUtils.INSTANCE.getItemFromID(s);
                 if (item == Items.AIR) return;
                 registration.addRecipeCatalyst(new ItemStack(item), tuple.map.getLoc());
+                if (!tuple.map.getSubCategories().isEmpty()){
+                    tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), new ResourceLocation(Ref.SHARED_ID, s1)));
+                }
             });
         });
     }
