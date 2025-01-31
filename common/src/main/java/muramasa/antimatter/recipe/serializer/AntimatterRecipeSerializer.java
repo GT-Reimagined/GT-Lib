@@ -29,6 +29,7 @@ import tesseract.FluidPlatformUtils;
 import tesseract.TesseractGraphWrappers;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -194,6 +195,13 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
                 inputChances[i] = buffer.readInt();
             }
         }
+        size = buffer.readInt();
+        Set<String> tags = new HashSet<>(size);
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                tags.add(buffer.readUtf());
+            }
+        }
         long power = buffer.readLong();
         int dur = buffer.readInt();
         int special = buffer.readInt();
@@ -215,6 +223,9 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             r.addOutputChances(outputChances);
         if (inputChances.length > 0){
             r.addInputChances(inputChances);
+        }
+        if (!tags.isEmpty()){
+            r.addTags(tags);
         }
         r.setIds(recipeId, mapId);
         r.setHidden(hidden);
@@ -248,6 +259,10 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         buffer.writeInt(recipe.hasInputChances() ? recipe.getInputChances().length : 0);
         if (recipe.hasInputChances()) {
             Arrays.stream(recipe.getInputChances()).forEach(buffer::writeInt);
+        }
+        buffer.writeInt(recipe.getTags().size());
+        if (!recipe.getTags().isEmpty()){
+            recipe.getTags().forEach(buffer::writeUtf);
         }
         buffer.writeLong(recipe.getPower());
         buffer.writeInt(recipe.getDuration());
