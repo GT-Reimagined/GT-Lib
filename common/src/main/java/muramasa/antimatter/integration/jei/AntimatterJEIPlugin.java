@@ -160,6 +160,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
             if (tuple.map.getSubCategories().isEmpty()) {
                 registration.addRecipes(RECIPE_TYPES.get(id.toString()), getRecipes(tuple.map));
             } else {
+                Antimatter.LOGGER.info(tuple.map.getId());
                 List<IRecipe> recipes = getRecipes(tuple.map);
                 List<IRecipe> mainRecipes = new ArrayList<>();
                 Map<String, List<IRecipe>> recipeMap = new HashMap<>();
@@ -176,8 +177,10 @@ public class AntimatterJEIPlugin implements IModPlugin {
                         mainRecipes.add(recipe);
                     }
                 }
+                Antimatter.LOGGER.info(mainRecipes.stream().map(r -> r.getId().toString()).toList());
                 registration.addRecipes(RECIPE_TYPES.get(id.toString()), mainRecipes);
                 for (var entry : recipeMap.entrySet()) {
+                    Antimatter.LOGGER.info(entry.getValue().stream().map(r -> r.getId().toString()).toList());
                     registration.addRecipes(RECIPE_TYPES.get(Ref.SHARED_ID + ":" + entry.getKey()), entry.getValue());
                 }
             }
