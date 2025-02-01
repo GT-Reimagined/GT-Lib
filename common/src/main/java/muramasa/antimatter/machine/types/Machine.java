@@ -516,11 +516,6 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
         return addTooltipInfo((m, s,w,t,f) -> t.add(tooltip));
     }
 
-    @Deprecated
-    public T setTooltipInfo(ITooltipInfo info){
-        return this.addTooltipInfo(info);
-    }
-
     public T addTooltipInfo(ITooltipInfo info){
         this.tooltipFunctions.add(info);
         return (T) this;

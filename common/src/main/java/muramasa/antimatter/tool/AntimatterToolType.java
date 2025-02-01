@@ -245,11 +245,6 @@ public class AntimatterToolType implements IAntimatterObject {
         return this;
     }
 
-    @Deprecated
-    public AntimatterToolType setRepairability(boolean repairable){
-        return setRepairable(repairable);
-    }
-
     public AntimatterToolType setTag(AntimatterToolType tag) {
         this.originalTag = false;
         this.tag = tag.getTag();

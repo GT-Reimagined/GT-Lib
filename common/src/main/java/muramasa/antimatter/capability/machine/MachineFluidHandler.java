@@ -48,11 +48,6 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         super(tile, capacity, inputCount, outputCount);
     }
 
-    @Deprecated(forRemoval = true)
-    public MachineFluidHandler(T tile, int capacity, int unused, int inputCount, int outputCount) {
-        this(tile, capacity, inputCount, outputCount);
-    }
-
     public MachineFluidHandler(T tile) {
         this(tile, 32000);
     }
