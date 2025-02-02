@@ -8,6 +8,7 @@ import muramasa.antimatter.data.AntimatterMaterialTypes;
 import muramasa.antimatter.data.AntimatterMaterials;
 import muramasa.antimatter.data.AntimatterStoneTypes;
 import muramasa.antimatter.datagen.AntimatterDynamics;
+import muramasa.antimatter.datagen.AntimatterLoot;
 import muramasa.antimatter.datagen.loaders.MaterialRecipes;
 import muramasa.antimatter.datagen.loaders.StoneRecipes;
 import muramasa.antimatter.datagen.providers.AntimatterBlockLootProvider;
@@ -149,7 +150,7 @@ public class Antimatter extends AntimatterMod {
     public void onRegistrationEvent(RegistrationEvent event, Side side) {
         if (event == RegistrationEvent.DATA_INIT) {
             Recipe.init();
-
+            AntimatterLoot.RandomWeightLootFunction.init();
             SlotType.init();
             RecipeBuilders.init();
             MachineState.init();

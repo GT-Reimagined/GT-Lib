@@ -34,6 +34,7 @@
     "LeavesBlockMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
+    "LootPoolAccessor",
     "PickaxeItemMixin",
     "PlayerMixin",
     "RecipeManagerMixin",
@@ -43,5 +44,5 @@
     "TagLoaderMixin"
   ],
   "minVersion": "0.8",
-  "refmap" : "antimatter.refmap.json"
+  "refmap": "antimatter.refmap.json"
 }

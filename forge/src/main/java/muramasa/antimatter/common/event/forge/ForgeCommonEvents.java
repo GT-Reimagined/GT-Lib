@@ -6,6 +6,7 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.Holder;
 import muramasa.antimatter.common.event.CommonEvents;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
+import muramasa.antimatter.datagen.AntimatterLoot;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.ore.BlockOre;
 import muramasa.antimatter.pipe.TileTicker;
@@ -74,6 +75,7 @@ public class ForgeCommonEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLootTableLoad(LootTableLoadEvent event) {
         CommonEvents.lootTableLoad(event.getTable(), event.getName());
+        AntimatterLoot.onLootTableLoad(event.getTable().getPool("main"), event.getName());
     }
 
     @SubscribeEvent
