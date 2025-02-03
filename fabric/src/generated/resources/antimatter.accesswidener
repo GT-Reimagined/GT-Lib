@@ -20,3 +20,4 @@ accessible method net/minecraft/world/item/context/UseOnContext <init> (Lnet/min
 accessible method net/minecraft/world/item/context/UseOnContext getHitResult ()Lnet/minecraft/world/phys/BlockHitResult;
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
+accessible method net/minecraft/world/level/storage/loot/entries/LootItem <init> (Lnet/minecraft/world/item/Item;II[Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition;[Lnet/minecraft/world/level/storage/loot/functions/LootItemFunction;)V
