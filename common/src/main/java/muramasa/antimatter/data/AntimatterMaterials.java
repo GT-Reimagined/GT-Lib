@@ -23,6 +23,7 @@ public class AntimatterMaterials {
     public static Material Basalt = AntimatterAPI.register(Material.class, new Material(Ref.ID, "basalt", 0x1e1414, ROUGH));
     public static Material Endstone = AntimatterAPI.register(Material.class, new Material(Ref.ID, "endstone", 0xd9de9e, NONE));
     public static Material Netherrack = AntimatterAPI.register(Material.class, new Material(Ref.ID, "netherrack", 0xc80000, NONE));
+    public static Material Bedrock = AntimatterAPI.register(Material.class, new Material(Ref.ID, "bedrock", 0x404040, NONE));
     public static Material Prismarine = AntimatterAPI.register(Material.class, new Material(Ref.ID, "prismarine", 0x6eb2a5, NONE));
     public static Material DarkPrismarine = AntimatterAPI.register(Material.class, new Material(Ref.ID, "dark_prismarine", 0x587d6c, NONE));
     //Vanilla Metal/Gem Materials
