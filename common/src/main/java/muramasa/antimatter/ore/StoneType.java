@@ -1,6 +1,7 @@
 package muramasa.antimatter.ore;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.block.BlockStone;
 import muramasa.antimatter.material.Material;
@@ -21,20 +22,29 @@ import java.util.function.Supplier;
 
 public class StoneType implements ISharedAntimatterObject, IRegistryEntryProvider {
 
+    @Getter
     private final String domain, id;
     //private int harvestLevel;
     private boolean gravity, requiresTool;
     public boolean generateBlock, generateOre = true;
+    @Getter
     private final Material material;
     private Texture[] textures;
     protected Texture defaultTexture;
+    @Getter
     private final SoundType soundType;
+    @Getter
     private BlockState state;
     private Supplier<BlockState> stateSupplier;
+    @Getter
     private int harvestLevel, fallingDustColor;
+    @Getter
     private float hardness, resistence;
+    @Getter
     private TagKey<Block> toolType;
+    @Getter
     private net.minecraft.world.level.material.Material blockMaterial;
+    @Getter
     private boolean sandLike = false;
 
     public StoneType(String domain, String id, Material material, Texture texture, SoundType soundType, boolean generateBlock) {
@@ -117,21 +127,9 @@ public class StoneType implements ISharedAntimatterObject, IRegistryEntryProvide
         if (generateBlock && registry == RegistryType.BLOCKS) setState(new BlockStone(this));
     }
 
-    public String getDomain() {
-        return domain;
-    }
-
     @Override
     public String getId() {
         return id;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public BlockState getState() {
-        return state;
     }
 
     public Texture getTexture() {
@@ -140,22 +138,6 @@ public class StoneType implements ISharedAntimatterObject, IRegistryEntryProvide
 
     public Texture[] getTextures() {
         return textures != null ? textures : new Texture[]{getTexture()};
-    }
-
-    public SoundType getSoundType() {
-        return soundType;
-    }
-
-    public TagKey<Block> getToolType() {
-        return toolType;
-    }
-
-    public int getFallingDustColor() {
-        return fallingDustColor;
-    }
-
-    public net.minecraft.world.level.material.Material getBlockMaterial() {
-        return blockMaterial;
     }
 
     public boolean doesGenerateBlock() {
@@ -168,10 +150,6 @@ public class StoneType implements ISharedAntimatterObject, IRegistryEntryProvide
 
     public boolean doesRequireTool() {
         return requiresTool;
-    }
-
-    public boolean isSandLike() {
-        return sandLike;
     }
 
     public StoneType setState(Block block) {
@@ -187,18 +165,6 @@ public class StoneType implements ISharedAntimatterObject, IRegistryEntryProvide
     public StoneType setStateSupplier(Supplier<BlockState> blockState) {
         this.stateSupplier = blockState;
         return this;
-    }
-
-    public int getHarvestLevel() {
-        return harvestLevel;
-    }
-
-    public float getHardness() {
-        return hardness;
-    }
-
-    public float getResistence() {
-        return resistence;
     }
 
     public boolean getGravity() {
