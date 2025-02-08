@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class WorldGenVeinLayerBuilder {
 
@@ -106,6 +107,11 @@ public class WorldGenVeinLayerBuilder {
     public final WorldGenVeinLayerBuilder inDimension(ResourceKey<Level> dimension) {
         this.dimensions.add(dimension);
         return this;
+    }
+
+    public final WorldGenVeinLayerBuilder inDimensions(List<ResourceKey<Level>> dimension) {
+      this.dimensions.addAll(dimension);
+      return this;
     }
 
     @SafeVarargs

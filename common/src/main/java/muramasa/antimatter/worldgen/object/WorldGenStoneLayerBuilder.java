@@ -85,7 +85,7 @@ public class WorldGenStoneLayerBuilder {
         if (this.weight == null) {
             throw new RuntimeException("weight is required");
         }
-        if (this.dimensions.size() == 0) {
+        if (this.dimensions.isEmpty()) {
             this.dimensions.add(Level.OVERWORLD);
         }
 
