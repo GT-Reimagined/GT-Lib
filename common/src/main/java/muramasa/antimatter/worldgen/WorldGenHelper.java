@@ -154,7 +154,7 @@ public class WorldGenHelper {
         if (material == Material.NULL){
             rockState = AntimatterMaterialTypes.ROCK.get().get(stone.getMaterial()).asState();
         } else {
-            rockState = AntimatterMaterialTypes.BEARING_ROCK.get().get(material, stone != null && stone != AntimatterStoneTypes.BEDROCK && stone.doesGenerateOre() ? stone : AntimatterStoneTypes.STONE).asState();
+            rockState = AntimatterMaterialTypes.BEARING_ROCK.get().get(material, stone != null && stone.doesGenerateOre() ? stone : AntimatterStoneTypes.STONE).asState();
         }
         final BlockState existingBelow = world.getBlockState(pos.below());
         if (existingBelow.isAir() || !existingBelow.getMaterial().isSolid())

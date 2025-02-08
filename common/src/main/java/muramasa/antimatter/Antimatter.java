@@ -200,7 +200,7 @@ public class Antimatter extends AntimatterMod {
                 if (!AntimatterConfig.SHOW_ROCKS.get()){
                     AntimatterMaterialTypes.BEARING_ROCK.all().forEach(m -> {
                         AntimatterAPI.all(StoneType.class, s -> {
-                            if (s.doesGenerateOre() && s != BEDROCK) {
+                            if (s.doesGenerateOre()) {
                                 l.add(AntimatterMaterialTypes.BEARING_ROCK.get().get(m, s).asBlock());
                             }
                         });

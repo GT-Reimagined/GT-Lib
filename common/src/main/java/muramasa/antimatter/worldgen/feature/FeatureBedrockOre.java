@@ -93,7 +93,7 @@ public class FeatureBedrockOre extends AntimatterFeature<NoneFeatureConfiguratio
                             level.setBlock(offset, vein.flower.defaultBlockState(), 0);
                         } else if (tRocks){
                             if (!below.isAir() && below != WorldGenHelper.WATER_STATE && AntimatterConfig.STONE_LAYER_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()) {
-                                WorldGenHelper.setRock(level, offset, vein.material, Blocks.DEEPSLATE.defaultBlockState(), 1);
+                                WorldGenHelper.setRock(level, offset, vein.material, Blocks.BEDROCK.defaultBlockState(), 1);
                             }
                         }
                     }
