@@ -12,6 +12,8 @@ import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
 import muramasa.antimatter.data.AntimatterMaterials;
 import muramasa.antimatter.data.AntimatterStoneTypes;
+import muramasa.antimatter.data.AntimatterTags;
+import muramasa.antimatter.data.ForgeCTags;
 import muramasa.antimatter.fluid.AntimatterFluid;
 import muramasa.antimatter.machine.BlockMachine;
 import muramasa.antimatter.machine.BlockMultiMachine;
@@ -59,7 +61,10 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
                 int stoneMiningLevel = o.getStoneType().getHarvestLevel();
                 int maxLevel = Math.max(oreMiningLevel, stoneMiningLevel);
                 if (maxLevel > 0){
-                    this.tag(fromMiningLevel(maxLevel)).add(o);
+                    TagKey<Block> tagKey = fromMiningLevel(maxLevel);
+                    if (tagKey != null) {
+                        this.tag(tagKey).add(o);
+                    }
                 }
                 if (o.getOreType() == AntimatterMaterialTypes.ORE) this.tag(TagUtils.getForgelikeBlockTag("ores")).add(o);
             });
@@ -74,7 +79,10 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
                 this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(s).replace(replace);
                 int stoneMiningLevel = s.getType().getHarvestLevel();
                 if (stoneMiningLevel > 0){
-                    this.tag(fromMiningLevel(stoneMiningLevel)).add(s);
+                    TagKey<Block> tagKey = fromMiningLevel(stoneMiningLevel);
+                    if (tagKey != null) {
+                        this.tag(tagKey).add(s);
+                    }
                 }
                 this.tag(getBlockTag(new ResourceLocation("antimatter", "blocks/".concat(s.getId())))).add(s).replace(replace);
             });
@@ -143,9 +151,12 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
 
     public TagKey<Block> fromMiningLevel(int miningLevels){
         return switch (miningLevels){
+            case 1 -> BlockTags.NEEDS_STONE_TOOL;
             case 2 -> BlockTags.NEEDS_IRON_TOOL;
             case 3 -> BlockTags.NEEDS_DIAMOND_TOOL;
-            default -> BlockTags.NEEDS_STONE_TOOL;
+            case 4 -> AntimatterTags.NEEDS_NETHERITE_TOOL;
+            case 5 -> AntimatterTags.NEEDS_ADAMANTIUM_TOOL;
+            default -> null;
         };
     }
 }
