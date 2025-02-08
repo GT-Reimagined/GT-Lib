@@ -256,6 +256,17 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
         MaterialItem.addTooltipsForMaterialItems(stack, mat.getB(), mat.getA(), player.level, tooltips, flag);
     }
 
+    public static Material getMaterialFromStackTypeless(ItemStack stack) {
+        Material material = null;
+        for (MaterialType<?> type : AntimatterAPI.all(MaterialType.class)) {
+            material = type.getMaterialFromStack(stack);
+            if (material != null) {
+                break;
+            }
+        }
+        return material;
+    }
+
     @Override
     public void onRegistryBuild(RegistryType registry) {
 
