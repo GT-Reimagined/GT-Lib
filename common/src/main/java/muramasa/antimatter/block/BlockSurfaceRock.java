@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.Ref;
+import muramasa.antimatter.data.AntimatterMaterials;
 import muramasa.antimatter.datagen.builder.AntimatterBlockModelBuilder;
 import muramasa.antimatter.datagen.providers.AntimatterBlockStateProvider;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
@@ -106,7 +107,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        return AntimatterConfig.DETAILED_ROCKS.get() ? new ItemStack(this) : new ItemStack(ROCK.get().get(stoneType.getMaterial()).asItem());
+        return AntimatterConfig.DETAILED_ROCKS.get() ? new ItemStack(this) : !stoneType.getMaterial().has(ROCK) ? new ItemStack(ROCK.get().get(AntimatterMaterials.Stone).asItem()) : new ItemStack(ROCK.get().get(stoneType.getMaterial()).asItem());
     }
 
     @Override
