@@ -3,6 +3,7 @@ package muramasa.antimatter.structure;
 import com.google.common.collect.ImmutableMap;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import it.unimi.dsi.fastutil.Pair;
+import lombok.Getter;
 import muramasa.antimatter.blockentity.multi.BlockEntityBasicMultiMachine;
 import muramasa.antimatter.util.int2;
 import muramasa.antimatter.util.int3;
@@ -14,6 +15,7 @@ public class Structure<T extends BlockEntityBasicMultiMachine<T>> {
     private final IStructureDefinition<T> structureDefinition;
 
 
+    @Getter
     private final Map<String, Pair<Integer, Integer>> minMaxMap;
 
     private final Map<String, Pair<int2, BiFunction<Integer, int3, int3>>> partRequirements;
@@ -30,10 +32,6 @@ public class Structure<T extends BlockEntityBasicMultiMachine<T>> {
 
     public IStructureDefinition<T> getStructureDefinition() {
         return structureDefinition;
-    }
-
-    public Map<String, Pair<Integer, Integer>> getMinMaxMap() {
-        return minMaxMap;
     }
 
     public boolean check(T tile){

@@ -165,7 +165,7 @@ public class StructureBuilder<T extends BlockEntityBasicMultiMachine<T>> {
         }
 
         public StructurePartBuilder min(int i){
-            if (i <= 0) throw new IllegalArgumentException("i must be > 0!");
+            if (i < 0) throw new IllegalArgumentException("i must be >= 0!");
             min = i;
             return this;
         }
