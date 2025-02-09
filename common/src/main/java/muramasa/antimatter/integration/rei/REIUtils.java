@@ -11,11 +11,14 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import tesseract.FluidPlatformUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static muramasa.antimatter.machine.MachineFlag.RECIPE;
 
@@ -51,10 +54,7 @@ public class REIUtils {
         else ViewSearchBuilder.builder().addRecipesFor(stack).open();
     }
 
-    public static void showCategory(Machine<?> type, Tier tier) {
-        if (!type.has(RECIPE)) return;
-        IRecipeMap map = type.getRecipeMap(tier);
-        if (map == null) return; //incase someone adds tier specific recipe maps without a fallback
-        ViewSearchBuilder.builder().addCategories(List.of(CategoryIdentifier.of(map.getLoc()))).open();
+    public static void showCategories(ResourceLocation... categories) {
+        ViewSearchBuilder.builder().addCategories(Arrays.stream(categories).map(CategoryIdentifier::of).collect(Collectors.toList())).open();
     }
 }

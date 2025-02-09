@@ -23,6 +23,7 @@ import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.structure.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 
@@ -30,13 +31,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static muramasa.antimatter.gui.SlotType.*;
+import static muramasa.antimatter.machine.MachineFlag.RECIPE;
 
 public class AntimatterJEIREIPlugin{
     private static final List<Consumer<List<ItemLike>>> ITEMS_TO_HIDE = new ArrayList<>();
     private static final List<Consumer<List<Fluid>>> FLUIDS_TO_HIDE = new ArrayList<>();
+    @Getter
+    private static final Map<ResourceLocation, List<Consumer<List<Item>>>> WORKSTATIONS = new Object2ObjectOpenHashMap<>();
     @Getter
     private static final Map<BlockMachine, List<Pattern>> STRUCTURES = new Object2ObjectOpenHashMap<>();
     
@@ -133,10 +138,22 @@ public class AntimatterJEIREIPlugin{
     }
 
     public static void showCategory(Machine<?> type, Tier tier) {
+        if (!type.has(RECIPE)) return;
+        IRecipeMap map = type.getRecipeMap(tier);
+        if (map == null) return; //incase someone adds tier specific recipe maps without a fallback
+        List<ResourceLocation> categories = new ArrayList<>();
+        categories.add(map.getLoc());
+        if (!map.getSubCategories().isEmpty()){
+            map.getSubCategories().keySet().forEach(s -> categories.add(new ResourceLocation(Ref.SHARED_ID, s)));
+        }
+        showCategories(categories.toArray(ResourceLocation[]::new));
+    }
+
+    public static void showCategories(ResourceLocation... categories){
         if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
-            AntimatterJEIPlugin.showCategory(type, tier);
+            AntimatterJEIPlugin.showCategories(categories);
         } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
-            REIUtils.showCategory(type, tier);
+            REIUtils.showCategories(categories);
         }
     }
 
@@ -174,8 +191,17 @@ public class AntimatterJEIREIPlugin{
         });
     }
 
+
     public static void addFluidsToHide(Consumer<List<Fluid>> listConsumer){
         FLUIDS_TO_HIDE.add(listConsumer);
+    }
+
+    public static void addWorkstations(ResourceLocation category, Item... items){
+        addWorkstations(category, l -> l.addAll(Arrays.asList(items)));
+    }
+
+    public static void addWorkstations(ResourceLocation category, Consumer<List<Item>> listConsumer){
+        WORKSTATIONS.computeIfAbsent(category, r -> new ArrayList<>()).add(listConsumer);
     }
 
     public static List<Consumer<List<ItemLike>>> getItemsToHide() {
@@ -185,6 +211,5 @@ public class AntimatterJEIREIPlugin{
     public static List<Consumer<List<Fluid>>> getFluidsToHide() {
         return FLUIDS_TO_HIDE;
     }
-
 
 }

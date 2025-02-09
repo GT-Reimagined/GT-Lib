@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.ingredients.subtypes.UidContext;
@@ -28,7 +29,6 @@ import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.recipe.IRecipe;
-import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.material.MaterialRecipe;
@@ -41,6 +41,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
@@ -218,16 +219,8 @@ public class AntimatterJEIPlugin implements IModPlugin {
         return Minecraft.getInstance().level;
     }
 
-    public static void showCategory(Machine<?> type, Tier tier) {
+    public static void showCategories(ResourceLocation... categories) {
         if (runtime != null) {
-            if (!type.has(RECIPE)) return;
-            IRecipeMap map = type.getRecipeMap(tier);
-            if (map == null) return; //incase someone adds tier specific recipe maps without a fallback
-            List<ResourceLocation> categories = new ArrayList<>();
-            categories.add(map.getLoc());
-            if (!map.getSubCategories().isEmpty()){
-                map.getSubCategories().keySet().forEach(s -> categories.add(new ResourceLocation(Ref.SHARED_ID, s)));
-            }
             runtime.getRecipesGui().showCategories(ImmutableList.copyOf(categories));
         }
     }
@@ -265,6 +258,13 @@ public class AntimatterJEIPlugin implements IModPlugin {
                 if (!tuple.map.getSubCategories().isEmpty()){
                     tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), new ResourceLocation(Ref.SHARED_ID, s1)));
                 }
+            });
+        });
+        AntimatterJEIREIPlugin.getWORKSTATIONS().forEach((r, l) -> {
+            List<Item> list = new ArrayList<>();
+            l.forEach(l2 -> l2.accept(list));
+            list.forEach(i -> {
+                registration.addRecipeCatalyst(new ItemStack(i), RecipeType.create(r.getNamespace(), r.getPath(), Recipe.class));
             });
         });
     }
