@@ -178,10 +178,8 @@ public class AntimatterJEIPlugin implements IModPlugin {
                         mainRecipes.add(recipe);
                     }
                 }
-                Antimatter.LOGGER.info(mainRecipes.stream().map(r -> r.getId().toString()).toList());
                 registration.addRecipes(RECIPE_TYPES.get(id.toString()), mainRecipes);
                 for (var entry : recipeMap.entrySet()) {
-                    Antimatter.LOGGER.info(entry.getValue().stream().map(r -> r.getId().toString()).toList());
                     registration.addRecipes(RECIPE_TYPES.get(Ref.SHARED_ID + ":" + entry.getKey()), entry.getValue());
                 }
             }
