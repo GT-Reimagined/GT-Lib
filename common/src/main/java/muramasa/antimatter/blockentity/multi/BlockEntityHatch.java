@@ -2,7 +2,9 @@ package muramasa.antimatter.blockentity.multi;
 
 import lombok.Getter;
 import lombok.Setter;
+import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterConfig;
+import muramasa.antimatter.block.BlockBasic;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.ComponentHandler;
 import muramasa.antimatter.capability.machine.HatchComponentHandler;
@@ -23,11 +25,14 @@ import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -40,8 +45,7 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
     public final Optional<HatchComponentHandler<T>> componentHandler;
     public final HatchMachine hatchMachine;
     @Getter
-    @Setter
-    private ITextureProvider textureBlock = null;
+    private BlockBasic textureBlock = null;
 
     public BlockEntityHatch(HatchMachine type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -85,6 +89,11 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
                 }
             });
         }
+    }
+
+    public void setTextureBlock(BlockBasic textureBlock) {
+        this.textureBlock = textureBlock;
+        this.sidedSync(true);
     }
 
     @Override
@@ -154,6 +163,34 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
                 return;
             ((CoverOutput) cover).setEjects(has(FLUID), has(ITEM));
         });
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag updateTag = super.getUpdateTag();
+        if (textureBlock != null) {
+            updateTag.putString("textureBlock", textureBlock.getLoc().toString());
+        } else {
+            updateTag.putBoolean("noTextureBlock", true);
+        }
+        return updateTag;
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        if (tag.contains("textureBlock")) {
+            Block block = AntimatterAPI.get(Block.class, new ResourceLocation(tag.getString("textureBlock")));
+            if (block instanceof BlockBasic blockBasic){
+                textureBlock = blockBasic;
+            } else textureBlock = null;
+        }
+        if (tag.getBoolean("noTextureBlock")) {
+            textureBlock = null;
+        }
+        if (level != null) {
+            sidedSync(true);
+        }
     }
 
     @Override

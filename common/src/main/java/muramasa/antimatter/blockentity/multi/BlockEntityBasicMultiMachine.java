@@ -14,7 +14,9 @@ import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterConfig;
+import muramasa.antimatter.block.BlockBasic;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.IComponentHandler;
 import muramasa.antimatter.client.scene.TrackedDummyWorld;
@@ -23,10 +25,7 @@ import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.machine.event.MachineEvent;
 import muramasa.antimatter.machine.types.BasicMultiMachine;
 import muramasa.antimatter.machine.types.Machine;
-import muramasa.antimatter.network.AntimatterNetwork;
-import muramasa.antimatter.network.packets.StructureCheckPacket;
 import muramasa.antimatter.registration.IAntimatterObject;
-import muramasa.antimatter.registration.ITextureProvider;
 import muramasa.antimatter.structure.Structure;
 import muramasa.antimatter.structure.StructureCache;
 import muramasa.antimatter.structure.StructureHandle;
@@ -159,7 +158,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
         // This is not only behavioural but if INVALID_STRUCTURE are checked then
         // maxShares
         // might misbehave.
-        if (!validStructure && shouldCheckFirstTick) {
+        if (!validStructure && shouldCheckFirstTick && isServerSide()) {
             checkStructure();
         }
         super.onFirstTick();
@@ -181,6 +180,11 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     }
 
     public boolean checkStructure() {
+        if (level != null && isClientSide()){
+            Antimatter.LOGGER.warn("Checking structure on client side");
+            Thread.dumpStack();
+            return false;
+        }
         Structure<T> structure = getMachineType().getStructure(getMachineTier());
         if (structure == null)
             return false;
@@ -243,9 +247,6 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
         checkingStructure--;
         if (validStructure != oldValidStructure){
             sidedSync(true);
-            if (isServerSide()){
-                AntimatterNetwork.NETWORK.sendToPlayersInLevel(new StructureCheckPacket(this.getBlockPos(), false), this.level);
-            }
         }
         return validStructure;
     }
@@ -264,6 +265,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     @Override
     public void onBlockUpdate(BlockPos pos) {
         super.onBlockUpdate(pos);
+        if (!isServerSide()) return;
         if (checkingStructure > 0)
             return;
         if (validStructure) {
@@ -318,6 +320,11 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     }
 
     public void invalidateStructure() {
+        if (level != null && isClientSide()){
+            Antimatter.LOGGER.warn("Invalidating structure on client side");
+            Thread.dumpStack();
+            return;
+        }
         if (this.getLevel() instanceof TrackedDummyWorld)
             return;
         if (!validStructure) {
@@ -346,9 +353,6 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
         }
         StructureCache.remove(level, worldPosition);
         sidedSync(true);
-        if (isServerSide()){
-            AntimatterNetwork.NETWORK.sendToPlayersInLevel(new StructureCheckPacket(this.getBlockPos(), true), this.level);
-        }
         checkingStructure--;
     }
 
@@ -419,11 +423,11 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
         return tex[dir.get3DDataValue()];
     }
 
-    public ITextureProvider getHatchBlock(BlockPos pos){
+    public BlockBasic getHatchBlock(BlockPos pos){
         if (this.getMachineType() instanceof BasicMultiMachine<?> multiMachine && multiMachine.getTextureBlock() != null){
             return multiMachine.getTextureBlock().apply(tier);
         }
-        return () -> this.getMachineType().getBaseTexture(this.getMachineTier(), this.getMachineState().getTextureState());
+        return null;
     }
 
     @Override

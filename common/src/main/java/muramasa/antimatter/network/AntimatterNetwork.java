@@ -7,7 +7,6 @@ import muramasa.antimatter.network.packets.ClientboundGuiSyncPacket;
 import muramasa.antimatter.network.packets.CoverGuiEventPacket;
 import muramasa.antimatter.network.packets.FakeTilePacket;
 import muramasa.antimatter.network.packets.ServerboundGuiSyncPacket;
-import muramasa.antimatter.network.packets.StructureCheckPacket;
 import muramasa.antimatter.network.packets.TileGuiEventPacket;
 import net.minecraft.resources.ResourceLocation;
 
@@ -29,6 +28,5 @@ public abstract class AntimatterNetwork {
         NETWORK.registerPacket(NetworkDirection.CLIENT_TO_SERVER, GUI_SYNC_PACKET_ID_SERVERBOUND, ServerboundGuiSyncPacket.HANDLER, ServerboundGuiSyncPacket.class);
         NETWORK.registerPacket(NetworkDirection.SERVER_TO_CLIENT, GUI_SYNC_PACKET_ID, ClientboundGuiSyncPacket.HANDLER, ClientboundGuiSyncPacket.class);
         NETWORK.registerPacket(NetworkDirection.SERVER_TO_CLIENT, FAKE_TILE_PACKET_ID, FakeTilePacket.HANDLER, FakeTilePacket.class);
-        NETWORK.registerPacket(NetworkDirection.SERVER_TO_CLIENT, STRUCTURE_CHECK_PACKET_ID, StructureCheckPacket.HANDLER, StructureCheckPacket.class);
     }
 }

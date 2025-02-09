@@ -367,7 +367,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     protected boolean hasLoadedInput() {
-        return itemInputs.size() > 0 || fluidInputs.size() > 0;
+        return !itemInputs.isEmpty() || !fluidInputs.isEmpty();
     }
 
     public void checkRecipe() {
