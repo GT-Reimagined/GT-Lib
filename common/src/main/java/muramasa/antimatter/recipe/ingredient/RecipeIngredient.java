@@ -219,7 +219,7 @@ public class RecipeIngredient extends Ingredient {
     }
 
     public static RecipeIngredient of(Ingredient ingredient, int count){
-        return new RecipeIngredient(new MultiValue(Arrays.stream(ingredient.getItems()).map(t -> new RecipeValue(t, count))));
+        return new RecipeIngredient(new MultiValue(Arrays.stream(ingredient.getItems()).map(t -> new RecipeValue(t.copy(), count))));
     }
 
 
