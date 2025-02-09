@@ -39,6 +39,8 @@ public class Structure<T extends BlockEntityBasicMultiMachine<T>> {
     public boolean check(T tile){
         int i = 0;
         int successful = 0;
+        int3 offset = this.offset.copy();
+        offset.set(tile.getFacing());
         for (Map.Entry<String, Pair<int2, BiFunction<Integer, int3, int3>>> entry : partRequirements.entrySet()) {
             String s = entry.getKey();
             Pair<int2, BiFunction<Integer, int3, int3>> v = entry.getValue();
