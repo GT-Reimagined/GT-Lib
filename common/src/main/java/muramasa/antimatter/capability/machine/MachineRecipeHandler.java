@@ -651,8 +651,10 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         this.currentProgress = nbt.getInt("P");
         this.tickTimer = nbt.getInt("T");
         this.consumedResources = nbt.getBoolean("C");
-        this.activeRecipe = nbt.contains("AR") ? getRecipeMap().findByID(new ResourceLocation(nbt.getString("AR"))) : null;
-        this.lastRecipe = nbt.contains("LR") ? getRecipeMap().findByID(new ResourceLocation(nbt.getString("LR"))) : null;
+        if (getRecipeMap() != null) {
+            this.activeRecipe = nbt.contains("AR") ? getRecipeMap().findByID(new ResourceLocation(nbt.getString("AR"))) : null;
+            this.lastRecipe = nbt.contains("LR") ? getRecipeMap().findByID(new ResourceLocation(nbt.getString("LR"))) : null;
+        }
         if (this.activeRecipe != null) calculateDurations();
     }
 
