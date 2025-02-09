@@ -54,13 +54,13 @@ public class int3 extends BlockPos.MutableBlockPos {
     }
 
     public int3 right(int n) {
-        if (side.getAxis() != Axis.Y) return offset(n, side.getClockWise());
-        return offset(n, Direction.NORTH.getClockWise());
+        if (side.getAxis() != Axis.Y) return offset(n, side.getCounterClockWise());
+        return offset(n, Direction.NORTH.getCounterClockWise());
     }
 
     public int3 left(int n) {
-        if (side.getAxis() != Axis.Y) return offset(n, side.getCounterClockWise());
-        return offset(n, Direction.NORTH.getCounterClockWise());
+        if (side.getAxis() != Axis.Y) return offset(n, side.getClockWise());
+        return offset(n, Direction.NORTH.getClockWise());
     }
 
     public int3 forward(int n) {
