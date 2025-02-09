@@ -370,7 +370,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 return false;
             }
         }
-        return ok && (consumed.size() > 0 || !r.hasInputItems() || consumedResources);
+        return ok && (!consumed.isEmpty() || !r.hasInputItems() || consumedResources);
     }
 
     protected boolean hasLoadedInput() {
