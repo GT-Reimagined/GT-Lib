@@ -167,14 +167,14 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             slotCount = slots.size();
             if (slotCount > 0) {
                 int s = 0;
-                if (inputs.size() > 0) {
+                if (!inputs.isEmpty()) {
                     slotCount = Math.min(slotCount, inputs.size());
                     for (; s < slotCount; s++) {
                         IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
                         List<ItemStack> input = inputs.get(s);
-                        if (input.size() == 0) {
+                        if (input.isEmpty()) {
                             List<ItemStack> st = new ObjectArrayList<>(1);
-                            st.add(new ItemStack(Data.DEBUG_SCANNER, 1));
+                            st.add(new ItemStack(Data.DEBUG_SCANNER, 1).setHoverName(Utils.literal("Empty tag")));
                             slot.addIngredients(VanillaTypes.ITEM_STACK, st);
                         } else {
                             slot.addIngredients(VanillaTypes.ITEM_STACK, input);
