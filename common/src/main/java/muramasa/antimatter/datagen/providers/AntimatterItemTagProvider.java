@@ -13,6 +13,7 @@ import muramasa.antimatter.item.ItemFluidCell;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialItem;
 import muramasa.antimatter.material.MaterialType;
+import muramasa.antimatter.material.MaterialTypeBlock;
 import muramasa.antimatter.material.SubTag;
 import muramasa.antimatter.ore.BlockOre;
 import muramasa.antimatter.ore.BlockOreStone;
@@ -75,27 +76,12 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
         if (domain.equals(Ref.ID)) {
             AntimatterAPI.all(BlockOre.class, o -> {
                 //if (o.getOreType() == ORE_SMALL) return;
-                String name = String.join("", getConventionalStoneType(o.getStoneType()), "_", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId());
-                this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
-                String forgeName = String.join("", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId());
-                this.copy(getForgelikeBlockTag(forgeName), getForgelikeItemTag(forgeName));
+                this.tag(getForgelikeItemTag(String.join("", getConventionalStoneType(o.getStoneType()), "_", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o.asItem());
+                this.tag(getForgelikeItemTag(String.join("", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o.asItem());
+                this.tag(getForgelikeItemTag(getConventionalMaterialType(o.getOreType()))).add(o.asItem());
+                this.tag(getForgelikeItemTag(getConventionalStoneType(o.getStoneType()) + "_" + getConventionalMaterialType(o.getOreType()))).add(o.asItem());
             });
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/coal")).add(Items.COAL_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/coal")).add(Items.DEEPSLATE_COAL_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/iron")).add(Items.IRON_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/iron")).add(Items.DEEPSLATE_IRON_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/copper")).add(Items.COPPER_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/copper")).add(Items.DEEPSLATE_COPPER_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/gold")).add(Items.GOLD_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/gold")).add(Items.DEEPSLATE_GOLD_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/redstone")).add(Items.REDSTONE_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/redstone")).add(Items.DEEPSLATE_REDSTONE_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/emerald")).add(Items.EMERALD_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/emerald")).add(Items.DEEPSLATE_EMERALD_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/lapis")).add(Items.LAPIS_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/lapis")).add(Items.DEEPSLATE_LAPIS_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("stone_ores/diamond")).add(Items.DIAMOND_ORE);
-            this.tag(TagUtils.getForgelikeItemTag("deepslate_ores/diamond")).add(Items.DEEPSLATE_DIAMOND_ORE);
+
             AntimatterAPI.all(BlockStone.class, s -> {
                 String id = "blocks/".concat(s.getId());
                 if (s.getSuffix().isEmpty()) {
@@ -142,6 +128,14 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
                     this.tag(t.getMaterialTag((Material) m)).add(((Supplier<Item>)i).get()).replace(replace);
                     this.tag(t.getTag()).add(((Supplier<Item>)i).get()).replace(replace);
                 });
+                if (t instanceof MaterialTypeBlock<?> block){
+                   block.getOreReplacements().forEach((m, map) -> {
+                        map.forEach((s, i) -> {
+                            this.tag(block.getMaterialTag(m, s)).add(i.get());
+                            this.tag(getForgelikeItemTag(String.join("", getConventionalStoneType(s), "_", getConventionalMaterialType(t)))).add(i.get());
+                        });
+                   });
+                }
             });
             //TODO move this to a felt api module
             if (AntimatterPlatformUtils.INSTANCE.isFabric()){

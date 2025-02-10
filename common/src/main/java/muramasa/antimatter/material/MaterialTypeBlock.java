@@ -2,6 +2,7 @@ package muramasa.antimatter.material;
 
 import com.google.common.collect.HashBiMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.ore.StoneType;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
@@ -22,6 +23,7 @@ import java.util.function.Supplier;
 
 public class MaterialTypeBlock<T> extends MaterialType<T> {
 
+    @Getter
     protected final Map<Material, Map<StoneType, Supplier<Item>>> oreReplacements = HashBiMap.create();
 
     public interface BlockSupplier {
