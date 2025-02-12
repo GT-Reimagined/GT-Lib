@@ -161,7 +161,7 @@ public class FluidIngredient {
     public List<FluidHolder> drain(long amount, MachineFluidHandler<?> handler, boolean input, boolean simulate) {
         long drained = amount;
         List<FluidHolder> ret = new ObjectArrayList<>(1);
-        for (FluidHolder stack : stacks) {
+        for (FluidHolder stack : getStacks()) {
             stack = stack.copyHolder();
             stack.setAmount(drained);
             FluidHolder drain = input ? handler.drainInput(stack, simulate) : handler.extractFluid(stack, simulate);
@@ -181,7 +181,7 @@ public class FluidIngredient {
     public List<FluidHolder> drain(long amount, FluidContainer handler, boolean simulate) {
         long drained = amount;
         List<FluidHolder> ret = new ObjectArrayList<>(1);
-        for (FluidHolder stack : stacks) {
+        for (FluidHolder stack : getStacks()) {
             stack = stack.copyHolder();
             stack.setAmount(drained);
             FluidHolder drain = handler.internalExtract(stack, simulate);
