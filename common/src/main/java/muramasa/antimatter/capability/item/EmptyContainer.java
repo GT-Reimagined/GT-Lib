@@ -3,7 +3,6 @@ package muramasa.antimatter.capability.item;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.item.ExtendedItemContainer;
 
 public class EmptyContainer implements ExtendedItemContainer {
     public static final EmptyContainer INSTANCE = new EmptyContainer();

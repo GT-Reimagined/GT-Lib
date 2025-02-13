@@ -7,8 +7,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.item.ContainerItemHandler;
-import tesseract.api.item.ExtendedItemContainer;
 import tesseract.util.ItemHandlerUtils;
 
 public class ItemStackHandler implements ExtendedItemContainer, ContainerItemHandler {

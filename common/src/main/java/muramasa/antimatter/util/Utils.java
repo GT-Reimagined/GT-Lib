@@ -18,6 +18,7 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityBase;
+import muramasa.antimatter.capability.item.PlatformItemHandler;
 import muramasa.antimatter.data.AntimatterTags;
 import muramasa.antimatter.entity.IRadiationEntity;
 import muramasa.antimatter.material.Material;
@@ -81,7 +82,6 @@ import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.heat.IHeatHandler;
-import tesseract.api.item.PlatformItemHandler;
 
 import java.awt.Color;
 import java.text.DecimalFormat;

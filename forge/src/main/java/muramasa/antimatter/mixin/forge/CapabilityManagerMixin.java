@@ -2,6 +2,7 @@ package muramasa.antimatter.mixin.forge;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import muramasa.antimatter.capability.forge.AntimatterCaps;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -14,7 +15,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import tesseract.api.item.ExtendedItemContainer;
 import tesseract.api.rf.IRFNode;
 
 import java.util.IdentityHashMap;

@@ -17,7 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractGraphWrappers;
-import tesseract.api.fluid.FluidContainerHandler;
 
 import java.util.Arrays;
 import java.util.Collection;

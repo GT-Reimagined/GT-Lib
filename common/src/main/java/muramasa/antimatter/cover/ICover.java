@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.IGuiHandler;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.client.dynamic.IDynamicModelProvider;
 import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.SlotType;
@@ -37,7 +38,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.item.ExtendedItemContainer;
 
 import java.util.List;
 import java.util.Map;

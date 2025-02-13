@@ -2,11 +2,11 @@ package muramasa.antimatter.capability.pipe;
 
 import muramasa.antimatter.blockentity.pipe.BlockEntityItemPipe;
 import muramasa.antimatter.capability.CoverHandler;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.SidedCombinedInvWrapper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.item.ExtendedItemContainer;
 
 public class PipeItemHandler extends SidedCombinedInvWrapper {
     BlockEntityItemPipe<?> pipe;

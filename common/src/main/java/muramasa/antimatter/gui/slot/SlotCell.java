@@ -1,8 +1,8 @@
 package muramasa.antimatter.gui.slot;
 
 import muramasa.antimatter.capability.IGuiHandler;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.gui.SlotType;
-import tesseract.api.item.ExtendedItemContainer;
 
 public class SlotCell extends AbstractSlot<SlotCell> {
 

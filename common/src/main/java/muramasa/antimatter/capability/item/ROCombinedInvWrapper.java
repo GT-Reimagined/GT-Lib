@@ -3,8 +3,6 @@ package muramasa.antimatter.capability.item;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.item.ExtendedItemContainer;
-import tesseract.api.item.IItemNode;
 
 public class ROCombinedInvWrapper extends CombinedInvWrapper implements IItemNode {
     public ROCombinedInvWrapper(ExtendedItemContainer... itemHandler) {

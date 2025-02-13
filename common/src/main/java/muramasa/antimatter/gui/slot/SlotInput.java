@@ -1,9 +1,9 @@
 package muramasa.antimatter.gui.slot;
 
 import muramasa.antimatter.capability.IGuiHandler;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.gui.SlotType;
 import net.minecraft.world.entity.player.Player;
-import tesseract.api.item.ExtendedItemContainer;
 
 public class SlotInput extends AbstractSlot<SlotInput> {
 

@@ -15,6 +15,7 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.machine.event.MachineEvent;
 import muramasa.antimatter.tool.AntimatterToolType;
+import muramasa.antimatter.util.AntimatterCapUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -126,9 +127,9 @@ public class CoverOutput extends BaseCover {
             return;
         if (processing > 0) return;
         processing++;
-        TesseractCapUtils.INSTANCE.getItemHandler(adjTile, this.side.getOpposite())
+        AntimatterCapUtils.INSTANCE.getItemHandler(adjTile, this.side.getOpposite())
                 .ifPresent(adjHandler -> {
-                    TesseractCapUtils.INSTANCE.getItemHandler(handler.getTile(), this.side).ifPresent(h -> Utils.transferItems(h, adjHandler, false, i -> {
+                    AntimatterCapUtils.INSTANCE.getItemHandler(handler.getTile(), this.side).ifPresent(h -> Utils.transferItems(h, adjHandler, false, i -> {
                         return !(this.handler.getTile() instanceof BlockEntityMachine<?> machine) || machine.itemHandler.map(f -> f.canItemBeAutoOutput(i)).orElse(true);
                     }));
                 });

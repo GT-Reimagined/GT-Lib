@@ -9,6 +9,8 @@ import muramasa.antimatter.blockentity.multi.BlockEntityBasicMultiMachine;
 import muramasa.antimatter.capability.Holder;
 import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.forge.AntimatterCaps;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
+import muramasa.antimatter.capability.item.forge.ExtendedContainerWrapper;
 import muramasa.antimatter.capability.machine.MachineCoverHandler;
 import muramasa.antimatter.capability.machine.MachineEnergyHandler;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
@@ -36,9 +38,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import tesseract.api.forge.TesseractCaps;
-import tesseract.api.forge.wrapper.ExtendedContainerWrapper;
 import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.item.ExtendedItemContainer;
 import tesseract.api.rf.IRFNode;
 
 import java.util.Optional;

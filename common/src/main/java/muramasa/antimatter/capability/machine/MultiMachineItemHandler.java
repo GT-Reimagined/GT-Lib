@@ -1,10 +1,10 @@
 package muramasa.antimatter.capability.machine;
 
 import muramasa.antimatter.blockentity.multi.BlockEntityMultiMachine;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.ITrackedHandler;
 import muramasa.antimatter.capability.item.MultiTrackedItemHandler;
 import net.minecraft.world.item.ItemStack;
-import tesseract.api.item.ExtendedItemContainer;
 
 import java.util.List;
 import java.util.Optional;

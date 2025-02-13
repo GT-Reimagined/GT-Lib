@@ -8,8 +8,6 @@ import muramasa.antimatter.capability.CoverHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.fluid.FluidContainerHandler;
-import tesseract.api.fluid.IFluidNode;
 
 import java.util.List;
 

@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.fluid.FluidContainerHandler;
 
 import java.util.List;
 import java.util.Objects;

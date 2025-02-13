@@ -7,6 +7,8 @@ import muramasa.antimatter.blockentity.BlockEntityTickable;
 import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.capability.Holder;
 import muramasa.antimatter.capability.forge.AntimatterCaps;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
+import muramasa.antimatter.capability.item.forge.ExtendedContainerWrapper;
 import muramasa.antimatter.capability.pipe.PipeCoverHandler;
 import muramasa.antimatter.pipe.types.PipeType;
 import net.minecraft.core.BlockPos;
@@ -25,8 +27,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import tesseract.api.forge.wrapper.ExtendedContainerWrapper;
-import tesseract.api.item.ExtendedItemContainer;
 import tesseract.api.rf.IRFNode;
 
 import java.util.Optional;

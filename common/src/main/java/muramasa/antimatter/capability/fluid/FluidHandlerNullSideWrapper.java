@@ -7,7 +7,6 @@ import earth.terrarium.botarium.common.fluid.impl.SimpleFluidSnapshot;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import tesseract.api.fluid.IFluidNode;
 
 import java.util.List;
 

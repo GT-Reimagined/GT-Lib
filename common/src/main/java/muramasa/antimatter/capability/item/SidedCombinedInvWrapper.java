@@ -4,8 +4,6 @@ import muramasa.antimatter.capability.CoverHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.item.ExtendedItemContainer;
-import tesseract.api.item.IItemNode;
 
 import java.util.function.Predicate;
 

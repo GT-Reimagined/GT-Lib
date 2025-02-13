@@ -9,6 +9,7 @@ import lombok.Getter;
 import muramasa.antimatter.blockentity.BlockEntityBase;
 import muramasa.antimatter.capability.fluid.FluidTank;
 import muramasa.antimatter.capability.fluid.FluidTanks;
+import muramasa.antimatter.capability.fluid.IFluidNode;
 import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.util.Utils;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.FluidPlatformUtils;
-import tesseract.api.fluid.IFluidNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;

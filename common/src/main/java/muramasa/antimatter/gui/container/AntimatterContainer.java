@@ -2,6 +2,7 @@ package muramasa.antimatter.gui.container;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import muramasa.antimatter.capability.IGuiHandler;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
 import muramasa.antimatter.common.event.CommonEvents;
 import muramasa.antimatter.gui.GuiInstance;
@@ -22,7 +23,6 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import tesseract.api.item.ExtendedItemContainer;
 
 import java.util.Set;
 

@@ -3,7 +3,6 @@ package muramasa.antimatter.capability.item;
 import muramasa.antimatter.capability.machine.MachineItemHandler;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.item.ExtendedItemContainer;
 
 public class MultiTrackedItemHandler extends CombinedInvWrapper implements ITrackedHandler {
 

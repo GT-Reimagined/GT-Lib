@@ -2,6 +2,9 @@ package muramasa.antimatter.blockentity.pipe;
 
 import muramasa.antimatter.blockentity.IPreTickTile;
 import muramasa.antimatter.capability.Dispatch;
+import muramasa.antimatter.capability.item.ExtendedItemContainer;
+import muramasa.antimatter.capability.item.IItemPipe;
+import muramasa.antimatter.capability.item.PlatformItemHandler;
 import muramasa.antimatter.capability.item.ROCombinedInvWrapper;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
 import muramasa.antimatter.capability.pipe.PipeItemHandler;
@@ -10,6 +13,7 @@ import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.pipe.BlockItemPipe;
 import muramasa.antimatter.pipe.TileTicker;
 import muramasa.antimatter.pipe.types.ItemPipe;
+import muramasa.antimatter.util.AntimatterCapUtils;
 import muramasa.antimatter.util.CodeUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -22,10 +26,6 @@ import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import tesseract.TesseractCapUtils;
-import tesseract.api.item.ExtendedItemContainer;
-import tesseract.api.item.IItemPipe;
-import tesseract.api.item.PlatformItemHandler;
 import tesseract.graph.Connectivity;
 
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
         BlockEntity tile = getCachedBlockEntity(dir);
         if (tile == null)
             return false;
-        return TesseractCapUtils.INSTANCE.getItemHandler(tile, dir.getOpposite()).isPresent();
+        return AntimatterCapUtils.INSTANCE.getItemHandler(tile, dir.getOpposite()).isPresent();
     }
 
     @Override
@@ -180,7 +180,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
             BlockEntity tDelegator = getCachedBlockEntity(side);
             if (!(tDelegator instanceof BlockEntityPipe<?>) && tDelegator != null) {
                 if (!(tDelegator instanceof HopperBlockEntity || tDelegator instanceof DispenserBlockEntity)) {
-                    PlatformItemHandler itemHandler = TesseractCapUtils.INSTANCE.getItemHandler(tDelegator, side.getOpposite()).orElse(null);
+                    PlatformItemHandler itemHandler = AntimatterCapUtils.INSTANCE.getItemHandler(tDelegator, side.getOpposite()).orElse(null);
                     if (itemHandler != null){
                         // special cases for the win...
                         ICover cover = coverHandler.map(c -> c.get(side)).orElse(ICover.empty);

@@ -11,6 +11,7 @@ import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.FluidHandler;
 import muramasa.antimatter.capability.fluid.FluidHandlerNullSideWrapper;
 import muramasa.antimatter.capability.fluid.FluidTank;
+import muramasa.antimatter.capability.fluid.IFluidPipe;
 import muramasa.antimatter.capability.fluid.PipeFluidHandlerSidedWrapper;
 import muramasa.antimatter.capability.pipe.PipeFluidHandler;
 import muramasa.antimatter.cover.ICover;
@@ -34,7 +35,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import tesseract.FluidPlatformUtils;
 import tesseract.TesseractGraphWrappers;
-import tesseract.api.fluid.IFluidPipe;
 import tesseract.api.fluid.PipeFluidHolder;
 
 import java.util.ArrayList;
@@ -46,7 +46,6 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     @Getter
     protected Optional<PipeFluidHandler> fluidHandler;
     public static byte[] SBIT = {1, 2, 4, 8, 16, 32};
-    private PipeFluidHolder holder;
     byte[] lastSide;
     long transferredAmount = 0;
     long mTemperature = 293;
@@ -64,7 +63,6 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
 
     @Override
     public void onLoad() {
-        holder = new PipeFluidHolder(this);
         super.onLoad();
         if (even(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ())) {
             TileTicker.SERVER_TICK_PRE.add(this);
@@ -132,11 +130,6 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     }
 
     @Override
-    public PipeFluidHolder getHolder() {
-        return holder;
-    }
-
-    @Override
     public int getCapacity() {
         return 1;
     }
@@ -184,7 +177,6 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
         super.serverTick(level, pos, state);
-        this.getHolder().tick(getLevel().getGameTime());
     }
 
     private boolean mHasToAddTimer = true;
