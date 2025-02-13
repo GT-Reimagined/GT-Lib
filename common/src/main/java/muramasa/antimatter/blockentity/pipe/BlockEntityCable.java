@@ -98,7 +98,7 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     @Override
     public boolean validate(Direction dir) {
         if (!super.validate(dir)) return false;
-        BlockEntity tile = BlockEntityCache.getBlockEntity(level, getBlockPos().relative(dir));
+        BlockEntity tile = this.getCachedBlockEntity(dir);
         if (tile == null) return false;
         return TesseractCapUtils.INSTANCE.getEnergyHandler(tile, dir.getOpposite()).isPresent();
     }
