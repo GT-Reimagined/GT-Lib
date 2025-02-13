@@ -340,14 +340,14 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 } else {
                     return consumeGeneratorResources(simulate);
                 }
-            } else if (tile.rfHandler.isPresent()){
+            } /*else if (tile.rfHandler.isPresent()){
                 if (!generator) {
                     long power = getPower();
                     return tile.rfHandler.map(e -> e.extractEnergy(power, simulate) >= power).orElse(false);
                 } else {
                     return consumeRFGeneratorResources(simulate);
                 }
-            } else {
+            }*/ else {
                 return false;
             }
         }
@@ -462,9 +462,9 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }).orElse(false)) {
             //insert power!
             if (!simulate) {
-                tile.rfHandler.ifPresent(r -> {
+                /*tile.rfHandler.ifPresent(r -> {
                     r.setEnergy(r.getStoredEnergy() + activeRecipe.getPower());
-                });
+                });*/
             }
             return true;
         }

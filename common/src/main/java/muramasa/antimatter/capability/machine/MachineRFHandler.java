@@ -1,3 +1,4 @@
+/*
 package muramasa.antimatter.capability.machine;
 
 import com.google.common.collect.ImmutableList;
@@ -155,3 +156,4 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     public void onRemove() {
     }
 }
+*/

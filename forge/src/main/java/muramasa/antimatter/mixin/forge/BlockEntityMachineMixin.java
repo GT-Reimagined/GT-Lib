@@ -15,7 +15,6 @@ import muramasa.antimatter.capability.machine.MachineCoverHandler;
 import muramasa.antimatter.capability.machine.MachineEnergyHandler;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.capability.machine.MachineItemHandler;
-import muramasa.antimatter.capability.machine.MachineRFHandler;
 import muramasa.antimatter.cover.CoverDynamo;
 import muramasa.antimatter.cover.CoverEnergy;
 import muramasa.antimatter.cover.ICover;
@@ -39,7 +38,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.rf.IRFNode;
 
 import java.util.Optional;
 
@@ -54,8 +52,8 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
     public Holder<ICoverHandler<?>, MachineCoverHandler<T>> coverHandler;
     @Shadow
     public Holder<IEnergyHandler, MachineEnergyHandler<T>> energyHandler;
-    @Shadow
-    public Holder<IRFNode, MachineRFHandler<T>> rfHandler;
+    //@Shadow
+    //public Holder<IRFNode, MachineRFHandler<T>> rfHandler;
 
     @Shadow
     abstract Direction getFacing();
@@ -70,8 +68,8 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
     private LazyOptional<IFluidHandler>[] fluidHandlerLazyOptional = new LazyOptional[7];
     @Unique
     private LazyOptional<IItemHandler>[] itemHandlerLazyOptional = new LazyOptional[7];
-    @Unique
-    private LazyOptional<IEnergyStorage>[] rfHandlerLazyOptional = new LazyOptional[7];
+    //@Unique
+    //private LazyOptional<IEnergyStorage>[] rfHandlerLazyOptional = new LazyOptional[7];
 
     public BlockEntityMachineMixin(BlockEntityType type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -111,12 +109,12 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
             return itemHandlerLazyOptional[index].cast();
         }
         if (cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY || cap == CapabilityEnergy.ENERGY){
-            if (cap == CapabilityEnergy.ENERGY && rfHandler.isPresent()){
+            /*if (cap == CapabilityEnergy.ENERGY && rfHandler.isPresent()){
                 if (rfHandlerLazyOptional[index] == null || !rfHandlerLazyOptional[index].isPresent()){
                     rfHandlerLazyOptional[index] = fromEnergyHolder(rfHandler, side);
                 }
                 return rfHandlerLazyOptional[index].cast();
-            } else if (energyHandler.isPresent()){
+            } else */if (energyHandler.isPresent()){
                 if (energyHandlerLazyOptional[index] == null || !energyHandlerLazyOptional[index].isPresent()){
                     energyHandlerLazyOptional[index] = fromHolder(energyHandler, side);
                 }
@@ -154,12 +152,12 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
         return opt;
     }
 
-    private LazyOptional<IEnergyStorage> fromEnergyHolder(Holder<IRFNode, ?> holder, Direction side){
+    /*private LazyOptional<IEnergyStorage> fromEnergyHolder(Holder<IRFNode, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
         Optional<? extends IRFNode> optional = holder.side(side);
         LazyOptional<IEnergyStorage> opt = optional.<LazyOptional<IEnergyStorage>>map(irfNode -> LazyOptional.of(() -> new ForgeEnergyContainer<>(irfNode, this))).orElseGet(LazyOptional::empty);
         boolean add = holder.addListener(side, opt::invalidate);
         if (!add) return LazyOptional.empty();
         return opt;
-    }
+    }*/
 }

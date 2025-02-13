@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.rf.IRFNode;
 
 public class CoverEnergy extends BaseCover {
 
@@ -29,6 +28,6 @@ public class CoverEnergy extends BaseCover {
     public void onPlace() {
         super.onPlace();
         ((BlockEntityMachine<?>) handler.getTile()).invalidateCap(IEnergyHandler.class);
-        ((BlockEntityMachine<?>) handler.getTile()).invalidateCap(IRFNode.class);
+        //((BlockEntityMachine<?>) handler.getTile()).invalidateCap(IRFNode.class);
     }
 }

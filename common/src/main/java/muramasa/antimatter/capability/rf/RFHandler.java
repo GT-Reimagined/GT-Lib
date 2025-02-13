@@ -1,3 +1,4 @@
+/*
 package muramasa.antimatter.capability.rf;
 
 import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
@@ -22,9 +23,11 @@ public class RFHandler implements IRFNode {
         this.maxOut = maxOut;
     }
 
-    /**
+    */
+/**
      * Tesseract IGTNode Implementations
-     **/
+     **//*
+
 
     public void setMaxOutput(long maxOutput) {
         this.maxOut = maxOutput;
@@ -117,3 +120,4 @@ public class RFHandler implements IRFNode {
         this.energy = 0;
     }
 }
+*/
