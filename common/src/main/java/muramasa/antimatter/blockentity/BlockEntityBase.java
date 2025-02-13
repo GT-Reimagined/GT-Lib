@@ -67,11 +67,9 @@ public abstract class BlockEntityBase<T extends BlockEntityBase<T>> extends Bloc
     @Override
     public void onLoad() {
         super.onLoad();
-        BlockEntityCache.addBlockEntity(this.level, this.getBlockPos(), this);
     }
 
     public void onRemove() {
-        BlockEntityCache.removeBlockEntity(this.level, this.getBlockPos());
     }
 
     public boolean isClientSide() {
