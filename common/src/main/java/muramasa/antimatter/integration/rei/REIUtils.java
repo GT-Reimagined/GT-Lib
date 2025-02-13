@@ -10,9 +10,9 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.recipe.map.IRecipeMap;
+import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import tesseract.FluidPlatformUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

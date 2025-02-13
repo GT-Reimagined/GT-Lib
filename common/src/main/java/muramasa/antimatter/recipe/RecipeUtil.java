@@ -3,12 +3,12 @@ package muramasa.antimatter.recipe;
 import com.google.gson.JsonObject;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.datagen.builder.AntimatterShapedRecipeBuilder;
+import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.ImplLoader;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import tesseract.FluidPlatformUtils;
 
 import java.util.function.Consumer;
 

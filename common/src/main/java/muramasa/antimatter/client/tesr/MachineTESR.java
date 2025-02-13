@@ -16,6 +16,7 @@ import muramasa.antimatter.client.VertexTransformer;
 import muramasa.antimatter.client.baked.BakedMachineSide;
 import muramasa.antimatter.client.baked.ListBakedModel;
 import muramasa.antimatter.client.baked.MachineBakedModel;
+import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -31,7 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
-import tesseract.FluidPlatformUtils;
 
 import java.util.Collections;
 import java.util.List;

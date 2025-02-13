@@ -1,7 +1,7 @@
 package muramasa.antimatter.recipe.ingredient;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import tesseract.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidPlatformUtils;
 
 public class MapFluidIngredient extends AbstractMapIngredient {
 

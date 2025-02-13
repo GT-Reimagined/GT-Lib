@@ -16,6 +16,8 @@ import muramasa.antimatter.proxy.CommonHandler;
 import muramasa.antimatter.proxy.ServerHandler;
 import muramasa.antimatter.registration.RegistrationEvent;
 import muramasa.antimatter.registration.Side;
+import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.forge.FluidPlatformUtilsImpl;
 import net.devtech.arrp.ARRP;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -33,6 +35,7 @@ import static muramasa.antimatter.Antimatter.LOGGER;
 @Mod(Ref.ID)
 public class AntimatterImpl {
     public AntimatterImpl(){
+        FluidPlatformUtils.INSTANCE = new FluidPlatformUtilsImpl();
         AntimatterAPI.setSIDE(FMLEnvironment.dist.isClient() ? Side.CLIENT : Side.SERVER);
         new Antimatter();
 

@@ -21,6 +21,7 @@ import muramasa.antimatter.pipe.TileTicker;
 import muramasa.antimatter.pipe.types.FluidPipe;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.CodeUtils;
+import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.ByteTag;
@@ -33,7 +34,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import tesseract.FluidPlatformUtils;
 import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
