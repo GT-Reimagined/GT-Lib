@@ -35,7 +35,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import tesseract.FluidPlatformUtils;
 import tesseract.TesseractGraphWrappers;
-import tesseract.api.fluid.PipeFluidHolder;
 
 import java.util.ArrayList;
 import java.util.List;

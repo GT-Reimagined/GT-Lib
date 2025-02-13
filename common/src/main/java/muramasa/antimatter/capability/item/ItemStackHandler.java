@@ -1,5 +1,6 @@
 package muramasa.antimatter.capability.item;
 
+import muramasa.antimatter.util.ItemHandlerUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -7,7 +8,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tesseract.util.ItemHandlerUtils;
 
 public class ItemStackHandler implements ExtendedItemContainer, ContainerItemHandler {
     protected NonNullList<ItemStack> stacks;

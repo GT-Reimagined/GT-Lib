@@ -4,6 +4,7 @@ import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import muramasa.antimatter.util.AntimatterCapUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -43,6 +44,6 @@ public class BlockEntityCache {
         if (blockEntity != null){
             return FluidHooks.safeGetBlockFluidManager(blockEntity, side);
         }*/
-        return TesseractCapUtils.INSTANCE.getFluidHandler(level, pos, side);
+        return AntimatterCapUtils.INSTANCE.getFluidHandler(level, pos, side);
     }
 }

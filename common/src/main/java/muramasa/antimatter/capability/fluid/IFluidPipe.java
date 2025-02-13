@@ -2,8 +2,6 @@ package muramasa.antimatter.capability.fluid;
 
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import tesseract.api.IConnectable;
-import tesseract.api.fluid.FluidStatus;
-import tesseract.api.fluid.PipeFluidHolder;
 
 /**
  * A fluid pipe is the unit of interaction with fluid inventories.
