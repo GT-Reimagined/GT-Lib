@@ -5,6 +5,7 @@ import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.machine.Tier;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.gt.IEnergyHandler;
 
@@ -28,6 +29,6 @@ public class CoverDynamo extends BaseCover {
     public void onPlace() {
         super.onPlace();
         ((BlockEntityMachine<?>) handler.getTile()).invalidateCap(IEnergyHandler.class);
-        //((BlockEntityMachine<?>) handler.getTile()).invalidateCap(IRFNode.class);
+        ((BlockEntityMachine<?>) handler.getTile()).invalidateCap(IEnergyStorage.class);
     }
 }

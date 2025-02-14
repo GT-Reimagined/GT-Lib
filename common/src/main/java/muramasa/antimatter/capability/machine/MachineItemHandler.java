@@ -30,7 +30,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.system.CallbackI.P;
 import tesseract.TesseractCapUtils;
 import tesseract.api.gt.IEnergyHandlerItem;
 
@@ -228,14 +231,15 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         return list;
     }
 
-    public List<Pair<ItemStack, PlatformItemEnergyManager>> getRFChargeableItems() {
-        List<Pair<ItemStack, PlatformItemEnergyManager>> list = new ObjectArrayList<>();
+    public List<Pair<ItemStack, IEnergyStorage>> getRFChargeableItems() {
+        List<Pair<ItemStack, IEnergyStorage>> list = new ObjectArrayList<>();
         if (tile.isServerSide()) {
             ExtendedItemContainer chargeables = getChargeHandler();
             for (int i = 0; i < chargeables.getContainerSize(); i++) {
                 ItemStack item = chargeables.getItem(i);
-                if (!item.isEmpty() && EnergyHooks.isEnergyItem(item)) {
-                    list.add(new ObjectObjectImmutablePair<>(item, EnergyHooks.getItemEnergyManager(item)));
+                var cap = item.getCapability(CapabilityEnergy.ENERGY);
+                if (!item.isEmpty() && cap.isPresent()) {
+                    list.add(new ObjectObjectImmutablePair<>(item, cap.resolve().get()));
                 }
             }
         }

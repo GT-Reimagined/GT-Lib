@@ -1,4 +1,3 @@
-/*
 package muramasa.antimatter.capability.machine;
 
 import com.google.common.collect.ImmutableList;
@@ -20,32 +19,34 @@ import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import tesseract.api.rf.IRFNode;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+import tesseract.api.fe.IFENode;
 
 import java.util.List;
 import java.util.Optional;
 
-public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler implements IMachineHandler, Dispatch.Sided<IRFNode> {
+public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler implements IMachineHandler, Dispatch.Sided<IFENode> {
     protected final T tile;
-    protected List<Pair<ItemStack, PlatformItemEnergyManager>> cachedItems = new ObjectArrayList<>();
+    protected List<Pair<ItemStack, IEnergyStorage>> cachedItems = new ObjectArrayList<>();
 
     protected int offsetInsert = 0;
     protected int offsetExtract = 0;
-    public MachineRFHandler(T tile, long energy, long capacity, long maxIn, long maxOut) {
+    public MachineRFHandler(T tile, int energy, int capacity, int maxIn, int maxOut) {
         super(energy, capacity, maxIn, maxOut);
         this.tile = tile;
     }
 
-    public MachineRFHandler(T tile, long capacity, boolean isGenerator) {
-        this(tile, 0, capacity, isGenerator ? 0 : tile.getMachineTier().getVoltage(), isGenerator ? tile.getMachineTier().getVoltage() : 0);
+    public MachineRFHandler(T tile, int capacity, boolean isGenerator) {
+        this(tile, 0, capacity, isGenerator ? 0 : (int) tile.getMachineTier().getVoltage(), isGenerator ? (int) tile.getMachineTier().getVoltage() : 0);
     }
 
     public void onUpdate(){
         for (Direction dir : Ref.DIRS) {
-            if (canOutput(dir)) {
+            if (canExtract(dir)) {
                 BlockEntity tile = this.tile.getCachedBlockEntity(dir);
                 if (tile == null) continue;
-                Optional<PlatformEnergyManager> handle = EnergyHooks.safeGetBlockEnergyManager(tile, dir.getOpposite());
+                Optional<IEnergyStorage> handle = tile.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).resolve();
                 handle.ifPresent(eh -> Utils.transferEnergy(this, eh));
             }
         }
@@ -57,20 +58,20 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     }
 
     @Override
-    public long getMaxCapacity() {
+    public int getMaxEnergyStored() {
         if (canChargeItem()) {
-            return super.getMaxCapacity() + (cachedItems != null ? cachedItems.stream().map(Pair::right).mapToLong(PlatformItemEnergyManager::getCapacity).sum() : 0);
+            return super.getMaxEnergyStored() + (cachedItems != null ? cachedItems.stream().map(Pair::right).mapToInt(IEnergyStorage::getMaxEnergyStored).sum() : 0);
         }
-        return super.getMaxCapacity();
+        return super.getMaxEnergyStored();
     }
 
     @Override
-    public long insertEnergy(long maxAmount, boolean simulate) {
+    public int receiveEnergy(int maxAmount, boolean simulate) {
         int j = 0;
-        long inserted = super.insertEnergy(maxAmount, simulate);
+        int inserted = super.receiveEnergy(maxAmount, simulate);
         for (int i = offsetInsert; j < cachedItems.size(); j++, i = (i == cachedItems.size() - 1 ? 0 : (i + 1))) {
-            PlatformItemEnergyManager handler = cachedItems.get(i).right();
-            if (!handler.supportsInsertion()) continue;
+            IEnergyStorage handler = cachedItems.get(i).right();
+            if (!handler.canReceive()) continue;
             ItemStack stack = cachedItems.get(i).left();
             ItemStackHolder holder = new ItemStackHolder(stack);
             long insert = handler.insert(holder, maxAmount, simulate);
@@ -90,12 +91,12 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     }
 
     @Override
-    public long extractEnergy(long maxAmount, boolean simulate) {
+    public int extractEnergy(int maxAmount, boolean simulate) {
         int j = 0;
-        long extracted = super.extractEnergy(maxAmount, simulate);
+        int extracted = super.extractEnergy(maxAmount, simulate);
         for (int i = offsetInsert; j < cachedItems.size(); j++, i = (i == cachedItems.size() - 1 ? 0 : (i + 1))) {
-            PlatformItemEnergyManager handler = cachedItems.get(i).right();
-            if (!handler.supportsExtraction()) continue;
+            IEnergyStorage handler = cachedItems.get(i).right();
+            if (!handler.canExtract()) continue;
             ItemStack stack = cachedItems.get(i).left();
             ItemStackHolder holder = new ItemStackHolder(stack);
             long extract = handler.extract(holder, maxAmount, simulate);
@@ -115,16 +116,16 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     }
 
     @Override
-    public long getStoredEnergy() {
+    public int getEnergyStored() {
         if (canChargeItem()) {
-            return super.getStoredEnergy() + (cachedItems != null ? cachedItems.stream().map(Pair::right).mapToLong(PlatformItemEnergyManager::getStoredEnergy).sum() : 0);
+            return super.getEnergyStored() + (cachedItems != null ? cachedItems.stream().map(Pair::right).mapToInt(PlatformItemEnergyManager::getStoredEnergy).sum() : 0);
         }
-        return super.getStoredEnergy();
+        return super.getEnergyStored();
     }
 
     @Override
-    public boolean canInput(Direction direction) {
-        return super.canInput(direction) && (tile.getFacing() != direction || tile.getMachineType().allowsFrontIO());
+    public boolean canReceive(Direction direction) {
+        return super.canReceive(direction) && (tile.getFacing() != direction || tile.getMachineType().allowsFrontIO());
     }
 
     public boolean canChargeItem() {
@@ -144,16 +145,15 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     }
 
     @Override
-    public Optional<? extends IRFNode> forSide(Direction side) {
+    public Optional<? extends IFENode> forSide(Direction side) {
         return Optional.of(this);
     }
 
     @Override
-    public Optional<? extends IRFNode> forNullSide() {
+    public Optional<? extends IFENode> forNullSide() {
         return Optional.of(this);
     }
 
     public void onRemove() {
     }
 }
-*/
