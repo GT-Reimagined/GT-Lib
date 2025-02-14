@@ -27,7 +27,6 @@ import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.registration.RegistrationEvent;
 import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
-import muramasa.antimatter.util.AntimatterPreLaunchUtil;
 import muramasa.antimatter.util.NonNullSupplier;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.core.BlockPos;
@@ -38,6 +37,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.LoadingModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -435,8 +437,11 @@ public final class AntimatterAPI {
             PHASE = previous;
     }
 
-    public static boolean isModLoaded(String mod) {
-        return AntimatterPreLaunchUtil.INSTANCE.isModLoaded(mod);
+    public static boolean isModLoaded(String modid) {
+        if (ModList.get() == null) {
+            return LoadingModList.get().getMods().stream().map(ModInfo::getModId).anyMatch(modid::equals);
+        }
+        return ModList.get().isLoaded(modid);
     }
 
     public static void runOnEvent(RegistrationEvent event, Runnable runnable) {

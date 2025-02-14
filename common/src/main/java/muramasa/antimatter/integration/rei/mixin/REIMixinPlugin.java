@@ -1,7 +1,7 @@
 package muramasa.antimatter.integration.rei.mixin;
 
+import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.util.AntimatterPreLaunchUtil;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -22,7 +22,7 @@ public class REIMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return AntimatterPreLaunchUtil.INSTANCE.isModLoaded(Ref.MOD_REI);
+        return AntimatterAPI.isModLoaded(Ref.MOD_REI);
     }
 
     @Override
