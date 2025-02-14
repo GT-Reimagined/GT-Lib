@@ -28,7 +28,7 @@ import java.util.Optional;
 
 public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler implements IMachineHandler, Dispatch.Sided<IFENode> {
     protected final T tile;
-    protected List<Pair<ItemStack, IEnergyStorage>> cachedItems = new ObjectArrayList<>();
+    protected List<IEnergyStorage> cachedItems = new ObjectArrayList<>();
 
     protected int offsetInsert = 0;
     protected int offsetExtract = 0;
@@ -60,7 +60,7 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     @Override
     public int getMaxEnergyStored() {
         if (canChargeItem()) {
-            return super.getMaxEnergyStored() + (cachedItems != null ? cachedItems.stream().map(Pair::right).mapToInt(IEnergyStorage::getMaxEnergyStored).sum() : 0);
+            return super.getMaxEnergyStored() + (cachedItems != null ? cachedItems.stream().mapToInt(IEnergyStorage::getMaxEnergyStored).sum() : 0);
         }
         return super.getMaxEnergyStored();
     }
@@ -70,16 +70,10 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
         int j = 0;
         int inserted = super.receiveEnergy(maxAmount, simulate);
         for (int i = offsetInsert; j < cachedItems.size(); j++, i = (i == cachedItems.size() - 1 ? 0 : (i + 1))) {
-            IEnergyStorage handler = cachedItems.get(i).right();
+            IEnergyStorage handler = cachedItems.get(i);
             if (!handler.canReceive()) continue;
-            ItemStack stack = cachedItems.get(i).left();
-            ItemStackHolder holder = new ItemStackHolder(stack);
-            long insert = handler.insert(holder, maxAmount, simulate);
+            int insert = handler.receiveEnergy(maxAmount, simulate);
             if (insert > 0) {
-                if (holder.isDirty()){ //assumes the item itself did not change
-                    stack.setTag(holder.getStack().getTag());
-                    stack.setCount(holder.getStack().getCount());
-                }
                 offsetInsert = (offsetInsert + 1) % cachedItems.size();
                 inserted += insert;
             }
@@ -95,16 +89,10 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
         int j = 0;
         int extracted = super.extractEnergy(maxAmount, simulate);
         for (int i = offsetInsert; j < cachedItems.size(); j++, i = (i == cachedItems.size() - 1 ? 0 : (i + 1))) {
-            IEnergyStorage handler = cachedItems.get(i).right();
+            IEnergyStorage handler = cachedItems.get(i);
             if (!handler.canExtract()) continue;
-            ItemStack stack = cachedItems.get(i).left();
-            ItemStackHolder holder = new ItemStackHolder(stack);
-            long extract = handler.extract(holder, maxAmount, simulate);
+            int extract = handler.extractEnergy(maxAmount, simulate);
             if (extract > 0) {
-                if (holder.isDirty()){ //assumes the item itself did not change
-                    stack.setTag(holder.getStack().getTag());
-                    stack.setCount(holder.getStack().getCount());
-                }
                 offsetInsert = (offsetInsert + 1) % cachedItems.size();
                 extracted += extract;
             }
@@ -118,7 +106,7 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     @Override
     public int getEnergyStored() {
         if (canChargeItem()) {
-            return super.getEnergyStored() + (cachedItems != null ? cachedItems.stream().map(Pair::right).mapToInt(PlatformItemEnergyManager::getStoredEnergy).sum() : 0);
+            return super.getEnergyStored() + (cachedItems != null ? cachedItems.stream().mapToInt(IEnergyStorage::getEnergyStored).sum() : 0);
         }
         return super.getEnergyStored();
     }

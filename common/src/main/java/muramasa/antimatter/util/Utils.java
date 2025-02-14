@@ -76,6 +76,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -484,34 +485,10 @@ public class Utils {
         return transferred;
     }
 
-    public static boolean transferEnergy(PlatformEnergyManager from, PlatformEnergyManager to) {
-        long extracted = from.extract(Long.MAX_VALUE, true);
+    public static boolean transferEnergy(IEnergyStorage from, IEnergyStorage to) {
+        int extracted = from.extractEnergy(Integer.MAX_VALUE, true);
         if (extracted > 0) {
-            long inserted = to.insert(extracted, false);
-            if (inserted > 0) {
-                from.extract(inserted, false);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean transferEnergy(PlatformEnergyManager from, EnergyContainer to) {
-        long extracted = from.extract(Long.MAX_VALUE, true);
-        if (extracted > 0) {
-            long inserted = to.insertEnergy(extracted, false);
-            if (inserted > 0) {
-                from.extract(inserted, false);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean transferEnergy(EnergyContainer from, PlatformEnergyManager to) {
-        long extracted = from.extractEnergy(Long.MAX_VALUE, true);
-        if (extracted > 0) {
-            long inserted = to.insert(extracted, false);
+            int inserted = to.receiveEnergy(extracted, false);
             if (inserted > 0) {
                 from.extractEnergy(inserted, false);
                 return true;

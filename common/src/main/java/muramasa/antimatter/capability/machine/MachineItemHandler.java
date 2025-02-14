@@ -231,15 +231,15 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         return list;
     }
 
-    public List<Pair<ItemStack, IEnergyStorage>> getRFChargeableItems() {
-        List<Pair<ItemStack, IEnergyStorage>> list = new ObjectArrayList<>();
+    public List<IEnergyStorage> getRFChargeableItems() {
+        List<IEnergyStorage> list = new ObjectArrayList<>();
         if (tile.isServerSide()) {
             ExtendedItemContainer chargeables = getChargeHandler();
             for (int i = 0; i < chargeables.getContainerSize(); i++) {
                 ItemStack item = chargeables.getItem(i);
                 var cap = item.getCapability(CapabilityEnergy.ENERGY);
                 if (!item.isEmpty() && cap.isPresent()) {
-                    list.add(new ObjectObjectImmutablePair<>(item, cap.resolve().get()));
+                    list.add(cap.resolve().get());
                 }
             }
         }
