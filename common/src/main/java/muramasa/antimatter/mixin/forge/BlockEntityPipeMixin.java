@@ -1,7 +1,6 @@
 package muramasa.antimatter.mixin.forge;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.forge.energy.ForgeEnergyContainer;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import muramasa.antimatter.blockentity.BlockEntityTickable;
 import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
@@ -17,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;

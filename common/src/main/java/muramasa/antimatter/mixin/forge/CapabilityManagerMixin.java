@@ -5,7 +5,6 @@ import muramasa.antimatter.capability.forge.AntimatterCaps;
 import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.Debug;

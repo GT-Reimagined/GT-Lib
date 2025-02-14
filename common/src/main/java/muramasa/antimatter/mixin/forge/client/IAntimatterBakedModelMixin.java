@@ -34,7 +34,7 @@ public interface IAntimatterBakedModelMixin extends IDynamicBakedModel {
 
     @NotNull
     @Override
-    default List<BakedQuad> getQuads(@org.jetbrains.annotations.Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData data){
+    default List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData data){
         BlockAndTintGetter world = data.getData(AntimatterModelProperties.WORLD);
         BlockPos pos = data.getData(AntimatterModelProperties.POS);
         if (world == null || pos == null) return Collections.emptyList();

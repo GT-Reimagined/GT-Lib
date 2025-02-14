@@ -52,7 +52,7 @@ public class TomlConfigCondition implements ICondition {
 
     public static class Serializer implements IConditionSerializer<TomlConfigCondition> {
 
-        public static final TomlConfigCondition.Serializer INSTANCE = new TomlConfigCondition.Serializer();
+        public static final Serializer INSTANCE = new Serializer();
 
         @Override
         public void write(JsonObject json, TomlConfigCondition value) {
