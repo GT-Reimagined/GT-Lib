@@ -180,10 +180,7 @@ public class MaterialSword extends SwordItem implements IAntimatterTool, IContai
         return destroySpeed;
     }
 
-    public boolean isSuitableFor(ItemStack stack, BlockState state) {
-        return this.genericIsCorrectToolForDrops(stack, state);
-    }
-
+    @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state){
         return genericIsCorrectToolForDrops(stack, state);
     }
@@ -231,18 +228,13 @@ public class MaterialSword extends SwordItem implements IAntimatterTool, IContai
         return modifiers;
     }
 
-    //fabric method
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slotType) {
-        return this.getAttributeModifiers(slotType, stack);
-    }
-
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
         return (entity instanceof Player && ((Player) entity).isCreative()) ? 0 : damage(stack, amount);
     }
 
-    //@Override
-    public int getEnchantability(ItemStack stack) {
+    @Override
+    public int getItemEnchantability(ItemStack stack) {
         return getTier(stack).getEnchantmentValue();
     }
 
