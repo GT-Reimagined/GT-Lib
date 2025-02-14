@@ -53,7 +53,7 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
     @Shadow
     public Holder<IEnergyHandler, MachineEnergyHandler<T>> energyHandler;
     //@Shadow
-    //public Holder<IRFNode, MachineRFHandler<T>> rfHandler;
+    //public Holder<IFENode, MachineRFHandler<T>> rfHandler;
 
     @Shadow
     abstract Direction getFacing();
@@ -152,9 +152,9 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
         return opt;
     }
 
-    /*private LazyOptional<IEnergyStorage> fromEnergyHolder(Holder<IRFNode, ?> holder, Direction side){
+    /*private LazyOptional<IEnergyStorage> fromEnergyHolder(Holder<IFENode, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
-        Optional<? extends IRFNode> optional = holder.side(side);
+        Optional<? extends IFENode> optional = holder.side(side);
         LazyOptional<IEnergyStorage> opt = optional.<LazyOptional<IEnergyStorage>>map(irfNode -> LazyOptional.of(() -> new ForgeEnergyContainer<>(irfNode, this))).orElseGet(LazyOptional::empty);
         boolean add = holder.addListener(side, opt::invalidate);
         if (!add) return LazyOptional.empty();

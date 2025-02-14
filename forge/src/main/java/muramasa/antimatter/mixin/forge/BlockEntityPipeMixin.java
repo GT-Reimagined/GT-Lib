@@ -72,7 +72,7 @@ public abstract class BlockEntityPipeMixin<T extends PipeType<T>> extends BlockE
             return pipeCaps[index].cast();
         }
         if (side == null) return LazyOptional.empty();
-        /*if (cap == CapabilityEnergy.ENERGY && getCapClass() == IRFNode.class) {
+        /*if (cap == CapabilityEnergy.ENERGY && getCapClass() == IFENode.class) {
             if (pipeCaps[side.get3DDataValue()] == null || !pipeCaps[side.get3DDataValue()].isPresent()){
                 pipeCaps[side.get3DDataValue()] = fromEnergyHolder(pipeCapHolder, side).cast();
             }
@@ -118,7 +118,7 @@ public abstract class BlockEntityPipeMixin<T extends PipeType<T>> extends BlockE
         return opt;
     }
 
-    /*private LazyOptional<IEnergyStorage> fromEnergyHolder(Holder<IRFNode, ?> holder, Direction side){
+    /*private LazyOptional<IEnergyStorage> fromEnergyHolder(Holder<IFENode, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
         LazyOptional<IEnergyStorage> opt = LazyOptional.of(() -> new ForgeEnergyContainer<>(holder.side(side).get(), this));
         boolean add = holder.addListener(side, opt::invalidate);

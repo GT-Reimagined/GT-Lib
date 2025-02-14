@@ -27,7 +27,7 @@ public class CapabilityManagerMixin {
     private void injectCaps(String realName, boolean registering, CallbackInfoReturnable<Capability<?>> info){
         try {
             Class<?> clazz = Class.forName(realName.replace("/", "."));
-            clazz = clazz == IFluidHandler.class ? FluidContainer.class : clazz == IItemHandler.class ? ExtendedItemContainer.class /*: clazz == IEnergyStorage.class ? IRFNode.class*/ : clazz;
+            clazz = clazz == IFluidHandler.class ? FluidContainer.class : clazz == IItemHandler.class ? ExtendedItemContainer.class /*: clazz == IEnergyStorage.class ? IFENode.class*/ : clazz;
             AntimatterCaps.CAP_MAP.putIfAbsent(clazz, providers.get(realName));
         } catch (ClassNotFoundException e){
             e.printStackTrace();
