@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability.rf;
 
-import earth.terrarium.botarium.common.energy.base.EnergySnapshot;
 import lombok.Setter;
 import muramasa.antimatter.Ref;
 import net.minecraft.core.Direction;
@@ -10,7 +9,7 @@ import tesseract.api.Serializable;
 import tesseract.api.fe.IFENode;
 
 
-public class RFHandler implements IFENode, Serializable {
+public class FEHandler implements IFENode, Serializable {
 
     protected final int capacity;
 
@@ -18,7 +17,7 @@ public class RFHandler implements IFENode, Serializable {
     protected int energy;
     protected int maxIn, maxOut;
 
-    public RFHandler(int energy, int capacity, int maxIn, int maxOut) {
+    public FEHandler(int energy, int capacity, int maxIn, int maxOut) {
         this.energy = energy;
         this.capacity = capacity;
         this.maxIn = maxIn;

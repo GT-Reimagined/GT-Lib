@@ -1,7 +1,5 @@
 package muramasa.antimatter.capability.machine;
 
-import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
-import earth.terrarium.botarium.common.energy.util.EnergyHooks;
 import earth.terrarium.botarium.util.Serializable;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -33,7 +31,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.system.CallbackI.P;
 import tesseract.TesseractCapUtils;
 import tesseract.api.gt.IEnergyHandlerItem;
 
@@ -231,7 +228,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         return list;
     }
 
-    public List<IEnergyStorage> getRFChargeableItems() {
+    public List<IEnergyStorage> getFEChargeableItems() {
         List<IEnergyStorage> list = new ObjectArrayList<>();
         if (tile.isServerSide()) {
             ExtendedItemContainer chargeables = getChargeHandler();

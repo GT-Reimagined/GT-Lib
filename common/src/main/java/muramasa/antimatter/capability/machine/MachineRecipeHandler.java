@@ -217,7 +217,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     public long getPower() {
         if (activeRecipe == null) return 0;
-        if (overclock == 0 || tile.has(MachineFlag.RF)) return activeRecipe.getPower();
+        if (overclock == 0 || tile.has(MachineFlag.FE)) return activeRecipe.getPower();
         //half the duration => overclock ^ 2.
         //so if overclock is 2 tiers, we have 1/4 the duration(200 -> 50) but for e.g. 8eu/t this would be
         //8*4*4 = 128eu/t.
@@ -226,7 +226,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected void calculateDurations() {
         maxProgress = activeRecipe.getDuration();
-        if (!generator && !tile.has(MachineFlag.RF)) {
+        if (!generator && !tile.has(MachineFlag.FE)) {
             overclock = getOverclock();
             this.maxProgress = Math.max(1, maxProgress >> overclock);
         }
@@ -340,12 +340,12 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 } else {
                     return consumeGeneratorResources(simulate);
                 }
-            } else if (tile.rfHandler.isPresent()){
+            } else if (tile.feHandler.isPresent()){
                 if (!generator) {
                     long power = getPower();
-                    return tile.rfHandler.map(e -> e.extractEnergy((int) power, simulate) >= power).orElse(false);
+                    return tile.feHandler.map(e -> e.extractEnergy((int) power, simulate) >= power).orElse(false);
                 } else {
-                    return consumeRFGeneratorResources(simulate);
+                    return consumeFEGeneratorResources(simulate);
                 }
             } else {
                 return false;
@@ -444,7 +444,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return canOutput() && (!activeRecipe.hasInputItems() || tile.itemHandler.map(i -> i.consumeInputs(this.activeRecipe, true).size() > 0).orElse(false)) && (!activeRecipe.hasInputFluids() || tile.fluidHandler.map(t -> t.consumeAndReturnInputs(activeRecipe.getInputFluids(), true).size() > 0).orElse(false));
     }
 
-    protected boolean consumeRFGeneratorResources(boolean simulate){
+    protected boolean consumeFEGeneratorResources(boolean simulate){
         if (!activeRecipe.hasInputFluids()) {
             throw new RuntimeException("Missing fuel in active generator recipe!");
         }
@@ -462,7 +462,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }).orElse(false)) {
             //insert power!
             if (!simulate) {
-                tile.rfHandler.ifPresent(r -> {
+                tile.feHandler.ifPresent(r -> {
                     r.setEnergy((int) (r.getEnergyStored() + activeRecipe.getPower()));
                 });
             }

@@ -9,7 +9,7 @@ public class MachineFlag {
     public static final String CELL = "cell";
     public static final String FLUID = "fluid";
     public static final String EU = "eu"; //Needs power
-    public static final String RF = "rf"; //Uses RF instead of EU
+    public static final String FE = "fe"; //Uses FE
     public static final String HEAT = "heat";
     public static final String RECIPE = "recipe"; //Has a recipe map
     public static final String GUI = "gui";

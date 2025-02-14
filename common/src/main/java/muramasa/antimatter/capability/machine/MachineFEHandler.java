@@ -1,23 +1,17 @@
 package muramasa.antimatter.capability.machine;
 
 import com.google.common.collect.ImmutableList;
-import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
-import earth.terrarium.botarium.common.energy.base.PlatformItemEnergyManager;
-import earth.terrarium.botarium.common.energy.util.EnergyHooks;
-import earth.terrarium.botarium.common.item.ItemStackHolder;
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.IMachineHandler;
-import muramasa.antimatter.capability.rf.RFHandler;
+import muramasa.antimatter.capability.rf.FEHandler;
 import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.machine.event.MachineEvent;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -26,18 +20,18 @@ import tesseract.api.fe.IFENode;
 import java.util.List;
 import java.util.Optional;
 
-public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler implements IMachineHandler, Dispatch.Sided<IFENode> {
+public class MachineFEHandler<T extends BlockEntityMachine<T>> extends FEHandler implements IMachineHandler, Dispatch.Sided<IFENode> {
     protected final T tile;
     protected List<IEnergyStorage> cachedItems = new ObjectArrayList<>();
 
     protected int offsetInsert = 0;
     protected int offsetExtract = 0;
-    public MachineRFHandler(T tile, int energy, int capacity, int maxIn, int maxOut) {
+    public MachineFEHandler(T tile, int energy, int capacity, int maxIn, int maxOut) {
         super(energy, capacity, maxIn, maxOut);
         this.tile = tile;
     }
 
-    public MachineRFHandler(T tile, int capacity, boolean isGenerator) {
+    public MachineFEHandler(T tile, int capacity, boolean isGenerator) {
         this(tile, 0, capacity, isGenerator ? 0 : (int) tile.getMachineTier().getVoltage(), isGenerator ? (int) tile.getMachineTier().getVoltage() : 0);
     }
 
@@ -54,7 +48,7 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
 
     @Override
     public void init() {
-        this.cachedItems = tile.itemHandler.map(MachineItemHandler::getRFChargeableItems).map(ImmutableList::copyOf).orElse(ImmutableList.of());
+        this.cachedItems = tile.itemHandler.map(MachineItemHandler::getFEChargeableItems).map(ImmutableList::copyOf).orElse(ImmutableList.of());
     }
 
     @Override
@@ -124,7 +118,7 @@ public class MachineRFHandler<T extends BlockEntityMachine<T>> extends RFHandler
     public void onMachineEvent(IMachineEvent event, Object... data) {
         if (event == SlotType.ENERGY) {
             tile.itemHandler.ifPresent(h -> {
-                cachedItems = h.getRFChargeableItems();
+                cachedItems = h.getFEChargeableItems();
                 offsetInsert = 0;
                 offsetExtract = 0;
             });

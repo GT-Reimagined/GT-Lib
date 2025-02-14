@@ -51,7 +51,7 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
     @Shadow
     public Holder<IEnergyHandler, MachineEnergyHandler<T>> energyHandler;
     //@Shadow
-    //public Holder<IFENode, MachineRFHandler<T>> rfHandler;
+    //public Holder<IFENode, MachineFEHandler<T>> rfHandler;
 
     @Shadow
     abstract Direction getFacing();
