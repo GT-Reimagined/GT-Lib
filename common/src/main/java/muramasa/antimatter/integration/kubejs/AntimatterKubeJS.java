@@ -12,15 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 public class AntimatterKubeJS extends KubeJSPlugin {
 
     @Override
-    public void initStartup() {
-        super.initStartup();
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()) {
-            KubeJSPlatform.INSTANCE.onRegister();
-        }
-    }
-
-
-    @Override
     public void addBindings(BindingsEvent event) {
         event.add("antimatter", new KubeJSBindings());
     }

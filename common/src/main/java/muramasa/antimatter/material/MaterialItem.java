@@ -109,7 +109,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
             tooltip.add(Utils.literal("Is Element"));
         }
         if (stack.getItem() instanceof MaterialItem) {
-            tooltip.add(Utils.translatable("antimatter.tooltip.material_modid", AntimatterPlatformUtils.INSTANCE.getModName(mat.materialDomain())));
+            tooltip.add(Utils.translatable("antimatter.tooltip.material_modid", Utils.getModName(mat.materialDomain())));
         }
     }
 

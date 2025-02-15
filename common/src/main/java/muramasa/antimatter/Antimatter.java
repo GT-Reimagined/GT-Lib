@@ -1,5 +1,6 @@
 package muramasa.antimatter;
 
+import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import muramasa.antimatter.client.AntimatterModelManager;
 import muramasa.antimatter.client.ClientData;
 import muramasa.antimatter.cover.ICover;
@@ -220,9 +221,9 @@ public class Antimatter extends AntimatterMod {
                 if (map != null){
                     map.forEach((t, i) -> {
                         if (t instanceof MaterialTypeItem<?> typeItem){
-                            AntimatterPlatformUtils.INSTANCE.setBurnTime(typeItem.get(m), i);
+                            TerraformFuelRegistry.addFuel(typeItem.get(m), i);
                         } else if (t instanceof MaterialTypeBlock<?> typeBlock && typeBlock.get() instanceof MaterialTypeBlock.IBlockGetter blockGetter){
-                            AntimatterPlatformUtils.INSTANCE.setBurnTime(blockGetter.get(m).asItem(), i);
+                            TerraformFuelRegistry.addFuel(blockGetter.get(m).asItem(), i);
                         }
                     });
                 }

@@ -63,6 +63,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -236,7 +237,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         return InteractionResult.SUCCESS;
                     }
                     if (getType().has(MachineFlag.GUI) && tile.canPlayerOpenGui(player)) {
-                        AntimatterPlatformUtils.INSTANCE.openGui((ServerPlayer) player, tile, extra -> {
+                        NetworkHooks.openGui((ServerPlayer) player, tile, extra -> {
                             extra.writeBlockPos(pos);
                         });
                         return InteractionResult.SUCCESS;

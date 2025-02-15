@@ -6,6 +6,7 @@ import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
             return !stack.isEmpty();
         }
         if (!(stack = tile.itemHandler.map(t -> t.consumeInputs(BURNABLE.get(), false)).orElse(Collections.emptyList())).isEmpty()) {
-            burnDuration += AntimatterPlatformUtils.INSTANCE.getBurnTime(stack.get(0), null) * burnMultiplier;
+            burnDuration += ForgeHooks.getBurnTime(stack.get(0), null) * burnMultiplier;
             return true;
         }
         return false;

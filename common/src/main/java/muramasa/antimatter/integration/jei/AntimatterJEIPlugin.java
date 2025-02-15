@@ -45,6 +45,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
 import tesseract.api.gt.IEnergyItem;
@@ -205,7 +206,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
 
     private RecipeManager getRecipeManager(){
         if (AntimatterAPI.getSIDE().isServer()){
-            return AntimatterPlatformUtils.INSTANCE.getCurrentServer().getRecipeManager();
+            return ServerLifecycleHooks.getCurrentServer().getRecipeManager();
         } else {
             if (getWorld() == null) return null;
             return getWorld().getRecipeManager();

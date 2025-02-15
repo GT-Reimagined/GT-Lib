@@ -51,6 +51,7 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.Deserializers;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -137,7 +138,7 @@ public class AntimatterDynamics {
         AntimatterTagProvider.afterCompletion();
         AntimatterBlockLootProvider.afterCompletion();
         Antimatter.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
-        if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get() || !AntimatterPlatformUtils.INSTANCE.isProduction()) {
+        if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get() || !FMLEnvironment.production) {
             RUNTIME_DATA_PACK.dump(AntimatterPlatformUtils.INSTANCE.getConfigDir().getParent().resolve("dumped"));
         }
     }
@@ -152,7 +153,7 @@ public class AntimatterDynamics {
         providers.forEach(IAntimatterProvider::onCompletion);
         AntimatterLanguageProvider.postCompletion();
         Antimatter.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
-        if (!AntimatterPlatformUtils.INSTANCE.isProduction()) {
+        if (!FMLEnvironment.production) {
             DYNAMIC_RESOURCE_PACK.dump(AntimatterPlatformUtils.INSTANCE.getConfigDir().getParent().resolve("dumped"));
         }
     }

@@ -87,11 +87,7 @@ public class FluidSlotWidget extends Widget {
         List<Component> str = new ArrayList<>();
         str.add(FluidPlatformUtils.INSTANCE.getFluidDisplayName(this.stack));
         long mb = (this.stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier);
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-            str.add(Utils.translatable("antimatter.tooltip.fluid.amount", Utils.literal(mb + " " + intToSuperScript(this.stack.getFluidAmount() % 81L) + "/₈₁ L")).withStyle(ChatFormatting.BLUE));
-        } else {
-            str.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
-        }
+        str.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";
         str.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));

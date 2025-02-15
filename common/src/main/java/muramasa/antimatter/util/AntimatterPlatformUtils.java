@@ -46,6 +46,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,51 +63,43 @@ public interface AntimatterPlatformUtils {
 
     void markAndNotifyBlock(Level level, BlockPos arg, @Nullable LevelChunk levelchunk, BlockState blockstate, BlockState arg2, int j, int k);
 
-    CreativeModeTab createTab(String domain, String id, Supplier<ItemStack> iconSupplier);
-
-    int getBurnTime(ItemStack stack, @Nullable RecipeType<?> recipeType);
-
-    int getFlammability(BlockState state, Level level, BlockPos pos, Direction face);
-
-    void setBurnTime(Item item, int burnTime);
-
-    void setFlammability(Block block, int burn, int spread);
-
-    boolean isProduction();
-
-    String getActiveNamespace();
-
     Map<Item, Integer> getAllBurnables();
 
-    void openGui(ServerPlayer player, MenuProvider containerSupplier, Consumer<FriendlyByteBuf> extraDataWriter);
+    default boolean blockExists(ResourceLocation id){
+        return RegistryUtils.blockExists(id);
+    }
 
-    MinecraftServer getCurrentServer();
+    default boolean itemExists(ResourceLocation id){
+        return RegistryUtils.itemExists(id);
+    }
 
-    boolean isFabric();
+    default boolean fluidExists(ResourceLocation id){
+        return RegistryUtils.fluidExists(id);
+    }
 
-    boolean isForge();
+    default Block getBlockFromId(ResourceLocation id){
+        return RegistryUtils.getBlockFromId(id);
+    }
 
-    String getModName(String modid);
+    default Item getItemFromID(ResourceLocation id){
+        return RegistryUtils.getItemFromID(id);
+    }
 
-    boolean blockExists(ResourceLocation id);
+    default Fluid getFluidFromID(ResourceLocation id){
+        return RegistryUtils.getFluidFromID(id);
+    }
 
-    boolean itemExists(ResourceLocation id);
+    default ResourceLocation getIdFromBlock(Block block){
+        return RegistryUtils.getIdFromBlock(block);
+    }
 
-    boolean fluidExists(ResourceLocation id);
+    default ResourceLocation getIdFromItem(Item item){
+        return RegistryUtils.getIdFromItem(item);
+    }
 
-    Block getBlockFromId(ResourceLocation id);
-
-    Item getItemFromID(ResourceLocation id);
-
-    Fluid getFluidFromID(ResourceLocation id);
-
-    ResourceLocation getIdFromBlock(Block block);
-
-    ResourceLocation getIdFromItem(Item item);
-
-    ResourceLocation getIdFromFluid(Fluid fluid);
-
-    ResourceLocation getIdFromMenuType(MenuType<?> menuType);
+    default ResourceLocation getIdFromFluid(Fluid fluid){
+        return RegistryUtils.getIdFromFluid(fluid);
+    }
 
     default Block getBlockFromId(String domain, String id){
         return getBlockFromId(new ResourceLocation(domain, id));
@@ -116,36 +109,29 @@ public interface AntimatterPlatformUtils {
         return getItemFromID(new ResourceLocation(domain, id));
     }
 
-    default Fluid getFluidFromID(String domain, String id){
-        return getFluidFromID(new ResourceLocation(domain, id));
-    }
-
     default FluidHolder fromTag(CompoundTag tag){
-        if (isForge()){
-            if (tag == null) {
-                return FluidHooks.emptyFluid();
-            }
-            if (!tag.contains("FluidName", Tag.TAG_STRING)) {
-                return FluidHooks.fluidFromCompound(tag);
-            }
-
-            ResourceLocation fluidName = new ResourceLocation(tag.getString("FluidName"));
-            Fluid fluid = getFluidFromID(fluidName);
-            if (fluid == null) {
-                return FluidHooks.emptyFluid();
-            }
-            FluidHolder stack = FluidHooks.newFluidHolder(fluid, tag.getInt("Amount"), null);
-            if (tag.contains("Tag", Tag.TAG_COMPOUND)) {
-                stack.setCompound(tag.getCompound("Tag"));
-            }
-            return stack;
+        if (tag == null) {
+            return FluidHooks.emptyFluid();
         }
-        return FluidHooks.fluidFromCompound(tag);
+        if (!tag.contains("FluidName", Tag.TAG_STRING)) {
+            return FluidHooks.fluidFromCompound(tag);
+        }
+
+        ResourceLocation fluidName = new ResourceLocation(tag.getString("FluidName"));
+        Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName);
+        if (fluid == null) {
+            return FluidHooks.emptyFluid();
+        }
+        FluidHolder stack = FluidHooks.newFluidHolder(fluid, tag.getInt("Amount"), null);
+        if (tag.contains("Tag", Tag.TAG_COMPOUND)) {
+            stack.setCompound(tag.getCompound("Tag"));
+        }
+        return stack;
     }
 
-    Collection<Item> getAllItems();
-
-    Collection<Fluid> getAllFluids();
+    default Collection<Fluid> getAllFluids(){
+        return ForgeRegistries.FLUIDS.getValues();
+    }
 
     CraftingEvent postCraftingEvent(IAntimatterRegistrar registrar);
 

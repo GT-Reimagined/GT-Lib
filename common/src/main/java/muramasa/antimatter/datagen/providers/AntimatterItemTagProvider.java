@@ -137,12 +137,6 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
                    });
                 }
             });
-            //TODO move this to a felt api module
-            if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-                for (DyeColor dyeColor : DyeColor.values()){
-                    this.tag(TagUtils.getForgelikeItemTag("dyes/" + dyeColor.getName())).add(Registry.ITEM.get(new ResourceLocation(dyeColor.getName() + "_dye")));
-                }
-            }
             processSubtags();
             AntimatterAPI.all(IAntimatterTool.class, tool -> {
                 this.tag(tool.getAntimatterToolType().getTag()).add(tool.getItem()).replace(replace);

@@ -42,10 +42,6 @@ public abstract class AntimatterContainer extends AbstractContainerMenu implemen
         this.invSize = invSize;
         this.handler = new GuiInstance(handler, this, handler.isRemote());
         this.containerType = containerType;
-        //TODO move this to event
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-            CommonEvents.onContainerOpen(playerInv.player, this);
-        }
     }
 
     @Override

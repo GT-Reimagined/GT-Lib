@@ -77,6 +77,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -672,6 +673,10 @@ public class Utils {
 
     public static MutableComponent literal(String text){
         return new TextComponent(text);
+    }
+
+    public static String getModName(String modid){
+        return ModList.get().getModContainerById(modid).map(m -> m.getModInfo().getDisplayName()).orElse(modid);
     }
 
     /**

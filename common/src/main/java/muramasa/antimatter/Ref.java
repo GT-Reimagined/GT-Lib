@@ -2,6 +2,7 @@ package muramasa.antimatter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import muramasa.antimatter.client.forge.itemgroup.AntimatterItemGroup;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.XSTR;
 import net.minecraft.core.Direction;
@@ -28,11 +29,11 @@ public class Ref {
     /**
      * Creative Tabs
      **/
-    public static final CreativeModeTab TAB_ITEMS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "items", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_TOOLS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "tools", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_BLOCKS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "blocks", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MATERIALS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "materials", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MACHINES = AntimatterPlatformUtils.INSTANCE.createTab(ID, "machines", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_ITEMS = new AntimatterItemGroup(ID, "items", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_TOOLS = new AntimatterItemGroup(ID, "tools", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_BLOCKS = new AntimatterItemGroup(ID, "blocks", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_MATERIALS = new AntimatterItemGroup(ID, "materials", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_MACHINES = new AntimatterItemGroup(ID, "machines", () -> new ItemStack(Data.DEBUG_SCANNER));
 
     /**
      * Sound Events
@@ -56,7 +57,7 @@ public class Ref {
     /**
      * Fluid per Material Unit (Prime Factors: Forge: 3 * 3 * 2 * 2 * 2 * 2 Fabric: 5 * 5 * 5 * 3 * 3 * 2 * 2 * 2)
      */
-    public static final long L = AntimatterPlatformUtils.INSTANCE.isForge() ? 144L : 9000L, L9 = L / 9;
+    public static final long L = 144L, L9 = L / 9;
 
 
     /**

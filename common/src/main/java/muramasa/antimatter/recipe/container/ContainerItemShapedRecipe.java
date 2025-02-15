@@ -31,22 +31,6 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
         super(resourceLocation, string, i, j, nonNullList, itemStack);
     }
 
-    public NonNullList<ItemStack> getRemainingItems(@NotNull CraftingContainer container) {
-        if (AntimatterPlatformUtils.INSTANCE.isForge()) return super.getRemainingItems(container);
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(container.getContainerSize(), ItemStack.EMPTY);
-
-        for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack item = container.getItem(i);
-            if (item.getItem() instanceof IContainerItem containerItem){
-                if (containerItem.hasContainerItem(item)) {
-                    nonnulllist.set(i, containerItem.getContainerItem(item));
-                }
-            }
-        }
-
-        return nonnulllist;
-    }
-
     @Override
     public RecipeSerializer<?> getSerializer() {
         return INSTANCE;

@@ -34,22 +34,6 @@ public class ContainerItemShapelessRecipe extends ShapelessRecipe {
         return INSTANCE;
     }
 
-    public NonNullList<ItemStack> getRemainingItems(@NotNull CraftingContainer container) {
-        if (AntimatterPlatformUtils.INSTANCE.isForge()) return super.getRemainingItems(container);
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(container.getContainerSize(), ItemStack.EMPTY);
-
-        for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack item = container.getItem(i);
-            if (item.getItem() instanceof IContainerItem containerItem){
-                if (containerItem.hasContainerItem(item)) {
-                    nonnulllist.set(i, containerItem.getContainerItem(item));
-                }
-            }
-        }
-
-        return nonnulllist;
-    }
-
     public static class Serializer extends BaseRecipeSerializer<ContainerItemShapelessRecipe> {
         public Serializer() {
             super(Ref.ID, "container_shapeless");

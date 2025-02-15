@@ -35,6 +35,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Set;
 
@@ -67,8 +68,8 @@ public class ClientHandler implements IProxyHandler {
         AntimatterAPI.runLaterClient(() -> {
             Set<ResourceLocation> registered = new ObjectOpenHashSet<>();
             AntimatterAPI.all(MenuHandler.class, h -> {
-                if (!registered.contains(AntimatterPlatformUtils.INSTANCE.getIdFromMenuType(h.getContainerType()))) {
-                    registered.add(AntimatterPlatformUtils.INSTANCE.getIdFromMenuType(h.getContainerType()));
+                if (!registered.contains(ForgeRegistries.CONTAINERS.getKey(h.getContainerType()))) {
+                    registered.add(ForgeRegistries.CONTAINERS.getKey(h.getContainerType()));
                     MenuScreens.register(h.getContainerType(), AntimatterAPI.get(MenuScreens.ScreenConstructor.class, h.screenID(), h.screenDomain()));
                 }
             });

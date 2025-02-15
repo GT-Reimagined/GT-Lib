@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,7 +134,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
     default boolean openGui(Player player, Direction side) {
         if (!hasGui())
             return false;
-        AntimatterPlatformUtils.INSTANCE.openGui((ServerPlayer) player, this, packetBuffer -> {
+        NetworkHooks.openGui((ServerPlayer) player, this, packetBuffer -> {
             packetBuffer.writeBlockPos(this.source().getTile().getBlockPos());
             packetBuffer.writeInt(side.get3DDataValue());
         });

@@ -89,37 +89,12 @@ public class AntimatterPlatformUtilsImpl implements AntimatterPlatformUtils {
     }
 
     @Override
-    public CreativeModeTab createTab(String domain, String id, Supplier<ItemStack> iconSupplier){
-        return new AntimatterItemGroup(domain, id, iconSupplier);
-    }
-
-    @Override
-    public int getBurnTime(ItemStack stack, @Nullable RecipeType<?> recipeType) {
-        return ForgeHooks.getBurnTime(stack, recipeType);
-    }
-
-    @Override
-    public int getFlammability(BlockState state, Level level, BlockPos pos, Direction face) {
-        return state.getFlammability(level, pos, face);
-    }
-
-    @Override
-    public void setBurnTime(Item item, int burnTime){
-        TerraformFuelRegistry.addFuel(item, burnTime);
-    }
-
-    @Override
-    public void setFlammability(Block block, int burn, int spread){
-        TerraformFlammableBlockRegistry.addFlammableBlock(block, burn, spread);
-    }
-
-    @Override
     public Map<Item, Integer> getAllBurnables(){
         if (FUEL_LIST == null){
             ForgeHooks.updateBurns();
             ImmutableMap.Builder<Item, Integer> builder = ImmutableMap.builder();
-            AntimatterPlatformUtils.INSTANCE.getAllItems().forEach(i -> {
-                int burnTime = getBurnTime(i.getDefaultInstance(), null);
+            ForgeRegistries.ITEMS.getValues().forEach(i -> {
+                int burnTime = ForgeHooks.getBurnTime(i.getDefaultInstance(), null);
                 if (burnTime > 0){
                     builder.put(i, burnTime);
                 }
@@ -127,116 +102,6 @@ public class AntimatterPlatformUtilsImpl implements AntimatterPlatformUtils {
             FUEL_LIST = builder.build();
         }
         return FUEL_LIST;
-    }
-
-    @Override
-    public MinecraftServer getCurrentServer(){
-        return ServerLifecycleHooks.getCurrentServer();
-    }
-
-    @Override
-    public boolean isProduction(){
-        return FMLEnvironment.production;
-    }
-
-    @Override
-    public String getActiveNamespace(){
-        return ModLoadingContext.get().getActiveNamespace();
-    }
-
-    @Override
-    public void openGui(ServerPlayer player, MenuProvider containerSupplier, Consumer<FriendlyByteBuf> extraDataWriter){
-        NetworkHooks.openGui(player, containerSupplier, extraDataWriter);
-    }
-
-    @Override
-    public boolean isFabric(){
-        return false;
-    }
-
-    @Override
-    public boolean isForge(){
-        return true;
-    }
-
-    @Override
-    public String getModName(String modid){
-        return ModList.get().getModContainerById(modid).map(m -> m.getModInfo().getDisplayName()).orElse(modid);
-    }
-
-    @Override
-    public boolean blockExists(ResourceLocation id){
-        return ForgeRegistries.BLOCKS.containsKey(id);
-    }
-
-    @Override
-    public boolean itemExists(ResourceLocation id){
-        return ForgeRegistries.ITEMS.containsKey(id);
-    }
-
-    @Override
-    public boolean fluidExists(ResourceLocation id){
-        return ForgeRegistries.FLUIDS.containsKey(id);
-    }
-
-    @Override
-    public Block getBlockFromId(ResourceLocation id){
-        return ForgeRegistries.BLOCKS.getValue(id);
-    }
-
-    @Override
-    public Item getItemFromID(ResourceLocation id){
-        return ForgeRegistries.ITEMS.getValue(id);
-    }
-
-    @Override
-    public Fluid getFluidFromID(ResourceLocation id){
-        return ForgeRegistries.FLUIDS.getValue(id);
-    }
-
-    @Override
-    public ResourceLocation getIdFromBlock(Block block){
-        return ForgeRegistries.BLOCKS.getKey(block);
-    }
-
-    @Override
-    public ResourceLocation getIdFromItem(Item item){
-        return ForgeRegistries.ITEMS.getKey(item);
-    }
-
-    @Override
-    public ResourceLocation getIdFromFluid(Fluid fluid){
-        return ForgeRegistries.FLUIDS.getKey(fluid);
-    }
-
-    @Override
-    public ResourceLocation getIdFromMenuType(MenuType<?> menuType){
-        return ForgeRegistries.CONTAINERS.getKey(menuType);
-    }
-
-    @Override
-    public Block getBlockFromId(String domain, String id){
-        return getBlockFromId(new ResourceLocation(domain, id));
-    }
-
-    @Override
-    public Item getItemFromID(String domain, String id){
-        return getItemFromID(new ResourceLocation(domain, id));
-    }
-
-    @Override
-    public Fluid getFluidFromID(String domain, String id){
-        return getFluidFromID(new ResourceLocation(domain, id));
-    }
-
-    @Override
-    public Collection<Item> getAllItems(){
-        return ForgeRegistries.ITEMS.getValues();
-    }
-
-    @Override
-    public Collection<Fluid> getAllFluids(){
-        return ForgeRegistries.FLUIDS.getValues();
     }
 
     @Override

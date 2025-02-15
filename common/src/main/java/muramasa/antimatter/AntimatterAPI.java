@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.LoadingModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import org.apache.logging.log4j.LogManager;
@@ -423,7 +424,7 @@ public final class AntimatterAPI {
         Antimatter.LOGGER.info("Registration event " + event);
         Side side = getSIDE();
         if (!REGISTRATION_EVENTS_HANDLED.add(event)) {
-            if (AntimatterPlatformUtils.INSTANCE.isForge() && AntimatterPlatformUtils.INSTANCE.getActiveNamespace().equals(Ref.ID))
+            if (ModLoadingContext.get().getActiveNamespace().equals(Ref.ID))
                 return;
             throw new IllegalStateException("The RegistrationEvent " + event.name() + " has already been handled");
         }

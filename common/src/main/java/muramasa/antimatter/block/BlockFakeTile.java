@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -52,7 +53,7 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
             if (fakeBlock.getController() != null){
                 if (fakeBlock.getController().getMachineType().has(MachineFlag.GUI) && fakeBlock.getController().canPlayerOpenGui(player)) {
                     if (!level.isClientSide){
-                        AntimatterPlatformUtils.INSTANCE.openGui((ServerPlayer) player, fakeBlock.getController(), extra -> {
+                        NetworkHooks.openGui((ServerPlayer) player, fakeBlock.getController(), extra -> {
                             extra.writeBlockPos(fakeBlock.getController().getBlockPos());
                         });
                     }

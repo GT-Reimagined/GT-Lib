@@ -69,7 +69,7 @@ public class RecipeMapDisplay implements Display {
                     components.add(c);
                 }
                 if (recipe.getId() != null){
-                    components.add(Utils.literal("Recipe by: ").append(Utils.literal(AntimatterPlatformUtils.INSTANCE.getModName(recipe.getId().getNamespace())).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC)));
+                    components.add(Utils.literal("Recipe by: ").append(Utils.literal(Utils.getModName(recipe.getId().getNamespace())).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC)));
                     Minecraft minecraft = Minecraft.getInstance();
                     boolean showAdvanced = minecraft.options.advancedItemTooltips || Screen.hasShiftDown();
                     if (showAdvanced){
@@ -87,7 +87,7 @@ public class RecipeMapDisplay implements Display {
             fluidStackEntryStack.setting(EntryStack.Settings.TOOLTIP_PROCESSOR, (entry, t) -> {
                 createFluidTooltip(t, fluidStackEntryStack.getValue());
                 if (recipe.getId() != null){
-                    t.add(Utils.literal("Recipe by: ").append(Utils.literal(AntimatterPlatformUtils.INSTANCE.getModName(recipe.getId().getNamespace())).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC)));
+                    t.add(Utils.literal("Recipe by: ").append(Utils.literal(Utils.getModName(recipe.getId().getNamespace())).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC)));
                     Minecraft minecraft = Minecraft.getInstance();
                     boolean showAdvanced = minecraft.options.advancedItemTooltips || Screen.hasShiftDown();
                     if (showAdvanced){
@@ -118,11 +118,7 @@ public class RecipeMapDisplay implements Display {
         tooltip.entries().remove(2);
         tooltip.entries().remove(1);
         long mb = (stack.getAmount() / TesseractGraphWrappers.dropletMultiplier);
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-            tooltip.add(Utils.translatable("antimatter.tooltip.fluid.amount", Utils.literal(mb + " " + intToSuperScript(stack.getAmount() % 81L) + "/₈₁ L")).withStyle(ChatFormatting.BLUE));
-        } else {
-            tooltip.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
-        }
+        tooltip.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         tooltip.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
         tooltip.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));

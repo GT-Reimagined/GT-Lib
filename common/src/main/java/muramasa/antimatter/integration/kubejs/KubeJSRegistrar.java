@@ -22,12 +22,6 @@ import java.nio.file.LinkOption;
 ;
 
 public class KubeJSRegistrar extends AntimatterMod {
-    public KubeJSRegistrar() {
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-            onRegistrarInit();
-        }
-    }
-
     @Override
     public void onRegistrarInit() {
         super.onRegistrarInit();

@@ -125,10 +125,7 @@ public class RecipeIngredient extends Ingredient {
     }
 
     public static Ingredient fromNetwork(FriendlyByteBuf buffer) {
-        if (AntimatterPlatformUtils.INSTANCE.isForge()){
-            return Ingredient.fromNetwork(buffer);
-        }
-        return fromValues(buffer.readList(FriendlyByteBuf::readItem).stream().map(RecipeValue::new));
+        return Ingredient.fromNetwork(buffer);
     }
 
     /*public RecipeIngredient(JsonElement element) {
