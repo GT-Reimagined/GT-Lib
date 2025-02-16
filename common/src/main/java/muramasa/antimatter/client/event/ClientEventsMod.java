@@ -1,4 +1,4 @@
-package muramasa.antimatter.client.event.forge;
+package muramasa.antimatter.client.event;
 
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;

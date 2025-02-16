@@ -1,8 +1,7 @@
-package muramasa.antimatter.client.event.forge;
+package muramasa.antimatter.client.event;
 
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.client.SoundHelper;
-import muramasa.antimatter.client.event.ClientEvents;
 import muramasa.antimatter.material.MaterialType;
 import muramasa.antimatter.tool.IAntimatterTool;
 import net.minecraft.world.entity.player.Player;

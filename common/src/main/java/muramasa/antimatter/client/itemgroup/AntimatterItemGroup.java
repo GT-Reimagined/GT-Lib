@@ -1,4 +1,4 @@
-package muramasa.antimatter.client.forge.itemgroup;
+package muramasa.antimatter.client.itemgroup;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
