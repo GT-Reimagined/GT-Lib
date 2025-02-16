@@ -1,4 +1,4 @@
-package muramasa.antimatter.registration.forge;
+package muramasa.antimatter.registration;
 
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterAPI;
@@ -11,11 +11,6 @@ import muramasa.antimatter.fluid.AntimatterFluid;
 import muramasa.antimatter.integration.kubejs.AntimatterKubeJS;
 import muramasa.antimatter.recipe.condition.ConfigCondition;
 import muramasa.antimatter.recipe.condition.TomlConfigCondition;
-import muramasa.antimatter.registration.IAntimatterRegistrar;
-import muramasa.antimatter.registration.IItemBlockProvider;
-import muramasa.antimatter.registration.IRegistryEntryProvider;
-import muramasa.antimatter.registration.RegistrationEvent;
-import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.tool.AntimatterToolType;
 import muramasa.antimatter.tool.IAntimatterArmor;
 import muramasa.antimatter.tool.IAntimatterTool;
