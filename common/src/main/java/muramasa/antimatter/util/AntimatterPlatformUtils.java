@@ -90,6 +90,4 @@ public interface AntimatterPlatformUtils {
     WorldGenEvent postWorldEvent(IAntimatterRegistrar registrar);
 
     void addMultiMachineInfo(BasicMultiMachine<?> machine, List<Pattern> patterns);
-
-    Item.Properties getToolProperties(CreativeModeTab group, boolean repairable);
 }

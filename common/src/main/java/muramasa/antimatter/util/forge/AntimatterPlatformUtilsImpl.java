@@ -59,11 +59,4 @@ public class AntimatterPlatformUtilsImpl implements AntimatterPlatformUtils {
             MultiMachineInfoCategory.addMultiMachine(new MultiMachineInfoPage(machine, patterns));
         }*/
     }
-
-    @Override
-    public Item.Properties getToolProperties(CreativeModeTab group, boolean repairable){
-        Item.Properties properties = new Item.Properties().tab(group);
-        if (!repairable) properties.setNoRepair();
-        return properties;
-    }
 }

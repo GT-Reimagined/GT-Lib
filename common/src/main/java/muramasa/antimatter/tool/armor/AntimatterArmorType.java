@@ -93,7 +93,9 @@ public class AntimatterArmorType implements IAntimatterObject {
 
     private Item.Properties prepareInstantiation(String domain) {
         if (domain.isEmpty()) Utils.onInvalidData("An AntimatterArmorType was instantiated with an empty domain name!");
-        return AntimatterPlatformUtils.INSTANCE.getToolProperties(itemGroup, repairable);
+        Item.Properties properties = new Item.Properties().tab(itemGroup);
+        if (!repairable) properties.setNoRepair();
+        return properties;
     }
 
     public AntimatterArmorType setOverlayLayers(int overlayLayers) {
