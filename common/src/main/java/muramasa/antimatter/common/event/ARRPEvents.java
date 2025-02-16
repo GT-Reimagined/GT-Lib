@@ -1,4 +1,4 @@
-package muramasa.antimatter.common.event.forge;
+package muramasa.antimatter.common.event;
 
 import muramasa.antimatter.datagen.AntimatterDynamics;
 import net.devtech.arrp.api.RRPEvent;

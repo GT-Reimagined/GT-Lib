@@ -1,25 +1,42 @@
-package muramasa.antimatter.common.event.forge;
+package muramasa.antimatter.common.event;
 
 import muramasa.antimatter.AntimatterAPI;
+import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.AntimatterRemapping;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.capability.Holder;
-import muramasa.antimatter.common.event.CommonEvents;
+import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
+import muramasa.antimatter.datagen.AntimatterDynamics;
 import muramasa.antimatter.datagen.AntimatterLoot;
+import muramasa.antimatter.datagen.providers.AntimatterBlockLootProvider;
+import muramasa.antimatter.gui.container.IAntimatterContainer;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.ore.BlockOre;
+import muramasa.antimatter.pipe.BlockPipe;
 import muramasa.antimatter.pipe.TileTicker;
+import muramasa.antimatter.proxy.ClientHandler;
 import muramasa.antimatter.structure.StructureCache;
+import muramasa.antimatter.tool.IAntimatterTool;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
-import net.minecraft.core.Direction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -34,6 +51,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import static muramasa.antimatter.data.AntimatterMaterialTypes.DUST;
@@ -45,12 +63,26 @@ public class ForgeCommonEvents {
 
     @SubscribeEvent
     public static void onContainerOpen(PlayerContainerEvent.Open ev) {
-        CommonEvents.onContainerOpen(ev.getPlayer(), ev.getContainer());
+        if (ev.getPlayer() instanceof ServerPlayer serverPlayer) {
+            if (ev.getContainer() instanceof IAntimatterContainer antimatterContainer) {
+                antimatterContainer.listeners().add(serverPlayer);
+            }
+        }
     }
 
     @SubscribeEvent
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent e) {
-        CommonEvents.onItemCrafted(e.getInventory(), e.getPlayer());
+        Container inv = e.getInventory();
+        Player player = e.getPlayer();
+        if (!AntimatterConfig.PLAY_CRAFTING_SOUNDS.get()) return;
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            if (inv.getItem(i).getItem() instanceof IAntimatterTool tool) {
+                SoundEvent type = tool.getAntimatterToolType().getUseSound();
+                if (type != null) {
+                    player.playSound(type, 0.75F, 0.75F);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -60,27 +92,46 @@ public class ForgeCommonEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onBlockPlace(BlockEvent.EntityPlaceEvent event){
-        CommonEvents.placeBlock(event.getPlacedAgainst(), event.getEntity(), event.getWorld(), event.getPos(), event.getPlacedBlock());
+        if (event.getPlacedAgainst().getBlock() instanceof BlockPipe && !(event.getPlacedBlock().getBlock() instanceof BlockPipe)){
+            if (event.getEntity() instanceof Player && !event.getEntity().isCrouching()){
+                BlockEntity blockEntity = event.getWorld().getBlockEntity(event.getPos().relative(event.getEntity().getDirection()));
+                if (blockEntity instanceof BlockEntityPipe<?> pipe && event.getPlacedBlock().getBlock() instanceof EntityBlock){
+                    pipe.setConnection(event.getEntity().getDirection().getOpposite());
+                }
+            }
+        }
     }
 
     @SubscribeEvent
     public static void onAnvilUpdated(AnvilUpdateEvent event) {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
-        if (CommonEvents.anvilUpdate(left, right)){
-            event.setCanceled(true);
+        if (left.getItem() == right.getItem()) {
+            if (left.getItem() instanceof IAntimatterTool leftTool && right.getItem() instanceof IAntimatterTool rightTool) {
+                if (leftTool.getPrimaryMaterial(left) != rightTool.getPrimaryMaterial(right) || leftTool.getSecondaryMaterial(left) != rightTool.getSecondaryMaterial(right)) {
+                    event.setCanceled(true);
+                }
+            }
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLootTableLoad(LootTableLoadEvent event) {
-        CommonEvents.lootTableLoad(event.getTable(), event.getName());
+        if (event.getTable().getLootTableId().getPath().startsWith("blocks/")) {
+            ResourceLocation blockId = new ResourceLocation(event.getTable().getLootTableId().getNamespace(), event.getName().getPath().replace("blocks/", ""));
+            if (RegistryUtils.blockExists(blockId)) {
+                Block block = RegistryUtils.getBlockFromId(blockId);
+                if (block == Blocks.ICE || block == Blocks.PACKED_ICE || block == Blocks.BLUE_ICE) {
+                    event.getTable().addPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(AntimatterBlockLootProvider.SAW).add(LootItem.lootTableItem(block)).build());
+                }
+            }
+        }
         AntimatterLoot.onLootTableLoad(event.getTable().getPool("main"), event.getName());
     }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event){
-        CommonEvents.getPLAYER_TICK_CALLBACKS().forEach(c -> {
+        PlayerTickCallback.PLAYER_TICK_CALLBACKS.forEach(c -> {
             c.onTick(event.phase == TickEvent.Phase.END, event.side == LogicalSide.SERVER, event.player);
         });
     }
@@ -214,21 +265,16 @@ public class ForgeCommonEvents {
         });
     }
 
-    public static <T> LazyOptional<T> fromHolder(Holder<T, ?> holder, Direction side){
-        if (!holder.isPresent()) return LazyOptional.empty();
-        LazyOptional<T> opt = LazyOptional.of(() -> holder.side(side).get());
-        boolean add = holder.addListener(side, opt::invalidate);
-        if (!add) return LazyOptional.empty();
-        return opt;
-    }
-
     /**
      * Recipe event for local servers, builds recipes.
      * @param ev forge event callback.
      */
     @SubscribeEvent
     public static void recipeEvent(RecipesUpdatedEvent ev) {
-       CommonEvents.recipeEvent(ev.getRecipeManager());
+        if (ClientHandler.isLocal()) {
+            //AntimatterDynamics.onResourceReload(false);
+            AntimatterDynamics.onRecipeCompile(false, ev.getRecipeManager());
+        }
     }
 
     /**
@@ -237,7 +283,10 @@ public class ForgeCommonEvents {
      */
     @SubscribeEvent
     public static void tagsEvent(TagsUpdatedEvent ev) {
-        CommonEvents.tagsEvent();
+        if (FMLEnvironment.dist == Dist.CLIENT && !ClientHandler.isLocal()) {
+            //AntimatterDynamics.onResourceReload(false);
+            AntimatterDynamics.onRecipeCompile(true, Minecraft.getInstance().getConnection().getRecipeManager());
+        }
     }
 
     @SubscribeEvent
