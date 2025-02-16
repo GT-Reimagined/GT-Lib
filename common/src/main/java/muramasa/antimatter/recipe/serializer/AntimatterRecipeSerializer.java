@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
@@ -61,7 +62,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             }
             ItemStack[] outputs = null;
             if (json.has("outputItems")) {
-                outputs = Streams.stream(json.getAsJsonArray("outputItems")).map(t -> RecipeUtil.INSTANCE.getItemStack(t.getAsJsonObject(), true)).toArray(ItemStack[]::new);
+                outputs = Streams.stream(json.getAsJsonArray("outputItems")).map(t -> CraftingHelper.getItemStack(t.getAsJsonObject(), true)).toArray(ItemStack[]::new);
             }
             List<FluidIngredient> fluidInputs = new ObjectArrayList<>();
             if (json.has("inputFluids")) {
@@ -157,7 +158,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         List<Ingredient> ings = new ObjectArrayList<>(size);
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                ings.add(RecipeUtil.INSTANCE.fromNetwork(buffer));
+                ings.add(Ingredient.fromNetwork(buffer));
             }
         }
         size = buffer.readInt();
@@ -238,7 +239,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         buffer.writeUtf(recipe.getMapId());
         buffer.writeInt(!recipe.hasInputItems() ? 0 : recipe.getInputItems().size());
         if (recipe.hasInputItems()) {
-            recipe.getInputItems().forEach(t -> RecipeUtil.INSTANCE.write(buffer, t));
+            recipe.getInputItems().forEach(t -> CraftingHelper.write(buffer, t));
         }
         buffer.writeInt(!recipe.hasOutputItems() ? 0 : recipe.getOutputItems(false).length);
         if (recipe.hasOutputItems()) {
@@ -286,7 +287,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         array = new JsonArray();
         if (recipe.getOutputItems(false) != null){
             for (ItemStack stack : recipe.getOutputItems(false)){
-                array.add(RecipeUtil.INSTANCE.itemstackToJson(stack));
+                array.add(RecipeUtil.itemstackToJson(stack));
             }
         }
         if (!array.isEmpty()){

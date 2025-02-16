@@ -37,6 +37,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.crafting.CompoundIngredient;
+import net.minecraftforge.common.crafting.NBTIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -627,8 +629,8 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     public static boolean isIngredientSpecial(Ingredient i) {
         Class<? extends Ingredient> clazz = i.getClass();
         if (clazz == RecipeIngredient.class) return false;
-        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && !RecipeUtil.INSTANCE.isNBTIngredient(clazz)
-        && !RecipeUtil.INSTANCE.isCompoundIngredient(clazz));
+        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && clazz != NBTIngredient.class
+        && clazz != CompoundIngredient.class);
     }
 
     protected static class Branch {

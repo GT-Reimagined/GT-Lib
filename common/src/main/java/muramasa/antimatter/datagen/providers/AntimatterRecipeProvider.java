@@ -9,6 +9,8 @@ import muramasa.antimatter.datagen.builder.AntimatterShapedRecipeBuilder;
 import muramasa.antimatter.datagen.builder.AntimatterShapelessRecipeBuilder;
 import muramasa.antimatter.datagen.builder.SequencedAssemblyBuilder;
 import muramasa.antimatter.recipe.RecipeUtil;
+import muramasa.antimatter.recipe.forge.condition.ConfigCondition;
+import muramasa.antimatter.recipe.forge.condition.TomlConfigCondition;
 import muramasa.antimatter.recipe.ingredient.PropertyIngredient;
 import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.TagUtils;
@@ -25,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,11 +67,13 @@ public class AntimatterRecipeProvider extends RecipeProvider {
     }
 
     public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, Class configClass, String configFieldName, String recipeDomain, String recipeName) {
-        RecipeUtil.INSTANCE.addConditionalRecipe(consumer, builtRecipe, configClass, configFieldName, recipeDomain, recipeName);
+        ConditionalRecipe.builder().addCondition(new ConfigCondition(configClass, configFieldName))
+                .addRecipe(builtRecipe::build).build(consumer, recipeDomain, recipeName);
     }
 
     public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, String config, String configField, String recipeDomain, String recipeName) {
-        RecipeUtil.INSTANCE.addConditionalRecipe(consumer, builtRecipe, config, configField, recipeDomain, recipeName);
+        ConditionalRecipe.builder().addCondition(new TomlConfigCondition(config, configField))
+                .addRecipe(builtRecipe::build).build(consumer, recipeDomain, recipeName);
     }
 
     public AntimatterShapedRecipeBuilder getItemRecipe(String groupName, boolean customCriterion, ItemLike output, ImmutableMap<Character, Object> inputs, String... inputPattern) {

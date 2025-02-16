@@ -28,6 +28,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -187,7 +188,7 @@ public class AntimatterLoot {
             public RandomWeightLootFunction deserialize(JsonObject object,
                                                         JsonDeserializationContext deserializationContext,
                                                         LootItemCondition[] conditions) {
-                ItemStack stack = RecipeUtil.INSTANCE.getItemStack(object.getAsJsonObject("stack"), true);
+                ItemStack stack = CraftingHelper.getItemStack(object.getAsJsonObject("stack"), true);
                 int min = GsonHelper.getAsInt(object, "min");
                 int max = GsonHelper.getAsInt(object, "max");
                 return new RandomWeightLootFunction(stack, min, max);
