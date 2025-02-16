@@ -42,6 +42,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.LoadingModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -461,15 +462,8 @@ public final class AntimatterAPI {
     }
 
     public static boolean isRegistryEntry(Object object, String domain){
-        return AntimatterAPIPlatformHelper.INSTANCE.isRegistryEntry(object, domain);
-    }
-
-    public static void registerTransferApi(BlockEntityType<? extends BlockEntityMachine<?>> type){
-        AntimatterAPIPlatformHelper.INSTANCE.registerTransferApi(type);
-    }
-
-    public static void registerTransferApiPipe(BlockEntityType<? extends BlockEntityPipe<?>> type){
-        AntimatterAPIPlatformHelper.INSTANCE.registerTransferApiPipe(type);
+        return object instanceof IForgeRegistryEntry<?> r && r.getRegistryName() != null
+                && r.getRegistryName().getNamespace().equals(domain);
     }
 
     public static Optional<IAntimatterRegistrar> getRegistrar(String id) {

@@ -7,7 +7,6 @@ import muramasa.antimatter.block.BlockFrame;
 import muramasa.antimatter.block.BlockStorage;
 import muramasa.antimatter.block.BlockSurfaceRock;
 import muramasa.antimatter.client.AntimatterTextureStitcher;
-import muramasa.antimatter.client.ClientPlatformHelper;
 import muramasa.antimatter.client.ModelUtils;
 import muramasa.antimatter.client.tesr.MachineTESR;
 import muramasa.antimatter.cover.CoverFactory;
@@ -29,6 +28,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -90,7 +90,7 @@ public class ClientHandler implements IProxyHandler {
                 ModelUtils.INSTANCE.setRenderLayer(f.getFlowingFluid(), RenderType.translucent());
             });
         });
-        AntimatterAPI.all(Machine.class).stream().filter(Machine::renderAsTesr).filter(Machine::renderContainerLiquids).map(Machine::getTileType).distinct().forEach(i -> ClientPlatformHelper.INSTANCE.registerBlockEntityRenderer(i, MachineTESR::new));
+        AntimatterAPI.all(Machine.class).stream().filter(Machine::renderAsTesr).filter(Machine::renderContainerLiquids).map(Machine::getTileType).distinct().forEach(i -> BlockEntityRenderers.register(i, MachineTESR::new));
     }
 
     public static void onItemColorHandler(ItemColors colors) {

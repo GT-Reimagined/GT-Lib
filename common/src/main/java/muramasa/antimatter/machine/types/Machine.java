@@ -345,7 +345,6 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
     public void onRegistryBuild(RegistryType registry) {
         if (registry != RegistryType.BLOCKS) return;
         tileType = new BlockEntityType<>(new BlockEntityBase.BlockEntityGetter<>(tileFunc, (T)this), tiers.stream().map(t -> getBlock(this, t)).collect(Collectors.toSet()), null);
-        AntimatterAPI.registerTransferApi(tileType);
         AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }
 

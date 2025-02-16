@@ -60,7 +60,6 @@ public class ItemPipe<T extends ItemPipe<T>> extends PipeType<T> {
         registeredRestrictedBlocks = restrictedBlocks.stream().map(t -> new Pair<>(((BlockPipe<?>) t).getSize(),t))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
         tileType = new BlockEntityType<>((pos, state) -> tileFunc.create((T) this, pos, state), Stream.concat(blocks.stream(), restrictedBlocks.stream()).collect(Collectors.toSet()), null);
-        AntimatterAPI.registerTransferApiPipe(tileType);
         AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }
 

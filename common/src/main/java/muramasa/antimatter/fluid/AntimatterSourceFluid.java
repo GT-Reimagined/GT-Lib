@@ -1,4 +1,4 @@
-package muramasa.antimatter.fluid.forge;
+package muramasa.antimatter.fluid;
 
 import earth.terrarium.botarium.common.registry.fluid.FluidData;
 import earth.terrarium.botarium.forge.regsitry.fluid.ForgeFluidAttributesHandler;

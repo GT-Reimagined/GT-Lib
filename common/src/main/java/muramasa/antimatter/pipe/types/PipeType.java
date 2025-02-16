@@ -49,7 +49,6 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
         registeredBlocks = blocks.stream().map(t -> new Pair<>(((BlockPipe<?>) t).getSize(),t))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
         tileType = new BlockEntityType<>((pos,state) -> tileFunc.create((T) this, pos, state), blocks, null);
-        AntimatterAPI.registerTransferApiPipe(tileType);
         AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }
 
