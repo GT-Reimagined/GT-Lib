@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.client.baked.CoverBakedModel;
 import muramasa.antimatter.client.baked.IAntimatterBakedModel;
-import muramasa.antimatter.mixin.forge.client.SimpleBakedModel$BuilderAccessor;
+import muramasa.antimatter.mixin.client.SimpleBakedModel$BuilderAccessor;
 import muramasa.antimatter.util.ImplLoader;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.client.Minecraft;

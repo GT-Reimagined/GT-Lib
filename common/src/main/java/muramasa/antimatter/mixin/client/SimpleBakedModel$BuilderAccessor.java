@@ -1,4 +1,4 @@
-package muramasa.antimatter.mixin.forge.client;
+package muramasa.antimatter.mixin.client;
 
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;

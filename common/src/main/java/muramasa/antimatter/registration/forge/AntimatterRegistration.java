@@ -1,6 +1,5 @@
 package muramasa.antimatter.registration.forge;
 
-import com.google.gson.JsonObject;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Data;
@@ -12,7 +11,6 @@ import muramasa.antimatter.fluid.AntimatterFluid;
 import muramasa.antimatter.integration.kubejs.AntimatterKubeJS;
 import muramasa.antimatter.recipe.forge.condition.ConfigCondition;
 import muramasa.antimatter.recipe.forge.condition.TomlConfigCondition;
-import muramasa.antimatter.recipe.ingredient.IAntimatterIngredientSerializer;
 import muramasa.antimatter.registration.IAntimatterRegistrar;
 import muramasa.antimatter.registration.IItemBlockProvider;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
@@ -23,12 +21,10 @@ import muramasa.antimatter.tool.IAntimatterArmor;
 import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.tool.armor.AntimatterArmorType;
 import muramasa.antimatter.worldgen.feature.IAntimatterFeature;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
@@ -131,25 +127,8 @@ public final class AntimatterRegistration {
             });
         } else if (e.getRegistry() == ForgeRegistries.RECIPE_SERIALIZERS) {
             //TODO better solution for this
-            AntimatterAPI.all(IAntimatterIngredientSerializer.class, domain, (s, d, i) -> {
-                IIngredientSerializer<?> serializer = new IIngredientSerializer() {
-                    @Override
-                    public Ingredient parse(FriendlyByteBuf arg) {
-                        return s.parse(arg);
-                    }
-
-                    @Override
-                    public Ingredient parse(JsonObject jsonObject) {
-                        return s.parse(jsonObject);
-                    }
-
-                    @Override
-                    public void write(FriendlyByteBuf arg, Ingredient arg2) {
-                        s.write(arg, arg2);
-                    }
-                };
-                AntimatterAPI.register(IIngredientSerializer.class, i, d, serializer);
-                CraftingHelper.register(new ResourceLocation(d, i), serializer);
+            AntimatterAPI.all(IIngredientSerializer.class, domain, (s, d, i) -> {
+                CraftingHelper.register(new ResourceLocation(d, i), s);
             });
             if (domain.equals(Ref.ID)) {
                 CraftingHelper.register(ConfigCondition.Serializer.INSTANCE);

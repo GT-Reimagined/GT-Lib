@@ -3,16 +3,9 @@
   "package" : "muramasa.antimatter.mixin.forge",
   "compatibilityLevel" : "JAVA_17",
   "mixins" : [
-    "CapabilityManagerMixin",
-    "GameDataMixin",
-    "PropertyIngredientMixin",
-    "RecipeIngredientMixin",
     "BlockEntityFakeBlockMixin",
     "BlockEntityMachineMixin",
     "BlockEntityPipeMixin"
-  ],
-  "client" : [
-    "client.SimpleBakedModel$BuilderAccessor"
   ],
   "minVersion" : "0.8",
   "refmap" : "antimatter.refmap.json"

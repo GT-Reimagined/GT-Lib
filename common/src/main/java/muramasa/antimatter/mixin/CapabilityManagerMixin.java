@@ -1,4 +1,4 @@
-package muramasa.antimatter.mixin.forge;
+package muramasa.antimatter.mixin;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import muramasa.antimatter.capability.forge.AntimatterCaps;

@@ -28,6 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -214,18 +215,24 @@ public class PropertyIngredient extends Ingredient {
         return super.test(test);
     }
 
+    @NotNull
+    @Override
+    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+        return Serializer.INSTANCE;
+    }
+
     public static Builder builder(String id) {
         return new Builder(id);
     }
 
-    public static class Serializer implements IAntimatterIngredientSerializer<PropertyIngredient> {
+    public static class Serializer implements IIngredientSerializer<PropertyIngredient> {
 
         public static Serializer INSTANCE = new Serializer();
 
         public static final ResourceLocation ID = new ResourceLocation("antimatter", "material");
 
         public static void init(){
-            AntimatterAPI.register(IAntimatterIngredientSerializer.class, "material", Ref.ID, INSTANCE);
+            AntimatterAPI.register(IIngredientSerializer.class, "material", Ref.ID, INSTANCE);
         }
 
         @Override
