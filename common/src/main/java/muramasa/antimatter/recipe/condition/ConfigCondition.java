@@ -1,4 +1,4 @@
-package muramasa.antimatter.recipe.forge.condition;
+package muramasa.antimatter.recipe.condition;
 
 import com.google.gson.JsonObject;
 import muramasa.antimatter.Ref;

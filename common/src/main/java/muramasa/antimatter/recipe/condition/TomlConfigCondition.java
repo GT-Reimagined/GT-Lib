@@ -1,4 +1,4 @@
-package muramasa.antimatter.recipe.forge.condition;
+package muramasa.antimatter.recipe.condition;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
