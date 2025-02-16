@@ -1,6 +1,5 @@
-package muramasa.antimatter.forge;
+package muramasa.antimatter;
 
-import muramasa.antimatter.Ref;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(Ref.SHARED_ID)
