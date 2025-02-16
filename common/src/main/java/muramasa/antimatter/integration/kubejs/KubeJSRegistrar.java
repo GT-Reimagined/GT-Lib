@@ -11,7 +11,7 @@ import muramasa.antimatter.datagen.providers.AntimatterBlockTagProvider;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.datagen.providers.AntimatterItemTagProvider;
 import muramasa.antimatter.datagen.providers.AntimatterLanguageProvider;
-import muramasa.antimatter.event.ProvidersEvent;
+import muramasa.antimatter.event.forge.AntimatterProvidersEvent;
 import muramasa.antimatter.registration.RegistrationEvent;
 import net.minecraftforge.api.distmarker.Dist;
 
@@ -28,7 +28,7 @@ public class KubeJSRegistrar extends AntimatterMod {
         AntimatterDynamics.clientProvider(Ref.MOD_KJS, () -> new AntimatterLanguageProvider(Ref.MOD_KJS, "KubeJS en_us Localization", "en_us"));
     }
 
-    public static void providerEvent(ProvidersEvent ev) {
+    public static void providerEvent(AntimatterProvidersEvent ev) {
         final AntimatterBlockTagProvider[] p = new AntimatterBlockTagProvider[1];
         ev.addProvider(Ref.MOD_KJS, () -> {
             p[0] = new AntimatterBlockTagProvider(Ref.MOD_KJS, "KubeJS Block Tags", false);

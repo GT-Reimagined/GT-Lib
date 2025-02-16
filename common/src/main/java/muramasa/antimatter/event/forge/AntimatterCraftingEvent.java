@@ -1,30 +1,27 @@
 package muramasa.antimatter.event.forge;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.datagen.ICraftingLoader;
-import muramasa.antimatter.event.CraftingEvent;
 import muramasa.antimatter.registration.IAntimatterRegistrar;
 import net.minecraftforge.fml.event.IModBusEvent;
 
 import java.util.Collection;
+import java.util.List;
 
 public class AntimatterCraftingEvent extends AntimatterEvent implements IModBusEvent {
 
-    private final CraftingEvent event;
 
-    public AntimatterCraftingEvent(IAntimatterRegistrar registrar, CraftingEvent event) {
+    private final List<ICraftingLoader> loaders = new ObjectArrayList<>();
+
+    public AntimatterCraftingEvent(IAntimatterRegistrar registrar) {
         super(registrar);
-        this.event = event;
-    }
-
-    public CraftingEvent getEvent() {
-        return event;
     }
 
     public void addLoader(ICraftingLoader loader) {
-        this.event.addLoader(loader);
+        this.loaders.add(loader);
     }
 
     public Collection<ICraftingLoader> getLoaders() {
-        return event.getLoaders();
+        return loaders;
     }
 }

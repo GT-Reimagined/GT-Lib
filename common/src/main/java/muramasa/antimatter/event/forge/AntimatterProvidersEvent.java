@@ -1,30 +1,31 @@
 package muramasa.antimatter.event.forge;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.datagen.IAntimatterProvider;
-import muramasa.antimatter.event.ProvidersEvent;
 import muramasa.antimatter.registration.IAntimatterRegistrar;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.event.IModBusEvent;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class AntimatterProvidersEvent extends AntimatterEvent implements IModBusEvent {
-    public final ProvidersEvent event;
+    private final List<IAntimatterProvider> providers = new ObjectArrayList<>(10);
 
-    public AntimatterProvidersEvent(ProvidersEvent event, IAntimatterRegistrar registrar) {
+    public final Dist side;
+
+
+    public AntimatterProvidersEvent(Dist side, IAntimatterRegistrar registrar) {
         super(registrar);
-        this.event = event;
-    }
-
-    public ProvidersEvent getEvent() {
-        return event;
+        this.side = side;
     }
 
     public void addProvider(String domain, Supplier<IAntimatterProvider> provider) {
-        event.addProvider(domain, provider);
+        providers.add(provider.get());
     }
 
     public Collection<IAntimatterProvider> getProviders() {
-        return event.getProviders();
+        return providers;
     }
 }

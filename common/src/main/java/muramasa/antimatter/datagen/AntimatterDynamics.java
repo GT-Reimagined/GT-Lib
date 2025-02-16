@@ -16,9 +16,10 @@ import muramasa.antimatter.datagen.providers.AntimatterBlockLootProvider;
 import muramasa.antimatter.datagen.providers.AntimatterLanguageProvider;
 import muramasa.antimatter.datagen.providers.AntimatterRecipeProvider;
 import muramasa.antimatter.datagen.providers.AntimatterTagProvider;
-import muramasa.antimatter.event.CraftingEvent;
-import muramasa.antimatter.event.ProvidersEvent;
-import muramasa.antimatter.event.WorldGenEvent;
+import muramasa.antimatter.event.forge.AntimatterCraftingEvent;
+import muramasa.antimatter.event.forge.AntimatterLoaderEvent;
+import muramasa.antimatter.event.forge.AntimatterProvidersEvent;
+import muramasa.antimatter.event.forge.AntimatterWorldGenEvent;
 import muramasa.antimatter.integration.kubejs.AMWorldEvent;
 import muramasa.antimatter.integration.kubejs.KubeJSRegistrar;
 import muramasa.antimatter.integration.kubejs.RecipeLoaderEventKubeJS;
@@ -29,7 +30,6 @@ import muramasa.antimatter.recipe.map.RecipeBuilder;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.registration.IAntimatterRegistrar;
 import muramasa.antimatter.registration.ModRegistrar;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import muramasa.antimatter.worldgen.StoneLayerOre;
 import muramasa.antimatter.worldgen.bedrockore.WorldGenBedrockVein;
@@ -50,6 +50,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.Deserializers;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -127,7 +129,8 @@ public class AntimatterDynamics {
 
     public static void runDataProvidersDynamically() {
         AntimatterBlockLootProvider.init();
-        ProvidersEvent ev = AntimatterPlatformUtils.INSTANCE.postProviderEvent(AntimatterAPI.getSIDE(), Antimatter.INSTANCE);
+        AntimatterProvidersEvent ev = new AntimatterProvidersEvent(FMLEnvironment.dist, Antimatter.INSTANCE);
+        ModLoader.get().postEvent(ev);
         Collection<IAntimatterProvider> providers = ev.getProviders();
         long time = System.currentTimeMillis();
         Stream<IAntimatterProvider> async = providers.stream().filter(IAntimatterProvider::async).parallel();
@@ -163,8 +166,9 @@ public class AntimatterDynamics {
      * @param rec consumer for IFinishedRecipe.
      */
     public static void collectRecipes(AntimatterRecipeProvider provider, Consumer<FinishedRecipe> rec) {
-        CraftingEvent ev = AntimatterPlatformUtils.INSTANCE.postCraftingEvent(Antimatter.INSTANCE);
-        for (ICraftingLoader loader : ev.getLoaders()) {
+        AntimatterCraftingEvent event = new AntimatterCraftingEvent(Antimatter.INSTANCE);
+        ModLoader.get().postEvent(event);
+        for (ICraftingLoader loader : event.getLoaders()) {
             loader.loadRecipes(rec, provider);
         }
     }
@@ -250,13 +254,13 @@ public class AntimatterDynamics {
             filter = Collections.emptySet();
         }
         Map<ResourceLocation, IRecipeRegistrate.IRecipeLoader> loaders = new Object2ObjectOpenHashMap<>(30);
-        AntimatterPlatformUtils.INSTANCE.postLoaderEvent(Antimatter.INSTANCE, (a, b, c) -> {
+        MinecraftForge.EVENT_BUS.post(new AntimatterLoaderEvent(Antimatter.INSTANCE, (a, b, c) -> {
             if (filter.contains(new ResourceLocation(a, b)))
                 return;
             if (loaders.put(new ResourceLocation(a, b), c) != null) {
                 Antimatter.LOGGER.warn("Duplicate recipe loader: " + new ResourceLocation(a, b));
             }
-        });
+        }));
         List<WorldGenVeinLayer> veins = new ObjectArrayList<>();
         List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
         List<WorldGenSmallOre> smallOres = new ObjectArrayList<>();
@@ -274,7 +278,8 @@ public class AntimatterDynamics {
             runRegular = !ev.disableBuiltin;
         }
         if (runRegular) {
-            WorldGenEvent ev = AntimatterPlatformUtils.INSTANCE.postWorldEvent(Antimatter.INSTANCE);
+            AntimatterWorldGenEvent ev = new AntimatterWorldGenEvent(Antimatter.INSTANCE);
+            MinecraftForge.EVENT_BUS.post(ev);
             veins.addAll(ev.VEINS);
             veins.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenVeinLayer.class, WorldGenVeinLayer::fromJson, "vein_layers"));
             smallOres.addAll(ev.SMALL_ORES);
