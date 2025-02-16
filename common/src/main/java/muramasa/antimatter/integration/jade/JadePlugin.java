@@ -1,4 +1,4 @@
-package muramasa.antimatter.integration.jade.forge;
+package muramasa.antimatter.integration.jade;
 
 import mcp.mobius.waila.api.IWailaClientRegistration;
 import mcp.mobius.waila.api.IWailaCommonRegistration;
