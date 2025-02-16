@@ -20,10 +20,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +56,7 @@ public abstract class Widget implements IGuiElement {
         updateSize();
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected static void fillGradient(Matrix4f matrix, BufferBuilder builder, int x1, int y1, int x2, int y2, int z, int colorA, int colorB) {
         float f = (float) (colorA >> 24 & 255) / 255.0F;
         float f1 = (float) (colorA >> 16 & 255) / 255.0F;
@@ -119,7 +119,7 @@ public abstract class Widget implements IGuiElement {
         return ((mouseX >= realX && mouseX <= realX + w) && (mouseY >= realY && mouseY <= realY + h));
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected void renderTooltip(PoseStack matrixStack, Component text, double mouseX, double mouseY) {
         this.gui.screen.renderComponentTooltip(matrixStack, Collections.singletonList(text), (int)mouseX,(int) mouseY);
     }
@@ -159,7 +159,7 @@ public abstract class Widget implements IGuiElement {
     }
 
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public abstract void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks);
 
     public boolean isVisible() {
@@ -167,7 +167,7 @@ public abstract class Widget implements IGuiElement {
     }
 
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.isEnabled() && isInside(mouseX, mouseY)) {
             this.clickSound(Minecraft.getInstance().getSoundManager());
@@ -177,7 +177,7 @@ public abstract class Widget implements IGuiElement {
         return false;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (!isInside(mouseX, mouseY)) return false;
         isClicking = false;
@@ -189,22 +189,22 @@ public abstract class Widget implements IGuiElement {
         return false;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
 
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void clickSound(SoundManager handler) {
         handler.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void update(double mouseX, double mouseY) {
 
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         this.onDrag(mouseX, mouseY, dragX, dragY);
         return true;
@@ -257,7 +257,7 @@ public abstract class Widget implements IGuiElement {
         return parent;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected void fillGradient(PoseStack matrixStack, int x1, int y1, int width, int height, int colorFrom, int colorTo) {
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
@@ -273,17 +273,17 @@ public abstract class Widget implements IGuiElement {
     }
 
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected void drawHoverText(List<Component> textLines, int x, int y, Font font, PoseStack matrixStack) {
         this.gui.screen.renderComponentTooltip(matrixStack, textLines, x, y);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public int drawText(PoseStack matrixStack, Component text, float x, float y, int color) {
         return Minecraft.getInstance().font.draw(matrixStack, text, x, y, color);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected void drawTexture(PoseStack stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -292,7 +292,7 @@ public abstract class Widget implements IGuiElement {
         GuiComponent.blit(stack, left, top, 0, x, y, sizeX, sizeY, 256, 256);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected void drawTexture(PoseStack stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY, int textureHeight, int textureWidth) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

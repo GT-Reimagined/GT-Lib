@@ -21,7 +21,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -231,7 +232,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
 
     public static ImmutableMap<Item, Tuple<MaterialType, Material>> tooltipCache;
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static void buildTooltips() {
         ImmutableMap.Builder<Item, Tuple<MaterialType, Material>> builder = ImmutableMap.builder();
         AntimatterAPI.all(MaterialType.class, t -> {

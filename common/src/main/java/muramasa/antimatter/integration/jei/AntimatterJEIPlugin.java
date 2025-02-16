@@ -7,7 +7,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.ingredients.subtypes.UidContext;
@@ -26,13 +25,10 @@ import muramasa.antimatter.integration.jei.category.MultiMachineInfoCategory;
 import muramasa.antimatter.integration.jei.category.RecipeMapCategory;
 import muramasa.antimatter.integration.jei.extension.JEIMaterialRecipeExtension;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
-import muramasa.antimatter.machine.Tier;
-import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.material.MaterialRecipe;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -46,13 +42,14 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
 import tesseract.api.gt.IEnergyItem;
 import tesseract.api.gt.IGTNode;
 import tesseract.api.wrapper.ItemStackWrapper;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,8 +58,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static muramasa.antimatter.machine.MachineFlag.RECIPE;
 
 @SuppressWarnings("removal")
 @JeiPlugin
@@ -214,7 +209,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
         }
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     ClientLevel getWorld(){
         return Minecraft.getInstance().level;
     }

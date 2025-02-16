@@ -9,12 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Map;
 
 
-@Environment(Environment.EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class SoundHelper {
 
     private static final Map<Level, Map<BlockPos, SoundInstance>> MACHINE_SOUNDS = new Object2ObjectOpenHashMap<>();

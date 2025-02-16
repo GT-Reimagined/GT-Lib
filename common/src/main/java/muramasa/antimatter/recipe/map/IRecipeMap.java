@@ -13,7 +13,6 @@ import muramasa.antimatter.integration.jeirei.renderer.IRecipeInfoRenderer;
 import muramasa.antimatter.integration.jeirei.renderer.InfoRenderers;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.IRecipe;
-import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -21,9 +20,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.Collection;
 import java.util.Map;
@@ -80,7 +80,7 @@ public interface IRecipeMap extends ISharedAntimatterObject {
     }
 
     @NotNull
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     default IRecipeInfoRenderer getInfoRenderer() {
         return InfoRenderers.DEFAULT_RENDERER;
     }

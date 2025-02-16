@@ -9,9 +9,10 @@ import muramasa.antimatter.gui.Widget;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -102,7 +103,7 @@ public class TextBoxWidget extends Widget {
         }
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected void initTextBox(){
         textBox = new EditBox(Minecraft.getInstance().font, this.realX(), this.realY(), this.getW(), this.getH(), Utils.literal(""));
         this.textBox.setMaxLength(32500);

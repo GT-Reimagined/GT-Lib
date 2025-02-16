@@ -78,13 +78,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.fe.IFENode;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.heat.IHeatHandler;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.List;
 import java.util.Optional;
@@ -119,7 +119,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Getter
     protected boolean muffled = false;
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public SoundInstance playingSound;
 
     /**

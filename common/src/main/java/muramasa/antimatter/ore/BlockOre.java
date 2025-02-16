@@ -27,11 +27,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Fallable;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.ticks.ScheduledTick;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.List;
 import java.util.Random;
@@ -179,7 +179,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         return state.isAir() || state.is(BlockTags.FIRE) || material.isLiquid() || material.isReplaceable();
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if (this.stoneType.getGravity()) {
             if (rand.nextInt(16) == 0) {
@@ -194,7 +194,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public int getDustColor(BlockState state, BlockGetter reader, BlockPos pos) {
         return this.stoneType.getFallingDustColor();
     }

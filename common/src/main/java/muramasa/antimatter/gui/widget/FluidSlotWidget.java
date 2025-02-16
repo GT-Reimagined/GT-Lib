@@ -14,20 +14,19 @@ import muramasa.antimatter.gui.Widget;
 import muramasa.antimatter.gui.event.SlotClickEvent;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
 import muramasa.antimatter.network.packets.AbstractGuiEventPacket;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import tesseract.TesseractGraphWrappers;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static muramasa.antimatter.gui.ICanSyncData.SyncDirection.SERVER_TO_CLIENT;
-import static muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin.intToSuperScript;
 
 public class FluidSlotWidget extends Widget {
 
@@ -64,7 +63,7 @@ public class FluidSlotWidget extends Widget {
         renderFluid(matrixStack, this.stack, realX(), realY());
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void renderFluid(PoseStack stack, FluidHolder fluid, int x, int y) {
         if (fluid.isEmpty())
             return;

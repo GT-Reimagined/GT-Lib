@@ -35,10 +35,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +78,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     @Nullable
     private Supplier<Object> icon;
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private IRecipeInfoRenderer infoRenderer;
 
     @Getter
@@ -133,14 +133,14 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     }
 
     @NotNull
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public IRecipeInfoRenderer getInfoRenderer() {
         if (infoRenderer == null)
             return InfoRenderers.DEFAULT_RENDERER;
         return infoRenderer;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void setInfoRenderer(IRecipeInfoRenderer renderer) {
         this.infoRenderer = renderer;
     }
