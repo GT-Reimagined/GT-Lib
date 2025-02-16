@@ -10,11 +10,12 @@ import muramasa.antimatter.cover.CoverStone;
 import muramasa.antimatter.item.ItemStoneCover;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.registration.ITextureProvider;
-import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class VanillaStoneType extends CobbleStoneType{
     private final Texture vanillaTexture;
@@ -24,9 +25,8 @@ public class VanillaStoneType extends CobbleStoneType{
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
-
-        if (registry == RegistryType.BLOCKS) {
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry == ForgeRegistries.BLOCKS) {
             if (this.getId().equals("basalt")){
                 for (int i = 0; i < SUFFIXES.length; i++) {
                     Block stone;

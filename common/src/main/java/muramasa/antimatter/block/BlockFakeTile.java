@@ -4,7 +4,6 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.blockentity.BlockEntityFakeBlock;
 import muramasa.antimatter.machine.MachineFlag;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
-import muramasa.antimatter.registration.RegistryType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -18,6 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -32,10 +33,10 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
-        if (registry == RegistryType.BLOCKS){
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry == ForgeRegistries.BLOCKS){
             TILE_SET.add(this);
-        } else if (registry == RegistryType.BLOCK_ENTITIES) {
+        } else if (registry == ForgeRegistries.BLOCK_ENTITIES) {
             if (TYPE == null){
                 TYPE = new BlockEntityType<>(BlockEntityFakeBlock::new, TILE_SET, null);
                 //((IForgeRegistry<BlockEntityType<?>>)registry).register(TYPE);

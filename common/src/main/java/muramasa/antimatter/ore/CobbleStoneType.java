@@ -10,10 +10,11 @@ import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.CoverStone;
 import muramasa.antimatter.item.ItemStoneCover;
 import muramasa.antimatter.material.Material;
-import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.texture.Texture;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,8 +35,8 @@ public class CobbleStoneType extends StoneType {
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
-        if (registry == RegistryType.BLOCKS) {
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry == ForgeRegistries.BLOCKS) {
             if (generateBlock) {
                 for (int i = 0; i < SUFFIXES.length; i++) {
                     BlockStone stone;

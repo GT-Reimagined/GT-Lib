@@ -8,9 +8,10 @@ import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.pipe.BlockItemPipe;
 import muramasa.antimatter.pipe.BlockPipe;
 import muramasa.antimatter.pipe.PipeSize;
-import muramasa.antimatter.registration.RegistryType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Map;
 import java.util.Set;
@@ -50,8 +51,8 @@ public class ItemPipe<T extends ItemPipe<T>> extends PipeType<T> {
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
-        if (registry != RegistryType.BLOCKS)
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry != ForgeRegistries.BLOCKS)
             return;
         Set<Block> blocks = getBlocks();
         Set<Block> restrictedBlocks = getRestrictedBlocks();

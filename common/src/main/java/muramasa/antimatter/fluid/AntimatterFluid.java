@@ -10,7 +10,6 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
-import muramasa.antimatter.registration.RegistryType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
@@ -22,6 +21,8 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * AntimatterFluid is an object that includes all essential information of what a normal fluid would compose of in Minecraft
@@ -79,17 +80,17 @@ public class AntimatterFluid implements ISharedAntimatterObject, IRegistryEntryP
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
-        if (registry == RegistryType.ITEMS) {
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry == ForgeRegistries.ITEMS) {
             AntimatterAPI.register(Item.class, getId() + "_bucket", getDomain(), containerItem = new BucketItem(this.getFluid(), new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET).tab(CreativeModeTab.TAB_MISC)));
-        } else if (registry == RegistryType.BLOCKS) {
+        } else if (registry == ForgeRegistries.BLOCKS) {
             FluidData data = FLUID_TYPES.register(attributes);
             this.source = new AntimatterSourceFluid(data);
             this.flowing = new AntimatterFlowingFluid(data);
             data.setBucket(() -> this.containerItem);
             this.fluidBlock = new BotariumLiquidBlock(data, blockProperties);
             AntimatterAPI.register(Block.class, "block_fluid_".concat(getId()), getDomain(), fluidBlock);
-        } else if (registry == RegistryType.FLUIDS) {
+        } else if (registry == ForgeRegistries.FLUIDS) {
             AntimatterAPI.register(Fluid.class, getId(), getDomain(), source);
             AntimatterAPI.register(FlowingFluid.class, "flowing_".concat(getId()), getDomain(), flowing);
         }

@@ -78,9 +78,9 @@ public final class AntimatterRegistration {
                 }
                 Data.postInit();
             }
-            AntimatterAPI.all(IRegistryEntryProvider.class, domain, p -> p.onRegistryBuild(getRegistryType(e.getRegistry())));
-            AntimatterAPI.all(IRegistryEntryProvider.class, Ref.SHARED_ID, p -> p.onRegistryBuild(getRegistryType(e.getRegistry())));
-            list.forEach(r -> AntimatterAPI.all(IRegistryEntryProvider.class, r.getDomain(), p -> p.onRegistryBuild(getRegistryType(e.getRegistry()))));
+            AntimatterAPI.all(IRegistryEntryProvider.class, domain, p -> p.onRegistryBuild(e.getRegistry()));
+            AntimatterAPI.all(IRegistryEntryProvider.class, Ref.SHARED_ID, p -> p.onRegistryBuild(e.getRegistry()));
+            list.forEach(r -> AntimatterAPI.all(IRegistryEntryProvider.class, r.getDomain(), p -> p.onRegistryBuild(e.getRegistry())));
         }
         if (e.getRegistry() == ForgeRegistries.BLOCKS) {
             AntimatterAPI.all(Block.class, domain, (b, d, i) -> {
@@ -168,13 +168,5 @@ public final class AntimatterRegistration {
             });
 
         });
-    }
-
-    public static RegistryType getRegistryType(IForgeRegistry<?> registry){
-        if (registry == ForgeRegistries.BLOCKS) return RegistryType.BLOCKS;
-        if (registry == ForgeRegistries.ITEMS) return RegistryType.ITEMS;
-        if (registry == ForgeRegistries.FLUIDS) return RegistryType.FLUIDS;
-        if (registry == ForgeRegistries.BLOCK_ENTITIES) return RegistryType.BLOCK_ENTITIES;
-        return RegistryType.WORLD;
     }
 }
