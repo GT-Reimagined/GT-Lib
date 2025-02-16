@@ -1,7 +1,7 @@
-package muramasa.antimatter.integration.curios.forge;
+package muramasa.antimatter.integration.curios;
 
 import muramasa.antimatter.AntimatterAPI;
-import muramasa.antimatter.integration.curios.ICuriosHelper;
+import muramasa.antimatter.util.ImplLoader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -10,9 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CuriosHelperImpl implements ICuriosHelper {
-    @Override
-    public Stream<ItemStack> getCuriosItems(String slotType, Player player) {
+public class CuriosHelper {
+    public static Stream<ItemStack> getCuriosItems(String slotType, Player player){
         if (!AntimatterAPI.isModLoaded("curios")) {
             return Stream.empty();
         }
