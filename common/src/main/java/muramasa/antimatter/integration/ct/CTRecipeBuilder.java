@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
@@ -46,13 +47,13 @@ public class CTRecipeBuilder {
     }
 
     public CTRecipeBuilder fi(IFluidStack... fluidInput){
-        List<FluidIngredient> fluidIn = fluidInput == null ? Collections.emptyList() : Arrays.stream(fluidInput).map(t -> FluidIngredient.of(CrafttweakerUtils.INSTANCE.fromIFluidStack(t))).toList();
+        List<FluidIngredient> fluidIn = fluidInput == null ? Collections.emptyList() : Arrays.stream(fluidInput).map(t -> FluidIngredient.of(new ForgeFluidHolder(t.getInternal()))).toList();
         recipeBuilder.fi(fluidIn.toArray(new FluidIngredient[0]));
         return this;
     }
 
     public CTRecipeBuilder fo(IFluidStack... fluidOutput){
-        FluidHolder[] fluidOut = fluidOutput == null ? IRecipeMap.EMPTY_FLUID : Arrays.stream(fluidOutput).map(CrafttweakerUtils.INSTANCE::fromIFluidStack).toArray(FluidHolder[]::new);
+        FluidHolder[] fluidOut = fluidOutput == null ? IRecipeMap.EMPTY_FLUID : Arrays.stream(fluidOutput).map(t -> new ForgeFluidHolder(t.getInternal())).toArray(FluidHolder[]::new);
         recipeBuilder.fo(fluidOut);
         return this;
     }
