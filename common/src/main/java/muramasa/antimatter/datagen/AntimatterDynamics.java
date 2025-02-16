@@ -52,6 +52,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.Deserializers;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -139,7 +140,7 @@ public class AntimatterDynamics {
         AntimatterBlockLootProvider.afterCompletion();
         Antimatter.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
         if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get() || !FMLEnvironment.production) {
-            RUNTIME_DATA_PACK.dump(AntimatterPlatformUtils.INSTANCE.getConfigDir().getParent().resolve("dumped"));
+            RUNTIME_DATA_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
     }
 
@@ -154,7 +155,7 @@ public class AntimatterDynamics {
         AntimatterLanguageProvider.postCompletion();
         Antimatter.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
         if (!FMLEnvironment.production) {
-            DYNAMIC_RESOURCE_PACK.dump(AntimatterPlatformUtils.INSTANCE.getConfigDir().getParent().resolve("dumped"));
+            DYNAMIC_RESOURCE_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
     }
 

@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import muramasa.antimatter.recipe.container.ContainerItemShapedRecipe;
 import muramasa.antimatter.recipe.material.MaterialSerializer;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -133,7 +134,7 @@ public class AntimatterShapedRecipeBuilder {
      * Builds this recipe into an {@link FinishedRecipe}.
      */
     public void build(Consumer<FinishedRecipe> consumer) {
-        this.build(consumer, AntimatterPlatformUtils.INSTANCE.getIdFromItem(this.result.get(0).getItem()));
+        this.build(consumer, RegistryUtils.getIdFromItem(this.result.get(0).getItem()));
     }
 
     /**
@@ -154,7 +155,7 @@ public class AntimatterShapedRecipeBuilder {
     }
 
     public void buildTool(Consumer<FinishedRecipe> consumer, String builder){
-        buildTool(consumer, builder, AntimatterPlatformUtils.INSTANCE.getIdFromItem(this.result.get(0).getItem()));
+        buildTool(consumer, builder, RegistryUtils.getIdFromItem(this.result.get(0).getItem()));
     }
 
     public void buildTool(Consumer<FinishedRecipe> consumer, String builder, String id) {
@@ -238,7 +239,7 @@ public class AntimatterShapedRecipeBuilder {
             }
             json.add("key", jsonobject);
             JsonObject resultObj = new JsonObject();
-            resultObj.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(this.result.getItem()).toString());
+            resultObj.addProperty("item", RegistryUtils.getIdFromItem(this.result.getItem()).toString());
             if (this.result.getCount() > 1) {
                 resultObj.addProperty("count", this.result.getCount());
             }
@@ -290,7 +291,7 @@ public class AntimatterShapedRecipeBuilder {
             JsonArray arr = new JsonArray();
             result.forEach(el -> {
                 JsonObject resultObj = new JsonObject();
-                resultObj.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(el.getItem()).toString());
+                resultObj.addProperty("item", RegistryUtils.getIdFromItem(el.getItem()).toString());
                 if (el.getCount() > 1) {
                     resultObj.addProperty("count", el.getCount());
                 }

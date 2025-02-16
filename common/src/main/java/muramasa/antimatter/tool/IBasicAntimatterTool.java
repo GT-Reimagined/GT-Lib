@@ -39,6 +39,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.common.TierSortingRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,7 @@ public interface IBasicAntimatterTool extends IAntimatterObject, IColorHandler, 
                 break;
             }
         }
-        return containsEffectiveBlock && AntimatterPlatformUtils.INSTANCE.isCorrectTierForDrops(getTier(stack), state);
+        return containsEffectiveBlock && TierSortingRegistry.isCorrectTierForDrops(getTier(stack), state);
     }
 
     default float getDefaultMiningSpeed(ItemStack stack){

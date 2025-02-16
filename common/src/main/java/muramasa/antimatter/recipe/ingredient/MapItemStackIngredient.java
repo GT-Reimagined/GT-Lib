@@ -3,6 +3,7 @@ package muramasa.antimatter.recipe.ingredient;
 import com.google.common.collect.ImmutableSet;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,7 +40,7 @@ public class MapItemStackIngredient extends AbstractMapIngredient {
         if (a.getItem() != b.getItem()) return false;
         if (aTag.isEmpty() != bTag.isEmpty()) return false;
         if (!aTag.equals(bTag)) return false;
-        return AntimatterPlatformUtils.INSTANCE.areCapsCompatible(a, b);
+        return a.areCapsCompatible(b);
     }
 
     protected static final Set<String> CUSTOM_TAGS = ImmutableSet.of(Ref.KEY_STACK_NO_CONSUME, Ref.KEY_STACK_IGNORE_NBT);
@@ -62,7 +63,7 @@ public class MapItemStackIngredient extends AbstractMapIngredient {
         boolean nbt = stack.hasTag();
         long tempHash = 1;
 
-        tempHash = 31 * tempHash + AntimatterPlatformUtils.INSTANCE.getIdFromItem(stack.getItem()).hashCode();
+        tempHash = 31 * tempHash + RegistryUtils.getIdFromItem(stack.getItem()).hashCode();
         if (nbt && stack.getTag() != null) {
             CompoundTag newNbt = filterTags(stack.getTag());
             if (!newNbt.isEmpty()) tempHash = 31 * tempHash + newNbt.hashCode();

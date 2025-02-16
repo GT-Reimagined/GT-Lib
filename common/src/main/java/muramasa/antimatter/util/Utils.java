@@ -76,6 +76,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
@@ -800,7 +802,7 @@ public class Utils {
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (tile.getLevel().isClientSide) {
             tile.getLevel().sendBlockUpdated(tile.getBlockPos(), state, state, 11);
-            AntimatterPlatformUtils.INSTANCE.requestModelDataRefresh(tile);
+            ModelDataManager.requestModelDataRefresh(tile);
         }
     }
 
@@ -1080,18 +1082,18 @@ public class Utils {
         if (world.isClientSide) return false;
         BlockState state = world.getBlockState(pos);
         ServerPlayer serverPlayer = player == null ? null : ((ServerPlayer) player);
-        int exp = player == null ? -1 : AntimatterPlatformUtils.INSTANCE.onBlockBreakEvent(world, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos);
+        int exp = player == null ? -1 : ForgeHooks.onBlockBreakEvent(world, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos);
         FluidState fluidState = world.getFluidState(pos);
         boolean destroyed = world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());// world.destroyBlock(pos, !player.isCreative(), player);
         if (destroyed) {
             if (player != null) {
-                if (AntimatterPlatformUtils.INSTANCE.canHarvestBlock(state, world, pos, player)) {
+                if (state.canHarvestBlock(world, pos, player)) {
                     state.getBlock().playerDestroy(world, player, pos, state, world.getBlockEntity(pos), stack);
                 }
                 stack.hurtAndBreak(state.getDestroySpeed(world, pos) != 0.0F ? damage : 0, player, (onBroken) -> onBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
         }
-        if (exp > 0) AntimatterPlatformUtils.INSTANCE.popExperience(state.getBlock(), (ServerLevel) world, pos, exp);
+        if (exp > 0) state.getBlock().popExperience((ServerLevel) world, pos, exp);
         return destroyed;
     }
 
@@ -1131,7 +1133,7 @@ public class Utils {
                 if (stack.isEmpty()) return;
                 if (stopped[0]) return;
                 BlockState state = world.getBlockState(b);
-                if (state.isAir() || !AntimatterPlatformUtils.INSTANCE.isCorrectToolForDrops(state, player))
+                if (state.isAir() || !ForgeHooks.isCorrectToolForDrops(state, player))
                     return;
                 else if (state.is(BlockTags.LOGS)) {
                     if (breakBlock(world, player, stack, b, tool.getUseDurability())){

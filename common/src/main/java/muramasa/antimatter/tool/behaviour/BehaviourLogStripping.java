@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.event.ForgeEventFactory;
 
 public class BehaviourLogStripping implements IItemUse<IBasicAntimatterTool> {
 
@@ -52,7 +54,7 @@ public class BehaviourLogStripping implements IItemUse<IBasicAntimatterTool> {
     }
 
     private BlockState getToolModifiedState(BlockState originalState, UseOnContext context, String action) {
-        BlockState eventState = AntimatterPlatformUtils.INSTANCE.onToolUse(originalState, context, action);
+        BlockState eventState = ForgeEventFactory.onToolUse(originalState, context, ToolAction.get(action), false);
         if (eventState != originalState) return eventState;
         Block stripped = STRIPPING_MAP.get(originalState.getBlock());
         if (stripped == null) return null;

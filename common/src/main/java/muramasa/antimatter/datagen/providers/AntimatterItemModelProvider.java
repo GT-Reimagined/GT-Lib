@@ -7,6 +7,7 @@ import muramasa.antimatter.datagen.builder.AntimatterBlockModelBuilder;
 import muramasa.antimatter.datagen.builder.AntimatterItemModelBuilder;
 import muramasa.antimatter.fluid.AntimatterFluid;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -58,7 +59,7 @@ public class AntimatterItemModelProvider extends AntimatterModelProvider<Antimat
     }
 
     public AntimatterItemModelBuilder getBuilder(ItemLike item) {
-        return getBuilder(AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem()).getPath());
+        return getBuilder(RegistryUtils.getIdFromItem(item.asItem()).getPath());
     }
 
     public AntimatterItemModelBuilder tex(ItemLike item, ResourceLocation... textures) {
@@ -79,7 +80,7 @@ public class AntimatterItemModelProvider extends AntimatterModelProvider<Antimat
     }
 
     public AntimatterItemModelBuilder blockItem(ItemLike item) {
-        return withParent(AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem()).getPath(), modLoc("block/" + AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem()).getPath()));
+        return withParent(RegistryUtils.getIdFromItem(item.asItem()).getPath(), modLoc("block/" + RegistryUtils.getIdFromItem(item.asItem()).getPath()));
     }
 
     public ResourceLocation existing(String domain, String path) {
@@ -87,7 +88,7 @@ public class AntimatterItemModelProvider extends AntimatterModelProvider<Antimat
     }
 
     public AntimatterItemModelBuilder getAntimatterBuilder(ItemLike item) {
-        return getBuilder(AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem()).getPath());
+        return getBuilder(RegistryUtils.getIdFromItem(item.asItem()).getPath());
     }
 
     public AntimatterItemModelBuilder modelAndTexture(ItemLike item, String namespace, String path) {

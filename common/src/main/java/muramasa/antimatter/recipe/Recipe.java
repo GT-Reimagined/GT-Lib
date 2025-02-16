@@ -12,6 +12,7 @@ import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -266,7 +267,7 @@ public class Recipe implements IRecipe {
         if (fluidsOutput != null) {
             builder.append("Output Fluids: { ");
             for (int i = 0; i < fluidsOutput.length; i++) {
-                builder.append(AntimatterPlatformUtils.INSTANCE.getIdFromFluid(fluidsOutput[i].getFluid())).append(": ").append(fluidsOutput[i].getFluidAmount() / TesseractGraphWrappers.dropletMultiplier).append("mb");
+                builder.append(RegistryUtils.getIdFromFluid(fluidsOutput[i].getFluid())).append(": ").append(fluidsOutput[i].getFluidAmount() / TesseractGraphWrappers.dropletMultiplier).append("mb");
                 if (i != fluidsOutput.length - 1) builder.append(", ");
             }
             builder.append(" }\n");

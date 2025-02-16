@@ -24,6 +24,7 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.int4;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -65,7 +66,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 this.icon = EntryStacks.of(itemLike);
             }
         } else {
-            ItemLike item = iconId == null ? Data.DEBUG_SCANNER : AntimatterPlatformUtils.INSTANCE.getItemFromID(iconId);
+            ItemLike item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
             this.icon = EntryStacks.of(item);
         }

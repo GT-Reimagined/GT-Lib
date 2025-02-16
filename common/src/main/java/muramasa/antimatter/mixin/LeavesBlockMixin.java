@@ -3,6 +3,7 @@ package muramasa.antimatter.mixin;
 import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -38,9 +39,9 @@ public abstract class LeavesBlockMixin extends Block {
                 ServerLevel serverworld = builder.getLevel();
                 LootTable loottable = serverworld.getServer().getLootTables().get(resourcelocation);
                 ItemStack sapling = ItemStack.EMPTY;
-                ResourceLocation location = new ResourceLocation(AntimatterPlatformUtils.INSTANCE.getIdFromBlock(this).toString().replace("leaves", "sapling"));
-                if (AntimatterPlatformUtils.INSTANCE.blockExists(location)) {
-                    sapling = new ItemStack(AntimatterPlatformUtils.INSTANCE.getBlockFromId(location));
+                ResourceLocation location = new ResourceLocation(RegistryUtils.getIdFromBlock(this).toString().replace("leaves", "sapling"));
+                if (RegistryUtils.blockExists(location)) {
+                    sapling = new ItemStack(RegistryUtils.getBlockFromId(location));
                 }
                 /*for (ItemStack stack1 : list){
                     if (stack1.getItem() instanceof BlockItem && ((BlockItem) stack1.getItem()).getBlock() instanceof SaplingBlock){

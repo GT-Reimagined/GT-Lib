@@ -1,5 +1,6 @@
 package muramasa.antimatter;
 
+import carbonconfiglib.CarbonConfig;
 import carbonconfiglib.api.ConfigType;
 import carbonconfiglib.config.Config;
 import carbonconfiglib.config.ConfigEntry;
@@ -131,7 +132,7 @@ public class AntimatterConfig {
         AXE_TIMBER = treefelling.addBool("axe_timber", true, "Allow Antimatter Axe types to fell trees - Default: true");
         AXE_TIMBER_MAX = treefelling.addInt("axe_timber_max", 150, "Max height of a column of logs an Antimatter Axe type can fell - Default: 150")
                 .setMin(1).setMax(2304);
-        CONFIG_COMMON = AntimatterPlatformUtils.INSTANCE.createConfig(Ref.ID, config);
+        CONFIG_COMMON = CarbonConfig.CONFIGS.createConfig(config);
         CONFIG_COMMON.register();
         if (AntimatterAPI.getSIDE().isClient()){
             Config client = new Config("antimatter/client");
@@ -144,7 +145,7 @@ public class AntimatterConfig {
             SHOW_ALL_ORES = general.addBool("show_all_ores", false, "Show all ore variants in jei/rei, not just stone variants - Default: false");
             SHOW_ROCKS = general.addBool("show_rocks", false, "Show all block versions of rocks in jei/rei - Default: false");
             OVERRIDE_BASALT_TEXTURE = general.addBool("override_basalt_texture", false, "Override vanilla basalt texture why my own version - Default: false").setRequiredReload(ReloadMode.GAME);
-            CONFIG_CLIENT = AntimatterPlatformUtils.INSTANCE.createConfig(Ref.ID, client, ConfigSettings.withConfigType(ConfigType.CLIENT).withAutomations(AutomationType.AUTO_LOAD));
+            CONFIG_CLIENT = CarbonConfig.CONFIGS.createConfig(client, ConfigSettings.withConfigType(ConfigType.CLIENT).withAutomations(AutomationType.AUTO_LOAD));
             CONFIG_CLIENT.register();
         }
     }

@@ -12,6 +12,7 @@ import muramasa.antimatter.mixin.LootPoolAccessor;
 import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.ItemStackHashStrategy;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -75,7 +76,7 @@ public class AntimatterLoot {
     public static void addItem(@NotNull ResourceLocation lootTable, @NotNull ItemStack stack, int minAmount,
                                int maxAmount, int weight) {
         RandomWeightLootFunction lootFunction = new RandomWeightLootFunction(stack, minAmount, maxAmount);
-        String modid = Objects.requireNonNull(AntimatterPlatformUtils.INSTANCE.getIdFromItem(stack.getItem())).getNamespace();
+        String modid = Objects.requireNonNull(RegistryUtils.getIdFromItem(stack.getItem())).getNamespace();
         String entryName = createEntryName(stack, modid, weight, lootFunction);
         LootEntryItem itemEntry = new LootEntryItem(stack, weight, lootFunction, entryName);
         lootEntryItems.computeIfAbsent(lootTable, $ -> new ArrayList<>()).add(itemEntry);
@@ -177,7 +178,7 @@ public class AntimatterLoot {
                 json.add("max", serializationContext.serialize(setItemCountFunction.maxAmount));
                 JsonObject stack = new JsonObject();
                 stack.addProperty("item",
-                        AntimatterPlatformUtils.INSTANCE.getIdFromItem(setItemCountFunction.stack.getItem()).toString());
+                        RegistryUtils.getIdFromItem(setItemCountFunction.stack.getItem()).toString());
                 stack.addProperty("count", setItemCountFunction.stack.getCount());
                 if (setItemCountFunction.stack.hasTag())
                     stack.addProperty("nbt", setItemCountFunction.stack.getTag().toString());

@@ -17,6 +17,7 @@ import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -115,7 +116,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             }
             JsonObject obj = (JsonObject) element;
             ResourceLocation fluidName = new ResourceLocation(obj.get("fluid").getAsString());
-            Fluid fluid = AntimatterPlatformUtils.INSTANCE.getFluidFromID(fluidName);
+            Fluid fluid = RegistryUtils.getFluidFromID(fluidName);
             if (fluid == null) {
                 return FluidHooks.emptyFluid();
             }

@@ -51,6 +51,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 
@@ -198,7 +199,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
         BlockHitResult trace = getPlayerPOVHitResult(world, player, (fluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier) + 1000 <= capacity ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
 
         // fire Forge event for bucket use
-        InteractionResultHolder<ItemStack> ret = AntimatterPlatformUtils.INSTANCE.postBucketUseEvent(player, world, stack, trace);
+        InteractionResultHolder<ItemStack> ret = ForgeEventFactory.onBucketUse(player, world, stack, trace);
         if (ret != null) {
             return ret;
         }

@@ -1,15 +1,6 @@
 package muramasa.antimatter.util.forge;
 
-import carbonconfiglib.CarbonConfig;
-import carbonconfiglib.config.Config;
-import carbonconfiglib.config.ConfigHandler;
-import carbonconfiglib.config.ConfigSettings;
-import com.google.common.collect.ImmutableMap;
-import com.mojang.math.Matrix4f;
-import com.terraformersmc.terraform.utils.TerraformFlammableBlockRegistry;
-import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import muramasa.antimatter.Antimatter;
-import muramasa.antimatter.client.forge.itemgroup.AntimatterItemGroup;
 import muramasa.antimatter.event.CraftingEvent;
 import muramasa.antimatter.event.ProvidersEvent;
 import muramasa.antimatter.event.WorldGenEvent;
@@ -23,86 +14,14 @@ import muramasa.antimatter.registration.IAntimatterRegistrar;
 import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.structure.Pattern;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoader;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
-import org.apache.commons.lang3.function.TriFunction;
-import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class AntimatterPlatformUtilsImpl implements AntimatterPlatformUtils {
-
-    private static ImmutableMap<Item, Integer> FUEL_LIST = null;
-
-    @Override
-    public void markAndNotifyBlock(Level level, BlockPos arg, @Nullable LevelChunk levelchunk, BlockState blockstate, BlockState arg2, int j, int k){
-        level.markAndNotifyBlock(arg, levelchunk, blockstate, arg2, j, k);
-    }
-
-    @Override
-    public Map<Item, Integer> getAllBurnables(){
-        if (FUEL_LIST == null){
-            ForgeHooks.updateBurns();
-            ImmutableMap.Builder<Item, Integer> builder = ImmutableMap.builder();
-            ForgeRegistries.ITEMS.getValues().forEach(i -> {
-                int burnTime = ForgeHooks.getBurnTime(i.getDefaultInstance(), null);
-                if (burnTime > 0){
-                    builder.put(i, burnTime);
-                }
-            });
-            FUEL_LIST = builder.build();
-        }
-        return FUEL_LIST;
-    }
 
     @Override
     public CraftingEvent postCraftingEvent(IAntimatterRegistrar registrar){
@@ -135,11 +54,6 @@ public class AntimatterPlatformUtilsImpl implements AntimatterPlatformUtils {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> postBucketUseEvent(Player player, Level world, ItemStack stack, BlockHitResult trace){
-        return ForgeEventFactory.onBucketUse(player, world, stack, trace);
-    }
-
-    @Override
     public void addMultiMachineInfo(BasicMultiMachine<?> machine, List<Pattern> patterns){
         /*if (AntimatterAPI.isModLoaded(Ref.MOD_JEI)){
             MultiMachineInfoCategory.addMultiMachine(new MultiMachineInfoPage(machine, patterns));
@@ -147,94 +61,9 @@ public class AntimatterPlatformUtilsImpl implements AntimatterPlatformUtils {
     }
 
     @Override
-    public Matrix4f createMatrix4f(float[] values){
-        return new Matrix4f(values);
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack stack){
-        return stack.isRepairable();
-    }
-
-    @Override
-    public void addPool(LootTable table, LootPool pool){
-        table.addPool(pool);
-    }
-
-    @Override
-    public ResourceLocation getLootTableID(LootTable table){
-        return table.getLootTableId();
-    }
-
-    @Override
-    public boolean areCapsCompatible(ItemStack a, ItemStack b){
-        return a.areCapsCompatible(b);
-    }
-
-    @Override
-    public Path getConfigDir(){
-        return FMLPaths.CONFIGDIR.get();
-    }
-
-    @Override
-    public ConfigHandler createConfig(String modid, Config config){
-        return CarbonConfig.CONFIGS.createConfig(config);
-    }
-
-    @Override
-    public ConfigHandler createConfig(String modid, Config config, ConfigSettings settings){
-        return CarbonConfig.CONFIGS.createConfig(config, settings);
-    }
-
-    @Override
-    public <T extends AbstractContainerMenu> MenuType<T> create(TriFunction<Integer, Inventory, FriendlyByteBuf, T> factory) {
-        return IForgeMenuType.create(factory::apply);
-    }
-
-    @Override
     public Item.Properties getToolProperties(CreativeModeTab group, boolean repairable){
         Item.Properties properties = new Item.Properties().tab(group);
         if (!repairable) properties.setNoRepair();
         return properties;
-    }
-
-    @Override
-    public boolean isCorrectTierForDrops(Tier tier, BlockState state){
-        return TierSortingRegistry.isCorrectTierForDrops(tier, state);
-    }
-
-    @Override
-    public BlockState onToolUse(BlockState originalState, UseOnContext context, String action){
-        return ForgeEventFactory.onToolUse(originalState, context, ToolAction.get(action), false);
-    }
-
-    @Override
-    public boolean onUseHoe(UseOnContext context){
-        return MinecraftForge.EVENT_BUS.post(new UseHoeEvent(context));
-    }
-
-    @Override
-    public void popExperience(Block block, ServerLevel level, BlockPos pos, int exp){
-        block.popExperience(level, pos, exp);
-    }
-
-    @Override
-    public void requestModelDataRefresh(BlockEntity tile){
-        ModelDataManager.requestModelDataRefresh(tile);
-    }
-
-    @Override
-    public boolean isCorrectToolForDrops(BlockState state, Player player){
-        return ForgeHooks.isCorrectToolForDrops(state, player);
-    }
-
-    @Override
-    public int onBlockBreakEvent(Level world, GameType gameType, ServerPlayer player, BlockPos pos){
-        return ForgeHooks.onBlockBreakEvent(world, gameType, player, pos);
-    }
-
-    @Override
-    public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player){
-        return state.canHarvestBlock(level, pos, player);
     }
 }

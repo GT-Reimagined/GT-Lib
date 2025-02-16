@@ -6,6 +6,7 @@ import com.mojang.math.Vector3f;
 import muramasa.antimatter.client.baked.CoverBakedModel;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.ImplLoader;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -124,7 +125,7 @@ public interface ModelUtils {
     }
 
     static BakedModel getBakedFromItem(Item item) {
-        return Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(AntimatterPlatformUtils.INSTANCE.getIdFromItem(item), "inventory"));
+        return Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(RegistryUtils.getIdFromItem(item), "inventory"));
     }
 
     static TextureAtlasSprite getSprite(ResourceLocation loc) {

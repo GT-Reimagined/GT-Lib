@@ -7,6 +7,7 @@ import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import muramasa.antimatter.worldgen.vein.old.WorldGenVein;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -60,7 +61,7 @@ public class WorldGenSmallOreBuilder {
 
 
     private WorldGenVein readJson(WorldGenVein original){
-        File dir = new File(AntimatterPlatformUtils.INSTANCE.getConfigDir().toFile(), "antimatter/small_ore/overrides");
+        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "antimatter/small_ore/overrides");
         File target = new File(dir, id + ".json");
 
 

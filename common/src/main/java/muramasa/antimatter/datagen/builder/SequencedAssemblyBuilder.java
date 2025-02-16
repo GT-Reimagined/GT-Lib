@@ -8,6 +8,7 @@ import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -139,7 +140,7 @@ public class SequencedAssemblyBuilder {
                 nestedRecipe.add("ingredients", ingredients);
                 JsonArray results = new JsonArray();
                 JsonObject item = new JsonObject();
-                item.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(s.result.asItem()).toString());
+                item.addProperty("item", RegistryUtils.getIdFromItem(s.result.asItem()).toString());
                 results.add(item);
                 nestedRecipe.add("results", results);
                 nestedRecipes.add(nestedRecipe);
@@ -148,7 +149,7 @@ public class SequencedAssemblyBuilder {
             for (Tuple<ItemStack, Float> result : results) {
                 JsonObject resultObject = new JsonObject();
                 ItemStack stack = result.getA();
-                resultObject.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(stack.getItem()).toString());
+                resultObject.addProperty("item", RegistryUtils.getIdFromItem(stack.getItem()).toString());
                 if (stack.getCount() != 1)
                     resultObject.addProperty("count", stack.getCount());
                 if (stack.hasTag())
@@ -162,7 +163,7 @@ public class SequencedAssemblyBuilder {
             json.add("sequence", nestedRecipes);
             json.add("results", resultArray);
             JsonObject transitionalItemObject = new JsonObject();
-            transitionalItemObject.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(transitionalItem.asItem()).toString());
+            transitionalItemObject.addProperty("item", RegistryUtils.getIdFromItem(transitionalItem.asItem()).toString());
             json.add("transitionalItem", transitionalItemObject);
             json.addProperty("loops", loops);
         }

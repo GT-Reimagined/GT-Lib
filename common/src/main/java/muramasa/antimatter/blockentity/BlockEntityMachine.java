@@ -622,6 +622,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         return true;
     }
 
+    @Override
     public void invalidateCaps() {
         if (isServerSide()) {
             dispatch.invalidate();

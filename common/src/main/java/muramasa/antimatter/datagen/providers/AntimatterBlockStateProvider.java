@@ -16,6 +16,7 @@ import muramasa.antimatter.datagen.builder.VariantBlockStateBuilder;
 import muramasa.antimatter.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
 import muramasa.antimatter.fluid.AntimatterFluid;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.data.HashCache;
@@ -93,10 +94,10 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
     public void onCompletion() {
         models().buildAll();
         registeredBlocks.forEach((b, s) -> {
-            if (AntimatterPlatformUtils.INSTANCE.getIdFromBlock(b) == null) { //TODO ?
+            if (RegistryUtils.getIdFromBlock(b) == null) { //TODO ?
                 BlockBasic block = (BlockBasic) b;
             } else {
-                AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addBlockState(s.toState(), AntimatterPlatformUtils.INSTANCE.getIdFromBlock(b));
+                AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addBlockState(s.toState(), RegistryUtils.getIdFromBlock(b));
             }
         });
     }
@@ -111,14 +112,14 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
     }
 
     public AntimatterBlockModelBuilder getBuilder(Block block) {
-        if (AntimatterPlatformUtils.INSTANCE.getIdFromBlock(block) == null) {
+        if (RegistryUtils.getIdFromBlock(block) == null) {
             return models().getBuilder(((BlockBasic) block).getId());
         }
-        return models().getBuilder(AntimatterPlatformUtils.INSTANCE.getIdFromBlock(block).getPath());
+        return models().getBuilder(RegistryUtils.getIdFromBlock(block).getPath());
     }
 
     public AntimatterBlockModelBuilder cubeAll(Block block, ResourceLocation texture) {
-        return models().cubeAll(AntimatterPlatformUtils.INSTANCE.getIdFromBlock(block).toString(), texture);
+        return models().cubeAll(RegistryUtils.getIdFromBlock(block).toString(), texture);
     }
 
     public void state(Block block, IModelLocation model) {
@@ -162,12 +163,12 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
     }
 
     private String name(Block block) {
-        return AntimatterPlatformUtils.INSTANCE.getIdFromBlock(block).getPath();
+        return RegistryUtils.getIdFromBlock(block).getPath();
     }
 
 
     public ResourceLocation blockTexture(Block block) {
-        ResourceLocation name = AntimatterPlatformUtils.INSTANCE.getIdFromBlock(block);
+        ResourceLocation name = RegistryUtils.getIdFromBlock(block);
         return new ResourceLocation(name.getNamespace(), AntimatterModelProvider.BLOCK_FOLDER + "/" + name.getPath());
     }
 

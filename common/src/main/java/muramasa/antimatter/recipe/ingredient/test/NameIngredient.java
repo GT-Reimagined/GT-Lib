@@ -1,6 +1,7 @@
 package muramasa.antimatter.recipe.ingredient.test;
 
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,6 @@ public class NameIngredient extends Ingredient {
 
     @Override
     public boolean test(@Nullable ItemStack p_test_1_) {
-        return p_test_1_ != null && Objects.requireNonNull(AntimatterPlatformUtils.INSTANCE.getIdFromItem(p_test_1_.getItem())).getPath().contains(test);
+        return p_test_1_ != null && Objects.requireNonNull(RegistryUtils.getIdFromItem(p_test_1_.getItem())).getPath().contains(test);
     }
 }

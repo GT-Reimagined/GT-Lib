@@ -8,6 +8,7 @@ import lombok.Getter;
 import muramasa.antimatter.block.BlockStone;
 import muramasa.antimatter.ore.StoneType;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.worldgen.StoneLayerOre;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -98,7 +99,7 @@ public class WorldGenStoneLayer extends WorldGenBase<WorldGenStoneLayer> {
         if (stoneType != null){
             json.addProperty("stoneType", stoneType.getId());
         }
-        json.addProperty("stoneState", AntimatterPlatformUtils.INSTANCE.getIdFromBlock(stoneState.getBlock()).toString());
+        json.addProperty("stoneState", RegistryUtils.getIdFromBlock(stoneState.getBlock()).toString());
         JsonArray array = new JsonArray();
         if (ores != null){
             for (StoneLayerOre ore : ores) {
@@ -135,13 +136,13 @@ public class WorldGenStoneLayer extends WorldGenBase<WorldGenStoneLayer> {
                 }
             });
         }
-        BlockState fill = json.has("fill") ? AntimatterPlatformUtils.INSTANCE.getBlockFromId(new ResourceLocation(json.get("fill").getAsString())).defaultBlockState() : null;
+        BlockState fill = json.has("fill") ? RegistryUtils.getBlockFromId(new ResourceLocation(json.get("fill").getAsString())).defaultBlockState() : null;
         StoneType stoneType = null;
         if (json.has("stoneType")){
             stoneType = StoneType.get(json.get("stoneType").getAsString());
             if (stoneType == null) throw new IllegalStateException("stone type: " + json.get("stoneType").getAsString() + " does not exist!");
         }
-        BlockState stoneState = AntimatterPlatformUtils.INSTANCE.getBlockFromId(new ResourceLocation(json.get("stoneState").getAsString())).defaultBlockState();
+        BlockState stoneState = RegistryUtils.getBlockFromId(new ResourceLocation(json.get("stoneState").getAsString())).defaultBlockState();
         WorldGenStoneLayer stoneLayer = new WorldGenStoneLayer(
                 id,
                 stoneType,

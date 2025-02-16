@@ -9,6 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.Getter;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.TagParser;
@@ -384,7 +385,7 @@ public class RecipeIngredient extends Ingredient {
     private static JsonObject toJson(ItemStack stack)
     {
         JsonObject ret = new JsonObject();
-        ret.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(stack.getItem()).toString());
+        ret.addProperty("item", RegistryUtils.getIdFromItem(stack.getItem()).toString());
         if (stack.getCount() != 1)
             ret.addProperty("count", stack.getCount());
         if (stack.getTag() != null)

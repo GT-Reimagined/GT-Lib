@@ -19,6 +19,7 @@ import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.material.MaterialTypeItem;
 import muramasa.antimatter.tool.AntimatterToolType;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -157,7 +158,7 @@ public class PropertyIngredient extends Ingredient {
         obj.add("item_tags", materialArr);
         materialArr = new JsonArray();
         for (ItemLike item : this.items) {
-            ResourceLocation name = AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem());
+            ResourceLocation name = RegistryUtils.getIdFromItem(item.asItem());
             if (name != null) materialArr.add(name.toString());
         }
         obj.add("items", materialArr);
@@ -260,8 +261,8 @@ public class PropertyIngredient extends Ingredient {
             Set<ItemLike> itemProviders = new ObjectArraySet<>(size);
             for (int i = 0; i < size; i++) {
                 ResourceLocation name = new ResourceLocation(buffer.readUtf());
-                if (AntimatterPlatformUtils.INSTANCE.itemExists(name)) {
-                    itemProviders.add(AntimatterPlatformUtils.INSTANCE.getItemFromID(name));
+                if (RegistryUtils.itemExists(name)) {
+                    itemProviders.add(RegistryUtils.getItemFromID(name));
                 }
             }
             ItemStack[] stacks = new ItemStack[buffer.readVarInt()];
@@ -282,8 +283,8 @@ public class PropertyIngredient extends Ingredient {
             arr = json.getAsJsonArray("items");
             Set<ItemLike> items2 = new ObjectArraySet<>(arr.size());
             arr.forEach(el -> {
-                if (AntimatterPlatformUtils.INSTANCE.itemExists(new ResourceLocation(el.getAsString())))
-                    items2.add(AntimatterPlatformUtils.INSTANCE.getItemFromID(new ResourceLocation(el.getAsString())));
+                if (RegistryUtils.itemExists(new ResourceLocation(el.getAsString())))
+                    items2.add(RegistryUtils.getItemFromID(new ResourceLocation(el.getAsString())));
             });
             String ingId = json.get("id").getAsString();
             boolean inverse = json.get("inverse").getAsBoolean();
@@ -335,7 +336,7 @@ public class PropertyIngredient extends Ingredient {
             }
             buffer.writeVarInt(ingredient.items.size());
             for (ItemLike item : ingredient.items) {
-                ResourceLocation name = AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem());
+                ResourceLocation name = RegistryUtils.getIdFromItem(item.asItem());
                 if (name != null) buffer.writeUtf(name.toString());
             }
             //Needed because tags might not be available on client.

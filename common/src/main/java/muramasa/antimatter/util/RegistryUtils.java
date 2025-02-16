@@ -1,12 +1,33 @@
 package muramasa.antimatter.util;
 
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Map;
+
 public class RegistryUtils {
+    private static ImmutableMap<Item, Integer> FUEL_LIST = null;
+
+    public static Map<Item, Integer> getAllBurnables(){
+        if (FUEL_LIST == null){
+            ForgeHooks.updateBurns();
+            ImmutableMap.Builder<Item, Integer> builder = ImmutableMap.builder();
+            ForgeRegistries.ITEMS.getValues().forEach(i -> {
+                int burnTime = ForgeHooks.getBurnTime(i.getDefaultInstance(), null);
+                if (burnTime > 0){
+                    builder.put(i, burnTime);
+                }
+            });
+            FUEL_LIST = builder.build();
+        }
+        return FUEL_LIST;
+    }
+
     public static boolean blockExists(ResourceLocation id){
         return ForgeRegistries.BLOCKS.containsKey(id);
     }

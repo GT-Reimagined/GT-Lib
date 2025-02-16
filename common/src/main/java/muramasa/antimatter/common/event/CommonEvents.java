@@ -12,6 +12,7 @@ import muramasa.antimatter.proxy.ClientHandler;
 import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -47,13 +48,13 @@ public class CommonEvents {
 
 
     public static void lootTableLoad(LootTable table, ResourceLocation name){
-        if (AntimatterPlatformUtils.INSTANCE.getLootTableID(table).getPath().startsWith("blocks/")) {
-            ResourceLocation blockId = new ResourceLocation(AntimatterPlatformUtils.INSTANCE.getLootTableID(table).getNamespace(), name.getPath().replace("blocks/", ""));
-            if (AntimatterPlatformUtils.INSTANCE.blockExists(blockId)) {
-                Block block = AntimatterPlatformUtils.INSTANCE.getBlockFromId(blockId);
+        if (table.getLootTableId().getPath().startsWith("blocks/")) {
+            ResourceLocation blockId = new ResourceLocation(table.getLootTableId().getNamespace(), name.getPath().replace("blocks/", ""));
+            if (RegistryUtils.blockExists(blockId)) {
+                Block block = RegistryUtils.getBlockFromId(blockId);
                 //Antimatter.LOGGER.info(blockId.toString());
                 if (block == Blocks.ICE || block == Blocks.PACKED_ICE || block == Blocks.BLUE_ICE) {
-                    AntimatterPlatformUtils.INSTANCE.addPool(table, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(AntimatterBlockLootProvider.SAW).add(LootItem.lootTableItem(block)).build());
+                    table.addPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(AntimatterBlockLootProvider.SAW).add(LootItem.lootTableItem(block)).build());
                 }
             }
         }

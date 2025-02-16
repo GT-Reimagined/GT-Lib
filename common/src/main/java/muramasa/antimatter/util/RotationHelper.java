@@ -1,5 +1,6 @@
 package muramasa.antimatter.util;
 
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
@@ -84,7 +85,7 @@ public class RotationHelper {
         public Direction rotateFace(Direction facing) {
             Vec3i vector3i = facing.getNormal();
             Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-            vector4f.transform(AntimatterPlatformUtils.INSTANCE.createMatrix4f(matrix.values()));
+            vector4f.transform(new com.mojang.math.Matrix4f(matrix.values()));
             return Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
         }
     }

@@ -11,6 +11,7 @@ import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -130,14 +131,14 @@ public class RecipeBuilder {
     public void getID(){
         if (id == null){
             if (itemsOutput != null && itemsOutput.size() > 0){
-                String id = AntimatterPlatformUtils.INSTANCE.getIdFromItem(itemsOutput.get(0).getItem()).toString() + "_recipe";
+                String id = RegistryUtils.getIdFromItem(itemsOutput.get(0).getItem()).toString() + "_recipe";
                 checkID(id);
             } else if (fluidsOutput != null && fluidsOutput.size() > 0){
-                String id = AntimatterPlatformUtils.INSTANCE.getIdFromFluid(fluidsOutput.get(0).getFluid()).toString() + "_recipe";
+                String id = RegistryUtils.getIdFromFluid(fluidsOutput.get(0).getFluid()).toString() + "_recipe";
                 checkID(id);
             } else if (!ingredientInput.isEmpty() && ingredientInput.get(0).getItems().length > 0){
                 ItemStack stack = ingredientInput.get(0).getItems()[0];
-                String id = AntimatterPlatformUtils.INSTANCE.getIdFromItem(stack.getItem()).toString() + "_recipe";
+                String id = RegistryUtils.getIdFromItem(stack.getItem()).toString() + "_recipe";
                 checkID(id);
             } else if (!fluidsInput.isEmpty()){
                 FluidIngredient ing = fluidsInput.get(0);
@@ -147,7 +148,7 @@ public class RecipeBuilder {
                 } else {
                     List<FluidHolder> list = Arrays.asList(ing.getStacks());
                     if (!list.isEmpty()){
-                        id = AntimatterPlatformUtils.INSTANCE.getIdFromFluid(list.get(0).getFluid()).toString() + "_recipe";
+                        id = RegistryUtils.getIdFromFluid(list.get(0).getFluid()).toString() + "_recipe";
                     } else {
                         id = "antimatter:unknown_in_" + recipeMap.getId();
                     }

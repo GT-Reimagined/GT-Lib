@@ -6,6 +6,7 @@ import muramasa.antimatter.event.MaterialEvent;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialType;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.resources.ResourceLocation;
 
 public class AMMaterialEvent extends EventJS {
@@ -27,9 +28,9 @@ public class AMMaterialEvent extends EventJS {
         if (material1 == Material.NULL){
             return;
         }
-        if (!AntimatterPlatformUtils.INSTANCE.itemExists(new ResourceLocation(item))){
+        if (!RegistryUtils.itemExists(new ResourceLocation(item))){
             return;
         }
-        type.replacement(material1, () -> AntimatterPlatformUtils.INSTANCE.getItemFromID(new ResourceLocation(item)));
+        type.replacement(material1, () -> RegistryUtils.getItemFromID(new ResourceLocation(item)));
     }
 }

@@ -33,6 +33,7 @@ import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.material.MaterialRecipe;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -251,7 +252,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
         AntimatterJEIREIPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (tuple.workstations.isEmpty()) return;
             tuple.workstations.forEach(s -> {
-                ItemLike item = AntimatterPlatformUtils.INSTANCE.getItemFromID(s);
+                ItemLike item = RegistryUtils.getItemFromID(s);
                 if (item == Items.AIR) return;
                 registration.addRecipeCatalyst(new ItemStack(item), tuple.map.getLoc());
                 if (!tuple.map.getSubCategories().isEmpty()){

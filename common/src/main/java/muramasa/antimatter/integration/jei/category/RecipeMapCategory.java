@@ -32,6 +32,7 @@ import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.map.SubCategory;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
 import muramasa.antimatter.util.int4;
 import net.minecraft.ChatFormatting;
@@ -83,7 +84,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
             }
         } else {
-            Item item = iconId == null ? Data.DEBUG_SCANNER : AntimatterPlatformUtils.INSTANCE.getItemFromID(iconId);
+            Item item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
             this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
         }

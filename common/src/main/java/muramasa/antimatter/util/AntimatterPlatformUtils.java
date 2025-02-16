@@ -61,54 +61,6 @@ import java.util.function.Supplier;
 public interface AntimatterPlatformUtils {
     AntimatterPlatformUtils INSTANCE = ImplLoader.load(AntimatterPlatformUtils.class);
 
-    void markAndNotifyBlock(Level level, BlockPos arg, @Nullable LevelChunk levelchunk, BlockState blockstate, BlockState arg2, int j, int k);
-
-    Map<Item, Integer> getAllBurnables();
-
-    default boolean blockExists(ResourceLocation id){
-        return RegistryUtils.blockExists(id);
-    }
-
-    default boolean itemExists(ResourceLocation id){
-        return RegistryUtils.itemExists(id);
-    }
-
-    default boolean fluidExists(ResourceLocation id){
-        return RegistryUtils.fluidExists(id);
-    }
-
-    default Block getBlockFromId(ResourceLocation id){
-        return RegistryUtils.getBlockFromId(id);
-    }
-
-    default Item getItemFromID(ResourceLocation id){
-        return RegistryUtils.getItemFromID(id);
-    }
-
-    default Fluid getFluidFromID(ResourceLocation id){
-        return RegistryUtils.getFluidFromID(id);
-    }
-
-    default ResourceLocation getIdFromBlock(Block block){
-        return RegistryUtils.getIdFromBlock(block);
-    }
-
-    default ResourceLocation getIdFromItem(Item item){
-        return RegistryUtils.getIdFromItem(item);
-    }
-
-    default ResourceLocation getIdFromFluid(Fluid fluid){
-        return RegistryUtils.getIdFromFluid(fluid);
-    }
-
-    default Block getBlockFromId(String domain, String id){
-        return getBlockFromId(new ResourceLocation(domain, id));
-    }
-
-    default Item getItemFromID(String domain, String id){
-        return getItemFromID(new ResourceLocation(domain, id));
-    }
-
     default FluidHolder fromTag(CompoundTag tag){
         if (tag == null) {
             return FluidHooks.emptyFluid();
@@ -129,10 +81,6 @@ public interface AntimatterPlatformUtils {
         return stack;
     }
 
-    default Collection<Fluid> getAllFluids(){
-        return ForgeRegistries.FLUIDS.getValues();
-    }
-
     CraftingEvent postCraftingEvent(IAntimatterRegistrar registrar);
 
     void postLoaderEvent(IAntimatterRegistrar registrar, IRecipeRegistrate reg);
@@ -141,43 +89,7 @@ public interface AntimatterPlatformUtils {
 
     WorldGenEvent postWorldEvent(IAntimatterRegistrar registrar);
 
-    InteractionResultHolder<ItemStack> postBucketUseEvent(Player player, Level world, ItemStack stack, BlockHitResult trace);
-
     void addMultiMachineInfo(BasicMultiMachine<?> machine, List<Pattern> patterns);
 
-    Matrix4f createMatrix4f(float[] values);
-
-    boolean isRepairable(ItemStack stack);
-
-    void addPool(LootTable table, LootPool pool);
-
-    ResourceLocation getLootTableID(LootTable table);
-
-    boolean areCapsCompatible(ItemStack a, ItemStack b);
-
-    Path getConfigDir();
-
-    ConfigHandler createConfig(String modid, Config config);
-
-    ConfigHandler createConfig(String modid, Config config, ConfigSettings settings);
-
-    <T extends AbstractContainerMenu> MenuType<T> create(TriFunction<Integer, Inventory, FriendlyByteBuf, T> factory);
-
     Item.Properties getToolProperties(CreativeModeTab group, boolean repairable);
-
-    boolean isCorrectTierForDrops(Tier tier, BlockState state);
-
-    BlockState onToolUse(BlockState originalState, UseOnContext context, String action);
-
-    boolean onUseHoe(UseOnContext context);
-
-    void requestModelDataRefresh(BlockEntity tile);
-
-    void popExperience(Block block, ServerLevel level, BlockPos pos, int exp);
-
-    boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player);
-
-    int onBlockBreakEvent(Level world, GameType gameType, ServerPlayer player, BlockPos pos);
-
-    boolean isCorrectToolForDrops(BlockState state, Player player);
 }

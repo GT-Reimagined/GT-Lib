@@ -32,6 +32,7 @@ import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -116,7 +117,7 @@ public class AntimatterREIClientPlugin implements REIClientPlugin {
                 registry.add(category);
                 if (!tuple.workstations.isEmpty()){
                     tuple.workstations.forEach(s -> {
-                        ItemLike item = AntimatterPlatformUtils.INSTANCE.getItemFromID(s);
+                        ItemLike item = RegistryUtils.getItemFromID(s);
                         if (item == Items.AIR) return;
                         registry.addWorkstations(category.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, new ItemStack(item)));
                     });
