@@ -6,7 +6,6 @@ import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.event.MaterialEvent;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.resources.ResourceLocation;
 
 public class AntimatterKubeJS extends KubeJSPlugin {

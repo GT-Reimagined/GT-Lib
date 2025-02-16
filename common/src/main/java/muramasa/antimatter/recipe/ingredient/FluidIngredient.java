@@ -9,7 +9,6 @@ import lombok.Getter;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.recipe.RecipeUtil;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.core.Registry;

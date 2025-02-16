@@ -18,7 +18,7 @@ import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.IRecipeValidator;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -639,7 +639,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         itemInputs = new ObjectArrayList<>();
         fluidInputs = new ObjectArrayList<>();
         nbt.getList("I", 10).forEach(t -> itemInputs.add(ItemStack.of((CompoundTag) t)));
-        nbt.getList("F", 10).forEach(t -> fluidInputs.add(AntimatterPlatformUtils.INSTANCE.fromTag((CompoundTag) t)));
+        nbt.getList("F", 10).forEach(t -> fluidInputs.add(FluidPlatformUtils.INSTANCE.fromTag((CompoundTag) t)));
         this.processingBlocked = nbt.getBoolean("PB");
         this.currentProgress = nbt.getInt("P");
         this.tickTimer = nbt.getInt("T");

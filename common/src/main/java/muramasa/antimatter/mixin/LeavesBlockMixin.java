@@ -2,7 +2,6 @@ package muramasa.antimatter.mixin;
 
 import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.tool.IAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;

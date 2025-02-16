@@ -10,7 +10,6 @@ import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.mixin.LootPoolAccessor;
 import muramasa.antimatter.recipe.RecipeUtil;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.ItemStackHashStrategy;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Registry;

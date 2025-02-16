@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;

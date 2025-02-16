@@ -3,7 +3,6 @@ package muramasa.antimatter.worldgen.smallore;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import muramasa.antimatter.material.Material;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import muramasa.antimatter.worldgen.vein.old.WorldGenVein;
 import net.minecraft.resources.ResourceLocation;

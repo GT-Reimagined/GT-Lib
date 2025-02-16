@@ -4,7 +4,6 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import muramasa.antimatter.client.baked.CoverBakedModel;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.ImplLoader;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.client.Minecraft;

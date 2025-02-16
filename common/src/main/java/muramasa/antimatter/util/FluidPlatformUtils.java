@@ -6,12 +6,15 @@ import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -187,5 +190,25 @@ public abstract class FluidPlatformUtils {
         Fluid fluid = Registry.FLUID.byId(buffer.readVarInt());
         long amount = buffer.readVarLong();
         return FluidHooks.newFluidHolder(fluid, amount, buffer.readNbt());
+    }
+
+    public FluidHolder fromTag(CompoundTag tag){
+        if (tag == null) {
+            return FluidHooks.emptyFluid();
+        }
+        if (!tag.contains("FluidName", Tag.TAG_STRING)) {
+            return FluidHooks.fluidFromCompound(tag);
+        }
+
+        ResourceLocation fluidName = new ResourceLocation(tag.getString("FluidName"));
+        Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName);
+        if (fluid == null) {
+            return FluidHooks.emptyFluid();
+        }
+        FluidHolder stack = FluidHooks.newFluidHolder(fluid, tag.getInt("Amount"), null);
+        if (tag.contains("Tag", Tag.TAG_COMPOUND)) {
+            stack.setCompound(tag.getCompound("Tag"));
+        }
+        return stack;
     }
 }

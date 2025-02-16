@@ -5,7 +5,6 @@ import muramasa.antimatter.blockentity.BlockEntityFakeBlock;
 import muramasa.antimatter.machine.MachineFlag;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
 import muramasa.antimatter.registration.RegistryType;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

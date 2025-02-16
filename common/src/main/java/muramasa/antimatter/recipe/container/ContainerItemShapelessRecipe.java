@@ -3,22 +3,17 @@ package muramasa.antimatter.recipe.container;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.item.IContainerItem;
 import muramasa.antimatter.recipe.BaseRecipeSerializer;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import org.jetbrains.annotations.NotNull;
 
 public class ContainerItemShapelessRecipe extends ShapelessRecipe {
     public static final Serializer INSTANCE = new Serializer();

@@ -1,6 +1,5 @@
 package muramasa.antimatter.recipe.ingredient.test;
 
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

@@ -7,7 +7,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.Getter;
 import muramasa.antimatter.block.BlockStone;
 import muramasa.antimatter.ore.StoneType;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.worldgen.StoneLayerOre;
 import net.minecraft.core.Registry;

@@ -10,7 +10,6 @@ import muramasa.antimatter.datagen.builder.AntimatterShapelessRecipeBuilder;
 import muramasa.antimatter.datagen.builder.SequencedAssemblyBuilder;
 import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.PropertyIngredient;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;

@@ -19,7 +19,6 @@ import muramasa.antimatter.data.AntimatterTags;
 import muramasa.antimatter.pipe.PipeSize;
 import muramasa.antimatter.pipe.TileTicker;
 import muramasa.antimatter.pipe.types.FluidPipe;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.CodeUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.core.BlockPos;

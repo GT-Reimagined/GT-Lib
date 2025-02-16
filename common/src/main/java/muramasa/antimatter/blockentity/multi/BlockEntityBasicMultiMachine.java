@@ -31,7 +31,6 @@ import muramasa.antimatter.structure.StructureCache;
 import muramasa.antimatter.structure.StructureHandle;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.AntimatterToolType;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

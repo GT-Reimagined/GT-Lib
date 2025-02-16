@@ -23,7 +23,6 @@ import muramasa.antimatter.material.MaterialType;
 import muramasa.antimatter.ore.BlockOre;
 import muramasa.antimatter.pipe.BlockPipe;
 import muramasa.antimatter.registration.IColorHandler;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;

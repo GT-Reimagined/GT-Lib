@@ -2,7 +2,6 @@ package muramasa.antimatter.capability.machine;
 
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.recipe.ingredient.impl.Ingredients;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

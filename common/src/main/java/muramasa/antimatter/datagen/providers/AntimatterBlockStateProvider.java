@@ -15,7 +15,6 @@ import muramasa.antimatter.datagen.builder.MultiPartBlockStateBuilder;
 import muramasa.antimatter.datagen.builder.VariantBlockStateBuilder;
 import muramasa.antimatter.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
 import muramasa.antimatter.fluid.AntimatterFluid;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;

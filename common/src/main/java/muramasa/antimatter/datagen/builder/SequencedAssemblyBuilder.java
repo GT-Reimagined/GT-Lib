@@ -7,7 +7,6 @@ import com.google.gson.JsonParser;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;

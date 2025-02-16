@@ -2,7 +2,6 @@ package muramasa.antimatter.datagen.builder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.devtech.arrp.json.loot.JCondition;

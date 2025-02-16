@@ -2,7 +2,6 @@ package muramasa.antimatter.capability.energy;
 
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.EnergyHandler;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import tesseract.api.context.TesseractItemContext;

@@ -3,7 +3,6 @@ package muramasa.antimatter.mixin;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import muramasa.antimatter.tool.IAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;

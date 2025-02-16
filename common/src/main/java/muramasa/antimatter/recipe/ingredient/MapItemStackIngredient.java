@@ -2,7 +2,6 @@ package muramasa.antimatter.recipe.ingredient;
 
 import com.google.common.collect.ImmutableSet;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

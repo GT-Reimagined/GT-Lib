@@ -9,7 +9,6 @@ import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.registration.IAntimatterObject;
 import muramasa.antimatter.tool.IAntimatterArmor;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;

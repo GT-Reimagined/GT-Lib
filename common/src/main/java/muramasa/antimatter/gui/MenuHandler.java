@@ -5,7 +5,6 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.gui.container.IAntimatterContainer;
 import muramasa.antimatter.registration.IAntimatterObject;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

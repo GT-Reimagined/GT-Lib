@@ -12,7 +12,6 @@ import muramasa.antimatter.material.Material;
 import muramasa.antimatter.registration.ITextureProvider;
 import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;

@@ -30,7 +30,6 @@ import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.map.SubCategory;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
@@ -49,8 +48,6 @@ import tesseract.TesseractGraphWrappers;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin.intToSuperScript;
 
 public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
 

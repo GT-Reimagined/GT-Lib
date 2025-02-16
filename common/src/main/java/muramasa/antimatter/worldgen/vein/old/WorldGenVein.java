@@ -3,7 +3,6 @@ package muramasa.antimatter.worldgen.vein.old;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.worldgen.object.WorldGenBase;
 import net.minecraft.core.Registry;

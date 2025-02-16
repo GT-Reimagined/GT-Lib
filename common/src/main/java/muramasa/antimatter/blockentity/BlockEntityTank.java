@@ -9,7 +9,6 @@ import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.integration.jeirei.renderer.IInfoRenderer;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.machine.types.TankMachine;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
