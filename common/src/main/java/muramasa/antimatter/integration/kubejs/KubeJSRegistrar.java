@@ -21,9 +21,8 @@ import java.nio.file.LinkOption;
 ;
 
 public class KubeJSRegistrar extends AntimatterMod {
-    @Override
-    public void onRegistrarInit() {
-        super.onRegistrarInit();
+    public KubeJSRegistrar() {
+        super();
         AntimatterDynamics.clientProvider(Ref.MOD_KJS, () -> new AntimatterBlockStateProvider(Ref.MOD_KJS, "KubeJS BlockStates"));
         AntimatterDynamics.clientProvider(Ref.MOD_KJS, () -> new AntimatterItemModelProvider(Ref.MOD_KJS, "KubeJS Item Models"));
         AntimatterDynamics.clientProvider(Ref.MOD_KJS, () -> new AntimatterLanguageProvider(Ref.MOD_KJS, "KubeJS en_us Localization", "en_us"));

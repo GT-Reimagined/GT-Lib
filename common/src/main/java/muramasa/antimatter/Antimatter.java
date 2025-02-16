@@ -87,11 +87,7 @@ public class Antimatter extends AntimatterMod {
 
     public Antimatter() {
         super();
-    }
 
-    @Override
-    public void onRegistrarInit() {
-        super.onRegistrarInit();
         LOGGER.info("Loading Antimatter");
         INSTANCE = this;
         PROXY = DistExecutor.unsafeRunForDist(() -> ClientHandler::new, () -> ServerHandler::new);

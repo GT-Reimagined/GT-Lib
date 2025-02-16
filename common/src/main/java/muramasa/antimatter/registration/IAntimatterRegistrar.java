@@ -3,7 +3,7 @@ package muramasa.antimatter.registration;
 import muramasa.antimatter.event.MaterialEvent;
 import net.minecraftforge.api.distmarker.Dist;
 
-public interface IAntimatterRegistrar extends IAntimatterObject, IAntimatterRegistrarInitializer {
+public interface IAntimatterRegistrar extends IAntimatterObject {
 
     default String getDomain() {
         return getId();
