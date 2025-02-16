@@ -5,8 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
-import earth.terrarium.botarium.common.energy.base.EnergyContainer;
-import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectMap;
@@ -79,7 +77,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -768,22 +768,22 @@ public class Utils {
 
     @Nullable
     public static BlockEntity getTileFromBuf(FriendlyByteBuf buf) {
-        return unsafeRunForDist(() -> () -> Antimatter.PROXY.getClientWorld().getBlockEntity(buf.readBlockPos()), () -> () -> {
+        return DistExecutor.unsafeRunForDist(() -> () -> Antimatter.PROXY.getClientWorld().getBlockEntity(buf.readBlockPos()), () -> () -> {
             throw new RuntimeException("Shouldn't be called on server!");
         });
     }
 
     public static <T> T unsafeRunForDist(Supplier<Supplier<T>> clientTarget, Supplier<Supplier<T>> serverTarget) {
-        return switch (AntimatterAPI.getSIDE()) {
+        return switch (FMLEnvironment.dist) {
             case CLIENT -> clientTarget.get().get();
-            case SERVER -> serverTarget.get().get();
+            case DEDICATED_SERVER -> serverTarget.get().get();
         };
     }
 
     public static void unsafeRunForDistVoid(Supplier<Runnable> clientTarget, Supplier<Runnable> serverTarget) {
-        switch (AntimatterAPI.getSIDE()) {
+        switch (FMLEnvironment.dist) {
             case CLIENT -> clientTarget.get().run();
-            case SERVER -> serverTarget.get().run();
+            case DEDICATED_SERVER -> serverTarget.get().run();
         };
     }
 

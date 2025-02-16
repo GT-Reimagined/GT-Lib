@@ -9,7 +9,7 @@ import carbonconfiglib.config.ConfigSection;
 import carbonconfiglib.config.ConfigSettings;
 import carbonconfiglib.impl.ReloadMode;
 import carbonconfiglib.utils.AutomationType;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public class AntimatterConfig {
 
@@ -134,7 +134,7 @@ public class AntimatterConfig {
                 .setMin(1).setMax(2304);
         CONFIG_COMMON = CarbonConfig.CONFIGS.createConfig(config);
         CONFIG_COMMON.register();
-        if (AntimatterAPI.getSIDE().isClient()){
+        if (FMLEnvironment.dist.isClient()){
             Config client = new Config("antimatter/client");
             ConfigSection general = client.add("general");
             BASIC_MACHINE_MODELS = general.addBool("basic_machine_models", false, "Enable flat machine related models (5U Style) - Default: false");

@@ -23,14 +23,12 @@ import muramasa.antimatter.integration.kubejs.AMWorldEvent;
 import muramasa.antimatter.integration.kubejs.KubeJSRegistrar;
 import muramasa.antimatter.integration.kubejs.RecipeLoaderEventKubeJS;
 import muramasa.antimatter.recipe.IRecipe;
-import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.loader.IRecipeRegistrate;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeBuilder;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.registration.IAntimatterRegistrar;
 import muramasa.antimatter.registration.ModRegistrar;
-import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import muramasa.antimatter.worldgen.StoneLayerOre;
@@ -51,6 +49,7 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.Deserializers;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -59,7 +58,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -106,15 +104,15 @@ public class AntimatterDynamics {
 
     public static void addDataPacks(Consumer<PackResources> function){
         if (initialized) {
-            AntimatterDynamics.onResourceReload(AntimatterAPI.getSIDE().isServer());
+            AntimatterDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
         function.accept(new DynamicDataPack("antimatter:recipes", AntimatterAPI.all(IAntimatterRegistrar.class).stream().map(IAntimatterRegistrar::getDomain).collect(Collectors.toSet())));
 
     }
 
-    public static void onProviderInit(String domain, DataGenerator gen, Side side) {
-        if (side == Side.CLIENT) {
+    public static void onProviderInit(String domain, DataGenerator gen, Dist side) {
+        if (side == Dist.CLIENT) {
             PROVIDERS.getOrDefault(domain, Collections.emptyList()).stream().map(Supplier::get)
                     .filter(p -> p instanceof AntimatterLanguageProvider).forEach(gen::addProvider);
         }

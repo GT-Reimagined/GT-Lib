@@ -5,7 +5,7 @@ import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterMod;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.common.event.forge.ARRPEvents;
+import muramasa.antimatter.common.event.ARRPEvents;
 import muramasa.antimatter.datagen.AntimatterDynamics;
 import muramasa.antimatter.event.forge.AntimatterCraftingEvent;
 import muramasa.antimatter.event.forge.AntimatterProvidersEvent;

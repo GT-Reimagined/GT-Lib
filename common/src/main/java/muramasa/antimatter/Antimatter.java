@@ -50,11 +50,8 @@ import muramasa.antimatter.recipe.ingredient.PropertyIngredient;
 import muramasa.antimatter.recipe.material.MaterialSerializer;
 import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import muramasa.antimatter.registration.RegistrationEvent;
-import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.tool.IAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
-import muramasa.antimatter.util.Utils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -62,6 +59,8 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,8 +71,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static muramasa.antimatter.data.AntimatterStoneTypes.BEDROCK;
 
 //import muramasa.antimatter.integration.kubejs.KubeJSRegistrar;
 
@@ -97,7 +94,7 @@ public class Antimatter extends AntimatterMod {
         super.onRegistrarInit();
         LOGGER.info("Loading Antimatter");
         INSTANCE = this;
-        PROXY = Utils.unsafeRunForDist(() -> ClientHandler::new, () -> ServerHandler::new); // todo: scheduled to
+        PROXY = DistExecutor.unsafeRunForDist(() -> ClientHandler::new, () -> ServerHandler::new);
         // change in new Forge
         if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)){
             new KubeJSRegistrar();
@@ -148,7 +145,7 @@ public class Antimatter extends AntimatterMod {
     }
 
     @Override
-    public void onRegistrationEvent(RegistrationEvent event, Side side) {
+    public void onRegistrationEvent(RegistrationEvent event, Dist side) {
         if (event == RegistrationEvent.DATA_INIT) {
             Recipe.init();
             AntimatterLoot.RandomWeightLootFunction.init();

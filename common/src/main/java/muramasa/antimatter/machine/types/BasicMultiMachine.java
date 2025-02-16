@@ -1,7 +1,6 @@
 package muramasa.antimatter.machine.types;
 
 import lombok.Getter;
-import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.block.BlockBasic;
 import muramasa.antimatter.blockentity.multi.BlockEntityBasicMultiMachine;
@@ -16,6 +15,7 @@ import muramasa.antimatter.structure.Pattern;
 import muramasa.antimatter.structure.PatternBuilder;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.util.Utils;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,7 +70,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     }
     
     public final void setStructurePattern(Pattern... patterns) {
-        if (AntimatterAPI.getSIDE().isClient()) {
+        if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
             AntimatterJEIREIPlugin.registerPatternForJei(this, Arrays.stream(patterns).collect(Collectors.toList()));
         }
@@ -81,7 +81,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     }
 
     public final void setStructurePattern(Tier tier,  Pattern... patterns) {
-        if (AntimatterAPI.getSIDE().isClient()) {
+        if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
             AntimatterJEIREIPlugin.registerPatternForJei(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
         }

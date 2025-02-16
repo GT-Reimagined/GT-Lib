@@ -44,6 +44,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
@@ -201,7 +202,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
     }
 
     private RecipeManager getRecipeManager(){
-        if (AntimatterAPI.getSIDE().isServer()){
+        if (FMLEnvironment.dist.isDedicatedServer()){
             return ServerLifecycleHooks.getCurrentServer().getRecipeManager();
         } else {
             if (getWorld() == null) return null;

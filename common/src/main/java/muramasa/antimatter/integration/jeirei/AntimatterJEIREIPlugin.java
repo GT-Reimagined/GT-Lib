@@ -26,12 +26,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static muramasa.antimatter.gui.SlotType.*;
@@ -107,7 +107,7 @@ public class AntimatterJEIREIPlugin{
     }
     public static void registerPatternForJei(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
         STRUCTURES.put(machine.getBlockState(tier), patternList);
-        if (AntimatterAPI.isModLoaded(Ref.MOD_CREATE) && AntimatterAPI.getSIDE().isClient()){
+        if (AntimatterAPI.isModLoaded(Ref.MOD_CREATE) && FMLEnvironment.dist.isClient()){
             PonderIntegration.registerMultiblock(machine, tier, patternList);
         }
     }

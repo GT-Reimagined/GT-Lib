@@ -26,7 +26,6 @@ import muramasa.antimatter.registration.IRegistryEntryProvider;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.registration.RegistrationEvent;
 import muramasa.antimatter.registration.Side;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.NonNullSupplier;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.core.BlockPos;
@@ -37,8 +36,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.LoadingModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import org.apache.logging.log4j.LogManager;
@@ -422,7 +423,7 @@ public final class AntimatterAPI {
         RegistrationEvent previous = PHASE;
         PHASE = event;
         Antimatter.LOGGER.info("Registration event " + event);
-        Side side = getSIDE();
+        Dist side = FMLEnvironment.dist;
         if (!REGISTRATION_EVENTS_HANDLED.add(event)) {
             if (ModLoadingContext.get().getActiveNamespace().equals(Ref.ID))
                 return;
