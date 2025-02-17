@@ -1,7 +1,7 @@
 package muramasa.antimatter.mixin;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import muramasa.antimatter.capability.forge.AntimatterCaps;
+import muramasa.antimatter.capability.AntimatterCaps;
 import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;

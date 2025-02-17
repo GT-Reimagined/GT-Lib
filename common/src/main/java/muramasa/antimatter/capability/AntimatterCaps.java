@@ -1,9 +1,8 @@
-package muramasa.antimatter.capability.forge;
+package muramasa.antimatter.capability;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.capability.ICoverHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,6 +15,5 @@ public class AntimatterCaps {
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent ev) {
-        ev.register(ICoverHandler.class);
     }
 }

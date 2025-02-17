@@ -14,7 +14,7 @@ import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.ICoverHandlerProvider;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.capability.IMachineHandler;
-import muramasa.antimatter.capability.forge.AntimatterCaps;
+import muramasa.antimatter.capability.AntimatterCaps;
 import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.forge.ExtendedContainerWrapper;
 import muramasa.antimatter.capability.pipe.PipeCoverHandler;
