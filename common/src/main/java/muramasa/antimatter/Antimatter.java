@@ -130,7 +130,6 @@ public class Antimatter extends AntimatterMod {
         eventBus.addListener(this::commonSetup);
         eventBus.addListener(this::serverSetup);
         eventBus.addListener(this::loadComplete);
-        eventBus.addListener(EventPriority.LOWEST, this::onGatherDataEvent);
 
         eventBus.addListener(this::addCraftingLoaders);
         eventBus.addListener(this::providers);
@@ -273,10 +272,6 @@ public class Antimatter extends AntimatterMod {
         return Ref.ID;
     }
 
-
-    private void onGatherDataEvent(GatherDataEvent event){
-        AntimatterMod.onGatherData(event.getGenerator(), event.includeClient(), event.includeServer());
-    }
 
     private void clientSetup(final FMLClientSetupEvent e) {
         ClientHandler.setup();

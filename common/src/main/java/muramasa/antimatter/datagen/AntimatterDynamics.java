@@ -113,13 +113,6 @@ public class AntimatterDynamics {
 
     }
 
-    public static void onProviderInit(String domain, DataGenerator gen, Dist side) {
-        if (side == Dist.CLIENT) {
-            PROVIDERS.getOrDefault(domain, Collections.emptyList()).stream().map(Supplier::get)
-                    .filter(p -> p instanceof AntimatterLanguageProvider).forEach(gen::addProvider);
-        }
-    }
-
     /**
      * Providers and Dynamic Resource Pack Section
      **/
