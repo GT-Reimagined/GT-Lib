@@ -30,13 +30,13 @@ public class KubeJSRegistrar extends AntimatterMod {
 
     public static void providerEvent(AntimatterProvidersEvent ev) {
         final AntimatterBlockTagProvider[] p = new AntimatterBlockTagProvider[1];
-        ev.addProvider(Ref.MOD_KJS, () -> {
+        ev.addProvider(() -> {
             p[0] = new AntimatterBlockTagProvider(Ref.MOD_KJS, "KubeJS Block Tags", false);
             return p[0];
         });
-        ev.addProvider(Ref.MOD_KJS, () ->
+        ev.addProvider(() ->
                 new AntimatterItemTagProvider(Ref.MOD_KJS, "KubeJS Item Tags", false, p[0]));
-        ev.addProvider(Ref.MOD_KJS, () -> new AntimatterBlockLootProvider(Ref.MOD_KJS, "KubeJS Loot generator"));
+        ev.addProvider(() -> new AntimatterBlockLootProvider(Ref.MOD_KJS, "KubeJS Loot generator"));
     }
 
     @Override

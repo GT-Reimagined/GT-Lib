@@ -13,15 +13,11 @@ import java.util.function.Supplier;
 public class AntimatterProvidersEvent extends AntimatterEvent implements IModBusEvent {
     private final List<IAntimatterProvider> providers = new ObjectArrayList<>(10);
 
-    public final Dist side;
-
-
-    public AntimatterProvidersEvent(Dist side, IAntimatterRegistrar registrar) {
+    public AntimatterProvidersEvent(IAntimatterRegistrar registrar) {
         super(registrar);
-        this.side = side;
     }
 
-    public void addProvider(String domain, Supplier<IAntimatterProvider> provider) {
+    public void addProvider(Supplier<IAntimatterProvider> provider) {
         providers.add(provider.get());
     }
 

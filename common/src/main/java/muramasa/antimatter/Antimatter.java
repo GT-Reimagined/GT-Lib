@@ -143,17 +143,16 @@ public class Antimatter extends AntimatterMod {
 
     public void providers(AntimatterProvidersEvent ev) {
         final AntimatterBlockTagProvider[] p = new AntimatterBlockTagProvider[1];
-        ev.addProvider(Ref.ID, () -> {
+        ev.addProvider(() -> {
             p[0] = new AntimatterBlockTagProvider(Ref.ID, Ref.NAME.concat(" Block Tags"), false);
             return p[0];
         });
-        ev.addProvider(Ref.SHARED_ID, () -> new AntimatterFluidTagProvider(Ref.SHARED_ID,
+        ev.addProvider(() -> new AntimatterFluidTagProvider(Ref.SHARED_ID,
                 "Antimatter Shared Fluid Tags", false));
-        ev.addProvider(Ref.ID, () -> new AntimatterItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
+        ev.addProvider(() -> new AntimatterItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
                 false, p[0]));
-        ev.addProvider(Ref.ID,
-                () -> new AntimatterBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
-        ev.addProvider(Ref.ID, () -> new AntimatterTagProvider<Biome>(BuiltinRegistries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome") {
+        ev.addProvider(() -> new AntimatterBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
+        ev.addProvider(() -> new AntimatterTagProvider<Biome>(BuiltinRegistries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome") {
             @Override
             protected void processTags(String domain) {
                 this.tag(TagUtils.getBiomeTag(new ResourceLocation("is_desert"))).add(Biomes.DESERT);

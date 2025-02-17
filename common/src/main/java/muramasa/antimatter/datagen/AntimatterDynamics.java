@@ -122,7 +122,7 @@ public class AntimatterDynamics {
 
     public static void runDataProvidersDynamically() {
         AntimatterBlockLootProvider.init();
-        AntimatterProvidersEvent ev = new AntimatterProvidersEvent(FMLEnvironment.dist, Antimatter.INSTANCE);
+        AntimatterProvidersEvent ev = new AntimatterProvidersEvent(Antimatter.INSTANCE);
         ModLoader.get().postEvent(ev);
         Collection<IAntimatterProvider> providers = ev.getProviders();
         long time = System.currentTimeMillis();
