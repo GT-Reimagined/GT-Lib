@@ -13,7 +13,6 @@ import muramasa.antimatter.data.AntimatterMaterialTypes;
 import muramasa.antimatter.data.AntimatterMaterials;
 import muramasa.antimatter.data.AntimatterStoneTypes;
 import muramasa.antimatter.data.AntimatterTags;
-import muramasa.antimatter.data.ForgeCTags;
 import muramasa.antimatter.fluid.AntimatterFluid;
 import muramasa.antimatter.machine.BlockMachine;
 import muramasa.antimatter.machine.BlockMultiMachine;
