@@ -13,6 +13,7 @@ import muramasa.antimatter.machine.event.MachineEvent;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import tesseract.api.fe.IFENode;
@@ -127,13 +128,13 @@ public class MachineFEHandler<T extends BlockEntityMachine<T>> extends FEHandler
     }
 
     @Override
-    public Optional<? extends IFENode> forSide(Direction side) {
-        return Optional.of(this);
+    public LazyOptional<? extends IFENode> forSide(Direction side) {
+        return LazyOptional.of(() -> this);
     }
 
     @Override
-    public Optional<? extends IFENode> forNullSide() {
-        return Optional.of(this);
+    public LazyOptional<? extends IFENode> forNullSide() {
+        return LazyOptional.of(() -> this);
     }
 
     public void onRemove() {

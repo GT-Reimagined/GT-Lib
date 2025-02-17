@@ -28,6 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
@@ -427,12 +428,12 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     }
 
     @Override
-    public Optional<ExtendedItemContainer> forSide(Direction side) {
-        return Optional.of(new SidedCombinedInvWrapper(side, tile.coverHandler.map(c -> c).orElse(null), this::allowsInput, this::allowsOutput, this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(ExtendedItemContainer[]::new)));
+    public LazyOptional<ExtendedItemContainer> forSide(Direction side) {
+        return LazyOptional.of(() -> new SidedCombinedInvWrapper(side, tile.coverHandler.map(c -> c).orElse(null), this::allowsInput, this::allowsOutput, this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(ExtendedItemContainer[]::new)));
     }
 
     @Override
-    public Optional<? extends ExtendedItemContainer> forNullSide() {
-        return Optional.of(new ROCombinedInvWrapper(this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(ExtendedItemContainer[]::new)));
+    public LazyOptional<? extends ExtendedItemContainer> forNullSide() {
+        return LazyOptional.of(() -> new ROCombinedInvWrapper(this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(ExtendedItemContainer[]::new)));
     }
 }

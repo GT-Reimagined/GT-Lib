@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.Ref;
 import net.minecraft.core.Direction;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 public class Holder<V, T extends Dispatch.Sided<V>> {
     private final Dispatch dispatch;
     public final Class<?> cap;
-    private final Optional[] sided;
+    private final LazyOptional[] sided;
     private List<Consumer<? super T>> consumers = new ObjectArrayList<>();
     private final ImmutableList<Set<Runnable>> listeners;
     private Supplier<? extends T> supplier;
@@ -30,11 +31,11 @@ public class Holder<V, T extends Dispatch.Sided<V>> {
         this.cap = cap;
         //7th side is null side
         this.listeners = ImmutableList.of(new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
-        this.sided = new Optional[Ref.DIRS.length + 1];
+        this.sided = new LazyOptional[Ref.DIRS.length + 1];
         for (Direction dir : Ref.DIRS) {
-            sided[dir.get3DDataValue()] = Optional.empty();
+            sided[dir.get3DDataValue()] = LazyOptional.empty();
         }
-        sided[6] = Optional.empty();
+        sided[6] = LazyOptional.empty();
         this.flag = false;
         this.supplier = source;
         dispatch.registerHolder(this);
@@ -65,20 +66,17 @@ public class Holder<V, T extends Dispatch.Sided<V>> {
     }
 
     public void invalidate(Direction side) {
-        invalidating++;
-        int index = side == null ? 6 : side.get3DDataValue();
-        listeners.get(index).forEach(Runnable::run);
-        listeners.get(index).clear();
-        invalidating--;
+        if (side == null) {
+            sided[6].invalidate();
+            return;
+        }
+        sided[side.get3DDataValue()].invalidate();
     }
 
     public void invalidate() {
-        invalidating++;
-        listeners.forEach(l -> {
-            l.forEach(Runnable::run);
-            l.clear();
-        });
-        invalidating--;
+        for (LazyOptional<?> opt : sided) {
+            opt.invalidate();
+        }
     }
 
     @Nullable
@@ -98,11 +96,8 @@ public class Holder<V, T extends Dispatch.Sided<V>> {
         return resolved;
     }
 
-    public Optional<? extends V> nullSide() {
-        if (resolved == null) {
-            get();
-        }
-        return resolved.forNullSide();
+    public LazyOptional<? extends V> nullSide() {
+        return side(null);
     }
 
     public T orElse(T orElse) {
@@ -153,6 +148,11 @@ public class Holder<V, T extends Dispatch.Sided<V>> {
         }
     }
 
+    public <U> LazyOptional<U> lazyMap(Function<? super T, ? extends U> mapper) {
+        T value = get();
+        return value == null ? LazyOptional.empty() : LazyOptional.of(() -> mapper.apply(value));
+    }
+
     public <U> Optional<U> map(Function<? super T, ? extends U> mapper) {
         T value = get();
         return value == null ? Optional.empty() : Optional.of(mapper.apply(value));
@@ -163,17 +163,17 @@ public class Holder<V, T extends Dispatch.Sided<V>> {
         return value != null && predicate.test(value) ? Optional.of(value) : Optional.empty();
     }
 
-    public Optional<? extends V> side(Direction side) {
+    public LazyOptional<? extends V> side(Direction side) {
         if (!isPresent()) {
-            return Optional.empty();
+            return LazyOptional.empty();
         }
         if (resolved == null) {
             get();
         }
         int index = side == null ? 6 : side.get3DDataValue();
-        Optional<? extends V> t = sided[index];
+        LazyOptional<? extends V> t = sided[index];
         if (!t.isPresent()) {
-            sided[index] = (t = (side == null ? nullSide() : resolved.forSide(side)));
+            sided[index] = (t = (side == null ? resolved.forNullSide() : resolved.forSide(side)));
         }
         return t;
     }

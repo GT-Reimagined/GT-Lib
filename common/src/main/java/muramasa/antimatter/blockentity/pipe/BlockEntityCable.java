@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import tesseract.TesseractCapUtils;
 import tesseract.TesseractGraphWrappers;
 import tesseract.api.capability.TesseractGTCapability;
@@ -110,13 +111,13 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     }
 
     @Override
-    public Optional<IEnergyHandler> forSide(Direction side) {
-        return Optional.of(new TesseractGTCapability<>(this, side, !isConnector(), (stack, dir, input, simulate) ->
+    public LazyOptional<IEnergyHandler> forSide(Direction side) {
+        return LazyOptional.of(() -> new TesseractGTCapability<>(this, side, !isConnector(), (stack, dir, input, simulate) ->
         this.coverHandler.map(t -> t.onTransfer(stack, dir, input, simulate)).orElse(false)));
     }
 
     @Override
-    public Optional<IEnergyHandler> forNullSide() {
+    public LazyOptional<IEnergyHandler> forNullSide() {
         return forSide(null);
     }
 

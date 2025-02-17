@@ -26,6 +26,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 
@@ -652,12 +653,12 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     @Override
-    public Optional<MachineRecipeHandler<?>> forSide(Direction side) {
-        return Optional.of(this);
+    public LazyOptional<MachineRecipeHandler<?>> forSide(Direction side) {
+        return LazyOptional.of(() -> this);
     }
 
     @Override
-    public Optional<MachineRecipeHandler<?>> forNullSide() {
-        return Optional.of(this);
+    public LazyOptional<MachineRecipeHandler<?>> forNullSide() {
+        return LazyOptional.of(() -> this);
     }
 }

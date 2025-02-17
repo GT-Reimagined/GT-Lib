@@ -93,15 +93,14 @@ public abstract class BlockEntityPipeMixin<T extends PipeType<T>> extends BlockE
 
     private  <U> LazyOptional<U> fromHolder(Holder<U, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
-        LazyOptional<U> opt = LazyOptional.of(() -> holder.side(side).get());
-        boolean add = holder.addListener(side, opt::invalidate);
-        if (!add) return LazyOptional.empty();
-        return opt;
+        return holder.side(side).cast();
     }
 
     private LazyOptional<IItemHandler> fromItemHolder(Holder<ExtendedItemContainer, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
-        LazyOptional<IItemHandler> opt = LazyOptional.of(() -> new ExtendedContainerWrapper(holder.side(side).get()));
+        Optional<? extends ExtendedItemContainer> optional = holder.side(side).resolve();
+        if (optional.isEmpty()) return LazyOptional.empty();
+        LazyOptional<IItemHandler> opt = LazyOptional.of(() -> new ExtendedContainerWrapper(optional.get()));
         boolean add = holder.addListener(side, opt::invalidate);
         if (!add) return LazyOptional.empty();
         return opt;
@@ -109,7 +108,9 @@ public abstract class BlockEntityPipeMixin<T extends PipeType<T>> extends BlockE
 
     private LazyOptional<IFluidHandler> fromFluidHolder(Holder<FluidContainer, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
-        LazyOptional<IFluidHandler> opt = LazyOptional.of(() -> new ForgeFluidContainer(holder.side(side).get()));
+        Optional<? extends FluidContainer> optional = holder.side(side).resolve();
+        if (optional.isEmpty()) return LazyOptional.empty();
+        LazyOptional<IFluidHandler> opt = LazyOptional.of(() -> new ForgeFluidContainer(optional.get()));
         boolean add = holder.addListener(side, opt::invalidate);
         if (!add) return LazyOptional.empty();
         return opt;

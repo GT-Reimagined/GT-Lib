@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import tesseract.graph.Connectivity;
 
@@ -105,13 +106,13 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     }
 
     @Override
-    public Optional<ExtendedItemContainer> forSide(Direction side) {
-        return Optional.of(new PipeItemHandler(side, this, coverHandler.orElse(null), inventory));
+    public LazyOptional<ExtendedItemContainer> forSide(Direction side) {
+        return LazyOptional.of(() -> new PipeItemHandler(side, this, coverHandler.orElse(null), inventory));
     }
 
     @Override
-    public Optional<? extends ExtendedItemContainer> forNullSide() {
-        return Optional.of(new ROCombinedInvWrapper(inventory));
+    public LazyOptional<? extends ExtendedItemContainer> forNullSide() {
+        return LazyOptional.of(() -> new ROCombinedInvWrapper(inventory));
     }
 
     @Override

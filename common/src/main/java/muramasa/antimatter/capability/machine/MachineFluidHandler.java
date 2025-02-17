@@ -22,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -256,13 +257,13 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     }
 
     @Override
-    public Optional<? extends FluidContainer> forNullSide() {
-        return Optional.of(new FluidHandlerNullSideWrapper(this));
+    public LazyOptional<? extends FluidContainer> forNullSide() {
+        return LazyOptional.of(() -> new FluidHandlerNullSideWrapper(this));
     }
 
     @Override
-    public Optional<FluidContainer> forSide(Direction side) {
-        return Optional.of(new FluidHandlerSidedWrapper(this, tile.coverHandler.map(c -> c).orElse(null), side));
+    public LazyOptional<FluidContainer> forSide(Direction side) {
+        return LazyOptional.of(() -> new FluidHandlerSidedWrapper(this, tile.coverHandler.map(c -> c).orElse(null), side));
     }
 
     public PlatformFluidHandler getGuiHandler() {

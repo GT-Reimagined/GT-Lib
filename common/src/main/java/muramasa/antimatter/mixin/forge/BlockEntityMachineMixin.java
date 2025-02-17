@@ -125,16 +125,13 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
 
     private  <U> LazyOptional<U> fromHolder(Holder<U, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
-        Optional<? extends U> optional = holder.side(side);
-        LazyOptional<U> opt = optional.isPresent() ? LazyOptional.of(optional::get) : LazyOptional.empty();
-        boolean add = holder.addListener(side, opt::invalidate);
-        if (!add) return LazyOptional.empty();
-        return opt;
+        LazyOptional<? extends U> optional = holder.side(side);
+        return optional.cast();
     }
 
     private LazyOptional<IItemHandler> fromItemHolder(Holder<ExtendedItemContainer, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
-        Optional<? extends ExtendedItemContainer> optional = holder.side(side);
+        LazyOptional<? extends ExtendedItemContainer> optional = holder.side(side);
         LazyOptional<IItemHandler> opt = optional.<LazyOptional<IItemHandler>>map(extendedItemContainer -> LazyOptional.of(() -> new ExtendedContainerWrapper(extendedItemContainer))).orElseGet(LazyOptional::empty);
         boolean add = holder.addListener(side, opt::invalidate);
         if (!add) return LazyOptional.empty();
@@ -143,7 +140,7 @@ public abstract class BlockEntityMachineMixin<T extends BlockEntityMachine<T>> e
 
     private LazyOptional<IFluidHandler> fromFluidHolder(Holder<FluidContainer, ?> holder, Direction side){
         if (!holder.isPresent()) return LazyOptional.empty();
-        Optional<? extends FluidContainer> optional = holder.side(side);
+        LazyOptional<? extends FluidContainer> optional = holder.side(side);
         LazyOptional<IFluidHandler> opt = optional.<LazyOptional<IFluidHandler>>map(fluidContainer -> LazyOptional.of(() -> new ForgeFluidContainer(fluidContainer))).orElseGet(LazyOptional::empty);
         boolean add = holder.addListener(side, opt::invalidate);
         if (!add) return LazyOptional.empty();

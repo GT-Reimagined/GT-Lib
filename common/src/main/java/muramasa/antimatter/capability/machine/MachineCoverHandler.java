@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,12 +140,12 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
     }
 
     @Override
-    public Optional<ICoverHandler<?>> forSide(Direction side) {
-        return Optional.of(this);
+    public LazyOptional<ICoverHandler<?>> forSide(Direction side) {
+        return LazyOptional.of(() -> this);
     }
 
     @Override
-    public Optional<? extends ICoverHandler<?>> forNullSide() {
-        return Optional.of(this);
+    public LazyOptional<? extends ICoverHandler<?>> forNullSide() {
+        return LazyOptional.of(() -> this);
     }
 }

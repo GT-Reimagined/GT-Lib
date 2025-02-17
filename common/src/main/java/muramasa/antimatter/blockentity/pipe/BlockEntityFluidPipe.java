@@ -33,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.common.util.LazyOptional;
 import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
@@ -331,18 +332,18 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     }
 
     @Override
-    public Optional<? extends FluidContainer> forSide(Direction side) {
+    public LazyOptional<? extends FluidContainer> forSide(Direction side) {
         if (fluidHandler.isEmpty()) {
-            fluidHandler = Optional.of(new PipeFluidHandler(this, type.getPressure(getPipeSize()) * 2, 1, 0));
+            return LazyOptional.empty();
         }
         if (side == null){
-            return Optional.of(new FluidHandlerNullSideWrapper(fluidHandler.get()));
+            return LazyOptional.of(() -> new FluidHandlerNullSideWrapper(fluidHandler.get()));
         }
-        return Optional.of(new PipeFluidHandlerSidedWrapper(fluidHandler.get(), this, side));
+        return LazyOptional.of(() -> new PipeFluidHandlerSidedWrapper(fluidHandler.get(), this, side));
     }
 
     @Override
-    public Optional<? extends FluidContainer> forNullSide() {
+    public LazyOptional<? extends FluidContainer> forNullSide() {
         return forSide(null);
     }
 
