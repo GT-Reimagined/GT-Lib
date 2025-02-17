@@ -1,4 +1,4 @@
-package muramasa.antimatter.event.forge;
+package muramasa.antimatter.event;
 
 import muramasa.antimatter.registration.IAntimatterRegistrar;
 import net.minecraftforge.eventbus.api.Event;

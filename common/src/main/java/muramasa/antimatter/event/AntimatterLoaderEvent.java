@@ -1,4 +1,4 @@
-package muramasa.antimatter.event.forge;
+package muramasa.antimatter.event;
 
 import muramasa.antimatter.recipe.loader.IRecipeRegistrate;
 import muramasa.antimatter.registration.IAntimatterRegistrar;

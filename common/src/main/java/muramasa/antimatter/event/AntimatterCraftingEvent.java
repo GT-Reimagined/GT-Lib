@@ -1,4 +1,4 @@
-package muramasa.antimatter.event.forge;
+package muramasa.antimatter.event;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.datagen.ICraftingLoader;

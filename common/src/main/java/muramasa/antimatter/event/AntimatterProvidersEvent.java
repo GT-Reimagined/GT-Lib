@@ -1,9 +1,8 @@
-package muramasa.antimatter.event.forge;
+package muramasa.antimatter.event;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.datagen.IAntimatterProvider;
 import muramasa.antimatter.registration.IAntimatterRegistrar;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.event.IModBusEvent;
 
 import java.util.Collection;
