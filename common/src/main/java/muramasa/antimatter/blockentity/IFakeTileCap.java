@@ -1,4 +1,4 @@
-package muramasa.antimatter.forge.duck;
+package muramasa.antimatter.blockentity;
 
 import muramasa.antimatter.cover.ICover;
 import net.minecraft.core.Direction;

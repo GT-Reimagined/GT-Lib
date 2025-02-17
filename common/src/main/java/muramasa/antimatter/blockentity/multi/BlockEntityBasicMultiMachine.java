@@ -18,8 +18,12 @@ import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.block.BlockBasic;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
+import muramasa.antimatter.blockentity.IFakeTileCap;
 import muramasa.antimatter.capability.IComponentHandler;
 import muramasa.antimatter.client.scene.TrackedDummyWorld;
+import muramasa.antimatter.cover.CoverDynamo;
+import muramasa.antimatter.cover.CoverEnergy;
+import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.machine.MachineState;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.machine.event.MachineEvent;
@@ -42,8 +46,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tesseract.api.forge.TesseractCaps;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +63,7 @@ import java.util.Set;
  * Allows a MultiMachine to handle GUI recipes, instead of using Hatches
  **/
 public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine<T>> extends BlockEntityMachine<T>
-        implements IAlignment {
+        implements IAlignment , IFakeTileCap {
 
     private final Set<StructureHandle<?>> allHandlers = new ObjectOpenHashSet<>();
     protected boolean validStructure = false;
@@ -456,5 +465,12 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
 
     public void addStructureHandle(StructureHandle<?> handle) {
         this.allHandlers.add(handle);
+    }
+
+    @Override
+    public <U> LazyOptional<U> getCapabilityFromFake(@NotNull Capability<U> cap, @Nullable Direction side, ICover cover) {
+        if (!allowsFakeTiles()) return LazyOptional.empty();
+        if ((cap == CapabilityEnergy.ENERGY || cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY) && !(cover instanceof CoverDynamo || cover instanceof CoverEnergy)) return LazyOptional.empty();
+        return getCap(cap, side);
     }
 }

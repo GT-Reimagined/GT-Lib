@@ -1,6 +1,7 @@
 package muramasa.antimatter.blockentity;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.block.BlockFakeTile;
 import muramasa.antimatter.blockentity.multi.BlockEntityBasicMultiMachine;
@@ -21,6 +22,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +33,7 @@ import java.util.Map;
 
 public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlock> {
 
+    @Getter
     private BlockEntityBasicMultiMachine<?> controller = null;
     public Map<Direction, ICover> covers = new EnumMap<>(Direction.class);
     public Direction facing;
@@ -50,10 +54,6 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
             }
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         }
-    }
-
-    public BlockEntityBasicMultiMachine<?> getController() {
-        return controller;
     }
 
     @Override
@@ -191,5 +191,14 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
             controller.getInfo(simple);
         }
         return list;
+    }
+
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (controller != null){
+            return controller.getCapabilityFromFake(cap, side, side == null ? ICover.empty : covers.get(side));
+        }
+        return super.getCapability(cap, side);
     }
 }

@@ -1,6 +1,7 @@
 package muramasa.antimatter.blockentity;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
+import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
@@ -15,7 +16,9 @@ import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.ICoverHandlerProvider;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.capability.IMachineHandler;
+import muramasa.antimatter.capability.forge.AntimatterCaps;
 import muramasa.antimatter.capability.item.ExtendedItemContainer;
+import muramasa.antimatter.capability.item.forge.ExtendedContainerWrapper;
 import muramasa.antimatter.capability.machine.DefaultHeatHandler;
 import muramasa.antimatter.capability.machine.MachineCoverHandler;
 import muramasa.antimatter.capability.machine.MachineEnergyHandler;
@@ -28,8 +31,11 @@ import muramasa.antimatter.client.dynamic.DynamicTexturer;
 import muramasa.antimatter.client.dynamic.DynamicTexturers;
 import muramasa.antimatter.client.tesr.Caches;
 import muramasa.antimatter.client.tesr.MachineTESR;
+import muramasa.antimatter.cover.CoverDynamo;
+import muramasa.antimatter.cover.CoverEnergy;
 import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.ICover;
+import muramasa.antimatter.cover.ICover.DynamicKey;
 import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.GuiInstance;
 import muramasa.antimatter.gui.IGuiElement;
@@ -80,9 +86,18 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Unique;
 import tesseract.api.fe.IFENode;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.heat.IHeatHandler;
 
@@ -138,6 +153,9 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public Holder<IHeatHandler, DefaultHeatHandler> heatHandler = new Holder<>(IHeatHandler.class, dispatch);
     public Holder<IFENode, MachineFEHandler<T>> feHandler = new Holder<>(IFENode.class, dispatch);
     public Holder<MachineRecipeHandler<?>, MachineRecipeHandler<T>> recipeHandler = new Holder<>(MachineRecipeHandler.class, dispatch, null);
+
+    private LazyOptional<IFluidHandler>[] fluidHandlerLazyOptional = new LazyOptional[7];
+    private LazyOptional<IItemHandler>[] itemHandlerLazyOptional = new LazyOptional[7];
 
     /**
      * Client related fields.
@@ -643,6 +661,59 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     public <V> boolean blocksCapability(@NotNull Class<V> cap, Direction side) {
         return coverHandler.map(t -> t.blocksCapability(cap, side)).orElse(false);
+    }
+
+    @NotNull
+    @Override
+    public <U> LazyOptional<U> getCapability(@NotNull Capability<U> cap, @Nullable Direction side) {
+        int index = side == null ? 6 : side.get3DDataValue();
+        if (side == getFacing() && !allowsFrontIO()) return LazyOptional.empty();
+        if (blocksCapability(AntimatterCaps.CAP_MAP.inverse().get(cap), side)) return LazyOptional.empty();
+        return getCap(cap, side);
+    }
+
+
+    protected <U> LazyOptional<U> getCap(@NotNull Capability<U> cap, @Nullable Direction side) {
+        int index = side == null ? 6 : side.get3DDataValue();
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && fluidHandler.isPresent()) {
+            if (fluidHandlerLazyOptional[index] == null || !fluidHandlerLazyOptional[index].isPresent()){
+                fluidHandlerLazyOptional[index] = fromFluidHolder(fluidHandler, side);
+            }
+            return fluidHandlerLazyOptional[index].cast();
+        }
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && itemHandler.isPresent()) {
+            if (itemHandlerLazyOptional[index] == null || !itemHandlerLazyOptional[index].isPresent()){
+                itemHandlerLazyOptional[index] = fromItemHolder(itemHandler, side);
+            }
+            return itemHandlerLazyOptional[index].cast();
+        }
+        if (cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY || cap == CapabilityEnergy.ENERGY){
+            if (cap == CapabilityEnergy.ENERGY && feHandler.isPresent()){
+                return feHandler.side(side).cast();
+            } else if (energyHandler.isPresent()){
+                if (cap == CapabilityEnergy.ENERGY && side == null) return LazyOptional.empty();
+                return energyHandler.side(side).cast();
+            }
+        }
+        return super.getCapability(cap, side);
+    }
+
+    private LazyOptional<IItemHandler> fromItemHolder(Holder<ExtendedItemContainer, ?> holder, Direction side){
+        if (!holder.isPresent()) return LazyOptional.empty();
+        LazyOptional<? extends ExtendedItemContainer> optional = holder.side(side);
+        LazyOptional<IItemHandler> opt = optional.<LazyOptional<IItemHandler>>map(extendedItemContainer -> LazyOptional.of(() -> new ExtendedContainerWrapper(extendedItemContainer))).orElseGet(LazyOptional::empty);
+        boolean add = holder.addListener(side, opt::invalidate);
+        if (!add) return LazyOptional.empty();
+        return opt;
+    }
+
+    private LazyOptional<IFluidHandler> fromFluidHolder(Holder<FluidContainer, ?> holder, Direction side) {
+        if (!holder.isPresent()) return LazyOptional.empty();
+        LazyOptional<? extends FluidContainer> optional = holder.side(side);
+        LazyOptional<IFluidHandler> opt = optional.<LazyOptional<IFluidHandler>>map(fluidContainer -> LazyOptional.of(() -> new ForgeFluidContainer(fluidContainer))).orElseGet(LazyOptional::empty);
+        boolean add = holder.addListener(side, opt::invalidate);
+        if (!add) return LazyOptional.empty();
+        return opt;
     }
 
     public final boolean allowsFrontIO() {
