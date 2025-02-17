@@ -53,7 +53,7 @@ public class AntimatterItemModelProvider extends AntimatterModelProvider<Antimat
         AntimatterAPI.all(Block.class, domain).forEach(b -> AntimatterModelManager.onItemModelBuild(b, this));
         AntimatterAPI.all(AntimatterFluid.class, domain).forEach(f -> {
             modelAndTexture(f.getContainerItem(), "forge", "item/bucket").bucketProperties(f.getFluid());
-            modelAndTexture(f.getFluidBlock(), AntimatterBlockModelBuilder.getSimple()).tex(a -> a.put("all", f.getAttributes().flowing().toString()));
+            modelAndTexture(f.getFluidBlock(), AntimatterBlockModelBuilder.getSimple()).tex(a -> a.put("all", f.getAttributes().getFlowingTexture().toString()));
         });
     }
 
