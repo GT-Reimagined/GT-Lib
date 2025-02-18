@@ -3,6 +3,7 @@ package muramasa.antimatter.client.model;
 import com.mojang.datafixers.util.Pair;
 import muramasa.antimatter.client.IAntimatterModel;
 import muramasa.antimatter.client.baked.ProxyBakedModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -26,7 +27,7 @@ public class ProxyModel implements IAntimatterModel<ProxyModel> {
     }
 
     @Override
-    public BakedModel bakeModel(ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
+    public BakedModel bakeModel(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         return new ProxyBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())));
     }
 

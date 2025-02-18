@@ -6,6 +6,7 @@ import com.mojang.math.Transformation;
 import muramasa.antimatter.client.IAntimatterModel;
 import muramasa.antimatter.client.ModelUtils;
 import muramasa.antimatter.client.SimpleModelState;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -34,7 +35,8 @@ public class AntimatterModel<T extends AntimatterModel<T>> implements IAntimatte
         this.rotations = rotations;
     }
 
-    public BakedModel bakeModel(ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
+    @Override
+    public BakedModel bakeModel(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         return model != null ? model.bake(bakery, getter, getModelTransform(transform, rotations), loc) : ModelUtils.getMissingModel().bake(bakery, getter, transform, loc);
     }
 

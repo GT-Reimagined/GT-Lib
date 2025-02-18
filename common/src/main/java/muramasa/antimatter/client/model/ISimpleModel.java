@@ -14,11 +14,6 @@ import java.util.function.Function;
 
 public interface ISimpleModel<T extends ISimpleModel<T>> extends IAntimatterModel<T> {
     @Override
-    default BakedModel bakeModel(ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc){
-        return null;
-    }
-
-    @Override
     default BakedModel bakeModel(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
     {
         TextureAtlasSprite particle = spriteGetter.apply(owner.resolveTexture("particle"));
