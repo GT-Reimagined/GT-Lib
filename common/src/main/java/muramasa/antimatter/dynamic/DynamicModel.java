@@ -62,9 +62,9 @@ public class DynamicModel implements IAntimatterModel {
     }
 
     @Override
-    public Collection<Material> getMaterials(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
+    public Collection<Material> getTextures(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
         Set<Material> textures = new ObjectOpenHashSet<>();
-        modelConfigs.values().forEach(v -> Arrays.stream(v).forEach(m -> textures.addAll(m.getMaterials(configuration, getter, errors))));
+        modelConfigs.values().forEach(v -> Arrays.stream(v).forEach(m -> textures.addAll(m.getTextures(configuration, getter, errors))));
         return textures;
     }
 }

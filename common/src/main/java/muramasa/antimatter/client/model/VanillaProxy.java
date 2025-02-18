@@ -55,7 +55,7 @@ public class VanillaProxy implements ISimpleModel
     }
 
     @Override
-    public Collection<Material> getMaterials(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
+    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
     {
         Set<Material> textures = Sets.newHashSet();
 
