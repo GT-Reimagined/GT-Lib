@@ -105,8 +105,7 @@ public abstract class BlockEntityBase<T extends BlockEntityBase<T>> extends Bloc
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    //TODO figure this out
-    //@Override
+    @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         CompoundTag compoundtag = pkt.getTag();
         if (compoundtag != null) {
@@ -133,13 +132,4 @@ public abstract class BlockEntityBase<T extends BlockEntityBase<T>> extends Bloc
     public interface BlockEntitySupplier<T extends BlockEntity,U> {
         T create(U obj, BlockPos pos, BlockState state);
     }
-
-    //TODO: implications of this.
-    /*@NotNull
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
-        this.write(tag);
-        return tag;
-    }*/
 }
