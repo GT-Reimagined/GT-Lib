@@ -1,5 +1,6 @@
 package muramasa.antimatter.item;
 
+import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.IHaveCover;
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 public class ItemCover extends ItemBasic<ItemCover> implements IHaveCover {
 
+    @Getter
     private final CoverFactory cover;
 
     private final Tier tier;
@@ -36,10 +38,6 @@ public class ItemCover extends ItemBasic<ItemCover> implements IHaveCover {
     @Override
     public Tier getTier() {
         return tier;
-    }
-
-    public CoverFactory getCover() {
-        return cover;
     }
 
     @Override

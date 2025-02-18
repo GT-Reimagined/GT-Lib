@@ -69,21 +69,6 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IAntimatt
         return id;
     }
 
-    /*
-    @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new TranslationTextComponent("item." + getId());
-    }
-     */
-
-    public boolean isEqual(ItemStack stack) {
-        return stack.getItem() == this;
-    }
-
-//    public static boolean doesShowExtendedHighlight(ItemStack stack) {
-//        return AntimatterAPI.getCoverFromCatalyst(stack) != null; //TODO: reimplement?
-//    }
-
     public ItemStack get(int count) {
         //TODO replace consumeTag with flag system
         if (count == 0) return Utils.addNoConsumeTag(new ItemStack(this, 1));

@@ -1,5 +1,6 @@
 package muramasa.antimatter.item;
 
+import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.energy.ItemEnergyHandler;
 import muramasa.antimatter.machine.Tier;
@@ -28,9 +29,11 @@ import java.util.Optional;
 
 public class ItemBattery extends ItemBasic<ItemBattery> implements IEnergyItem {
 
+    @Getter
     protected Tier tier;
     protected final long cap;
     protected final int amps;
+    @Getter
     protected final boolean reusable;
 
     public ItemBattery(String domain, String id, Tier tier, long cap, boolean reusable) {
@@ -45,16 +48,8 @@ public class ItemBattery extends ItemBasic<ItemBattery> implements IEnergyItem {
         this.reusable = reusable;
     }
 
-    public Tier getTier() {
-        return tier;
-    }
-
     public long getCapacity() {
         return cap;
-    }
-
-    public boolean isReusable() {
-        return reusable;
     }
 
     @Override
@@ -78,7 +73,6 @@ public class ItemBattery extends ItemBasic<ItemBattery> implements IEnergyItem {
         long energy = stack.getOrCreateTagElement(Ref.TAG_ITEM_ENERGY_DATA).getLong(Ref.KEY_ITEM_ENERGY);
         if (energy <= 0) return super.getBarColor(stack);
         return 0x00BFFF;
-        //return TesseractCapUtils.INSTANCE.getEnergyHandlerItem(stack).map(IEnergyHandler::getEnergy).filter(l -> l <= 0).map(l -> super.getBarColor(stack)).orElse(0x00BFFF);
     }
 
     @Override
@@ -105,7 +99,7 @@ public class ItemBattery extends ItemBasic<ItemBattery> implements IEnergyItem {
 
     private boolean canDischarge(ItemStack stack) {
         CompoundTag nbt = stack.getTag();
-        if (!nbt.contains(Ref.TAG_ITEM_ENERGY_DATA)) return true;
+        if (nbt == null || !nbt.contains(Ref.TAG_ITEM_ENERGY_DATA)) return true;
         CompoundTag energyTag = nbt.getCompound(Ref.TAG_ITEM_ENERGY_DATA);
         if (!energyTag.contains(Ref.KEY_ITEM_DISCHARGE_MODE)) return true;
         return energyTag.getBoolean(Ref.KEY_ITEM_DISCHARGE_MODE);
@@ -143,11 +137,12 @@ public class ItemBattery extends ItemBasic<ItemBattery> implements IEnergyItem {
         return new ItemEnergyHandler(context, cap, isReusable() ? tier.getVoltage() : 0, tier.getVoltage(), reusable ? 2 : 0, amps);
     }
 
+    @Override
     public int getItemStackLimit(ItemStack stack) {
         if (stack.getTag() != null){
             long energy = stack.getOrCreateTagElement(Ref.TAG_ITEM_ENERGY_DATA).getLong(Ref.KEY_ITEM_ENERGY);
             if (energy > 0) return 1;
         }
-        return getMaxStackSize();
+        return super.getItemStackLimit(stack);
     }
 }

@@ -3,6 +3,7 @@ package muramasa.antimatter.item;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
+import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.client.AntimatterTextureStitcher;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
@@ -32,6 +33,7 @@ import static muramasa.antimatter.util.FluidPlatformUtils.createFluidStack;
 
 public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContainerItem, IFluidItem{
 
+    @Getter
     private final int capacity;
 
     private final Fluid stack;
@@ -48,10 +50,6 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
         });
         this.capacity = 1;
         this.stack = Fluids.EMPTY;
-    }
-
-    public int getCapacity() {
-        return capacity;
     }
 
     /*@Override
