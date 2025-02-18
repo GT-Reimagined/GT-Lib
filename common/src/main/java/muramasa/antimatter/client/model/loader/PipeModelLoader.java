@@ -3,7 +3,6 @@ package muramasa.antimatter.client.model.loader;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import muramasa.antimatter.client.baked.PipeBakedModel;
-import muramasa.antimatter.client.model.IModelConfiguration;
 import muramasa.antimatter.dynamic.DynamicModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -13,6 +12,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.function.Function;
 

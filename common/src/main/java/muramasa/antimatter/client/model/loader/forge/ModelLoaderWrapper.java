@@ -38,61 +38,12 @@ public record ModelLoaderWrapper(IAntimatterModelLoader<?> loader) implements IM
 
         @Override
         public BakedModel bake(IModelConfiguration iModelConfiguration, ModelBakery modelBakery, Function function, ModelState modelState, ItemOverrides itemOverrides, ResourceLocation resourceLocation) {
-            return model.bake(new ModelConfigurationWrapper(iModelConfiguration),modelBakery, function, modelState, itemOverrides, resourceLocation);
+            return model.bake(iModelConfiguration, modelBakery, function, modelState, itemOverrides, resourceLocation);
         }
 
         @Override
         public Collection<Material> getTextures(IModelConfiguration iModelConfiguration, Function function, Set set) {
-            return model.getMaterials(new ModelConfigurationWrapper(iModelConfiguration), function, set);
-        }
-    }
-
-    private record ModelConfigurationWrapper(IModelConfiguration configuration) implements muramasa.antimatter.client.model.IModelConfiguration {
-
-        @Nullable
-        @Override
-        public UnbakedModel getOwnerModel() {
-            return configuration.getOwnerModel();
-        }
-
-        @Override
-        public String getModelName() {
-            return configuration.getModelName();
-        }
-
-        @Override
-        public boolean isTexturePresent(String name) {
-            return configuration.isTexturePresent(name);
-        }
-
-        @Override
-        public Material resolveTexture(String name) {
-            return configuration.resolveTexture(name);
-        }
-
-        @Override
-        public boolean isShadedInGui() {
-            return configuration.isShadedInGui();
-        }
-
-        @Override
-        public boolean isSideLit() {
-            return configuration.isSideLit();
-        }
-
-        @Override
-        public boolean useSmoothLighting() {
-            return configuration.useSmoothLighting();
-        }
-
-        @Override
-        public ItemTransforms getCameraTransforms() {
-            return configuration.getCameraTransforms();
-        }
-
-        @Override
-        public ModelState getCombinedTransform() {
-            return configuration.getCombinedTransform();
+            return model.getMaterials(iModelConfiguration, function, set);
         }
     }
 }

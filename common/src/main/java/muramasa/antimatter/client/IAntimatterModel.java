@@ -3,7 +3,6 @@ package muramasa.antimatter.client;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import muramasa.antimatter.client.model.IModelConfiguration;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -12,6 +11,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.Collection;
 import java.util.Set;

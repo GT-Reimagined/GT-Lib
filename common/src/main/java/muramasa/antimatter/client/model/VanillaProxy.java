@@ -19,6 +19,7 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.Collection;
 import java.util.List;
