@@ -24,11 +24,11 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class AntimatterGroupedModel implements IAntimatterModel {
-    final Map<String, IAntimatterModel> models;
+public class AntimatterGroupedModel implements IAntimatterModel<AntimatterGroupedModel> {
+    final Map<String, IAntimatterModel<?>> models;
     final ResourceLocation particle;
 
-    public AntimatterGroupedModel(ResourceLocation particle, Map<String, IAntimatterModel> models) {
+    public AntimatterGroupedModel(ResourceLocation particle, Map<String, IAntimatterModel<?>> models) {
         this.models = models;
         this.particle = particle;
     }
@@ -44,9 +44,9 @@ public class AntimatterGroupedModel implements IAntimatterModel {
         return new GroupedBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())), builder.build());
     }
 
-    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IAntimatterModel>> entries) {
+    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IAntimatterModel<?>>> entries) {
         ImmutableMap.Builder<String, BakedModel> builder = ImmutableMap.builder();
-        for (Map.Entry<String, IAntimatterModel> entry : entries) {
+        for (Map.Entry<String, IAntimatterModel<?>> entry : entries) {
             builder.put(entry.getKey(), entry.getValue().bake(configuration, bakery, getter, transform, overrides, loc));
         }
         return builder;

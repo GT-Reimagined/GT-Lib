@@ -4,7 +4,7 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.client.IAntimatterModel;
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class AntimatterModelLoader<T extends IAntimatterModel> implements IAntimatterModelLoader<T> {
+public abstract class AntimatterModelLoader<T extends IAntimatterModel<T>> implements IAntimatterModelLoader<T> {
     private final ResourceLocation loc;
 
     public AntimatterModelLoader(ResourceLocation loc) {

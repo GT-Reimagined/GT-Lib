@@ -11,6 +11,7 @@ import muramasa.antimatter.dynamic.DynamicModel;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class DynamicModelLoader extends AntimatterModelLoader<DynamicModel> {
 
@@ -18,8 +19,9 @@ public class DynamicModelLoader extends AntimatterModelLoader<DynamicModel> {
             super(loc);
         }
 
+        @NotNull
         @Override
-        public DynamicModel readModel(JsonDeserializationContext context, JsonObject json) {
+        public DynamicModel read(JsonDeserializationContext context, JsonObject json) {
             try {
                 Int2ObjectOpenHashMap<IAntimatterModel[]> configs = new Int2ObjectOpenHashMap<>();
                 for (JsonElement e : json.getAsJsonArray("config")) {

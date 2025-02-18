@@ -12,7 +12,7 @@ import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.function.Function;
 
-public interface ISimpleModel extends IAntimatterModel {
+public interface ISimpleModel<T extends ISimpleModel<T>> extends IAntimatterModel<T> {
     @Override
     default BakedModel bakeModel(ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc){
         return null;

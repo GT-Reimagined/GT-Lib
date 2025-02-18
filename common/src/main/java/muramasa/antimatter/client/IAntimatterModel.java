@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
-public interface IAntimatterModel extends IModelGeometry<IAntimatterModel> {
+public interface IAntimatterModel<T extends IAntimatterModel<T>> extends IModelGeometry<T> {
 
     default ModelState getModelTransform(ModelState base, int[] rots) {
         if (rots == null || rots.length != 3 || (rots[0] == 0 && rots[1] == 0 && rots[2] == 0)) return base;

@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class MachineModel implements IAntimatterModel{
+public class MachineModel implements IAntimatterModel<MachineModel>{
 
     protected final Map<MachineState, UnbakedModel[]> models;
     protected final ResourceLocation particle;

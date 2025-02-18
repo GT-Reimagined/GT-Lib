@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
-public class DynamicModel implements IAntimatterModel {
+public class DynamicModel implements IAntimatterModel<DynamicModel> {
 
     protected Int2ObjectOpenHashMap<IAntimatterModel[]> modelConfigs;
     protected String staticMapId;

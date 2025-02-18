@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
-public class AntimatterModel implements IAntimatterModel {
+public class AntimatterModel<T extends AntimatterModel<T>> implements IAntimatterModel<T> {
 
     protected UnbakedModel model;
     protected int[] rotations = new int[0];

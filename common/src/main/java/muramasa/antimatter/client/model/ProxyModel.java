@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
-public class ProxyModel implements IAntimatterModel {
+public class ProxyModel implements IAntimatterModel<ProxyModel> {
 
     public ProxyModel() {
         super();

@@ -5,10 +5,10 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import muramasa.antimatter.client.IAntimatterModel;
 import muramasa.antimatter.registration.IAntimatterObject;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraftforge.client.model.IModelLoader;
 
-public interface IAntimatterModelLoader<T extends IAntimatterModel> extends IAntimatterObject {
-    T readModel(JsonDeserializationContext context, JsonObject json);
-
+public interface IAntimatterModelLoader<T extends IAntimatterModel<T>> extends IAntimatterObject, IModelLoader<T> {
     default int[] buildRotations(JsonObject e) {
         int[] rotations = new int[3];
         if (e.has("rotation") && e.get("rotation").isJsonArray()) {
@@ -20,5 +20,10 @@ public interface IAntimatterModelLoader<T extends IAntimatterModel> extends IAnt
             }
         }
         return rotations;
+    }
+
+    @Override
+    default void onResourceManagerReload(ResourceManager resourceManager){
+
     }
 }

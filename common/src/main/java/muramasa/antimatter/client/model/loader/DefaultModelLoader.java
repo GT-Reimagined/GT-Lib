@@ -10,7 +10,7 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class DefaultModelLoader extends AntimatterModelLoader<AntimatterModel> {
+public class DefaultModelLoader extends AntimatterModelLoader {
     public DefaultModelLoader(ResourceLocation loc) {
         super(loc);
     }
@@ -18,7 +18,7 @@ public class DefaultModelLoader extends AntimatterModelLoader<AntimatterModel> {
     @SuppressWarnings("unchecked")
     @NotNull
     @Override
-    public AntimatterModel readModel(JsonDeserializationContext context, JsonObject json) {
+    public AntimatterModel read(JsonDeserializationContext context, JsonObject json) {
         try {
             UnbakedModel baseModel = (json.has("model") && json.get("model").isJsonObject()) ? context.deserialize(json.get("model"), BlockModel.class) : ModelUtils.getMissingModel();
             return new AntimatterModel(baseModel, buildRotations(json));
