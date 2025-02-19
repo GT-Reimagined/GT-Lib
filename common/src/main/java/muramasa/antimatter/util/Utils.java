@@ -16,7 +16,6 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityBase;
-import muramasa.antimatter.capability.item.PlatformItemHandler;
 import muramasa.antimatter.data.AntimatterTags;
 import muramasa.antimatter.entity.IRadiationEntity;
 import muramasa.antimatter.material.Material;
@@ -80,6 +79,8 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -160,7 +161,7 @@ public class Utils {
         return state.getValue(BlockStateProperties.HORIZONTAL_FACING);
     }
 
-    public static ItemStack extractAny(PlatformItemHandler handler) {
+    public static ItemStack extractAny(IItemHandler handler) {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.extractItem(i, Math.min(handler.getStackInSlot(i).getCount(), handler.getStackInSlot(i).getMaxStackSize()), false);
             if (!stack.isEmpty()) return stack;
@@ -193,11 +194,11 @@ public class Utils {
         return splitStacks(a);
     }
 
-    public static void tryCondenseInventory(PlatformItemHandler itemHandler){
+    public static void tryCondenseInventory(IItemHandlerModifiable itemHandler){
         tryCondenseInventory(itemHandler, 0, itemHandler.getSlots());
     }
 
-    public static void tryCondenseInventory(PlatformItemHandler tile, int startSlot, int endSlot) {
+    public static void tryCondenseInventory(IItemHandlerModifiable tile, int startSlot, int endSlot) {
         for (int i = startSlot; i < endSlot; ++i) {
             for (int j = startSlot; j < endSlot; ++j) {
                 if (i == j) {
@@ -421,11 +422,11 @@ public class Utils {
         return matchCount >= a.length;
     }
 
-    public static boolean transferItems(PlatformItemHandler from, PlatformItemHandler to, boolean once) {
+    public static boolean transferItems(IItemHandler from, IItemHandler to, boolean once) {
         return transferItems(from, to, once, stack -> true);
     }
 
-    public static boolean transferItems(PlatformItemHandler from, PlatformItemHandler to, boolean once, Predicate<ItemStack> filter) {
+    public static boolean transferItems(IItemHandler from, IItemHandler to, boolean once, Predicate<ItemStack> filter) {
         boolean successful = false;
         for (int i = 0; i < from.getSlots(); i++) {
             ItemStack toInsert = from.extractItem(i, Math.min(from.getStackInSlot(i).getCount(), from.getStackInSlot(i).getMaxStackSize()), true);
@@ -450,7 +451,7 @@ public class Utils {
         return successful;
     }
 
-    public static ItemStack insertItem(PlatformItemHandler to, ItemStack stack, boolean simulate){
+    public static ItemStack insertItem(IItemHandler to, ItemStack stack, boolean simulate){
         if (to == null || stack.isEmpty())
             return stack;
 

@@ -25,6 +25,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 
@@ -126,9 +127,9 @@ public class CoverOutput extends BaseCover {
             return;
         if (processing > 0) return;
         processing++;
-        AntimatterCapUtils.INSTANCE.getItemHandler(adjTile, this.side.getOpposite())
+        adjTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.side.getOpposite())
                 .ifPresent(adjHandler -> {
-                    AntimatterCapUtils.INSTANCE.getItemHandler(handler.getTile(), this.side).ifPresent(h -> Utils.transferItems(h, adjHandler, false, i -> {
+                    handler.getTile().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.side).ifPresent(h -> Utils.transferItems(h, adjHandler, false, i -> {
                         return !(this.handler.getTile() instanceof BlockEntityMachine<?> machine) || machine.itemHandler.map(f -> f.canItemBeAutoOutput(i)).orElse(true);
                     }));
                 });

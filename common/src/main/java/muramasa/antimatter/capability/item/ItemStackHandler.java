@@ -1,12 +1,12 @@
 package muramasa.antimatter.capability.item;
 
-import muramasa.antimatter.util.ItemHandlerUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemStackHandler implements ExtendedItemContainer, ContainerItemHandler {
@@ -69,7 +69,7 @@ public class ItemStackHandler implements ExtendedItemContainer, ContainerItemHan
             ItemStack existing = (ItemStack)this.stacks.get(slot);
             int limit = this.getStackLimit(slot, stack);
             if (!existing.isEmpty()) {
-                if (!ItemHandlerUtils.canItemStacksStack(stack, existing)) {
+                if (!ItemHandlerHelper.canItemStacksStack(stack, existing)) {
                     return stack;
                 }
 
