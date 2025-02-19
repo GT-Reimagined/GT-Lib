@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability.item;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,27 +21,23 @@ public class EmptyContainer implements ExtendedItemContainer {
     }
 
     @Override
-    public void deserialize(CompoundTag nbt) {
-
+    public boolean isItemValid(int i, @NotNull ItemStack itemStack) {
+        return false;
     }
 
     @Override
-    public CompoundTag serialize(CompoundTag nbt) {
-        return null;
-    }
-
-    @Override
-    public int getContainerSize() {
+    public int getSlots() {
         return 0;
     }
 
+    @NotNull
     @Override
-    public ItemStack getItem(int index) {
+    public ItemStack getStackInSlot(int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItem(int index, ItemStack stack) {
+    public void setStackInSlot(int index, ItemStack stack) {
 
     }
 }

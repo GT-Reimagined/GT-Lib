@@ -12,7 +12,6 @@ import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.pipe.BlockItemPipe;
 import muramasa.antimatter.pipe.TileTicker;
 import muramasa.antimatter.pipe.types.ItemPipe;
-import muramasa.antimatter.util.AntimatterCapUtils;
 import muramasa.antimatter.util.CodeUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -102,7 +101,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
 
     @Override
     public Class<?> getCapClass() {
-        return ExtendedItemContainer.class;
+        return IItemHandler.class;
     }
 
     @Override
@@ -186,11 +185,11 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
                         // special cases for the win...
                         ICover cover = coverHandler.map(c -> c.get(side)).orElse(ICover.empty);
                         for (int i = 0; i < aSender.inventory.getSize(); i++) {
-                            ItemStack stack = aSender.inventory.getItem(i);
+                            ItemStack stack = aSender.inventory.getStackInSlot(i);
                             if (!stack.isEmpty()){
                                 boolean transfered = false;
                                 if (!cover.isEmpty()){
-                                    if (cover.blocksOutput(ExtendedItemContainer.class, side)){
+                                    if (cover.blocksOutput(IItemHandler.class, side)){
                                         return false;
                                     }
                                     if (cover.onTransfer(stack.copy(), false, true)){
@@ -240,7 +239,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     public void addInventoryDrops(List<ItemStack> drops) {
         super.addInventoryDrops(drops);
         for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack stack = inventory.getItem(i);
+            ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty()) drops.add(stack);
         }
     }
@@ -255,11 +254,11 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     }
 
     public boolean canAcceptItemsFrom(Direction side, BlockEntityItemPipe<?> sender){
-        return Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksInput(ExtendedItemContainer.class, side)).orElse(true);
+        return Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksInput(IItemHandler.class, side)).orElse(true);
     }
 
     public boolean canEmitItemsTo(Direction side, BlockEntityItemPipe<?> sender){
-        return (sender != this || side.get3DDataValue() != mLastReceivedFrom) && Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksOutput(ExtendedItemContainer.class, side)).orElse(true);
+        return (sender != this || side.get3DDataValue() != mLastReceivedFrom) && Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksOutput(IItemHandler.class, side)).orElse(true);
     }
 
     private void addTicker(){
@@ -287,7 +286,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
         tag.putByte("lastReceivedFrom", mLastReceivedFrom);
         tag.putByte("oldLastReceivedFrom", oLastReceivedFrom);
         if (!inventory.isEmpty()){
-            CompoundTag inventory = this.inventory.serialize(new CompoundTag());
+            CompoundTag inventory = this.inventory.serializeNBT();
             tag.put("inventory", inventory);
         }
     }
@@ -298,7 +297,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
         mLastReceivedFrom = tag.getByte("lastReceivedFrom");
         oLastReceivedFrom = tag.getByte("oldLastReceivedFrom");
         if (tag.contains("inventory")){
-            inventory.deserialize(tag.getCompound("inventory"));
+            inventory.deserializeNBT(tag.getCompound("inventory"));
             if (!inventory.isEmpty()){
                 addTicker();
             }

@@ -8,15 +8,13 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityTickable;
+import muramasa.antimatter.capability.AntimatterCaps;
 import muramasa.antimatter.capability.CoverHandler;
 import muramasa.antimatter.capability.Holder;
 import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.ICoverHandlerProvider;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.capability.IMachineHandler;
-import muramasa.antimatter.capability.AntimatterCaps;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
-import muramasa.antimatter.capability.item.forge.ExtendedContainerWrapper;
 import muramasa.antimatter.capability.pipe.PipeCoverHandler;
 import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.ICover;
@@ -46,7 +44,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.IConnectable;
@@ -511,14 +508,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
             }
             return pipeCaps[index].cast();
         }
-        if (cap == ITEM_HANDLER_CAPABILITY && getCapClass() == ExtendedItemContainer.class){
-            int index = side == null ? 6 : side.get3DDataValue();
-            if (pipeCaps[index] == null || !pipeCaps[index].isPresent()){
-                pipeCaps[index] = fromItemHolder(pipeCapHolder, side).cast();
-            }
-            return pipeCaps[index].cast();
-        }
-        if (side == null) return LazyOptional.empty();
+        if (side == null && cap != ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
         /*if (cap == CapabilityEnergy.ENERGY && getCapClass() == IFENode.class) {
             if (pipeCaps[side.get3DDataValue()] == null || !pipeCaps[side.get3DDataValue()].isPresent()){
                 pipeCaps[side.get3DDataValue()] = fromEnergyHolder(pipeCapHolder, side).cast();
@@ -534,16 +524,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
             return LazyOptional.empty();
         }
         return LazyOptional.empty();
-    }
-
-    private LazyOptional<IItemHandler> fromItemHolder(Holder<ExtendedItemContainer, ?> holder, Direction side){
-        if (!holder.isPresent()) return LazyOptional.empty();
-        Optional<? extends ExtendedItemContainer> optional = holder.side(side).resolve();
-        if (optional.isEmpty()) return LazyOptional.empty();
-        LazyOptional<IItemHandler> opt = LazyOptional.of(() -> new ExtendedContainerWrapper(optional.get()));
-        boolean add = holder.addListener(side, opt::invalidate);
-        if (!add) return LazyOptional.empty();
-        return opt;
     }
 
     private LazyOptional<IFluidHandler> fromFluidHolder(Holder<FluidContainer, ?> holder, Direction side){

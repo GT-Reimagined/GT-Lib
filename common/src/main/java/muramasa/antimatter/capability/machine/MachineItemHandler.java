@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability.machine;
 
-import earth.terrarium.botarium.util.Serializable;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -31,15 +30,16 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
+import tesseract.api.Serializable;
 import tesseract.api.gt.IEnergyHandlerItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static muramasa.antimatter.machine.MachineFlag.GUI;
@@ -90,7 +90,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
 
     @Override
     public CompoundTag serialize(CompoundTag nbt) {
-        this.inventories.forEach((f, i) -> nbt.put(f.getId(), i.serialize(new CompoundTag())));
+        this.inventories.forEach((f, i) -> nbt.put(f.getId(), i.serializeNBT()));
         return nbt;
     }
 
@@ -98,7 +98,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public void deserialize(CompoundTag nbt) {
         this.inventories.forEach((f, i) -> {
             if (!nbt.contains(f.getId())) return;
-            i.deserialize(nbt.getCompound(f.getId()));
+            i.deserializeNBT(nbt.getCompound(f.getId()));
         });
     }
 
@@ -116,9 +116,9 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
 
     public List<ItemStack> getAllItems() {
         return inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).flatMap(t -> {
-            List<ItemStack> stacks = new ObjectArrayList<>(t.getContainerSize());
-            for (int i = 0; i < t.getContainerSize(); i++) {
-                stacks.add(t.getItem(i).copy());
+            List<ItemStack> stacks = new ObjectArrayList<>(t.getSlots());
+            for (int i = 0; i < t.getSlots(); i++) {
+                stacks.add(t.getStackInSlot(i).copy());
             }
             return stacks.stream();
         }).collect(Collectors.toList());
@@ -128,14 +128,14 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
 
     }
 
-    public static ItemStack insertIntoOutput(ExtendedItemContainer handler, int slot, @NotNull ItemStack stack, boolean simulate) {
+    public static ItemStack insertIntoOutput(IItemHandler handler, int slot, @NotNull ItemStack stack, boolean simulate) {
         if (handler instanceof ITrackedHandler trackedHandler) {
             return trackedHandler.insertOutputItem(slot, stack, simulate);
         }
         return handler.insertItem(slot, stack, simulate);
     }
 
-    public static ItemStack extractFromInput(ExtendedItemContainer handler, int slot, int amount, boolean simulate) {
+    public static ItemStack extractFromInput(IItemHandler handler, int slot, int amount, boolean simulate) {
         if (handler instanceof ITrackedHandler trackedHandler) {
             return trackedHandler.extractFromInput(slot, amount, simulate);
         }
@@ -170,15 +170,15 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     }
 
     public int getInputCount() {
-        return getInputHandler().getContainerSize();
+        return getInputHandler().getSlots();
     }
 
     public int getOutputCount() {
-        return getOutputHandler().getContainerSize();
+        return getOutputHandler().getSlots();
     }
 
     public int getCellCount() {
-        return getCellInputHandler().getContainerSize();
+        return getCellInputHandler().getSlots();
     }
 
     @NotNull
@@ -191,11 +191,11 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     }
 
     public ItemStack getCellInput() {
-        return getCellInputHandler().getItem(0);
+        return getCellInputHandler().getStackInSlot(0);
     }
 
     public ItemStack getCellOutput() {
-        return getCellInputHandler().getItem(1);
+        return getCellInputHandler().getStackInSlot(1);
     }
 
     /**
@@ -204,9 +204,9 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public List<ItemStack> getInputList() {
         List<ItemStack> list = new ObjectArrayList<>();
         ExtendedItemContainer inputs = getInputHandler();
-        for (int i = 0; i < inputs.getContainerSize(); i++) {
-            if (!inputs.getItem(i).isEmpty()) {
-                list.add(inputs.getItem(i).copy());
+        for (int i = 0; i < inputs.getSlots(); i++) {
+            if (!inputs.getStackInSlot(i).isEmpty()) {
+                list.add(inputs.getStackInSlot(i).copy());
             }
         }
         return list;
@@ -219,8 +219,8 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         List<Pair<ItemStack, IEnergyHandlerItem>> list = new ObjectArrayList<>();
         if (tile.isServerSide()) {
             ExtendedItemContainer chargeables = getChargeHandler();
-            for (int i = 0; i < chargeables.getContainerSize(); i++) {
-                ItemStack item = chargeables.getItem(i);
+            for (int i = 0; i < chargeables.getSlots(); i++) {
+                ItemStack item = chargeables.getStackInSlot(i);
                 if (!item.isEmpty()) {
                     TesseractCapUtils.INSTANCE.getWrappedEnergyHandlerItem(item).ifPresent(e -> list.add(new ObjectObjectImmutablePair<>(item, e)));
                 }
@@ -233,8 +233,8 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         List<IEnergyStorage> list = new ObjectArrayList<>();
         if (tile.isServerSide()) {
             ExtendedItemContainer chargeables = getChargeHandler();
-            for (int i = 0; i < chargeables.getContainerSize(); i++) {
-                ItemStack item = chargeables.getItem(i);
+            for (int i = 0; i < chargeables.getSlots(); i++) {
+                ItemStack item = chargeables.getStackInSlot(i);
                 var cap = item.getCapability(CapabilityEnergy.ENERGY);
                 if (!item.isEmpty() && cap.isPresent()) {
                     list.add(cap.resolve().get());
@@ -250,8 +250,8 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public List<ItemStack> getOutputList() {
         List<ItemStack> list = new ObjectArrayList<>();
         ExtendedItemContainer outputs = getOutputHandler();
-        for (int i = 0; i < outputs.getContainerSize(); i++) {
-            ItemStack slot = outputs.getItem(i);
+        for (int i = 0; i < outputs.getSlots(); i++) {
+            ItemStack slot = outputs.getStackInSlot(i);
             if (!slot.isEmpty()) {
                 list.add(slot.copy());
             }
@@ -262,15 +262,15 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
 
     public List<ItemStack> consumeInputs(List<Ingredient> items, boolean simulate) {
         if (items == null) return Collections.emptyList();
-        IntSet skipSlots = new IntOpenHashSet(getInputHandler().getContainerSize());
+        IntSet skipSlots = new IntOpenHashSet(getInputHandler().getSlots());
         List<ItemStack> consumedItems = new ObjectArrayList<>();
 
         boolean success = items.stream().mapToInt(input -> {
             int failed = 0;
             ITrackedHandler wrap = getInputHandler();
             int countToReach = RecipeIngredient.count(input);
-            for (int i = 0; i < wrap.getContainerSize(); i++) {
-                ItemStack item = wrap.getItem(i);
+            for (int i = 0; i < wrap.getSlots(); i++) {
+                ItemStack item = wrap.getStackInSlot(i);
                 if (input.test(item) && !skipSlots.contains(i)) {
                     int toConsume = Math.min(item.getCount(), Math.max(countToReach - item.getCount(), countToReach));
                     countToReach -= toConsume;
@@ -283,7 +283,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
                         break;
                     }
                 }
-                if (i == wrap.getContainerSize() - 1) {
+                if (i == wrap.getSlots() - 1) {
                     failed++;
                 }
             }
@@ -330,7 +330,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             return;
         }
         for (ItemStack output : outputs) {
-            for (int i = 0; i < outputHandler.getContainerSize(); i++) {
+            for (int i = 0; i < outputHandler.getSlots(); i++) {
                 output = insertIntoOutput(outputHandler, i, output.copy(), false);
                 if (output.isEmpty()) {
                     break;
@@ -348,7 +348,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         boolean[] results = new boolean[a.length];
         List<Integer> slotsTaken = new ArrayList<>();
         for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < outputHandler.getContainerSize(); j++) {
+            for (int j = 0; j < outputHandler.getSlots(); j++) {
                 if (slotsTaken.contains(j)) continue;
                 results[i] |= insertIntoOutput(outputHandler, j, a[i], true).isEmpty();
                 if (results[i]){
@@ -374,8 +374,8 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             return 0;
         }
         for (ItemStack stack : a) {
-            for (int i = 0; i < handler.getContainerSize(); i++) {
-                ItemStack item = handler.getItem(i);
+            for (int i = 0; i < handler.getSlots(); i++) {
+                ItemStack item = handler.getStackInSlot(i);
                 if (item.isEmpty() || (Utils.equals(stack, item) && item.getCount() + stack.getCount() <= handler.getSlotLimit(i))) {
                     matchCount++;
                     break;
@@ -390,8 +390,8 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         List<ItemStack> notConsumed = new ObjectArrayList<>();
         ExtendedItemContainer inputHandler = getInputHandler();
         for (ItemStack input : inputs) {
-            for (int i = 0; i < inputHandler.getContainerSize(); i++) {
-                if (Utils.equals(input, inputHandler.getItem(i))) {
+            for (int i = 0; i < inputHandler.getSlots(); i++) {
+                if (Utils.equals(input, inputHandler.getStackInSlot(i))) {
                     ItemStack result = extractFromInput(inputHandler, i, input.getCount(), false);
                     if (!result.isEmpty()) {
                         if (result.getCount() == input.getCount()) {
@@ -400,7 +400,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
                             notConsumed.add(Utils.ca(input.getCount() - result.getCount(), input));
                         }
                     }
-                } else if (i == inputHandler.getContainerSize() - 1) {
+                } else if (i == inputHandler.getSlots() - 1) {
                     notConsumed.add(input);
                 }
             }
@@ -412,14 +412,14 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         List<ItemStack> notExported = new ObjectArrayList<>();
         ExtendedItemContainer outputHandler = getOutputHandler();
         for (int i = 0; i < outputs.length; i++) {
-            for (int j = 0; j < outputHandler.getContainerSize(); j++) {
+            for (int j = 0; j < outputHandler.getSlots(); j++) {
                 ItemStack result = insertIntoOutput(outputHandler, j, outputs[i].copy(), false);
                 if (result.isEmpty()) {
                     break;
                 } else {
                     outputs[i] = result;
                 }
-                if (j == outputHandler.getContainerSize() - 1) {
+                if (j == outputHandler.getSlots() - 1) {
                     notExported.add(result);
                 }
             }

@@ -9,6 +9,7 @@ import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.AntimatterProperties;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.multi.BlockEntityBasicMultiMachine;
+import muramasa.antimatter.capability.AntimatterCaps;
 import muramasa.antimatter.capability.CoverHandler;
 import muramasa.antimatter.capability.EnergyHandler;
 import muramasa.antimatter.capability.Holder;
@@ -16,9 +17,7 @@ import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.ICoverHandlerProvider;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.capability.IMachineHandler;
-import muramasa.antimatter.capability.AntimatterCaps;
 import muramasa.antimatter.capability.item.ExtendedItemContainer;
-import muramasa.antimatter.capability.item.forge.ExtendedContainerWrapper;
 import muramasa.antimatter.capability.machine.DefaultHeatHandler;
 import muramasa.antimatter.capability.machine.MachineCoverHandler;
 import muramasa.antimatter.capability.machine.MachineEnergyHandler;
@@ -89,7 +88,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.fe.IFENode;
@@ -151,7 +149,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public Holder<MachineRecipeHandler<?>, MachineRecipeHandler<T>> recipeHandler = new Holder<>(MachineRecipeHandler.class, dispatch, null);
 
     private LazyOptional<IFluidHandler>[] fluidHandlerLazyOptional = new LazyOptional[7];
-    private LazyOptional<IItemHandler>[] itemHandlerLazyOptional = new LazyOptional[7];
 
     /**
      * Client related fields.
@@ -678,10 +675,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             return fluidHandlerLazyOptional[index].cast();
         }
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && itemHandler.isPresent()) {
-            if (itemHandlerLazyOptional[index] == null || !itemHandlerLazyOptional[index].isPresent()){
-                itemHandlerLazyOptional[index] = fromItemHolder(itemHandler, side);
-            }
-            return itemHandlerLazyOptional[index].cast();
+            return itemHandler.side(side).cast();
         }
         if (cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY || cap == CapabilityEnergy.ENERGY){
             if (cap == CapabilityEnergy.ENERGY && feHandler.isPresent()){
@@ -692,15 +686,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             }
         }
         return super.getCapability(cap, side);
-    }
-
-    private LazyOptional<IItemHandler> fromItemHolder(Holder<ExtendedItemContainer, ?> holder, Direction side){
-        if (!holder.isPresent()) return LazyOptional.empty();
-        LazyOptional<? extends ExtendedItemContainer> optional = holder.side(side);
-        LazyOptional<IItemHandler> opt = optional.<LazyOptional<IItemHandler>>map(extendedItemContainer -> LazyOptional.of(() -> new ExtendedContainerWrapper(extendedItemContainer))).orElseGet(LazyOptional::empty);
-        boolean add = holder.addListener(side, opt::invalidate);
-        if (!add) return LazyOptional.empty();
-        return opt;
     }
 
     private LazyOptional<IFluidHandler> fromFluidHolder(Holder<FluidContainer, ?> holder, Direction side) {

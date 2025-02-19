@@ -32,7 +32,6 @@ import tesseract.TesseractGraphWrappers;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static muramasa.antimatter.machine.MachineState.*;
 
@@ -564,7 +563,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 return;
             }
             if (event == SlotType.ENERGY) {
-                if (tile.itemHandler.map(t -> t.inventories.get(SlotType.ENERGY).getItem((int) data[0]).isEmpty()).orElse(true)) {
+                if (tile.itemHandler.map(t -> t.inventories.get(SlotType.ENERGY).getStackInSlot((int) data[0]).isEmpty()).orElse(true)) {
                     return;
                 }
             }

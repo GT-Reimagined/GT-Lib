@@ -9,6 +9,7 @@ import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.gui.SlotType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiPredicate;
@@ -96,14 +97,14 @@ public class TrackedItemHandler<T extends IGuiHandler> extends ItemStackHandler 
     }
     //Size is defined by GUI and not the NBT data.
     @Override
-    public CompoundTag serialize(CompoundTag nbt) {
-        super.serialize(nbt);
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = super.serializeNBT();
         nbt.remove("Size");
         return nbt;
     }
 
     @Override
-    public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         return true;//validator.test(tile, stack);
     }
 }

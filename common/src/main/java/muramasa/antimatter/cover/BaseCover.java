@@ -153,7 +153,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
             CompoundTag nbt = new CompoundTag();
             this.inventories.forEach((f, i) -> {
                 if (i.isEmpty()) return;
-                nbt.put(f.getId(), i.serialize(new CompoundTag()));
+                nbt.put(f.getId(), i.serializeNBT());
             });
             if (!nbt.isEmpty()) {
                 stack.getOrCreateTag().put("coverInventories", nbt);
@@ -170,7 +170,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
             if (inventories != null && getFactory().hasGui()){
                 this.inventories.forEach((f, i) -> {
                     if (!nbt.contains(f.getId())) return;
-                    i.deserialize(nbt.getCompound(f.getId()));
+                    i.deserializeNBT(nbt.getCompound(f.getId()));
                 });
                 handler.getTile().setChanged();
             }
@@ -214,7 +214,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
         if (getFactory().hasGui()){
             this.inventories.forEach((f, i) -> {
                 if (!nbt.contains(f.getId())) return;
-                i.deserialize(nbt.getCompound(f.getId()));
+                i.deserializeNBT(nbt.getCompound(f.getId()));
             });
         }
     }
@@ -235,7 +235,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
         if (inventories != null && getFactory().hasGui()){
             this.inventories.forEach((f, i) -> {
                 if (i.isEmpty()) return;
-                nbt.put(f.getId(), i.serialize(new CompoundTag()));
+                nbt.put(f.getId(), i.serializeNBT());
             });
         }
         return nbt;

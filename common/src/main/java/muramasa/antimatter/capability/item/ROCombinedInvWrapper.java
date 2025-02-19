@@ -2,6 +2,7 @@ package muramasa.antimatter.capability.item;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 public class ROCombinedInvWrapper extends CombinedInvWrapper implements IItemNode {
@@ -22,7 +23,7 @@ public class ROCombinedInvWrapper extends CombinedInvWrapper implements IItemNod
     }
 
     @Override
-    public void setItem(int slot, @NotNull ItemStack stack) {
+    public void setStackInSlot(int slot, @NotNull ItemStack stack) {
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ROCombinedInvWrapper extends CombinedInvWrapper implements IItemNod
 
     @Override
     public boolean isEmpty(int slot) {
-        return getItem(slot).isEmpty();
+        return getStackInSlot(slot).isEmpty();
     }
 
     @Override
