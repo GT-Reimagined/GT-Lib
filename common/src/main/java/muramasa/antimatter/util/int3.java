@@ -83,21 +83,9 @@ public class int3 extends BlockPos.MutableBlockPos {
         return offset(n, Direction.NORTH);
     }
 
-    @NotNull
-    @Override
-    public BlockPos relative(Direction side) {
-        return offset(1, side);
-    }
-
-    @NotNull
-    @Override
-    public BlockPos relative(Direction side, int n) {
-        return offset(n, side);
-    }
-
     public int3 offset(int n, Direction side) {
         if (n == 0 || side == null) return this;
-        set(getX() + side.getStepX() * n, getY() + side.getStepY() * n, getZ() + side.getStepZ() * n);
+        move(side, n);
         return this;
     }
 
