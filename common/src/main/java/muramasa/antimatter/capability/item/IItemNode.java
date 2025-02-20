@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
  * DO NOT ASSUME that these objects are used internally in all cases.
  * </p>
  */
-public interface IItemNode extends ExtendedItemContainer {
+public interface IItemNode extends IItemHandlerExtended {
 
     /**
      * @param direction Direction to the proceed.
