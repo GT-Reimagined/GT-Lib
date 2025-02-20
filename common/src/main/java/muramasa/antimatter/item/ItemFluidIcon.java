@@ -63,7 +63,7 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
 
     @Override
     public long getTankSize() {
-        return capacity * TesseractGraphWrappers.dropletMultiplier;
+        return capacity;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
     public ItemStack fill(Fluid fluid) {
         ItemStack stack = new ItemStack(this);
         ItemStackHolder holder = new ItemStackHolder(stack);
-        insert(holder, createFluidStack(fluid, TesseractGraphWrappers.dropletMultiplier));
+        insert(holder, createFluidStack(fluid, 1));
         return holder.getStack();
     }
 

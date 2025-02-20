@@ -147,7 +147,7 @@ public class CoverOutput extends BaseCover {
         processing++;
         FluidHooks.safeGetBlockFluidManager(adjTile, this.side.getOpposite())
                 .ifPresent(adjHandler -> {
-                    FluidHooks.safeGetBlockFluidManager(handler.getTile(), this.side).ifPresent(h -> tryFluidTransfer(adjHandler, h, Integer.MAX_VALUE * TesseractGraphWrappers.dropletMultiplier, true));
+                    FluidHooks.safeGetBlockFluidManager(handler.getTile(), this.side).ifPresent(h -> tryFluidTransfer(adjHandler, h, Integer.MAX_VALUE, true));
                 });
         processing--;
     }

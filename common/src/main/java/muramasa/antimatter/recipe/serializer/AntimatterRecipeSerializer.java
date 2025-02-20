@@ -120,7 +120,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             if (fluid == null) {
                 return FluidHooks.emptyFluid();
             }
-            FluidHolder stack = FluidPlatformUtils.createFluidStack(fluid, obj.has("amount") ? obj.get("amount").getAsLong() : 1000 * TesseractGraphWrappers.dropletMultiplier);
+            FluidHolder stack = FluidPlatformUtils.createFluidStack(fluid, obj.has("amount") ? obj.get("amount").getAsLong() : 1000);
 
             if (obj.has("tag")) {
                 stack.setCompound(TagParser.parseTag(obj.get("tag").getAsString()));
@@ -140,7 +140,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             JsonObject obj = (JsonObject) element;
             if (obj.has("fluidTag")) {
                 ResourceLocation tagType = new ResourceLocation(obj.get("tag").getAsString());
-                long amount = obj.has("amount") ? obj.get("amount").getAsLong() : 1000 * TesseractGraphWrappers.dropletMultiplier;
+                long amount = obj.has("amount") ? obj.get("amount").getAsLong() : 1000;
                 return FluidIngredient.of(tagType, amount);
             }
             return FluidIngredient.of(getStack(element));

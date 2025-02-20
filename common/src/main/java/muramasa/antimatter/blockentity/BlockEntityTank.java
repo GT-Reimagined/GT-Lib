@@ -52,7 +52,7 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
             return 8;
         }
         renderer.draw(stack, FluidPlatformUtils.INSTANCE.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
-        String fluidAmount = String.valueOf(instance.stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier);
+        String fluidAmount = String.valueOf(instance.stack.getFluidAmount());
         renderer.draw(stack, fluidAmount + " mb", left, top + 8, 0xFAFAFF);
         return 16;
     }

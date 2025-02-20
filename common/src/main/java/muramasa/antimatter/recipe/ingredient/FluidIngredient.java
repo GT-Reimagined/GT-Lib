@@ -58,7 +58,7 @@ public class FluidIngredient {
     }
 
     public int getAmountInMB(){
-        return (int) (getAmount() / TesseractGraphWrappers.dropletMultiplier);
+        return (int) getAmount();
     }
 
     public FluidIngredient copy(long droplets) {
@@ -75,7 +75,7 @@ public class FluidIngredient {
     }
 
     public FluidIngredient copyMB(int amount) {
-        return copy(amount * TesseractGraphWrappers.dropletMultiplier);
+        return copy(amount);
     }
 
     public void write(FriendlyByteBuf buffer) {
@@ -138,11 +138,11 @@ public class FluidIngredient {
     }
 
     public static FluidIngredient ofMB(ResourceLocation loc, int amount) {
-        return of(loc, amount * TesseractGraphWrappers.dropletMultiplier);
+        return of(loc, amount);
     }
 
     public static FluidIngredient ofMB(Material mat, int amount) {
-        return of(mat, amount * TesseractGraphWrappers.dropletMultiplier);
+        return of(mat, amount);
     }
 
     public static FluidIngredient of(FluidHolder stack) {

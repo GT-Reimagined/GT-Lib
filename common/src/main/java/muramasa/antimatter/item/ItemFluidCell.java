@@ -102,7 +102,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
 
     @Override
     public long getTankSize() {
-        return capacity * TesseractGraphWrappers.dropletMultiplier;
+        return capacity;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
             FluidHolder fluid = x.getFluidInTank(0);
             if (!fluid.isEmpty()) {
                 MutableComponent fluidname = (MutableComponent) FluidPlatformUtils.INSTANCE.getFluidDisplayName(fluid);
-                fluidname.append(": ").append(Utils.literal(NumberFormat.getNumberInstance(Locale.US).format(fluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier) + " mB").withStyle(ChatFormatting.GRAY));
+                fluidname.append(": ").append(Utils.literal(NumberFormat.getNumberInstance(Locale.US).format(fluid.getFluidAmount()) + " mB").withStyle(ChatFormatting.GRAY));
                 tooltip.add(fluidname);
             }
             tooltip.add(Utils.literal("Max Temp: " + ((ItemFluidCell) stack.getItem()).getMaxTemp() + "K"));
@@ -131,7 +131,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
     }
 
     public ItemStack fill(Fluid fluid, int amount){
-        return fill(fluid, amount * TesseractGraphWrappers.dropletMultiplier);
+        return fill(fluid, (long)amount);
     }
 
     public ItemStack fill(Fluid fluid) {
@@ -195,7 +195,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         FluidHolder fluid = this.getFluidStack(stack);
-        BlockHitResult trace = getPlayerPOVHitResult(world, player, (fluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier) + 1000 <= capacity ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
+        BlockHitResult trace = getPlayerPOVHitResult(world, player, fluid.getFluidAmount() + 1000 <= capacity ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
 
         // fire Forge event for bucket use
         InteractionResultHolder<ItemStack> ret = ForgeEventFactory.onBucketUse(player, world, stack, trace);
@@ -218,7 +218,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
             BlockState state = world.getBlockState(pos);
             var block = state.getBlock();
 
-            if ((fluid.isEmpty() || (fluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier) + 1000 <= capacity) && block instanceof BucketPickup) {
+            if ((fluid.isEmpty() || fluid.getFluidAmount() + 1000 <= capacity) && block instanceof BucketPickup) {
                 ItemStack bucket = ((BucketPickup) block).pickupBlock(world, pos, state);
                 if (!bucket.isEmpty()) {
                     Fluid newFluid = ((BucketItemAccessor)bucket.getItem()).getContent();
@@ -230,14 +230,14 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
                         sound = newFluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
                     }
                     player.playSound(sound, 1.0F, 1.0F);
-                    ItemStack newStack = updateCell(stack, player, fill(newFluid, (fluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier) + 1000));
+                    ItemStack newStack = updateCell(stack, player, fill(newFluid, fluid.getFluidAmount() + 1000));
                     if (!world.isClientSide()) {
                         CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, newStack.copy());
                     }
 
                     return InteractionResultHolder.success(newStack);
                 }
-            } else if ((fluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier) >= 1000) {
+            } else if (fluid.getFluidAmount() >= 1000) {
                 BlockPos fluidPos = state.getBlock() instanceof LiquidBlockContainer && fluid.getFluid() == Fluids.WATER ? pos : offset;
                 if (this.tryPlaceContainedLiquid(player, world, fluidPos, stack, trace)) {
                     onLiquidPlaced(player, fluid.getFluid(), world, stack, fluidPos);
@@ -246,7 +246,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
                     }
 
                     player.awardStat(Stats.ITEM_USED.get(this));
-                    ItemStack newStack = drain(Utils.ca(1, stack), FluidPlatformUtils.createFluidStack(fluid.getFluid(), 1000 * TesseractGraphWrappers.dropletMultiplier));
+                    ItemStack newStack = drain(Utils.ca(1, stack), FluidPlatformUtils.createFluidStack(fluid.getFluid(), 1000));
                     if (stack.getCount() > 1) {
                         stack.shrink(1);
                         addItem(player, newStack);
@@ -377,7 +377,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
                         world.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL, level+1));
                     }
                     world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    ItemStack newStack = cell.drain(Utils.ca(1, stack), FluidHooks.newFluidHolder(fluid.getFluid(), 1000 * TesseractGraphWrappers.dropletMultiplier, null));
+                    ItemStack newStack = cell.drain(Utils.ca(1, stack), FluidHooks.newFluidHolder(fluid.getFluid(), 1000, null));
                     if (stack.getCount() > 1) {
                         stack.shrink(1);
                         addItem(player, newStack);

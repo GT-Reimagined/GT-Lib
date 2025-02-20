@@ -265,7 +265,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         Component component = list.get(2);
         list.remove(2);
         list.remove(1);
-        long mb = (stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier);
+        long mb = stack.getFluidAmount();
         list.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         list.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";

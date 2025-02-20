@@ -42,25 +42,25 @@ public class FluidTanks implements FluidContainer, FluidContainerHandler {
     public FluidTanks(int tanks, long tankAmountInMB) {
         this.tanks = new FluidTank[tanks];
         for (int i = 0; i < tanks; i++) {
-            this.tanks[i] = new FluidTank(tankAmountInMB * TesseractGraphWrappers.dropletMultiplier);
+            this.tanks[i] = new FluidTank(tankAmountInMB);
         }
-        this.totalCapacity = tanks * tankAmountInMB * TesseractGraphWrappers.dropletMultiplier;
+        this.totalCapacity = tanks * tankAmountInMB;
     }
 
     public FluidTanks(int tanks, long tankAmountInMB, Predicate<FluidHolder> validator) {
         this.tanks = new FluidTank[tanks];
         for (int i = 0; i < tanks; i++) {
-            this.tanks[i] = new FluidTank(tankAmountInMB * TesseractGraphWrappers.dropletMultiplier, validator);
+            this.tanks[i] = new FluidTank(tankAmountInMB, validator);
         }
-        this.totalCapacity = tanks * tankAmountInMB * TesseractGraphWrappers.dropletMultiplier;
+        this.totalCapacity = tanks * tankAmountInMB;
     }
 
     public FluidTanks(long... tankAmountsInMB) {
         this.tanks = new FluidTank[tankAmountsInMB.length];
         for (int i = 0; i < this.tanks.length; i++) {
-            this.tanks[i] = new FluidTank(tankAmountsInMB[i] * TesseractGraphWrappers.dropletMultiplier);
+            this.tanks[i] = new FluidTank(tankAmountsInMB[i]);
         }
-        this.totalCapacity = LongStream.of(tankAmountsInMB).sum() * TesseractGraphWrappers.dropletMultiplier;
+        this.totalCapacity = LongStream.of(tankAmountsInMB).sum();
     }
 
     public FluidTanks(Collection<FluidTank> tanks) {
@@ -259,7 +259,7 @@ public class FluidTanks implements FluidContainer, FluidContainerHandler {
         }
 
         public Builder<T> tank(Predicate<FluidHolder> validator, int amountInMB) {
-            this.tanks.add(new FluidTank(amountInMB * TesseractGraphWrappers.dropletMultiplier, validator) {
+            this.tanks.add(new FluidTank(amountInMB, validator) {
                 @Override
                 protected void onContentsChanged() {
                     tile.onMachineEvent(contentEvent, this.storedFluid);
@@ -269,7 +269,7 @@ public class FluidTanks implements FluidContainer, FluidContainerHandler {
         }
 
         public Builder<T> tank(int amountInMB) {
-            this.tanks.add(new FluidTank(amountInMB * TesseractGraphWrappers.dropletMultiplier) {
+            this.tanks.add(new FluidTank(amountInMB) {
                 @Override
                 protected void onContentsChanged() {
                     tile.onMachineEvent(contentEvent, this.storedFluid);

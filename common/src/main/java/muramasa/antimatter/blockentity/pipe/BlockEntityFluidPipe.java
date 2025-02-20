@@ -209,7 +209,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
 
 
                 if (!isGasProof() && FluidPlatformUtils.INSTANCE.isFluidGaseous(tFluid.getFluid())) {
-                    transferredAmount += tTank.extractFluid(tFluid.copyWithAmount(8 * TesseractGraphWrappers.dropletMultiplier), false).getFluidAmount();
+                    transferredAmount += tTank.extractFluid(tFluid.copyWithAmount(8), false).getFluidAmount();
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
                     /*try {
                         for (Entity tEntity : (List<Entity>)worldObj.getEntitiesWithinAABB(Entity.class, box(-2, -2, -2, +3, +3, +3))) {
@@ -219,7 +219,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
                 }
 
                 if (!type.isAcidProof() && tFluid.getFluid().is(AntimatterTags.ACID)){
-                    transferredAmount += tTank.extractFluid(tFluid.copyWithAmount(16 * TesseractGraphWrappers.dropletMultiplier), false).getFluidAmount();
+                    transferredAmount += tTank.extractFluid(tFluid.copyWithAmount(16), false).getFluidAmount();
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
                     if (level.random.nextInt(100) == 0){
                         tTank.clearContent();
@@ -352,7 +352,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
         fluidHandler.ifPresent(t -> {
             for (int i = 0; i < t.getSize(); i++) {
                 FluidHolder stack = t.getFluidInTank(i);
-                list.add(("Tank " + (i + 1) + ": " + (stack.isEmpty() ? "Empty" : (stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier) + "mb of " + FluidPlatformUtils.INSTANCE.getFluidDisplayName(stack).getString())));
+                list.add(("Tank " + (i + 1) + ": " + (stack.isEmpty() ? "Empty" : stack.getFluidAmount() + "mb of " + FluidPlatformUtils.INSTANCE.getFluidDisplayName(stack).getString())));
             }
         });
         if (simple) return list;

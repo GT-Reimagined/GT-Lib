@@ -116,7 +116,7 @@ public class RecipeMapDisplay implements Display {
         Tooltip.Entry component = tooltip.entries().get(2);
         tooltip.entries().remove(2);
         tooltip.entries().remove(1);
-        long mb = (stack.getAmount() / TesseractGraphWrappers.dropletMultiplier);
+        long mb = stack.getAmount();
         tooltip.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         tooltip.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";

@@ -252,11 +252,11 @@ public class Material implements ISharedAntimatterObject {
     }
 
     public FluidHolder getLiquid(int mb) {
-        return this.getLiquid(mb * TesseractGraphWrappers.dropletMultiplier);
+        return this.getLiquid((long)mb);
     }
 
     public FluidHolder getGas(int mb) {
-        return this.getGas(mb * TesseractGraphWrappers.dropletMultiplier);
+        return this.getGas((long)mb);
     }
 
 
@@ -265,7 +265,7 @@ public class Material implements ISharedAntimatterObject {
     }
 
     public FluidIngredient getFluidIngredient(int mb){
-        return FluidIngredient.of(getFluidTag(), mb * TesseractGraphWrappers.dropletMultiplier);
+        return FluidIngredient.of(getFluidTag(), mb);
     }
 
     public TagKey<Fluid> getFluidTag(){

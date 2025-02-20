@@ -556,7 +556,7 @@ public class Utils {
                         continue;
                     }
                     fluid = fluid.copyHolder();
-                    long toDrain = Math.min(cap * TesseractGraphWrappers.dropletMultiplier, fluid.getFluidAmount());
+                    long toDrain = Math.min(cap, fluid.getFluidAmount());
                     fluid.setAmount(toDrain);
                     toInsert = from.extractFluid(fluid, true);
                 } else {
