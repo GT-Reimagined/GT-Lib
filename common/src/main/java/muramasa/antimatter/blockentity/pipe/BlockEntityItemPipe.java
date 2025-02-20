@@ -2,7 +2,6 @@ package muramasa.antimatter.blockentity.pipe;
 
 import muramasa.antimatter.blockentity.IPreTickTile;
 import muramasa.antimatter.capability.Dispatch;
-import muramasa.antimatter.capability.item.IItemPipe;
 import muramasa.antimatter.capability.item.ROCombinedInvWrapper;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
 import muramasa.antimatter.capability.pipe.PipeItemHandler;

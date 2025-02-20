@@ -1,6 +1,5 @@
-package muramasa.antimatter.capability.fluid;
+package muramasa.antimatter.blockentity.pipe;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import tesseract.api.IConnectable;
 
 /**

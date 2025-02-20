@@ -11,7 +11,6 @@ import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.FluidHandler;
 import muramasa.antimatter.capability.fluid.FluidHandlerNullSideWrapper;
 import muramasa.antimatter.capability.fluid.FluidTank;
-import muramasa.antimatter.capability.fluid.IFluidPipe;
 import muramasa.antimatter.capability.fluid.PipeFluidHandlerSidedWrapper;
 import muramasa.antimatter.capability.pipe.PipeFluidHandler;
 import muramasa.antimatter.cover.ICover;

@@ -1,4 +1,4 @@
-package muramasa.antimatter.capability.item;
+package muramasa.antimatter.blockentity.pipe;
 
 import tesseract.api.IConnectable;
 
