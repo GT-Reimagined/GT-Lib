@@ -4,6 +4,7 @@ import muramasa.antimatter.capability.CoverHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
     private final Predicate<Direction> inputFunction;
     private final Predicate<Direction> outputFunction;
 
-    public SidedCombinedInvWrapper(Direction side, CoverHandler<?> coverHandler, Predicate<Direction> inputFunction, Predicate<Direction> outputFunction, ExtendedItemContainer... itemHandler) {
+    public SidedCombinedInvWrapper(Direction side, CoverHandler<?> coverHandler, Predicate<Direction> inputFunction, Predicate<Direction> outputFunction, IItemHandlerModifiable... itemHandler) {
         super(itemHandler);
         this.side = side;
         this.coverHandler = coverHandler;
@@ -23,7 +24,7 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
         this.outputFunction = outputFunction;
     }
 
-    public SidedCombinedInvWrapper(Direction side, CoverHandler<?> coverHandler, ExtendedItemContainer... itemHandler) {
+    public SidedCombinedInvWrapper(Direction side, CoverHandler<?> coverHandler, IItemHandlerModifiable... itemHandler) {
         this(side, coverHandler, d -> true, d -> true, itemHandler);
     }
 

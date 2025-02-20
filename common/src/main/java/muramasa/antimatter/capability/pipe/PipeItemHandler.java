@@ -2,15 +2,15 @@ package muramasa.antimatter.capability.pipe;
 
 import muramasa.antimatter.blockentity.pipe.BlockEntityItemPipe;
 import muramasa.antimatter.capability.CoverHandler;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.SidedCombinedInvWrapper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 public class PipeItemHandler extends SidedCombinedInvWrapper {
     BlockEntityItemPipe<?> pipe;
-    public PipeItemHandler(Direction side, BlockEntityItemPipe<?> pipe, CoverHandler<?> coverHandler, ExtendedItemContainer... itemHandler) {
+    public PipeItemHandler(Direction side, BlockEntityItemPipe<?> pipe, CoverHandler<?> coverHandler, IItemHandlerModifiable... itemHandler) {
         super(side, coverHandler, itemHandler);
         this.pipe = pipe;
     }

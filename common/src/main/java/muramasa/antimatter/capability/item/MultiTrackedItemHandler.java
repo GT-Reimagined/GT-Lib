@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MultiTrackedItemHandler extends CombinedInvWrapper implements ITrackedHandler {
 
-    public MultiTrackedItemHandler(ExtendedItemContainer... itemHandler) {
+    public MultiTrackedItemHandler(IItemHandlerModifiable... itemHandler) {
         super(itemHandler);
     }
 

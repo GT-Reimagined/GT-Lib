@@ -2,7 +2,6 @@ package muramasa.antimatter.blockentity.pipe;
 
 import muramasa.antimatter.blockentity.IPreTickTile;
 import muramasa.antimatter.capability.Dispatch;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.IItemPipe;
 import muramasa.antimatter.capability.item.ROCombinedInvWrapper;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
@@ -36,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<T>
-        implements IItemPipe, Dispatch.Sided<ExtendedItemContainer>, IPreTickTile {
+        implements IItemPipe, Dispatch.Sided<IItemHandler>, IPreTickTile {
 
     private int holder;
     private boolean restricted;
@@ -105,12 +104,12 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     }
 
     @Override
-    public LazyOptional<ExtendedItemContainer> forSide(Direction side) {
+    public LazyOptional<IItemHandler> forSide(Direction side) {
         return LazyOptional.of(() -> new PipeItemHandler(side, this, coverHandler.orElse(null), inventory));
     }
 
     @Override
-    public LazyOptional<? extends ExtendedItemContainer> forNullSide() {
+    public LazyOptional<? extends IItemHandler> forNullSide() {
         return LazyOptional.of(() -> new ROCombinedInvWrapper(inventory));
     }
 

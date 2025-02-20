@@ -3,13 +3,13 @@ package muramasa.antimatter.gui.slot;
 import lombok.Getter;
 import muramasa.antimatter.capability.IFilterableHandler;
 import muramasa.antimatter.capability.IGuiHandler;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
 import muramasa.antimatter.capability.machine.MachineItemHandler;
 import muramasa.antimatter.gui.SlotType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,9 +19,9 @@ public class AbstractSlot<T extends Slot> extends SlotItemHandler {
     public final SlotType<T> type;
     protected final IGuiHandler holder;
     @Getter
-    private final ExtendedItemContainer container;
+    private final IItemHandler container;
 
-    public AbstractSlot(SlotType<T> type, IGuiHandler tile, ExtendedItemContainer stackHandler, int index, int x, int y) {
+    public AbstractSlot(SlotType<T> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
         super(stackHandler, index, x, y);
         this.container = stackHandler;
         this.index = index;

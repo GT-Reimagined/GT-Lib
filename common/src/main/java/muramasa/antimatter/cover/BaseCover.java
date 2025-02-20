@@ -6,8 +6,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.IGuiHandler;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.FakeTrackedItemHandler;
+import muramasa.antimatter.capability.item.ITrackedHandler;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
 import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.GuiInstance;
@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,10 +140,10 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     }
 
     @Override
-    public Map<SlotType<?>, ExtendedItemContainer> getAll() {
-        return (Map<SlotType<?>, ExtendedItemContainer>) (Object) inventories;
+    public Map<SlotType<?>, IItemHandler> getAll() {
+        return (Map<SlotType<?>, IItemHandler>) (Object) inventories;
     }
-    public ExtendedItemContainer getInventory(SlotType<?> type){
+    public ITrackedHandler getInventory(SlotType<?> type){
         return inventories.get(type);
     }
 

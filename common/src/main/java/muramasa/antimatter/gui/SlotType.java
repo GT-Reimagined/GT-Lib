@@ -2,12 +2,12 @@ package muramasa.antimatter.gui;
 
 import earth.terrarium.botarium.common.energy.util.EnergyHooks;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
+import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.capability.item.EmptyContainer;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.gui.slot.AbstractSlot;
 import muramasa.antimatter.gui.slot.SlotCell;
@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.IItemHandler;
 import tesseract.TesseractCapUtils;
 
 import java.util.Map;
@@ -48,7 +49,9 @@ public class SlotType<T extends Slot> implements IAntimatterObject, IMachineEven
         return true;
     }, true, false, new ResourceLocation(Ref.ID, "energy"));
 
+    @Getter
     protected final String id;
+    @Getter
     protected final ISlotSupplier<T> slotSupplier;
     public final boolean output;
     public final boolean input;
@@ -73,16 +76,8 @@ public class SlotType<T extends Slot> implements IAntimatterObject, IMachineEven
         AntimatterAPI.register(SlotType.class, this);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public ISlotSupplier<T> getSlotSupplier() {
-        return slotSupplier;
-    }
-
     public interface ISlotSupplier<T extends Slot> {
-        T get(SlotType<T> type, IGuiHandler tile, Map<SlotType<?>, ExtendedItemContainer> slots, int index, SlotData<T> data);
+        T get(SlotType<T> type, IGuiHandler tile, Map<SlotType<?>, IItemHandler> slots, int index, SlotData<T> data);
     }
 
     public static void init() {

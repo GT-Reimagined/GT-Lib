@@ -1,16 +1,16 @@
 package muramasa.antimatter.gui.slot;
 
 import muramasa.antimatter.capability.IGuiHandler;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.gui.SlotType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 
 public class SlotOutput extends AbstractSlot<SlotOutput> {
 
-    public SlotOutput(SlotType<SlotOutput> type, IGuiHandler tile, ExtendedItemContainer stackHandler, int index, int x, int y) {
+    public SlotOutput(SlotType<SlotOutput> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
         super(type, tile, stackHandler, index, x, y);
     }
 

@@ -1,8 +1,8 @@
 package muramasa.antimatter.gui.container;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import lombok.Getter;
 import muramasa.antimatter.capability.IGuiHandler;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
 import muramasa.antimatter.gui.GuiInstance;
 import muramasa.antimatter.gui.slot.AbstractSlot;
@@ -21,11 +21,13 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.Set;
 
 public abstract class AntimatterContainer extends AbstractContainerMenu implements IAntimatterContainer {
 
+    @Getter
     protected Inventory playerInv;
     protected int invSize;
     public final GuiInstance handler;
@@ -164,9 +166,9 @@ public abstract class AntimatterContainer extends AbstractContainerMenu implemen
                         itemstack.setCount(j);
                         slot.setChanged();
                         if (slot instanceof AbstractSlot<?> abstractSlot) {
-                            ExtendedItemContainer handle = abstractSlot.getContainer();
-                            if (handle instanceof TrackedItemHandler<?>) {
-                                ((TrackedItemHandler<?>) handle).onContentsChanged(slot.index);
+                            IItemHandler handle = abstractSlot.getContainer();
+                            if (handle instanceof TrackedItemHandler<?> trackedItemHandler) {
+                                trackedItemHandler.onContentsChanged(slot.index);
                             }
                         }
                         flag = true;
@@ -229,10 +231,6 @@ public abstract class AntimatterContainer extends AbstractContainerMenu implemen
         }
 
         return flag;
-    }
-
-    public Inventory getPlayerInv() {
-        return playerInv;
     }
 
     @Override

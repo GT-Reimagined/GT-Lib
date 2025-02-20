@@ -17,7 +17,6 @@ import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.ICoverHandlerProvider;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.capability.IMachineHandler;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.machine.DefaultHeatHandler;
 import muramasa.antimatter.capability.machine.MachineCoverHandler;
 import muramasa.antimatter.capability.machine.MachineEnergyHandler;
@@ -88,6 +87,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.fe.IFENode;
@@ -140,7 +140,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public LazyOptional<MachineRecipeHandler<U>> recipeHandler;
     public LazyOptional<MachineCoverHandler<BlockEntityMachine>> coverHandler;*/
 
-    public Holder<ExtendedItemContainer, MachineItemHandler<T>> itemHandler = new Holder<>(ExtendedItemContainer.class, dispatch);
+    public Holder<IItemHandler, MachineItemHandler<T>> itemHandler = new Holder<>(IItemHandler.class, dispatch);
     public Holder<FluidContainer, MachineFluidHandler<T>> fluidHandler = new Holder<>(FluidContainer.class, dispatch);
     public Holder<ICoverHandler<?>, MachineCoverHandler<T>> coverHandler = new Holder<>(ICoverHandler.class, dispatch, null);
     public Holder<IEnergyHandler, MachineEnergyHandler<T>> energyHandler = new Holder<>(IEnergyHandler.class, dispatch);

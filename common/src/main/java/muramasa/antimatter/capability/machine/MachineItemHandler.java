@@ -7,12 +7,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
+import lombok.Getter;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.IMachineHandler;
-import muramasa.antimatter.capability.item.ExtendedItemContainer;
 import muramasa.antimatter.capability.item.FakeTrackedItemHandler;
 import muramasa.antimatter.capability.item.ITrackedHandler;
 import muramasa.antimatter.capability.item.ROCombinedInvWrapper;
@@ -31,6 +31,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
 import tesseract.api.Serializable;
@@ -44,8 +45,9 @@ import java.util.stream.Collectors;
 
 import static muramasa.antimatter.machine.MachineFlag.GUI;
 
-public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMachineHandler, Serializable, Dispatch.Sided<ExtendedItemContainer> {
+public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMachineHandler, Serializable, Dispatch.Sided<IItemHandler> {
 
+    @Getter
     protected final T tile;
     protected final Object2ObjectMap<SlotType<?>, TrackedItemHandler<T>> inventories = new Object2ObjectOpenHashMap<>();
 
@@ -71,8 +73,8 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         }
     }
 
-    public Map<SlotType<?>, ExtendedItemContainer> getAll() {
-        return (Map<SlotType<?>, ExtendedItemContainer>) (Object) inventories;
+    public Map<SlotType<?>, IItemHandler> getAll() {
+        return (Map<SlotType<?>, IItemHandler>) (Object) inventories;
     }
 
 
@@ -100,10 +102,6 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             if (!nbt.contains(f.getId())) return;
             i.deserializeNBT(nbt.getCompound(f.getId()));
         });
-    }
-
-    public T getTile() {
-        return tile;
     }
 
     public void onUpdate() {
@@ -203,7 +201,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      **/
     public List<ItemStack> getInputList() {
         List<ItemStack> list = new ObjectArrayList<>();
-        ExtendedItemContainer inputs = getInputHandler();
+        IItemHandler inputs = getInputHandler();
         for (int i = 0; i < inputs.getSlots(); i++) {
             if (!inputs.getStackInSlot(i).isEmpty()) {
                 list.add(inputs.getStackInSlot(i).copy());
@@ -218,7 +216,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public List<Pair<ItemStack, IEnergyHandlerItem>> getChargeableItems() {
         List<Pair<ItemStack, IEnergyHandlerItem>> list = new ObjectArrayList<>();
         if (tile.isServerSide()) {
-            ExtendedItemContainer chargeables = getChargeHandler();
+            IItemHandler chargeables = getChargeHandler();
             for (int i = 0; i < chargeables.getSlots(); i++) {
                 ItemStack item = chargeables.getStackInSlot(i);
                 if (!item.isEmpty()) {
@@ -232,7 +230,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public List<IEnergyStorage> getFEChargeableItems() {
         List<IEnergyStorage> list = new ObjectArrayList<>();
         if (tile.isServerSide()) {
-            ExtendedItemContainer chargeables = getChargeHandler();
+            IItemHandler chargeables = getChargeHandler();
             for (int i = 0; i < chargeables.getSlots(); i++) {
                 ItemStack item = chargeables.getStackInSlot(i);
                 var cap = item.getCapability(CapabilityEnergy.ENERGY);
@@ -249,7 +247,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      **/
     public List<ItemStack> getOutputList() {
         List<ItemStack> list = new ObjectArrayList<>();
-        ExtendedItemContainer outputs = getOutputHandler();
+        IItemHandler outputs = getOutputHandler();
         for (int i = 0; i < outputs.getSlots(); i++) {
             ItemStack slot = outputs.getStackInSlot(i);
             if (!slot.isEmpty()) {
@@ -325,7 +323,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      * @param outputs the outputs to add.
      */
     public void addOutputs(ItemStack... outputs) {
-        ExtendedItemContainer outputHandler = getOutputHandler();
+        IItemHandler outputHandler = getOutputHandler();
         if (outputHandler == null || outputs == null || outputs.length == 0) {
             return;
         }
@@ -344,7 +342,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      **/
     public boolean canOutputsFit(ItemStack[] a) {
         if (a == null) return true;
-        ExtendedItemContainer outputHandler = getOutputHandler();
+        IItemHandler outputHandler = getOutputHandler();
         boolean[] results = new boolean[a.length];
         List<Integer> slotsTaken = new ArrayList<>();
         for (int i = 0; i < a.length; i++) {
@@ -369,7 +367,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public int getSpaceForOutputs(ItemStack[] a) {
         int matchCount = 0;
         //Here, cast to use stack limit
-        ExtendedItemContainer handler = getOutputHandler();
+        IItemHandler handler = getOutputHandler();
         if (!(handler instanceof TrackedItemHandler)) {
             return 0;
         }
@@ -388,7 +386,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
 
     public ItemStack[] consumeAndReturnInputs(ItemStack... inputs) {
         List<ItemStack> notConsumed = new ObjectArrayList<>();
-        ExtendedItemContainer inputHandler = getInputHandler();
+        IItemHandler inputHandler = getInputHandler();
         for (ItemStack input : inputs) {
             for (int i = 0; i < inputHandler.getSlots(); i++) {
                 if (Utils.equals(input, inputHandler.getStackInSlot(i))) {
@@ -410,7 +408,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
 
     public ItemStack[] exportAndReturnOutputs(ItemStack... outputs) {
         List<ItemStack> notExported = new ObjectArrayList<>();
-        ExtendedItemContainer outputHandler = getOutputHandler();
+        IItemHandler outputHandler = getOutputHandler();
         for (int i = 0; i < outputs.length; i++) {
             for (int j = 0; j < outputHandler.getSlots(); j++) {
                 ItemStack result = insertIntoOutput(outputHandler, j, outputs[i].copy(), false);
@@ -428,12 +426,12 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     }
 
     @Override
-    public LazyOptional<ExtendedItemContainer> forSide(Direction side) {
-        return LazyOptional.of(() -> new SidedCombinedInvWrapper(side, tile.coverHandler.map(c -> c).orElse(null), this::allowsInput, this::allowsOutput, this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(ExtendedItemContainer[]::new)));
+    public LazyOptional<IItemHandler> forSide(Direction side) {
+        return LazyOptional.of(() -> new SidedCombinedInvWrapper(side, tile.coverHandler.map(c -> c).orElse(null), this::allowsInput, this::allowsOutput, this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(IItemHandlerModifiable[]::new)));
     }
 
     @Override
-    public LazyOptional<? extends ExtendedItemContainer> forNullSide() {
-        return LazyOptional.of(() -> new ROCombinedInvWrapper(this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(ExtendedItemContainer[]::new)));
+    public LazyOptional<? extends IItemHandler> forNullSide() {
+        return LazyOptional.of(() -> new ROCombinedInvWrapper(this.inventories.values().stream().filter(t -> !(t instanceof FakeTrackedItemHandler)).toArray(IItemHandlerModifiable[]::new)));
     }
 }

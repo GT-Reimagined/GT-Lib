@@ -2,11 +2,12 @@ package muramasa.antimatter.capability.item;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 public class ROCombinedInvWrapper extends CombinedInvWrapper implements IItemNode {
-    public ROCombinedInvWrapper(ExtendedItemContainer... itemHandler) {
+    public ROCombinedInvWrapper(IItemHandlerModifiable... itemHandler) {
         super(itemHandler);
     }
 
