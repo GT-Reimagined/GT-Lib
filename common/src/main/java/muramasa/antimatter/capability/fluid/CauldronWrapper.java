@@ -1,4 +1,4 @@
-package muramasa.antimatter.capability.fluid.forge;
+package muramasa.antimatter.capability.fluid;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

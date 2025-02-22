@@ -3,7 +3,7 @@ package muramasa.antimatter.util.forge;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.forge.fluid.ForgeFluidHandler;
-import muramasa.antimatter.capability.fluid.forge.CauldronWrapper;
+import muramasa.antimatter.capability.fluid.CauldronWrapper;
 import muramasa.antimatter.util.AntimatterCapUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
