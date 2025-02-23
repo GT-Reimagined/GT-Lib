@@ -6,6 +6,8 @@ import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.blockentity.pipe.BlockEntityFluidPipe;
 import muramasa.antimatter.capability.FluidHandler;
 import net.minecraft.core.Direction;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class PipeFluidHandlerSidedWrapper extends FluidHandlerSidedWrapper{
@@ -18,14 +20,14 @@ public class PipeFluidHandlerSidedWrapper extends FluidHandlerSidedWrapper{
     }
 
     @Override
-    public long insertFluid(FluidHolder resource, boolean simulate) {
+    public int fill(FluidStack resource, FluidAction action) {
         if (side == null) return 0;
         if (coverHandler != null) {
-            if (coverHandler.get(side).blocksInput(FluidContainer.class, side)) {
+            if (coverHandler.get(side).blocksInput(IFluidHandler.class, side)) {
                 return 0;
             }
-            long oldAmount = resource.getFluidAmount();
-            if(coverHandler.onTransfer(resource, side, true, simulate)) return oldAmount - resource.getFluidAmount();
+            int oldAmount = resource.getAmount();
+            if(coverHandler.onTransfer(resource, side, true, action.simulate())) return oldAmount - resource.getAmount();
         }
 
         if (!fluidHandler.canInput(resource, side) || !fluidHandler.canInput(side)) {
@@ -33,20 +35,19 @@ public class PipeFluidHandlerSidedWrapper extends FluidHandlerSidedWrapper{
         }
         int tank = fluidHandler.getInputTanks().getFirstAvailableTank(resource, false);
         if (tank == -1) return 0;
-        long insert = fluidHandler.getInputTanks().getTank(tank).insertFluid(resource, simulate);
-        if (insert > 0 && !simulate){
+        int insert = fluidHandler.getInputTanks().getTank(tank).fill(resource, action);
+        if (insert > 0 && action.execute()){
             pipe.setLastSide(side, tank);
         }
         return insert;
     }
 
-    @NotNull
     @Override
-    public FluidHolder extractFluid(FluidHolder resource, boolean simulate) {
-        if (side == null) return FluidHooks.emptyFluid();
-        if (coverHandler != null && (coverHandler.get(side).blocksOutput(FluidContainer.class, side) || coverHandler.onTransfer(resource, side, false, simulate))) {
-            return FluidHooks.emptyFluid();
+    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+        if (side == null) return FluidStack.EMPTY;
+        if (coverHandler != null && (coverHandler.get(side).blocksOutput(IFluidHandler.class, side) || coverHandler.onTransfer(resource, side, false, action.simulate()))) {
+            return FluidStack.EMPTY;
         }
-        return super.extractFluid(resource, simulate);
+        return super.drain(resource, action);
     }
 }

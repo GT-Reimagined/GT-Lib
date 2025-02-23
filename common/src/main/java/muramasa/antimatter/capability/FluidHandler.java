@@ -161,6 +161,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
         return FluidStack.EMPTY;
     }
 
+    @NotNull
     @Override
     public FluidStack drain(int toExtract, FluidAction action) {
         if (getOutputTanks() != null){
