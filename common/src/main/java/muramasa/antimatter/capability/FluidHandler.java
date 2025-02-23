@@ -245,11 +245,6 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
     }
 
     @Override
-    public void clearContent() {
-        getAllTanks().clearContent();
-    }
-
-    @Override
     public FluidSnapshot createSnapshot() {
         return new FluidHandlerSnapshot(this);
     }
