@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class SequencedAssemblyBuilder {
             throw new IllegalStateException("Recipe must add a transitional item first!");
         }
         FluidIngredient ingredient;
-        if (in instanceof FluidHolder stack){
+        if (in instanceof FluidStack stack){
             ingredient = FluidIngredient.of(stack);
         } else if (in instanceof FluidIngredient ing){
             ingredient = ing;

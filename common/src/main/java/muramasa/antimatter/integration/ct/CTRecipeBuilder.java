@@ -16,6 +16,7 @@ import muramasa.antimatter.recipe.map.RecipeBuilder;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,13 +48,13 @@ public class CTRecipeBuilder {
     }
 
     public CTRecipeBuilder fi(IFluidStack... fluidInput){
-        List<FluidIngredient> fluidIn = fluidInput == null ? Collections.emptyList() : Arrays.stream(fluidInput).map(t -> FluidIngredient.of(new ForgeFluidHolder(t.getInternal()))).toList();
+        List<FluidIngredient> fluidIn = fluidInput == null ? Collections.emptyList() : Arrays.stream(fluidInput).map(t -> FluidIngredient.of(t.getInternal())).toList();
         recipeBuilder.fi(fluidIn.toArray(new FluidIngredient[0]));
         return this;
     }
 
     public CTRecipeBuilder fo(IFluidStack... fluidOutput){
-        FluidHolder[] fluidOut = fluidOutput == null ? IRecipeMap.EMPTY_FLUID : Arrays.stream(fluidOutput).map(t -> new ForgeFluidHolder(t.getInternal())).toArray(FluidHolder[]::new);
+        FluidStack[] fluidOut = fluidOutput == null ? IRecipeMap.EMPTY_FLUID : Arrays.stream(fluidOutput).map(t -> t.getInternal()).toArray(FluidStack[]::new);
         recipeBuilder.fo(fluidOut);
         return this;
     }

@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -51,20 +53,20 @@ public class SlotClickEvent implements IGuiEvent {
         return false;
     }
 
-    private PlatformFluidHandler tryGetCap(IGuiHandler handler) {
+    private IFluidHandler tryGetCap(IGuiHandler handler) {
         if (handler instanceof BlockEntityMachine) {
             BlockEntityMachine<?> machine = (BlockEntityMachine<?>) handler;
             return machine.fluidHandler.map(f -> type == SlotType.FL_IN && f.getInputTanks() != null ? f.getInputTanks().getTank(index) : type == SlotType.FL_OUT && f.getOutputTanks() != null ? f.getOutputTanks().getTank(f.offsetTank(index)) : f.getGuiHandler()).orElse(null);
         }
         if (handler instanceof BlockEntity be) {
-            return FluidHooks.safeGetBlockFluidManager(be, null).orElse(null);
+            return be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().orElse(null);
         }
         return null;
     }
 
     @Override
     public void handle(Player player, GuiInstance instance) {
-        PlatformFluidHandler sink = tryGetCap(instance.handler);
+        IFluidHandler sink = tryGetCap(instance.handler);
         if (sink == null) return;
         ItemStack stack = player.containerMenu.getCarried();
         if (stack.isEmpty()) return;

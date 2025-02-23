@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidStack;
 import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class FluidSlotWidget extends Widget {
 
     private final int slot;
     private final SlotData<?> slots;
-    private FluidHolder stack = FluidHooks.emptyFluid();
+    private FluidStack stack = FluidStack.EMPTY;
 
     protected FluidSlotWidget(GuiInstance gui, IGuiElement parent, int fluidSlot, SlotData<?> slots) {
         super(gui, parent);
@@ -53,7 +54,7 @@ public class FluidSlotWidget extends Widget {
         super.init();
         if (this.gui.handler instanceof BlockEntityMachine<?> blockEntity){
             this.gui.syncFluidStack(() -> blockEntity.fluidHandler
-                    .map(t -> t.getFluidInTank(slot)).orElse(FluidHooks.emptyFluid()), stack -> this.stack = stack, SERVER_TO_CLIENT);
+                    .map(t -> t.getFluidInTank(slot)).orElse(FluidStack.EMPTY), stack -> this.stack = stack, SERVER_TO_CLIENT);
         }
 
     }
@@ -64,7 +65,7 @@ public class FluidSlotWidget extends Widget {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void renderFluid(PoseStack stack, FluidHolder fluid, int x, int y) {
+    public void renderFluid(PoseStack stack, FluidStack fluid, int x, int y) {
         if (fluid.isEmpty())
             return;
         RenderHelper.drawFluid(stack, Minecraft.getInstance(), x, y, getW(), getH(), 16, fluid);
@@ -85,7 +86,7 @@ public class FluidSlotWidget extends Widget {
         RenderSystem.enableDepthTest();
         List<Component> str = new ArrayList<>();
         str.add(FluidPlatformUtils.INSTANCE.getFluidDisplayName(this.stack));
-        long mb = this.stack.getFluidAmount();
+        long mb = this.stack.getAmount();
         str.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";

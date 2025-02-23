@@ -25,6 +25,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
@@ -145,20 +149,21 @@ public class CoverOutput extends BaseCover {
         }
         if (processing > 0) return;
         processing++;
-        FluidHooks.safeGetBlockFluidManager(adjTile, this.side.getOpposite())
-                .ifPresent(adjHandler -> {
-                    FluidHooks.safeGetBlockFluidManager(handler.getTile(), this.side).ifPresent(h -> tryFluidTransfer(adjHandler, h, Integer.MAX_VALUE, true));
-                });
+        adjTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, this.side.getOpposite()).ifPresent(adjHandler -> {
+            handler.getTile().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, this.side).ifPresent(h -> {
+                tryFluidTransfer(adjHandler, h, Integer.MAX_VALUE, true);
+            });
+        });
         processing--;
     }
 
-    public void tryFluidTransfer(PlatformFluidHandler fluidDestination, PlatformFluidHandler fluidSource, long maxAmount, boolean doTransfer) {
-        for (int i = 0; i < fluidSource.getTankAmount(); i++) {
-            FluidHolder fluid = fluidSource.getFluidInTank(i);
+    public void tryFluidTransfer(IFluidHandler fluidDestination, IFluidHandler fluidSource, int maxAmount, boolean doTransfer) {
+        for (int i = 0; i < fluidSource.getTanks(); i++) {
+            FluidStack fluid = fluidSource.getFluidInTank(i);
             if (this.handler.getTile() instanceof BlockEntityMachine<?> machine && machine.fluidHandler.map(f -> !f.canFluidBeAutoOutput(fluid)).orElse(false)){
                 continue;
             }
-            FluidPlatformUtils.INSTANCE.tryFluidTransfer(fluidDestination, fluidSource, fluid.copyWithAmount(Math.min(fluid.getFluidAmount(), maxAmount)), doTransfer);
+            FluidUtil.tryFluidTransfer(fluidDestination, fluidSource, Utils.ca(Math.min(fluid.getAmount(), maxAmount), fluid), doTransfer);
         }
     }
 

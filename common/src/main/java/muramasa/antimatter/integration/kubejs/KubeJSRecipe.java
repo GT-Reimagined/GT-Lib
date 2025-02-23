@@ -22,6 +22,7 @@ import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.GsonHelper;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
 public class KubeJSRecipe extends RecipeJS {
 
     public final List<FluidIngredient> fluidInput = new ObjectArrayList<>();
-    public final List<FluidHolder> fluidOutput = new ObjectArrayList<>();
+    public final List<FluidStack> fluidOutput = new ObjectArrayList<>();
 
     private int duration;
     private int special;
@@ -58,7 +59,7 @@ public class KubeJSRecipe extends RecipeJS {
         }
         if (listJS.get(3) != null) for (Object inputFluid : ListJS.orSelf(listJS.get(3))) {
             if (inputFluid instanceof FluidStackJS fluidStack){
-                this.fluidInput.add(FluidIngredient.of(REIUtils.fromREIFluidStack(fluidStack.getFluidStack())));
+                this.fluidInput.add(FluidIngredient.of(REIUtils.fromREIFluidStack(fluidStack.getFluidStack()));
             } else if (inputFluid instanceof MapJS map){
                 this.fluidInput.add(AntimatterRecipeSerializer.getFluidIngredient(map.toJson()));
             } else {

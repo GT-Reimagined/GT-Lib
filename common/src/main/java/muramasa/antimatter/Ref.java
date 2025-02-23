@@ -56,7 +56,7 @@ public class Ref {
     /**
      * Fluid per Material Unit (Prime Factors: Forge: 3 * 3 * 2 * 2 * 2 * 2 Fabric: 5 * 5 * 5 * 3 * 3 * 2 * 2 * 2)
      */
-    public static final long L = 144L, L9 = L / 9;
+    public static final int L = 144, L9 = L / 9;
 
 
     /**

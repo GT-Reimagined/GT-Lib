@@ -141,7 +141,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             JsonObject obj = (JsonObject) element;
             if (obj.has("fluidTag")) {
                 ResourceLocation tagType = new ResourceLocation(obj.get("tag").getAsString());
-                long amount = obj.has("amount") ? obj.get("amount").getAsLong() : 1000;
+                int amount = obj.has("amount") ? obj.get("amount").getAsInt() : 1000;
                 return FluidIngredient.of(tagType, amount);
             }
             return FluidIngredient.of(getStack(element));

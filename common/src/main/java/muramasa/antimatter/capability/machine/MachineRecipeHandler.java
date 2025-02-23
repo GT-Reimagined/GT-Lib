@@ -448,12 +448,11 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         if (!activeRecipe.hasInputFluids()) {
             throw new RuntimeException("Missing fuel in active generator recipe!");
         }
-        long toConsume = calculateGeneratorConsumption(activeRecipe);
-        long actualConsume = toConsume;
-        if (actualConsume == 0 || tile.fluidHandler.map(h -> {
+        int toConsume = calculateGeneratorConsumption(activeRecipe);
+        if (toConsume == 0 || tile.fluidHandler.map(h -> {
             FluidIngredient in = activeRecipe.getInputFluids().get(0);
-            long amount = in.drainedAmount(actualConsume, h, true, true);
-            if (amount == actualConsume) {
+            int amount = in.drainedAmount(toConsume, h, true, true);
+            if (amount == toConsume) {
                 if (!simulate)
                     in.drain(amount, h, true, false);
                 return true;
@@ -510,8 +509,8 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return tile.getMachineType().getMachineEfficiency(tile.getMachineTier());
     }
 
-    protected long calculateGeneratorConsumption(IRecipe r) {
-        long amount = r.getInputFluids().get(0).getAmount();
+    protected int calculateGeneratorConsumption(IRecipe r) {
+        int amount = r.getInputFluids().get(0).getAmount();
         if (currentProgress > 0) {
             return 0;
         }
