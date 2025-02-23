@@ -141,14 +141,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public LazyOptional<MachineCoverHandler<BlockEntityMachine>> coverHandler;*/
 
     public Holder<IItemHandler, MachineItemHandler<T>> itemHandler = new Holder<>(IItemHandler.class, dispatch);
-    public Holder<FluidContainer, MachineFluidHandler<T>> fluidHandler = new Holder<>(FluidContainer.class, dispatch);
+    public Holder<IFluidHandler, MachineFluidHandler<T>> fluidHandler = new Holder<>(IFluidHandler.class, dispatch);
     public Holder<ICoverHandler<?>, MachineCoverHandler<T>> coverHandler = new Holder<>(ICoverHandler.class, dispatch, null);
     public Holder<IEnergyHandler, MachineEnergyHandler<T>> energyHandler = new Holder<>(IEnergyHandler.class, dispatch);
     public Holder<IHeatHandler, DefaultHeatHandler> heatHandler = new Holder<>(IHeatHandler.class, dispatch);
     public Holder<IFENode, MachineFEHandler<T>> feHandler = new Holder<>(IFENode.class, dispatch);
     public Holder<MachineRecipeHandler<?>, MachineRecipeHandler<T>> recipeHandler = new Holder<>(MachineRecipeHandler.class, dispatch, null);
-
-    private LazyOptional<IFluidHandler>[] fluidHandlerLazyOptional = new LazyOptional[7];
 
     /**
      * Client related fields.
@@ -669,10 +667,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     protected <U> LazyOptional<U> getCap(@NotNull Capability<U> cap, @Nullable Direction side) {
         int index = side == null ? 6 : side.get3DDataValue();
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && fluidHandler.isPresent()) {
-            if (fluidHandlerLazyOptional[index] == null || !fluidHandlerLazyOptional[index].isPresent()){
-                fluidHandlerLazyOptional[index] = fromFluidHolder(fluidHandler, side);
-            }
-            return fluidHandlerLazyOptional[index].cast();
+            return fluidHandler.side(side).cast();
         }
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && itemHandler.isPresent()) {
             return itemHandler.side(side).cast();
@@ -686,15 +681,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             }
         }
         return super.getCapability(cap, side);
-    }
-
-    private LazyOptional<IFluidHandler> fromFluidHolder(Holder<FluidContainer, ?> holder, Direction side) {
-        if (!holder.isPresent()) return LazyOptional.empty();
-        LazyOptional<? extends FluidContainer> optional = holder.side(side);
-        LazyOptional<IFluidHandler> opt = optional.<LazyOptional<IFluidHandler>>map(fluidContainer -> LazyOptional.of(() -> new ForgeFluidContainer(fluidContainer))).orElseGet(LazyOptional::empty);
-        boolean add = holder.addListener(side, opt::invalidate);
-        if (!add) return LazyOptional.empty();
-        return opt;
     }
 
     public final boolean allowsFrontIO() {
