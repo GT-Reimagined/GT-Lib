@@ -212,7 +212,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                     InteractionResult coverInteract = tile.getCoverHandler().map(h -> h.onInteract(player, hand, Utils.getInteractSide(hit), Utils.getToolType(player))).orElse(InteractionResult.PASS);
                     if (coverInteract != InteractionResult.PASS) return coverInteract;
                     //Has gui?
-                    if (FluidHooks.safeGetBlockFluidManager(tile, hit.getDirection()).map(fh -> {
+                    if (tile.fluidHandler.map(fh -> {
                         Consumer<ItemStack> consumer = s -> {
                             if (player.isCreative()) return;
                             boolean single = stack.getCount() == 1;
@@ -226,9 +226,9 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                             }
                         };
                         boolean success = false;
-                        if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(Utils.ca(1, stack), fh, consumer)){
+                        if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), fh, consumer)){
                             success = true;
-                        } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(Utils.ca(1, stack), fh, consumer)){
+                        } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(-1, Utils.ca(1, stack), fh, consumer)){
                             success = true;
                         }
                         return success;

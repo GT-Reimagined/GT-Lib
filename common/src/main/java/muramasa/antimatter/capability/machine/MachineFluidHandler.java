@@ -106,7 +106,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         return true;
     }
 
-    protected void tryFillCell(int slot, long maxFill) {
+    protected void tryFillCell(int slot, int maxFill) {
         if (tile.itemHandler.map(MachineItemHandler::getCellCount).orElse(0) > 0) {
             fillCell(slot, maxFill);
         }
