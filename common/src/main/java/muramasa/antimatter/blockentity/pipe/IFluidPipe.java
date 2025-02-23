@@ -22,15 +22,6 @@ public interface IFluidPipe extends IConnectable {
     long getPressure();
 
     /**
-     * Version of {@link #getPressure} that returns a max pressure but in fabric's droplets unit of fluid measurement. 1 mb = 81 droplets
-     *
-     * @return A positive long representing the maximum amount, zero or negative indicates that this component accepts no fluid.
-     */
-    default long getPressureInDroplets(){
-        return getPressure();
-    }
-
-    /**
      * Returns the maximum temperature that this fluid component will permit to pass through or be received in a single packet.
      *
      * @return A positive integer representing the maximum accepted temp, zero or negative indicates that this component accepts no fluid.
