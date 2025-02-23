@@ -59,7 +59,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         }
     }
 
-    public void fillCell(int cellSlot, long maxFill) {
+    public void fillCell(int cellSlot, int maxFill) {
         if (fillingCell) return;
         fillingCell = true;
         if (getInputTanks() != null) {
@@ -77,10 +77,10 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
                     MachineItemHandler.insertIntoOutput(ih.getCellOutputHandler(), cellSlot, s, false);
                     MachineItemHandler.extractFromInput(ih.getCellInputHandler(), cellSlot, 1, false);
                 };
-                if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
-                } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
                 }

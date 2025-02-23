@@ -14,11 +14,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public abstract class FluidPlatformUtils {
     public static FluidPlatformUtils INSTANCE; // =  ServiceLoader.load(FluidPlatformUtils.class).findFirst().orElseThrow(() -> new IllegalStateException("No implementation of FluidPlatformUtils found"));
@@ -120,56 +127,44 @@ public abstract class FluidPlatformUtils {
         return FluidHooks.emptyFluid();
     }
 
-    public boolean fillItemFromContainer(ItemStack stack, PlatformFluidHandler handler, Consumer<ItemStack> consumer){
-        return fillItemFromContainer(stack, handler, s -> true, consumer);
+    public boolean fillItemFromContainer(int maxFill, ItemStack stack, IFluidHandler handler, Consumer<ItemStack> consumer){
+        return fillItemFromContainer(maxFill, stack, handler, s -> true, consumer);
     }
 
-    public boolean emptyItemIntoContainer(ItemStack stack, PlatformFluidHandler handler, Consumer<ItemStack> consumer){
-        return emptyItemIntoContainer(stack, handler, s -> true, consumer);
+    public boolean emptyItemIntoContainer(int maxFill, ItemStack stack, IFluidHandler handler, Consumer<ItemStack> consumer){
+        return emptyItemIntoContainer(maxFill, stack, handler, s -> true, consumer);
     }
 
-    public boolean fillItemFromContainer(ItemStack stack, PlatformFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
-        PlatformFluidItemHandler itemHandler = FluidHooks.safeGetItemFluidManager(stack.copy()).orElse(null);
+    public boolean fillItemFromContainer(int maxFill, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
+        IFluidHandlerItem itemHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().orElse(null);
         if (itemHandler == null) return false;
-        for (int i = 0; i < handler.getTankAmount(); i++) {
-            FluidHolder fluid = handler.getFluidInTank(i);
-            FluidHolder extracted = handler.extractFluid(fluid, true);
-            if (!extracted.isEmpty()){
-                ItemStackHolder holder = new ItemStackHolder(stack);
-                long inserted = itemHandler.insertFluid(holder, extracted, false);
-                if (inserted > 0 && tester.test(holder.getStack())){
-                    itemHandler = FluidHooks.getItemFluidManager(stack);
-                    FluidHolder fluidHolder = FluidHooks.newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound());
-                    handler.extractFluid(fluidHolder, false);
-                    long insert = itemHandler.insertFluid(holder, fluidHolder, false);
-                    consumer.accept(holder.getStack());
-                    return insert > 0;
-                }
-            }
+        final int actualMax = maxFill == -1 ? itemHandler.getTankCapacity(0) : maxFill;
+        ItemStack checkContainer = stack.copy().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).map(t -> {
+            t.fill(FluidUtil.tryFluidTransfer(t, handler, actualMax, false), EXECUTE);
+            return t.getContainer();
+        }).orElse(ItemStack.EMPTY);
+        if (!tester.test(checkContainer)) return false;
+        FluidStack fluidStack = FluidUtil.tryFluidTransfer(itemHandler, handler, actualMax, true);
+        if (!fluidStack.isEmpty()) {
+            consumer.accept(checkContainer);
+            return true;
         }
         return false;
     }
 
-    public boolean emptyItemIntoContainer(ItemStack stack, PlatformFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
-        PlatformFluidItemHandler itemHandler = FluidHooks.safeGetItemFluidManager(stack.copy()).orElse(null);
+    public boolean emptyItemIntoContainer(int maxDrain, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
+        IFluidHandlerItem itemHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().orElse(null);
         if (itemHandler == null) return false;
-        for (int i = 0; i < itemHandler.getTankAmount(); i++) {
-            FluidHolder fluid = itemHandler.getFluidInTank(i);
-            ItemStackHolder holder = new ItemStackHolder(stack);
-            FluidHolder extracted = itemHandler.extractFluid(holder, fluid, false);
-            if (!extracted.isEmpty() && tester.test(holder.getStack())){
-                long inserted = handler.insertFluid(extracted, true);
-                if (inserted > 0){
-                    itemHandler = FluidHooks.getItemFluidManager(stack.copy());
-                    FluidHolder fluidHolder = FluidHooks.newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound());
-                    long actuallyExtracted = itemHandler.extractFluid(holder, fluidHolder, false).getFluidAmount();
-                    if (actuallyExtracted == inserted){
-                        long insert = handler.insertFluid(fluidHolder, false);
-                        consumer.accept(holder.getStack());
-                        return insert > 0;
-                    }
-                }
-            }
+        final int actualMax = maxDrain == -1 ? itemHandler.getTankCapacity(0) : maxDrain;
+        ItemStack checkContainer = stack.copy().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).map(t -> {
+            t.drain(actualMax, EXECUTE);
+            return t.getContainer();
+        }).orElse(ItemStack.EMPTY);
+        if (!tester.test(checkContainer)) return false;
+        FluidStack fluidStack = FluidUtil.tryFluidTransfer(handler, itemHandler, actualMax, true);
+        if (!fluidStack.isEmpty()) {
+            consumer.accept(checkContainer);
+            return true;
         }
         return false;
     }
