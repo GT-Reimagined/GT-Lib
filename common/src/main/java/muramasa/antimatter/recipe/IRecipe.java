@@ -1,7 +1,6 @@
 package muramasa.antimatter.recipe;
 
 import com.google.gson.JsonObject;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
@@ -10,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,7 +72,7 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
     List<FluidIngredient> getInputFluids();
 
     @Nullable
-    FluidHolder[] getOutputFluids();
+    FluidStack[] getOutputFluids();
 
     int getDuration();
 

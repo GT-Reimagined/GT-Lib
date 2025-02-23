@@ -11,23 +11,31 @@ import muramasa.antimatter.material.Material;
 import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
+import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import org.lwjgl.system.CallbackI.F;
 import tesseract.TesseractGraphWrappers;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.SIMULATE;
+
 public class FluidIngredient {
-    private FluidHolder[] stacks = new FluidHolder[0];
+    private FluidStack[] stacks = new FluidStack[0];
     @Getter
     private TagKey<Fluid> tag;
     @Getter
-    private long amount = 0;
+    private int amount = 0;
     private boolean evaluated = false;
 
     public static final FluidIngredient EMPTY = new FluidIngredient();
@@ -36,53 +44,41 @@ public class FluidIngredient {
 
     }
 
-    public boolean matches(FluidHolder fluidHolder){
-        List<FluidHolder> list = Arrays.stream(getStacks()).filter(f -> f.matches(fluidHolder)).toList();
+    public boolean matches(FluidStack fluidHolder){
+        List<FluidStack> list = Arrays.stream(getStacks()).filter(f -> f.isFluidEqual(fluidHolder)).toList();
         return !list.isEmpty();
     }
 
 
-    public FluidHolder[] getStacks() {
+    public FluidStack[] getStacks() {
         if (evaluated) return stacks;
         evaluated = true;
         if (tag != null) {
-            List<FluidHolder> list = new ObjectArrayList<>();
+            List<FluidStack> list = new ObjectArrayList<>();
             Registry.FLUID.getTagOrEmpty(tag).iterator().forEachRemaining(t -> {
                 if (!t.value().isSource(t.value().defaultFluidState())) return;
-                FluidHolder stack = FluidHooks.newFluidHolder(t.value(), getAmount(), null);
+                FluidStack stack = new FluidStack(t.value(), getAmount());
                 list.add(stack);
             });
-            this.stacks = list.toArray(new FluidHolder[0]);
+            this.stacks = list.toArray(new FluidStack[0]);
         }
         return stacks;
     }
 
-    public int getAmountInMB(){
-        return (int) getAmount();
-    }
-
-    public FluidIngredient copy(long droplets) {
+    public FluidIngredient copy(int amount) {
         FluidIngredient ing = new FluidIngredient();
-        ing.stacks = Arrays.stream(stacks).map(t -> {
-            FluidHolder stack = t.copyHolder();
-            stack.setAmount(droplets);
-            return stack;
-        }).toArray(FluidHolder[]::new);
+        ing.stacks = Arrays.stream(stacks).map(t -> Utils.ca(amount, t)).toArray(FluidStack[]::new);
         ing.evaluated = this.evaluated;
-        ing.amount = droplets;
+        ing.amount = amount;
         ing.tag = this.tag;
         return ing;
-    }
-
-    public FluidIngredient copyMB(int amount) {
-        return copy(amount);
     }
 
     public void write(FriendlyByteBuf buffer) {
         getStacks();
         buffer.writeVarInt(stacks.length);
-        for (FluidHolder stack : this.stacks) {
-            FluidPlatformUtils.INSTANCE.writeToPacket(buffer, stack);
+        for (FluidStack stack : this.stacks) {
+            buffer.writeFluidStack(stack);
         }
     }
 
@@ -100,15 +96,15 @@ public class FluidIngredient {
 
     public static FluidIngredient of(FriendlyByteBuf buf) {
         int count = buf.readVarInt();
-        FluidHolder[] stacks = new FluidHolder[count];
+        FluidStack[] stacks = new FluidStack[count];
         for (int i = 0; i < count; i++) {
-            stacks[i] = FluidPlatformUtils.INSTANCE.readFromPacket(buf);
+            stacks[i] = buf.readFluidStack();
         }
         FluidIngredient ing = new FluidIngredient();
-        long amount = 0;
-        for (FluidHolder stack : stacks) {
-            if (stack.getFluidAmount() > amount){
-                amount = stack.getFluidAmount();
+        int amount = 0;
+        for (FluidStack stack : stacks) {
+            if (stack.getAmount() > amount){
+                amount = stack.getAmount();
             }
         }
         ing.stacks = stacks;
@@ -117,54 +113,47 @@ public class FluidIngredient {
         return ing;
     }
 
-    public static FluidIngredient of(ResourceLocation loc, long droplets) {
+    public static FluidIngredient of(ResourceLocation loc, int amount) {
         Objects.requireNonNull(loc);
         FluidIngredient ing = new FluidIngredient();
         ing.tag = TagUtils.getFluidTag(loc);
-        ing.amount = droplets;
+        ing.amount = amount;
         return ing;
     }
 
-    public static FluidIngredient of(TagKey<Fluid> tag, long droplets) {
+    public static FluidIngredient of(TagKey<Fluid> tag, int amount) {
         Objects.requireNonNull(tag);
         FluidIngredient ing = new FluidIngredient();
         ing.tag = tag;
-        ing.amount = droplets;
+        ing.amount = amount;
         return ing;
     }
 
-    public static FluidIngredient of(Material mat, long droplets) {
-        return of(new ResourceLocation("forge", mat.getId()), droplets);
+    public static FluidIngredient of(Material mat, int amount) {
+        return of(new ResourceLocation("forge", mat.getId()), amount);
     }
 
-    public static FluidIngredient ofMB(ResourceLocation loc, int amount) {
-        return of(loc, amount);
-    }
 
-    public static FluidIngredient ofMB(Material mat, int amount) {
-        return of(mat, amount);
-    }
-
-    public static FluidIngredient of(FluidHolder stack) {
+    public static FluidIngredient of(FluidStack stack) {
         Objects.requireNonNull(stack);
         FluidIngredient ing = new FluidIngredient();
-        ing.stacks = new FluidHolder[]{stack};
-        ing.amount = stack.getFluidAmount();
+        ing.stacks = new FluidStack[]{stack};
+        ing.amount = stack.getAmount();
         return ing;
     }
 
-    public List<FluidHolder> drain(MachineFluidHandler<?> handler, boolean input, boolean simulate) {
+    public List<FluidStack> drain(MachineFluidHandler<?> handler, boolean input, boolean simulate) {
         return drain(amount, handler, input, simulate);
     }
 
-    public List<FluidHolder> drain(long amount, MachineFluidHandler<?> handler, boolean input, boolean simulate) {
-        long drained = amount;
-        List<FluidHolder> ret = new ObjectArrayList<>(1);
-        for (FluidHolder stack : getStacks()) {
-            stack = stack.copyHolder();
+    public List<FluidStack> drain(int amount, MachineFluidHandler<?> handler, boolean input, boolean simulate) {
+        int drained = amount;
+        List<FluidStack> ret = new ObjectArrayList<>(1);
+        for (FluidStack stack : getStacks()) {
+            stack = stack.copy();
             stack.setAmount(drained);
-            FluidHolder drain = input ? handler.drainInput(stack, simulate) : handler.extractFluid(stack, simulate);
-            drained -= drain.getFluidAmount();
+            FluidStack drain = input ? handler.drainInput(stack, simulate ? SIMULATE : EXECUTE) : handler.drain(stack, simulate ? SIMULATE : EXECUTE);
+            drained -= drain.getAmount();
             if (!drain.isEmpty()) {
                 ret.add(drain);
             }
@@ -173,18 +162,18 @@ public class FluidIngredient {
         return ret;
     }
 
-    public List<FluidHolder> drain(FluidContainer handler, boolean simulate) {
+    public List<FluidStack> drain(IFluidHandler handler, boolean simulate) {
         return drain(amount, handler, simulate);
     }
 
-    public List<FluidHolder> drain(long amount, FluidContainer handler, boolean simulate) {
-        long drained = amount;
-        List<FluidHolder> ret = new ObjectArrayList<>(1);
-        for (FluidHolder stack : getStacks()) {
-            stack = stack.copyHolder();
+    public List<FluidStack> drain(int amount, IFluidHandler handler, boolean simulate) {
+        int drained = amount;
+        List<FluidStack> ret = new ObjectArrayList<>(1);
+        for (FluidStack stack : getStacks()) {
+            stack = stack.copy();
             stack.setAmount(drained);
-            FluidHolder drain = handler.internalExtract(stack, simulate);
-            drained -= drain.getFluidAmount();
+            FluidStack drain = handler.drain(stack, simulate ? SIMULATE : EXECUTE);
+            drained -= drain.getAmount();
             if (!drain.isEmpty()) {
                 ret.add(drain);
             }
@@ -193,7 +182,7 @@ public class FluidIngredient {
         return ret;
     }
 
-    public long drainedAmount(long amount, MachineFluidHandler<?> handler, boolean input, boolean simulate) {
-        return drain(amount, handler, input, simulate).stream().mapToLong(FluidHolder::getFluidAmount).sum();
+    public int drainedAmount(int amount, MachineFluidHandler<?> handler, boolean input, boolean simulate) {
+        return drain(amount, handler, input, simulate).stream().mapToInt(FluidStack::getAmount).sum();
     }
 }

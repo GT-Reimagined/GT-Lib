@@ -90,7 +90,7 @@ public class FluidTanks implements IFluidHandler {
                     firstEmpty = i;
                 }
             }
-            if (tank.getFluid().containsFluid(stack)) {
+            if (tank.getFluid().isFluidEqual(stack)) {
                 firstAvailable = i;
                 break;
             }

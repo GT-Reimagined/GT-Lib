@@ -1,7 +1,5 @@
 package muramasa.antimatter.recipe.map;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.FluidHandler;
 import muramasa.antimatter.capability.Holder;
@@ -21,6 +19,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,9 +32,9 @@ import java.util.function.Predicate;
 
 public interface IRecipeMap extends ISharedAntimatterObject {
     ItemStack[] EMPTY_ITEM = new ItemStack[0];
-    FluidHolder[] EMPTY_FLUID = new FluidHolder[0];
+    FluidStack[] EMPTY_FLUID = new FluidStack[0];
 
-    IRecipe find(@NotNull ItemStack[] items, @NotNull FluidHolder[] fluids, Tier tier, @NotNull Predicate<IRecipe> canHandle);
+    IRecipe find(@NotNull ItemStack[] items, @NotNull FluidStack[] fluids, Tier tier, @NotNull Predicate<IRecipe> canHandle);
 
     default IRecipe findByID(ResourceLocation id){
         return getRecipes(false).stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
@@ -45,7 +45,7 @@ public interface IRecipeMap extends ISharedAntimatterObject {
     void resetCompiled();
     Collection<IRecipe> getRecipes(boolean filterHidden);
     boolean acceptsItem(ItemStack item);
-    boolean acceptsFluid(FluidHolder fluid);
+    boolean acceptsFluid(FluidStack fluid);
 
     RecipeType<? extends IRecipe> getRecipeType();
 
@@ -60,7 +60,7 @@ public interface IRecipeMap extends ISharedAntimatterObject {
         return null;
     }
 
-    default <T extends BlockEntityMachine<T>> IRecipe find(Holder<IItemHandler, MachineItemHandler<T>> itemHandler, Holder<FluidContainer, MachineFluidHandler<T>> fluidHandler, Tier tier, Predicate<IRecipe> validateRecipe) {
+    default <T extends BlockEntityMachine<T>> IRecipe find(Holder<IItemHandler, MachineItemHandler<T>> itemHandler, Holder<IFluidHandler, MachineFluidHandler<T>> fluidHandler, Tier tier, Predicate<IRecipe> validateRecipe) {
         return find(itemHandler.map(MachineItemHandler::getInputs).orElse(EMPTY_ITEM),
                 fluidHandler.map(FluidHandler::getInputs).orElse(EMPTY_FLUID), tier, validateRecipe);
     }

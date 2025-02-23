@@ -25,6 +25,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
@@ -44,7 +45,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
     @Override
     public abstract RecipeType<T> getRecipeType();
 
-    public abstract T createRecipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidHolder[] fluidsOutput, int duration, long power, int special, int amps);
+    public abstract T createRecipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidStack[] fluidsOutput, int duration, long power, int special, int amps);
 
     @Override
     public T fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -71,9 +72,9 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
                     fluidInputs.add(getFluidIngredient(element));
                 }
             }
-            FluidHolder[] fluidOutputs = null;
+            FluidStack[] fluidOutputs = null;
             if (json.has("outputFluids")) {
-                fluidOutputs = Streams.stream(json.getAsJsonArray("outputFluids")).map(AntimatterRecipeSerializer::getStack).toArray(FluidHolder[]::new);
+                fluidOutputs = Streams.stream(json.getAsJsonArray("outputFluids")).map(AntimatterRecipeSerializer::getStack).toArray(FluidStack[]::new);
             }
             long eut = json.get("eu").getAsLong();
             int duration = json.get("duration").getAsInt();
@@ -109,27 +110,27 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         }
         return null;
     }
-    public static FluidHolder getStack(JsonElement element) {
+    public static FluidStack getStack(JsonElement element) {
         try {
             if (!(element.isJsonObject())) {
-                return FluidHooks.emptyFluid();
+                return FluidStack.EMPTY;
             }
             JsonObject obj = (JsonObject) element;
             ResourceLocation fluidName = new ResourceLocation(obj.get("fluid").getAsString());
             Fluid fluid = RegistryUtils.getFluidFromID(fluidName);
             if (fluid == null) {
-                return FluidHooks.emptyFluid();
+                return FluidStack.EMPTY;
             }
-            FluidHolder stack = FluidPlatformUtils.createFluidStack(fluid, obj.has("amount") ? obj.get("amount").getAsLong() : 1000);
+            FluidStack stack = new FluidStack(fluid, obj.has("amount") ? obj.get("amount").getAsInt() : 1000);
 
             if (obj.has("tag")) {
-                stack.setCompound(TagParser.parseTag(obj.get("tag").getAsString()));
+                stack.setTag(TagParser.parseTag(obj.get("tag").getAsString()));
             }
             return stack;
         } catch (Exception ex) {
             Antimatter.LOGGER.error(ex);
         }
-        return FluidHooks.emptyFluid();
+        return FluidStack.EMPTY;
     }
 
     public static FluidIngredient getFluidIngredient(JsonElement element) {
@@ -176,10 +177,10 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             }
         }
         size = buffer.readInt();
-        FluidHolder[] outf = new FluidHolder[size];
+        FluidStack[] outf = new FluidStack[size];
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                outf[i] = FluidPlatformUtils.INSTANCE.readFromPacket(buffer);
+                outf[i] = buffer.readFluidStack();
             }
         }
         size = buffer.readInt();
@@ -251,7 +252,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         }
         buffer.writeInt(!recipe.hasOutputFluids() ? 0 : recipe.getOutputFluids().length);
         if (recipe.hasOutputFluids()) {
-            Arrays.stream(recipe.getOutputFluids()).forEach(stack -> FluidPlatformUtils.INSTANCE.writeToPacket(buffer, stack));
+            Arrays.stream(recipe.getOutputFluids()).forEach(buffer::writeFluidStack);
         }
         buffer.writeInt(recipe.hasOutputChances() ? recipe.getOutputChances().length : 0);
         if (recipe.hasOutputChances()) {
@@ -302,7 +303,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
         }
         array = new JsonArray();
         if (recipe.getOutputFluids() != null){
-            for (FluidHolder stack : recipe.getOutputFluids()){
+            for (FluidStack stack : recipe.getOutputFluids()){
                 array.add(RecipeUtil.fluidstackToJson(stack));
             }
         }

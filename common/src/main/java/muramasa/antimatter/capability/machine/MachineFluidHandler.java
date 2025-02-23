@@ -216,7 +216,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
             return new FluidStack[0];
         }
         List<FluidStack> notExported = new ObjectArrayList<>();
-        long result;
+        int result;
         for (int i = 0; i < outputs.length; i++) {
             result = fill(outputs[i], FluidAction.EXECUTE);
             if (result == 0) notExported.add(outputs[i]); //Valid space was not found

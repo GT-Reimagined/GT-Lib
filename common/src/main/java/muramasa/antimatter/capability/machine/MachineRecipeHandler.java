@@ -503,7 +503,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     public int consumedFluidPerOperation(IRecipe r){
-        return r.getInputFluids().get(0).getAmountInMB();
+        return r.getInputFluids().get(0).getAmount();
     }
 
     protected int getEfficiency() {

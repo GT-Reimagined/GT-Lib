@@ -1,7 +1,6 @@
 package muramasa.antimatter.recipe.map;
 
 import com.google.gson.JsonObject;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public class RecipeBuilder {
     protected List<ItemStack> itemsOutput = new ObjectArrayList<>();
     protected List<Ingredient> ingredientInput = new ObjectArrayList<>();
     protected List<FluidIngredient> fluidsInput = new ObjectArrayList<>();
-    protected List<FluidHolder> fluidsOutput = new ObjectArrayList<>();
+    protected List<FluidStack> fluidsOutput = new ObjectArrayList<>();
     protected int[] inputChances, outputChances;
     protected int duration, special;
     protected long power;
@@ -86,12 +86,12 @@ public class RecipeBuilder {
      * @return the recipe.
      */
     public IRecipe build() {
-        if (itemsOutput != null && itemsOutput.size() > 0 && !Utils.areItemsValid(itemsOutput.toArray(new ItemStack[0]))) {
+        if (itemsOutput != null && !itemsOutput.isEmpty() && !Utils.areItemsValid(itemsOutput.toArray(new ItemStack[0]))) {
             String id = this.id == null ? "": " Recipe ID: " + this.id;
             Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT ITEMS INVALID!" + id + " Recipe map ID:" + recipeMap.getId());
             return Utils.getEmptyRecipe();
         }
-        if (fluidsOutput != null && fluidsOutput.size() > 0 && !Utils.areFluidsValid(fluidsOutput.toArray(new FluidHolder[0]))) {
+        if (fluidsOutput != null && !fluidsOutput.isEmpty() && !Utils.areFluidsValid(fluidsOutput.toArray(new FluidStack[0]))) {
             String id = this.id == null ? "": " Recipe ID: " + this.id;
             Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT FLUIDS INVALID!" + id + " Recipe map ID:" + recipeMap.getId());
             return Utils.getEmptyRecipe();
@@ -114,7 +114,7 @@ public class RecipeBuilder {
                 ingredientInput,
                 itemsOutput != null ? itemsOutput.toArray(new ItemStack[0]) : null,
                 fluidsInput != null ? fluidsInput : Collections.emptyList(),
-                fluidsOutput != null ? fluidsOutput.toArray(new FluidHolder[0]) : null,
+                fluidsOutput != null ? fluidsOutput.toArray(new FluidStack[0]) : null,
                 duration, power, special, amps
         );
         if (outputChances != null) recipe.addOutputChances(outputChances);
@@ -129,10 +129,10 @@ public class RecipeBuilder {
 
     public void getID(){
         if (id == null){
-            if (itemsOutput != null && itemsOutput.size() > 0){
+            if (itemsOutput != null && !itemsOutput.isEmpty()){
                 String id = RegistryUtils.getIdFromItem(itemsOutput.get(0).getItem()).toString() + "_recipe";
                 checkID(id);
-            } else if (fluidsOutput != null && fluidsOutput.size() > 0){
+            } else if (fluidsOutput != null && !fluidsOutput.isEmpty()){
                 String id = RegistryUtils.getIdFromFluid(fluidsOutput.get(0).getFluid()).toString() + "_recipe";
                 checkID(id);
             } else if (!ingredientInput.isEmpty() && ingredientInput.get(0).getItems().length > 0){
@@ -145,7 +145,7 @@ public class RecipeBuilder {
                 if (ing.getTag() != null){
                     id = ing.getTag().location().toString() + "_recipe";
                 } else {
-                    List<FluidHolder> list = Arrays.asList(ing.getStacks());
+                    List<FluidStack> list = Arrays.asList(ing.getStacks());
                     if (!list.isEmpty()){
                         id = RegistryUtils.getIdFromFluid(list.get(0).getFluid()).toString() + "_recipe";
                     } else {
@@ -224,7 +224,7 @@ public class RecipeBuilder {
         return this;
     }
 
-    public RecipeBuilder fi(FluidHolder... stacks) {
+    public RecipeBuilder fi(FluidStack... stacks) {
         fluidsInput.addAll(Arrays.stream(stacks).map(FluidIngredient::of).toList());
         return this;
     }
@@ -235,17 +235,17 @@ public class RecipeBuilder {
     }
 
 
-    public RecipeBuilder fi(List<FluidHolder> stacks) {
+    public RecipeBuilder fi(List<FluidStack> stacks) {
         fluidsInput.addAll(stacks.stream().map(FluidIngredient::of).toList());
         return this;
     }
 
-    public RecipeBuilder fo(FluidHolder... stacks) {
+    public RecipeBuilder fo(FluidStack... stacks) {
         fluidsOutput.addAll(Arrays.asList(stacks));
         return this;
     }
 
-    public RecipeBuilder fo(List<FluidHolder> stacks) {
+    public RecipeBuilder fo(List<FluidStack> stacks) {
         fluidsOutput.addAll(stacks);
         return this;
     }

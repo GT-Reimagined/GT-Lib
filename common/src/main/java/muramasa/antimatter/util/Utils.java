@@ -76,6 +76,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -259,8 +260,8 @@ public class Utils {
         return stack;
     }
 
-    public static FluidHolder ca(long amount, FluidHolder toCopy) {
-        FluidHolder stack = toCopy.copyHolder();
+    public static FluidStack ca(int amount, FluidStack toCopy) {
+        FluidStack stack = toCopy.copy();
         stack.setAmount(amount);
         return stack;
     }
@@ -355,9 +356,9 @@ public class Utils {
         return true;
     }
 
-    public static boolean areFluidsValid(FluidHolder... fluids) {
+    public static boolean areFluidsValid(FluidStack... fluids) {
         if (fluids == null || fluids.length == 0) return false;
-        for (FluidHolder fluid : fluids) {
+        for (FluidStack fluid : fluids) {
             if (fluid.getFluid() == Fluids.EMPTY) return false;
         }
         return true;
@@ -372,8 +373,8 @@ public class Utils {
     }
 
 
-    public static boolean areFluidsValid(FluidHolder[]... fluidArrays) {
-        for (FluidHolder[] fluidArray : fluidArrays) {
+    public static boolean areFluidsValid(FluidStack[]... fluidArrays) {
+        for (FluidStack[] fluidArray : fluidArrays) {
             if (!areFluidsValid(fluidArray)) return false;
         }
         return true;

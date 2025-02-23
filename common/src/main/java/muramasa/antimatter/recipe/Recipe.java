@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
@@ -33,7 +34,7 @@ public class Recipe implements IRecipe {
     private final List<Ingredient> itemsInput;
     @NotNull
     private final List<FluidIngredient> fluidsInput;
-    private final FluidHolder[] fluidsOutput;
+    private final FluidStack[] fluidsOutput;
     @Getter
     private final int duration;
     private final int special;
@@ -62,7 +63,7 @@ public class Recipe implements IRecipe {
 
     public static final RecipeType<Recipe> RECIPE_TYPE = RecipeType.register("antimatter_machine");
 
-    public Recipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidHolder[] fluidsOutput, int duration, long power, int special, int amps) {
+    public Recipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidStack[] fluidsOutput, int duration, long power, int special, int amps) {
         this.itemsInput = ImmutableList.copyOf(stacksInput);
         this.itemsOutput = stacksOutput;
         this.duration = duration;
@@ -212,7 +213,7 @@ public class Recipe implements IRecipe {
     }
 
     @Nullable
-    public FluidHolder[] getOutputFluids() {
+    public FluidStack[] getOutputFluids() {
         return hasOutputFluids() ? fluidsOutput.clone() : null;
     }
 
@@ -266,7 +267,7 @@ public class Recipe implements IRecipe {
         if (fluidsOutput != null) {
             builder.append("Output Fluids: { ");
             for (int i = 0; i < fluidsOutput.length; i++) {
-                builder.append(RegistryUtils.getIdFromFluid(fluidsOutput[i].getFluid())).append(": ").append(fluidsOutput[i].getFluidAmount()).append("mb");
+                builder.append(RegistryUtils.getIdFromFluid(fluidsOutput[i].getFluid())).append(": ").append(fluidsOutput[i].getAmount()).append("mb");
                 if (i != fluidsOutput.length - 1) builder.append(", ");
             }
             builder.append(" }\n");

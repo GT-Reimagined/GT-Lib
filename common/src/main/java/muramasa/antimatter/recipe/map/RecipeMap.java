@@ -39,6 +39,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.NBTIngredient;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -302,16 +303,16 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
                                    boolean insideMap) {
         for (FluidIngredient t : ingredients) {
             List<AbstractMapIngredient> inner = new ObjectArrayList<>(t.getStacks().length);
-            for (FluidHolder stack : t.getStacks()) {
+            for (FluidStack stack : t.getStacks()) {
                 inner.add(new MapFluidIngredient(stack, insideMap));
             }
             builder.add(inner);
         }
     }
 
-    protected void buildFromFluidStacks(List<List<AbstractMapIngredient>> builder, List<FluidHolder> ingredients,
+    protected void buildFromFluidStacks(List<List<AbstractMapIngredient>> builder, List<FluidStack> ingredients,
                                         boolean insideMap) {
-        for (FluidHolder t : ingredients) {
+        for (FluidStack t : ingredients) {
             builder.add(Collections.singletonList(new MapFluidIngredient(t, insideMap)));
         }
     }
@@ -519,7 +520,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
 
     @Nullable
     @Override
-    public IRecipe find(@NotNull ItemStack[] items, @NotNull FluidHolder[] fluids, Tier tier, @NotNull Predicate<IRecipe> canHandle) {
+    public IRecipe find(@NotNull ItemStack[] items, @NotNull FluidStack[] fluids, Tier tier, @NotNull Predicate<IRecipe> canHandle) {
         // First, check if items and fluids are valid.
         if (items.length + fluids.length > Long.SIZE) {
             Utils.onInvalidData(
@@ -536,15 +537,15 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
             buildFromItemStacks(list, uniqueItems(items));
         }
         if (fluids.length > 0) {
-            List<FluidHolder> stack = new ObjectArrayList<>(fluids.length);
-            for (FluidHolder f : fluids) {
+            List<FluidStack> stack = new ObjectArrayList<>(fluids.length);
+            for (FluidStack f : fluids) {
                 if (!f.isEmpty())
                     stack.add(f);
             }
-            if (stack.size() > 0)
+            if (!stack.isEmpty())
                 buildFromFluidStacks(list, stack, false);
         }
-        if (list.size() == 0)
+        if (list.isEmpty())
             return null;
         // Find recipe.
         // long current = System.nanoTime();
@@ -609,7 +610,8 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
         });
     }
 
-    public boolean acceptsFluid(FluidHolder fluid) {
+    @Override
+    public boolean acceptsFluid(FluidStack fluid) {
         MapFluidIngredient i = new MapFluidIngredient(fluid, false);
         if (ROOT.contains(i))
             return true;
