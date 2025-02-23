@@ -1,34 +1,29 @@
 package muramasa.antimatter.capability;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import muramasa.antimatter.blockentity.BlockEntityBase;
-import muramasa.antimatter.capability.fluid.FluidTank;
 import muramasa.antimatter.capability.fluid.FluidTanks;
 import muramasa.antimatter.capability.fluid.IFluidNode;
 import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.util.FluidPlatformUtils;
-import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tesseract.api.Serializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Objects;
 
-public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> implements IMachineHandler, IFluidNode {
+public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> implements IMachineHandler, IFluidNode, Serializable {
     @Getter
     protected final T tile;
     protected final EnumMap<FluidDirection, FluidTanks> tanks = new EnumMap<>(FluidDirection.class);
@@ -73,14 +68,14 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
     }
 
     @Override
-    public int getSize() {
-        return this.tanks.values().stream().mapToInt(FluidTanks::getSize).sum();
+    public int getTanks() {
+        return this.tanks.values().stream().mapToInt(FluidTanks::getTanks).sum();
     }
 
     @NotNull
     @Override
-    public FluidHolder getFluidInTank(int tank) {
-        return getTank(tank).getStoredFluid();
+    public FluidStack getFluidInTank(int tank) {
+        return getTank(tank).getFluid();
     }
 
     protected FluidTank getTank(int tank) {
@@ -103,7 +98,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
             return null;
         }
 
-        boolean isOutput = tank >= input.getSize();
+        boolean isOutput = tank >= input.getTanks();
 
         if (!isOutput) {
             return input;
@@ -114,18 +109,18 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
 
     public int offsetTank(int tank) {
         FluidTanks in = getInputTanks();
-        if (in != null && tank >= getInputTanks().getSize())
-            return tank - in.getSize();
+        if (in != null && tank >= getInputTanks().getTanks())
+            return tank - in.getTanks();
         return tank;
     }
 
     @Override
-    public long getTankCapacity(int tank) {
+    public int getTankCapacity(int tank) {
         return getTanks(tank).getTankCapacity(offsetTank(tank));
     }
 
     @Override
-    public boolean isFluidValid(int tank, @NotNull FluidHolder stack) {
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
         return getTank(tank).isFluidValid(stack);
     }
 
@@ -139,74 +134,66 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
     }
 
     @Override
-    public long insertFluid(FluidHolder fluid, boolean simulate) {
+    public int fill(FluidStack fluid, FluidAction action) {
         FluidTanks input = getInputTanks();
         if (input != null && !empty(input)) {
-            return getInputTanks().insertFluid(fluid, simulate);
+            return getInputTanks().fill(fluid, action);
         }
         return 0;
     }
 
     protected boolean empty(FluidTanks tank) {
-        return tank.getSize() == 0;
+        return tank.getTanks() == 0;
     }
 
-    public long fillOutput(FluidHolder stack, boolean simulate) {
+    public int fillOutput(FluidStack stack, FluidAction action) {
         if (getOutputTanks() != null) {
-            return getOutputTanks().insertFluid(stack, simulate);
+            return getOutputTanks().fill(stack, action);
         }
         return 0;
     }
 
     @Override
-    public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
+    public FluidStack drain(FluidStack fluid, FluidAction action) {
         if (getOutputTanks() != null) {
-            return getOutputTanks().extractFluid(fluid, simulate);
+            return getOutputTanks().drain(fluid, action);
         }
-        return FluidHooks.emptyFluid();
+        return FluidStack.EMPTY;
     }
 
     @Override
-    public FluidHolder extractFluid(long toExtract, boolean simulate) {
+    public FluidStack drain(int toExtract, FluidAction action) {
         if (getOutputTanks() != null){
-            for (int i = 0; i < getOutputTanks().getSize(); i++) {
-                FluidHolder toExtractFluid = getOutputTanks().getFluidInTank(i);
-                FluidHolder fluid = getOutputTanks().extractFluid(toExtractFluid.copyWithAmount(Math.min(toExtractFluid.getFluidAmount(), toExtract)), simulate);
-                if (!fluid.isEmpty()) return fluid;
-            }
+            return getOutputTanks().drain(toExtract, action);
         }
-        return FluidHooks.emptyFluid();
+        return FluidStack.EMPTY;
     }
 
     /**
      * Drains from the input tanks rather than output tanks. Useful for recipes.
      *
      * @param stack  stack to drain.
-     * @param simulate execute/simulate
+     * @param action execute/simulate
      * @return the drained stack
      */
     @NotNull
     @Override
-    public FluidHolder drainInput(FluidHolder stack, boolean simulate) {
+    public FluidStack drainInput(FluidStack stack, FluidAction action) {
         if (getInputTanks() != null) {
-            return getInputTanks().extractFluid(stack, simulate);
+            return getInputTanks().drain(stack, action);
         }
-        return FluidHooks.emptyFluid();
+        return FluidStack.EMPTY;
     }
 
-    public FluidHolder drainInput(long maxDrain, boolean simulate) {
+    public FluidStack drainInput(int maxDrain, FluidAction action) {
         if (getInputTanks() != null){
-            for (int i = 0; i < getInputTanks().getSize(); i++) {
-                FluidHolder fluid = getInputTanks().extractFluid(Utils.ca(maxDrain, getInputTanks().getFluidInTank(i)), simulate);
-                if (!fluid.isEmpty()) return fluid;
-            }
+            return getInputTanks().drain(maxDrain, action);
         }
-        return FluidHooks.emptyFluid();
+        return FluidStack.EMPTY;
     }
 
-    @Override
-    public void setFluid(int slot, FluidHolder fluid) {
-        getTank(slot).setFluid(0, fluid);
+    public void setFluid(int slot, FluidStack fluid) {
+        getTank(slot).setFluid(fluid);
     }
 
     protected boolean checkValidFluid(FluidHolder fluid) {
@@ -221,49 +208,25 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
      * Helpers
      **/
     @NotNull
-    public FluidHolder[] getInputs() {
+    public FluidStack[] getInputs() {
         FluidTanks tanks = getInputTanks();
-        return tanks == null ? new FluidHolder[0] : tanks.getFluids().toArray(FluidHolder[]::new);
+        return tanks == null ? new FluidStack[0] : tanks.getFluids().toArray(FluidStack[]::new);
     }
 
-    public FluidHolder[] getOutputs() {
+    public FluidStack[] getOutputs() {
         FluidTanks tanks = getOutputTanks();
-        return tanks == null ? new FluidHolder[0] : tanks.getFluids().toArray(FluidHolder[]::new);
+        return tanks == null ? new FluidStack[0] : tanks.getFluids().toArray(FluidStack[]::new);
     }
 
-    @Override
-    public List<FluidHolder> getFluids() {
-        List<FluidHolder> list = new ArrayList<>();
+    public List<FluidStack> getFluids() {
+        List<FluidStack> list = new ArrayList<>();
         list.addAll(Arrays.asList(getInputs()));
         list.addAll(Arrays.asList(getOutputs()));
         return list;
     }
 
-    @Override
     public boolean isEmpty() {
         return getAllTanks().isEmpty();
-    }
-
-    @Override
-    public FluidSnapshot createSnapshot() {
-        return new FluidHandlerSnapshot(this);
-    }
-
-    @Override
-    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
-        if (Objects.equals(fluidHolder.getCompound(), toInsert.getCompound()) && fluidHolder.getFluid().isSame(toInsert.getFluid())) {
-            long extracted = Mth.clamp(toInsert.getFluidAmount(), 0, fluidHolder.getFluidAmount());
-            snapshot.run();
-            fluidHolder.setAmount(fluidHolder.getFluidAmount() - extracted);
-            if(fluidHolder.getFluidAmount() == 0) fluidHolder.setFluid(Fluids.EMPTY);
-            return extracted;
-        }
-        return 0;
-    }
-
-    @Override
-    public void fromContainer(FluidContainer container) {
-
     }
 
     @Nullable
@@ -277,28 +240,28 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
     }
 
     @Override
-    public boolean allowsExtraction() {
+    public boolean canOutput() {
         return getOutputTanks() != null;
     }
 
     @Override
-    public boolean allowsInsertion() {
+    public boolean canInput() {
         return getInputTanks() != null;
     }
 
     @Override
     public boolean canInput(Direction direction) {
-        return allowsInsertion();
+        return canInput();
     }
 
     @Override
-    public boolean canInput(FluidHolder fluid, Direction direction) {
+    public boolean canInput(FluidStack fluid, Direction direction) {
         return true;
     }
 
     @Override
     public boolean canOutput(Direction direction) {
-        return allowsExtraction();
+        return canOutput();
     }
 
     @Override
@@ -311,11 +274,11 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
         StringBuilder builder = new StringBuilder();
         if (this.tanks.containsKey(FluidDirection.INPUT)) {
             builder.append("Inputs:\n");
-            for (int i = 0; i < getInputTanks().getSize(); i++) {
-                FluidHolder stack = getInputTanks().getFluidInTank(i);
+            for (int i = 0; i < getInputTanks().getTanks(); i++) {
+                FluidStack stack = getInputTanks().getFluidInTank(i);
                 if (!stack.isEmpty()) {
-                    builder.append(FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid())).append(" - ").append(stack.getFluidAmount());
-                    if (i != getInputTanks().getSize() - 1) {
+                    builder.append(FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid())).append(" - ").append(stack.getAmount());
+                    if (i != getInputTanks().getTanks() - 1) {
                         builder.append("\n");
                     }
                 }
@@ -323,11 +286,11 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
         }
         if (this.tanks.containsKey(FluidDirection.OUTPUT)) {
             builder.append("Outputs:\n");
-            for (int i = 0; i < getOutputTanks().getSize(); i++) {
-                FluidHolder stack = getOutputTanks().getFluidInTank(i);
+            for (int i = 0; i < getOutputTanks().getTanks(); i++) {
+                FluidStack stack = getOutputTanks().getFluidInTank(i);
                 if (!stack.isEmpty()) {
-                    builder.append(FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid())).append(" - ").append(stack.getFluidAmount());
-                    if (i != getOutputTanks().getSize() - 1) {
+                    builder.append(FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid())).append(" - ").append(stack.getAmount());
+                    if (i != getOutputTanks().getTanks() - 1) {
                         builder.append("\n");
                     }
                 }

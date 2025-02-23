@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -236,7 +235,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     public boolean canOutput(Direction direction) {
         if (tile.getFacing().get3DDataValue() == direction.get3DDataValue() && !tile.getMachineType().allowsFrontIO())
             return false;
-        return super.allowsExtraction();
+        return super.canOutput();
     }
 
     @Override
@@ -248,7 +247,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     public boolean canInput(Direction direction) {
         if (tile.getFacing().get3DDataValue() == direction.get3DDataValue() && !tile.getMachineType().allowsFrontIO())
             return false;
-        return super.allowsInsertion();
+        return super.canInput();
     }
 
     @Override
@@ -301,12 +300,12 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
 
             @Override
             public boolean supportsInsertion() {
-                return MachineFluidHandler.this.allowsInsertion();
+                return MachineFluidHandler.this.canInput();
             }
 
             @Override
             public boolean supportsExtraction() {
-                return MachineFluidHandler.this.allowsExtraction();
+                return MachineFluidHandler.this.canOutput();
             }
         };
     }
