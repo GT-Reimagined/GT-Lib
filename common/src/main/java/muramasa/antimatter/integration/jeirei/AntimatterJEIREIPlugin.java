@@ -1,6 +1,5 @@
 package muramasa.antimatter.integration.jeirei;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -12,7 +11,6 @@ import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.slot.ISlotProvider;
 import muramasa.antimatter.integration.create.client.PonderIntegration;
 import muramasa.antimatter.integration.jei.AntimatterJEIPlugin;
-import muramasa.antimatter.integration.jei.JEIPlatformHelper;
 import muramasa.antimatter.integration.rei.REIUtils;
 import muramasa.antimatter.machine.BlockMachine;
 import muramasa.antimatter.machine.Tier;

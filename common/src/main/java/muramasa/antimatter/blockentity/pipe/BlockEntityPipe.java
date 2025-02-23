@@ -82,7 +82,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
 
     @Getter
     protected Holder pipeCapHolder;
-    protected LazyOptional[] pipeCaps = new LazyOptional[7];
 
     public BlockEntityPipe(T type, BlockPos pos, BlockState state) {
         super(type.getTileType(), pos, state);
@@ -501,14 +500,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     public <U> LazyOptional<U> getCapability(@NotNull Capability<U> cap, @Nullable Direction side) {
         if (side != null && !connects(side)) return LazyOptional.empty();
         if (!pipeCapHolder.isPresent()) return LazyOptional.empty();
-        if (cap == FLUID_HANDLER_CAPABILITY && getCapClass() == FluidContainer.class){
-            int index = side == null ? 6 : side.get3DDataValue();
-            if (pipeCaps[index] == null || !pipeCaps[index].isPresent()){
-                pipeCaps[index] = fromFluidHolder(pipeCapHolder, side).cast();
-            }
-            return pipeCaps[index].cast();
-        }
-        if (side == null && cap != ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
+        if (side == null && cap != ITEM_HANDLER_CAPABILITY && cap != FLUID_HANDLER_CAPABILITY) return LazyOptional.empty();
         /*if (cap == CapabilityEnergy.ENERGY && getCapClass() == IFENode.class) {
             if (pipeCaps[side.get3DDataValue()] == null || !pipeCaps[side.get3DDataValue()].isPresent()){
                 pipeCaps[side.get3DDataValue()] = fromEnergyHolder(pipeCapHolder, side).cast();
@@ -524,15 +516,5 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
             return LazyOptional.empty();
         }
         return LazyOptional.empty();
-    }
-
-    private LazyOptional<IFluidHandler> fromFluidHolder(Holder<FluidContainer, ?> holder, Direction side){
-        if (!holder.isPresent()) return LazyOptional.empty();
-        Optional<? extends FluidContainer> optional = holder.side(side).resolve();
-        if (optional.isEmpty()) return LazyOptional.empty();
-        LazyOptional<IFluidHandler> opt = LazyOptional.of(() -> new ForgeFluidContainer(optional.get()));
-        boolean add = holder.addListener(side, opt::invalidate);
-        if (!add) return LazyOptional.empty();
-        return opt;
     }
 }

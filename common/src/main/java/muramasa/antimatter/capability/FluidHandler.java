@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import muramasa.antimatter.blockentity.BlockEntityBase;
@@ -197,7 +196,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
         getTank(slot).setFluid(fluid);
     }
 
-    protected boolean checkValidFluid(FluidHolder fluid) {
+    protected boolean checkValidFluid(FluidStack fluid) {
         return true;
     }
 

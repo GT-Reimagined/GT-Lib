@@ -1,20 +1,15 @@
 package muramasa.antimatter.item;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import earth.terrarium.botarium.common.item.ItemStackHolder;
 import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.client.AntimatterTextureStitcher;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
 import muramasa.antimatter.util.FluidPlatformUtils;
-import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ItemLike;
@@ -24,14 +19,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.Nullable;
-import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-
-import static muramasa.antimatter.util.FluidPlatformUtils.createFluidStack;
 
 
 public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContainerItem, IFluidItem{
@@ -78,17 +69,6 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
             AntimatterJEIREIPlugin.addModDescriptor(str, fluid);
             tooltip.addAll(str);
         });
-    }
-
-    public ItemStack fill(Fluid fluid) {
-        ItemStack stack = new ItemStack(this);
-        insert(stack, new FluidStack(fluid, 1));
-        return stack;
-    }
-
-    public ItemStack drain(ItemStack old, FluidStack fluid) {
-        extract(old, fluid);
-        return old;
     }
 
     public Fluid getFluid() {

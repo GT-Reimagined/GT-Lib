@@ -3,8 +3,6 @@ package muramasa.antimatter.gui.widget;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.client.RenderHelper;
 import muramasa.antimatter.gui.GuiInstance;
@@ -22,7 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
 import java.util.List;

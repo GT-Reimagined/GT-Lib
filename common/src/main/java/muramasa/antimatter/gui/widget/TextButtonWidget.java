@@ -1,7 +1,6 @@
 package muramasa.antimatter.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.IGuiHandler;

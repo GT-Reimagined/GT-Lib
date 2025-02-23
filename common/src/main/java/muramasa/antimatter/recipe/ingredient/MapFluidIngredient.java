@@ -1,6 +1,5 @@
 package muramasa.antimatter.recipe.ingredient;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraftforge.fluids.FluidStack;
 

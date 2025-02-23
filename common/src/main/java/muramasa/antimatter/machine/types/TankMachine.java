@@ -1,7 +1,5 @@
 package muramasa.antimatter.machine.types;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.blockentity.BlockEntityTank;
 import muramasa.antimatter.gui.GuiInstance;

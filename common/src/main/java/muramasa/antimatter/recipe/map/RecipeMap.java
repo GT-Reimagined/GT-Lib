@@ -1,7 +1,6 @@
 package muramasa.antimatter.recipe.map;
 
 import com.mojang.datafixers.util.Either;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -15,7 +14,6 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.Recipe;
-import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.AbstractMapIngredient;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.ingredient.MapFluidIngredient;
@@ -60,7 +58,7 @@ import java.util.stream.Stream;
 public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObject, IRecipeMap {
 
     private static final ItemStack[] EMPTY_ITEM = new ItemStack[0];
-    private static final FluidHolder[] EMPTY_FLUID = new FluidHolder[0];
+    private static final FluidStack[] EMPTY_FLUID = new FluidStack[0];
 
     private final ResourceLocation loc;
     //in case we have some use for this

@@ -1,14 +1,9 @@
 package muramasa.antimatter.capability.fluid;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
-import tesseract.TesseractCapUtils;
-import tesseract.api.GraphWrapper;
 
 /**
  * An fluid node is the unit of interaction with fluid inventories.

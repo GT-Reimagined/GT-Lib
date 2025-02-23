@@ -1,7 +1,5 @@
 package muramasa.antimatter.gui.slot;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.gui.SlotType;
@@ -9,6 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public class SlotFluidDisplaySettable extends SlotFake {
 
     @Override
     public ItemStack clickSlot(int clickedButton, ClickType clickType, Player playerEntity, AbstractContainerMenu container) {
-        if (container.getCarried().isEmpty() || FluidHooks.safeGetItemFluidManager(container.getCarried()).map(f -> !f.getFluidInTank(0).isEmpty()).orElse(false)){
+        if (container.getCarried().isEmpty() || container.getCarried().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).map(f -> !f.getFluidInTank(0).isEmpty()).orElse(false)){
             return super.clickSlot(clickedButton, clickType, playerEntity, container);
         }
         return ItemStack.EMPTY;
@@ -30,10 +30,10 @@ public class SlotFluidDisplaySettable extends SlotFake {
         if (!stack.isEmpty()){
             ItemStack[] stacks = new ItemStack[1];
             stacks[0] = ItemStack.EMPTY;
-            FluidHooks.safeGetItemFluidManager(stack).ifPresent(f -> {
-                FluidHolder fluidHolder = f.getFluidInTank(0);
-                if (!fluidHolder.isEmpty()){
-                    stacks[0] = Data.FLUID_ICON.fill(fluidHolder.getFluid());
+            stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> {
+                FluidStack fluidStack = f.getFluidInTank(0);
+                if (!fluidStack.isEmpty()){
+                    stacks[0] = Data.FLUID_ICON.fill(fluidStack.getFluid());
                 }
             });
             super.set(stacks[0]);

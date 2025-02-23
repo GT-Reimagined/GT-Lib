@@ -1,7 +1,6 @@
 package muramasa.antimatter.recipe;
 
 import com.google.common.collect.ImmutableList;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
@@ -21,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.TesseractGraphWrappers;
 
 import java.util.Collections;
 import java.util.List;

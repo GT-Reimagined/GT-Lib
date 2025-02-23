@@ -1,16 +1,11 @@
 package muramasa.antimatter.integration.rei;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-import muramasa.antimatter.machine.Tier;
-import muramasa.antimatter.machine.types.Machine;
-import muramasa.antimatter.recipe.map.IRecipeMap;
-import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,8 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static muramasa.antimatter.machine.MachineFlag.RECIPE;
 
 public class REIUtils {
     static List<Consumer<CategoryRegistry>> EXTRA_CATEGORIES = new ArrayList<>();

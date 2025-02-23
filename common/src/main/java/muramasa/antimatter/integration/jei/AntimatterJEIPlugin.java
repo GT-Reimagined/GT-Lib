@@ -1,8 +1,6 @@
 package muramasa.antimatter.integration.jei;
 
 import com.google.common.collect.ImmutableList;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
@@ -60,7 +58,6 @@ import tesseract.api.gt.IGTNode;
 import tesseract.api.wrapper.ItemStackWrapper;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

@@ -1,8 +1,5 @@
 package muramasa.antimatter.item;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import earth.terrarium.botarium.common.item.ItemStackHolder;
 import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.client.AntimatterTextureStitcher;
@@ -54,12 +51,10 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.Nullable;
-import tesseract.TesseractGraphWrappers;
 
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContainerItem, IFluidItem{
@@ -119,21 +114,6 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
 
     public static TagKey<net.minecraft.world.item.Item> getTag() {
         return TagUtils.getItemTag(new ResourceLocation(Ref.ID, "cell"));
-    }
-
-    public ItemStack fill(Fluid fluid, int amount) {
-        ItemStack stack = new ItemStack(this);
-        insert(stack, new FluidStack(fluid, amount));
-        return stack;
-    }
-
-    public ItemStack fill(Fluid fluid) {
-        return fill(fluid, this.capacity);
-    }
-
-    public ItemStack drain(ItemStack old, FluidStack fluid) {
-        extract(old, fluid);
-        return old;
     }
 
     public Fluid getFluid() {
