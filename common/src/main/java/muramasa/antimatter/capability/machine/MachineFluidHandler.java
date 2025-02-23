@@ -1,9 +1,6 @@
 package muramasa.antimatter.capability.machine;
 
 import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
@@ -191,16 +188,16 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     }
 
     @NotNull
-    public List<FluidHolder> consumeAndReturnInputs(List<FluidIngredient> inputs, boolean simulate) {
+    public List<FluidStack> consumeAndReturnInputs(List<FluidIngredient> inputs, boolean simulate) {
         if (getInputTanks() == null) {
             return Collections.emptyList();
         }
-        List<FluidHolder> consumed = new ObjectArrayList<>();
+        List<FluidStack> consumed = new ObjectArrayList<>();
         List<FluidIngredient> fluidIngredients = new ObjectArrayList<>();
         if (inputs != null) {
             for (FluidIngredient input : inputs) {
-                List<FluidHolder> inner = input.drain(this, true, true);
-                if (inner.stream().mapToLong(FluidHolder::getFluidAmount).sum() != input.getAmount()) {
+                List<FluidStack> inner = input.drain(this, true, true);
+                if (inner.stream().mapToLong(FluidStack::getAmount).sum() != input.getAmount()) {
                     return Collections.emptyList();
                 } else {
                     fluidIngredients.add(input);
