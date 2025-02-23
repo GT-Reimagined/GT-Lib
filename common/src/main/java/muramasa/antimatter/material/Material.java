@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 import tesseract.TesseractGraphWrappers;
 
@@ -237,31 +238,18 @@ public class Material implements ISharedAntimatterObject {
         return AntimatterMaterialTypes.GAS.get().get(this, 1).getFluid();
     }
 
-    public FluidHolder getLiquid(long droplets) {
+    public FluidStack getLiquid(int mb) {
         if (!this.has(AntimatterMaterialTypes.LIQUID)){
             throw new RuntimeException("Material: " + this.getId() + " does not have liquid");
         }
-        return AntimatterMaterialTypes.LIQUID.get().get(this, droplets);
+        return AntimatterMaterialTypes.LIQUID.get().get(this, mb);
     }
 
-    public FluidHolder getGas(long droplets) {
+    public FluidStack getGas(int mb) {
         if (!this.has(AntimatterMaterialTypes.GAS)){
             throw new RuntimeException("Material: " + this.getId() + " does not have gas");
         }
-        return AntimatterMaterialTypes.GAS.get().get(this, droplets);
-    }
-
-    public FluidHolder getLiquid(int mb) {
-        return this.getLiquid((long)mb);
-    }
-
-    public FluidHolder getGas(int mb) {
-        return this.getGas((long)mb);
-    }
-
-
-    public FluidIngredient getFluidIngredient(long droplets){
-        return FluidIngredient.of(getFluidTag(), droplets);
+        return AntimatterMaterialTypes.GAS.get().get(this, mb);
     }
 
     public FluidIngredient getFluidIngredient(int mb){

@@ -28,6 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -181,17 +182,17 @@ public class AntimatterMaterialTypes {
 
         LIQUID.set((m, i) -> {
             if (m == null || !LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(LIQUID, m);
-            if (m.getId().equals("water")) return FluidPlatformUtils.createFluidStack(Fluids.WATER, i);
-            else if (m.getId().equals("lava")) return FluidPlatformUtils.createFluidStack(Fluids.LAVA, i);
+            if (m.getId().equals("water")) return new FluidStack(Fluids.WATER, i);
+            else if (m.getId().equals("lava")) return new FluidStack(Fluids.LAVA, i);
             AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, LIQUID.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
-            return FluidPlatformUtils.createFluidStack(fluid.getFluid(), i);
+            return new FluidStack(fluid.getFluid(), i);
         });
         GAS.set((m, i) -> {
             if (m == null || !GAS.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(GAS, m);
             AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, GAS.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
-            return FluidPlatformUtils.createFluidStack(fluid.getFluid(), i);
+            return new FluidStack(fluid.getFluid(), i);
         });
     }
 
