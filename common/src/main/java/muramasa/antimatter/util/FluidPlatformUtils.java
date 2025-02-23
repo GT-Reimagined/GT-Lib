@@ -5,6 +5,10 @@ import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import earth.terrarium.botarium.common.fluid.base.PlatformFluidItemHandler;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import earth.terrarium.botarium.common.item.ItemStackHolder;
+import earth.terrarium.botarium.forge.fluid.ForgeFluidHandler;
+import muramasa.antimatter.capability.fluid.CauldronWrapper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -13,7 +17,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractCauldronBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -21,7 +30,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -51,7 +62,18 @@ public abstract class FluidPlatformUtils {
 
     public abstract SoundEvent getFluidSound(Fluid fluid, boolean fill);
 
-    public abstract Component getFluidDisplayName(FluidHolder fluid);
+    public abstract Component getFluidDisplayName(FluidStack fluid);
+
+    public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, @Nullable BlockEntity be, Direction side){
+        if (be == null){
+            BlockState state = level.getBlockState(pos);
+            if (state.getBlock() instanceof AbstractCauldronBlock){
+                return LazyOptional.of(() ->new CauldronWrapper(state, level, pos));
+            }
+            return LazyOptional.empty();
+        }
+        return be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+    }
 
     /**
      * Fill a destination fluid handler from a source fluid handler with a max amount.

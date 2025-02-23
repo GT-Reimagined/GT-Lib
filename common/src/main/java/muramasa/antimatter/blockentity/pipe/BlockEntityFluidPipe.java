@@ -1,8 +1,5 @@
 package muramasa.antimatter.blockentity.pipe;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityCache;
@@ -19,6 +16,7 @@ import muramasa.antimatter.pipe.TileTicker;
 import muramasa.antimatter.pipe.types.FluidPipe;
 import muramasa.antimatter.util.CodeUtils;
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.ByteTag;
@@ -32,20 +30,25 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPipe<T> implements IFluidPipe, IPreTickTile, Dispatch.Sided<FluidContainer> {
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.SIMULATE;
+
+public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPipe<T> implements IFluidPipe, IPreTickTile, Dispatch.Sided<IFluidHandler> {
 
     @Getter
     protected Optional<PipeFluidHandler> fluidHandler;
     public static byte[] SBIT = {1, 2, 4, 8, 16, 32};
     byte[] lastSide;
-    long transferredAmount = 0;
+    int transferredAmount = 0;
     long mTemperature = 293;
 
     public BlockEntityFluidPipe(T type, BlockPos pos, BlockState state) {
@@ -146,8 +149,8 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     public long getCurrentTemperature(){
         return fluidHandler.map(f -> {
             long currentTemp = -1;
-            for (int i = 0; i < f.getSize(); i++){
-                FluidHolder fluid = f.getFluidInTank(i);
+            for (int i = 0; i < f.getTanks(); i++){
+                FluidStack fluid = f.getFluidInTank(i);
                 if (fluid.isEmpty()){
                     continue;
                 }
@@ -186,13 +189,13 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     public void onServerTickPre(Level level, BlockPos pos, boolean aFirst) {
         transferredAmount = 0;
 
-        PlatformFluidHandler[] adjacentFluidHandlers = new PlatformFluidHandler[6];
+        IFluidHandler[] adjacentFluidHandlers = new IFluidHandler[6];
         PipeFluidHandler pipeFluidHandler = fluidHandler.orElse(null);
         if (pipeFluidHandler == null) return;
 
         for (Direction tSide : Direction.values()) {
             if (connects(tSide)) {
-                BlockEntityCache.getFluidHandlerCached(level, pos.relative(tSide), tSide.getOpposite()).ifPresent(fluidHandler1 -> {
+                FluidPlatformUtils.getFluidHandler(level, pos.relative(tSide), getCachedBlockEntity(tSide), tSide.getOpposite()).ifPresent(fluidHandler1 -> {
                     adjacentFluidHandlers[tSide.get3DDataValue()] = fluidHandler1;
                 });
             }
@@ -200,16 +203,16 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
 
         boolean tCheckTemperature = true;
 
-        for (int i = 0; i < pipeFluidHandler.getInputTanks().getSize(); i++){
+        for (int i = 0; i < pipeFluidHandler.getInputTanks().getTanks(); i++){
             FluidTank tTank = pipeFluidHandler.getInputTanks().getTank(i);
-            FluidHolder tFluid = tTank.getStoredFluid();
+            FluidStack tFluid = tTank.getFluid();
             if (!tFluid.isEmpty()){
                 mTemperature = (tCheckTemperature ? FluidPlatformUtils.INSTANCE.getFluidTemperature(tFluid.getFluid()) : Math.max(mTemperature, FluidPlatformUtils.INSTANCE.getFluidTemperature(tFluid.getFluid())));
                 tCheckTemperature = false;
 
 
                 if (!isGasProof() && FluidPlatformUtils.INSTANCE.isFluidGaseous(tFluid.getFluid())) {
-                    transferredAmount += tTank.extractFluid(tFluid.copyWithAmount(8), false).getFluidAmount();
+                    transferredAmount += tTank.drain(Utils.ca(8, tFluid), FluidAction.EXECUTE).getAmount();
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
                     /*try {
                         for (Entity tEntity : (List<Entity>)worldObj.getEntitiesWithinAABB(Entity.class, box(-2, -2, -2, +3, +3, +3))) {
@@ -219,10 +222,10 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
                 }
 
                 if (!type.isAcidProof() && tFluid.getFluid().is(AntimatterTags.ACID)){
-                    transferredAmount += tTank.extractFluid(tFluid.copyWithAmount(16), false).getFluidAmount();
+                    transferredAmount += tTank.drain(Utils.ca(16, tFluid), FluidAction.EXECUTE).getAmount();
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
                     if (level.random.nextInt(100) == 0){
-                        tTank.clearContent();
+                        tTank.drain(tTank.getFluidAmount(), FluidAction.EXECUTE);
                         level.setBlock(pos, Blocks.FIRE.defaultBlockState(), 3);
                         return;
                     }
@@ -231,27 +234,27 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
             if (mTemperature > getTemperature()) {
                 burn(level, pos.getX(), pos.getY(), pos.getZ());
                 if (level.random.nextInt(100) == 0) {
-                    tTank.clearContent();
+                    tTank.drain(tTank.getFluidAmount(), FluidAction.EXECUTE);
                     level.setBlock(pos, Blocks.FIRE.defaultBlockState(), 3);
                     return;
                 }
             }
 
-            if (!tTank.getStoredFluid().isEmpty()) distribute(level, tTank, i, adjacentFluidHandlers);
+            if (!tTank.getFluid().isEmpty()) distribute(level, tTank, i, adjacentFluidHandlers);
 
             lastSide[i] = 0;
         }
     }
 
     @SuppressWarnings("rawtypes")
-    public void distribute(Level level, FluidTank aTank, int i, PlatformFluidHandler[] fluidHandlers) {
+    public void distribute(Level level, FluidTank aTank, int i, IFluidHandler[] fluidHandlers) {
         // Check if we are empty.
         if (aTank.isEmpty()) return;
         // Compile all possible Targets into one List.
-        List<PlatformFluidHandler> tTanks = new ArrayList<>();
-        List<PlatformFluidHandler> tPipes = new ArrayList<>();
+        List<IFluidHandler> tTanks = new ArrayList<>();
+        List<IFluidHandler> tPipes = new ArrayList<>();
         // Amount to check for Distribution
-        long tAmount = aTank.getStoredFluid().getFluidAmount();
+        int tAmount = aTank.getFluid().getAmount();
         // Count all Targets. Also includes THIS for even distribution, thats why it starts at 1.
         int tTargetCount = 1;
         // Put Targets into Lists.
@@ -263,11 +266,11 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
             if (!connects(tSide)) continue;
             // Covers let distribution happen, right?
             ICover cover = coverHandler.map(c -> c.get(tSide)).orElse(ICover.empty);
-            if (!cover.isEmpty() && (cover.blocksOutput(FluidContainer.class, tSide) || cover.onTransfer(aTank.getStoredFluid().copyHolder(), false, true))) continue;
+            if (!cover.isEmpty() && (cover.blocksOutput(IFluidHandler.class, tSide) || cover.onTransfer(aTank.getFluid().copy(), false, true))) continue;
             // No Tank? Nothing to do then.
             if (fluidHandlers[tSide.get3DDataValue()] == null) continue;
             // Check if the Tank can be filled with this Fluid.
-            long insert = fluidHandlers[tSide.get3DDataValue()].insertFluid(aTank.getStoredFluid().copyWithAmount(Integer.MAX_VALUE), true);
+            long insert = fluidHandlers[tSide.get3DDataValue()].fill(Utils.ca(Integer.MAX_VALUE, aTank.getFluid()), SIMULATE);
             if (insert > 0) {
                 if (fluidHandlers[tSide.get3DDataValue()] instanceof PipeFluidHandlerSidedWrapper){
                     tPipes.add(level.random.nextInt(tTanks.size()+1), fluidHandlers[tSide.get3DDataValue()]);
@@ -284,20 +287,20 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
         // No Targets? Nothing to do then.
         if (tTargetCount <= 1) return;
         // Amount to distribute normally.
-        tAmount = CodeUtils.divup(tAmount, tTargetCount);
+        tAmount = CodeUtils.bindInt(CodeUtils.divup(tAmount, tTargetCount));
         // Distribute to Pipes first.
-        for (PlatformFluidHandler tPipe : tPipes) transferredAmount += aTank.extractFluid(aTank.getStoredFluid().copyWithAmount(tPipe.insertFluid(aTank.getStoredFluid().copyWithAmount(tAmount), false)), false).getFluidAmount();
+        for (IFluidHandler tPipe : tPipes) transferredAmount += aTank.drain(Utils.ca(tPipe.fill(Utils.ca(tAmount, aTank.getFluid()), EXECUTE), aTank.getFluid()), EXECUTE).getAmount();
         // Check if we are empty.
         if (aTank.isEmpty()) return;
         // Distribute to Tanks afterwards.
-        for (PlatformFluidHandler tTank : tTanks) transferredAmount += aTank.extractFluid(aTank.getStoredFluid().copyWithAmount(tTank.insertFluid(aTank.getStoredFluid().copyWithAmount(tAmount), false)), false).getFluidAmount();
+        for (IFluidHandler tTank : tTanks) transferredAmount += aTank.drain(Utils.ca(tTank.fill(Utils.ca(tAmount, aTank.getFluid()), EXECUTE), aTank.getFluid()), EXECUTE).getAmount();
         // Check if we are empty.
         if (aTank.isEmpty()) return;
         // No Targets? Nothing to do then.
         if (tPipes.isEmpty()) return;
         // And then if there still is pressure, distribute to Pipes again.
-        tAmount = (aTank.getStoredFluid().getFluidAmount() - aTank.getCapacity()/2) / tPipes.size();
-        if (tAmount > 0) for (PlatformFluidHandler tPipe : tPipes) transferredAmount += aTank.extractFluid(aTank.getStoredFluid().copyWithAmount(tPipe.insertFluid(aTank.getStoredFluid().copyWithAmount(tAmount), false)), false).getFluidAmount();
+        tAmount = (aTank.getFluid().getAmount() - aTank.getCapacity()/2) / tPipes.size();
+        if (tAmount > 0) for (IFluidHandler tPipe : tPipes) transferredAmount += aTank.drain(Utils.ca(tPipe.fill(Utils.ca(tAmount, aTank.getFluid()), EXECUTE), aTank.getFluid()), EXECUTE).getAmount();
     }
 
     public static void burn(Level aWorld, int aX, int aY, int aZ) {
@@ -327,11 +330,11 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
 
     @Override
     public Class<?> getCapClass() {
-        return FluidContainer.class;
+        return IFluidHandler.class;
     }
 
     @Override
-    public LazyOptional<? extends FluidContainer> forSide(Direction side) {
+    public LazyOptional<? extends IFluidHandler> forSide(Direction side) {
         if (fluidHandler.isEmpty()) {
             return LazyOptional.empty();
         }
@@ -342,7 +345,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     }
 
     @Override
-    public LazyOptional<? extends FluidContainer> forNullSide() {
+    public LazyOptional<? extends IFluidHandler> forNullSide() {
         return forSide(null);
     }
 
@@ -350,9 +353,9 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     public List<String> getInfo(boolean simple) {
         List<String> list = super.getInfo(simple);
         fluidHandler.ifPresent(t -> {
-            for (int i = 0; i < t.getSize(); i++) {
-                FluidHolder stack = t.getFluidInTank(i);
-                list.add(("Tank " + (i + 1) + ": " + (stack.isEmpty() ? "Empty" : stack.getFluidAmount() + "mb of " + FluidPlatformUtils.INSTANCE.getFluidDisplayName(stack).getString())));
+            for (int i = 0; i < t.getTanks(); i++) {
+                FluidStack stack = t.getFluidInTank(i);
+                list.add(("Tank " + (i + 1) + ": " + (stack.isEmpty() ? "Empty" : stack.getAmount() + "mb of " + FluidPlatformUtils.INSTANCE.getFluidDisplayName(stack).getString())));
             }
         });
         if (simple) return list;

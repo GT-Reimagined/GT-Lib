@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FluidPlatformUtilsImpl extends FluidPlatformUtils {
 
@@ -41,7 +42,7 @@ public class FluidPlatformUtilsImpl extends FluidPlatformUtils {
         return fill ? fluid.getAttributes().getFillSound() : fluid.getAttributes().getEmptySound();
     }
 
-    public Component getFluidDisplayName(FluidHolder fluid){
-        return fluid.getFluid().getAttributes().getDisplayName(ForgeFluidHolder.toStack(fluid));
+    public Component getFluidDisplayName(FluidStack fluid){
+        return fluid.getFluid().getAttributes().getDisplayName(fluid);
     }
 }
