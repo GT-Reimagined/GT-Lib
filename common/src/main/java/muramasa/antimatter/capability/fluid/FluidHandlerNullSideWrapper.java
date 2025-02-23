@@ -7,6 +7,8 @@ import earth.terrarium.botarium.common.fluid.impl.SimpleFluidSnapshot;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -23,6 +25,16 @@ public class FluidHandlerNullSideWrapper implements IFluidNode {
     }
 
     @Override
+    public boolean canInput() {
+        return false;
+    }
+
+    @Override
+    public boolean canOutput() {
+        return false;
+    }
+
+    @Override
     public boolean canInput(Direction direction) {
         return fluidHandler.canInput(direction);
     }
@@ -33,87 +45,42 @@ public class FluidHandlerNullSideWrapper implements IFluidNode {
     }
 
     @Override
-    public boolean canInput(FluidHolder fluid, Direction direction) {
+    public boolean canInput(FluidStack fluid, Direction direction) {
         return fluidHandler.canInput(fluid, direction);
     }
 
     @Override
-    public long insertFluid(FluidHolder fluid, boolean simulate) {
+    public int fill(FluidStack fluidStack, FluidAction fluidAction) {
         return 0;
     }
 
     @Override
-    public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
-        return FluidHooks.emptyFluid();
+    public @NotNull FluidStack drain(int amount, FluidAction fluidAction) {
+       return FluidStack.EMPTY;
     }
 
     @Override
-    public void setFluid(int slot, FluidHolder fluid) {
-
+    public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
+       return FluidStack.EMPTY;
     }
 
     @Override
-    public List<FluidHolder> getFluids() {
-        return fluidHandler.getFluids();
+    public int getTanks() {
+        return fluidHandler.getTanks();
     }
 
     @Override
-    public int getSize() {
-        return fluidHandler.getSize();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return fluidHandler.isEmpty();
-    }
-
-    @Override
-    public FluidContainer copy() {
-        return new FluidHandlerNullSideWrapper(fluidHandler);
-    }
-
-    @Override
-    public long getTankCapacity(int tankSlot) {
+    public int getTankCapacity(int tankSlot) {
         return fluidHandler.getTankCapacity(tankSlot);
     }
 
     @Override
-    public void fromContainer(FluidContainer container) {
-        if (container instanceof FluidHandlerNullSideWrapper wrapper) fluidHandler = wrapper.fluidHandler;
+    public @NotNull FluidStack getFluidInTank(int i) {
+        return fluidHandler.getFluidInTank(i);
     }
 
     @Override
-    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
-        return fluidHandler.extractFromSlot(fluidHolder, toInsert, snapshot);
-    }
-
-    @Override
-    public boolean allowsInsertion() {
-        return fluidHandler.allowsInsertion();
-    }
-
-    @Override
-    public boolean allowsExtraction() {
-        return fluidHandler.allowsExtraction();
-    }
-
-    @Override
-    public FluidSnapshot createSnapshot() {
-        return new SimpleFluidSnapshot(this);
-    }
-
-    @Override
-    public void deserialize(CompoundTag nbt) {
-
-    }
-
-    @Override
-    public CompoundTag serialize(CompoundTag nbt) {
-        return null;
-    }
-
-    @Override
-    public void clearContent() {
-        fluidHandler.clearContent();
+    public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
+        return fluidHandler.isFluidValid(i, fluidStack);
     }
 }
