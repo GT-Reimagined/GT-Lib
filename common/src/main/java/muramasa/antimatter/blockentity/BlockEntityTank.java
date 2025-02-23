@@ -1,7 +1,6 @@
 package muramasa.antimatter.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import muramasa.antimatter.capability.fluid.FluidTank;
 import muramasa.antimatter.capability.fluid.FluidTanks;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.cover.CoverOutput;
@@ -13,6 +12,7 @@ import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 

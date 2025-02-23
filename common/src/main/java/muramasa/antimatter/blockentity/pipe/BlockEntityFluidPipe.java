@@ -10,7 +10,6 @@ import muramasa.antimatter.blockentity.IPreTickTile;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.FluidHandler;
 import muramasa.antimatter.capability.fluid.FluidHandlerNullSideWrapper;
-import muramasa.antimatter.capability.fluid.FluidTank;
 import muramasa.antimatter.capability.fluid.PipeFluidHandlerSidedWrapper;
 import muramasa.antimatter.capability.pipe.PipeFluidHandler;
 import muramasa.antimatter.cover.ICover;
@@ -33,6 +32,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
