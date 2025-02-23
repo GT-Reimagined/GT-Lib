@@ -86,7 +86,7 @@ public class FluidSlotWidget extends Widget {
         RenderSystem.enableDepthTest();
         List<Component> str = new ArrayList<>();
         str.add(FluidPlatformUtils.INSTANCE.getFluidDisplayName(this.stack));
-        long mb = this.stack.getAmount();
+        int mb = this.stack.getAmount();
         str.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";

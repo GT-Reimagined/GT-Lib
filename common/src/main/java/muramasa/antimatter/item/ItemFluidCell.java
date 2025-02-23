@@ -51,6 +51,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 
@@ -108,14 +110,17 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (worldIn == null) return;
-        FluidHooks.safeGetItemFluidManager(stack).ifPresent(x -> {
-            FluidHolder fluid = x.getFluidInTank(0);
+        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
+            FluidStack fluid = x.getFluidInTank(0);
             if (!fluid.isEmpty()) {
                 MutableComponent fluidname = (MutableComponent) FluidPlatformUtils.INSTANCE.getFluidDisplayName(fluid);
-                fluidname.append(": ").append(Utils.literal(NumberFormat.getNumberInstance(Locale.US).format(fluid.getFluidAmount()) + " mB").withStyle(ChatFormatting.GRAY));
+                fluidname.append(": ").append(Utils.literal(NumberFormat.getNumberInstance(Locale.US).format(fluid.getAmount()) + " mB").withStyle(ChatFormatting.GRAY));
                 tooltip.add(fluidname);
             }
             tooltip.add(Utils.literal("Max Temp: " + ((ItemFluidCell) stack.getItem()).getMaxTemp() + "K"));
+        });
+        FluidHooks.safeGetItemFluidManager(stack).ifPresent(x -> {
+
         });
     }
 

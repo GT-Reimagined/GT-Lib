@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
@@ -159,9 +160,9 @@ public class AntimatterJEIREIPlugin{
 
     //To perform a JEI lookup for fluid. Use defines direction.
 
-    public static void uses(FluidHolder val, boolean USE) {
+    public static void uses(FluidStack val, boolean USE) {
         if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
-            JEIPlatformHelper.INSTANCE.uses(val, USE);
+            AntimatterJEIPlugin.uses(val, USE);
         } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.uses(val, USE);
         }

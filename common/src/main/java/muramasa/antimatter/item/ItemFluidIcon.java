@@ -21,6 +21,8 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 
@@ -69,8 +71,8 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.remove(0);
-        FluidHooks.safeGetItemFluidManager(stack).ifPresent(x -> {
-            FluidHolder fluid = x.getFluidInTank(0);
+        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
+            FluidStack fluid = x.getFluidInTank(0);
             if (fluid.isEmpty()) return;
             List<Component> str = new ArrayList<>();
             str.add(FluidPlatformUtils.INSTANCE.getFluidDisplayName(fluid));

@@ -2,14 +2,20 @@ package muramasa.antimatter.integration.jei;
 
 import com.google.common.collect.ImmutableList;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.forge.fluid.ForgeFluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.ingredients.IIngredientType;
+import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.ingredients.subtypes.UidContext;
+import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -44,6 +50,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +65,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @SuppressWarnings("removal")
@@ -91,7 +99,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
         AntimatterJEIREIPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
         // wish there was a better way to do this
         if (!fluidList.isEmpty()){
-            runtime.getIngredientManager().removeIngredientsAtRuntime(JEIPlatformHelper.INSTANCE.getFluidIngredientObjectType(), (Collection) fluidList.stream().map(f -> JEIPlatformHelper.INSTANCE.getFluidObject(FluidHolder.of(f))).toList());
+            runtime.getIngredientManager().removeIngredientsAtRuntime(ForgeTypes.FLUID_STACK,  fluidList.stream().map(f -> new FluidStack(f, 1)).toList());
             runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, fluidList.stream().map(i -> i.getBucket().getDefaultInstance()).toList());
         }
         //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, AntimatterAPI.all(BlockSurfaceRock.class).stream().map(b -> new ItemStack(b, 1)).filter(t -> !t.isEmpty()).collect(Collectors.toList()));
@@ -236,9 +244,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
 
     public static <T> void addModDescriptor(List<Component> tooltip, T t) {
         if (t == null || helpers == null) return;
-        Object o = t;
-        if (t instanceof FluidHolder holder) o = JEIPlatformHelper.INSTANCE.getFluidObject(holder);
-        String text = helpers.getModIdHelper().getFormattedModNameForModId(getRuntime().getIngredientManager().getIngredientHelper(o).getDisplayModId(o));
+        String text = helpers.getModIdHelper().getFormattedModNameForModId(getRuntime().getIngredientManager().getIngredientHelper((Object) t).getDisplayModId(t));
         tooltip.add(Utils.literal(text));
     }
 
@@ -262,6 +268,47 @@ public class AntimatterJEIPlugin implements IModPlugin {
             list.forEach(i -> {
                 registration.addRecipeCatalyst(new ItemStack(i), RecipeType.create(r.getNamespace(), r.getPath(), Recipe.class));
             });
+        });
+    }
+
+    public static void uses(FluidStack val, boolean USE) {
+        AntimatterJEIPlugin.getRuntime().getRecipesGui().show(new IFocus<FluidStack>() {
+            @Override
+            public ITypedIngredient<FluidStack> getTypedValue() {
+                return new ITypedIngredient<>() {
+                    @Override
+                    public IIngredientType<FluidStack> getType() {
+                        return ForgeTypes.FLUID_STACK;
+                    }
+
+                    @Override
+                    public FluidStack getIngredient() {
+                        return val;
+                    }
+
+                    @Override
+                    public <V> Optional<V> getIngredient(IIngredientType<V> ingredientType) {
+                        if (ingredientType == ForgeTypes.FLUID_STACK) return ((Optional<V>) Optional.of(val));
+                        return Optional.empty();
+                    }
+                };
+            }
+
+            @Override
+            public RecipeIngredientRole getRole() {
+                return USE ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT;
+            }
+
+            @Override
+            public <T> Optional<IFocus<T>> checkedCast(IIngredientType<T> ingredientType) {
+                return Optional.empty();
+            }
+
+            @Override
+            public Mode getMode() {
+                return USE ? Mode.INPUT : Mode.OUTPUT;
+            }
+
         });
     }
 }

@@ -59,7 +59,7 @@ public class KubeJSRecipe extends RecipeJS {
         }
         if (listJS.get(3) != null) for (Object inputFluid : ListJS.orSelf(listJS.get(3))) {
             if (inputFluid instanceof FluidStackJS fluidStack){
-                this.fluidInput.add(FluidIngredient.of(REIUtils.fromREIFluidStack(fluidStack.getFluidStack()));
+                this.fluidInput.add(FluidIngredient.of(REIUtils.fromREIFluidStack(fluidStack.getFluidStack())));
             } else if (inputFluid instanceof MapJS map){
                 this.fluidInput.add(AntimatterRecipeSerializer.getFluidIngredient(map.toJson()));
             } else {
@@ -97,7 +97,7 @@ public class KubeJSRecipe extends RecipeJS {
             amps = 1;
             special = 0;
         }
-        if (inputItems.size() == 0 && fluidInput.size() == 0) {
+        if (inputItems.isEmpty() && fluidInput.isEmpty()) {
             throw new IllegalStateException("No input in recipe");
         }
     }
@@ -132,12 +132,12 @@ public class KubeJSRecipe extends RecipeJS {
         }
     }
 
-    public static JsonElement serializeStack(FluidHolder stack) {
+    public static JsonElement serializeStack(FluidStack stack) {
         JsonObject obj = new JsonObject();
         obj.addProperty("fluid", FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).toString());
-        obj.addProperty("amount", stack.getFluidAmount());
-        if (stack.getCompound() != null) {
-            obj.add("tag", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, stack.getCompound()));
+        obj.addProperty("amount", stack.getAmount());
+        if (stack.getTag() != null) {
+            obj.add("tag", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, stack.getTag()));
         }
         return obj;
     }
@@ -166,32 +166,32 @@ public class KubeJSRecipe extends RecipeJS {
 
     @Override
     public void serialize() {
-        if (inputItems.size() > 0) {
+        if (!inputItems.isEmpty()) {
             JsonArray arr = new JsonArray();
             inputItems.forEach(t -> arr.add(t.toJson()));
             this.json.add("inputItems", arr);
         }
-        if (outputItems.size() > 0) {
+        if (!outputItems.isEmpty()) {
             JsonArray arr = new JsonArray();
             outputItems.forEach(t -> arr.add(t.toResultJson()));
             this.json.add("outputItems", arr);
         }
-        if (fluidInput.size() > 0) {
+        if (!fluidInput.isEmpty()) {
             JsonArray arr = new JsonArray();
             fluidInput.forEach(t -> arr.add(serializeFluid(t)));
             this.json.add("inputFluids", arr);
         }
-        if (fluidOutput.size() > 0) {
+        if (!fluidOutput.isEmpty()) {
             JsonArray arr = new JsonArray();
             fluidOutput.forEach(t -> arr.add(serializeStack(t)));
             this.json.add("outputFluids", arr);
         }
-        if (outputChances.size() > 0) {
+        if (!outputChances.isEmpty()) {
             JsonArray arr = new JsonArray();
             outputChances.forEach(arr::add);
             this.json.add("outputChances", arr);
         }
-        if (inputChances.size() > 0) {
+        if (!inputChances.isEmpty()) {
             JsonArray arr = new JsonArray();
             inputChances.forEach(arr::add);
             this.json.add("inputChances", arr);
