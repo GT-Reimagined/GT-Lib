@@ -2,6 +2,7 @@ package muramasa.antimatter.recipe;
 
 import com.google.gson.JsonObject;
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +24,7 @@ public class RecipeUtil {
 
     public static JsonObject fluidstackToJson(FluidStack stack){
         JsonObject object = new JsonObject();
-        object.addProperty("fluid", FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).toString());
+        object.addProperty("fluid", RegistryUtils.getIdFromFluid(stack.getFluid()).toString());
         object.addProperty("amount", stack.getAmount());
         if (stack.getTag() != null){
             object.addProperty("tag", stack.getTag().toString());

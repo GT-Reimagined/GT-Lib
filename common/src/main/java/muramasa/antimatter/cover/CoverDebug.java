@@ -4,6 +4,7 @@ import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ public class CoverDebug extends BaseCover {
         if (!simulate) {
             String fmt = "";
             if (object instanceof FluidStack fluidStack) {
-                fmt = String.format("Fluid: %s, amount: %d", FluidPlatformUtils.INSTANCE.getFluidId(fluidStack.getFluid()), (fluidStack.getAmount()));
+                fmt = String.format("Fluid: %s, amount: %d", RegistryUtils.getIdFromFluid(fluidStack.getFluid()), (fluidStack.getAmount()));
             } else {
                 fmt = object.toString();
             }

@@ -42,23 +42,41 @@ public abstract class FluidPlatformUtils {
         return FluidHooks.newFluidHolder(fluid,amount, null);
     }
 
-    public abstract ResourceLocation getStillTexture(Fluid fluid);
+    public static ResourceLocation getStillTexture(Fluid fluid){
+        return fluid.getAttributes().getStillTexture();
+    }
 
-    public abstract ResourceLocation getFlowingTexture(Fluid fluid);
+    public static ResourceLocation getFlowingTexture(Fluid fluid){
+        return fluid.getAttributes().getFlowingTexture();
+    }
 
-    public abstract ResourceLocation getFluidId(Fluid fluid);
+    public static int getFluidTemperature(Fluid fluid){
+        return fluid.getAttributes().getTemperature();
+    }
 
-    public abstract int getFluidTemperature(Fluid fluid);
+    public static int getFluidDensity(Fluid fluid){
+        return fluid.getAttributes().getDensity();
+    }
 
-    public abstract int getFluidDensity(Fluid fluid);
+    public static boolean isFluidGaseous(Fluid fluid){
+        return fluid.getAttributes().isGaseous();
+    }
 
-    public abstract boolean isFluidGaseous(Fluid fluid);
+    public static int getFluidColor(Fluid fluid){
+        return fluid.getAttributes().getColor();
+    }
 
-    public abstract int getFluidColor(Fluid fluid);
+    public static SoundEvent getFillSound(Fluid fluid){
+        return fluid.getAttributes().getFillSound();
+    }
 
-    public abstract SoundEvent getFluidSound(Fluid fluid, boolean fill);
+    public static SoundEvent getEmptySound(Fluid fluid){
+        return fluid.getAttributes().getEmptySound();
+    }
 
-    public abstract Component getFluidDisplayName(FluidStack fluid);
+    public static Component getFluidDisplayName(FluidStack fluid){
+        return fluid.getDisplayName();
+    }
 
     public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, @Nullable BlockEntity be, Direction side){
         if (be == null){

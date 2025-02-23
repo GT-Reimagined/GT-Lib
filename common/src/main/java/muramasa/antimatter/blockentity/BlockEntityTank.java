@@ -51,7 +51,7 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
             renderer.draw(stack, "Empty", left, top, 0xFAFAFF);
             return 8;
         }
-        renderer.draw(stack, FluidPlatformUtils.INSTANCE.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
+        renderer.draw(stack, FluidPlatformUtils.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
         String fluidAmount = String.valueOf(instance.stack.getAmount());
         renderer.draw(stack, fluidAmount + " mb", left, top + 8, 0xFAFAFF);
         return 16;

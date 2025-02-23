@@ -116,8 +116,8 @@ public class RenderHelper {
         RenderSystem.enableBlend();
         //TODO 1.18
         //RenderSystem.enableAlphaTest();
-        TextureAtlasSprite fluidStillSprite = mc.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(FluidPlatformUtils.INSTANCE.getStillTexture(fluid));
-        int fluidColor = FluidPlatformUtils.INSTANCE.getFluidColor(fluid);
+        TextureAtlasSprite fluidStillSprite = mc.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(FluidPlatformUtils.getStillTexture(fluid));
+        int fluidColor = FluidPlatformUtils.getFluidColor(fluid);
 
         //Draw the fluid texture
         drawTiledSprite(mstack, mc, posX, posY, width, height, 16, 16, fluidColor, scaledAmount, fluidStillSprite);

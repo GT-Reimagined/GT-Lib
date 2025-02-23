@@ -8,6 +8,7 @@ import muramasa.antimatter.capability.fluid.IFluidNode;
 import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -277,7 +278,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
             for (int i = 0; i < getInputTanks().getTanks(); i++) {
                 FluidStack stack = getInputTanks().getFluidInTank(i);
                 if (!stack.isEmpty()) {
-                    builder.append(FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid())).append(" - ").append(stack.getAmount());
+                    builder.append(RegistryUtils.getIdFromFluid(stack.getFluid())).append(" - ").append(stack.getAmount());
                     if (i != getInputTanks().getTanks() - 1) {
                         builder.append("\n");
                     }
@@ -289,7 +290,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
             for (int i = 0; i < getOutputTanks().getTanks(); i++) {
                 FluidStack stack = getOutputTanks().getFluidInTank(i);
                 if (!stack.isEmpty()) {
-                    builder.append(FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid())).append(" - ").append(stack.getAmount());
+                    builder.append(RegistryUtils.getIdFromFluid(stack.getFluid())).append(" - ").append(stack.getAmount());
                     if (i != getOutputTanks().getTanks() - 1) {
                         builder.append("\n");
                     }

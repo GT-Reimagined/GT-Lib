@@ -19,6 +19,7 @@ import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.fluids.FluidStack;
@@ -133,7 +134,7 @@ public class KubeJSRecipe extends RecipeJS {
 
     public static JsonElement serializeStack(FluidStack stack) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("fluid", FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).toString());
+        obj.addProperty("fluid", RegistryUtils.getIdFromFluid(stack.getFluid()).toString());
         obj.addProperty("amount", stack.getAmount());
         if (stack.getTag() != null) {
             obj.add("tag", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, stack.getTag()));

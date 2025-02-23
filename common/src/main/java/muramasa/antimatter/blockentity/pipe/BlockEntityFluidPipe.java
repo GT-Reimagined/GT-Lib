@@ -154,7 +154,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
                 if (fluid.isEmpty()){
                     continue;
                 }
-                currentTemp = Math.max(FluidPlatformUtils.INSTANCE.getFluidTemperature(fluid.getFluid()), currentTemp);
+                currentTemp = Math.max(FluidPlatformUtils.getFluidTemperature(fluid.getFluid()), currentTemp);
             }
             return currentTemp == -1 ? 293L : currentTemp;
         }).orElse(293L);
@@ -207,11 +207,11 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
             FluidTank tTank = pipeFluidHandler.getInputTanks().getTank(i);
             FluidStack tFluid = tTank.getFluid();
             if (!tFluid.isEmpty()){
-                mTemperature = (tCheckTemperature ? FluidPlatformUtils.INSTANCE.getFluidTemperature(tFluid.getFluid()) : Math.max(mTemperature, FluidPlatformUtils.INSTANCE.getFluidTemperature(tFluid.getFluid())));
+                mTemperature = (tCheckTemperature ? FluidPlatformUtils.getFluidTemperature(tFluid.getFluid()) : Math.max(mTemperature, FluidPlatformUtils.getFluidTemperature(tFluid.getFluid())));
                 tCheckTemperature = false;
 
 
-                if (!isGasProof() && FluidPlatformUtils.INSTANCE.isFluidGaseous(tFluid.getFluid())) {
+                if (!isGasProof() && FluidPlatformUtils.isFluidGaseous(tFluid.getFluid())) {
                     transferredAmount += tTank.drain(Utils.ca(8, tFluid), FluidAction.EXECUTE).getAmount();
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
                     /*try {
@@ -355,7 +355,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
         fluidHandler.ifPresent(t -> {
             for (int i = 0; i < t.getTanks(); i++) {
                 FluidStack stack = t.getFluidInTank(i);
-                list.add(("Tank " + (i + 1) + ": " + (stack.isEmpty() ? "Empty" : stack.getAmount() + "mb of " + FluidPlatformUtils.INSTANCE.getFluidDisplayName(stack).getString())));
+                list.add(("Tank " + (i + 1) + ": " + (stack.isEmpty() ? "Empty" : stack.getAmount() + "mb of " + FluidPlatformUtils.getFluidDisplayName(stack).getString())));
             }
         });
         if (simple) return list;

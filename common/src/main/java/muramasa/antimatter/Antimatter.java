@@ -56,7 +56,6 @@ import muramasa.antimatter.registration.RegistrationEvent;
 import muramasa.antimatter.tool.IAntimatterTool;
 import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
-import muramasa.antimatter.util.forge.FluidPlatformUtilsImpl;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import net.devtech.arrp.ARRP;
 import net.minecraft.data.BuiltinRegistries;
@@ -121,7 +120,6 @@ public class Antimatter extends AntimatterMod {
         AntimatterAPI.init();
         AntimatterNetwork.register();
         AntimatterConfig.createConfig();
-        FluidPlatformUtils.INSTANCE = new FluidPlatformUtilsImpl();
         /* Lifecycle events */
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::clientSetup);

@@ -104,7 +104,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
         stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
             FluidStack fluid = x.getFluidInTank(0);
             if (!fluid.isEmpty()) {
-                MutableComponent fluidname = (MutableComponent) FluidPlatformUtils.INSTANCE.getFluidDisplayName(fluid);
+                MutableComponent fluidname = (MutableComponent) FluidPlatformUtils.getFluidDisplayName(fluid);
                 fluidname.append(": ").append(Utils.literal(NumberFormat.getNumberInstance(Locale.US).format(fluid.getAmount()) + " mB").withStyle(ChatFormatting.GRAY));
                 tooltip.add(fluidname);
             }
@@ -139,7 +139,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
 
     @Override
     public Predicate<FluidStack> getFilter() {
-        return f -> FluidPlatformUtils.INSTANCE.getFluidTemperature(f.getFluid()) <= this.getMaxTemp();
+        return f -> FluidPlatformUtils.getFluidTemperature(f.getFluid()) <= this.getMaxTemp();
     }
 
     @Override
@@ -197,7 +197,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
                     player.awardStat(Stats.ITEM_USED.get(this));
 
                     // play sound effect
-                    SoundEvent sound = FluidPlatformUtils.INSTANCE.getFluidSound(newFluid, true);
+                    SoundEvent sound = FluidPlatformUtils.getFillSound(newFluid);
                     if (sound == null) {
                         sound = newFluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
                     }
@@ -297,7 +297,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
      * @param pos    Position of sound
      */
     private void playEmptySound(Fluid fluid, @Nullable Player player, LevelAccessor world, BlockPos pos) {
-        SoundEvent sound = FluidPlatformUtils.INSTANCE.getFluidSound(fluid, false);
+        SoundEvent sound = FluidPlatformUtils.getEmptySound(fluid);
         if (sound == null) {
             sound = fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
         }

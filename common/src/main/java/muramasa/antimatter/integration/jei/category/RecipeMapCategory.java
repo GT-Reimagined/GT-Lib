@@ -266,8 +266,8 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         list.remove(1);
         int mb = stack.getAmount();
         list.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
-        list.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
-        String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
+        list.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
+        String liquid = !FluidPlatformUtils.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
         list.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
         if (Utils.hasNoConsumeTag(ing.getDisplayedIngredient().get().getIngredient(ForgeTypes.FLUID_STACK).get()))
             list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));

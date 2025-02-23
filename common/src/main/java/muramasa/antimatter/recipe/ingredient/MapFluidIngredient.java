@@ -1,6 +1,7 @@
 package muramasa.antimatter.recipe.ingredient;
 
 import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraftforge.fluids.FluidStack;
 
 public class MapFluidIngredient extends AbstractMapIngredient {
@@ -14,7 +15,7 @@ public class MapFluidIngredient extends AbstractMapIngredient {
 
     @Override
     protected int hash() {
-        return FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).hashCode();
+        return RegistryUtils.getIdFromFluid(stack.getFluid()).hashCode();
     }
 
     @Override
@@ -32,6 +33,6 @@ public class MapFluidIngredient extends AbstractMapIngredient {
 
     @Override
     public String toString() {
-        return FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).toString();
+        return RegistryUtils.getIdFromFluid(stack.getFluid()).toString();
     }
 }
