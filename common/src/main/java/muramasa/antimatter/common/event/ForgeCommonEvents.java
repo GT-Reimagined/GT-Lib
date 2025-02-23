@@ -5,11 +5,13 @@ import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.AntimatterRemapping;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
+import muramasa.antimatter.capability.fluid.FluidHandlerItem;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
 import muramasa.antimatter.datagen.AntimatterDynamics;
 import muramasa.antimatter.datagen.AntimatterLoot;
 import muramasa.antimatter.datagen.providers.AntimatterBlockLootProvider;
 import muramasa.antimatter.gui.container.IAntimatterContainer;
+import muramasa.antimatter.item.IFluidItem;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.ore.BlockOre;
 import muramasa.antimatter.pipe.BlockPipe;
@@ -38,6 +40,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
@@ -134,6 +137,13 @@ public class ForgeCommonEvents {
         PlayerTickCallback.PLAYER_TICK_CALLBACKS.forEach(c -> {
             c.onTick(event.phase == TickEvent.Phase.END, event.side == LogicalSide.SERVER, event.player);
         });
+    }
+
+    @SubscribeEvent
+    public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
+        if (event.getObject().getItem() instanceof IFluidItem fluidItem){
+            event.addCapability(new ResourceLocation(Ref.ID, "fluid"), new FluidHandlerItem(event.getObject(), fluidItem.getCapacity(), fluidItem.getFilter()));
+        }
     }
 
     @SubscribeEvent

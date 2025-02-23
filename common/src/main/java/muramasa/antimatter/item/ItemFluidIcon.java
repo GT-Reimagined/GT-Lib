@@ -29,6 +29,7 @@ import tesseract.TesseractGraphWrappers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import static muramasa.antimatter.util.FluidPlatformUtils.createFluidStack;
 
@@ -64,11 +65,6 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
     }*/
 
     @Override
-    public long getTankSize() {
-        return capacity;
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.remove(0);
         stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
@@ -84,21 +80,15 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
         });
     }
 
-    public static TagKey<net.minecraft.world.item.Item> getTag() {
-        return TagUtils.getItemTag(new ResourceLocation(Ref.ID, "cell"));
-    }
-
     public ItemStack fill(Fluid fluid) {
         ItemStack stack = new ItemStack(this);
-        ItemStackHolder holder = new ItemStackHolder(stack);
-        insert(holder, createFluidStack(fluid, 1));
-        return holder.getStack();
+        insert(stack, new FluidStack(fluid, 1));
+        return stack;
     }
 
-    public ItemStack drain(ItemStack old, FluidHolder fluid) {
-        ItemStackHolder holder = new ItemStackHolder(old);
-        extract(holder, fluid);
-        return holder.getStack();
+    public ItemStack drain(ItemStack old, FluidStack fluid) {
+        extract(old, fluid);
+        return old;
     }
 
     public Fluid getFluid() {
@@ -123,8 +113,8 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
     }
 
     @Override
-    public BiPredicate<Integer, FluidHolder> getFilter() {
-        return (i, f) -> true;
+    public Predicate<FluidStack> getFilter() {
+        return f -> true;
     }
 
     @Override
