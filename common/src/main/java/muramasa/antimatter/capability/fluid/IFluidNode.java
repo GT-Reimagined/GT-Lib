@@ -4,6 +4,9 @@ import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import net.minecraft.core.Direction;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
 import tesseract.api.GraphWrapper;
 
@@ -15,12 +18,26 @@ import tesseract.api.GraphWrapper;
  * DO NOT ASSUME that these objects are used internally in all cases.
  * </p>
  */
-public interface IFluidNode extends FluidContainer {
+public interface IFluidNode extends IFluidHandler {
     /**
      * @param direction Direction to the proceed.
      * @return Returns the priority of this node as a number.
      */
     int getPriority(Direction direction);
+
+    /**
+     * Gets if this storage can have fluid extracted.
+     *
+     * @return If this is false, then any calls to extractEnergy will return 0.
+     */
+    boolean canOutput();
+
+    /**
+     * Used to determine if this storage can receive fluid.
+     *
+     * @return If this is false, then any calls to receiveEnergy will return 0.
+     */
+    boolean canInput();
 
     /**
      * Used to determine if this storage can receive fluid.
@@ -44,30 +61,26 @@ public interface IFluidNode extends FluidContainer {
      * @param direction Direction to the input.
      * @return If the tank can input the fluid (EVER, not at the time of query).
      */
-    boolean canInput(FluidHolder fluid, Direction direction);
+    boolean canInput(FluidStack fluid, Direction direction);
 
     /**
      * Drains from the input tanks rather than output tanks. Useful for recipes.
      *
      * @param stack  stack to drain.
-     * @param simulate execute/simulate
+     * @param action execute/action
      * @return the drained stack
      */
-    default FluidHolder drainInput(FluidHolder stack, boolean simulate) {
-        return extractFluid(stack, simulate);
+    default FluidStack drainInput(FluidStack stack, FluidAction action) {
+        return drain(stack, action);
     }
 
-    default FluidHolder extractFluid(long toExtract, boolean simulate) {
-        for (int i = 0; i < getSize(); i++) {
-            FluidHolder fluid = extractFluid(getFluidInTank(i), simulate);
-            if (!fluid.isEmpty()) return fluid;
+    @Override
+    @NotNull
+    default FluidStack drain(int amount, FluidAction fluidAction){
+        for (int i = 0; i < getTanks(); i++) {
+            FluidStack stack = drain(getFluidInTank(i), fluidAction);
+            if (!stack.isEmpty()) return stack;
         }
-        return FluidHooks.emptyFluid();
-    }
-
-    default boolean isFluidValid(int tank, FluidHolder stack) { return true; }
-
-    default FluidHolder getFluidInTank(int tank){
-        return getFluids().get(tank);
+        return FluidStack.EMPTY;
     }
 }
