@@ -3,10 +3,8 @@ package muramasa.antimatter.util;
 import muramasa.antimatter.capability.fluid.CauldronWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -22,8 +20,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -31,9 +27,9 @@ import java.util.function.Predicate;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
-public abstract class FluidPlatformUtils {
-    public static FluidPlatformUtils INSTANCE; // =  ServiceLoader.load(FluidPlatformUtils.class).findFirst().orElseThrow(() -> new IllegalStateException("No implementation of FluidPlatformUtils found"));
-    //public static FluidPlatformUtils INSTANCE = new FluidPlatformUtils();
+public abstract class FluidUtils {
+    public static FluidUtils INSTANCE; // =  ServiceLoader.load(FluidUtils.class).findFirst().orElseThrow(() -> new IllegalStateException("No implementation of FluidUtils found"));
+    //public static FluidUtils INSTANCE = new FluidUtils();
 
     public static ResourceLocation getStillTexture(Fluid fluid){
         return fluid.getAttributes().getStillTexture();

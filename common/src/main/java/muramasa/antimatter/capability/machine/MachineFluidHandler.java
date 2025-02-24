@@ -12,7 +12,7 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.TagKey;
@@ -76,10 +76,10 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
                     MachineItemHandler.insertIntoOutput(ih.getCellOutputHandler(), cellSlot, s, false);
                     MachineItemHandler.extractFromInput(ih.getCellInputHandler(), cellSlot, 1, false);
                 };
-                if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                if (FluidUtils.INSTANCE.fillItemFromContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
-                } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                } else if (FluidUtils.INSTANCE.emptyItemIntoContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
                 }

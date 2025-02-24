@@ -5,7 +5,7 @@ import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.gui.GuiInstance;
 import muramasa.antimatter.gui.SlotType;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -82,11 +82,11 @@ public class SlotClickEvent implements IGuiEvent {
                 }
             };
             if (type == SlotType.FL_IN){
-                if (!FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(-1, Utils.ca(1, stack), sink, consumer)){
-                    FluidPlatformUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
+                if (!FluidUtils.INSTANCE.emptyItemIntoContainer(-1, Utils.ca(1, stack), sink, consumer)){
+                    FluidUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
                 }
             } else {
-                FluidPlatformUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
+                FluidUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
             }
         }
     }

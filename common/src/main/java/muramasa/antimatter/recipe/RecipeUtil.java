@@ -1,7 +1,6 @@
 package muramasa.antimatter.recipe;
 
 import com.google.gson.JsonObject;
-import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;

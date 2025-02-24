@@ -7,7 +7,6 @@ import muramasa.antimatter.capability.fluid.FluidTanks;
 import muramasa.antimatter.capability.fluid.IFluidNode;
 import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.machine.event.IMachineEvent;
-import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

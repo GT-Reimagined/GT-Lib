@@ -5,7 +5,7 @@ import lombok.Getter;
 import muramasa.antimatter.blockentity.BlockEntityBase;
 import muramasa.antimatter.capability.IMachineHandler;
 import muramasa.antimatter.machine.event.IMachineEvent;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -182,7 +182,7 @@ public class FluidTanks implements IFluidHandler {
             if (tank instanceof CompoundTag cnbt) {
                 if (i > tanks.length - 1)
                     break;
-                tanks[i++].setFluid(FluidPlatformUtils.fromTag(cnbt));
+                tanks[i++].setFluid(FluidUtils.fromTag(cnbt));
             }
         }
     }

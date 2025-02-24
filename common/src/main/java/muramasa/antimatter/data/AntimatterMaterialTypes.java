@@ -20,7 +20,6 @@ import muramasa.antimatter.ore.BlockOre;
 import muramasa.antimatter.ore.BlockOreStone;
 import muramasa.antimatter.ore.StoneType;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -36,7 +35,6 @@ import java.util.function.Function;
 import static muramasa.antimatter.Ref.*;
 import static muramasa.antimatter.data.AntimatterMaterials.Wood;
 import static muramasa.antimatter.material.MaterialTags.RUBBERTOOLS;
-import static muramasa.antimatter.material.MaterialTags.WOOD;
 
 public class AntimatterMaterialTypes {
     //Item Types

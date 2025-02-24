@@ -54,7 +54,6 @@ import muramasa.antimatter.recipe.material.MaterialSerializer;
 import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import muramasa.antimatter.registration.RegistrationEvent;
 import muramasa.antimatter.tool.IAntimatterTool;
-import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import net.devtech.arrp.ARRP;

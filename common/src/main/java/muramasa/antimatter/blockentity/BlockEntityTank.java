@@ -8,13 +8,12 @@ import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.integration.jeirei.renderer.IInfoRenderer;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.machine.types.TankMachine;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
-import tesseract.TesseractGraphWrappers;
 
 import static muramasa.antimatter.machine.MachineFlag.FLUID;
 import static muramasa.antimatter.machine.MachineFlag.ITEM;
@@ -51,7 +50,7 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
             renderer.draw(stack, "Empty", left, top, 0xFAFAFF);
             return 8;
         }
-        renderer.draw(stack, FluidPlatformUtils.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
+        renderer.draw(stack, FluidUtils.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
         String fluidAmount = String.valueOf(instance.stack.getAmount());
         renderer.draw(stack, fluidAmount + " mb", left, top + 8, 0xFAFAFF);
         return 16;

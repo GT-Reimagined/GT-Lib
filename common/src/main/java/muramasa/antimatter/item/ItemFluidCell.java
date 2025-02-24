@@ -7,7 +7,7 @@ import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.mixin.BucketItemAccessor;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -104,7 +104,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
         stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
             FluidStack fluid = x.getFluidInTank(0);
             if (!fluid.isEmpty()) {
-                MutableComponent fluidname = (MutableComponent) FluidPlatformUtils.getFluidDisplayName(fluid);
+                MutableComponent fluidname = (MutableComponent) FluidUtils.getFluidDisplayName(fluid);
                 fluidname.append(": ").append(Utils.literal(NumberFormat.getNumberInstance(Locale.US).format(fluid.getAmount()) + " mB").withStyle(ChatFormatting.GRAY));
                 tooltip.add(fluidname);
             }
@@ -139,7 +139,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
 
     @Override
     public Predicate<FluidStack> getFilter() {
-        return f -> FluidPlatformUtils.getFluidTemperature(f.getFluid()) <= this.getMaxTemp();
+        return f -> FluidUtils.getFluidTemperature(f.getFluid()) <= this.getMaxTemp();
     }
 
     @Override
@@ -197,7 +197,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
                     player.awardStat(Stats.ITEM_USED.get(this));
 
                     // play sound effect
-                    SoundEvent sound = FluidPlatformUtils.getFillSound(newFluid);
+                    SoundEvent sound = FluidUtils.getFillSound(newFluid);
                     if (sound == null) {
                         sound = newFluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
                     }
@@ -297,7 +297,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContaine
      * @param pos    Position of sound
      */
     private void playEmptySound(Fluid fluid, @Nullable Player player, LevelAccessor world, BlockPos pos) {
-        SoundEvent sound = FluidPlatformUtils.getEmptySound(fluid);
+        SoundEvent sound = FluidUtils.getEmptySound(fluid);
         if (sound == null) {
             sound = fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
         }

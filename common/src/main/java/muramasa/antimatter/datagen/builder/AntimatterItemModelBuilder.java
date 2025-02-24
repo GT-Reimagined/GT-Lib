@@ -2,7 +2,7 @@ package muramasa.antimatter.datagen.builder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.models.JOverride;
@@ -47,7 +47,7 @@ public class AntimatterItemModelBuilder extends AntimatterModelBuilder<Antimatte
     }
 
     public AntimatterItemModelBuilder bucketProperties(Fluid fluid) {
-        return bucketProperties(fluid, true, FluidPlatformUtils.isFluidGaseous(fluid));
+        return bucketProperties(fluid, true, FluidUtils.isFluidGaseous(fluid));
     }
 
     public AntimatterItemModelBuilder bucketProperties(Fluid fluid, boolean tint, boolean islighter) {

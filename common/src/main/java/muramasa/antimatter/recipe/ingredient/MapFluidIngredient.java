@@ -1,6 +1,5 @@
 package muramasa.antimatter.recipe.ingredient;
 
-import muramasa.antimatter.util.FluidPlatformUtils;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraftforge.fluids.FluidStack;
 

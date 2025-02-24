@@ -24,7 +24,7 @@ import muramasa.antimatter.registration.IColorHandler;
 import muramasa.antimatter.registration.IItemBlockProvider;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.AntimatterToolType;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -225,9 +225,9 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                             }
                         };
                         boolean success = false;
-                        if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), fh, consumer)){
+                        if (FluidUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), fh, consumer)){
                             success = true;
-                        } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(-1, Utils.ca(1, stack), fh, consumer)){
+                        } else if (FluidUtils.INSTANCE.emptyItemIntoContainer(-1, Utils.ca(1, stack), fh, consumer)){
                             success = true;
                         }
                         return success;

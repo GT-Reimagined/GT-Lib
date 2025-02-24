@@ -13,7 +13,7 @@ import muramasa.antimatter.client.VertexTransformer;
 import muramasa.antimatter.client.baked.BakedMachineSide;
 import muramasa.antimatter.client.baked.ListBakedModel;
 import muramasa.antimatter.client.baked.MachineBakedModel;
-import muramasa.antimatter.util.FluidPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -73,8 +73,8 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
 
     private static BakedModel renderInner(BlockState state, Random rand, int light, BakedModel inner, Fluid fluid, BlockAndTintGetter level, BlockPos pos) {
         List<BakedQuad> quads = ModelUtils.INSTANCE.getQuadsFromBaked(inner, state, null, rand, level, pos);
-        List<BakedQuad> out = VertexTransformer.processMany(quads, FluidPlatformUtils.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidPlatformUtils.getStillTexture(fluid)));
-        boolean hot = FluidPlatformUtils.getFluidTemperature(fluid) >= FluidPlatformUtils.getFluidTemperature(Fluids.LAVA);
+        List<BakedQuad> out = VertexTransformer.processMany(quads, FluidUtils.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidUtils.getStillTexture(fluid)));
+        boolean hot = FluidUtils.getFluidTemperature(fluid) >= FluidUtils.getFluidTemperature(Fluids.LAVA);
         for (BakedQuad bakedQuad : out) {
             LightUtil.setLightData(bakedQuad, hot ? 1 << 7 : light);
         }
