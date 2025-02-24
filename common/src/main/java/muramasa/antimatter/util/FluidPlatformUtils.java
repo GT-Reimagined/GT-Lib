@@ -223,23 +223,18 @@ public abstract class FluidPlatformUtils {
         return FluidHooks.newFluidHolder(fluid, amount, buffer.readNbt());
     }
 
-    public FluidHolder fromTag(CompoundTag tag){
+    public static FluidStack fromTag(CompoundTag tag){
         if (tag == null) {
-            return FluidHooks.emptyFluid();
+            return FluidStack.EMPTY;
         }
-        if (!tag.contains("FluidName", Tag.TAG_STRING)) {
-            return FluidHooks.fluidFromCompound(tag);
+        if (tag.contains("Fluid", Tag.TAG_STRING)) {
+            tag.putString("FluidName", tag.getString("Fluid"));
+            tag.remove("Fluid");
         }
-
-        ResourceLocation fluidName = new ResourceLocation(tag.getString("FluidName"));
-        Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName);
-        if (fluid == null) {
-            return FluidHooks.emptyFluid();
+        if (tag.contains("Nbt", Tag.TAG_COMPOUND)) {
+            tag.put("Tag", tag.getCompound("Nbt"));
+            tag.remove("Nbt");
         }
-        FluidHolder stack = FluidHooks.newFluidHolder(fluid, tag.getInt("Amount"), null);
-        if (tag.contains("Tag", Tag.TAG_COMPOUND)) {
-            stack.setCompound(tag.getCompound("Tag"));
-        }
-        return stack;
+        return FluidStack.loadFluidStackFromNBT(tag);
     }
 }

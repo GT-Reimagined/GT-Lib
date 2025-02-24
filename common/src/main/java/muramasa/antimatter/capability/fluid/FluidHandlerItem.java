@@ -1,5 +1,6 @@
 package muramasa.antimatter.capability.fluid;
 
+import muramasa.antimatter.util.FluidPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -26,7 +27,7 @@ public class FluidHandlerItem extends FluidHandlerItemStack {
                ListTag storedFluids = botTag.getList("StoredFluids", Tag.TAG_COMPOUND);
                if (!storedFluids.isEmpty()){
                    CompoundTag fluidTag = storedFluids.getCompound(0);
-                   FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(fluidTag);
+                   FluidStack fluidStack = FluidPlatformUtils.fromTag(fluidTag);
                    if (!fluidStack.isEmpty()){
                        botTag.remove("StoredFluids");
                        if (botTag.isEmpty()){
