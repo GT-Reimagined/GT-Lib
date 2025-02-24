@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability.pipe;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import muramasa.antimatter.blockentity.pipe.BlockEntityFluidPipe;
 import muramasa.antimatter.capability.FluidHandler;
 

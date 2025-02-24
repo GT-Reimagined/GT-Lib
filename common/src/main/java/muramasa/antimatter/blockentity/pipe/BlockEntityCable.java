@@ -1,7 +1,6 @@
 package muramasa.antimatter.blockentity.pipe;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import muramasa.antimatter.blockentity.BlockEntityCache;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.gui.GuiInstance;
 import muramasa.antimatter.gui.IGuiElement;
@@ -23,8 +22,6 @@ import tesseract.api.capability.TesseractGTCapability;
 import tesseract.api.gt.GTHolder;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.gt.IGTCable;
-
-import java.util.Optional;
 
 public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> implements IGTCable, Dispatch.Sided<IEnergyHandler>, IInfoRenderer<InfoRenderWidget.TesseractGTWidget> {
 

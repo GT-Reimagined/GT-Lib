@@ -4,7 +4,6 @@ import lombok.Setter;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityBase;
-import muramasa.antimatter.blockentity.BlockEntityCache;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.IMachineHandler;

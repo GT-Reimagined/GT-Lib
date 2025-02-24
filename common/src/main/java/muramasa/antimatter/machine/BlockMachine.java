@@ -1,7 +1,6 @@
 package muramasa.antimatter.machine;
 
 import com.google.common.collect.ImmutableMap;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterRemapping;

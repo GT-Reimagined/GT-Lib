@@ -1,10 +1,8 @@
 package muramasa.antimatter.mixin;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import muramasa.antimatter.capability.AntimatterCaps;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +22,6 @@ public class CapabilityManagerMixin {
     private void injectCaps(String realName, boolean registering, CallbackInfoReturnable<Capability<?>> info){
         try {
             Class<?> clazz = Class.forName(realName.replace("/", "."));
-            clazz = clazz == IFluidHandler.class ? FluidContainer.class : clazz;
             AntimatterCaps.CAP_MAP.putIfAbsent(clazz, providers.get(realName));
         } catch (ClassNotFoundException e){
             e.printStackTrace();

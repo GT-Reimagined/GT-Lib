@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability;
 
-import earth.terrarium.botarium.util.Serializable;
 import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.tool.AntimatterToolType;
@@ -12,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
+import tesseract.api.Serializable;
 
 public interface ICoverHandler<T extends BlockEntity> extends Serializable {
 

@@ -1,7 +1,5 @@
 package muramasa.antimatter.blockentity.pipe;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import lombok.Getter;
 import lombok.Setter;
 import muramasa.antimatter.AntimatterAPI;

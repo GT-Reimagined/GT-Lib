@@ -2,7 +2,6 @@ package muramasa.antimatter.blockentity.pipe;
 
 import lombok.Getter;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.blockentity.BlockEntityCache;
 import muramasa.antimatter.blockentity.IPreTickTile;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.FluidHandler;
@@ -168,7 +167,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     @Override
     public boolean validate(Direction dir) {
         if (!super.validate(dir)) return false;
-        return BlockEntityCache.getFluidHandlerCached(level, getBlockPos().relative(dir), dir.getOpposite()).isPresent();
+        return FluidPlatformUtils.getFluidHandler(level, getBlockPos().relative(dir), getCachedBlockEntity(dir), dir.getOpposite()).isPresent();
     }
 
     public void setLastSide(Direction lastSide, int tank) {

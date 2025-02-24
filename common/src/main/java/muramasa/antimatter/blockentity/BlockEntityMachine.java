@@ -1,7 +1,5 @@
 package muramasa.antimatter.blockentity;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.forge.fluid.ForgeFluidContainer;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;

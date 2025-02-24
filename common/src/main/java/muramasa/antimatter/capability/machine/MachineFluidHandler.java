@@ -1,6 +1,5 @@
 package muramasa.antimatter.capability.machine;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
@@ -246,7 +245,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
 
     @Override
     public int getPriority(Direction direction) {
-        return tile.coverHandler.map(c -> c.get(direction).getPriority(FluidContainer.class)).orElse(0);
+        return tile.coverHandler.map(c -> c.get(direction).getPriority(IFluidHandler.class)).orElse(0);
     }
 
     @Override

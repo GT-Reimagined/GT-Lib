@@ -1,6 +1,5 @@
 package muramasa.antimatter.fluid;
 
-import earth.terrarium.botarium.common.registry.fluid.FluidRegistry;
 import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
@@ -45,8 +44,6 @@ public class AntimatterFluid implements ISharedAntimatterObject, IRegistryEntryP
     public static final ResourceLocation GAS_FLOW_TEXTURE = new ResourceLocation(Ref.ID, "block/liquid/gas"); // _flow
     public static final ResourceLocation PLASMA_TEXTURE = new ResourceLocation(Ref.ID, "block/liquid/plasma");
     public static final ResourceLocation PLASMA_FLOW_TEXTURE = new ResourceLocation(Ref.ID, "block/liquid/plasma"); // _flow
-
-    public static final FluidRegistry FLUID_TYPES = new FluidRegistry(Ref.SHARED_ID);
 
     private final String domain, id;
     protected Properties fluidProperties;

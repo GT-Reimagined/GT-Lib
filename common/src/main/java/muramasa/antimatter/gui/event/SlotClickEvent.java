@@ -1,7 +1,5 @@
 package muramasa.antimatter.gui.event;
 
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.IGuiHandler;
