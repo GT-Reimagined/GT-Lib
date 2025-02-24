@@ -89,6 +89,10 @@ public abstract class FluidPlatformUtils {
         return be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
     }
 
+    public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, Direction side){
+       return getFluidHandler(level, pos, level.getBlockEntity(pos), side);
+    }
+
     /**
      * Fill a destination fluid handler from a source fluid handler with a max amount.
      * To specify a fluid to transfer instead of max amount, use {@link #tryFluidTransfer(PlatformFluidHandler, PlatformFluidHandler, FluidHolder, boolean)}
