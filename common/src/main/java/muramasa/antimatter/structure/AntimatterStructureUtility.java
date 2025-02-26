@@ -26,7 +26,7 @@ public class AntimatterStructureUtility {
             if (machineTile.getMachineTier().getVoltage() < minTier.getVoltage()){
                 return false;
             }
-            t.addComponent(machine1.getId(), handler);
+            t.addComponent(machine1.getIdForHandlers(), handler);
             return true;
         });
     }
@@ -40,7 +40,7 @@ public class AntimatterStructureUtility {
                 if (tile instanceof IComponent component) {
                     if (component.getComponentHandler().isPresent()) {
                         IComponentHandler componentHandler = component.getComponentHandler().orElse(null);
-                        if (machine.getId().equals(componentHandler.getId())) {
+                        if (machine.getIdForHandlers().equals(componentHandler.getIdForHandlers())) {
                             boolean test = callback.test(t, world, pos, machine, componentHandler);
                             if (test && world.getBlockEntity(pos) instanceof BlockEntityHatch<?> hatch) {
                                 hatch.setTextureBlock(t.getHatchBlock(pos));
