@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 
-public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContainerItem, IFluidItem{
+public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidItem{
 
     @Getter
     private final int capacity;

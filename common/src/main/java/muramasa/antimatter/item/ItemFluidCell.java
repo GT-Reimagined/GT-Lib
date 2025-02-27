@@ -57,7 +57,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 
-public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IContainerItem, IFluidItem{
+public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidItem{
 
     public final Material material;
     @Getter

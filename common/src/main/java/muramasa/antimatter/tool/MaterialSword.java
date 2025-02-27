@@ -47,7 +47,7 @@ import java.util.function.Consumer;
 
 //@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class MaterialSword extends SwordItem implements IAntimatterTool, IContainerItem {
+public class MaterialSword extends SwordItem implements IAntimatterTool {
 
     protected String domain;
     protected AntimatterToolType type;

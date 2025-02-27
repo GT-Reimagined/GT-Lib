@@ -59,7 +59,7 @@ import static muramasa.antimatter.data.AntimatterDefaultTools.KNIFE;
 
 //@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class MaterialTool extends DiggerItem implements IAntimatterTool, IContainerItem {
+public class MaterialTool extends DiggerItem implements IAntimatterTool {
 
     protected final String domain;
     protected final AntimatterToolType type;
