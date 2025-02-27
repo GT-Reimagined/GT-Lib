@@ -12,6 +12,7 @@ import me.shedaniel.rei.api.common.entry.settings.EntrySettingsAdapterRegistry;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.plugins.PluginManager;
 import me.shedaniel.rei.api.common.registry.ReloadStage;
+import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterConfig;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+@REIPluginClient()
 public class AntimatterREIClientPlugin implements REIClientPlugin {
     @Override
     public String getPluginProviderName() {
