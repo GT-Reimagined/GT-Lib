@@ -129,17 +129,24 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
             }
         });
         AntimatterAPI.all(Machine.class, domain).forEach(i -> {
+            String lang = i.getLang(locale);
+            if (!(i instanceof BasicMultiMachine<?>) || i.getTiers().size() > 1){
+                lang = lang.concat(" (%s)");
+            }
             if (!i.hasTierSpecificLang()){
-                add("machine." + i.getId(), i.getLang(locale).concat(" (%s)"));
+                add("machine." + i.getId(), lang);
             }
             Collection<Tier> tiers = i.getTiers();
+            String finalLang = lang;
             tiers.forEach(t -> {
+                String langCopy = finalLang;
+                if (t == Tier.NONE) langCopy = langCopy.replace(" (%s)", "");
                 if (i.hasTierSpecificLang()) {
-                    add("machine." + i.getId() + "." + t.getId(), i.getLang(locale).concat(t == Tier.NONE ? "" : " (%s)"));
+                    add("machine." + i.getId() + "." + t.getId(), langCopy);
                 }
-                add(i.getBlockState(t), i.getLang(locale).concat(t == Tier.NONE ? "" : " (" + t.getId().toUpperCase(Locale.ROOT) + ")"));
+                add(i.getBlockState(t), langCopy.replace("%s", t.getId().toUpperCase(Locale.ROOT)));
                 if (i instanceof BasicMultiMachine<?>) {
-                    add(i.getDomain() + ".ponder." + i.getIdFromTier(t) + ".header", i.getLang(locale).concat(t == Tier.NONE ? "" : " (" + t.getId().toUpperCase(Locale.ROOT) + ")").concat(" Multiblock"));
+                    add(i.getDomain() + ".ponder." + i.getIdFromTier(t) + ".header", langCopy.replace("%s", t.getId().toUpperCase(Locale.ROOT)).concat(" Multiblock"));
                 }
             });
         });
