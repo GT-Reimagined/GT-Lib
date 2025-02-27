@@ -8,6 +8,7 @@ import muramasa.antimatter.cover.CoverFactory;
 import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.gui.widget.TankIconWidget;
 import muramasa.antimatter.machine.Tier;
+import muramasa.antimatter.registration.IColorHandler;
 
 import static muramasa.antimatter.machine.MachineFlag.*;
 
@@ -28,14 +29,8 @@ public class HatchMachine extends Machine<HatchMachine> {
         frontCovers();
         allowFrontIO();
         blockColorHandler((state, world, pos, machine, i) -> {
-            if (machine instanceof BlockEntityHatch<?> hatch){
-                return hatch.componentHandler.map(c -> {
-                    BlockEntityMultiMachine<?> multiMachine = c.getControllers().stream().findFirst().orElse(null);
-                    if (multiMachine != null){
-                        return multiMachine.getMachineType().blockColorHandler.getBlockColor(multiMachine.getBlockState(), multiMachine.getLevel(), multiMachine.getBlockPos(), multiMachine, i);
-                    }
-                    return -1;
-                }).orElse(-1);
+            if (machine instanceof BlockEntityHatch<?> hatch && hatch.getTextureBlock() instanceof IColorHandler colorHandler && i == 0) {
+                return colorHandler.getBlockColor(hatch.getTextureBlock().defaultBlockState(), world, pos, i);
             }
             return -1;
         });

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class Structure<T extends BlockEntityBasicMultiMachine<T>> {
+    @Getter
     private final IStructureDefinition<T> structureDefinition;
 
 
@@ -30,20 +31,14 @@ public class Structure<T extends BlockEntityBasicMultiMachine<T>> {
         this.callback = callback;
     }
 
-    public IStructureDefinition<T> getStructureDefinition() {
-        return structureDefinition;
-    }
-
     public boolean check(T tile){
         int i = 0;
         int successful = 0;
-        int3 offset = this.offset.copy();
-        offset.set(tile.getFacing());
         for (Map.Entry<String, Pair<int2, BiFunction<Integer, int3, int3>>> entry : partRequirements.entrySet()) {
             String s = entry.getKey();
             Pair<int2, BiFunction<Integer, int3, int3>> v = entry.getValue();
             for (int j = 0; j < v.left().y; j++) {
-                int3 newOffset = v.right().apply(i, offset.copy());
+                int3 newOffset = v.right().apply(i, this.offset.copy());
                 boolean success = callback.check(structureDefinition, tile, s, i, newOffset);
                 if (success){
                     successful++;

@@ -378,19 +378,16 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     }
 
     public List<IComponentHandler> getComponentsByHandlerId(String id) {
-        List<IComponentHandler> list = new ArrayList<>();
-        components.forEach((s, l) -> l.forEach(c -> {
-            if (c.getIdForHandlers().equals(id)) list.add(c);
-        }));
-        return list;
+        List<IComponentHandler> list = components.get(id);
+        return list != null ? list : Collections.emptyList();
     }
 
 
     public void addComponent(String elementId, IComponentHandler component) {
-        List<IComponentHandler> existing = components.get(component.getId());
-        if (existing == null) components.put(component.getId(), Lists.newArrayList(component));
+        List<IComponentHandler> existing = components.get(component.getIdForHandlers());
+        if (existing == null) components.put(component.getIdForHandlers(), Lists.newArrayList(component));
         else existing.add(component);
-        if (!elementId.isEmpty() && !elementId.equals(component.getId())) {
+        if (!elementId.isEmpty() && !elementId.equals(component.getIdForHandlers())) {
             existing = components.get(elementId);
             if (existing == null) components.put(elementId, Lists.newArrayList(component));
             else existing.add(component);

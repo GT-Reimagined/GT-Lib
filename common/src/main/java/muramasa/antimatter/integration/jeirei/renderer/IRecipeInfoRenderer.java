@@ -16,7 +16,15 @@ public interface IRecipeInfoRenderer {
     }
 
     default void renderString(PoseStack stack, String string, Font render, float x, float y, int color, int guiOffsetX, int guiOffsetY) {
-        render.drawShadow(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
+        renderString(stack, string, render, x, y, color, guiOffsetX, guiOffsetY, true);
+    }
+
+    default void renderString(PoseStack stack, String string, Font render, float x, float y, int color, int guiOffsetX, int guiOffsetY, boolean shadow) {
+        if (shadow) {
+            render.drawShadow(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
+        } else {
+            render.draw(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
+        }
     }
 
     default int stringWidth(String string, Font renderer) {
