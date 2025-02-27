@@ -16,15 +16,18 @@ import net.minecraft.world.level.Level;
 
 import java.util.Map;
 
-public class ContainerItemShapedRecipe extends ShapedRecipe {
+public class MirroredShapedRecipe extends ShapedRecipe {
 
     public static final Serializer INSTANCE = new Serializer();
 
     public static void init(){
     }
 
-    public ContainerItemShapedRecipe(ResourceLocation resourceLocation, String string, int i, int j, NonNullList<Ingredient> nonNullList, ItemStack itemStack) {
+    private final boolean mirrored;
+
+    public MirroredShapedRecipe(ResourceLocation resourceLocation, String string, int i, int j, NonNullList<Ingredient> nonNullList, ItemStack itemStack, boolean mirrored) {
         super(resourceLocation, string, i, j, nonNullList, itemStack);
+        this.mirrored = mirrored;
     }
 
     @Override
@@ -39,17 +42,20 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
                 if (this.matches(inv, i, j, false)) {
                     return true;
                 }
+                if (mirrored && this.matches(inv, i, j, true)){
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public static class Serializer extends BaseRecipeSerializer<ContainerItemShapedRecipe> {
+    public static class Serializer extends BaseRecipeSerializer<MirroredShapedRecipe> {
         public Serializer() {
-            super(Ref.ID, "container_shaped");
+            super(Ref.ID, "mirrored_shaped");
         }
 
-        public ContainerItemShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+        public MirroredShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             String string = GsonHelper.getAsString(json, "group", "");
             Map<String, Ingredient> map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
             String[] strings = shrink(ShapedRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
@@ -57,7 +63,8 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
             int j = strings.length;
             NonNullList<Ingredient> nonNullList = ShapedRecipe.dissolvePattern(strings, map, i, j);
             ItemStack itemStack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-            return new ContainerItemShapedRecipe(recipeId, string, i, j, nonNullList, itemStack);
+            boolean mirrored = GsonHelper.getAsBoolean(json, "mirrored", false);
+            return new MirroredShapedRecipe(recipeId, string, i, j, nonNullList, itemStack, mirrored);
         }
 
         String[] shrink(String... toShrink) {
@@ -111,7 +118,7 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
             return i;
         }
 
-        public ContainerItemShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public MirroredShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             int i = buffer.readVarInt();
             int j = buffer.readVarInt();
             String string = buffer.readUtf();
@@ -120,10 +127,11 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
             nonNullList.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
 
             ItemStack itemStack = buffer.readItem();
-            return new ContainerItemShapedRecipe(recipeId, string, i, j, nonNullList, itemStack);
+            boolean mirrored = buffer.readBoolean();
+            return new MirroredShapedRecipe(recipeId, string, i, j, nonNullList, itemStack, mirrored);
         }
 
-        public void toNetwork(FriendlyByteBuf buffer, ContainerItemShapedRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buffer, MirroredShapedRecipe recipe) {
             buffer.writeVarInt(recipe.getWidth());
             buffer.writeVarInt(recipe.getHeight());
             buffer.writeUtf(recipe.getGroup());
@@ -133,6 +141,7 @@ public class ContainerItemShapedRecipe extends ShapedRecipe {
             }
 
             buffer.writeItem(recipe.getResultItem());
+            buffer.writeBoolean(recipe.mirrored);
         }
     }
 }

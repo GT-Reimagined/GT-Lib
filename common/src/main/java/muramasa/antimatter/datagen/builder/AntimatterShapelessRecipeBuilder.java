@@ -3,7 +3,6 @@ package muramasa.antimatter.datagen.builder;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import muramasa.antimatter.recipe.container.ContainerItemShapelessRecipe;
 import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -186,7 +185,7 @@ public class AntimatterShapelessRecipeBuilder {
         }
 
         public RecipeSerializer<?> getType() {
-            return ContainerItemShapelessRecipe.INSTANCE;
+            return RecipeSerializer.SHAPELESS_RECIPE;
         }
 
         /**
