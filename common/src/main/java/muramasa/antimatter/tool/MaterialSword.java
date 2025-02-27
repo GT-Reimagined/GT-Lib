@@ -8,7 +8,6 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.behaviour.IBehaviour;
 import muramasa.antimatter.behaviour.IDestroySpeed;
 import muramasa.antimatter.capability.energy.ItemEnergyHandler;
-import muramasa.antimatter.item.IContainerItem;
 import muramasa.antimatter.material.Material;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

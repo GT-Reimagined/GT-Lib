@@ -10,7 +10,6 @@ import muramasa.antimatter.behaviour.IBehaviour;
 import muramasa.antimatter.behaviour.IDestroySpeed;
 import muramasa.antimatter.capability.energy.ItemEnergyHandler;
 import muramasa.antimatter.data.AntimatterDefaultTools;
-import muramasa.antimatter.item.IContainerItem;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.MethodsReturnNonnullByDefault;
