@@ -27,10 +27,7 @@ import java.util.function.Predicate;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
-public abstract class FluidUtils {
-    public static FluidUtils INSTANCE; // =  ServiceLoader.load(FluidUtils.class).findFirst().orElseThrow(() -> new IllegalStateException("No implementation of FluidUtils found"));
-    //public static FluidUtils INSTANCE = new FluidUtils();
-
+public class FluidUtils {
     public static ResourceLocation getStillTexture(Fluid fluid){
         return fluid.getAttributes().getStillTexture();
     }
@@ -82,15 +79,15 @@ public abstract class FluidUtils {
        return getFluidHandler(level, pos, level.getBlockEntity(pos), side);
     }
 
-    public boolean fillItemFromContainer(int maxFill, ItemStack stack, IFluidHandler handler, Consumer<ItemStack> consumer){
+    public static boolean fillItemFromContainer(int maxFill, ItemStack stack, IFluidHandler handler, Consumer<ItemStack> consumer){
         return fillItemFromContainer(maxFill, stack, handler, s -> true, consumer);
     }
 
-    public boolean emptyItemIntoContainer(int maxFill, ItemStack stack, IFluidHandler handler, Consumer<ItemStack> consumer){
+    public static boolean emptyItemIntoContainer(int maxFill, ItemStack stack, IFluidHandler handler, Consumer<ItemStack> consumer){
         return emptyItemIntoContainer(maxFill, stack, handler, s -> true, consumer);
     }
 
-    public boolean fillItemFromContainer(int maxFill, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
+    public static boolean fillItemFromContainer(int maxFill, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
         IFluidHandlerItem itemHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().orElse(null);
         if (itemHandler == null) return false;
         final int actualMax = maxFill == -1 ? itemHandler.getTankCapacity(0) : maxFill;
@@ -107,7 +104,7 @@ public abstract class FluidUtils {
         return false;
     }
 
-    public boolean emptyItemIntoContainer(int maxDrain, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
+    public static boolean emptyItemIntoContainer(int maxDrain, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
         IFluidHandlerItem itemHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().orElse(null);
         if (itemHandler == null) return false;
         final int actualMax = maxDrain == -1 ? itemHandler.getTankCapacity(0) : maxDrain;

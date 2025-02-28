@@ -76,10 +76,10 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
                     MachineItemHandler.insertIntoOutput(ih.getCellOutputHandler(), cellSlot, s, false);
                     MachineItemHandler.extractFromInput(ih.getCellInputHandler(), cellSlot, 1, false);
                 };
-                if (FluidUtils.INSTANCE.fillItemFromContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                if (FluidUtils.fillItemFromContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
-                } else if (FluidUtils.INSTANCE.emptyItemIntoContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                } else if (FluidUtils.emptyItemIntoContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
                 }

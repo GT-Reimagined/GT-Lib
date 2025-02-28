@@ -82,11 +82,11 @@ public class SlotClickEvent implements IGuiEvent {
                 }
             };
             if (type == SlotType.FL_IN){
-                if (!FluidUtils.INSTANCE.emptyItemIntoContainer(-1, Utils.ca(1, stack), sink, consumer)){
-                    FluidUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
+                if (!FluidUtils.emptyItemIntoContainer(-1, Utils.ca(1, stack), sink, consumer)){
+                    FluidUtils.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
                 }
             } else {
-                FluidUtils.INSTANCE.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
+                FluidUtils.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
             }
         }
     }
