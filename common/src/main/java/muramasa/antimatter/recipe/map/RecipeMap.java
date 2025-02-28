@@ -1,7 +1,6 @@
 package muramasa.antimatter.recipe.map;
 
 import com.mojang.datafixers.util.Either;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -15,7 +14,6 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.Recipe;
-import muramasa.antimatter.recipe.RecipeUtil;
 import muramasa.antimatter.recipe.ingredient.AbstractMapIngredient;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.ingredient.MapFluidIngredient;
@@ -35,10 +33,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.crafting.CompoundIngredient;
+import net.minecraftforge.common.crafting.NBTIngredient;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -57,7 +58,7 @@ import java.util.stream.Stream;
 public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObject, IRecipeMap {
 
     private static final ItemStack[] EMPTY_ITEM = new ItemStack[0];
-    private static final FluidHolder[] EMPTY_FLUID = new FluidHolder[0];
+    private static final FluidStack[] EMPTY_FLUID = new FluidStack[0];
 
     private final ResourceLocation loc;
     //in case we have some use for this
@@ -78,7 +79,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     @Nullable
     private Supplier<Object> icon;
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private IRecipeInfoRenderer infoRenderer;
 
     @Getter
@@ -133,14 +134,14 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     }
 
     @NotNull
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public IRecipeInfoRenderer getInfoRenderer() {
         if (infoRenderer == null)
             return InfoRenderers.DEFAULT_RENDERER;
         return infoRenderer;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void setInfoRenderer(IRecipeInfoRenderer renderer) {
         this.infoRenderer = renderer;
     }
@@ -300,16 +301,16 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
                                    boolean insideMap) {
         for (FluidIngredient t : ingredients) {
             List<AbstractMapIngredient> inner = new ObjectArrayList<>(t.getStacks().length);
-            for (FluidHolder stack : t.getStacks()) {
+            for (FluidStack stack : t.getStacks()) {
                 inner.add(new MapFluidIngredient(stack, insideMap));
             }
             builder.add(inner);
         }
     }
 
-    protected void buildFromFluidStacks(List<List<AbstractMapIngredient>> builder, List<FluidHolder> ingredients,
+    protected void buildFromFluidStacks(List<List<AbstractMapIngredient>> builder, List<FluidStack> ingredients,
                                         boolean insideMap) {
-        for (FluidHolder t : ingredients) {
+        for (FluidStack t : ingredients) {
             builder.add(Collections.singletonList(new MapFluidIngredient(t, insideMap)));
         }
     }
@@ -517,7 +518,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
 
     @Nullable
     @Override
-    public IRecipe find(@NotNull ItemStack[] items, @NotNull FluidHolder[] fluids, Tier tier, @NotNull Predicate<IRecipe> canHandle) {
+    public IRecipe find(@NotNull ItemStack[] items, @NotNull FluidStack[] fluids, Tier tier, @NotNull Predicate<IRecipe> canHandle) {
         // First, check if items and fluids are valid.
         if (items.length + fluids.length > Long.SIZE) {
             Utils.onInvalidData(
@@ -534,15 +535,15 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
             buildFromItemStacks(list, uniqueItems(items));
         }
         if (fluids.length > 0) {
-            List<FluidHolder> stack = new ObjectArrayList<>(fluids.length);
-            for (FluidHolder f : fluids) {
+            List<FluidStack> stack = new ObjectArrayList<>(fluids.length);
+            for (FluidStack f : fluids) {
                 if (!f.isEmpty())
                     stack.add(f);
             }
-            if (stack.size() > 0)
+            if (!stack.isEmpty())
                 buildFromFluidStacks(list, stack, false);
         }
-        if (list.size() == 0)
+        if (list.isEmpty())
             return null;
         // Find recipe.
         // long current = System.nanoTime();
@@ -607,7 +608,8 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
         });
     }
 
-    public boolean acceptsFluid(FluidHolder fluid) {
+    @Override
+    public boolean acceptsFluid(FluidStack fluid) {
         MapFluidIngredient i = new MapFluidIngredient(fluid, false);
         if (ROOT.contains(i))
             return true;
@@ -627,8 +629,8 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     public static boolean isIngredientSpecial(Ingredient i) {
         Class<? extends Ingredient> clazz = i.getClass();
         if (clazz == RecipeIngredient.class) return false;
-        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && !RecipeUtil.INSTANCE.isNBTIngredient(clazz)
-        && !RecipeUtil.INSTANCE.isCompoundIngredient(clazz));
+        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && clazz != NBTIngredient.class
+        && clazz != CompoundIngredient.class);
     }
 
     protected static class Branch {

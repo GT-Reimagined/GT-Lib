@@ -24,7 +24,7 @@ import muramasa.antimatter.ore.BlockOreStone;
 import muramasa.antimatter.ore.CobbleStoneType;
 import muramasa.antimatter.ore.StoneType;
 import muramasa.antimatter.pipe.BlockPipe;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataProvider;
@@ -130,7 +130,7 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
     public static void afterCompletion(){
         for (var e : GLOBAL_TABLES.entrySet()) {
             LootTable table = e.getValue().apply(e.getKey()).setParamSet(LootContextParamSets.BLOCK).build();
-            AntimatterDynamics.RUNTIME_DATA_PACK.addData(AntimatterDynamics.fix(AntimatterPlatformUtils.INSTANCE.getIdFromBlock(e.getKey()), "loot_tables/blocks", "json"), AntimatterDynamics.serialize(table));
+            AntimatterDynamics.RUNTIME_DATA_PACK.addData(AntimatterDynamics.fix(RegistryUtils.getIdFromBlock(e.getKey()), "loot_tables/blocks", "json"), AntimatterDynamics.serialize(table));
         }
     }
 

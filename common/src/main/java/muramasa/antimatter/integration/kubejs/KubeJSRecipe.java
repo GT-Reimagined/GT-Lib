@@ -12,24 +12,24 @@ import dev.latvian.mods.kubejs.item.ingredient.MatchAnyIngredientJS;
 import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.integration.rei.REIUtils;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.serializer.AntimatterRecipeSerializer;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.GsonHelper;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
-import tesseract.FluidPlatformUtils;
 
 import java.util.List;
 
 public class KubeJSRecipe extends RecipeJS {
 
     public final List<FluidIngredient> fluidInput = new ObjectArrayList<>();
-    public final List<FluidHolder> fluidOutput = new ObjectArrayList<>();
+    public final List<FluidStack> fluidOutput = new ObjectArrayList<>();
 
     private int duration;
     private int special;
@@ -96,7 +96,7 @@ public class KubeJSRecipe extends RecipeJS {
             amps = 1;
             special = 0;
         }
-        if (inputItems.size() == 0 && fluidInput.size() == 0) {
+        if (inputItems.isEmpty() && fluidInput.isEmpty()) {
             throw new IllegalStateException("No input in recipe");
         }
     }
@@ -131,12 +131,12 @@ public class KubeJSRecipe extends RecipeJS {
         }
     }
 
-    public static JsonElement serializeStack(FluidHolder stack) {
+    public static JsonElement serializeStack(FluidStack stack) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("fluid", FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).toString());
-        obj.addProperty("amount", stack.getFluidAmount());
-        if (stack.getCompound() != null) {
-            obj.add("tag", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, stack.getCompound()));
+        obj.addProperty("fluid", RegistryUtils.getIdFromFluid(stack.getFluid()).toString());
+        obj.addProperty("amount", stack.getAmount());
+        if (stack.getTag() != null) {
+            obj.add("tag", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, stack.getTag()));
         }
         return obj;
     }
@@ -165,32 +165,32 @@ public class KubeJSRecipe extends RecipeJS {
 
     @Override
     public void serialize() {
-        if (inputItems.size() > 0) {
+        if (!inputItems.isEmpty()) {
             JsonArray arr = new JsonArray();
             inputItems.forEach(t -> arr.add(t.toJson()));
             this.json.add("inputItems", arr);
         }
-        if (outputItems.size() > 0) {
+        if (!outputItems.isEmpty()) {
             JsonArray arr = new JsonArray();
             outputItems.forEach(t -> arr.add(t.toResultJson()));
             this.json.add("outputItems", arr);
         }
-        if (fluidInput.size() > 0) {
+        if (!fluidInput.isEmpty()) {
             JsonArray arr = new JsonArray();
             fluidInput.forEach(t -> arr.add(serializeFluid(t)));
             this.json.add("inputFluids", arr);
         }
-        if (fluidOutput.size() > 0) {
+        if (!fluidOutput.isEmpty()) {
             JsonArray arr = new JsonArray();
             fluidOutput.forEach(t -> arr.add(serializeStack(t)));
             this.json.add("outputFluids", arr);
         }
-        if (outputChances.size() > 0) {
+        if (!outputChances.isEmpty()) {
             JsonArray arr = new JsonArray();
             outputChances.forEach(arr::add);
             this.json.add("outputChances", arr);
         }
-        if (inputChances.size() > 0) {
+        if (!inputChances.isEmpty()) {
             JsonArray arr = new JsonArray();
             inputChances.forEach(arr::add);
             this.json.add("inputChances", arr);

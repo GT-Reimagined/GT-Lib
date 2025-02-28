@@ -3,8 +3,6 @@ package muramasa.antimatter.gui.widget;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.client.RenderHelper;
 import muramasa.antimatter.gui.GuiInstance;
@@ -14,26 +12,25 @@ import muramasa.antimatter.gui.Widget;
 import muramasa.antimatter.gui.event.SlotClickEvent;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
 import muramasa.antimatter.network.packets.AbstractGuiEventPacket;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import tesseract.FluidPlatformUtils;
-import tesseract.TesseractGraphWrappers;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static muramasa.antimatter.gui.ICanSyncData.SyncDirection.SERVER_TO_CLIENT;
-import static muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin.intToSuperScript;
 
 public class FluidSlotWidget extends Widget {
 
     private final int slot;
     private final SlotData<?> slots;
-    private FluidHolder stack = FluidHooks.emptyFluid();
+    private FluidStack stack = FluidStack.EMPTY;
 
     protected FluidSlotWidget(GuiInstance gui, IGuiElement parent, int fluidSlot, SlotData<?> slots) {
         super(gui, parent);
@@ -54,7 +51,7 @@ public class FluidSlotWidget extends Widget {
         super.init();
         if (this.gui.handler instanceof BlockEntityMachine<?> blockEntity){
             this.gui.syncFluidStack(() -> blockEntity.fluidHandler
-                    .map(t -> t.getFluidInTank(slot)).orElse(FluidHooks.emptyFluid()), stack -> this.stack = stack, SERVER_TO_CLIENT);
+                    .map(t -> t.getFluidInTank(slot)).orElse(FluidStack.EMPTY), stack -> this.stack = stack, SERVER_TO_CLIENT);
         }
 
     }
@@ -64,8 +61,8 @@ public class FluidSlotWidget extends Widget {
         renderFluid(matrixStack, this.stack, realX(), realY());
     }
 
-    @Environment(Environment.EnvType.CLIENT)
-    public void renderFluid(PoseStack stack, FluidHolder fluid, int x, int y) {
+    @OnlyIn(Dist.CLIENT)
+    public void renderFluid(PoseStack stack, FluidStack fluid, int x, int y) {
         if (fluid.isEmpty())
             return;
         RenderHelper.drawFluid(stack, Minecraft.getInstance(), x, y, getW(), getH(), 16, fluid);
@@ -85,15 +82,11 @@ public class FluidSlotWidget extends Widget {
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
         List<Component> str = new ArrayList<>();
-        str.add(FluidPlatformUtils.INSTANCE.getFluidDisplayName(this.stack));
-        long mb = (this.stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier);
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-            str.add(Utils.translatable("antimatter.tooltip.fluid.amount", Utils.literal(mb + " " + intToSuperScript(this.stack.getFluidAmount() % 81L) + "/₈₁ L")).withStyle(ChatFormatting.BLUE));
-        } else {
-            str.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
-        }
-        str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
-        String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";
+        str.add(FluidUtils.getFluidDisplayName(this.stack));
+        int mb = this.stack.getAmount();
+        str.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
+        str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidUtils.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
+        String liquid = !FluidUtils.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";
         str.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
         AntimatterJEIREIPlugin.addModDescriptor(str, this.stack);
         drawHoverText(str, (int) mouseX, (int) mouseY, Minecraft.getInstance().font, stack);

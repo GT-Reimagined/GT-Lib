@@ -21,22 +21,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import tesseract.TesseractCapUtils;
-import tesseract.api.item.ExtendedItemContainer;
-import tesseract.api.item.IItemPipe;
-import tesseract.api.item.PlatformItemHandler;
 import tesseract.graph.Connectivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<T>
-        implements IItemPipe, Dispatch.Sided<ExtendedItemContainer>, IPreTickTile {
+        implements IItemPipe, Dispatch.Sided<IItemHandler>, IPreTickTile {
 
     private int holder;
     private boolean restricted;
@@ -96,22 +94,22 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
         BlockEntity tile = getCachedBlockEntity(dir);
         if (tile == null)
             return false;
-        return TesseractCapUtils.INSTANCE.getItemHandler(tile, dir.getOpposite()).isPresent();
+        return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).isPresent();
     }
 
     @Override
     public Class<?> getCapClass() {
-        return ExtendedItemContainer.class;
+        return IItemHandler.class;
     }
 
     @Override
-    public Optional<ExtendedItemContainer> forSide(Direction side) {
-        return Optional.of(new PipeItemHandler(side, this, coverHandler.orElse(null), inventory));
+    public LazyOptional<IItemHandler> forSide(Direction side) {
+        return LazyOptional.of(() -> new PipeItemHandler(side, this, coverHandler.orElse(null), inventory));
     }
 
     @Override
-    public Optional<? extends ExtendedItemContainer> forNullSide() {
-        return Optional.of(new ROCombinedInvWrapper(inventory));
+    public LazyOptional<? extends IItemHandler> forNullSide() {
+        return LazyOptional.of(() -> new ROCombinedInvWrapper(inventory));
     }
 
     @Override
@@ -180,16 +178,16 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
             BlockEntity tDelegator = getCachedBlockEntity(side);
             if (!(tDelegator instanceof BlockEntityPipe<?>) && tDelegator != null) {
                 if (!(tDelegator instanceof HopperBlockEntity || tDelegator instanceof DispenserBlockEntity)) {
-                    PlatformItemHandler itemHandler = TesseractCapUtils.INSTANCE.getItemHandler(tDelegator, side.getOpposite()).orElse(null);
+                    IItemHandler itemHandler = tDelegator.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).resolve().orElse(null);
                     if (itemHandler != null){
                         // special cases for the win...
                         ICover cover = coverHandler.map(c -> c.get(side)).orElse(ICover.empty);
                         for (int i = 0; i < aSender.inventory.getSize(); i++) {
-                            ItemStack stack = aSender.inventory.getItem(i);
+                            ItemStack stack = aSender.inventory.getStackInSlot(i);
                             if (!stack.isEmpty()){
                                 boolean transfered = false;
                                 if (!cover.isEmpty()){
-                                    if (cover.blocksOutput(ExtendedItemContainer.class, side)){
+                                    if (cover.blocksOutput(IItemHandler.class, side)){
                                         return false;
                                     }
                                     if (cover.onTransfer(stack.copy(), false, true)){
@@ -239,7 +237,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     public void addInventoryDrops(List<ItemStack> drops) {
         super.addInventoryDrops(drops);
         for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack stack = inventory.getItem(i);
+            ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty()) drops.add(stack);
         }
     }
@@ -254,11 +252,11 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     }
 
     public boolean canAcceptItemsFrom(Direction side, BlockEntityItemPipe<?> sender){
-        return Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksInput(ExtendedItemContainer.class, side)).orElse(true);
+        return Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksInput(IItemHandler.class, side)).orElse(true);
     }
 
     public boolean canEmitItemsTo(Direction side, BlockEntityItemPipe<?> sender){
-        return (sender != this || side.get3DDataValue() != mLastReceivedFrom) && Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksOutput(ExtendedItemContainer.class, side)).orElse(true);
+        return (sender != this || side.get3DDataValue() != mLastReceivedFrom) && Connectivity.has(connection, side.get3DDataValue()) && coverHandler.map(c -> !c.get(side).blocksOutput(IItemHandler.class, side)).orElse(true);
     }
 
     private void addTicker(){
@@ -286,7 +284,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
         tag.putByte("lastReceivedFrom", mLastReceivedFrom);
         tag.putByte("oldLastReceivedFrom", oLastReceivedFrom);
         if (!inventory.isEmpty()){
-            CompoundTag inventory = this.inventory.serialize(new CompoundTag());
+            CompoundTag inventory = this.inventory.serializeNBT();
             tag.put("inventory", inventory);
         }
     }
@@ -297,7 +295,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
         mLastReceivedFrom = tag.getByte("lastReceivedFrom");
         oLastReceivedFrom = tag.getByte("oldLastReceivedFrom");
         if (tag.contains("inventory")){
-            inventory.deserialize(tag.getCompound("inventory"));
+            inventory.deserializeNBT(tag.getCompound("inventory"));
             if (!inventory.isEmpty()){
                 addTicker();
             }

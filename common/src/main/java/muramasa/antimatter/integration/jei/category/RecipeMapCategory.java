@@ -2,9 +2,9 @@ package muramasa.antimatter.integration.jei.category;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -21,7 +21,6 @@ import muramasa.antimatter.gui.BarDir;
 import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.SlotData;
 import muramasa.antimatter.gui.SlotType;
-import muramasa.antimatter.integration.jei.JEIPlatformHelper;
 import muramasa.antimatter.integration.jeirei.renderer.IRecipeInfoRenderer;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.IRecipe;
@@ -30,7 +29,8 @@ import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.map.SubCategory;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
 import muramasa.antimatter.util.int4;
 import net.minecraft.ChatFormatting;
@@ -42,14 +42,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import tesseract.FluidPlatformUtils;
-import tesseract.TesseractGraphWrappers;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin.intToSuperScript;
 
 public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
 
@@ -83,7 +80,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
             }
         } else {
-            Item item = iconId == null ? Data.DEBUG_SCANNER : AntimatterPlatformUtils.INSTANCE.getItemFromID(iconId);
+            Item item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
             this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
         }
@@ -232,11 +229,11 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 slotCount = Math.min(slotCount, fluids.size());
                 for (int s = 0; s < slotCount; s++) {
                     IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
-                    JEIPlatformHelper.INSTANCE.addFluidIngredients(slot, Arrays.asList(fluids.get(s).getStacks()));
+                    slot.addIngredients(ForgeTypes.FLUID_STACK, Arrays.asList(fluids.get(s).getStacks()));
                     slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                     int finalS = s;
                     slot.addTooltipCallback((ing, list) -> {
-                        FluidHolder stack = fluids.get(finalS).getStacks()[0];
+                        FluidStack stack = fluids.get(finalS).getStacks()[0];
                         createFluidTooltip(ing, list, stack);
                     });
                     inputFluids++;
@@ -247,15 +244,15 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
-                FluidHolder[] fluids = recipe.getOutputFluids();
+                FluidStack[] fluids = recipe.getOutputFluids();
                 slotCount = Math.min(slotCount, fluids.length);
                 for (int s = 0; s < slotCount; s++) {
                     IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
-                    slot.setFluidRenderer((int)fluids[s].getFluidAmount(), true, 16, 16);
-                    JEIPlatformHelper.INSTANCE.addFluidIngredients(slot, Collections.singletonList(fluids[s]));
+                    slot.setFluidRenderer(fluids[s].getAmount(), true, 16, 16);
+                    slot.addIngredients(ForgeTypes.FLUID_STACK, Collections.singletonList(fluids[s]));
                     int finalS = s;
                     slot.addTooltipCallback((ing, list) -> {
-                        FluidHolder stack = fluids[finalS];
+                        FluidStack stack = fluids[finalS];
                         createFluidTooltip(ing, list, stack);
                     });
                 }
@@ -263,20 +260,16 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         }
     }
 
-    private void createFluidTooltip(IRecipeSlotView ing, List<Component> list, FluidHolder stack) {
+    private void createFluidTooltip(IRecipeSlotView ing, List<Component> list, FluidStack stack) {
         Component component = list.get(2);
         list.remove(2);
         list.remove(1);
-        long mb = (stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier);
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-            list.add(Utils.translatable("antimatter.tooltip.fluid.amount", Utils.literal(mb + " " + intToSuperScript(stack.getFluidAmount() % 81L) + "/₈₁ L")).withStyle(ChatFormatting.BLUE));
-        } else {
-            list.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
-        }
-        list.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
-        String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
+        int mb = stack.getAmount();
+        list.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
+        list.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
+        String liquid = !FluidUtils.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
         list.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
-        if (Utils.hasNoConsumeTag(JEIPlatformHelper.INSTANCE.getIngredient(ing.getDisplayedIngredient().get())))
+        if (Utils.hasNoConsumeTag(ing.getDisplayedIngredient().get().getIngredient(ForgeTypes.FLUID_STACK).get()))
             list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
         list.add(component);
     }

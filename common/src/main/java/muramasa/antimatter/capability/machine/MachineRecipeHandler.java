@@ -1,7 +1,5 @@
 package muramasa.antimatter.capability.machine;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +16,7 @@ import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.IRecipeValidator;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,12 +24,13 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.Nullable;
-import tesseract.TesseractGraphWrappers;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static muramasa.antimatter.machine.MachineState.*;
 
@@ -73,7 +72,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     //Items used to find recipe
     protected List<ItemStack> itemInputs = Collections.emptyList();
-    protected List<FluidHolder> fluidInputs = Collections.emptyList();
+    protected List<FluidStack> fluidInputs = Collections.emptyList();
 
     public MachineRecipeHandler(T tile) {
         this.tile = tile;
@@ -217,7 +216,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     public long getPower() {
         if (activeRecipe == null) return 0;
-        if (overclock == 0 || tile.has(MachineFlag.RF)) return activeRecipe.getPower();
+        if (overclock == 0 || tile.has(MachineFlag.FE)) return activeRecipe.getPower();
         //half the duration => overclock ^ 2.
         //so if overclock is 2 tiers, we have 1/4 the duration(200 -> 50) but for e.g. 8eu/t this would be
         //8*4*4 = 128eu/t.
@@ -226,7 +225,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected void calculateDurations() {
         maxProgress = activeRecipe.getDuration();
-        if (!generator && !tile.has(MachineFlag.RF)) {
+        if (!generator && !tile.has(MachineFlag.FE)) {
             overclock = getOverclock();
             this.maxProgress = Math.max(1, maxProgress >> overclock);
         }
@@ -340,12 +339,12 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 } else {
                     return consumeGeneratorResources(simulate);
                 }
-            } else if (tile.rfHandler.isPresent()){
+            } else if (tile.feHandler.isPresent()){
                 if (!generator) {
                     long power = getPower();
-                    return tile.rfHandler.map(e -> e.extractEnergy(power, simulate) >= power).orElse(false);
+                    return tile.feHandler.map(e -> e.extractEnergy((int) power, simulate) >= power).orElse(false);
                 } else {
-                    return consumeRFGeneratorResources(simulate);
+                    return consumeFEGeneratorResources(simulate);
                 }
             } else {
                 return false;
@@ -377,7 +376,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         //First lookup.
         if (!this.tile.hadFirstTick() && hasLoadedInput()) {
             if (!tile.getMachineState().allowRecipeCheck()) return;
-            activeRecipe = getRecipeMap().find(itemInputs.toArray(new ItemStack[0]), fluidInputs.toArray(new FluidHolder[0]), this.tile.getMachineTier(), this::validateRecipe);
+            activeRecipe = getRecipeMap().find(itemInputs.toArray(new ItemStack[0]), fluidInputs.toArray(new FluidStack[0]), this.tile.getMachineTier(), this::validateRecipe);
             if (activeRecipe == null) return;
             calculateDurations();
             lastRecipe = activeRecipe;
@@ -409,7 +408,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return map == null || map.acceptsItem(stack);
     }
 
-    public boolean accepts(FluidHolder stack) {
+    public boolean accepts(FluidStack stack) {
         IRecipeMap map = getRecipeMap();
         return map == null || map.acceptsFluid(stack);
     }
@@ -444,16 +443,15 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return canOutput() && (!activeRecipe.hasInputItems() || tile.itemHandler.map(i -> i.consumeInputs(this.activeRecipe, true).size() > 0).orElse(false)) && (!activeRecipe.hasInputFluids() || tile.fluidHandler.map(t -> t.consumeAndReturnInputs(activeRecipe.getInputFluids(), true).size() > 0).orElse(false));
     }
 
-    protected boolean consumeRFGeneratorResources(boolean simulate){
+    protected boolean consumeFEGeneratorResources(boolean simulate){
         if (!activeRecipe.hasInputFluids()) {
             throw new RuntimeException("Missing fuel in active generator recipe!");
         }
-        long toConsume = calculateGeneratorConsumption(activeRecipe);
-        long actualConsume = toConsume;
-        if (actualConsume == 0 || tile.fluidHandler.map(h -> {
+        int toConsume = calculateGeneratorConsumption(activeRecipe);
+        if (toConsume == 0 || tile.fluidHandler.map(h -> {
             FluidIngredient in = activeRecipe.getInputFluids().get(0);
-            long amount = in.drainedAmount(actualConsume, h, true, true);
-            if (amount == actualConsume) {
+            int amount = in.drainedAmount(toConsume, h, true, true);
+            if (amount == toConsume) {
                 if (!simulate)
                     in.drain(amount, h, true, false);
                 return true;
@@ -462,8 +460,8 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }).orElse(false)) {
             //insert power!
             if (!simulate) {
-                tile.rfHandler.ifPresent(r -> {
-                    r.setEnergy(r.getStoredEnergy() + activeRecipe.getPower());
+                tile.feHandler.ifPresent(r -> {
+                    r.setEnergy((int) (r.getEnergyStored() + activeRecipe.getPower()));
                 });
             }
             return true;
@@ -478,19 +476,19 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         if (!activeRecipe.hasInputFluids()) {
             throw new RuntimeException("Missing fuel in active generator recipe!");
         }
-        long toConsume = consumedFluidPerOperation(activeRecipe);
+        int toConsume = consumedFluidPerOperation(activeRecipe);
         long toInsert = calculateGeneratorProduction(activeRecipe);
         MachineEnergyHandler<?> handler = tile.energyHandler.orElse(null);
         if (handler == null) return false;
-        FluidHolder mFluid = tile.fluidHandler.map(f -> f.getInputTanks().getTank(0).getStoredFluid()).orElse(FluidHooks.emptyFluid());
+        FluidStack mFluid = tile.fluidHandler.map(f -> f.getInputTanks().getTank(0).getFluid()).orElse(FluidStack.EMPTY);
         if (mFluid.isEmpty()) return false;
-        long fluidAmount = mFluid.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier;
+        int fluidAmount = mFluid.getAmount();
         if (toInsert > 0 && toConsume > 0 && fluidAmount >= toConsume) {
-            long tFluidAmountToUse = Math.min(fluidAmount / toConsume, (handler.getCapacity() - handler.getEnergy()) / toInsert);
+            int tFluidAmountToUse = (int) Math.min(fluidAmount / toConsume, (handler.getCapacity() - handler.getEnergy()) / toInsert);
             if (tFluidAmountToUse > 0 && handler.insertInternal(tFluidAmountToUse * toInsert, true) == tFluidAmountToUse * toInsert) {
                 if (tile.getLevel().getGameTime() % 10 == 0 && !simulate){
                     handler.insertInternal(tFluidAmountToUse * toInsert, false);
-                    tile.fluidHandler.ifPresent(f -> f.drainInput(Utils.ca(tFluidAmountToUse * toConsume * TesseractGraphWrappers.dropletMultiplier, mFluid), false));
+                    tile.fluidHandler.ifPresent(f -> f.drainInput(Utils.ca(tFluidAmountToUse * toConsume, mFluid), FluidAction.EXECUTE));
                 }
                 return true;
             }
@@ -503,15 +501,15 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     public int consumedFluidPerOperation(IRecipe r){
-        return r.getInputFluids().get(0).getAmountInMB();
+        return r.getInputFluids().get(0).getAmount();
     }
 
     protected int getEfficiency() {
         return tile.getMachineType().getMachineEfficiency(tile.getMachineTier());
     }
 
-    protected long calculateGeneratorConsumption(IRecipe r) {
-        long amount = r.getInputFluids().get(0).getAmount();
+    protected int calculateGeneratorConsumption(IRecipe r) {
+        int amount = r.getInputFluids().get(0).getAmount();
         if (currentProgress > 0) {
             return 0;
         }
@@ -563,7 +561,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 return;
             }
             if (event == SlotType.ENERGY) {
-                if (tile.itemHandler.map(t -> t.inventories.get(SlotType.ENERGY).getItem((int) data[0]).isEmpty()).orElse(true)) {
+                if (tile.itemHandler.map(t -> t.inventories.get(SlotType.ENERGY).getStackInSlot((int) data[0]).isEmpty()).orElse(true)) {
                     return;
                 }
             }
@@ -618,7 +616,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }
         ListTag fluid = new ListTag();
         if (fluidInputs.size() > 0) {
-            fluidInputs.forEach(t -> fluid.add(t.serialize()));
+            fluidInputs.forEach(t -> fluid.add(t.writeToNBT(new CompoundTag())));
         }
         nbt.put("I", item);
         nbt.putInt("T", tickTimer);
@@ -639,7 +637,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         itemInputs = new ObjectArrayList<>();
         fluidInputs = new ObjectArrayList<>();
         nbt.getList("I", 10).forEach(t -> itemInputs.add(ItemStack.of((CompoundTag) t)));
-        nbt.getList("F", 10).forEach(t -> fluidInputs.add(AntimatterPlatformUtils.INSTANCE.fromTag((CompoundTag) t)));
+        nbt.getList("F", 10).forEach(t -> fluidInputs.add(FluidUtils.fromTag((CompoundTag) t)));
         this.processingBlocked = nbt.getBoolean("PB");
         this.currentProgress = nbt.getInt("P");
         this.tickTimer = nbt.getInt("T");
@@ -652,12 +650,12 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     @Override
-    public Optional<MachineRecipeHandler<?>> forSide(Direction side) {
-        return Optional.of(this);
+    public LazyOptional<MachineRecipeHandler<?>> forSide(Direction side) {
+        return LazyOptional.of(() -> this);
     }
 
     @Override
-    public Optional<MachineRecipeHandler<?>> forNullSide() {
-        return Optional.of(this);
+    public LazyOptional<MachineRecipeHandler<?>> forNullSide() {
+        return LazyOptional.of(() -> this);
     }
 }

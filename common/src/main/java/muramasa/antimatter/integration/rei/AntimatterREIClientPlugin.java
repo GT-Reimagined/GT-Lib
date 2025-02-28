@@ -12,6 +12,7 @@ import me.shedaniel.rei.api.common.entry.settings.EntrySettingsAdapterRegistry;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.plugins.PluginManager;
 import me.shedaniel.rei.api.common.registry.ReloadStage;
+import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterConfig;
@@ -29,23 +30,21 @@ import muramasa.antimatter.material.MaterialTypeItem;
 import muramasa.antimatter.ore.CobbleStoneType;
 import muramasa.antimatter.ore.StoneType;
 import muramasa.antimatter.recipe.IRecipe;
-import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.map.RecipeMap;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
+@REIPluginClient()
 public class AntimatterREIClientPlugin implements REIClientPlugin {
     @Override
     public String getPluginProviderName() {
@@ -116,7 +115,7 @@ public class AntimatterREIClientPlugin implements REIClientPlugin {
                 registry.add(category);
                 if (!tuple.workstations.isEmpty()){
                     tuple.workstations.forEach(s -> {
-                        ItemLike item = AntimatterPlatformUtils.INSTANCE.getItemFromID(s);
+                        ItemLike item = RegistryUtils.getItemFromID(s);
                         if (item == Items.AIR) return;
                         registry.addWorkstations(category.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, new ItemStack(item)));
                     });

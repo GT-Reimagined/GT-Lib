@@ -1,7 +1,9 @@
 package muramasa.antimatter;
 
+import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import muramasa.antimatter.client.AntimatterModelManager;
 import muramasa.antimatter.client.ClientData;
+import muramasa.antimatter.common.event.ARRPEvents;
 import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
@@ -19,11 +21,12 @@ import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.datagen.providers.AntimatterItemTagProvider;
 import muramasa.antimatter.datagen.providers.AntimatterLanguageProvider;
 import muramasa.antimatter.datagen.providers.AntimatterTagProvider;
-import muramasa.antimatter.event.CraftingEvent;
-import muramasa.antimatter.event.ProvidersEvent;
+import muramasa.antimatter.event.AntimatterCraftingEvent;
+import muramasa.antimatter.event.AntimatterProvidersEvent;
 import muramasa.antimatter.fluid.AntimatterFluid;
 import muramasa.antimatter.gui.SlotType;
 import muramasa.antimatter.gui.event.GuiEvents;
+import muramasa.antimatter.integration.Integrations;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
 import muramasa.antimatter.integration.kubejs.KubeJSRegistrar;
 import muramasa.antimatter.item.interaction.CauldronInteractions;
@@ -38,29 +41,36 @@ import muramasa.antimatter.network.AntimatterNetwork;
 import muramasa.antimatter.ore.BlockOre;
 import muramasa.antimatter.ore.StoneType;
 import muramasa.antimatter.proxy.ClientHandler;
+import muramasa.antimatter.proxy.CommonHandler;
 import muramasa.antimatter.proxy.IProxyHandler;
 import muramasa.antimatter.proxy.ServerHandler;
 import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.RecipeBuilders;
-import muramasa.antimatter.recipe.container.ContainerItemShapedRecipe;
-import muramasa.antimatter.recipe.container.ContainerItemShapelessRecipe;
+import muramasa.antimatter.recipe.container.MirroredShapedRecipe;
 import muramasa.antimatter.recipe.ingredient.IngredientSerializer;
 import muramasa.antimatter.recipe.ingredient.PropertyIngredient;
 import muramasa.antimatter.recipe.material.MaterialSerializer;
 import muramasa.antimatter.recipe.serializer.MachineRecipeSerializer;
 import muramasa.antimatter.registration.RegistrationEvent;
-import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.tool.IAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
-import muramasa.antimatter.util.Utils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
+import net.devtech.arrp.ARRP;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,11 +82,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static muramasa.antimatter.data.AntimatterStoneTypes.BEDROCK;
-
-//import muramasa.antimatter.integration.kubejs.KubeJSRegistrar;
-
-
+@Mod(Ref.ID)
 public class Antimatter extends AntimatterMod {
 
     public static Antimatter INSTANCE;
@@ -89,14 +95,10 @@ public class Antimatter extends AntimatterMod {
 
     public Antimatter() {
         super();
-    }
 
-    @Override
-    public void onRegistrarInit() {
-        super.onRegistrarInit();
         LOGGER.info("Loading Antimatter");
         INSTANCE = this;
-        PROXY = Utils.unsafeRunForDist(() -> ClientHandler::new, () -> ServerHandler::new); // todo: scheduled to
+        PROXY = DistExecutor.unsafeRunForDist(() -> ClientHandler::new, () -> ServerHandler::new);
         // change in new Forge
         if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)){
             new KubeJSRegistrar();
@@ -116,26 +118,35 @@ public class Antimatter extends AntimatterMod {
         AntimatterAPI.init();
         AntimatterNetwork.register();
         AntimatterConfig.createConfig();
+        /* Lifecycle events */
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::clientSetup);
+        eventBus.addListener(this::commonSetup);
+        eventBus.addListener(this::serverSetup);
+        eventBus.addListener(this::loadComplete);
+
+        eventBus.addListener(this::addCraftingLoaders);
+        eventBus.addListener(this::providers);
+        ARRP.EVENT_BUS.register(ARRPEvents.class);
     }
 
-    public void addCraftingLoaders(CraftingEvent ev) {
+    public void addCraftingLoaders(AntimatterCraftingEvent ev) {
         ev.addLoader(StoneRecipes::loadRecipes);
         ev.addLoader(MaterialRecipes::init);
     }
 
-    public void providers(ProvidersEvent ev) {
+    public void providers(AntimatterProvidersEvent ev) {
         final AntimatterBlockTagProvider[] p = new AntimatterBlockTagProvider[1];
-        ev.addProvider(Ref.ID, () -> {
+        ev.addProvider(() -> {
             p[0] = new AntimatterBlockTagProvider(Ref.ID, Ref.NAME.concat(" Block Tags"), false);
             return p[0];
         });
-        ev.addProvider(Ref.SHARED_ID, () -> new AntimatterFluidTagProvider(Ref.SHARED_ID,
+        ev.addProvider(() -> new AntimatterFluidTagProvider(Ref.SHARED_ID,
                 "Antimatter Shared Fluid Tags", false));
-        ev.addProvider(Ref.ID, () -> new AntimatterItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
+        ev.addProvider(() -> new AntimatterItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
                 false, p[0]));
-        ev.addProvider(Ref.ID,
-                () -> new AntimatterBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
-        ev.addProvider(Ref.ID, () -> new AntimatterTagProvider<Biome>(BuiltinRegistries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome") {
+        ev.addProvider(() -> new AntimatterBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
+        ev.addProvider(() -> new AntimatterTagProvider<Biome>(BuiltinRegistries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome") {
             @Override
             protected void processTags(String domain) {
                 this.tag(TagUtils.getBiomeTag(new ResourceLocation("is_desert"))).add(Biomes.DESERT);
@@ -144,10 +155,11 @@ public class Antimatter extends AntimatterMod {
                 this.tag(TagUtils.getBiomeTag(new ResourceLocation("is_swamp"))).add(Biomes.SWAMP);
             }
         });
+        KubeJSRegistrar.providerEvent(ev);
     }
 
     @Override
-    public void onRegistrationEvent(RegistrationEvent event, Side side) {
+    public void onRegistrationEvent(RegistrationEvent event, Dist side) {
         if (event == RegistrationEvent.DATA_INIT) {
             Recipe.init();
             AntimatterLoot.RandomWeightLootFunction.init();
@@ -164,8 +176,7 @@ public class Antimatter extends AntimatterMod {
             AntimatterWorldGenerator.preinit();
             GuiEvents.init();
             MaterialSerializer.init();
-            ContainerItemShapedRecipe.init();
-            ContainerItemShapelessRecipe.init();
+            MirroredShapedRecipe.init();
             MachineRecipeSerializer.init();
             IngredientSerializer.init();
             PropertyIngredient.Serializer.init();
@@ -220,9 +231,9 @@ public class Antimatter extends AntimatterMod {
                 if (map != null){
                     map.forEach((t, i) -> {
                         if (t instanceof MaterialTypeItem<?> typeItem){
-                            AntimatterPlatformUtils.INSTANCE.setBurnTime(typeItem.get(m), i);
+                            TerraformFuelRegistry.addFuel(typeItem.get(m), i);
                         } else if (t instanceof MaterialTypeBlock<?> typeBlock && typeBlock.get() instanceof MaterialTypeBlock.IBlockGetter blockGetter){
-                            AntimatterPlatformUtils.INSTANCE.setBurnTime(blockGetter.get(m).asItem(), i);
+                            TerraformFuelRegistry.addFuel(blockGetter.get(m).asItem(), i);
                         }
                     });
                 }
@@ -251,5 +262,57 @@ public class Antimatter extends AntimatterMod {
     @Override
     public String getId() {
         return Ref.ID;
+    }
+
+
+    private void clientSetup(final FMLClientSetupEvent e) {
+        ClientHandler.setup();
+        AntimatterAPI.onRegistration(RegistrationEvent.DATA_READY);
+        AntimatterDynamics.runDataProvidersDynamically();
+        e.enqueueWork(() -> AntimatterAPI.getClientDeferredQueue().ifPresent(t -> {
+            for (Runnable r : t) {
+                try {
+                    r.run();
+                } catch (Exception ex) {
+                    LOGGER.warn("Caught error during client setup: " + ex.getMessage());
+                }
+            }
+        }));
+    }
+
+    private void commonSetup(final FMLCommonSetupEvent e) {
+        CommonHandler.setup();
+        AntimatterDynamics.setInitialized();
+        LOGGER.info("AntimatterAPI Data Processing has Finished. All Data Objects can now be Modified!");
+        e.enqueueWork(() -> AntimatterAPI.getCommonDeferredQueue().ifPresent(t -> {
+            for (Runnable r : t) {
+                try {
+                    r.run();
+                } catch (Exception ex) {
+                    LOGGER.warn("Caught error during common setup: " + ex.getMessage());
+                }
+            }
+        }));
+
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(Integrations::enqueueIMC);
+    }
+
+    private void serverSetup(final FMLDedicatedServerSetupEvent e) {
+        ServerHandler.setup();
+        AntimatterAPI.onRegistration(RegistrationEvent.DATA_READY);
+        AntimatterDynamics.runDataProvidersDynamically();
+        e.enqueueWork(() -> AntimatterAPI.getServerDeferredQueue().ifPresent(t -> {
+            for (Runnable r : t) {
+                try {
+                    r.run();
+                } catch (Exception ex) {
+                    LOGGER.warn("Caught error during server setup: " + ex.getMessage());
+                }
+            }
+        }));
+    }
+
+    private void loadComplete(FMLLoadCompleteEvent event) {
     }
 }

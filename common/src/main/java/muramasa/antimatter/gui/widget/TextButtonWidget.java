@@ -1,7 +1,6 @@
 package muramasa.antimatter.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.IGuiHandler;
@@ -16,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,8 +50,8 @@ public class TextButtonWidget<T> extends ButtonWidget {
             gui.syncString(() -> (String)syncFunction.apply(gui.handler), i -> this.state = (T) i, ICanSyncData.SyncDirection.SERVER_TO_CLIENT);
         } else if (state instanceof ItemStack){
             gui.syncItemStack(() -> (ItemStack)syncFunction.apply(gui.handler), i -> this.state = (T) i, ICanSyncData.SyncDirection.SERVER_TO_CLIENT);
-        } else if (state instanceof FluidHolder){
-            gui.syncFluidStack(() -> (FluidHolder) syncFunction.apply(gui.handler), i -> this.state = (T) i, ICanSyncData.SyncDirection.SERVER_TO_CLIENT);
+        } else if (state instanceof FluidStack){
+            gui.syncFluidStack(() -> (FluidStack) syncFunction.apply(gui.handler), i -> this.state = (T) i, ICanSyncData.SyncDirection.SERVER_TO_CLIENT);
         } else {
             String object = gui.handler instanceof BlockEntityMachine<?> machine ? machine.getMachineType().getLoc().toString() : gui.handler instanceof ICover cover ? cover.getLoc().toString() : gui.handler.getClass().toString();
             Antimatter.LOGGER.warn("Unknown sync type in text widget in: " + object);

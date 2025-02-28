@@ -20,7 +20,7 @@ public class FakeTrackedItemHandler<T extends IGuiHandler> extends TrackedItemHa
     }
 
     @Override
-    public void setItem(int slot, @NotNull ItemStack stack) {
-        super.setItem(slot, stack.copy());
+    public void setStackInSlot(int slot, @NotNull ItemStack stack) {
+        super.setStackInSlot(slot, stack.copy());
     }
 }

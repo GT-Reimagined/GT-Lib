@@ -1,13 +1,12 @@
 package muramasa.antimatter.material;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.registration.IAntimatterObject;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
 
@@ -18,9 +17,9 @@ public class MaterialTypeFluid<T> extends MaterialType<T> {
         AntimatterAPI.register(MaterialTypeFluid.class, this);
     }
 
-    public static FluidHolder getEmptyFluidAndLog(MaterialType<?> type, IAntimatterObject... objects) {
+    public static FluidStack getEmptyFluidAndLog(MaterialType<?> type, IAntimatterObject... objects) {
         Utils.onInvalidData("Tried to create " + type.getId() + " for objects: " + Arrays.toString(Arrays.stream(objects).map(IAntimatterObject::getId).toArray(String[]::new)));
-        return FluidHooks.newFluidHolder(Fluids.WATER, 1, null);
+        return new FluidStack(Fluids.WATER, 1);
     }
 
     @Override
@@ -29,6 +28,6 @@ public class MaterialTypeFluid<T> extends MaterialType<T> {
     }
 
     public interface IFluidGetter {
-        FluidHolder get(Material m, long amount);
+        FluidStack get(Material m, int amount);
     }
 }

@@ -1,9 +1,9 @@
 package muramasa.antimatter.gui;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import tesseract.FluidPlatformUtils;
+import net.minecraftforge.common.extensions.IForgeFriendlyByteBuf;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -45,11 +45,11 @@ public interface ICanSyncData {
         bind(source, onChange, FriendlyByteBuf::readBoolean, FriendlyByteBuf::writeBoolean, Object::equals, direction);
     }
 
-    default void syncFluidStack(Supplier<FluidHolder> source, Consumer<FluidHolder> onChange, SyncDirection direction) {
-        bind(() -> source.get().copyHolder(), onChange, FluidPlatformUtils.INSTANCE::readFromPacket, FluidPlatformUtils.INSTANCE::writeToPacket, (a, b) -> {
-            FluidHolder f = (FluidHolder) a;
-            if (!(b instanceof FluidHolder h)) return false;
-            return a.equals(b) && h.getFluidAmount() == f.getFluidAmount();
+    default void syncFluidStack(Supplier<FluidStack> source, Consumer<FluidStack> onChange, SyncDirection direction) {
+        bind(() -> source.get().copy(), onChange, IForgeFriendlyByteBuf::readFluidStack, IForgeFriendlyByteBuf::writeFluidStack, (a, b) -> {
+            FluidStack f = (FluidStack) a;
+            if (!(b instanceof FluidStack h)) return false;
+            return a.equals(b) && h.getAmount() == f.getAmount();
         }, direction);
     }
 

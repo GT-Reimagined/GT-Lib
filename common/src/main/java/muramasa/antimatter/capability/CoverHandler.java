@@ -23,10 +23,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -55,7 +55,7 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
         coverTexturer = new EnumMap<>(Direction.class);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public DynamicTexturer<ICover, ICover.DynamicKey> getTexturer(Direction dir) {
         return coverTexturer.computeIfAbsent(dir, d -> new DynamicTexturer<>(DynamicTexturers.COVER_DYNAMIC_TEXTURER));
     }

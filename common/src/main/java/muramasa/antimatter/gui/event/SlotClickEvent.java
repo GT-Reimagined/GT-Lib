@@ -1,19 +1,19 @@
 package muramasa.antimatter.gui.event;
 
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.gui.GuiInstance;
 import muramasa.antimatter.gui.SlotType;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import tesseract.FluidPlatformUtils;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -51,20 +51,20 @@ public class SlotClickEvent implements IGuiEvent {
         return false;
     }
 
-    private PlatformFluidHandler tryGetCap(IGuiHandler handler) {
+    private IFluidHandler tryGetCap(IGuiHandler handler) {
         if (handler instanceof BlockEntityMachine) {
             BlockEntityMachine<?> machine = (BlockEntityMachine<?>) handler;
             return machine.fluidHandler.map(f -> type == SlotType.FL_IN && f.getInputTanks() != null ? f.getInputTanks().getTank(index) : type == SlotType.FL_OUT && f.getOutputTanks() != null ? f.getOutputTanks().getTank(f.offsetTank(index)) : f.getGuiHandler()).orElse(null);
         }
         if (handler instanceof BlockEntity be) {
-            return FluidHooks.safeGetBlockFluidManager(be, null).orElse(null);
+            return be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().orElse(null);
         }
         return null;
     }
 
     @Override
     public void handle(Player player, GuiInstance instance) {
-        PlatformFluidHandler sink = tryGetCap(instance.handler);
+        IFluidHandler sink = tryGetCap(instance.handler);
         if (sink == null) return;
         ItemStack stack = player.containerMenu.getCarried();
         if (stack.isEmpty()) return;
@@ -82,11 +82,11 @@ public class SlotClickEvent implements IGuiEvent {
                 }
             };
             if (type == SlotType.FL_IN){
-                if (!FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(Utils.ca(1, stack), sink, consumer)){
-                    FluidPlatformUtils.INSTANCE.fillItemFromContainer(Utils.ca(1, stack), sink, consumer);
+                if (!FluidUtils.emptyItemIntoContainer(-1, Utils.ca(1, stack), sink, consumer)){
+                    FluidUtils.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
                 }
             } else {
-                FluidPlatformUtils.INSTANCE.fillItemFromContainer(Utils.ca(1, stack), sink, consumer);
+                FluidUtils.fillItemFromContainer(-1, Utils.ca(1, stack), sink, consumer);
             }
         }
     }

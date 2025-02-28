@@ -1,12 +1,12 @@
 package muramasa.antimatter.cover;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.machine.Tier;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.core.Direction;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
-import tesseract.FluidPlatformUtils;
 
 public class CoverDebug extends BaseCover {
 
@@ -19,8 +19,8 @@ public class CoverDebug extends BaseCover {
         if (this.handler.getTile().getLevel().isClientSide) return false;
         if (!simulate) {
             String fmt = "";
-            if (object instanceof FluidHolder fluidHolder) {
-                fmt = String.format("Fluid: %s, amount: %d", FluidPlatformUtils.INSTANCE.getFluidId(fluidHolder.getFluid()), (fluidHolder.getFluidAmount()));
+            if (object instanceof FluidStack fluidStack) {
+                fmt = String.format("Fluid: %s, amount: %d", RegistryUtils.getIdFromFluid(fluidStack.getFluid()), (fluidStack.getAmount()));
             } else {
                 fmt = object.toString();
             }

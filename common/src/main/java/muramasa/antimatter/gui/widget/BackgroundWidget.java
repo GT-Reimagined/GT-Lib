@@ -8,7 +8,8 @@ import muramasa.antimatter.gui.Widget;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 ;
 ;
@@ -48,7 +49,7 @@ public class BackgroundWidget extends Widget {
         drawTexture(matrixStack, loc, realX(), realY(), 0, 0, xSize, ySize);
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     protected void drawTexture(PoseStack stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
         RenderSystem.setShaderColor(1, 1, 1, 1);

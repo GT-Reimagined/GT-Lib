@@ -2,6 +2,7 @@ package muramasa.antimatter.capability;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Direction;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -48,10 +49,10 @@ public class Dispatch {
     }
 
     public interface Sided<U> {
-        Optional<? extends U> forSide(Direction side);
+        LazyOptional<? extends U> forSide(Direction side);
 
-        default Optional<? extends U> forNullSide() {
-            return Optional.empty();
+        default LazyOptional<? extends U> forNullSide() {
+            return LazyOptional.empty();
         }
     }
 }

@@ -9,8 +9,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import muramasa.antimatter.blockentity.BlockEntityMachine;
-import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.datagen.IAntimatterProvider;
 import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
@@ -25,9 +23,6 @@ import muramasa.antimatter.registration.IAntimatterRegistrar;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.registration.RegistrationEvent;
-import muramasa.antimatter.registration.Side;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
-import muramasa.antimatter.util.AntimatterPreLaunchUtil;
 import muramasa.antimatter.util.NonNullSupplier;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.core.BlockPos;
@@ -36,8 +31,14 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.LoadingModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +69,6 @@ public final class AntimatterAPI {
     private static final Int2ObjectMap<Deque<Runnable>> DEFERRED_QUEUE = new Int2ObjectOpenHashMap<>();
     private static final Object2ObjectMap<ResourceLocation, Supplier<Object>> REPLACEMENTS = new Object2ObjectOpenHashMap<>();
     private static final Map<String, Map<String, Class<?>>> CLASS_LOOKUP = new Object2ObjectOpenHashMap<>();
-    private static Side SIDE;
 
     private static RegistrationEvent PHASE = null;
 
@@ -419,9 +419,9 @@ public final class AntimatterAPI {
         RegistrationEvent previous = PHASE;
         PHASE = event;
         Antimatter.LOGGER.info("Registration event " + event);
-        Side side = getSIDE();
+        Dist side = FMLEnvironment.dist;
         if (!REGISTRATION_EVENTS_HANDLED.add(event)) {
-            if (AntimatterPlatformUtils.INSTANCE.isForge() && AntimatterPlatformUtils.INSTANCE.getActiveNamespace().equals(Ref.ID))
+            if (ModLoadingContext.get().getActiveNamespace().equals(Ref.ID))
                 return;
             throw new IllegalStateException("The RegistrationEvent " + event.name() + " has already been handled");
         }
@@ -435,8 +435,11 @@ public final class AntimatterAPI {
             PHASE = previous;
     }
 
-    public static boolean isModLoaded(String mod) {
-        return AntimatterPreLaunchUtil.INSTANCE.isModLoaded(mod);
+    public static boolean isModLoaded(String modid) {
+        if (ModList.get() == null) {
+            return LoadingModList.get().getMods().stream().map(ModInfo::getModId).anyMatch(modid::equals);
+        }
+        return ModList.get().isLoaded(modid);
     }
 
     public static void runOnEvent(RegistrationEvent event, Runnable runnable) {
@@ -454,15 +457,8 @@ public final class AntimatterAPI {
     }
 
     public static boolean isRegistryEntry(Object object, String domain){
-        return AntimatterAPIPlatformHelper.INSTANCE.isRegistryEntry(object, domain);
-    }
-
-    public static void registerTransferApi(BlockEntityType<? extends BlockEntityMachine<?>> type){
-        AntimatterAPIPlatformHelper.INSTANCE.registerTransferApi(type);
-    }
-
-    public static void registerTransferApiPipe(BlockEntityType<? extends BlockEntityPipe<?>> type){
-        AntimatterAPIPlatformHelper.INSTANCE.registerTransferApiPipe(type);
+        return object instanceof IForgeRegistryEntry<?> r && r.getRegistryName() != null
+                && r.getRegistryName().getNamespace().equals(domain);
     }
 
     public static Optional<IAntimatterRegistrar> getRegistrar(String id) {
@@ -576,14 +572,6 @@ public final class AntimatterAPI {
     public static void onNotifyBlockUpdate(Level world, BlockPos pos, BlockState oldState, BlockState newState,
                                            int flags) {
         BLOCK_UPDATE_HANDLERS.forEach(h -> h.onNotifyBlockUpdate(world, pos, oldState, newState, flags));
-    }
-
-    public static Side getSIDE() {
-        return SIDE;
-    }
-
-    public static void setSIDE(Side SIDE) {
-        AntimatterAPI.SIDE = SIDE;
     }
 
     public interface IBlockUpdateEvent {

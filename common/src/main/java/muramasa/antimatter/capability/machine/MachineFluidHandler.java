@@ -1,9 +1,5 @@
 package muramasa.antimatter.capability.machine;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
@@ -16,24 +12,26 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
-import tesseract.FluidPlatformUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static muramasa.antimatter.machine.MachineFlag.GENERATOR;
 import static muramasa.antimatter.machine.MachineFlag.GUI;
 
-public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidHandler<T> implements Dispatch.Sided<FluidContainer> {
+public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidHandler<T> implements Dispatch.Sided<IFluidHandler> {
 
     private boolean fillingCell = false;
     protected boolean filledLastTick = false;
@@ -60,7 +58,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         }
     }
 
-    public void fillCell(int cellSlot, long maxFill) {
+    public void fillCell(int cellSlot, int maxFill) {
         if (fillingCell) return;
         fillingCell = true;
         if (getInputTanks() != null) {
@@ -78,10 +76,10 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
                     MachineItemHandler.insertIntoOutput(ih.getCellOutputHandler(), cellSlot, s, false);
                     MachineItemHandler.extractFromInput(ih.getCellInputHandler(), cellSlot, 1, false);
                 };
-                if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                if (FluidUtils.fillItemFromContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
-                } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
+                } else if (FluidUtils.emptyItemIntoContainer(maxFill, Utils.ca(1, cell), this.getCellAccessibleTanks(), predicate, consumer)){
                     success = true;
                     lastCellSlot = cellSlot;
                 }
@@ -97,9 +95,9 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         return this.getAllTanks();
     }
 
-    protected boolean checkValidFluid(FluidHolder fluid) {
+    protected boolean checkValidFluid(FluidStack fluid) {
         if (tile.has(GENERATOR)) {
-            IRecipe recipe = tile.getMachineType().getRecipeMap(tile.getMachineTier()).find(new ItemStack[0], new FluidHolder[]{fluid}, Tier.ULV, r -> true);
+            IRecipe recipe = tile.getMachineType().getRecipeMap(tile.getMachineTier()).find(new ItemStack[0], new FluidStack[]{fluid}, Tier.ULV, r -> true);
             if (recipe != null) {
                 return true;
             }
@@ -107,21 +105,16 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         return true;
     }
 
-    protected void tryFillCell(int slot, long maxFill) {
+    protected void tryFillCell(int slot, int maxFill) {
         if (tile.itemHandler.map(MachineItemHandler::getCellCount).orElse(0) > 0) {
             fillCell(slot, maxFill);
         }
     }
 
     @Override
-    public long insertFluid(FluidHolder fluid, boolean simulate) {
+    public int fill(FluidStack fluid, FluidAction action) {
         if (!tile.recipeHandler.map(t -> t.accepts(fluid)).orElse(true)) return 0;
-        return super.insertFluid(fluid, simulate);
-    }
-
-    @Override
-    public FluidContainer copy() {
-        return this;
+        return super.fill(fluid, action);
     }
 
     @Override
@@ -139,20 +132,20 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         }
     }
 
-    public boolean canFluidBeAutoOutput(FluidHolder fluid) {
+    public boolean canFluidBeAutoOutput(FluidStack fluid) {
         return true;
     }
 
-    public boolean canOutputsFit(FluidHolder[] outputs) {
+    public boolean canOutputsFit(FluidStack[] outputs) {
         return getSpaceForOutputs(outputs) >= outputs.length;
     }
 
-    public int getSpaceForOutputs(FluidHolder[] outputs) {
+    public int getSpaceForOutputs(FluidStack[] outputs) {
         int matchCount = 0;
         if (getOutputTanks() != null) {
-            for (FluidHolder output : outputs) {
+            for (FluidStack output : outputs) {
                 int tank = getOutputTanks().getFirstAvailableTank(output, false);
-                if (tank >= 0 && getOutputTanks().getTank(tank).insertFluid(output, true) == output.getFluidAmount()) {
+                if (tank >= 0 && getOutputTanks().getTank(tank).fill(output, FluidAction.SIMULATE) == output.getAmount()) {
                     matchCount++;
                 }
             }
@@ -160,21 +153,21 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         return matchCount;
     }
 
-    public void addOutputs(FluidHolder... fluids) {
+    public void addOutputs(FluidStack... fluids) {
         if (getOutputTanks() == null) {
             return;
         }
         if (fluids != null) {
-            for (FluidHolder input : fluids) {
-                fillOutput(input, false);
+            for (FluidStack input : fluids) {
+                fillOutput(input, FluidAction.EXECUTE);
             }
         }
     }
 
     public int getTankForTag(TagKey<Fluid> tag, int min) {
-        FluidHolder[] inputs = this.getInputs();
+        FluidStack[] inputs = this.getInputs();
         for (int i = min; i < inputs.length; i++) {
-            FluidHolder input = inputs[i];
+            FluidStack input = inputs[i];
             if (input.getFluid().builtInRegistryHolder().is(tag)) {
                 return i;
             }
@@ -183,27 +176,27 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     }
 
     @NotNull
-    public FluidHolder consumeTaggedInput(TagKey<Fluid> input, long amount, boolean simulate) {
+    public FluidStack consumeTaggedInput(TagKey<Fluid> input, int amount, boolean simulate) {
         FluidTanks inputs = getInputTanks();
         if (inputs == null) {
-            return FluidHooks.emptyFluid();
+            return FluidStack.EMPTY;
         }
         int id = getTankForTag(input, 0);
-        if (id == -1) return FluidHooks.emptyFluid();
-        return inputs.extractFluid(FluidHooks.newFluidHolder(inputs.getFluidInTank(id).getFluid(), amount, null), simulate);
+        if (id == -1) return FluidStack.EMPTY;
+        return inputs.drain(new FluidStack(inputs.getFluidInTank(id).getFluid(), amount), simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE);
     }
 
     @NotNull
-    public List<FluidHolder> consumeAndReturnInputs(List<FluidIngredient> inputs, boolean simulate) {
+    public List<FluidStack> consumeAndReturnInputs(List<FluidIngredient> inputs, boolean simulate) {
         if (getInputTanks() == null) {
             return Collections.emptyList();
         }
-        List<FluidHolder> consumed = new ObjectArrayList<>();
+        List<FluidStack> consumed = new ObjectArrayList<>();
         List<FluidIngredient> fluidIngredients = new ObjectArrayList<>();
         if (inputs != null) {
             for (FluidIngredient input : inputs) {
-                List<FluidHolder> inner = input.drain(this, true, true);
-                if (inner.stream().mapToLong(FluidHolder::getFluidAmount).sum() != input.getAmount()) {
+                List<FluidStack> inner = input.drain(this, true, true);
+                if (inner.stream().mapToLong(FluidStack::getAmount).sum() != input.getAmount()) {
                     return Collections.emptyList();
                 } else {
                     fluidIngredients.add(input);
@@ -217,29 +210,29 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
         return consumed;
     }
 
-    public FluidHolder[] exportAndReturnOutputs(FluidHolder... outputs) {
+    public FluidStack[] exportAndReturnOutputs(FluidStack... outputs) {
         if (getOutputTanks() == null) {
-            return new FluidHolder[0];
+            return new FluidStack[0];
         }
-        List<FluidHolder> notExported = new ObjectArrayList<>();
-        long result;
+        List<FluidStack> notExported = new ObjectArrayList<>();
+        int result;
         for (int i = 0; i < outputs.length; i++) {
-            result = insertFluid(outputs[i], false);
+            result = fill(outputs[i], FluidAction.EXECUTE);
             if (result == 0) notExported.add(outputs[i]); //Valid space was not found
             else outputs[i] = Utils.ca(result, outputs[i]); //Fluid was partially exported
         }
-        return notExported.toArray(new FluidHolder[0]);
+        return notExported.toArray(new FluidStack[0]);
     }
 
     @Override
     public boolean canOutput(Direction direction) {
         if (tile.getFacing().get3DDataValue() == direction.get3DDataValue() && !tile.getMachineType().allowsFrontIO())
             return false;
-        return super.allowsExtraction();
+        return super.canOutput();
     }
 
     @Override
-    public boolean canInput(FluidHolder fluid, Direction direction) {
+    public boolean canInput(FluidStack fluid, Direction direction) {
         return true;
     }
 
@@ -247,65 +240,59 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     public boolean canInput(Direction direction) {
         if (tile.getFacing().get3DDataValue() == direction.get3DDataValue() && !tile.getMachineType().allowsFrontIO())
             return false;
-        return super.allowsInsertion();
+        return super.canInput();
     }
 
     @Override
     public int getPriority(Direction direction) {
-        return tile.coverHandler.map(c -> c.get(direction).getPriority(FluidContainer.class)).orElse(0);
+        return tile.coverHandler.map(c -> c.get(direction).getPriority(IFluidHandler.class)).orElse(0);
     }
 
     @Override
-    public Optional<? extends FluidContainer> forNullSide() {
-        return Optional.of(new FluidHandlerNullSideWrapper(this));
+    public LazyOptional<? extends IFluidHandler> forNullSide() {
+        return LazyOptional.of(() -> new FluidHandlerNullSideWrapper(this));
     }
 
     @Override
-    public Optional<FluidContainer> forSide(Direction side) {
-        return Optional.of(new FluidHandlerSidedWrapper(this, tile.coverHandler.map(c -> c).orElse(null), side));
+    public LazyOptional<IFluidHandler> forSide(Direction side) {
+        return LazyOptional.of(() -> new FluidHandlerSidedWrapper(this, tile.coverHandler.map(c -> c).orElse(null), side));
     }
 
-    public PlatformFluidHandler getGuiHandler() {
-        return new PlatformFluidHandler() {
+    public IFluidHandler getGuiHandler() {
+        return new IFluidHandler() {
             @Override
-            public long insertFluid(FluidHolder fluid, boolean simulate) {
-                return MachineFluidHandler.this.insertFluid(fluid, simulate);
+            public int getTanks() {
+                return MachineFluidHandler.this.getTanks();
             }
 
             @Override
-            public FluidHolder extractFluid(FluidHolder fluid, boolean simulate) {
-                return MachineFluidHandler.this.extractFluid(fluid, simulate);
+            public @NotNull FluidStack getFluidInTank(int i) {
+                return MachineFluidHandler.this.getFluidInTank(i);
             }
 
             @Override
-            public int getTankAmount() {
-                return MachineFluidHandler.this.getSize();
-            }
-
-            @NotNull
-            @Override
-            public FluidHolder getFluidInTank(int tank) {
-                return MachineFluidHandler.this.getFluidInTank(tank);
+            public int getTankCapacity(int i) {
+                return MachineFluidHandler.this.getTankCapacity(i);
             }
 
             @Override
-            public List<FluidHolder> getFluidTanks() {
-                return MachineFluidHandler.this.getFluids();
+            public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
+                return MachineFluidHandler.this.isFluidValid(i, fluidStack);
             }
 
             @Override
-            public long getTankCapacity(int tank) {
-                return MachineFluidHandler.this.getTankCapacity(tank);
+            public int fill(FluidStack fluidStack, FluidAction fluidAction) {
+                return MachineFluidHandler.this.fill(fluidStack, fluidAction);
             }
 
             @Override
-            public boolean supportsInsertion() {
-                return MachineFluidHandler.this.allowsInsertion();
+            public @NotNull FluidStack drain(FluidStack fluidStack, FluidAction fluidAction) {
+                return MachineFluidHandler.this.drain(fluidStack, fluidAction);
             }
 
             @Override
-            public boolean supportsExtraction() {
-                return MachineFluidHandler.this.allowsExtraction();
+            public @NotNull FluidStack drain(int i, FluidAction fluidAction) {
+                return MachineFluidHandler.this.drain(i, fluidAction);
             }
         };
     }

@@ -19,6 +19,8 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraftforge.client.model.IModelConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
-public class VanillaProxy implements ISimpleModel
+public class VanillaProxy implements ISimpleModel<VanillaProxy>
 {
     private final List<BlockElement> elements;
 
@@ -54,7 +56,7 @@ public class VanillaProxy implements ISimpleModel
     }
 
     @Override
-    public Collection<Material> getMaterials(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
+    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
     {
         Set<Material> textures = Sets.newHashSet();
 
@@ -80,8 +82,9 @@ public class VanillaProxy implements ISimpleModel
         {
         }
 
+        @NotNull
         @Override
-        public VanillaProxy readModel(JsonDeserializationContext deserializationContext, JsonObject modelContents)
+        public VanillaProxy read(JsonDeserializationContext deserializationContext, JsonObject modelContents)
         {
             List<BlockElement> list = this.getModelElements(deserializationContext, modelContents);
             return new VanillaProxy(list);

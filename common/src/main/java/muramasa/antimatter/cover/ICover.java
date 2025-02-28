@@ -15,7 +15,6 @@ import muramasa.antimatter.network.packets.AbstractGuiEventPacket;
 import muramasa.antimatter.registration.ITextureProvider;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.AntimatterToolType;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
@@ -35,9 +34,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.item.ExtendedItemContainer;
 
 import java.util.List;
 import java.util.Map;
@@ -133,7 +133,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
     default boolean openGui(Player player, Direction side) {
         if (!hasGui())
             return false;
-        AntimatterPlatformUtils.INSTANCE.openGui((ServerPlayer) player, this, packetBuffer -> {
+        NetworkHooks.openGui((ServerPlayer) player, this, packetBuffer -> {
             packetBuffer.writeBlockPos(this.source().getTile().getBlockPos());
             packetBuffer.writeInt(side.get3DDataValue());
         });
@@ -141,7 +141,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
         return true;
     }
 
-    default Map<SlotType<?>, ExtendedItemContainer> getAll(){
+    default Map<SlotType<?>, IItemHandler> getAll(){
         return null;
     }
 

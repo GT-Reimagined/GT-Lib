@@ -11,7 +11,6 @@ import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
-import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -21,7 +20,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Arrays;
 import java.util.List;
@@ -231,7 +232,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
 
     public static ImmutableMap<Item, Tuple<MaterialType, Material>> tooltipCache;
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static void buildTooltips() {
         ImmutableMap.Builder<Item, Tuple<MaterialType, Material>> builder = ImmutableMap.builder();
         AntimatterAPI.all(MaterialType.class, t -> {
@@ -268,7 +269,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, I
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
 
     }
 

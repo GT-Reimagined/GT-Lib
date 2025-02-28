@@ -25,7 +25,6 @@ import muramasa.antimatter.item.ItemCover;
 import muramasa.antimatter.item.ItemFluidIcon;
 import muramasa.antimatter.item.ScannerItem;
 import muramasa.antimatter.machine.types.BasicMachine;
-import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.enchantment.ElectricEnchantment;
 import net.minecraft.ChatFormatting;
@@ -38,6 +37,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraftforge.api.distmarker.Dist;
 import org.jetbrains.annotations.Nullable;
 
 import static muramasa.antimatter.gui.ButtonOverlay.*;
@@ -114,7 +114,7 @@ public class Data {
     public static final BasicMachine CREATIVE_GENERATOR = new BasicMachine(Ref.ID, "creative_generator").addFlags(EU, GUI).setTiers(MAX).setVerticalFacingAllowed(true).allowFrontIO().setTile(BlockEntityInfiniteStorage::new)
             .noCovers();
 
-    public static void init(Side side) {
+    public static void init(Dist side) {
         CREATIVE_GENERATOR.getGui().setBackgroundTexture("creative_generator");
         if (side.isClient()){
             CREATIVE_GENERATOR.addGuiCallback(t -> {

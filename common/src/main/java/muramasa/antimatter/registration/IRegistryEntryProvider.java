@@ -1,6 +1,9 @@
 package muramasa.antimatter.registration;
 
+import net.minecraft.core.Registry;
+import net.minecraftforge.registries.IForgeRegistry;
+
 public interface IRegistryEntryProvider extends IAntimatterObject {
 
-    void onRegistryBuild(RegistryType registry);
+    void onRegistryBuild(IForgeRegistry<?> registry);
 }

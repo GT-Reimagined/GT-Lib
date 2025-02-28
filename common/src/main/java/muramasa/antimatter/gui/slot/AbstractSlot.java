@@ -9,18 +9,19 @@ import muramasa.antimatter.gui.SlotType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.item.ExtendedItemContainer;
 
 
-public class AbstractSlot<T extends Slot> extends Slot {
+public class AbstractSlot<T extends Slot> extends SlotItemHandler {
     protected final int index;
     public final SlotType<T> type;
     protected final IGuiHandler holder;
     @Getter
-    private final ExtendedItemContainer container;
+    private final IItemHandler container;
 
-    public AbstractSlot(SlotType<T> type, IGuiHandler tile, ExtendedItemContainer stackHandler, int index, int x, int y) {
+    public AbstractSlot(SlotType<T> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
         super(stackHandler, index, x, y);
         this.container = stackHandler;
         this.index = index;
@@ -64,17 +65,4 @@ public class AbstractSlot<T extends Slot> extends Slot {
         }
         return filter && this.type.tester.test(this.holder, stack);
     }
-
-    @Override
-    public int getMaxStackSize(@NotNull ItemStack stack) {
-        ItemStack maxAdd = stack.copy();
-        int maxInput = stack.getMaxStackSize();
-        maxAdd.setCount(maxInput);
-        ItemStack currentStack = container.getItem(index);
-        container.setItem(index, ItemStack.EMPTY);
-        ItemStack remainder = container.insertItem(index, maxAdd, true);
-        container.setItem(index, currentStack);
-        return maxInput - remainder.getCount();
-    }
-
 }

@@ -1,19 +1,12 @@
 package muramasa.antimatter.capability.fluid;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.FluidSnapshot;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import muramasa.antimatter.capability.CoverHandler;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.fluid.FluidContainerHandler;
-import tesseract.api.fluid.IFluidNode;
 
-import java.util.List;
-
-public class FluidHandlerSidedWrapper implements IFluidNode, FluidContainerHandler {
+public class FluidHandlerSidedWrapper implements IFluidNode {
     protected IFluidNode fluidHandler;
     protected Direction side;
     CoverHandler<?> coverHandler;
@@ -25,89 +18,50 @@ public class FluidHandlerSidedWrapper implements IFluidNode, FluidContainerHandl
     }
 
     @Override
-    public int getSize() {
-        return fluidHandler.getSize();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return fluidHandler.isEmpty();
-    }
-
-    @Override
-    public FluidContainer copy() {
-        return new FluidHandlerSidedWrapper(fluidHandler, coverHandler, side);
+    public int getTanks() {
+        return fluidHandler.getTanks();
     }
 
     @NotNull
     @Override
-    public FluidHolder getFluidInTank(int tank) {
+    public FluidStack getFluidInTank(int tank) {
         return fluidHandler.getFluidInTank(tank);
     }
 
     @Override
-    public long getTankCapacity(int tank) {
+    public int getTankCapacity(int tank) {
         return fluidHandler.getTankCapacity(tank);
     }
 
     @Override
-    public void fromContainer(FluidContainer container) {
-        if (container instanceof FluidHandlerSidedWrapper wrapper) {
-            fluidHandler = wrapper.fluidHandler;
-            coverHandler = wrapper.coverHandler;
-            side = wrapper.side;
-        }
-    }
-
-    @Override
-    public long extractFromSlot(FluidHolder fluidHolder, FluidHolder toInsert, Runnable snapshot) {
-        return fluidHandler.extractFromSlot(fluidHolder, toInsert, snapshot);
-    }
-
-    @Override
-    public boolean isFluidValid(int tank, @NotNull FluidHolder stack) {
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
         return fluidHandler.isFluidValid(tank, stack);
     }
 
     @Override
-    public FluidContainer getFluidContainer() {
-        return this;
-    }
-
-    @Override
-    public long insertFluid(FluidHolder resource, boolean simulate) {
+    public int fill(FluidStack resource, FluidAction action) {
         if (coverHandler != null) {
-            if (coverHandler.get(side).blocksInput(FluidContainer.class, side)) {
+            if (coverHandler.get(side).blocksInput(IFluidHandler.class, side)) {
                 return 0;
             }
-            long oldAmount = resource.getFluidAmount();
-            if(coverHandler.onTransfer(resource, side, true, simulate)) return oldAmount - resource.getFluidAmount();
+            int oldAmount = resource.getAmount();
+            if(coverHandler.onTransfer(resource, side, true, action.simulate())) return oldAmount - resource.getAmount();
         }
 
         if (!fluidHandler.canInput(resource, side) || !fluidHandler.canInput(side)) {
             return 0;
         }
-        return fluidHandler.insertFluid(resource, simulate);
+        return fluidHandler.fill(resource, action);
     }
 
     @NotNull
     @Override
-    public FluidHolder extractFluid(FluidHolder resource, boolean  simulate) {
-        if (coverHandler != null && (coverHandler.get(side).blocksOutput(FluidContainer.class, side) || coverHandler.onTransfer(resource, side, false, simulate))) {
-            return FluidHooks.emptyFluid();
+    public FluidStack drain(FluidStack resource, FluidAction action) {
+        if (coverHandler != null && (coverHandler.get(side).blocksOutput(IFluidHandler.class, side) || coverHandler.onTransfer(resource, side, false, action.simulate()))) {
+            return FluidStack.EMPTY;
         }
-        if (!fluidHandler.canOutput(side)) return FluidHooks.emptyFluid();
-        return fluidHandler.extractFluid(resource, simulate);
-    }
-
-    @Override
-    public void setFluid(int slot, FluidHolder fluid) {
-        fluidHandler.setFluid(slot, fluid);
-    }
-
-    @Override
-    public List<FluidHolder> getFluids() {
-        return fluidHandler.getFluids();
+        if (!fluidHandler.canOutput(side)) return FluidStack.EMPTY;
+        return fluidHandler.drain(resource, action);
     }
 
     @Override
@@ -116,18 +70,13 @@ public class FluidHandlerSidedWrapper implements IFluidNode, FluidContainerHandl
     }
 
     @Override
-    public boolean allowsExtraction() {
-        return fluidHandler.allowsExtraction();
+    public boolean canOutput() {
+        return fluidHandler.canOutput();
     }
 
     @Override
-    public FluidSnapshot createSnapshot() {
-        return fluidHandler.createSnapshot();
-    }
-
-    @Override
-    public boolean allowsInsertion() {
-        return fluidHandler.allowsInsertion();
+    public boolean canInput() {
+        return fluidHandler.canInput();
     }
 
     @Override
@@ -141,27 +90,7 @@ public class FluidHandlerSidedWrapper implements IFluidNode, FluidContainerHandl
     }
 
     @Override
-    public boolean canInput(FluidHolder fluid, Direction direction) {
+    public boolean canInput(FluidStack fluid, Direction direction) {
         return fluidHandler.canInput(fluid, direction);
-    }
-
-    @Override
-    public void deserialize(CompoundTag nbt) {
-        fluidHandler.deserialize(nbt);
-    }
-
-    @Override
-    public CompoundTag serialize(CompoundTag nbt) {
-        return fluidHandler.serialize(nbt);
-    }
-
-    @Override
-    public void clearContent() {
-        fluidHandler.clearContent();
-    }
-
-    @Override
-    public void readSnapshot(FluidSnapshot snapshot) {
-        fluidHandler.readSnapshot(snapshot);
     }
 }

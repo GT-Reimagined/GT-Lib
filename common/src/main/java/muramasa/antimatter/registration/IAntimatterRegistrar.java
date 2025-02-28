@@ -1,8 +1,9 @@
 package muramasa.antimatter.registration;
 
 import muramasa.antimatter.event.MaterialEvent;
+import net.minecraftforge.api.distmarker.Dist;
 
-public interface IAntimatterRegistrar extends IAntimatterObject, IAntimatterRegistrarInitializer {
+public interface IAntimatterRegistrar extends IAntimatterObject {
 
     default String getDomain() {
         return getId();
@@ -12,7 +13,7 @@ public interface IAntimatterRegistrar extends IAntimatterObject, IAntimatterRegi
         return !getId().equals("minecraft");
     }
 
-    void onRegistrationEvent(RegistrationEvent event, Side side);
+    void onRegistrationEvent(RegistrationEvent event, Dist side);
 
     default void onMaterialEvent(MaterialEvent event){}
 

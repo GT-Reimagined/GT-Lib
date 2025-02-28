@@ -18,7 +18,7 @@ import muramasa.antimatter.material.MaterialTag;
 import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.material.MaterialTypeItem;
 import muramasa.antimatter.tool.AntimatterToolType;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -157,7 +158,7 @@ public class PropertyIngredient extends Ingredient {
         obj.add("item_tags", materialArr);
         materialArr = new JsonArray();
         for (ItemLike item : this.items) {
-            ResourceLocation name = AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem());
+            ResourceLocation name = RegistryUtils.getIdFromItem(item.asItem());
             if (name != null) materialArr.add(name.toString());
         }
         obj.add("items", materialArr);
@@ -214,18 +215,24 @@ public class PropertyIngredient extends Ingredient {
         return super.test(test);
     }
 
+    @NotNull
+    @Override
+    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+        return Serializer.INSTANCE;
+    }
+
     public static Builder builder(String id) {
         return new Builder(id);
     }
 
-    public static class Serializer implements IAntimatterIngredientSerializer<PropertyIngredient> {
+    public static class Serializer implements IIngredientSerializer<PropertyIngredient> {
 
         public static Serializer INSTANCE = new Serializer();
 
         public static final ResourceLocation ID = new ResourceLocation("antimatter", "material");
 
         public static void init(){
-            AntimatterAPI.register(IAntimatterIngredientSerializer.class, "material", Ref.ID, INSTANCE);
+            AntimatterAPI.register(IIngredientSerializer.class, "material", Ref.ID, INSTANCE);
         }
 
         @Override
@@ -260,8 +267,8 @@ public class PropertyIngredient extends Ingredient {
             Set<ItemLike> itemProviders = new ObjectArraySet<>(size);
             for (int i = 0; i < size; i++) {
                 ResourceLocation name = new ResourceLocation(buffer.readUtf());
-                if (AntimatterPlatformUtils.INSTANCE.itemExists(name)) {
-                    itemProviders.add(AntimatterPlatformUtils.INSTANCE.getItemFromID(name));
+                if (RegistryUtils.itemExists(name)) {
+                    itemProviders.add(RegistryUtils.getItemFromID(name));
                 }
             }
             ItemStack[] stacks = new ItemStack[buffer.readVarInt()];
@@ -282,8 +289,8 @@ public class PropertyIngredient extends Ingredient {
             arr = json.getAsJsonArray("items");
             Set<ItemLike> items2 = new ObjectArraySet<>(arr.size());
             arr.forEach(el -> {
-                if (AntimatterPlatformUtils.INSTANCE.itemExists(new ResourceLocation(el.getAsString())))
-                    items2.add(AntimatterPlatformUtils.INSTANCE.getItemFromID(new ResourceLocation(el.getAsString())));
+                if (RegistryUtils.itemExists(new ResourceLocation(el.getAsString())))
+                    items2.add(RegistryUtils.getItemFromID(new ResourceLocation(el.getAsString())));
             });
             String ingId = json.get("id").getAsString();
             boolean inverse = json.get("inverse").getAsBoolean();
@@ -335,7 +342,7 @@ public class PropertyIngredient extends Ingredient {
             }
             buffer.writeVarInt(ingredient.items.size());
             for (ItemLike item : ingredient.items) {
-                ResourceLocation name = AntimatterPlatformUtils.INSTANCE.getIdFromItem(item.asItem());
+                ResourceLocation name = RegistryUtils.getIdFromItem(item.asItem());
                 if (name != null) buffer.writeUtf(name.toString());
             }
             //Needed because tags might not be available on client.

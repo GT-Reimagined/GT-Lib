@@ -11,7 +11,6 @@ import muramasa.antimatter.registration.IModelProvider;
 import muramasa.antimatter.registration.ISharedAntimatterObject;
 import muramasa.antimatter.registration.ITextureProvider;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.CodeUtils;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;
@@ -46,8 +45,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.util.List;
 
@@ -109,7 +109,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
             tooltip.add(Utils.literal("Is Element"));
         }
         if (stack.getItem() instanceof MaterialItem) {
-            tooltip.add(Utils.translatable("antimatter.tooltip.material_modid", AntimatterPlatformUtils.INSTANCE.getModName(mat.materialDomain())));
+            tooltip.add(Utils.translatable("antimatter.tooltip.material_modid", Utils.getModName(mat.materialDomain())));
         }
     }
 
@@ -276,7 +276,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
         return -1;
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private int getChangingMaterialColor(){
         long currentRemainder = Minecraft.getInstance().player != null ?  Minecraft.getInstance().player.getLevel().getGameTime() % 100 : -1;
         if (currentRemainder >= 0){

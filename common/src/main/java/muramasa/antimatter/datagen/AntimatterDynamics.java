@@ -16,22 +16,20 @@ import muramasa.antimatter.datagen.providers.AntimatterBlockLootProvider;
 import muramasa.antimatter.datagen.providers.AntimatterLanguageProvider;
 import muramasa.antimatter.datagen.providers.AntimatterRecipeProvider;
 import muramasa.antimatter.datagen.providers.AntimatterTagProvider;
-import muramasa.antimatter.event.CraftingEvent;
-import muramasa.antimatter.event.ProvidersEvent;
-import muramasa.antimatter.event.WorldGenEvent;
+import muramasa.antimatter.event.AntimatterCraftingEvent;
+import muramasa.antimatter.event.AntimatterLoaderEvent;
+import muramasa.antimatter.event.AntimatterProvidersEvent;
+import muramasa.antimatter.event.AntimatterWorldGenEvent;
 import muramasa.antimatter.integration.kubejs.AMWorldEvent;
 import muramasa.antimatter.integration.kubejs.KubeJSRegistrar;
 import muramasa.antimatter.integration.kubejs.RecipeLoaderEventKubeJS;
 import muramasa.antimatter.recipe.IRecipe;
-import muramasa.antimatter.recipe.Recipe;
 import muramasa.antimatter.recipe.loader.IRecipeRegistrate;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.recipe.map.RecipeBuilder;
 import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.registration.IAntimatterRegistrar;
 import muramasa.antimatter.registration.ModRegistrar;
-import muramasa.antimatter.registration.Side;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import muramasa.antimatter.worldgen.StoneLayerOre;
 import muramasa.antimatter.worldgen.bedrockore.WorldGenBedrockVein;
@@ -44,20 +42,22 @@ import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.models.JTextures;
 import net.devtech.arrp.util.UnsafeByteArrayOutputStream;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.Deserializers;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModLoader;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,18 +104,11 @@ public class AntimatterDynamics {
 
     public static void addDataPacks(Consumer<PackResources> function){
         if (initialized) {
-            AntimatterDynamics.onResourceReload(AntimatterAPI.getSIDE().isServer());
+            AntimatterDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
         function.accept(new DynamicDataPack("antimatter:recipes", AntimatterAPI.all(IAntimatterRegistrar.class).stream().map(IAntimatterRegistrar::getDomain).collect(Collectors.toSet())));
 
-    }
-
-    public static void onProviderInit(String domain, DataGenerator gen, Side side) {
-        if (side == Side.CLIENT) {
-            PROVIDERS.getOrDefault(domain, Collections.emptyList()).stream().map(Supplier::get)
-                    .filter(p -> p instanceof AntimatterLanguageProvider).forEach(gen::addProvider);
-        }
     }
 
     /**
@@ -127,7 +120,8 @@ public class AntimatterDynamics {
 
     public static void runDataProvidersDynamically() {
         AntimatterBlockLootProvider.init();
-        ProvidersEvent ev = AntimatterPlatformUtils.INSTANCE.postProviderEvent(AntimatterAPI.getSIDE(), Antimatter.INSTANCE);
+        AntimatterProvidersEvent ev = new AntimatterProvidersEvent(Antimatter.INSTANCE);
+        ModLoader.get().postEvent(ev);
         Collection<IAntimatterProvider> providers = ev.getProviders();
         long time = System.currentTimeMillis();
         Stream<IAntimatterProvider> async = providers.stream().filter(IAntimatterProvider::async).parallel();
@@ -137,8 +131,8 @@ public class AntimatterDynamics {
         AntimatterTagProvider.afterCompletion();
         AntimatterBlockLootProvider.afterCompletion();
         Antimatter.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
-        if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get() || !AntimatterPlatformUtils.INSTANCE.isProduction()) {
-            RUNTIME_DATA_PACK.dump(AntimatterPlatformUtils.INSTANCE.getConfigDir().getParent().resolve("dumped"));
+        if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get() || !FMLEnvironment.production) {
+            RUNTIME_DATA_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
     }
 
@@ -152,8 +146,8 @@ public class AntimatterDynamics {
         providers.forEach(IAntimatterProvider::onCompletion);
         AntimatterLanguageProvider.postCompletion();
         Antimatter.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
-        if (!AntimatterPlatformUtils.INSTANCE.isProduction()) {
-            DYNAMIC_RESOURCE_PACK.dump(AntimatterPlatformUtils.INSTANCE.getConfigDir().getParent().resolve("dumped"));
+        if (!FMLEnvironment.production) {
+            DYNAMIC_RESOURCE_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
     }
 
@@ -163,8 +157,9 @@ public class AntimatterDynamics {
      * @param rec consumer for IFinishedRecipe.
      */
     public static void collectRecipes(AntimatterRecipeProvider provider, Consumer<FinishedRecipe> rec) {
-        CraftingEvent ev = AntimatterPlatformUtils.INSTANCE.postCraftingEvent(Antimatter.INSTANCE);
-        for (ICraftingLoader loader : ev.getLoaders()) {
+        AntimatterCraftingEvent event = new AntimatterCraftingEvent(Antimatter.INSTANCE);
+        ModLoader.get().postEvent(event);
+        for (ICraftingLoader loader : event.getLoaders()) {
             loader.loadRecipes(rec, provider);
         }
     }
@@ -250,13 +245,13 @@ public class AntimatterDynamics {
             filter = Collections.emptySet();
         }
         Map<ResourceLocation, IRecipeRegistrate.IRecipeLoader> loaders = new Object2ObjectOpenHashMap<>(30);
-        AntimatterPlatformUtils.INSTANCE.postLoaderEvent(Antimatter.INSTANCE, (a, b, c) -> {
+        MinecraftForge.EVENT_BUS.post(new AntimatterLoaderEvent(Antimatter.INSTANCE, (a, b, c) -> {
             if (filter.contains(new ResourceLocation(a, b)))
                 return;
             if (loaders.put(new ResourceLocation(a, b), c) != null) {
                 Antimatter.LOGGER.warn("Duplicate recipe loader: " + new ResourceLocation(a, b));
             }
-        });
+        }));
         List<WorldGenVeinLayer> veins = new ObjectArrayList<>();
         List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
         List<WorldGenSmallOre> smallOres = new ObjectArrayList<>();
@@ -274,7 +269,8 @@ public class AntimatterDynamics {
             runRegular = !ev.disableBuiltin;
         }
         if (runRegular) {
-            WorldGenEvent ev = AntimatterPlatformUtils.INSTANCE.postWorldEvent(Antimatter.INSTANCE);
+            AntimatterWorldGenEvent ev = new AntimatterWorldGenEvent(Antimatter.INSTANCE);
+            MinecraftForge.EVENT_BUS.post(ev);
             veins.addAll(ev.VEINS);
             veins.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenVeinLayer.class, WorldGenVeinLayer::fromJson, "vein_layers"));
             smallOres.addAll(ev.SMALL_ORES);

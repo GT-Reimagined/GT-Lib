@@ -8,9 +8,10 @@ import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.datagen.builder.AntimatterShapedRecipeBuilder;
 import muramasa.antimatter.datagen.builder.AntimatterShapelessRecipeBuilder;
 import muramasa.antimatter.datagen.builder.SequencedAssemblyBuilder;
-import muramasa.antimatter.recipe.RecipeUtil;
+import muramasa.antimatter.recipe.condition.ConfigCondition;
+import muramasa.antimatter.recipe.condition.TomlConfigCondition;
 import muramasa.antimatter.recipe.ingredient.PropertyIngredient;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.TagUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,11 +66,13 @@ public class AntimatterRecipeProvider extends RecipeProvider {
     }
 
     public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, Class configClass, String configFieldName, String recipeDomain, String recipeName) {
-        RecipeUtil.INSTANCE.addConditionalRecipe(consumer, builtRecipe, configClass, configFieldName, recipeDomain, recipeName);
+        ConditionalRecipe.builder().addCondition(new ConfigCondition(configClass, configFieldName))
+                .addRecipe(builtRecipe::build).build(consumer, recipeDomain, recipeName);
     }
 
     public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, String config, String configField, String recipeDomain, String recipeName) {
-        RecipeUtil.INSTANCE.addConditionalRecipe(consumer, builtRecipe, config, configField, recipeDomain, recipeName);
+        ConditionalRecipe.builder().addCondition(new TomlConfigCondition(config, configField))
+                .addRecipe(builtRecipe::build).build(consumer, recipeDomain, recipeName);
     }
 
     public AntimatterShapedRecipeBuilder getItemRecipe(String groupName, boolean customCriterion, ItemLike output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
@@ -99,7 +103,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
                     recipeBuilder.addCriterion(id, hasSafeItem((TagKey<Item>) tag));
                     criteria.add(id);
                 } else if (o instanceof ItemLike itemLike){
-                    String id = "has_" + AntimatterPlatformUtils.INSTANCE.getIdFromItem(itemLike.asItem()).getPath();
+                    String id = "has_" + RegistryUtils.getIdFromItem(itemLike.asItem()).getPath();
                     if (criteria.contains(id)) continue;
                     recipeBuilder.addCriterion(id, hasSafeItem(itemLike));
                     criteria.add(id);
@@ -124,7 +128,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
             try {
                 if (input instanceof ItemLike l) {
                     builder.requires(l);
-                    String id = "has_" + AntimatterPlatformUtils.INSTANCE.getIdFromItem(l.asItem()).getPath();
+                    String id = "has_" + RegistryUtils.getIdFromItem(l.asItem()).getPath();
                     if (criteria.contains(id)) continue;
                     builder.unlockedBy(id, hasSafeItem(l));
                     criteria.add(id);

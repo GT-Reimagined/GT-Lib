@@ -3,7 +3,7 @@ package muramasa.antimatter.worldgen.vein.old;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.worldgen.object.WorldGenBase;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -126,7 +126,7 @@ public class WorldGenVein extends WorldGenBase<WorldGenVein> {
         json.addProperty("maxSize", maxSize);
         json.addProperty("heightScale", heightScale);
         if (fill != null){
-            json.addProperty("fill", AntimatterPlatformUtils.INSTANCE.getIdFromBlock(fill.getBlock()).toString());
+            json.addProperty("fill", RegistryUtils.getIdFromBlock(fill.getBlock()).toString());
         }
         JsonArray array = new JsonArray();
         variants.forEach(m -> {
@@ -162,7 +162,7 @@ public class WorldGenVein extends WorldGenBase<WorldGenVein> {
                 }
             });
         }
-        BlockState fill = json.has("fill") ? AntimatterPlatformUtils.INSTANCE.getBlockFromId(new ResourceLocation(json.get("fill").getAsString())).defaultBlockState() : null;
+        BlockState fill = json.has("fill") ? RegistryUtils.getBlockFromId(new ResourceLocation(json.get("fill").getAsString())).defaultBlockState() : null;
         return new WorldGenVein(
                 id,
                 json.get("layer").getAsInt(),

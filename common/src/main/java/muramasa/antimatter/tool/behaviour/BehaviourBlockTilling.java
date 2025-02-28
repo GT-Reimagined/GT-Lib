@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import muramasa.antimatter.behaviour.IItemUse;
 import muramasa.antimatter.tool.IBasicAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
@@ -16,6 +15,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 
 public class BehaviourBlockTilling implements IItemUse<IBasicAntimatterTool> {
 
@@ -38,7 +41,7 @@ public class BehaviourBlockTilling implements IItemUse<IBasicAntimatterTool> {
         if (c.getClickedFace() != Direction.DOWN && c.getLevel().isEmptyBlock(c.getClickedPos().above())) {
             BlockState blockstate = getToolModifiedState(c.getLevel().getBlockState(c.getClickedPos()), c, "hoe_dig");
             if (blockstate == null) return InteractionResult.PASS;
-            if (AntimatterPlatformUtils.INSTANCE.onUseHoe(c)) return InteractionResult.PASS;
+            if ( MinecraftForge.EVENT_BUS.post(new UseHoeEvent(c))) return InteractionResult.PASS;
             Utils.damageStack(c.getItemInHand(), c.getPlayer());
             SoundEvent soundEvent = instance.getAntimatterToolType().getUseSound() == null ? SoundEvents.HOE_TILL : instance.getAntimatterToolType().getUseSound();
             c.getLevel().playSound(c.getPlayer(), c.getClickedPos(), soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -49,7 +52,7 @@ public class BehaviourBlockTilling implements IItemUse<IBasicAntimatterTool> {
     }
 
     private BlockState getToolModifiedState(BlockState originalState, UseOnContext context, String action) {
-        BlockState eventState = AntimatterPlatformUtils.INSTANCE.onToolUse(originalState, context, action);
+        BlockState eventState = ForgeEventFactory.onToolUse(originalState, context, ToolAction.get(action), false);
         return eventState != originalState ? eventState : TILLING_MAP.get(originalState);
     }
 

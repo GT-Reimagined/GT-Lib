@@ -1,7 +1,6 @@
 package muramasa.antimatter.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import muramasa.antimatter.capability.fluid.FluidTank;
 import muramasa.antimatter.capability.fluid.FluidTanks;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.cover.CoverOutput;
@@ -9,13 +8,12 @@ import muramasa.antimatter.cover.ICover;
 import muramasa.antimatter.integration.jeirei.renderer.IInfoRenderer;
 import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.machine.types.TankMachine;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
-import tesseract.FluidPlatformUtils;
-import tesseract.TesseractGraphWrappers;
 
 import static muramasa.antimatter.machine.MachineFlag.FLUID;
 import static muramasa.antimatter.machine.MachineFlag.ITEM;
@@ -52,12 +50,9 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
             renderer.draw(stack, "Empty", left, top, 0xFAFAFF);
             return 8;
         }
-        renderer.draw(stack, FluidPlatformUtils.INSTANCE.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
-        StringBuilder fluidAmount = new StringBuilder().append(instance.stack.getFluidAmount() / TesseractGraphWrappers.dropletMultiplier);
-        if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-            fluidAmount.append(" ").append(intToSuperScript((int) (instance.stack.getFluidAmount() % 81L))).append("/₈₁");
-        }
-        renderer.draw(stack, fluidAmount.toString() + " mb", left, top + 8, 0xFAFAFF);
+        renderer.draw(stack, FluidUtils.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
+        String fluidAmount = String.valueOf(instance.stack.getAmount());
+        renderer.draw(stack, fluidAmount + " mb", left, top + 8, 0xFAFAFF);
         return 16;
     }
 

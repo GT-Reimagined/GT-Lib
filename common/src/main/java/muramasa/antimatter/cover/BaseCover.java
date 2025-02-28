@@ -7,6 +7,7 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.capability.ICoverHandler;
 import muramasa.antimatter.capability.IGuiHandler;
 import muramasa.antimatter.capability.item.FakeTrackedItemHandler;
+import muramasa.antimatter.capability.item.ITrackedHandler;
 import muramasa.antimatter.capability.item.TrackedItemHandler;
 import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.GuiInstance;
@@ -21,7 +22,6 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.network.packets.AbstractGuiEventPacket;
 import muramasa.antimatter.network.packets.CoverGuiEventPacket;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -29,9 +29,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.item.ExtendedItemContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,10 +140,10 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     }
 
     @Override
-    public Map<SlotType<?>, ExtendedItemContainer> getAll() {
-        return (Map<SlotType<?>, ExtendedItemContainer>) (Object) inventories;
+    public Map<SlotType<?>, IItemHandler> getAll() {
+        return (Map<SlotType<?>, IItemHandler>) (Object) inventories;
     }
-    public ExtendedItemContainer getInventory(SlotType<?> type){
+    public ITrackedHandler getInventory(SlotType<?> type){
         return inventories.get(type);
     }
 
@@ -154,7 +154,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
             CompoundTag nbt = new CompoundTag();
             this.inventories.forEach((f, i) -> {
                 if (i.isEmpty()) return;
-                nbt.put(f.getId(), i.serialize(new CompoundTag()));
+                nbt.put(f.getId(), i.serializeNBT());
             });
             if (!nbt.isEmpty()) {
                 stack.getOrCreateTag().put("coverInventories", nbt);
@@ -171,7 +171,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
             if (inventories != null && getFactory().hasGui()){
                 this.inventories.forEach((f, i) -> {
                     if (!nbt.contains(f.getId())) return;
-                    i.deserialize(nbt.getCompound(f.getId()));
+                    i.deserializeNBT(nbt.getCompound(f.getId()));
                 });
                 handler.getTile().setChanged();
             }
@@ -215,7 +215,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
         if (getFactory().hasGui()){
             this.inventories.forEach((f, i) -> {
                 if (!nbt.contains(f.getId())) return;
-                i.deserialize(nbt.getCompound(f.getId()));
+                i.deserializeNBT(nbt.getCompound(f.getId()));
             });
         }
     }
@@ -236,7 +236,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
         if (inventories != null && getFactory().hasGui()){
             this.inventories.forEach((f, i) -> {
                 if (i.isEmpty()) return;
-                nbt.put(f.getId(), i.serialize(new CompoundTag()));
+                nbt.put(f.getId(), i.serializeNBT());
             });
         }
         return nbt;
@@ -268,7 +268,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     }
 
     protected void markAndNotifySource(){
-        AntimatterPlatformUtils.INSTANCE.markAndNotifyBlock(source().getTile().getLevel(), source().getTile().getBlockPos(), source().getTile().getLevel().getChunkAt(source().getTile().getBlockPos()), source().getTile().getBlockState(), source().getTile().getBlockState(), 1, 512);
+        source().getTile().getLevel().markAndNotifyBlock(source().getTile().getBlockPos(), source().getTile().getLevel().getChunkAt(source().getTile().getBlockPos()), source().getTile().getBlockState(), source().getTile().getBlockState(), 1, 512);
     }
 
 }

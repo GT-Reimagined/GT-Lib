@@ -23,9 +23,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -51,7 +51,7 @@ public class GuiInstance implements ICanSyncData {
     private final List<SyncHolder> syncData = new ObjectArrayList<>();
     private int indexCounter = 0;
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Nullable
     public AntimatterContainerScreen<?> screen;
 
@@ -103,7 +103,7 @@ public class GuiInstance implements ICanSyncData {
      *
      * @return iterable widget list
      */
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public Iterable<Widget> widgetsToRender() {
         return () -> this.widgets.stream().sorted(Comparator.comparing(Widget::depth)).iterator();
     }
@@ -167,7 +167,7 @@ public class GuiInstance implements ICanSyncData {
         initWidgets(null);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void initClient(AntimatterContainerScreen<?> parent) {
         this.screen = parent;
         initWidgets(parent);

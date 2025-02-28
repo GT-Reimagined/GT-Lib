@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import muramasa.antimatter.material.Material;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
 import muramasa.antimatter.worldgen.object.WorldGenBase;
 import net.minecraft.core.Registry;
@@ -56,7 +56,7 @@ public class WorldGenBedrockVein extends WorldGenBase<WorldGenBedrockVein> {
         jsonObject.addProperty("indicatorRocks", indicatorRocks);
         jsonObject.addProperty("indicatorFlowers", indicatorFlowers);
         if (flower != null && flower != Blocks.AIR){
-            jsonObject.addProperty("flower", AntimatterPlatformUtils.INSTANCE.getIdFromBlock(flower).toString());
+            jsonObject.addProperty("flower", RegistryUtils.getIdFromBlock(flower).toString());
         }
         JsonArray array = new JsonArray();
         getDimensions().forEach(r -> array.add(r.toString()));
@@ -82,7 +82,7 @@ public class WorldGenBedrockVein extends WorldGenBase<WorldGenBedrockVein> {
                 Material.get(jsonObject.get("material").getAsString()),
                 jsonObject.get("indicatorRocks").getAsBoolean(),
                 jsonObject.get("indicatorFlowers").getAsBoolean(),
-                jsonObject.has("flower") ? AntimatterPlatformUtils.INSTANCE.getBlockFromId(new ResourceLocation(jsonObject.get("flower").getAsString())) : Blocks.AIR,
+                jsonObject.has("flower") ? RegistryUtils.getBlockFromId(new ResourceLocation(jsonObject.get("flower").getAsString())) : Blocks.AIR,
                 dims
         );
     }

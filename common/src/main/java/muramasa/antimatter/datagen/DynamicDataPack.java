@@ -6,12 +6,12 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.Ref;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -54,7 +54,7 @@ public class DynamicDataPack implements PackResources {
 
     public static void addRecipe(FinishedRecipe recipe) {
         JsonObject recipeJson = recipe.serializeRecipe();
-        Path parent = AntimatterPlatformUtils.INSTANCE.getConfigDir().getParent()
+        Path parent = FMLPaths.CONFIGDIR.get().getParent()
                 .resolve("dumped/antimatter-dynamic-data/data");
         if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get()){
             writeJson(recipe.getId(), "recipes", parent, recipeJson);

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import muramasa.antimatter.behaviour.IItemUse;
 import muramasa.antimatter.tool.IBasicAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.event.ForgeEventFactory;
 
 public class BehaviourVanillaShovel implements IItemUse<IBasicAntimatterTool> {
 
@@ -63,7 +64,7 @@ public class BehaviourVanillaShovel implements IItemUse<IBasicAntimatterTool> {
     }
 
     private BlockState getToolModifiedState(BlockState originalState, UseOnContext context, String action) {
-        BlockState eventState = AntimatterPlatformUtils.INSTANCE.onToolUse(originalState, context, action);
+        BlockState eventState = ForgeEventFactory.onToolUse(originalState, context, ToolAction.get(action), false);
         if (eventState != originalState) return eventState;
         Block flattened = FLATTENING_MAP.get(originalState.getBlock());
         if (flattened == null) return null;
@@ -77,7 +78,7 @@ public class BehaviourVanillaShovel implements IItemUse<IBasicAntimatterTool> {
     }
 
     private BlockState getFireModifiedState(BlockState originalState, BlockState changedState, UseOnContext context, String action) {
-        BlockState eventState = AntimatterPlatformUtils.INSTANCE.onToolUse(originalState, context, action);
+        BlockState eventState = ForgeEventFactory.onToolUse(originalState, context, ToolAction.get(action), false);
         return eventState != originalState ? eventState : changedState;
     }
 

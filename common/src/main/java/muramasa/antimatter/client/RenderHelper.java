@@ -12,13 +12,13 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.item.ItemBattery;
 import muramasa.antimatter.mixin.client.LevelRendererAccessor;
 import muramasa.antimatter.mixin.client.VertexFormatAccessor;
 import muramasa.antimatter.pipe.PipeSize;
 import muramasa.antimatter.tool.armor.MaterialArmor;
+import muramasa.antimatter.util.FluidUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -48,7 +48,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import tesseract.FluidPlatformUtils;
+import net.minecraftforge.fluids.FluidStack;
 import tesseract.TesseractCapUtils;
 import tesseract.api.gt.IEnergyHandlerItem;
 import tesseract.graph.Connectivity;
@@ -109,15 +109,15 @@ public class RenderHelper {
         ModelUtils.INSTANCE.registerProperty(item, location, function);
     }
 
-    public static void drawFluid(PoseStack mstack, Minecraft mc, int posX, int posY, int width, int height, int scaledAmount, FluidHolder stack) {
+    public static void drawFluid(PoseStack mstack, Minecraft mc, int posX, int posY, int width, int height, int scaledAmount, FluidStack stack) {
         if (stack == null) return;
         Fluid fluid = stack.getFluid();
         if (fluid == null) return;
         RenderSystem.enableBlend();
         //TODO 1.18
         //RenderSystem.enableAlphaTest();
-        TextureAtlasSprite fluidStillSprite = mc.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(FluidPlatformUtils.INSTANCE.getStillTexture(fluid));
-        int fluidColor = FluidPlatformUtils.INSTANCE.getFluidColor(fluid);
+        TextureAtlasSprite fluidStillSprite = mc.getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(FluidUtils.getStillTexture(fluid));
+        int fluidColor = FluidUtils.getFluidColor(fluid);
 
         //Draw the fluid texture
         drawTiledSprite(mstack, mc, posX, posY, width, height, 16, 16, fluidColor, scaledAmount, fluidStillSprite);

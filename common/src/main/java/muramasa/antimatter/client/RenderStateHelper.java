@@ -1,10 +1,11 @@
 package muramasa.antimatter.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL13;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
-@Environment(Environment.EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderStateHelper {
     public static void setGlClearColorFromInt(int colorValue, int opacity) {
         int i = (colorValue & 16711680) >> 16;

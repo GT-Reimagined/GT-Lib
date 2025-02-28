@@ -66,7 +66,7 @@ public class ScannerItem extends ItemBasic<ScannerItem> {
     }
 
     @NotNull
-    //@Override
+    @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         if (context.getLevel().isClientSide) return InteractionResult.CONSUME;
         BlockState state = context.getLevel().getBlockState(context.getClickedPos());
@@ -85,100 +85,4 @@ public class ScannerItem extends ItemBasic<ScannerItem> {
         if (success) return InteractionResult.SUCCESS;
         return super.useOn(context);
     }
-
-    /*@Override
-    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        return super.onItemUseFirst(stack, context);
-    }*/
-
-    //    @Override
-//    public EnumActionResult onItemUse(PlayerEntity player, World world, BlockPos pos, Hand hand, Direction side, float hitX, float hitY, float hitZ) {
-//        ItemStack stack = player.getHeldItem(hand);
-//        TileEntity tile = Utils.getTile(world, pos);
-//        if (tile != null) {
-//            if (Data.DebugScanner.isEqual(stack)) {
-//                if (tile instanceof BlockEntityMachine) {
-//                    if (tile instanceof BlockEntityMultiMachine) {
-//                        if (!world.isRemote) {
-//                            if (!((BlockEntityMultiMachine) tile).isStructureValid()) {
-//                                ((BlockEntityMultiMachine) tile).checkStructure();
-//                            }
-//                        }
-//                        ((BlockEntityMultiMachine) tile).checkRecipe();
-//                    } else if (tile instanceof BlockEntityHatch) {
-////                        MachineFluidHandler handler = ((BlockEntityHatch) tile).getFluidHandler();
-////                        if (handler != null) {
-////                            System.out.println(handler.toString());
-////                        }
-//                    } /*else if (tile instanceof TileEntityItemFluidMachine) {
-//                        MachineFluidHandler fluidHandler = ((TileEntityItemFluidMachine) tile).getFluidHandler();
-//                        for (FluidStack fluid : fluidHandler.getInputs()) {
-//                            System.out.println(fluid.getLocalizedName() + " - " + fluid.amount);
-//                        }
-//                        tile.markDirty();
-//                    }*/
-//                } else if (tile instanceof BlockEntityPipe) {
-//                    player.sendMessage(new StringTextComponent("C: " + ((BlockEntityPipe) tile).getConnections() + (((BlockEntityPipe) tile).getConnections() > 63 ? " (Culled)" : " (Non Culled)")));
-//                } else if (tile instanceof TileEntityMaterial) {
-//                    if (!world.isRemote) {
-//                        TileEntityMaterial ore = (TileEntityMaterial) tile;
-//                        player.sendMessage(new StringTextComponent(ore.getMaterial().getId()));
-//                    }
-//                }
-//            }
-//        } else {
-//            if (Data.DebugScanner.isEqual(stack)) {
-//                BlockState state = world.getBlockState(pos);
-//                if (state.getBlock() instanceof BlockTurbineCasing) {
-//                    BlockState casingState = state.getBlock().getExtendedState(state, world, pos);
-//                    if (casingState instanceof IExtendedBlockState) {
-//                        IExtendedBlockState exState = (IExtendedBlockState) casingState;
-//                        try {
-//                            int[] ct = exState.getValue(BlockTurbineCasing.CONFIG);
-//                            player.sendMessage(new StringTextComponent("ct: " + Arrays.toString(ct)));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                } else if (state.getBlock() instanceof BlockDynamic) {
-//                    BlockState ctState = state.getBlock().getExtendedState(state, world, pos);
-//                    if (ctState instanceof IExtendedBlockState) {
-//                        IExtendedBlockState exState = (IExtendedBlockState) ctState;
-//                        try {
-//                            int[] ct = exState.getValue(BlockDynamic.CONFIG);
-//                            player.sendMessage(new StringTextComponent("ct: " + Arrays.toString(ct)));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//                //if (!world.isRemote) {
-//                    //Data.RUBBER_SAPLING.generateTree(world, pos, Ref.RNG);
-//                    //RecipeMap.dumpHashCollisions();
-//                //}
-//            }
-//        }
-//        return EnumActionResult.FAIL; //TODO FAIL?
-//    }
-
-//    public ItemType required(String... mods) {
-//        for (int i = 0; i < mods.length; i++) {
-//            if (!Utils.isModLoaded(mods[i])) {
-//                enabled = false;
-//                break;
-//            }
-//        }
-//        return this;
-//    }
-//
-//    public ItemType optional(String... mods) {
-//        enabled = false;
-//        for (int i = 0; i < mods.length; i++) {
-//            if (Utils.isModLoaded(mods[i])) {
-//                enabled = true;
-//                break;
-//            }
-//        }
-//        return this;
-//    }
 }

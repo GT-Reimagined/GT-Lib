@@ -16,6 +16,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.Collection;
 import java.util.Map;
@@ -23,18 +24,13 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class AntimatterGroupedModel implements IAntimatterModel {
-    final Map<String, IAntimatterModel> models;
+public class AntimatterGroupedModel implements IAntimatterModel<AntimatterGroupedModel> {
+    final Map<String, IAntimatterModel<?>> models;
     final ResourceLocation particle;
 
-    public AntimatterGroupedModel(ResourceLocation particle, Map<String, IAntimatterModel> models) {
+    public AntimatterGroupedModel(ResourceLocation particle, Map<String, IAntimatterModel<?>> models) {
         this.models = models;
         this.particle = particle;
-    }
-
-    @Override
-    public BakedModel bakeModel(ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
-        return null;
     }
 
     @Override
@@ -43,17 +39,17 @@ public class AntimatterGroupedModel implements IAntimatterModel {
         return new GroupedBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())), builder.build());
     }
 
-    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IAntimatterModel>> entries) {
+    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IAntimatterModel<?>>> entries) {
         ImmutableMap.Builder<String, BakedModel> builder = ImmutableMap.builder();
-        for (Map.Entry<String, IAntimatterModel> entry : entries) {
+        for (Map.Entry<String, IAntimatterModel<?>> entry : entries) {
             builder.put(entry.getKey(), entry.getValue().bake(configuration, bakery, getter, transform, overrides, loc));
         }
         return builder;
     }
 
     @Override
-    public Collection<Material> getMaterials(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return models.values().stream().flatMap(t -> t.getMaterials(configuration, modelGetter, missingTextureErrors).stream()).collect(Collectors.toList());
+    public Collection<Material> getTextures(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
+        return models.values().stream().flatMap(t -> t.getTextures(configuration, modelGetter, missingTextureErrors).stream()).collect(Collectors.toList());
     }
 
     public static class CoverModel extends AntimatterGroupedModel {

@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import muramasa.antimatter.client.IAntimatterModel;
 import muramasa.antimatter.client.baked.MachineBakedModel;
 import muramasa.antimatter.machine.MachineState;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -13,6 +14,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,7 +23,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class MachineModel implements IAntimatterModel{
+public class MachineModel implements IAntimatterModel<MachineModel>{
 
     protected final Map<MachineState, UnbakedModel[]> models;
     protected final ResourceLocation particle;
@@ -31,13 +33,13 @@ public class MachineModel implements IAntimatterModel{
     }
 
     @Override
-    public Collection<Material> getMaterials(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
+    public Collection<Material> getTextures(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
             return models.values().stream().flatMap(t -> Arrays.stream(t).flatMap(i -> i.getMaterials(modelGetter, missingTextureErrors).stream())).collect(Collectors.toSet());
     }
 
     @Override
-    public BakedModel bakeModel(ModelBakery bakery,
-            Function<Material, TextureAtlasSprite> getter, ModelState transform,
+    public BakedModel bakeModel(IModelConfiguration configuration, ModelBakery bakery,
+            Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides,
             ResourceLocation loc) {
                 ImmutableMap.Builder<MachineState, BakedModel[]> builder = ImmutableMap.builder();
 

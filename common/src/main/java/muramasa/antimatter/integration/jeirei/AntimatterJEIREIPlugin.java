@@ -1,6 +1,5 @@
 package muramasa.antimatter.integration.jeirei;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -12,7 +11,6 @@ import muramasa.antimatter.gui.GuiData;
 import muramasa.antimatter.gui.slot.ISlotProvider;
 import muramasa.antimatter.integration.create.client.PonderIntegration;
 import muramasa.antimatter.integration.jei.AntimatterJEIPlugin;
-import muramasa.antimatter.integration.jei.JEIPlatformHelper;
 import muramasa.antimatter.integration.rei.REIUtils;
 import muramasa.antimatter.machine.BlockMachine;
 import muramasa.antimatter.machine.Tier;
@@ -26,12 +24,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static muramasa.antimatter.gui.SlotType.*;
@@ -107,7 +106,7 @@ public class AntimatterJEIREIPlugin{
     }
     public static void registerPatternForJei(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
         STRUCTURES.put(machine.getBlockState(tier), patternList);
-        if (AntimatterAPI.isModLoaded(Ref.MOD_CREATE) && AntimatterAPI.getSIDE().isClient()){
+        if (AntimatterAPI.isModLoaded(Ref.MOD_CREATE) && FMLEnvironment.dist.isClient()){
             PonderIntegration.registerMultiblock(machine, tier, patternList);
         }
     }
@@ -159,9 +158,9 @@ public class AntimatterJEIREIPlugin{
 
     //To perform a JEI lookup for fluid. Use defines direction.
 
-    public static void uses(FluidHolder val, boolean USE) {
+    public static void uses(FluidStack val, boolean USE) {
         if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
-            JEIPlatformHelper.INSTANCE.uses(val, USE);
+            AntimatterJEIPlugin.uses(val, USE);
         } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.uses(val, USE);
         }

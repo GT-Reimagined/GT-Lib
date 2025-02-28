@@ -76,13 +76,13 @@ public class InfoRenderers {
         }
     };
 
-    public static final IRecipeInfoRenderer RF_RENDERER = new IRecipeInfoRenderer() {
+    public static final IRecipeInfoRenderer FE_RENDERER = new IRecipeInfoRenderer() {
         public void render(PoseStack stack, IRecipe recipe, Font fontRenderer, int guiOffsetX, int guiOffsetY) {
             if (recipe.getDuration() == 0 && recipe.getPower() == 0) return;
             String additional = recipe.getDuration() < 1200 ? "" : recipe.getDuration() < 36000 ? " (" + (recipe.getDuration() / 20.0f) + " secs)" : " (" + (recipe.getDuration() / 1200.0f) + " mins)";
             String power = "Duration: " + recipe.getDuration() + " ticks" + additional;
-            String euT = "RF/t: " + recipe.getPower();
-            String total = "Total: " + recipe.getPower() * recipe.getDuration() + " RF";
+            String euT = "FE/t: " + recipe.getPower();
+            String total = "Total: " + recipe.getPower() * recipe.getDuration() + " FE";
             renderString(stack, power, fontRenderer, 5, 0, guiOffsetX, guiOffsetY);
             renderString(stack, euT, fontRenderer, 5, 10, guiOffsetX, guiOffsetY);
             renderString(stack, total, fontRenderer, 5, 20, guiOffsetX, guiOffsetY);

@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import muramasa.antimatter.AntimatterAPI;
-import muramasa.antimatter.recipe.container.ContainerItemShapedRecipe;
+import muramasa.antimatter.recipe.container.MirroredShapedRecipe;
 import muramasa.antimatter.recipe.ingredient.PropertyIngredient;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Set;
 
 
-public class MaterialRecipe extends ContainerItemShapedRecipe {
+public class MaterialRecipe extends MirroredShapedRecipe {
 
     private final static Map<Provider, ResourceLocation> IDS = new Object2ObjectOpenHashMap<>();
 
@@ -58,7 +58,7 @@ public class MaterialRecipe extends ContainerItemShapedRecipe {
     public final NonNullList<ItemStack> outputs;
 
     public MaterialRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, NonNullList<ItemStack> recipeOutputIn, String builderId, Map<String, Set<Integer>> materialSlots) {
-        super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn.get(0));
+        super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn.get(0), false);
         this.materialSlots = ImmutableMap.copyOf(materialSlots);
         this.size = materialSlots.values().stream().mapToInt(Set::size).sum();
         String[] ids = builderId.split("/");

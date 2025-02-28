@@ -2,12 +2,12 @@ package muramasa.antimatter.datagen.builder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.models.JOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import tesseract.FluidPlatformUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,11 +47,11 @@ public class AntimatterItemModelBuilder extends AntimatterModelBuilder<Antimatte
     }
 
     public AntimatterItemModelBuilder bucketProperties(Fluid fluid) {
-        return bucketProperties(fluid, true, FluidPlatformUtils.INSTANCE.isFluidGaseous(fluid));
+        return bucketProperties(fluid, true, FluidUtils.isFluidGaseous(fluid));
     }
 
     public AntimatterItemModelBuilder bucketProperties(Fluid fluid, boolean tint, boolean islighter) {
-        property("fluid", AntimatterPlatformUtils.INSTANCE.getIdFromFluid(fluid).toString());
+        property("fluid", RegistryUtils.getIdFromFluid(fluid).toString());
         property("flipGas", islighter);
         property("applyTint", tint);
         // property("coverIsMask", false);

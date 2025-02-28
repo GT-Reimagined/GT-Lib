@@ -1,48 +1,52 @@
 package muramasa.antimatter.item;
 
-import earth.terrarium.botarium.common.fluid.base.BotariumFluidItem;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.impl.SimpleFluidContainer;
-import earth.terrarium.botarium.common.fluid.impl.WrappedItemFluidContainer;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import earth.terrarium.botarium.common.item.ItemStackHolder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
-public interface IFluidItem extends BotariumFluidItem {
+public interface IFluidItem {
 
-    long getTankSize();
+    int getCapacity();
 
-    default FluidHolder getTank(ItemStack stack) {
-        return FluidHooks.getItemFluidManager(stack).getFluidInTank(0);
+    default Item getItem(){
+        return (Item)this;
     }
 
-    default long getFluidAmount(ItemStack stack) {
-        return getTank(stack).getFluidAmount();
+    default FluidStack getTank(ItemStack stack) {
+        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).map(f -> f.getFluidInTank(0)).orElse(FluidStack.EMPTY);
+    }
+
+    default int getFluidAmount(ItemStack stack) {
+        return getTank(stack).getAmount();
     }
 
     default Fluid getFluid(ItemStack stack) {
         return getTank(stack).getFluid();
     }
 
-    default FluidHolder getFluidStack(ItemStack stack){
-        return getTank(stack).copyHolder();
+    default FluidStack getFluidStack(ItemStack stack){
+        return getTank(stack).copy();
     }
 
-    default void insert(ItemStackHolder stack, FluidHolder fluid) {
-        FluidHooks.getItemFluidManager(stack.getStack()).insertFluid(stack, fluid, false);
+    default ItemStack fill(Fluid fluid, int amount) {
+        ItemStack stack = new ItemStack(getItem());
+        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> f.fill(new FluidStack(fluid, amount), FluidAction.EXECUTE));
+        return stack;
     }
 
-    default void extract(ItemStackHolder stack, FluidHolder fluid) {
-        FluidHooks.getItemFluidManager(stack.getStack()).extractFluid(stack, fluid, false);
+    default ItemStack fill(Fluid fluid) {
+        return fill(fluid, this.getCapacity());
     }
 
-    BiPredicate<Integer, FluidHolder> getFilter();
-
-    @Override
-    default WrappedItemFluidContainer getFluidContainer(ItemStack stack) {
-        return new WrappedItemFluidContainer(stack, new SimpleFluidContainer(this.getTankSize(), 1, getFilter()));
+    default ItemStack drain(ItemStack old, FluidStack fluid) {
+        old.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> f.drain(fluid, FluidAction.EXECUTE));
+        return old;
     }
+
+    Predicate<FluidStack> getFilter();
 }

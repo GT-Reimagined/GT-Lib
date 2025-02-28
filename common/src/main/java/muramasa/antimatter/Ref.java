@@ -2,7 +2,7 @@ package muramasa.antimatter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.client.itemgroup.AntimatterItemGroup;
 import muramasa.antimatter.util.XSTR;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -28,11 +28,11 @@ public class Ref {
     /**
      * Creative Tabs
      **/
-    public static final CreativeModeTab TAB_ITEMS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "items", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_TOOLS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "tools", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_BLOCKS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "blocks", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MATERIALS = AntimatterPlatformUtils.INSTANCE.createTab(ID, "materials", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MACHINES = AntimatterPlatformUtils.INSTANCE.createTab(ID, "machines", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_ITEMS = new AntimatterItemGroup(ID, "items", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_TOOLS = new AntimatterItemGroup(ID, "tools", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_BLOCKS = new AntimatterItemGroup(ID, "blocks", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_MATERIALS = new AntimatterItemGroup(ID, "materials", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_MACHINES = new AntimatterItemGroup(ID, "machines", () -> new ItemStack(Data.DEBUG_SCANNER));
 
     /**
      * Sound Events
@@ -56,7 +56,7 @@ public class Ref {
     /**
      * Fluid per Material Unit (Prime Factors: Forge: 3 * 3 * 2 * 2 * 2 * 2 Fabric: 5 * 5 * 5 * 3 * 3 * 2 * 2 * 2)
      */
-    public static final long L = AntimatterPlatformUtils.INSTANCE.isForge() ? 144L : 9000L, L9 = L / 9;
+    public static final int L = 144, L9 = L / 9;
 
 
     /**
@@ -93,7 +93,7 @@ public class Ref {
     public static final String KEY_MACHINE_TEXTURE = "mt";
     public static final String KEY_MACHINE_FLUIDS = "fl";
     public static final String KEY_MACHINE_ENERGY = "en";
-    public static final String KEY_MACHINE_RF = "rf";
+    public static final String KEY_MACHINE_FE = "fe";
     public static final String KEY_MACHINE_HEAT = "he";
     public static final String KEY_MACHINE_RECIPE = "re";
     public static final String KEY_MACHINE_COVER = "co";

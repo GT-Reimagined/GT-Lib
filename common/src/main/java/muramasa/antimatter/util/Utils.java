@@ -5,10 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
-import earth.terrarium.botarium.common.energy.base.EnergyContainer;
-import earth.terrarium.botarium.common.energy.base.PlatformEnergyManager;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.base.PlatformFluidHandler;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectMap;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -75,13 +71,23 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractGraphWrappers;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.heat.IHeatHandler;
-import tesseract.api.item.PlatformItemHandler;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -119,11 +125,11 @@ public class Utils {
     /**
      * Returns true of A has the same Fluid as B
      **/
-    public static boolean equals(FluidHolder a, FluidHolder b) {
+    public static boolean equals(FluidStack a, FluidStack b) {
         if (a == b) return true;
         if (a == null || b == null) return false;
 
-        return a.getFluid() == b.getFluid() && a.getCompound() == b.getCompound();
+        return a.getFluid() == b.getFluid() && a.getTag() == b.getTag();
     }
 
     /**
@@ -136,8 +142,8 @@ public class Utils {
     /**
      * Returns true if A equals() B and A amount >= B amount
      **/
-    public static boolean contains(FluidHolder a, FluidHolder b) {
-        return equals(a, b) && a.getFluidAmount() >= b.getFluidAmount();
+    public static boolean contains(FluidStack a, FluidStack b) {
+        return equals(a, b) && a.getAmount() >= b.getAmount();
     }
 
     /**
@@ -156,7 +162,7 @@ public class Utils {
         return state.getValue(BlockStateProperties.HORIZONTAL_FACING);
     }
 
-    public static ItemStack extractAny(PlatformItemHandler handler) {
+    public static ItemStack extractAny(IItemHandler handler) {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.extractItem(i, Math.min(handler.getStackInSlot(i).getCount(), handler.getStackInSlot(i).getMaxStackSize()), false);
             if (!stack.isEmpty()) return stack;
@@ -167,7 +173,7 @@ public class Utils {
     /**
      * Returns the index of a fluid in a list, or -1 if not found
      **/
-    public static int contains(List<FluidHolder> list, FluidHolder fluid) {
+    public static int contains(List<FluidStack> list, FluidStack fluid) {
         int size = list.size();
         for (int i = 0; i < size; i++) {
             if (equals(list.get(i), fluid)) return i;
@@ -189,11 +195,11 @@ public class Utils {
         return splitStacks(a);
     }
 
-    public static void tryCondenseInventory(PlatformItemHandler itemHandler){
+    public static void tryCondenseInventory(IItemHandlerModifiable itemHandler){
         tryCondenseInventory(itemHandler, 0, itemHandler.getSlots());
     }
 
-    public static void tryCondenseInventory(PlatformItemHandler tile, int startSlot, int endSlot) {
+    public static void tryCondenseInventory(IItemHandlerModifiable tile, int startSlot, int endSlot) {
         for (int i = startSlot; i < endSlot; ++i) {
             for (int j = startSlot; j < endSlot; ++j) {
                 if (i == j) {
@@ -235,15 +241,15 @@ public class Utils {
     }
 
     /**
-     * Merges two Lists of FluidHolders, ignoring max amount
+     * Merges two Lists of FluidStacks, ignoring max amount
      **/
-    public static List<FluidHolder> mergeFluids(List<FluidHolder> a, List<FluidHolder> b) {
+    public static List<FluidStack> mergeFluids(List<FluidStack> a, List<FluidStack> b) {
         int position, size = b.size();
-        for (FluidHolder stack : b) {
+        for (FluidStack stack : b) {
             if (stack == null) continue;
             position = contains(a, stack);
             if (position == -1) a.add(stack);
-            else a.get(position).setAmount(a.get(position).getFluidAmount() + stack.getFluidAmount());
+            else a.get(position).setAmount(a.get(position).getAmount() + stack.getAmount());
         }
         return a;
     }
@@ -254,8 +260,8 @@ public class Utils {
         return stack;
     }
 
-    public static FluidHolder ca(long amount, FluidHolder toCopy) {
-        FluidHolder stack = toCopy.copyHolder();
+    public static FluidStack ca(int amount, FluidStack toCopy) {
+        FluidStack stack = toCopy.copy();
         stack.setAmount(amount);
         return stack;
     }
@@ -290,16 +296,16 @@ public class Utils {
         return ca(stack.getCount() * amount, stack);
     }
 
-    public static FluidHolder mul(long amount, FluidHolder stack) {
-        return ca(stack.getFluidAmount() * amount, stack);
+    public static FluidStack mul(int amount, FluidStack stack) {
+        return ca(stack.getAmount() * amount, stack);
     }
 
     public static boolean hasNoConsumeTag(ItemStack stack) {
         return stack.hasTag() && stack.getTag().contains(Ref.KEY_STACK_NO_CONSUME);
     }
 
-    public static boolean hasNoConsumeTag(FluidHolder stack) {
-        return stack.getCompound() != null && stack.getCompound().contains(Ref.KEY_STACK_NO_CONSUME);
+    public static boolean hasNoConsumeTag(FluidStack stack) {
+        return stack.getTag() != null && stack.getTag().contains(Ref.KEY_STACK_NO_CONSUME);
     }
 
     public static boolean hasIgnoreNbtTag(ItemStack stack) {
@@ -311,8 +317,8 @@ public class Utils {
         return stack.getTag().getBoolean(Ref.KEY_STACK_NO_CONSUME);
     }
 
-    public static boolean getNoConsumeTag(FluidHolder stack) {
-        return stack.getCompound().getBoolean(Ref.KEY_STACK_NO_CONSUME);
+    public static boolean getNoConsumeTag(FluidStack stack) {
+        return stack.getTag().getBoolean(Ref.KEY_STACK_NO_CONSUME);
     }
 
     public static ItemStack addNoConsumeTag(ItemStack stack) {
@@ -320,8 +326,8 @@ public class Utils {
         return stack;
     }
 
-    public static FluidHolder addNoConsumeTag(FluidHolder stack) {
-        validateNBT(stack).getCompound().putBoolean(Ref.KEY_STACK_NO_CONSUME, true);
+    public static FluidStack addNoConsumeTag(FluidStack stack) {
+        validateNBT(stack).getTag().putBoolean(Ref.KEY_STACK_NO_CONSUME, true);
         return stack;
     }
 
@@ -330,8 +336,8 @@ public class Utils {
         return stack;
     }
 
-    public static FluidHolder validateNBT(FluidHolder stack) {
-        if (stack.getCompound() == null) stack.setCompound(new CompoundTag());
+    public static FluidStack validateNBT(FluidStack stack) {
+        if (stack.getTag() == null) stack.setTag(new CompoundTag());
         return stack;
     }
 
@@ -350,9 +356,9 @@ public class Utils {
         return true;
     }
 
-    public static boolean areFluidsValid(FluidHolder... fluids) {
+    public static boolean areFluidsValid(FluidStack... fluids) {
         if (fluids == null || fluids.length == 0) return false;
-        for (FluidHolder fluid : fluids) {
+        for (FluidStack fluid : fluids) {
             if (fluid.getFluid() == Fluids.EMPTY) return false;
         }
         return true;
@@ -367,8 +373,8 @@ public class Utils {
     }
 
 
-    public static boolean areFluidsValid(FluidHolder[]... fluidArrays) {
-        for (FluidHolder[] fluidArray : fluidArrays) {
+    public static boolean areFluidsValid(FluidStack[]... fluidArrays) {
+        for (FluidStack[] fluidArray : fluidArrays) {
             if (!areFluidsValid(fluidArray)) return false;
         }
         return true;
@@ -402,12 +408,12 @@ public class Utils {
         return matchCount >= a.size();
     }
 
-    public static boolean doFluidsMatchAndSizeValid(FluidHolder[] a, FluidHolder[] b) {
+    public static boolean doFluidsMatchAndSizeValid(FluidStack[] a, FluidStack[] b) {
         if (a == null && b == null) return true;
         if (a == null || b == null) return false;
         int matchCount = 0;
-        for (FluidHolder fluidStack : a) {
-            for (FluidHolder stack : b) {
+        for (FluidStack fluidStack : a) {
+            for (FluidStack stack : b) {
                 if (contains(stack, fluidStack)) {
                     matchCount++;
                     break;
@@ -417,11 +423,11 @@ public class Utils {
         return matchCount >= a.length;
     }
 
-    public static boolean transferItems(PlatformItemHandler from, PlatformItemHandler to, boolean once) {
+    public static boolean transferItems(IItemHandler from, IItemHandler to, boolean once) {
         return transferItems(from, to, once, stack -> true);
     }
 
-    public static boolean transferItems(PlatformItemHandler from, PlatformItemHandler to, boolean once, Predicate<ItemStack> filter) {
+    public static boolean transferItems(IItemHandler from, IItemHandler to, boolean once, Predicate<ItemStack> filter) {
         boolean successful = false;
         for (int i = 0; i < from.getSlots(); i++) {
             ItemStack toInsert = from.extractItem(i, Math.min(from.getStackInSlot(i).getCount(), from.getStackInSlot(i).getMaxStackSize()), true);
@@ -446,7 +452,7 @@ public class Utils {
         return successful;
     }
 
-    public static ItemStack insertItem(PlatformItemHandler to, ItemStack stack, boolean simulate){
+    public static ItemStack insertItem(IItemHandler to, ItemStack stack, boolean simulate){
         if (to == null || stack.isEmpty())
             return stack;
 
@@ -484,34 +490,10 @@ public class Utils {
         return transferred;
     }
 
-    public static boolean transferEnergy(PlatformEnergyManager from, PlatformEnergyManager to) {
-        long extracted = from.extract(Long.MAX_VALUE, true);
+    public static boolean transferEnergy(IEnergyStorage from, IEnergyStorage to) {
+        int extracted = from.extractEnergy(Integer.MAX_VALUE, true);
         if (extracted > 0) {
-            long inserted = to.insert(extracted, false);
-            if (inserted > 0) {
-                from.extract(inserted, false);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean transferEnergy(PlatformEnergyManager from, EnergyContainer to) {
-        long extracted = from.extract(Long.MAX_VALUE, true);
-        if (extracted > 0) {
-            long inserted = to.insertEnergy(extracted, false);
-            if (inserted > 0) {
-                from.extract(inserted, false);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean transferEnergy(EnergyContainer from, PlatformEnergyManager to) {
-        long extracted = from.extractEnergy(Long.MAX_VALUE, true);
-        if (extracted > 0) {
-            long inserted = to.insert(extracted, false);
+            int inserted = to.receiveEnergy(extracted, false);
             if (inserted > 0) {
                 from.extractEnergy(inserted, false);
                 return true;
@@ -563,28 +545,28 @@ public class Utils {
         return transferred;
     }
 
-    public static boolean transferFluids(PlatformFluidHandler from, PlatformFluidHandler to, int cap, Predicate<FluidHolder> filter) {
+    public static boolean transferFluids(IFluidHandler from, IFluidHandler to, int cap, Predicate<FluidStack> filter) {
         boolean successful = false;
-        for (int i = 0; i < to.getTankAmount(); i++) {
+        for (int i = 0; i < to.getTanks(); i++) {
             //if (i >= from.getTanks()) break;
-            FluidHolder toInsert;
-            for (int j = 0; j < from.getTankAmount(); j++) {
+            FluidStack toInsert;
+            for (int j = 0; j < from.getTanks(); j++) {
                 if (cap > 0) {
-                    FluidHolder fluid = from.getFluidInTank(j);
+                    FluidStack fluid = from.getFluidInTank(j);
                     if (fluid.isEmpty() || !filter.test(fluid)) {
                         continue;
                     }
-                    fluid = fluid.copyHolder();
-                    long toDrain = Math.min(cap * TesseractGraphWrappers.dropletMultiplier, fluid.getFluidAmount());
+                    fluid = fluid.copy();
+                    int toDrain = Math.min(cap, fluid.getAmount());
                     fluid.setAmount(toDrain);
-                    toInsert = from.extractFluid(fluid, true);
+                    toInsert = from.drain(fluid, FluidAction.SIMULATE);
                 } else {
-                    toInsert = from.extractFluid(from.getFluidInTank(j), true);
+                    toInsert = from.drain(from.getFluidInTank(j), FluidAction.SIMULATE);
                 }
-                long filled = to.insertFluid(toInsert, true);
+                int filled = to.fill(toInsert, FluidAction.SIMULATE);
                 if (filled > 0) {
                     toInsert.setAmount(filled);
-                    to.insertFluid(from.extractFluid(toInsert, false), false);
+                    to.fill(from.drain(toInsert, FluidAction.EXECUTE), FluidAction.EXECUTE);
                     successful = true;
                 }
             }
@@ -598,7 +580,7 @@ public class Utils {
         return (Consumer<T>) SINK;
     }
 
-    public static boolean transferFluids(PlatformFluidHandler from, PlatformFluidHandler to, int cap) {
+    public static boolean transferFluids(IFluidHandler from, IFluidHandler to, int cap) {
         return transferFluids(from, to, cap, fluidStack -> true);
     }
 
@@ -631,7 +613,7 @@ public class Utils {
 
     }
 
-    public static boolean transferFluids(PlatformFluidHandler from, PlatformFluidHandler to) {
+    public static boolean transferFluids(IFluidHandler from, IFluidHandler to) {
         return transferFluids(from, to, -1);
     }
 
@@ -695,6 +677,10 @@ public class Utils {
 
     public static MutableComponent literal(String text){
         return new TextComponent(text);
+    }
+
+    public static String getModName(String modid){
+        return ModList.get().getModContainerById(modid).map(m -> m.getModInfo().getDisplayName()).orElse(modid);
     }
 
     /**
@@ -784,22 +770,22 @@ public class Utils {
 
     @Nullable
     public static BlockEntity getTileFromBuf(FriendlyByteBuf buf) {
-        return unsafeRunForDist(() -> () -> Antimatter.PROXY.getClientWorld().getBlockEntity(buf.readBlockPos()), () -> () -> {
+        return DistExecutor.unsafeRunForDist(() -> () -> Antimatter.PROXY.getClientWorld().getBlockEntity(buf.readBlockPos()), () -> () -> {
             throw new RuntimeException("Shouldn't be called on server!");
         });
     }
 
     public static <T> T unsafeRunForDist(Supplier<Supplier<T>> clientTarget, Supplier<Supplier<T>> serverTarget) {
-        return switch (AntimatterAPI.getSIDE()) {
+        return switch (FMLEnvironment.dist) {
             case CLIENT -> clientTarget.get().get();
-            case SERVER -> serverTarget.get().get();
+            case DEDICATED_SERVER -> serverTarget.get().get();
         };
     }
 
     public static void unsafeRunForDistVoid(Supplier<Runnable> clientTarget, Supplier<Runnable> serverTarget) {
-        switch (AntimatterAPI.getSIDE()) {
+        switch (FMLEnvironment.dist) {
             case CLIENT -> clientTarget.get().run();
-            case SERVER -> serverTarget.get().run();
+            case DEDICATED_SERVER -> serverTarget.get().run();
         };
     }
 
@@ -818,7 +804,7 @@ public class Utils {
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (tile.getLevel().isClientSide) {
             tile.getLevel().sendBlockUpdated(tile.getBlockPos(), state, state, 11);
-            AntimatterPlatformUtils.INSTANCE.requestModelDataRefresh(tile);
+            ModelDataManager.requestModelDataRefresh(tile);
         }
     }
 
@@ -1098,18 +1084,18 @@ public class Utils {
         if (world.isClientSide) return false;
         BlockState state = world.getBlockState(pos);
         ServerPlayer serverPlayer = player == null ? null : ((ServerPlayer) player);
-        int exp = player == null ? -1 : AntimatterPlatformUtils.INSTANCE.onBlockBreakEvent(world, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos);
+        int exp = player == null ? -1 : ForgeHooks.onBlockBreakEvent(world, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos);
         FluidState fluidState = world.getFluidState(pos);
         boolean destroyed = world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());// world.destroyBlock(pos, !player.isCreative(), player);
         if (destroyed) {
             if (player != null) {
-                if (AntimatterPlatformUtils.INSTANCE.canHarvestBlock(state, world, pos, player)) {
+                if (state.canHarvestBlock(world, pos, player)) {
                     state.getBlock().playerDestroy(world, player, pos, state, world.getBlockEntity(pos), stack);
                 }
                 stack.hurtAndBreak(state.getDestroySpeed(world, pos) != 0.0F ? damage : 0, player, (onBroken) -> onBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
         }
-        if (exp > 0) AntimatterPlatformUtils.INSTANCE.popExperience(state.getBlock(), (ServerLevel) world, pos, exp);
+        if (exp > 0) state.getBlock().popExperience((ServerLevel) world, pos, exp);
         return destroyed;
     }
 
@@ -1149,7 +1135,7 @@ public class Utils {
                 if (stack.isEmpty()) return;
                 if (stopped[0]) return;
                 BlockState state = world.getBlockState(b);
-                if (state.isAir() || !AntimatterPlatformUtils.INSTANCE.isCorrectToolForDrops(state, player))
+                if (state.isAir() || !ForgeHooks.isCorrectToolForDrops(state, player))
                     return;
                 else if (state.is(BlockTags.LOGS)) {
                     if (breakBlock(world, player, stack, b, tool.getUseDurability())){
@@ -1430,11 +1416,11 @@ public class Utils {
      * @return an empty instance of Recipe
      */
     public static IRecipe getEmptyRecipe() {
-        return new Recipe(Collections.emptyList(), new ItemStack[0], Collections.emptyList(), new FluidHolder[0], 1, 1, 0, 1);
+        return new Recipe(Collections.emptyList(), new ItemStack[0], Collections.emptyList(), new FluidStack[0], 1, 1, 0, 1);
     }
 
     public static IRecipe getEmptyPoweredRecipe(int duration, long euT, int amps) {
-        return new Recipe(Collections.emptyList(), new ItemStack[0], Collections.emptyList(), new FluidHolder[0], duration, euT, 0, amps);
+        return new Recipe(Collections.emptyList(), new ItemStack[0], Collections.emptyList(), new FluidStack[0], duration, euT, 0, amps);
     }
 
     /**
@@ -1447,7 +1433,7 @@ public class Utils {
      * @param amps     amps outputted.
      * @return recipe.
      */
-    public static IRecipe getFluidPoweredRecipe(List<FluidIngredient> input, FluidHolder[] output, int duration, long euT, int amps) {
+    public static IRecipe getFluidPoweredRecipe(List<FluidIngredient> input, FluidStack[] output, int duration, long euT, int amps) {
         return new Recipe(Collections.emptyList(), new ItemStack[0], input, output, duration, euT, 0, amps);
     }
 

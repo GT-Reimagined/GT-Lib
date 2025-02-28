@@ -39,7 +39,6 @@ import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.map.IRecipeMap;
 import muramasa.antimatter.registration.IAntimatterObject;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
-import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.structure.Structure;
 import muramasa.antimatter.structure.StructureBuilder;
 import muramasa.antimatter.texture.IOverlayModeler;
@@ -60,7 +59,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -341,10 +343,9 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
-        if (registry != RegistryType.BLOCKS) return;
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry != ForgeRegistries.BLOCKS) return;
         tileType = new BlockEntityType<>(new BlockEntityBase.BlockEntityGetter<>(tileFunc, (T)this), tiers.stream().map(t -> getBlock(this, t)).collect(Collectors.toSet()), null);
-        AntimatterAPI.registerTransferApi(tileType);
         AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }
 
@@ -707,7 +708,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
         structures.put(tier, func.apply(new StructureBuilder<>()));
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean renderAsTesr() {
         return renderTesr;
     }

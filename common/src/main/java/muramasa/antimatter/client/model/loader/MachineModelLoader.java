@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +22,9 @@ public class MachineModelLoader extends AntimatterModelLoader<MachineModel> {
         super(loc);
     }
 
+    @NotNull
     @Override
-    public MachineModel readModel(JsonDeserializationContext context, JsonObject json) {
+    public MachineModel read(JsonDeserializationContext context, JsonObject json) {
         ResourceLocation particle = json.has("particle") ? new ResourceLocation(json.get("particle").getAsString()) : MissingTextureAtlasSprite.getLocation();
         Map<MachineState, UnbakedModel[]> m = new HashMap<>();
         AntimatterAPI.all(MachineState.class, t -> {
@@ -43,9 +45,10 @@ public class MachineModelLoader extends AntimatterModelLoader<MachineModel> {
             super(loc);
         }
 
+        @NotNull
         @Override
-        public AntimatterGroupedModel readModel(JsonDeserializationContext context, JsonObject json) {
-            AntimatterGroupedModel model = super.readModel(context, json);
+        public AntimatterGroupedModel read(JsonDeserializationContext context, JsonObject json) {
+            AntimatterGroupedModel model = super.read(context, json);
             return new AntimatterGroupedModel.MachineSideModel(model);
         }
     }
@@ -55,9 +58,10 @@ public class MachineModelLoader extends AntimatterModelLoader<MachineModel> {
             super(loc);
         }
 
+        @NotNull
         @Override
-        public AntimatterGroupedModel readModel(JsonDeserializationContext context, JsonObject json) {
-            AntimatterGroupedModel model = super.readModel(context, json);
+        public AntimatterGroupedModel read(JsonDeserializationContext context, JsonObject json) {
+            AntimatterGroupedModel model = super.read(context, json);
             return new AntimatterGroupedModel.CoverModel(model);
         }
     }

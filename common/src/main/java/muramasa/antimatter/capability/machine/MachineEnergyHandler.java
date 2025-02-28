@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.util.LazyOptional;
 import tesseract.TesseractCapUtils;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.gt.IEnergyHandlerItem;
@@ -271,12 +272,12 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
 
 
     @Override
-    public Optional<IEnergyHandler> forSide(Direction side) {
-        return Optional.of(this);
+    public LazyOptional<IEnergyHandler> forSide(Direction side) {
+        return LazyOptional.of(() -> this);
     }
 
     @Override
-    public Optional<? extends IEnergyHandler> forNullSide() {
-        return Optional.of(this);
+    public LazyOptional<? extends IEnergyHandler> forNullSide() {
+        return LazyOptional.of(() -> this);
     }
 }

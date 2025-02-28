@@ -5,7 +5,6 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.machine.BlockMachine;
 import muramasa.antimatter.material.MaterialTags;
 import muramasa.antimatter.pipe.BlockPipe;
-import muramasa.antimatter.registration.Side;
 import muramasa.antimatter.tool.AntimatterToolType;
 import muramasa.antimatter.tool.MaterialSword;
 import muramasa.antimatter.tool.armor.AntimatterArmorType;
@@ -29,6 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.api.distmarker.Dist;
 
 import static muramasa.antimatter.data.AntimatterMaterialTypes.*;
 import static muramasa.antimatter.data.AntimatterMaterials.*;
@@ -60,7 +60,7 @@ public class AntimatterDefaultTools {
     public static final AntimatterArmorType LEGGINGS = new AntimatterArmorType(Ref.SHARED_ID, "leggings", 40, 0, 0.0F, 0.0F, EquipmentSlot.LEGS);
     public static final AntimatterArmorType BOOTS = new AntimatterArmorType(Ref.SHARED_ID, "boots", 40, 0, 0.0F, 0.0F, EquipmentSlot.FEET);
 
-    public static void init(Side side){
+    public static void init(Dist side){
         AXE.addBehaviour(BehaviourLogStripping.INSTANCE, BehaviourTreeFelling.INSTANCE);
         PICKAXE.addBehaviour(BehaviourTorchPlacing.INSTANCE);
         PLUNGER.addBehaviour(BehaviourWaterlogToggle.INSTANCE);
@@ -69,7 +69,7 @@ public class AntimatterDefaultTools {
         KNIFE.addBehaviour(BehaviourPumpkinCarving.INSTANCE);
         SCISSORS.addBehaviour(BehaviourShearing.INSTANCE);
         SCYTHE.addBehaviour(BehaviourCropHarvesting.INSTANCE);
-        if (side == Side.CLIENT) {
+        if (side == Dist.CLIENT) {
             clientInit();
         }
         PICKAXE.addReplacement(Iron, () -> Items.IRON_PICKAXE);

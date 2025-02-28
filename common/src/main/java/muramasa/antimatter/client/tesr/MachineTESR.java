@@ -2,13 +2,10 @@ package muramasa.antimatter.client.tesr;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
-import muramasa.antimatter.capability.fluid.FluidTank;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.client.ModelUtils;
 import muramasa.antimatter.client.RenderHelper;
@@ -16,6 +13,7 @@ import muramasa.antimatter.client.VertexTransformer;
 import muramasa.antimatter.client.baked.BakedMachineSide;
 import muramasa.antimatter.client.baked.ListBakedModel;
 import muramasa.antimatter.client.baked.MachineBakedModel;
+import muramasa.antimatter.util.FluidUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -30,8 +28,10 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.client.model.pipeline.LightUtil;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
-import tesseract.FluidPlatformUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -73,10 +73,10 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
 
     private static BakedModel renderInner(BlockState state, Random rand, int light, BakedModel inner, Fluid fluid, BlockAndTintGetter level, BlockPos pos) {
         List<BakedQuad> quads = ModelUtils.INSTANCE.getQuadsFromBaked(inner, state, null, rand, level, pos);
-        List<BakedQuad> out = VertexTransformer.processMany(quads, FluidPlatformUtils.INSTANCE.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidPlatformUtils.INSTANCE.getStillTexture(fluid)));
-        boolean hot = FluidPlatformUtils.INSTANCE.getFluidTemperature(fluid) >= FluidPlatformUtils.INSTANCE.getFluidTemperature(Fluids.LAVA);
+        List<BakedQuad> out = VertexTransformer.processMany(quads, FluidUtils.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidUtils.getStillTexture(fluid)));
+        boolean hot = FluidUtils.getFluidTemperature(fluid) >= FluidUtils.getFluidTemperature(Fluids.LAVA);
         for (BakedQuad bakedQuad : out) {
-            ModelUtils.INSTANCE.setLightData(bakedQuad, hot ? 1 << 7 : light);
+            LightUtil.setLightData(bakedQuad, hot ? 1 << 7 : light);
         }
         return new ListBakedModel(out);
     }
@@ -104,16 +104,16 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
                         Antimatter.LOGGER.warn("Caught exception building model" + ex);
                         continue;
                     }
-                    FluidHolder fluid = tile.fluidHandler.map(fh -> {
+                    FluidStack fluid = tile.fluidHandler.map(fh -> {
                         if (in) {
-                            if (fh.getInputTanks() == null) return FluidHooks.emptyFluid();
+                            if (fh.getInputTanks() == null) return FluidStack.EMPTY;
                             FluidTank tank = fh.getInputTanks().getTank(off);
-                            return tank == null ? FluidHooks.emptyFluid() : tank.getStoredFluid();
+                            return tank == null ? FluidStack.EMPTY : tank.getFluid();
                         }
-                        if (fh.getOutputTanks() == null) return FluidHooks.emptyFluid();
+                        if (fh.getOutputTanks() == null) return FluidStack.EMPTY;
                         FluidTank tank = fh.getOutputTanks().getTank(off);
-                        return tank == null ? FluidHooks.emptyFluid() : tank.getStoredFluid();
-                    }).orElse(FluidHooks.emptyFluid());
+                        return tank == null ? FluidStack.EMPTY : tank.getFluid();
+                    }).orElse(FluidStack.EMPTY);
                     BakedModel baked = renderInner(tile.getBlockState(), tile.getLevel().getRandom(), 16, customPart.getValue(), fluid.getFluid(), tile.getLevel(), tile.getBlockPos());
 
                     float fill = tile.fluidHandler.map(fh -> {
@@ -122,9 +122,9 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
                             FluidTank tank = fh.getInputTanks().getTank(off);
                             if (tank == null) return 0f;
                             if (tile.getMachineType().renderContainerLiquidLevel()) {
-                                return (float)tank.getStoredFluid().getFluidAmount() / (float)tank.getCapacity();
+                                return (float)tank.getFluid().getAmount() / (float)tank.getCapacity();
                             } else {
-                                if (tank.getStoredFluid().getFluidAmount() > 0) return 1f;
+                                if (tank.getFluid().getAmount() > 0) return 1f;
                                 return 0f;
                             }
                         }
@@ -132,9 +132,9 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
                         FluidTank tank = fh.getOutputTanks().getTank(off);
                         if (tank == null) return 0f;
                         if (tile.getMachineType().renderContainerLiquidLevel()) {
-                            return (float)tank.getStoredFluid().getFluidAmount() / (float)tank.getCapacity();
+                            return (float)tank.getFluid().getAmount() / (float)tank.getCapacity();
                         } else {
-                            if (tank.getStoredFluid().getFluidAmount() > 0) return 1f;
+                            if (tank.getFluid().getAmount() > 0) return 1f;
                             return 0f;
                         }
                     }).orElse(0f);

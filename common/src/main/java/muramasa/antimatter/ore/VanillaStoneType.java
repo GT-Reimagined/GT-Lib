@@ -10,11 +10,12 @@ import muramasa.antimatter.cover.CoverStone;
 import muramasa.antimatter.item.ItemStoneCover;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.registration.ITextureProvider;
-import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.texture.Texture;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class VanillaStoneType extends CobbleStoneType{
     private final Texture vanillaTexture;
@@ -24,9 +25,8 @@ public class VanillaStoneType extends CobbleStoneType{
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
-
-        if (registry == RegistryType.BLOCKS) {
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry == ForgeRegistries.BLOCKS) {
             if (this.getId().equals("basalt")){
                 for (int i = 0; i < SUFFIXES.length; i++) {
                     Block stone;
@@ -35,7 +35,7 @@ public class VanillaStoneType extends CobbleStoneType{
                         stone = this.getState().getBlock();
                         stoneTextureProvider = this::getTextures;
                     } else if (i == 6){
-                        stone = AntimatterPlatformUtils.INSTANCE.getBlockFromId("minecraft", "smooth_" + this.getId());
+                        stone = RegistryUtils.getBlockFromId("minecraft", "smooth_" + this.getId());
                         stoneTextureProvider = () -> new Texture[]{new Texture("block/smooth_" + getId())};
                     }else {
                         BlockStone stone1 = new BlockStone(this, SUFFIXES[i]);
@@ -64,13 +64,13 @@ public class VanillaStoneType extends CobbleStoneType{
                 if (i == 7) {
                     stone = this.getState().getBlock();
                     stoneTextureProvider = this::getTextures;
-                    slab = AntimatterPlatformUtils.INSTANCE.getBlockFromId("minecraft", this.getId() + "_slab");
-                    stair = AntimatterPlatformUtils.INSTANCE.getBlockFromId("minecraft", this.getId() + "_stairs");
-                    wall = AntimatterPlatformUtils.INSTANCE.getBlockFromId("minecraft", this.getId() + "_wall");
+                    slab = RegistryUtils.getBlockFromId("minecraft", this.getId() + "_slab");
+                    stair = RegistryUtils.getBlockFromId("minecraft", this.getId() + "_stairs");
+                    wall = RegistryUtils.getBlockFromId("minecraft", this.getId() + "_wall");
                 } else if (i == 6){
-                    stone = AntimatterPlatformUtils.INSTANCE.getBlockFromId("minecraft", "polished_" + this.getId());
-                    slab = AntimatterPlatformUtils.INSTANCE.getBlockFromId("minecraft", "polished_" + this.getId() + "_slab");
-                    stair = AntimatterPlatformUtils.INSTANCE.getBlockFromId("minecraft", "polished_" + this.getId() + "_stairs");
+                    stone = RegistryUtils.getBlockFromId("minecraft", "polished_" + this.getId());
+                    slab = RegistryUtils.getBlockFromId("minecraft", "polished_" + this.getId() + "_slab");
+                    stair = RegistryUtils.getBlockFromId("minecraft", "polished_" + this.getId() + "_stairs");
                     wall = new BlockStoneWall(this, SUFFIXES[i]);
                     stoneTextureProvider = () -> new Texture[]{new Texture("block/polished_" + getId())};
                 } else {

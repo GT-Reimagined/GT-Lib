@@ -6,6 +6,7 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityTickable;
+import muramasa.antimatter.capability.AntimatterCaps;
 import muramasa.antimatter.capability.CoverHandler;
 import muramasa.antimatter.capability.Holder;
 import muramasa.antimatter.capability.ICoverHandler;
@@ -38,12 +39,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.IConnectable;
 import tesseract.graph.Connectivity;
 
 import java.util.List;
 import java.util.Optional;
+
+import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
 public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntityTickable<BlockEntityPipe<T>> implements IMachineHandler, MenuProvider, IGuiHandler, IConnectable, ICoverHandlerProvider<BlockEntityPipe<?>> {
 
@@ -483,5 +491,28 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     @Override
     public Optional<ICoverHandler<BlockEntityPipe<?>>> getCoverHandler() {
         return coverHandler.map(p -> (ICoverHandler<BlockEntityPipe<?>>) p);
+    }
+
+    @NotNull
+    @Override
+    public <U> LazyOptional<U> getCapability(@NotNull Capability<U> cap, @Nullable Direction side) {
+        if (side != null && !connects(side)) return LazyOptional.empty();
+        if (!pipeCapHolder.isPresent()) return LazyOptional.empty();
+        if (side == null && cap != ITEM_HANDLER_CAPABILITY && cap != FLUID_HANDLER_CAPABILITY) return LazyOptional.empty();
+        /*if (cap == CapabilityEnergy.ENERGY && getCapClass() == IFENode.class) {
+            if (pipeCaps[side.get3DDataValue()] == null || !pipeCaps[side.get3DDataValue()].isPresent()){
+                pipeCaps[side.get3DDataValue()] = fromEnergyHolder(pipeCapHolder, side).cast();
+            }
+            return pipeCaps[side.get3DDataValue()].cast();
+        }*/
+        try {
+            if (cap == AntimatterCaps.CAP_MAP.get(getCapClass())){
+               return pipeCapHolder.side(side).cast();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return LazyOptional.empty();
+        }
+        return LazyOptional.empty();
     }
 }

@@ -8,7 +8,9 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.Getter;
 import muramasa.antimatter.Antimatter;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.AntimatterAPI;
+import muramasa.antimatter.Ref;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.TagParser;
@@ -21,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.crafting.IIngredientSerializer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -125,10 +129,7 @@ public class RecipeIngredient extends Ingredient {
     }
 
     public static Ingredient fromNetwork(FriendlyByteBuf buffer) {
-        if (AntimatterPlatformUtils.INSTANCE.isForge()){
-            return Ingredient.fromNetwork(buffer);
-        }
-        return fromValues(buffer.readList(FriendlyByteBuf::readItem).stream().map(RecipeValue::new));
+        return Ingredient.fromNetwork(buffer);
     }
 
     /*public RecipeIngredient(JsonElement element) {
@@ -216,6 +217,12 @@ public class RecipeIngredient extends Ingredient {
             return i.nonConsume;
         }
         return false;
+    }
+
+    @NotNull
+    @Override
+    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+        return IngredientSerializer.INSTANCE;
     }
 
     public static RecipeIngredient of(Ingredient ingredient, int count){
@@ -387,7 +394,7 @@ public class RecipeIngredient extends Ingredient {
     private static JsonObject toJson(ItemStack stack)
     {
         JsonObject ret = new JsonObject();
-        ret.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(stack.getItem()).toString());
+        ret.addProperty("item", RegistryUtils.getIdFromItem(stack.getItem()).toString());
         if (stack.getCount() != 1)
             ret.addProperty("count", stack.getCount());
         if (stack.getTag() != null)

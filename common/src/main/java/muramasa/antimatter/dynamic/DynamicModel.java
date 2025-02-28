@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import muramasa.antimatter.client.AntimatterModelManager;
 import muramasa.antimatter.client.IAntimatterModel;
-import muramasa.antimatter.client.model.IModelConfiguration;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -15,13 +14,14 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
-public class DynamicModel implements IAntimatterModel {
+public class DynamicModel implements IAntimatterModel<DynamicModel> {
 
     protected Int2ObjectOpenHashMap<IAntimatterModel[]> modelConfigs;
     protected String staticMapId;
@@ -37,11 +37,6 @@ public class DynamicModel implements IAntimatterModel {
         this.modelConfigs = copy.modelConfigs;
         this.staticMapId = copy.staticMapId;
         this.particle = copy.particle;
-    }
-
-    @Override
-    public BakedModel bakeModel(ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
-        return null;
     }
 
     @Override
@@ -62,9 +57,9 @@ public class DynamicModel implements IAntimatterModel {
     }
 
     @Override
-    public Collection<Material> getMaterials(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
+    public Collection<Material> getTextures(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
         Set<Material> textures = new ObjectOpenHashSet<>();
-        modelConfigs.values().forEach(v -> Arrays.stream(v).forEach(m -> textures.addAll(m.getMaterials(configuration, getter, errors))));
+        modelConfigs.values().forEach(v -> Arrays.stream(v).forEach(m -> textures.addAll(m.getTextures(configuration, getter, errors))));
         return textures;
     }
 }

@@ -4,7 +4,7 @@ import muramasa.antimatter.blockentity.multi.BlockEntityMultiMachine;
 import muramasa.antimatter.capability.item.ITrackedHandler;
 import muramasa.antimatter.capability.item.MultiTrackedItemHandler;
 import net.minecraft.world.item.ItemStack;
-import tesseract.api.item.ExtendedItemContainer;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,9 +41,9 @@ public class MultiMachineItemHandler<T extends BlockEntityMultiMachine<T>> exten
     }
 
     protected ITrackedHandler calculateInputs() {
-        List<ExtendedItemContainer> handlers = tile.getComponentsByHandlerId(inputComponentString()).stream().filter(t -> t.getItemHandler().isPresent()).map(t -> t.getItemHandler().get()).sorted(this::compareInputBuses).map(MachineItemHandler::getInputHandler).collect(Collectors.toList());
+        List<IItemHandlerModifiable> handlers = tile.getComponentsByHandlerId(inputComponentString()).stream().filter(t -> t.getItemHandler().isPresent()).map(t -> t.getItemHandler().get()).sorted(this::compareInputBuses).map(MachineItemHandler::getInputHandler).collect(Collectors.toList());
         handlers.add(super.getInputHandler());
-        return new MultiTrackedItemHandler(handlers.toArray(new ExtendedItemContainer[0]));
+        return new MultiTrackedItemHandler(handlers.toArray(new IItemHandlerModifiable[0]));
     }
 
     protected int compareInputBuses(MachineItemHandler<?> a, MachineItemHandler<?> b) {
@@ -63,9 +63,9 @@ public class MultiMachineItemHandler<T extends BlockEntityMultiMachine<T>> exten
     }
 
     protected ITrackedHandler calculateOutputs() {
-        List<ExtendedItemContainer> handlers = tile.getComponentsByHandlerId(outputComponentString()).stream().filter(t -> t.getItemHandler().isPresent()).map(t -> t.getItemHandler().get()).sorted(this::compareOutputBuses).map(MachineItemHandler::getOutputHandler).collect(Collectors.toList());
+        List<IItemHandlerModifiable> handlers = tile.getComponentsByHandlerId(outputComponentString()).stream().filter(t -> t.getItemHandler().isPresent()).map(t -> t.getItemHandler().get()).sorted(this::compareOutputBuses).map(MachineItemHandler::getOutputHandler).collect(Collectors.toList());
         handlers.add(super.getOutputHandler());
-        return new MultiTrackedItemHandler(handlers.toArray(new ExtendedItemContainer[0]));
+        return new MultiTrackedItemHandler(handlers.toArray(new IItemHandlerModifiable[0]));
     }
 
     @Override

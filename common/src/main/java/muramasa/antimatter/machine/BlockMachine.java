@@ -1,7 +1,6 @@
 package muramasa.antimatter.machine;
 
 import com.google.common.collect.ImmutableMap;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
 import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterRemapping;
@@ -25,7 +24,7 @@ import muramasa.antimatter.registration.IColorHandler;
 import muramasa.antimatter.registration.IItemBlockProvider;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.AntimatterToolType;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -62,9 +61,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.FluidPlatformUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,7 +211,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                     InteractionResult coverInteract = tile.getCoverHandler().map(h -> h.onInteract(player, hand, Utils.getInteractSide(hit), Utils.getToolType(player))).orElse(InteractionResult.PASS);
                     if (coverInteract != InteractionResult.PASS) return coverInteract;
                     //Has gui?
-                    if (FluidHooks.safeGetBlockFluidManager(tile, hit.getDirection()).map(fh -> {
+                    if (tile.fluidHandler.map(fh -> {
                         Consumer<ItemStack> consumer = s -> {
                             if (player.isCreative()) return;
                             boolean single = stack.getCount() == 1;
@@ -226,9 +225,9 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                             }
                         };
                         boolean success = false;
-                        if (FluidPlatformUtils.INSTANCE.fillItemFromContainer(Utils.ca(1, stack), fh, consumer)){
+                        if (FluidUtils.fillItemFromContainer(-1, Utils.ca(1, stack), fh, consumer)){
                             success = true;
-                        } else if (FluidPlatformUtils.INSTANCE.emptyItemIntoContainer(Utils.ca(1, stack), fh, consumer)){
+                        } else if (FluidUtils.emptyItemIntoContainer(-1, Utils.ca(1, stack), fh, consumer)){
                             success = true;
                         }
                         return success;
@@ -236,7 +235,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         return InteractionResult.SUCCESS;
                     }
                     if (getType().has(MachineFlag.GUI) && tile.canPlayerOpenGui(player)) {
-                        AntimatterPlatformUtils.INSTANCE.openGui((ServerPlayer) player, tile, extra -> {
+                        NetworkHooks.openGui((ServerPlayer) player, tile, extra -> {
                             extra.writeBlockPos(pos);
                         });
                         return InteractionResult.SUCCESS;
@@ -291,7 +290,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flag) {
-        if (getType().has(BASIC) && !getType().has(RF)) {
+        if (getType().has(BASIC) && !getType().has(FE)) {
             if (getTier().getVoltage() > 0 && getType().has(MachineFlag.EU)) {
                 String in = getType().has(GENERATOR) ? "out" : "in";
                 tooltip.add(Utils.translatable("machine.voltage." + in).append(": ").append(Utils.literal(getTier().getVoltage() + " (" + getTier().getId().toUpperCase() + ")")).withStyle(ChatFormatting.GREEN));

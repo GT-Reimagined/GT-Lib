@@ -1,6 +1,5 @@
 package muramasa.antimatter.material;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,8 +15,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
-import tesseract.TesseractGraphWrappers;
 
 import java.util.HashSet;
 import java.util.List;
@@ -237,35 +236,22 @@ public class Material implements ISharedAntimatterObject {
         return AntimatterMaterialTypes.GAS.get().get(this, 1).getFluid();
     }
 
-    public FluidHolder getLiquid(long droplets) {
+    public FluidStack getLiquid(int mb) {
         if (!this.has(AntimatterMaterialTypes.LIQUID)){
             throw new RuntimeException("Material: " + this.getId() + " does not have liquid");
         }
-        return AntimatterMaterialTypes.LIQUID.get().get(this, droplets);
+        return AntimatterMaterialTypes.LIQUID.get().get(this, mb);
     }
 
-    public FluidHolder getGas(long droplets) {
+    public FluidStack getGas(int mb) {
         if (!this.has(AntimatterMaterialTypes.GAS)){
             throw new RuntimeException("Material: " + this.getId() + " does not have gas");
         }
-        return AntimatterMaterialTypes.GAS.get().get(this, droplets);
-    }
-
-    public FluidHolder getLiquid(int mb) {
-        return this.getLiquid(mb * TesseractGraphWrappers.dropletMultiplier);
-    }
-
-    public FluidHolder getGas(int mb) {
-        return this.getGas(mb * TesseractGraphWrappers.dropletMultiplier);
-    }
-
-
-    public FluidIngredient getFluidIngredient(long droplets){
-        return FluidIngredient.of(getFluidTag(), droplets);
+        return AntimatterMaterialTypes.GAS.get().get(this, mb);
     }
 
     public FluidIngredient getFluidIngredient(int mb){
-        return FluidIngredient.of(getFluidTag(), mb * TesseractGraphWrappers.dropletMultiplier);
+        return FluidIngredient.of(getFluidTag(), mb);
     }
 
     public TagKey<Fluid> getFluidTag(){

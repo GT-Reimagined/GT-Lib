@@ -4,7 +4,6 @@ import lombok.Setter;
 import muramasa.antimatter.Data;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityBase;
-import muramasa.antimatter.blockentity.BlockEntityCache;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.IMachineHandler;
@@ -13,6 +12,7 @@ import muramasa.antimatter.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.util.LazyOptional;
 import tesseract.TesseractCapUtils;
 import tesseract.api.heat.IHeatHandler;
 
@@ -139,20 +139,20 @@ public class DefaultHeatHandler implements IHeatHandler, Dispatch.Sided<IHeatHan
     }
 
     @Override
-    public Optional<? extends IHeatHandler> forSide(Direction side) {
+    public LazyOptional<? extends IHeatHandler> forSide(Direction side) {
         if (tile instanceof BlockEntityMachine<?> m) {
-            if (side == null) return Optional.of(this);
+            if (side == null) return LazyOptional.of(() -> this);
             if (m.coverHandler.map(t -> t.get(side).getFactory() == Data.COVERHEAT).orElse(false)) {
-                return Optional.of(this);
+                return LazyOptional.of(() -> this);
             } else {
-                return Optional.empty();
+                return LazyOptional.empty();
             }
         }
-        return Optional.of(this);
+        return LazyOptional.of(() -> this);
     }
 
     @Override
-    public Optional<? extends IHeatHandler> forNullSide() {
+    public LazyOptional<? extends IHeatHandler> forNullSide() {
         return forSide(null);
     }
 

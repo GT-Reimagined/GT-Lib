@@ -3,7 +3,6 @@ package muramasa.antimatter.mixin;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import muramasa.antimatter.tool.IAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -39,7 +38,7 @@ public abstract class RepairItemRecipeMixin extends CustomRecipe {
                 list.add(itemstack);
                 if (list.size() > 1) {
                     ItemStack itemstack1 = list.get(0);
-                    if (itemstack.getItem() != itemstack1.getItem() || itemstack1.getCount() != 1 || itemstack.getCount() != 1 || !AntimatterPlatformUtils.INSTANCE.isRepairable(itemstack1)) {
+                    if (itemstack.getItem() != itemstack1.getItem() || itemstack1.getCount() != 1 || itemstack.getCount() != 1 || !itemstack1.isRepairable()) {
                         return;
                     }
                 }
@@ -48,7 +47,7 @@ public abstract class RepairItemRecipeMixin extends CustomRecipe {
         if (list.size() == 2) {
             ItemStack a = list.get(0);
             ItemStack b = list.get(1);
-            if (a.getItem() == b.getItem() && a.getCount() == 1 && b.getCount() == 1 && AntimatterPlatformUtils.INSTANCE.isRepairable(a) && a.getItem() instanceof IAntimatterTool tool) {
+            if (a.getItem() == b.getItem() && a.getCount() == 1 && b.getCount() == 1 && a.isRepairable() && a.getItem() instanceof IAntimatterTool tool) {
                 boolean match = tool.getPrimaryMaterial(a) == tool.getPrimaryMaterial(b) && tool.getSecondaryMaterial(a) == tool.getSecondaryMaterial(b);
                 if (!match) {
                     ci.setReturnValue(ItemStack.EMPTY);
@@ -95,7 +94,7 @@ public abstract class RepairItemRecipeMixin extends CustomRecipe {
                 list.add(itemstack);
                 if (list.size() > 1) {
                     ItemStack itemstack1 = list.get(0);
-                    if (itemstack.getItem() != itemstack1.getItem() || itemstack1.getCount() != 1 || itemstack.getCount() != 1 || !AntimatterPlatformUtils.INSTANCE.isRepairable(itemstack1)) {
+                    if (itemstack.getItem() != itemstack1.getItem() || itemstack1.getCount() != 1 || itemstack.getCount() != 1 || !itemstack1.isRepairable()) {
                         return;
                     }
                 }

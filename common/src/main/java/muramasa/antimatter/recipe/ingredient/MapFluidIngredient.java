@@ -1,20 +1,20 @@
 package muramasa.antimatter.recipe.ingredient;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import tesseract.FluidPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
+import net.minecraftforge.fluids.FluidStack;
 
 public class MapFluidIngredient extends AbstractMapIngredient {
 
-    public FluidHolder stack;
+    public FluidStack stack;
 
-    public MapFluidIngredient(FluidHolder stack, boolean insideMap) {
+    public MapFluidIngredient(FluidStack stack, boolean insideMap) {
         super(insideMap);
         this.stack = stack;
     }
 
     @Override
     protected int hash() {
-        return FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).hashCode();
+        return RegistryUtils.getIdFromFluid(stack.getFluid()).hashCode();
     }
 
     @Override
@@ -32,6 +32,6 @@ public class MapFluidIngredient extends AbstractMapIngredient {
 
     @Override
     public String toString() {
-        return FluidPlatformUtils.INSTANCE.getFluidId(stack.getFluid()).toString();
+        return RegistryUtils.getIdFromFluid(stack.getFluid()).toString();
     }
 }

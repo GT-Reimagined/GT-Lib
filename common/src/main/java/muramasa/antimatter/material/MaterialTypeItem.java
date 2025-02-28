@@ -2,10 +2,10 @@ package muramasa.antimatter.material;
 
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.recipe.ingredient.RecipeIngredient;
-import muramasa.antimatter.registration.RegistryType;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class MaterialTypeItem<T> extends MaterialType<T> {
 
@@ -63,7 +63,7 @@ public class MaterialTypeItem<T> extends MaterialType<T> {
     }
 
     @Override
-    public void onRegistryBuild(RegistryType registry) {
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
         super.onRegistryBuild(registry);
         if (doRegister()) {
             for (Material material : this.materials) {

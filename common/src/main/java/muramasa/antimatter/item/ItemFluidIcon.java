@@ -1,36 +1,33 @@
 package muramasa.antimatter.item;
 
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
-import earth.terrarium.botarium.common.fluid.utils.FluidHooks;
-import earth.terrarium.botarium.common.item.ItemStackHolder;
+import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.client.AntimatterTextureStitcher;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
-import muramasa.antimatter.util.TagUtils;
+import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.Nullable;
-import tesseract.FluidPlatformUtils;
-import tesseract.TesseractGraphWrappers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
-import static tesseract.FluidPlatformUtils.createFluidStack;
 
-public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContainerItem, IFluidItem{
+public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidItem{
 
+    @Getter
     private final int capacity;
 
     private final Fluid stack;
@@ -49,10 +46,6 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
         this.stack = Fluids.EMPTY;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
     /*@Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (this.allowdedIn(group)) {
@@ -63,41 +56,19 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
     }*/
 
     @Override
-    public long getTankSize() {
-        return capacity * TesseractGraphWrappers.dropletMultiplier;
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.remove(0);
-        FluidHooks.safeGetItemFluidManager(stack).ifPresent(x -> {
-            FluidHolder fluid = x.getFluidInTank(0);
+        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
+            FluidStack fluid = x.getFluidInTank(0);
             if (fluid.isEmpty()) return;
             List<Component> str = new ArrayList<>();
-            str.add(FluidPlatformUtils.INSTANCE.getFluidDisplayName(fluid));
-            str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidPlatformUtils.INSTANCE.getFluidTemperature(fluid.getFluid())).withStyle(ChatFormatting.RED));
-            String liquid = !FluidPlatformUtils.INSTANCE.isFluidGaseous(fluid.getFluid()) ? "liquid" : "gas";
+            str.add(FluidUtils.getFluidDisplayName(fluid));
+            str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidUtils.getFluidTemperature(fluid.getFluid())).withStyle(ChatFormatting.RED));
+            String liquid = !FluidUtils.isFluidGaseous(fluid.getFluid()) ? "liquid" : "gas";
             str.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
             AntimatterJEIREIPlugin.addModDescriptor(str, fluid);
             tooltip.addAll(str);
         });
-    }
-
-    public static TagKey<net.minecraft.world.item.Item> getTag() {
-        return TagUtils.getItemTag(new ResourceLocation(Ref.ID, "cell"));
-    }
-
-    public ItemStack fill(Fluid fluid) {
-        ItemStack stack = new ItemStack(this);
-        ItemStackHolder holder = new ItemStackHolder(stack);
-        insert(holder, createFluidStack(fluid, TesseractGraphWrappers.dropletMultiplier));
-        return holder.getStack();
-    }
-
-    public ItemStack drain(ItemStack old, FluidHolder fluid) {
-        ItemStackHolder holder = new ItemStackHolder(old);
-        extract(holder, fluid);
-        return holder.getStack();
     }
 
     public Fluid getFluid() {
@@ -122,8 +93,8 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IContaine
     }
 
     @Override
-    public BiPredicate<Integer, FluidHolder> getFilter() {
-        return (i, f) -> true;
+    public Predicate<FluidStack> getFilter() {
+        return f -> true;
     }
 
     @Override

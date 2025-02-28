@@ -1,6 +1,5 @@
 package muramasa.antimatter.blockentity;
 
-import earth.terrarium.botarium.common.fluid.base.FluidContainer;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import muramasa.antimatter.AntimatterAPI;
@@ -8,6 +7,7 @@ import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.AntimatterProperties;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.multi.BlockEntityBasicMultiMachine;
+import muramasa.antimatter.capability.AntimatterCaps;
 import muramasa.antimatter.capability.CoverHandler;
 import muramasa.antimatter.capability.EnergyHandler;
 import muramasa.antimatter.capability.Holder;
@@ -18,9 +18,9 @@ import muramasa.antimatter.capability.IMachineHandler;
 import muramasa.antimatter.capability.machine.DefaultHeatHandler;
 import muramasa.antimatter.capability.machine.MachineCoverHandler;
 import muramasa.antimatter.capability.machine.MachineEnergyHandler;
+import muramasa.antimatter.capability.machine.MachineFEHandler;
 import muramasa.antimatter.capability.machine.MachineFluidHandler;
 import muramasa.antimatter.capability.machine.MachineItemHandler;
-import muramasa.antimatter.capability.machine.MachineRFHandler;
 import muramasa.antimatter.capability.machine.MachineRecipeHandler;
 import muramasa.antimatter.client.SoundHelper;
 import muramasa.antimatter.client.dynamic.DynamicTexturer;
@@ -77,14 +77,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tesseract.api.fe.IFENode;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.heat.IHeatHandler;
-import tesseract.api.item.ExtendedItemContainer;
-import tesseract.api.rf.IRFNode;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
-import xyz.wagyourtail.unimined.expect.annotation.Environment.EnvType;
 
 import java.util.List;
 import java.util.Optional;
@@ -119,7 +126,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Getter
     protected boolean muffled = false;
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public SoundInstance playingSound;
 
     /**
@@ -131,12 +138,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public LazyOptional<MachineRecipeHandler<U>> recipeHandler;
     public LazyOptional<MachineCoverHandler<BlockEntityMachine>> coverHandler;*/
 
-    public Holder<ExtendedItemContainer, MachineItemHandler<T>> itemHandler = new Holder<>(ExtendedItemContainer.class, dispatch);
-    public Holder<FluidContainer, MachineFluidHandler<T>> fluidHandler = new Holder<>(FluidContainer.class, dispatch);
+    public Holder<IItemHandler, MachineItemHandler<T>> itemHandler = new Holder<>(IItemHandler.class, dispatch);
+    public Holder<IFluidHandler, MachineFluidHandler<T>> fluidHandler = new Holder<>(IFluidHandler.class, dispatch);
     public Holder<ICoverHandler<?>, MachineCoverHandler<T>> coverHandler = new Holder<>(ICoverHandler.class, dispatch, null);
     public Holder<IEnergyHandler, MachineEnergyHandler<T>> energyHandler = new Holder<>(IEnergyHandler.class, dispatch);
     public Holder<IHeatHandler, DefaultHeatHandler> heatHandler = new Holder<>(IHeatHandler.class, dispatch);
-    public Holder<IRFNode, MachineRFHandler<T>> rfHandler = new Holder<>(IRFNode.class, dispatch);
+    public Holder<IFENode, MachineFEHandler<T>> feHandler = new Holder<>(IFENode.class, dispatch);
     public Holder<MachineRecipeHandler<?>, MachineRecipeHandler<T>> recipeHandler = new Holder<>(MachineRecipeHandler.class, dispatch, null);
 
     /**
@@ -159,8 +166,8 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         if (type.has(EU)) {
             energyHandler.set(() -> new MachineEnergyHandler<>((T) this, type.amps(), type.has(GENERATOR)));
         }
-        if (type.has(RF)){
-            rfHandler.set(() -> new MachineRFHandler<>((T)this, this.getMachineTier().getVoltage() * 100, type.has(MachineFlag.GENERATOR)));
+        if (type.has(FE)){
+            feHandler.set(() -> new MachineFEHandler<>((T)this, (int) (this.getMachineTier().getVoltage() * 100), type.has(MachineFlag.GENERATOR)));
         }
         if (type.has(HEAT)){
             heatHandler.set(() -> new DefaultHeatHandler(this, (int) (this.getMachineTier().getVoltage() * 4), type.has(GENERATOR) ? 0 : (int) this.getMachineTier().getVoltage(), type.has(GENERATOR) ? (int) this.getMachineTier().getVoltage() : 0));
@@ -189,7 +196,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             this.itemHandler.ifPresent(MachineItemHandler::init);
             this.fluidHandler.ifPresent(MachineFluidHandler::init);
             this.energyHandler.ifPresent(MachineEnergyHandler::init);
-            this.rfHandler.ifPresent(MachineRFHandler::init);
+            this.feHandler.ifPresent(MachineFEHandler::init);
             this.recipeHandler.ifPresent(MachineRecipeHandler::init);
             this.coverHandler.ifPresent(CoverHandler::onFirstTick);
         }
@@ -278,7 +285,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         itemHandler.ifPresent(MachineItemHandler::onUpdate);
         energyHandler.ifPresent(MachineEnergyHandler::onUpdate);
-        rfHandler.ifPresent(MachineRFHandler::onUpdate);
+        feHandler.ifPresent(MachineFEHandler::onUpdate);
         heatHandler.ifPresent(handler -> handler.update(getMachineState() == MachineState.ACTIVE));
         fluidHandler.ifPresent(MachineFluidHandler::onUpdate);
         coverHandler.ifPresent(MachineCoverHandler::onUpdate);
@@ -316,7 +323,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             fluidHandler.ifPresent(MachineFluidHandler::onRemove);
             itemHandler.ifPresent(MachineItemHandler::onRemove);
             energyHandler.ifPresent(MachineEnergyHandler::onRemove);
-            rfHandler.ifPresent(MachineRFHandler::onRemove);
+            feHandler.ifPresent(MachineFEHandler::onRemove);
             recipeHandler.ifPresent(MachineRecipeHandler::onRemove);
 
             dispatch.invalidate();
@@ -360,7 +367,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             coverHandler.ifPresent(c -> c.onMachineEvent(event, data));
             itemHandler.ifPresent(i -> i.onMachineEvent(event, data));
             energyHandler.ifPresent(e -> e.onMachineEvent(event, data));
-            rfHandler.ifPresent(e -> e.onMachineEvent(event, data));
+            feHandler.ifPresent(e -> e.onMachineEvent(event, data));
             fluidHandler.ifPresent(f -> f.onMachineEvent(event, data));
             recipeHandler.ifPresent(r -> r.onMachineEvent(event, data));
             /*if (event instanceof ContentEvent && openContainers.size() > 0) {
@@ -622,6 +629,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         return true;
     }
 
+    @Override
     public void invalidateCaps() {
         if (isServerSide()) {
             dispatch.invalidate();
@@ -642,6 +650,35 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     public <V> boolean blocksCapability(@NotNull Class<V> cap, Direction side) {
         return coverHandler.map(t -> t.blocksCapability(cap, side)).orElse(false);
+    }
+
+    @NotNull
+    @Override
+    public <U> LazyOptional<U> getCapability(@NotNull Capability<U> cap, @Nullable Direction side) {
+        int index = side == null ? 6 : side.get3DDataValue();
+        if (side == getFacing() && !allowsFrontIO()) return LazyOptional.empty();
+        if (blocksCapability(AntimatterCaps.CAP_MAP.inverse().get(cap), side)) return LazyOptional.empty();
+        return getCap(cap, side);
+    }
+
+
+    protected <U> LazyOptional<U> getCap(@NotNull Capability<U> cap, @Nullable Direction side) {
+        int index = side == null ? 6 : side.get3DDataValue();
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && fluidHandler.isPresent()) {
+            return fluidHandler.side(side).cast();
+        }
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && itemHandler.isPresent()) {
+            return itemHandler.side(side).cast();
+        }
+        if (cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY || cap == CapabilityEnergy.ENERGY){
+            if (cap == CapabilityEnergy.ENERGY && feHandler.isPresent()){
+                return feHandler.side(side).cast();
+            } else if (energyHandler.isPresent()){
+                if (cap == CapabilityEnergy.ENERGY && side == null) return LazyOptional.empty();
+                return energyHandler.side(side).cast();
+            }
+        }
+        return super.getCapability(cap, side);
     }
 
     public final boolean allowsFrontIO() {
@@ -668,8 +705,8 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         if (tag.contains(Ref.KEY_MACHINE_ENERGY)) {
             energyHandler.ifPresent(e -> e.deserialize(tag.getCompound(Ref.KEY_MACHINE_ENERGY)));
         }
-        if (tag.contains(Ref.KEY_MACHINE_RF)){
-            rfHandler.ifPresent(e -> e.deserialize(tag.getCompound(Ref.KEY_MACHINE_RF)));
+        if (tag.contains(Ref.KEY_MACHINE_FE)){
+            feHandler.ifPresent(e -> e.deserialize(tag.getCompound(Ref.KEY_MACHINE_FE)));
         }
         if (tag.contains(Ref.KEY_MACHINE_HEAT)){
             heatHandler.ifPresent(h -> h.deserialize(tag.getCompound(Ref.KEY_MACHINE_HEAT)));
@@ -696,7 +733,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             tag.putInt(Ref.KEY_MACHINE_STATE_D, disabledState.ordinal());
         itemHandler.ifPresent(i -> tag.put(Ref.KEY_MACHINE_ITEMS, i.serialize(new CompoundTag())));
         energyHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_ENERGY, e.serialize(new CompoundTag())));
-        rfHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_RF, e.serialize(new CompoundTag())));
+        feHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_FE, e.serialize(new CompoundTag())));
         coverHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_COVER , e.serialize(new CompoundTag())));
         fluidHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_FLUIDS, e.serialize(new CompoundTag())));
         recipeHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_RECIPE, e.serialize()));
@@ -737,8 +774,8 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             if (outputs > 0) slots += (" FL_OUT: " + outputs + ",");
         }
         if (slots.length() > 0) info.add("Slots:" + slots);
-        if (type.has(RF))
-            rfHandler.ifPresent(h -> info.add("RF: " + h.getStoredEnergy() + " / " + h.getMaxCapacity()));
+        if (type.has(FE))
+            feHandler.ifPresent(h -> info.add("FE: " + h.getEnergyStored() + " / " + h.getMaxEnergyStored()));
         if (type.has(EU))
             energyHandler.ifPresent(h -> info.add("EU: " + h.getEnergy() + " / " + h.getCapacity()));
         coverHandler.ifPresent(h -> {

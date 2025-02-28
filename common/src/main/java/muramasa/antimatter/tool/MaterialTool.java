@@ -10,7 +10,6 @@ import muramasa.antimatter.behaviour.IBehaviour;
 import muramasa.antimatter.behaviour.IDestroySpeed;
 import muramasa.antimatter.capability.energy.ItemEnergyHandler;
 import muramasa.antimatter.data.AntimatterDefaultTools;
-import muramasa.antimatter.item.IContainerItem;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.util.Utils;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -59,7 +58,7 @@ import static muramasa.antimatter.data.AntimatterDefaultTools.KNIFE;
 
 //@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class MaterialTool extends DiggerItem implements IAntimatterTool, IContainerItem {
+public class MaterialTool extends DiggerItem implements IAntimatterTool {
 
     protected final String domain;
     protected final AntimatterToolType type;
@@ -115,13 +114,6 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
         return itemTier;
     }
 
-    /*
-    @NotNull
-    @Override
-    public Set<Tag<Block>> getToolTypes(ItemStack stack) {
-        return getToolTypes();
-    }*/
-
     @NotNull
     @Override
     public ItemStack asItemStack(@NotNull Material primary, @NotNull Material secondary) {
@@ -138,11 +130,7 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
         return Utils.doesStackHaveToolTypes(stack, AntimatterDefaultTools.WRENCH, AntimatterDefaultTools.SCREWDRIVER, AntimatterDefaultTools.CROWBAR, AntimatterDefaultTools.WIRE_CUTTER); // ???
     }
 
-    //fabric method
-    public boolean isSuitableFor(ItemStack stack, BlockState state) {
-        return this.genericIsCorrectToolForDrops(stack, state);
-    }
-
+    @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state){
         return genericIsCorrectToolForDrops(stack, state);
     }
@@ -152,15 +140,6 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
         super.onUseTick(p_41428_, p_41429_, p_41430_, p_41431_);
     }
 
-
-
-    /*
-    @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return getPrimaryMaterial(stack).getDisplayName().appendSibling(new StringTextComponent(type.getId()));
-    }
-     */
-
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         onGenericAddInformation(stack, tooltip, flag);
@@ -169,7 +148,7 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
 
     //TODO figure out why I wrote the below todo
     //TODO figure this out
-    //@Override
+    @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
     }
@@ -183,18 +162,6 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
     public int getUseDuration(ItemStack stack) {
         return type.getUseAction() == UseAnim.NONE ? super.getUseDuration(stack) : 72000;
     }
-
-    /*
-    @Override
-    public boolean canHarvestBlock(ItemStack stack, BlockState state) {
-        return Utils.isToolEffective(this, state) && getTier(stack).getLevel() >= state.getHarvestLevel();
-    }*/
-
-    /*
-    @Override
-    public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable Player player, @Nullable BlockState blockState) {
-        return getToolTypes().contains(tool) ? getTier(stack).getLevel() : -1;
-    }*/
 
     @Override
     public int getMaxDamage(ItemStack stack) {
@@ -262,6 +229,7 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
         return type.getToolTypes().contains(BlockTags.MINEABLE_WITH_AXE);
     }
 
+    @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slotType, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifiers = HashMultimap.create();
         if (slotType == EquipmentSlot.MAINHAND) {
@@ -269,11 +237,6 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
             modifiers.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", type.getBaseAttackSpeed(), AttributeModifier.Operation.ADDITION));
         }
         return modifiers;
-    }
-
-    //fabric method
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slotType) {
-        return this.getAttributeModifiers(slotType, stack);
     }
 
     @Override
@@ -286,8 +249,9 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool, IContai
         }
         return damage(stack, amount);
     }
-    //@Override
-    public int getEnchantability(ItemStack stack) {
+
+    @Override
+    public int getItemEnchantability(ItemStack stack) {
         return getTier(stack).getEnchantmentValue();
     }
 

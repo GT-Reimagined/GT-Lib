@@ -2,7 +2,6 @@ package muramasa.antimatter.integration.rei.category;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import earth.terrarium.botarium.common.fluid.base.FluidHolder;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -23,7 +22,7 @@ import muramasa.antimatter.integration.jeirei.renderer.IRecipeInfoRenderer;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
 import muramasa.antimatter.recipe.map.IRecipeMap;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.int4;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -33,6 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +65,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 this.icon = EntryStacks.of(itemLike);
             }
         } else {
-            ItemLike item = iconId == null ? Data.DEBUG_SCANNER : AntimatterPlatformUtils.INSTANCE.getItemFromID(iconId);
+            ItemLike item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
             this.icon = EntryStacks.of(item);
         }
@@ -201,7 +201,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
             List<SlotData<?>> finalSlots = slots;
             slotCount = slots.size();
             if (slotCount > 0) {
-                FluidHolder[] fluids = display.getRecipe().hasOutputFluids() ? display.getRecipe().getOutputFluids() : null;
+                FluidStack[] fluids = display.getRecipe().hasOutputFluids() ? display.getRecipe().getOutputFluids() : null;
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((helper, matrices, mouseX, mouseY, delta) -> {

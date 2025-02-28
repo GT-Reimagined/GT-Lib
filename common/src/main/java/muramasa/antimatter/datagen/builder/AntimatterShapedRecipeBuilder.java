@@ -7,9 +7,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntList;
-import muramasa.antimatter.recipe.container.ContainerItemShapedRecipe;
+import muramasa.antimatter.recipe.container.MirroredShapedRecipe;
 import muramasa.antimatter.recipe.material.MaterialSerializer;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
+import muramasa.antimatter.util.RegistryUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -41,6 +41,7 @@ public class AntimatterShapedRecipeBuilder {
     private final Advancement.Builder advBuilder = Advancement.Builder.advancement();
     private final Int2ObjectOpenHashMap<IntList> materialSlots = new Int2ObjectOpenHashMap<>();
     private String group;
+    private boolean mirrored = false;
 
     public AntimatterShapedRecipeBuilder(ItemStack result) {
         this.result = Collections.singletonList(result);
@@ -129,11 +130,16 @@ public class AntimatterShapedRecipeBuilder {
         return this;
     }
 
+    public AntimatterShapedRecipeBuilder setMirrored(boolean mirrored) {
+        this.mirrored = mirrored;
+        return this;
+    }
+
     /**
      * Builds this recipe into an {@link FinishedRecipe}.
      */
     public void build(Consumer<FinishedRecipe> consumer) {
-        this.build(consumer, AntimatterPlatformUtils.INSTANCE.getIdFromItem(this.result.get(0).getItem()));
+        this.build(consumer, RegistryUtils.getIdFromItem(this.result.get(0).getItem()));
     }
 
     /**
@@ -150,11 +156,11 @@ public class AntimatterShapedRecipeBuilder {
     public void build(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
         this.validate(id);
         this.advBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.result.get(0), this.group == null ? "" : this.group, this.pattern, this.key, this.advBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.get(0).getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
+        consumer.accept(new Result(id, this.result.get(0), this.group == null ? "" : this.group, this.pattern, this.key, this.advBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.get(0).getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.mirrored));
     }
 
     public void buildTool(Consumer<FinishedRecipe> consumer, String builder){
-        buildTool(consumer, builder, AntimatterPlatformUtils.INSTANCE.getIdFromItem(this.result.get(0).getItem()));
+        buildTool(consumer, builder, RegistryUtils.getIdFromItem(this.result.get(0).getItem()));
     }
 
     public void buildTool(Consumer<FinishedRecipe> consumer, String builder, String id) {
@@ -211,8 +217,9 @@ public class AntimatterShapedRecipeBuilder {
         private final Map<Character, Ingredient> key;
         private final Advancement.Builder advBuilder;
         private final ResourceLocation advId;
+        private final boolean mirrored;
 
-        public Result(ResourceLocation id, ItemStack result, String group, List<String> pattern, Map<Character, Ingredient> key, Advancement.Builder advBuilder, ResourceLocation advId) {
+        public Result(ResourceLocation id, ItemStack result, String group, List<String> pattern, Map<Character, Ingredient> key, Advancement.Builder advBuilder, ResourceLocation advId, boolean mirrored) {
             this.id = id;
             this.result = result;
             this.group = group;
@@ -220,6 +227,7 @@ public class AntimatterShapedRecipeBuilder {
             this.key = key;
             this.advBuilder = advBuilder;
             this.advId = advId;
+            this.mirrored = mirrored;
         }
 
         @Override
@@ -238,7 +246,7 @@ public class AntimatterShapedRecipeBuilder {
             }
             json.add("key", jsonobject);
             JsonObject resultObj = new JsonObject();
-            resultObj.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(this.result.getItem()).toString());
+            resultObj.addProperty("item", RegistryUtils.getIdFromItem(this.result.getItem()).toString());
             if (this.result.getCount() > 1) {
                 resultObj.addProperty("count", this.result.getCount());
             }
@@ -246,6 +254,7 @@ public class AntimatterShapedRecipeBuilder {
             if (this.result.hasTag()) {
                 resultObj.addProperty("nbt", this.result.getTag().toString());
             }
+            json.addProperty("mirrored", this.mirrored);
         }
 
         @Override
@@ -255,7 +264,7 @@ public class AntimatterShapedRecipeBuilder {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return ContainerItemShapedRecipe.INSTANCE;
+            return MirroredShapedRecipe.INSTANCE;
         }
 
         @Nullable
@@ -278,7 +287,7 @@ public class AntimatterShapedRecipeBuilder {
         private final List<ItemStack> result;
 
         public ToolResult(String builderId, ResourceLocation id, List<ItemStack> result, String group, List<String> pattern, Map<Character, Ingredient> key, Advancement.Builder advBuilder, ResourceLocation advId) {
-            super(id, result.get(0), group, pattern, key, advBuilder, advId);
+            super(id, result.get(0), group, pattern, key, advBuilder, advId, false);
             this.builderId = builderId;
             this.result = result;
         }
@@ -290,7 +299,7 @@ public class AntimatterShapedRecipeBuilder {
             JsonArray arr = new JsonArray();
             result.forEach(el -> {
                 JsonObject resultObj = new JsonObject();
-                resultObj.addProperty("item", AntimatterPlatformUtils.INSTANCE.getIdFromItem(el.getItem()).toString());
+                resultObj.addProperty("item", RegistryUtils.getIdFromItem(el.getItem()).toString());
                 if (el.getCount() > 1) {
                     resultObj.addProperty("count", el.getCount());
                 }

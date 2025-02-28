@@ -6,7 +6,7 @@ import muramasa.antimatter.block.BlockFrame;
 import muramasa.antimatter.block.BlockStone;
 import muramasa.antimatter.block.BlockStorage;
 import muramasa.antimatter.data.AntimatterTags;
-import muramasa.antimatter.data.ForgeCTags;
+import muramasa.antimatter.data.ForgeTags;
 import muramasa.antimatter.datagen.IAntimatterProvider;
 import muramasa.antimatter.datagen.builder.AntimatterTagBuilder;
 import muramasa.antimatter.item.ItemFluidCell;
@@ -23,14 +23,12 @@ import muramasa.antimatter.pipe.PipeSize;
 import muramasa.antimatter.pipe.types.Cable;
 import muramasa.antimatter.pipe.types.Wire;
 import muramasa.antimatter.tool.IAntimatterTool;
-import muramasa.antimatter.util.AntimatterPlatformUtils;
 import muramasa.antimatter.util.TagUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -61,7 +59,7 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
 
     private void antimatterTags() {
         this.tag(TagUtils.getForgelikeItemTag("pistons")).add(Items.PISTON, Items.STICKY_PISTON);
-        this.tag(ForgeCTags.GEMS_QUARTZ_ALL).addTag(GEM.getMaterialTag(Quartz));
+        this.tag(ForgeTags.GEMS_QUARTZ_ALL).addTag(GEM.getMaterialTag(Quartz));
         this.tag(TagUtils.getForgelikeItemTag("stone")).add(Items.BASALT);
     }
 
@@ -137,12 +135,6 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
                    });
                 }
             });
-            //TODO move this to a felt api module
-            if (AntimatterPlatformUtils.INSTANCE.isFabric()){
-                for (DyeColor dyeColor : DyeColor.values()){
-                    this.tag(TagUtils.getForgelikeItemTag("dyes/" + dyeColor.getName())).add(Registry.ITEM.get(new ResourceLocation(dyeColor.getName() + "_dye")));
-                }
-            }
             processSubtags();
             AntimatterAPI.all(IAntimatterTool.class, tool -> {
                 this.tag(tool.getAntimatterToolType().getTag()).add(tool.getItem()).replace(replace);

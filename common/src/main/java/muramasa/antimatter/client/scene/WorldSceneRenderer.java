@@ -25,9 +25,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
-import xyz.wagyourtail.unimined.expect.annotation.Environment;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -46,7 +47,7 @@ import java.util.function.Consumer;
  * @Date: 2021/08/23
  * @Description: Abstract class, and extend a lot of features compared with the original one.
  */
-@Environment(Environment.EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public abstract class WorldSceneRenderer {
     protected static final FloatBuffer MODELVIEW_MATRIX_BUFFER = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
     protected static final FloatBuffer PROJECTION_MATRIX_BUFFER = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
