@@ -24,7 +24,7 @@ pipeline {
         stage('Build & Publish') {
             steps {
                 echo 'Building & Publishing'
-                sh './gradlew build publish'
+                sh './gradlew :build :publish'
             }
         }
     }
