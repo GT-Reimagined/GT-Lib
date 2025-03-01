@@ -7,6 +7,13 @@ pipeline {
         discord_webhook = credentials('gt-discord-webhook')
     }
     stages {
+        stage('Update submodule') {
+            steps {
+                echo 'Updating submodule'
+                sh 'git submodule init'
+                sh 'git submodule update'
+            }
+        }
         stage('Clean') {
             steps {
                 echo 'Cleaning Project'
