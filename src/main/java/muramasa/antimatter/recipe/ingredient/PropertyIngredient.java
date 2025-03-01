@@ -229,7 +229,7 @@ public class PropertyIngredient extends Ingredient {
 
         public static Serializer INSTANCE = new Serializer();
 
-        public static final ResourceLocation ID = new ResourceLocation("antimatter", "material");
+        public static final ResourceLocation ID = new ResourceLocation(Ref.ID, "material");
 
         public static void init(){
             AntimatterAPI.register(IIngredientSerializer.class, "material", Ref.ID, INSTANCE);

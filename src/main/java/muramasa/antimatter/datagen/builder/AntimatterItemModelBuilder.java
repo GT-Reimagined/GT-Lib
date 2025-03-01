@@ -1,6 +1,7 @@
 package muramasa.antimatter.datagen.builder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import muramasa.antimatter.Ref;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.util.FluidUtils;
 import muramasa.antimatter.util.RegistryUtils;
@@ -42,7 +43,7 @@ public class AntimatterItemModelBuilder extends AntimatterModelBuilder<Antimatte
     }
 
     public AntimatterItemModelBuilder cell() {
-        super.loader(new ResourceLocation("antimatter", "cell"));
+        super.loader(new ResourceLocation(Ref.ID, "cell"));
         return this;
     }
 

@@ -487,7 +487,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         if (size.ordinal() > 5){
             prov.getBuilder(item).parent(new ResourceLocation(SIMPLE)).texture("all", getSide()).texture("north", getFace());
         } else {
-            prov.getBuilder(item).parent(prov.existing("antimatter", "block/pipe/" + getSize().getId() + "/line_inv")).texture("all", getSide()).texture("overlay", getFace());
+            prov.getBuilder(item).parent(prov.existing(Ref.ID, "block/pipe/" + getSize().getId() + "/line_inv")).texture("all", getSide()).texture("overlay", getFace());
         }
     }
 

@@ -1,6 +1,7 @@
 package muramasa.antimatter.item;
 
 import lombok.Getter;
+import muramasa.antimatter.Ref;
 import muramasa.antimatter.datagen.providers.AntimatterItemModelProvider;
 import muramasa.antimatter.registration.ITextureProvider;
 import net.minecraft.core.Direction;
@@ -20,6 +21,6 @@ public class ItemStoneCover extends ItemCover {
 
     @Override
     public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
-        prov.getBuilder(item).parent(prov.existing("antimatter", "block/cover/cover_inventory")).texture("overlay", stone.getTextures()[stone.getTextures().length == 6 ? Direction.NORTH.get3DDataValue() : 0]);
+        prov.getBuilder(item).parent(prov.existing(Ref.ID, "block/cover/cover_inventory")).texture("overlay", stone.getTextures()[stone.getTextures().length == 6 ? Direction.NORTH.get3DDataValue() : 0]);
     }
 }

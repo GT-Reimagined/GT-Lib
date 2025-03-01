@@ -83,7 +83,7 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
                         this.tag(tagKey).add(s);
                     }
                 }
-                this.tag(getBlockTag(new ResourceLocation("antimatter", "blocks/".concat(s.getId())))).add(s).replace(replace);
+                this.tag(getBlockTag(new ResourceLocation(Ref.ID, "blocks/".concat(s.getId())))).add(s).replace(replace);
             });
             AntimatterAPI.all(BlockStoneWall.class, b -> {
                 this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(b).replace(replace);

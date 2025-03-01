@@ -12,7 +12,7 @@ public class AntimatterKubeJS extends KubeJSPlugin {
 
     @Override
     public void addBindings(BindingsEvent event) {
-        event.add("antimatter", new KubeJSBindings());
+        event.add(Ref.ID, new KubeJSBindings());
     }
 
     @Override

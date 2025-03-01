@@ -157,7 +157,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
 
     @Override
     public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
-        prov.getBuilder(item).parent(prov.existing("antimatter", "block/rock/surface_rock_0")).tex(textureMap);
+        prov.getBuilder(item).parent(prov.existing(Ref.ID, "block/rock/surface_rock_0")).tex(textureMap);
     }
 
     @Override

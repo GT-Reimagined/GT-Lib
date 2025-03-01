@@ -172,7 +172,7 @@ public class AntimatterDynamics {
                 if (!AntimatterAPI.isModLoaded(mod))
                     return;
             }
-            t.craftingRecipes(new AntimatterRecipeProvider("Antimatter", "Custom recipes"));
+            t.craftingRecipes(new AntimatterRecipeProvider(Ref.ID, "Custom recipes"));
         });
         Antimatter.LOGGER.info("Antimatter recipe manager done..");
     }
