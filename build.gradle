@@ -142,7 +142,7 @@ jar{
 publishing {
     publications {
         mavenJava(org.gradle.api.publish.maven.MavenPublication) {
-            artifactId = project.name
+            artifactId = "gt-lib"
             from components.java
         }
     }
