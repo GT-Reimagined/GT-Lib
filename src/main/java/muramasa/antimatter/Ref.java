@@ -21,8 +21,8 @@ public class Ref {
     /**
      * Mod Data
      **/
-    public static final String ID = "antimatter";
-    public static final String NAME = "AntimatterAPI";
+    public static final String ID = "gtlib";
+    public static final String NAME = "GTLib";
     public static final String SHARED_ID = "antimatter_shared";
 
     /**

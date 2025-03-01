@@ -1,5 +1,5 @@
 {
-  "loader": "antimatter:main",
+  "loader": "gtlib:main",
 	"model": {
 		"parent": "minecraft:block/block",
 		"textures": {

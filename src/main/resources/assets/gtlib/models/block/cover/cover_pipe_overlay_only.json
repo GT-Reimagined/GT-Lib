@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"loader": "antimatter:cover",
+	"loader": "gtlib:cover",
 	"elements": [
 		{
 			"from": [0, 0, 16],

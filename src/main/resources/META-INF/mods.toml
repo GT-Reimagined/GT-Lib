@@ -1,58 +1,60 @@
 modLoader="javafml"
 license="LGPLv3"
 loaderVersion="[40,)"
-issueTrackerURL="https://github.com/GregTech-Intergalactical/AntimatterAPI/issues"
+issueTrackerURL="https://github.com/GT-Reimagined/GT-Lib/issues"
 
+[[mods]]
+modId="gtlib"
+version="${version}"
+displayName="GTLib"
+displayURL="https://github.com/GT-Reimagined/GT-Lib"
+credits="mitchej123, e99999, qubka, Vliro, repolainen, Muramasa, Rongmario for original AntimatterAPI"
+authors="Trinsdar"
+description='''Well-rounded API for Minecraft, primarily made for GregTech.'''
+[[dependencies.gtlib]]
+modId="forge"
+mandatory=true
+versionRange="[40.2.3,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.gtlib]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18.2,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.gtlib]]
+modId="kubejs"
+mandatory=false
+versionRange="[1605,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.gtlib]]
+modId="jei"
+mandatory=false
+versionRange="[9.7,)"
+ordering="AFTER"
+side="BOTH"
 [[mods]]
 modId="antimatter"
 version="${version}"
-displayName="AntimatterAPI"
-displayURL="https://github.com/GregTech-Intergalactical/AntimatterAPI"
+displayName="AntimatterStub"
+displayURL="https://github.com/GT-Reimagined/GT-Lib"
 #logoFile="examplemod.png"
-credits="mitchej123, e99999, qubka, Vliro, repolainen, Trinsdar for general implementations/fixes"
-authors="Muramasa, Rongmario, Trinsdar, Vliro"
-description='''Well-rounded API for Minecraft, primarily made for GregTech.'''
-[[dependencies.antimatter]]
-    modId="forge"
-    mandatory=true
-    versionRange="[40.2.3,)"
-    ordering="AFTER"
-    side="BOTH"
-[[dependencies.antimatter]]
-    modId="tesseractapi"
-    mandatory=true
-    versionRange="[0.2,)"
-    ordering="AFTER"
-    side="BOTH"
-[[dependencies.antimatter]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.18.2,)"
-    ordering="AFTER"
-    side="BOTH"
-[[dependencies.antimatter]]
-    modId="kubejs"
-    mandatory=false
-    versionRange="[1605,)"
-    ordering="AFTER"
-    side="BOTH"
-[[dependencies.antimatter]]
-    modId="jei"
-    mandatory=false
-    versionRange="[9.7,)"
-    ordering="AFTER"
-    side="BOTH"
+credits="mitchej123, e99999, qubka, Vliro, repolainen, Muramasa, Rongmario for original AntimatterAPI"
+authors="Trinsdar"
+description='''Temporary stub for old id'''
 [[mods]]
 modId="antimatter_shared"
 version="${version}"
 displayName="Antimatter Shared Data"
-displayURL="https://github.com/GregTech-Intergalactical/AntimatterAPI"
+displayURL="https://github.com/GT-Reimagined/GT-Lib"
 #logoFile="examplemod.png"
-credits="mitchej123, e99999, qubka, Vliro, repolainen, Trinsdar for general implementations/fixes"
-authors="Muramasa, Rongmario"
-description='''Modid used for data shared betwen antimatter addons'''
+credits="mitchej123, e99999, qubka, Vliro, repolainen, Muramasa, Rongmario for original AntimatterAPI"
+authors="Trinsdar"
+description='''Modid used for data shared betwen gtlib addons'''
 [[dependencies.antimatter_shared]]
-    modId="antimatter"
+    modId="gtlib"
     mandatory=true
     versionRange="[0.0.1,)"
     ordering="AFTER"

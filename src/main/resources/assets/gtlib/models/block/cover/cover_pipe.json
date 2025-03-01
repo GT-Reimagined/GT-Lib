@@ -112,5 +112,5 @@
 			"children": [7]
 		}
 	],
-	"loader": "antimatter:cover"
+	"loader": "gtlib:cover"
 }
