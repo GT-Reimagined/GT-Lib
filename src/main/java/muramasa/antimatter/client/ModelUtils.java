@@ -52,11 +52,11 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface ModelUtils {
-    ModelUtils INSTANCE = ImplLoader.load(ModelUtils.class);
+public class ModelUtils {
+    public static final ModelUtils INSTANCE = new ModelUtils();
 
     //Assumes from North.
-    static Transformation transform(Direction side) {
+    public static Transformation transform(Direction side) {
         switch (side) {
             case DOWN:
                 return new Transformation(null, new Quaternion(new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), 90.0F, true)), null, null);
@@ -75,21 +75,21 @@ public interface ModelUtils {
         }
     }
 
-    static UnbakedModel getMissingModel() {
+    public static UnbakedModel getMissingModel() {
         return getModelBakery().getModel(new ModelResourceLocation("builtin/missing", "missing"));
     }
 
 
-    static UnbakedModel getModel(ResourceLocation resourceLocation){
+    public static UnbakedModel getModel(ResourceLocation resourceLocation){
         return getModelBakery().getModel(resourceLocation);
     }
 
 
-    static SimpleBakedModel.Builder createSimpleModelBuilder(boolean smoothLighting, boolean sideLit, boolean isShadedInGui, ItemTransforms transforms, ItemOverrides overrides){
+    public static SimpleBakedModel.Builder createSimpleModelBuilder(boolean smoothLighting, boolean sideLit, boolean isShadedInGui, ItemTransforms transforms, ItemOverrides overrides){
         return SimpleBakedModel$BuilderAccessor.antimatter$create(smoothLighting, sideLit, isShadedInGui, transforms, overrides);
     }
 
-    static Function<ResourceLocation, UnbakedModel> getDefaultModelGetter(){
+    public static Function<ResourceLocation, UnbakedModel> getDefaultModelGetter(){
         return ModelUtils::getModelOrMissing;
     }
 
@@ -102,15 +102,15 @@ public interface ModelUtils {
         }
     }
 
-    static Function<Material, TextureAtlasSprite> getDefaultTextureGetter(){
+    public static Function<Material, TextureAtlasSprite> getDefaultTextureGetter(){
         return Material::sprite;
     }
 
-    static ModelBakery getModelBakery(){
+    public static ModelBakery getModelBakery(){
         return ForgeModelBakery.instance();
     }
 
-    static List<BakedQuad> getQuadsFromBaked(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos){
+    public static List<BakedQuad> getQuadsFromBaked(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos){
         if (model instanceof IAntimatterBakedModel antimatterBaked){
             return antimatterBaked.getQuads(state, side, rand, level, pos);
         } else {
@@ -119,75 +119,75 @@ public interface ModelUtils {
         }
     }
 
-    static List<BakedQuad> getQuadsFromBakedCover(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos, Predicate<Map.Entry<String, BakedModel>> coverPredicate){
+    public static List<BakedQuad> getQuadsFromBakedCover(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos, Predicate<Map.Entry<String, BakedModel>> coverPredicate){
         if (model instanceof CoverBakedModel coverBakedModel){
             return coverBakedModel.getBlockQuads(state, side, rand, level, pos, coverPredicate);
         }
         return getQuadsFromBaked(model, state, side, rand, level, pos);
     }
 
-    static BakedModel getBakedFromQuads(BlockModel model, List<BakedQuad> quads, Function<Material, TextureAtlasSprite> getter) {
+    public static BakedModel getBakedFromQuads(BlockModel model, List<BakedQuad> quads, Function<Material, TextureAtlasSprite> getter) {
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(model, ItemOverrides.EMPTY, true).particle(getter.apply(model.getMaterial("particle")));
         quads.forEach(builder::addUnculledFace);
         return builder.build();
     }
 
-    static BakedModel getBakedFromModel(BlockModel model, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
+    public static BakedModel getBakedFromModel(BlockModel model, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
         List<BakedQuad> generalQuads = model.bake(bakery, model, getter, transform, loc, true).getQuads(null, null, Ref.RNG, EmptyModelData.INSTANCE);
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(model, ItemOverrides.EMPTY, true).particle(getter.apply(model.getMaterial("particle")));
         generalQuads.forEach(builder::addUnculledFace);
         return builder.build();
     }
 
-    static BakedModel getSimpleBakedModel(BakedModel baked) {
+    public static BakedModel getSimpleBakedModel(BakedModel baked) {
         Map<Direction, List<BakedQuad>> faceQuads = new Object2ObjectOpenHashMap<>();
         Arrays.stream(Ref.DIRS).forEach(d -> faceQuads.put(d, baked.getQuads(null, d, Ref.RNG, EmptyModelData.INSTANCE)));
         return new SimpleBakedModel(baked.getQuads(null, null, Ref.RNG, EmptyModelData.INSTANCE), faceQuads, baked.useAmbientOcclusion(), baked.usesBlockLight(), baked.isGui3d(), baked.getParticleIcon(), baked.getTransforms(), baked.getOverrides());
     }
 
-    static BakedModel getBaked(ResourceLocation loc) {
+    public static BakedModel getBaked(ResourceLocation loc) {
         return getModelBakery().getBakedTopLevelModels().get(loc);// SimpleModelState.IDENTITY, ForgeModelBakery.defaultTextureGetter());
     }
 
-    static BakedModel getBakedFromState(BlockState state) {
+    public static BakedModel getBakedFromState(BlockState state) {
         return Minecraft.getInstance().getModelManager().getModel(BlockModelShaper.stateToModelLocation(state));
     }
 
-    static BakedModel getBakedFromItem(Item item) {
+    public static BakedModel getBakedFromItem(Item item) {
         return Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager().getModel(new ModelResourceLocation(RegistryUtils.getIdFromItem(item), "inventory"));
     }
 
-    static TextureAtlasSprite getSprite(ResourceLocation loc) {
+    public static TextureAtlasSprite getSprite(ResourceLocation loc) {
         return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(loc);
     }
 
-    static Material getBlockMaterial(ResourceLocation loc) {
+    public static Material getBlockMaterial(ResourceLocation loc) {
         return new Material(InventoryMenu.BLOCK_ATLAS, loc);
     }
 
-    static List<BakedQuad> trans(List<BakedQuad> quads, Vector3f rotationL, Vector3f rotationR) {
+    public static List<BakedQuad> trans(List<BakedQuad> quads, Vector3f rotationL, Vector3f rotationR) {
         Quaternion rotL = rotationL == null ? null : quatFromXYZ(rotationL, true);
         Quaternion rotR = rotationR == null ? null : quatFromXYZ(rotationR, true);
         return trans(quads, new Transformation(new Vector3f(0, 0, 0), rotL, null, rotR));
     }
 
-    static Quaternion quatFromXYZ(Vector3f xyz, boolean degrees){
+    public static Quaternion quatFromXYZ(Vector3f xyz, boolean degrees){
         return TransformationHelper.quatFromXYZ(xyz, degrees);
     }
 
-    static List<BakedQuad> trans(List<BakedQuad> quads, Transformation transform) {
+    public static List<BakedQuad> trans(List<BakedQuad> quads, Transformation transform) {
         return new QuadTransformer(transform.blockCenterToCorner()).processMany(quads);
     }
 
-    static void setRenderLayer(Block block, RenderType renderType){
+    public static void setRenderLayer(Block block, RenderType renderType){
         ItemBlockRenderTypes.setRenderLayer(block, renderType);
     }
 
-    static void setRenderLayer(Fluid fluid, RenderType renderType){
+    public static void setRenderLayer(Fluid fluid, RenderType renderType){
         ItemBlockRenderTypes.setRenderLayer(fluid, renderType);
     }
 
-    static void registerProperty(Item item, ResourceLocation location, ClampedItemPropertyFunction function){
+    public static void registerProperty(Item item, ResourceLocation location, ClampedItemPropertyFunction function){
         ItemProperties.register(item, location, function);
     }
 }
