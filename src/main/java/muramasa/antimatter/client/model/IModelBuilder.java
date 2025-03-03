@@ -12,7 +12,7 @@ import net.minecraftforge.client.model.IModelConfiguration;
 public interface IModelBuilder<T extends IModelBuilder<T>> {
     static IModelBuilder<?> of(IModelConfiguration owner, ItemOverrides overrides, TextureAtlasSprite particle)
     {
-        return new IModelBuilder.Simple(ModelUtils.INSTANCE.createSimpleModelBuilder(owner.useSmoothLighting(), owner.isSideLit(), owner.isShadedInGui(), owner.getCameraTransforms(), overrides).particle(particle));
+        return new IModelBuilder.Simple(ModelUtils.createSimpleModelBuilder(owner.useSmoothLighting(), owner.isSideLit(), owner.isShadedInGui(), owner.getCameraTransforms(), overrides).particle(particle));
     }
 
     T addFaceQuad(Direction facing, BakedQuad quad);
