@@ -53,8 +53,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ModelUtils {
-    public static final ModelUtils INSTANCE = new ModelUtils();
-
     //Assumes from North.
     public static Transformation transform(Direction side) {
         switch (side) {
