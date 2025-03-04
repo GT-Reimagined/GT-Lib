@@ -46,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.TesseractCapUtils;
 import tesseract.api.context.TesseractItemContext;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandlerItem;
 
 import java.util.List;
@@ -294,6 +295,6 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool {
     }
 
     private Optional<ItemEnergyHandler> getCastedHandler(ItemStack stack) {
-        return TesseractCapUtils.INSTANCE.getEnergyHandlerItem(stack).map(e -> (ItemEnergyHandler) e);
+        return stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(e -> (ItemEnergyHandler) e);
     }
 }

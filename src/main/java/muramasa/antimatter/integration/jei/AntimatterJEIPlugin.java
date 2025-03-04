@@ -53,6 +53,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyItem;
 import tesseract.api.gt.IGTNode;
 import tesseract.api.wrapper.ItemStackWrapper;
@@ -116,8 +117,8 @@ public class AntimatterJEIPlugin implements IModPlugin {
             if (i instanceof IEnergyItem energyItem && energyItem.canCreate(new ItemStackWrapper(i.getDefaultInstance()))) {
                 registration.registerSubtypeInterpreter(i, (s, c) -> {
                     if (c == UidContext.Recipe) return "";
-                    long energy = TesseractCapUtils.INSTANCE.getEnergyHandlerItem(s).map(IGTNode::getEnergy).orElse(0L);
-                    long capacity = TesseractCapUtils.INSTANCE.getEnergyHandlerItem(s).map(IGTNode::getCapacity).orElse(0L);
+                    long energy = s.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(IGTNode::getEnergy).orElse(0L);
+                    long capacity = s.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(IGTNode::getCapacity).orElse(0L);
                     return "e:" + energy + "/" + capacity;
                 });
             }

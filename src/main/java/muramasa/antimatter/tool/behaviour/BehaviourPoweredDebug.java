@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Blocks;
 import tesseract.TesseractCapUtils;
+import tesseract.api.forge.TesseractCaps;
 
 public class BehaviourPoweredDebug implements IItemUse<IBasicAntimatterTool> {
 
@@ -21,7 +22,7 @@ public class BehaviourPoweredDebug implements IItemUse<IBasicAntimatterTool> {
     public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
         if (instance.getAntimatterToolType().isPowered() && c.getLevel().getBlockState(c.getClickedPos()) == Blocks.REDSTONE_BLOCK.defaultBlockState() && c.getPlayer() != null && c.getPlayer().isCreative()) {
             ItemStack stack = c.getPlayer().getItemInHand(c.getHand());
-            TesseractCapUtils.INSTANCE.getEnergyHandlerItem(stack).ifPresent(i -> {
+            stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).ifPresent(i -> {
                 if (i.getCapacity() - i.getEnergy() <= 50000)
                     i.setEnergy(i.getCapacity());
                 else i.setEnergy(i.getEnergy() + 50000);
