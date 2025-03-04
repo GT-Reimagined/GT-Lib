@@ -500,7 +500,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     public String getModelLoc(String shape, int cull) {
-        return "antimatter:block/pipe/" + getSize().getId() + "/" + shape + (cull == 0 ? "" : (shape.equals("base") ? "" : "_culled"));
+        return Ref.ID + ":block/pipe/" + getSize().getId() + "/" + shape + (cull == 0 ? "" : (shape.equals("base") ? "" : "_culled"));
     }
 
     public AntimatterBlockModelBuilder getPipeConfig(AntimatterBlockModelBuilder builder) {
