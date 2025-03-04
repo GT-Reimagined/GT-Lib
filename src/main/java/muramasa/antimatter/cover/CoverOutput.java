@@ -141,6 +141,7 @@ public class CoverOutput extends BaseCover {
         } else {
             adjTile = handler.getTile().getLevel().getBlockEntity(handler.getTile().getBlockPos().relative(this.side));
         }
+        if (adjTile == null) return;
         if (processing > 0) return;
         processing++;
         adjTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, this.side.getOpposite()).ifPresent(adjHandler -> {
