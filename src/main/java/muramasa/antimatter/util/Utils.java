@@ -262,7 +262,9 @@ public class Utils {
 
     public static FluidStack ca(int amount, FluidStack toCopy) {
         FluidStack stack = toCopy.copy();
-        stack.setAmount(amount);
+        if (!stack.isEmpty()) {
+            stack.setAmount(amount);
+        }
         return stack;
     }
 
