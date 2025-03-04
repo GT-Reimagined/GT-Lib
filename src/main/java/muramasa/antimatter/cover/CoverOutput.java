@@ -154,6 +154,7 @@ public class CoverOutput extends BaseCover {
     public void tryFluidTransfer(IFluidHandler fluidDestination, IFluidHandler fluidSource, int maxAmount, boolean doTransfer) {
         for (int i = 0; i < fluidSource.getTanks(); i++) {
             FluidStack fluid = fluidSource.getFluidInTank(i);
+            if (fluid.isEmpty()) continue;
             if (this.handler.getTile() instanceof BlockEntityMachine<?> machine && machine.fluidHandler.map(f -> !f.canFluidBeAutoOutput(fluid)).orElse(false)){
                 continue;
             }
