@@ -269,10 +269,10 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
             // No Tank? Nothing to do then.
             if (fluidHandlers[tSide.get3DDataValue()] == null) continue;
             // Check if the Tank can be filled with this Fluid.
-            long insert = fluidHandlers[tSide.get3DDataValue()].fill(Utils.ca(Integer.MAX_VALUE, aTank.getFluid()), SIMULATE);
+            int insert = fluidHandlers[tSide.get3DDataValue()].fill(Utils.ca(Integer.MAX_VALUE, aTank.getFluid()), SIMULATE);
             if (insert > 0) {
                 if (fluidHandlers[tSide.get3DDataValue()] instanceof PipeFluidHandlerSidedWrapper){
-                    tPipes.add(level.random.nextInt(tTanks.size()+1), fluidHandlers[tSide.get3DDataValue()]);
+                    tPipes.add(level.random.nextInt(tPipes.size()+1), fluidHandlers[tSide.get3DDataValue()]);
                 } else {
                     // Add to a random Position in the List.
                     tTanks.add(level.random.nextInt(tTanks.size()+1), fluidHandlers[tSide.get3DDataValue()]);
