@@ -59,25 +59,6 @@ public class WorldGenSmallOreBuilder {
 
 
 
-    private WorldGenVein readJson(WorldGenVein original){
-        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "antimatter/small_ore/overrides");
-        File target = new File(dir, id + ".json");
-
-
-        if(target.exists()) {
-            try {
-                Reader reader = Files.newBufferedReader(target.toPath());
-                JsonObject parsed = JsonParser.parseReader(reader).getAsJsonObject();
-                WorldGenVein read = WorldGenVein.fromJson(this.id, parsed);
-                reader.close();
-                return read;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return original;
-    }
-
     final public WorldGenSmallOreBuilder withMaterial(Material material) {
         this.material = material;
         return this;

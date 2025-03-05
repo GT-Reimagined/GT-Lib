@@ -94,7 +94,7 @@ public class AntimatterWorldGenerator {
     }
 
     public static void setup() {
-        Antimatter.LOGGER.info("AntimatterAPI WorldGen Initialization Stage...");
+        Antimatter.LOGGER.info("GTLib WorldGen Initialization Stage...");
         AntimatterAPI.onRegistration(RegistrationEvent.WORLDGEN_INIT);
         //if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)) {
         //    AntimatterKubeJS.loadWorldgenScripts();
@@ -209,7 +209,7 @@ public class AntimatterWorldGenerator {
     }
 
     public static void writeJson(JsonObject json, String id, String path) {
-        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "antimatter/" + path + "/default");
+        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "gtlib/" + path + "/default");
         File target = new File(dir, id + ".json");
         File readme = new File(dir, "README.txt");
 
@@ -229,7 +229,7 @@ public class AntimatterWorldGenerator {
     }
 
     public static <T extends IAntimatterObject> List<T> readCustomJsonObjects(Class<T> clazz, BiFunction<String, JsonObject, T> function, String path){
-        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "antimatter/" + path + "/custom");
+        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "gtlib/" + path + "/custom");
         if (dir.listFiles() == null) return Collections.emptyList();
         List<File> files = Arrays.asList(dir.listFiles());
         List<T> objects = new ArrayList<>();
@@ -252,7 +252,7 @@ public class AntimatterWorldGenerator {
     }
 
     public static  <T extends IAntimatterObject> T readJson(Class<T> clazz, T original, BiFunction<String, JsonObject, T> function, String path){
-        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "antimatter/" + path + "/overrides");
+        File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "/" + path + "/overrides");
         File target = new File(dir, original.getId() + ".json");
 
 
