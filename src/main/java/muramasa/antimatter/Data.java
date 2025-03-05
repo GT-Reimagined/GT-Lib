@@ -28,6 +28,7 @@ import muramasa.antimatter.machine.types.BasicMachine;
 import muramasa.antimatter.texture.Texture;
 import muramasa.antimatter.tool.enchantment.ElectricEnchantment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Inventory;
@@ -136,6 +137,11 @@ public class Data {
                         .addButton(152, 63, APAD_RIGHT, false);
             });
         }
+        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "output"), new ResourceLocation(Ref.ID, "output"));
+        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "input"), new ResourceLocation(Ref.ID, "input"));
+        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "muffler"), new ResourceLocation(Ref.ID, "muffler"));
+        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "dynamo"), new ResourceLocation(Ref.ID, "dynamo"));
+        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "energy"), new ResourceLocation(Ref.ID, "energy"));
     }
 
     public static void postInit() {
