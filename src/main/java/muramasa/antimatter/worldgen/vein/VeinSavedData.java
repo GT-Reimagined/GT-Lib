@@ -3,6 +3,7 @@ package muramasa.antimatter.worldgen.vein;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import muramasa.antimatter.Ref;
 import muramasa.antimatter.material.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -46,7 +47,13 @@ public class VeinSavedData extends SavedData {
     }
 
     public static VeinSavedData getOrCreate(ServerLevel serverLevel) {
-        return serverLevel.getDataStorage().computeIfAbsent(tag -> new VeinSavedData(serverLevel, tag), () -> new VeinSavedData(serverLevel), "antimatter_ore_veins");
+        VeinSavedData data = serverLevel.getDataStorage().get(tag -> new VeinSavedData(serverLevel, tag), "antimatter_ore_veins");
+        if (data == null) {
+            data = serverLevel.getDataStorage().computeIfAbsent(tag -> new VeinSavedData(serverLevel, tag), () -> new VeinSavedData(serverLevel), Ref.ID + "_ore_veins");
+        } else {
+            serverLevel.getDataStorage().set(Ref.ID + "_ore_veins", data);
+        }
+        return data;
     }
     @Override
     public CompoundTag save(CompoundTag compoundTag) {
