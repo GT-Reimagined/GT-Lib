@@ -373,11 +373,11 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
     }
 
     private void processAntimatterTranslations() {
-        add(Ref.TAB_BLOCKS, "Antimatter Blocks");
-        add(Ref.TAB_ITEMS, "Antimatter Items");
-        add(Ref.TAB_MACHINES, "Antimatter Machines");
-        add(Ref.TAB_MATERIALS, "Antimatter Material Items");
-        add(Ref.TAB_TOOLS, "Antimatter Tools");
+        add(Ref.TAB_BLOCKS, "GT Blocks");
+        add(Ref.TAB_ITEMS, "GT Items");
+        add(Ref.TAB_MACHINES, "GT Machines");
+        add(Ref.TAB_MATERIALS, "GT Material Items");
+        add(Ref.TAB_TOOLS, "GT Tools");
     }
 
     @Override
