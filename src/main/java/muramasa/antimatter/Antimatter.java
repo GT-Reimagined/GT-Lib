@@ -108,9 +108,9 @@ public class Antimatter extends AntimatterMod {
         AntimatterDynamics.clientProvider(Ref.ID,
                 () -> new AntimatterItemModelProvider(Ref.ID, Ref.NAME.concat(" Item Models")));
         AntimatterDynamics.clientProvider(Ref.SHARED_ID,
-                () -> new AntimatterBlockStateProvider(Ref.SHARED_ID, "Antimatter Shared BlockStates"));
+                () -> new AntimatterBlockStateProvider(Ref.SHARED_ID, "GT Shared BlockStates"));
         AntimatterDynamics.clientProvider(Ref.SHARED_ID,
-                () -> new AntimatterItemModelProvider(Ref.SHARED_ID, "Antimatter Shared Item Models"));
+                () -> new AntimatterItemModelProvider(Ref.SHARED_ID, "GT Shared Item Models"));
         AntimatterDynamics.clientProvider(Ref.ID,
                 () -> new AntimatterLanguageProvider(Ref.ID, Ref.NAME.concat(" en_us Localization"), "en_us"));
         AntimatterDynamics.clientProvider(Ref.SHARED_ID,
@@ -142,7 +142,7 @@ public class Antimatter extends AntimatterMod {
             return p[0];
         });
         ev.addProvider(() -> new AntimatterFluidTagProvider(Ref.SHARED_ID,
-                "Antimatter Shared Fluid Tags", false));
+                "GT Shared Fluid Tags", false));
         ev.addProvider(() -> new AntimatterItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
                 false, p[0]));
         ev.addProvider(() -> new AntimatterBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
@@ -283,7 +283,7 @@ public class Antimatter extends AntimatterMod {
     private void commonSetup(final FMLCommonSetupEvent e) {
         CommonHandler.setup();
         AntimatterDynamics.setInitialized();
-        LOGGER.info("AntimatterAPI Data Processing has Finished. All Data Objects can now be Modified!");
+        LOGGER.info("GTLib Data Processing has Finished. All Data Objects can now be Modified!");
         e.enqueueWork(() -> AntimatterAPI.getCommonDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {

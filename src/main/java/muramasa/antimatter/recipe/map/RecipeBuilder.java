@@ -149,7 +149,7 @@ public class RecipeBuilder {
                     if (!list.isEmpty()){
                         id = RegistryUtils.getIdFromFluid(list.get(0).getFluid()).toString() + "_recipe";
                     } else {
-                        id = "antimatter:unknown_in_" + recipeMap.getId();
+                        id = Ref.ID + ":unknown_in_" + recipeMap.getId();
                     }
                 }
                 checkID(id);

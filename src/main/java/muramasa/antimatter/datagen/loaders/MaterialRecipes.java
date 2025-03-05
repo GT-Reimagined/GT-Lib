@@ -27,8 +27,8 @@ public class MaterialRecipes {
     public static void init(Consumer<FinishedRecipe> consumer, AntimatterRecipeProvider provider) {
         final CriterionTriggerInstance in = provider.hasSafeItem(AntimatterDefaultTools.WRENCH.getTag());
         AntimatterMaterialTypes.DUST.all().forEach(m -> {
-            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "antimatter_dusts", AntimatterMaterialTypes.DUST.get(m, 1), of('D', AntimatterMaterialTypes.DUST_SMALL.getMaterialTag(m)), "DD", "DD");
-            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "antimatter_dusts", AntimatterMaterialTypes.DUST.get(m, 1), of('D', AntimatterMaterialTypes.DUST_TINY.getMaterialTag(m)), "DDD", "DDD", "DDD");
+            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "gtlib_dusts", AntimatterMaterialTypes.DUST.get(m, 1), of('D', AntimatterMaterialTypes.DUST_SMALL.getMaterialTag(m)), "DD", "DD");
+            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "gtlib_dusts", AntimatterMaterialTypes.DUST.get(m, 1), of('D', AntimatterMaterialTypes.DUST_TINY.getMaterialTag(m)), "DDD", "DDD", "DDD");
         });
         AntimatterMaterialTypes.INGOT.all().forEach(m -> {
             if (m.has(AntimatterMaterialTypes.NUGGET) && m != AntimatterMaterials.Iron && m != AntimatterMaterials.Gold){

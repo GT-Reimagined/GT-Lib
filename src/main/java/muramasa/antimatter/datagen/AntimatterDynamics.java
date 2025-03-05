@@ -107,7 +107,7 @@ public class AntimatterDynamics {
             AntimatterDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
-        function.accept(new DynamicDataPack("antimatter:recipes", AntimatterAPI.all(IAntimatterRegistrar.class).stream().map(IAntimatterRegistrar::getDomain).collect(Collectors.toSet())));
+        function.accept(new DynamicDataPack("gtlib:recipes", AntimatterAPI.all(IAntimatterRegistrar.class).stream().map(IAntimatterRegistrar::getDomain).collect(Collectors.toSet())));
 
     }
 
@@ -165,7 +165,7 @@ public class AntimatterDynamics {
     }
 
     public static void onRecipeManagerBuild(Consumer<FinishedRecipe> objectIn) {
-        Antimatter.LOGGER.info("Antimatter recipe manager running..");
+        Antimatter.LOGGER.info("GTLib recipe manager running..");
         collectRecipes(new AntimatterRecipeProvider(Ref.ID, "provider"), objectIn);
         AntimatterAPI.all(ModRegistrar.class, t -> {
             for (String mod : t.modIds()) {
@@ -174,7 +174,7 @@ public class AntimatterDynamics {
             }
             t.craftingRecipes(new AntimatterRecipeProvider(Ref.ID, "Custom recipes"));
         });
-        Antimatter.LOGGER.info("Antimatter recipe manager done..");
+        Antimatter.LOGGER.info("GTLib recipe manager done..");
     }
 
     public static void onRecipeCompile(boolean server, RecipeManager manager) {
@@ -262,7 +262,7 @@ public class AntimatterDynamics {
         WorldGenVeinLayer.resetTotalWeight();
         if (AntimatterAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
             AMWorldEvent ev = new AMWorldEvent();
-            ev.post(ScriptType.SERVER, "antimatter.worldgen");
+            ev.post(ScriptType.SERVER, "gtlib.worldgen");
             veins.addAll(ev.VEINS);
             stoneLayers.addAll(ev.STONE_LAYERS);
             collisionMap.putAll(ev.COLLISION_MAP);

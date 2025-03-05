@@ -32,7 +32,7 @@ public class AntimatterAdvancementProvider implements DataProvider, IAntimatterP
         this.providerDomain = providerDomain;
         this.providerName = providerName;
         if (advancements.length == 0)
-            throw new IllegalArgumentException("AntimatterAdvancementProvider requires at least one Advancement class.");
+            throw new IllegalArgumentException("GTLibAdvancementProvider requires at least one Advancement class.");
         this.advancements = Arrays.asList(advancements);
     }
 

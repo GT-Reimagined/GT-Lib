@@ -69,11 +69,11 @@ public abstract class LivingEntityMixin extends Entity implements IRadiationEnti
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     private void injectSave(CompoundTag nbt, CallbackInfo info){
-        nbt.putByte("antimatter.radiation", radiation);
+        nbt.putByte("gtlib.radiation", radiation);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void injectRead(CompoundTag nbt, CallbackInfo info){
-        radiation = nbt.getByte("antimatter.radiation");
+        radiation = nbt.getByte("gtlib.radiation");
     }
 }

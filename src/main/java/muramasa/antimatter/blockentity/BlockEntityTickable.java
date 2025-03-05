@@ -22,7 +22,7 @@ public class BlockEntityTickable<T extends BlockEntityTickable<T>> extends Block
     }
 
     protected void tick(Level level, BlockPos pos, BlockState state) {
-        level.getProfiler().push("AntimatterTileTick");
+        level.getProfiler().push("GTLibTileTick");
         if (!hadFirstTick) {
             onFirstTick();
             hadFirstTick = true;

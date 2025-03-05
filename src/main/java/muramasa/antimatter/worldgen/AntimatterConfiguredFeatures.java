@@ -1,5 +1,6 @@
 package muramasa.antimatter.worldgen;
 
+import muramasa.antimatter.Ref;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
@@ -23,7 +24,7 @@ public class AntimatterConfiguredFeatures {
 
     @SuppressWarnings("unchecked")
     public static <T extends FeatureConfiguration> Holder<PlacedFeature> register(String id, Holder<ConfiguredFeature<T, ?>> feature) {
-        return PlacementUtils.register("antimatter:"+id, feature, Collections.emptyList());
+        return PlacementUtils.register(Ref.ID + ":"+id, feature, Collections.emptyList());
     }
 
     public static void init() {

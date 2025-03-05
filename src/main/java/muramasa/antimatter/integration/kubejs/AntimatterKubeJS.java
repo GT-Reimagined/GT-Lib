@@ -22,10 +22,10 @@ public class AntimatterKubeJS extends KubeJSPlugin {
 
     public static void loadStartup(){
         AMCreationEvent.init();
-        new AMCreationEvent().post(ScriptType.STARTUP, "antimatter.creation");
+        new AMCreationEvent().post(ScriptType.STARTUP, "gtlib.creation");
     }
 
     public static void loadMaterialEvent(MaterialEvent event){
-        new AMMaterialEvent(event).post(ScriptType.STARTUP, "antimatter.material_event");
+        new AMMaterialEvent(event).post(ScriptType.STARTUP, "gtlib.material_event");
     }
 }

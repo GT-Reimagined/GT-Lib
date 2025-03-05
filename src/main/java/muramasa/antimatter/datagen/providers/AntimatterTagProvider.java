@@ -108,7 +108,7 @@ public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
         if (json == null) {
             addTag(loc, obj.serializeToJson());
         } else {
-            obj = obj.addFromJson(json, "Antimatter - Dynamic Data");
+            obj = obj.addFromJson(json, "GTLib - Dynamic Data");
             addTag(loc, obj.serializeToJson());
         }
     }

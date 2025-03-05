@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @ZenRegister
-@ZenCodeType.Name("mods.antimatter.Api")
+@ZenCodeType.Name("mods.gtlib.Api")
 public class AntimatterCraftTweaker {
 
     @ZenCodeType.Method
@@ -66,7 +66,7 @@ public class AntimatterCraftTweaker {
     }
 
     @ZenCodeType.StaticExpansionMethod
-    @BracketResolver("antimatterapi")
+    @BracketResolver("gtlib")
     public static Object get(String tokens) {
         String[] toks = tokens.split(":");
         if (toks.length == 3) {
@@ -78,7 +78,7 @@ public class AntimatterCraftTweaker {
     }
 
     @ZenCodeType.StaticExpansionMethod
-    @BracketResolver("ammaterial")
+    @BracketResolver("gtmaterial")
     public static Material mat(String tokens) {
         return getMat(tokens);
     }
