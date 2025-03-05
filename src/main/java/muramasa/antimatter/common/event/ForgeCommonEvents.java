@@ -3,6 +3,7 @@ package muramasa.antimatter.common.event;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.AntimatterRemapping;
+import muramasa.antimatter.Data;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.pipe.BlockEntityPipe;
 import muramasa.antimatter.capability.fluid.FluidHandlerItem;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -144,6 +146,18 @@ public class ForgeCommonEvents {
         if (event.getObject().getItem() instanceof IFluidItem fluidItem){
             event.addCapability(new ResourceLocation(Ref.ID, "fluid"), new FluidHandlerItem(event.getObject(), fluidItem.getCapacity(), fluidItem.getFilter()));
         }
+    }
+
+    @SubscribeEvent
+    public static void remapMissingEnchantments(final RegistryEvent.MissingMappings<Enchantment> event){
+        event.getMappings("antimatter").forEach(m -> {
+            if (m.key.getPath().equals("energy_efficiency")){
+                m.remap(Data.ENERGY_EFFICIENCY);
+            }
+            if (m.key.getPath().equals("implosion")){
+                m.remap(Data.IMPLOSION);
+            }
+        });
     }
 
     @SubscribeEvent
