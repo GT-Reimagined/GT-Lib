@@ -301,9 +301,9 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
         if (stack.getTag() != null && stack.getTag().contains("covers")){
             CompoundTag covers = stack.getTag().getCompound("covers");
             if (!Screen.hasShiftDown()) {
-                tooltip.add(Utils.translatable("antimatter.tooltip.more"));
+                tooltip.add(Utils.translatable("gtlib.tooltip.more"));
             } else {
-                tooltip.add(Utils.translatable("antimatter.tooltip.cover.covers_on_item"));
+                tooltip.add(Utils.translatable("gtlib.tooltip.cover.covers_on_item"));
                 byte sides = covers.getByte(Ref.TAG_MACHINE_COVER_SIDE);
                 for (int i = 0; i < Ref.DIRS.length; i++) {
                     if ((sides & (1 << i)) > 0) {
@@ -319,7 +319,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         if (factory != null) {
                             ItemStack item = factory.getItem(tier);
                             Component itemTip = item.isEmpty() ? Utils.translatable("cover." + domain + "."+ id) : item.getHoverName();
-                            tooltip.add(Utils.translatable("antimatter.tooltip.cover.stack", dir.getName(), itemTip));
+                            tooltip.add(Utils.translatable("gtlib.tooltip.cover.stack", dir.getName(), itemTip));
                         }
                     }
                 }

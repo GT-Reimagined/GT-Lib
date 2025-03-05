@@ -107,8 +107,8 @@ public interface IBasicAntimatterTool extends IAntimatterObject, IColorHandler, 
 
     default void onGenericAddInformation(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         if (getAntimatterToolType().getTooltip().size() != 0) tooltip.addAll(getAntimatterToolType().getTooltip());
-        tooltip.add(Utils.translatable("antimatter.tooltip.mining_level", getTier(stack).getLevel()).withStyle(ChatFormatting.YELLOW));
-        tooltip.add(Utils.translatable("antimatter.tooltip.tool_speed", Utils.literal("" + getDefaultMiningSpeed(stack)).withStyle(ChatFormatting.LIGHT_PURPLE)));
+        tooltip.add(Utils.translatable("gtlib.tooltip.mining_level", getTier(stack).getLevel()).withStyle(ChatFormatting.YELLOW));
+        tooltip.add(Utils.translatable("gtlib.tooltip.tool_speed", Utils.literal("" + getDefaultMiningSpeed(stack)).withStyle(ChatFormatting.LIGHT_PURPLE)));
         for (Map.Entry<String, IBehaviour<IBasicAntimatterTool>> e : getBehaviours().entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IAddInformation addInformation)) continue;

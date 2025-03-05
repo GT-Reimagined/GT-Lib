@@ -58,9 +58,9 @@ public class MachineProvider implements IComponentProvider, IServerDataProvider<
                         validStructure = multiMachine.isStructureValid();
                     }
                     if (validStructure) {
-                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("antimatter.tooltip.valid_structure").withStyle(ChatFormatting.GREEN)).tag(JadePlugin.STRUCTURE));
+                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("gtlib.tooltip.valid_structure").withStyle(ChatFormatting.GREEN)).tag(JadePlugin.STRUCTURE));
                     } else {
-                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("antimatter.tooltip.invalid_structure").withStyle(ChatFormatting.RED)).tag(JadePlugin.STRUCTURE));
+                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("gtlib.tooltip.invalid_structure").withStyle(ChatFormatting.RED)).tag(JadePlugin.STRUCTURE));
                     }
                 }
 

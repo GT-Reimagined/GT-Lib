@@ -63,9 +63,9 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
             if (fluid.isEmpty()) return;
             List<Component> str = new ArrayList<>();
             str.add(FluidUtils.getFluidDisplayName(fluid));
-            str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidUtils.getFluidTemperature(fluid.getFluid())).withStyle(ChatFormatting.RED));
+            str.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(fluid.getFluid())).withStyle(ChatFormatting.RED));
             String liquid = !FluidUtils.isFluidGaseous(fluid.getFluid()) ? "liquid" : "gas";
-            str.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
+            str.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
             AntimatterJEIREIPlugin.addModDescriptor(str, fluid);
             tooltip.addAll(str);
         });

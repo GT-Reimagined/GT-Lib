@@ -205,16 +205,16 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
         Material primary = getPrimaryMaterial(stack);
         Material secondary = getSecondaryMaterial(stack);
         if (!getAntimatterToolType().isSimple())
-            tooltip.add(Utils.translatable("antimatter.tooltip.material_primary", primary.getDisplayName().getString()));
+            tooltip.add(Utils.translatable("gtlib.tooltip.material_primary", primary.getDisplayName().getString()));
         if (secondary != NULL)
-            tooltip.add(Utils.translatable("antimatter.tooltip.material_secondary", secondary.getDisplayName().getString()));
+            tooltip.add(Utils.translatable("gtlib.tooltip.material_secondary", secondary.getDisplayName().getString()));
         DyeColor color = getDyeColor(stack);
         if (color != null){
-            tooltip.add(Utils.translatable("antimatter.tooltip.dye_color", color.getName()));
+            tooltip.add(Utils.translatable("gtlib.tooltip.dye_color", color.getName()));
         }
         if (flag.isAdvanced() && getAntimatterToolType().isPowered())
-            tooltip.add(Utils.translatable("antimatter.tooltip.energy").append(": " + getCurrentEnergy(stack) + " / " + getMaxEnergy(stack)));
-        tooltip.add(Utils.translatable("antimatter.tooltip.durability", Utils.literal((stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GREEN)));
+            tooltip.add(Utils.translatable("gtlib.tooltip.energy").append(": " + getCurrentEnergy(stack) + " / " + getMaxEnergy(stack)));
+        tooltip.add(Utils.translatable("gtlib.tooltip.durability", Utils.literal((stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GREEN)));
         IBasicAntimatterTool.super.onGenericAddInformation(stack, tooltip, flag);
     }
 

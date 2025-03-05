@@ -26,15 +26,15 @@ public class BlockFluidPipe<T extends FluidPipe<T>> extends BlockPipe<T> {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Utils.translatable("antimatter.tooltip.bandwidth", getType().getPressure(getSize()) + " L/t").withStyle(ChatFormatting.AQUA));
-        tooltip.add(Utils.translatable("antimatter.tooltip.capacity", (getType().getPressure(getSize()) * 2) + "L").withStyle(ChatFormatting.AQUA));
+        tooltip.add(Utils.translatable("gtlib.tooltip.bandwidth", getType().getPressure(getSize()) + " L/t").withStyle(ChatFormatting.AQUA));
+        tooltip.add(Utils.translatable("gtlib.tooltip.capacity", (getType().getPressure(getSize()) * 2) + "L").withStyle(ChatFormatting.AQUA));
         if (getType().isGasProof()){
-            tooltip.add(Utils.translatable("antimatter.tooltip.gas_proof").withStyle(ChatFormatting.GOLD));
+            tooltip.add(Utils.translatable("gtlib.tooltip.gas_proof").withStyle(ChatFormatting.GOLD));
         }
         if (getType().isAcidProof()){
-            tooltip.add(Utils.translatable("antimatter.tooltip.acid_proof").withStyle(ChatFormatting.GOLD));
+            tooltip.add(Utils.translatable("gtlib.tooltip.acid_proof").withStyle(ChatFormatting.GOLD));
         }
-        tooltip.add(Utils.translatable("antimatter.tooltip.max_temperature").append(": " +getType().getMaxTemperature()).withStyle(ChatFormatting.DARK_RED));
+        tooltip.add(Utils.translatable("gtlib.tooltip.max_temperature").append(": " +getType().getMaxTemperature()).withStyle(ChatFormatting.DARK_RED));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 

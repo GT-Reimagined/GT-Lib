@@ -87,7 +87,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         //Here only add specific types, events are handled below.
         if (type == AntimatterMaterialTypes.BEARING_ROCK) {
-            tooltip.add(Utils.translatable("antimatter.tooltip.occurrence").append(Utils.literal(material.getDisplayName().getString()).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Utils.translatable("gtlib.tooltip.occurrence").append(Utils.literal(material.getDisplayName().getString()).withStyle(ChatFormatting.YELLOW)));
         }
     }
 
@@ -99,17 +99,17 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
         }
         if (!mat.getChemicalFormula().isEmpty()) {
             if (Screen.hasShiftDown()) {
-                tooltip.add(Utils.translatable("antimatter.tooltip.chemical_formula").append(": ").append(Utils.literal(mat.getChemicalFormula()).withStyle(ChatFormatting.DARK_AQUA)));
-                tooltip.add(Utils.translatable("antimatter.tooltip.mass").append(": ").append(Utils.literal(mat.getMass() + "").withStyle(ChatFormatting.DARK_AQUA)));
+                tooltip.add(Utils.translatable("gtlib.tooltip.chemical_formula").append(": ").append(Utils.literal(mat.getChemicalFormula()).withStyle(ChatFormatting.DARK_AQUA)));
+                tooltip.add(Utils.translatable("gtlib.tooltip.mass").append(": ").append(Utils.literal(mat.getMass() + "").withStyle(ChatFormatting.DARK_AQUA)));
             } else {
-                tooltip.add(Utils.translatable("antimatter.tooltip.formula").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
+                tooltip.add(Utils.translatable("gtlib.tooltip.formula").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
             }
         }
         if (mat.getElement() != null){
             tooltip.add(Utils.literal("Is Element"));
         }
         if (stack.getItem() instanceof MaterialItem) {
-            tooltip.add(Utils.translatable("antimatter.tooltip.material_modid", Utils.getModName(mat.materialDomain())));
+            tooltip.add(Utils.translatable("gtlib.tooltip.material_modid", Utils.getModName(mat.materialDomain())));
         }
     }
 

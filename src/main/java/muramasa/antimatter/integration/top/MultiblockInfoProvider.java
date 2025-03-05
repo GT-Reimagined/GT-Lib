@@ -30,9 +30,9 @@ public class MultiblockInfoProvider implements IProbeInfoProvider {
 
                 IProbeInfo horizontalPane = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
                 if (machine.isStructureValid()) {
-                    horizontalPane.text(Utils.translatable("antimatter.tooltip.valid_structure").withStyle(ChatFormatting.GREEN));
+                    horizontalPane.text(Utils.translatable("gtlib.tooltip.valid_structure").withStyle(ChatFormatting.GREEN));
                 } else {
-                    horizontalPane.text(Utils.translatable("antimatter.tooltip.invalid_structure").withStyle(ChatFormatting.RED));
+                    horizontalPane.text(Utils.translatable("gtlib.tooltip.invalid_structure").withStyle(ChatFormatting.RED));
                 }
 
             }

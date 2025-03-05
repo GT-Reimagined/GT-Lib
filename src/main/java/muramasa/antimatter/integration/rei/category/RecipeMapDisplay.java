@@ -116,10 +116,10 @@ public class RecipeMapDisplay implements Display {
         tooltip.entries().remove(2);
         tooltip.entries().remove(1);
         long mb = stack.getAmount();
-        tooltip.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
-        tooltip.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
+        tooltip.add(Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
+        tooltip.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidUtils.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
-        tooltip.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
+        tooltip.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
         tooltip.add(component.getAsText());
     }
 

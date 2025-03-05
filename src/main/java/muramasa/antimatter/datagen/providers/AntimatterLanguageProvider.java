@@ -308,21 +308,21 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
         add("machine.structure.form", "Right click structure to form it after placing blocks");
         add("machine.generator.efficiency", "Efficiency: %s");
         add("generic.amp", "Amperage");
-        add("antimatter.tooltip.formula", "Hold Shift to show formula.");
-        add("antimatter.tooltip.chemical_formula", "Formula");
-        add("antimatter.tooltip.mass", "Mass");
-        add("antimatter.tooltip.more", "Hold Shift to show more information.");
-        add("antimatter.tooltip.stacks", "Stacks");
-        add("antimatter.tooltip.fluid.amount", "Amount: %s");
-        add("antimatter.tooltip.fluid.temp", "Temperature: %s K");
-        add("antimatter.tooltip.fluid.liquid", "State: Liquid");
-        add("antimatter.tooltip.fluid.gas", "State: Gas");
-        add("antimatter.tooltip.cover.output.no_input", "Inputs blocked");
-        add("antimatter.tooltip.cover.output.allow_input", "Inputs allowed");
-        add("antimatter.tooltip.cover.covers_on_item", "Covers");
-        add("antimatter.tooltip.cover.stack", "%s: %s");
-        add("antimatter.tooltip.valid_structure", "Structure Formed");
-        add("antimatter.tooltip.invalid_structure", "Structure Invalid");
+        add("gtlib.tooltip.formula", "Hold Shift to show formula.");
+        add("gtlib.tooltip.chemical_formula", "Formula");
+        add("gtlib.tooltip.mass", "Mass");
+        add("gtlib.tooltip.more", "Hold Shift to show more information.");
+        add("gtlib.tooltip.stacks", "Stacks");
+        add("gtlib.tooltip.fluid.amount", "Amount: %s");
+        add("gtlib.tooltip.fluid.temp", "Temperature: %s K");
+        add("gtlib.tooltip.fluid.liquid", "State: Liquid");
+        add("gtlib.tooltip.fluid.gas", "State: Gas");
+        add("gtlib.tooltip.cover.output.no_input", "Inputs blocked");
+        add("gtlib.tooltip.cover.output.allow_input", "Inputs allowed");
+        add("gtlib.tooltip.cover.covers_on_item", "Covers");
+        add("gtlib.tooltip.cover.stack", "%s: %s");
+        add("gtlib.tooltip.valid_structure", "Structure Formed");
+        add("gtlib.tooltip.invalid_structure", "Structure Invalid");
         add("generic.tier", "Tier");
         add("generic.voltage", "Voltage");
         //Is this loss?
@@ -332,44 +332,44 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
         add("item.charge", "Energy");
         add("item.reusable", "Reusable");
         add("item.amps", "Warning: outputs %s amps");
-        add("antimatter.tooltip.battery.tier", "%s Battery");
-        add("antimatter.tooltip.material_primary", "Primary Material: %s");
-        add("antimatter.tooltip.material_secondary", "Secondary Material: %s");
-        add("antimatter.tooltip.dye_color", "Handle Color: %s");
-        add("antimatter.tooltip.tool_speed", "Mining Speed: %s");
-        add("antimatter.tooltip.crafting_uses", "Crafting Uses: %s");
-        add("antimatter.tooltip.mining_level", "Mining Level %s");
-        add("antimatter.tooltip.durability", "Durability: %s");
-        add("antimatter.gui.show_recipes", "Show Recipes");
-        add("antimatter.tooltip.bandwidth", "Bandwidth: %s");
-        add("antimatter.tooltip.capacity", "Capacity: %s");
-        add("antimatter.tooltip.stepsize", "Stepsize: %s");
-        add("antimatter.tooltip.gas_proof", "Can handle Gases");
-        add("antimatter.tooltip.acid_proof", "Can handle Acids");
-        add("antimatter.tooltip.max_temperature", "Max Temperature");
-        add("antimatter.tooltip.energy", "Energy");
-        add("antimatter.tooltip.heat_capacity", "Heat capacity");
-        add("antimatter.tooltip.heat_capacity_total", "Heat capacity (total)");
-        add("antimatter.tooltip.material_modid", "Material added by: %s");
-        add("antimatter.tooltip.occurrence", "Indicates occurrence of %s");
-        add("antimatter.tooltip.behaviour.aoe_enabled", "%s Enabled");
-        add("antimatter.tooltip.behaviour.aoe_disabled", "%s Disabled");
-        add("antimatter.tooltip.behaviour.aoe_right_click", "Sneak right click to Enable/Disable %s");
-        add("antimatter.tooltip.io_widget.fluid", "Fluid Auto-Output");
-        add("antimatter.tooltip.io_widget.item", "Item Auto-Output");
-        add("antimatter.behaviour.3x3", "3x3 Mining");
-        add("antimatter.behaviour.1x0x2", "1x2 Mining");
+        add("gtlib.tooltip.battery.tier", "%s Battery");
+        add("gtlib.tooltip.material_primary", "Primary Material: %s");
+        add("gtlib.tooltip.material_secondary", "Secondary Material: %s");
+        add("gtlib.tooltip.dye_color", "Handle Color: %s");
+        add("gtlib.tooltip.tool_speed", "Mining Speed: %s");
+        add("gtlib.tooltip.crafting_uses", "Crafting Uses: %s");
+        add("gtlib.tooltip.mining_level", "Mining Level %s");
+        add("gtlib.tooltip.durability", "Durability: %s");
+        add("gtlib.gui.show_recipes", "Show Recipes");
+        add("gtlib.tooltip.bandwidth", "Bandwidth: %s");
+        add("gtlib.tooltip.capacity", "Capacity: %s");
+        add("gtlib.tooltip.stepsize", "Stepsize: %s");
+        add("gtlib.tooltip.gas_proof", "Can handle Gases");
+        add("gtlib.tooltip.acid_proof", "Can handle Acids");
+        add("gtlib.tooltip.max_temperature", "Max Temperature");
+        add("gtlib.tooltip.energy", "Energy");
+        add("gtlib.tooltip.heat_capacity", "Heat capacity");
+        add("gtlib.tooltip.heat_capacity_total", "Heat capacity (total)");
+        add("gtlib.tooltip.material_modid", "Material added by: %s");
+        add("gtlib.tooltip.occurrence", "Indicates occurrence of %s");
+        add("gtlib.tooltip.behaviour.aoe_enabled", "%s Enabled");
+        add("gtlib.tooltip.behaviour.aoe_disabled", "%s Disabled");
+        add("gtlib.tooltip.behaviour.aoe_right_click", "Sneak right click to Enable/Disable %s");
+        add("gtlib.tooltip.io_widget.fluid", "Fluid Auto-Output");
+        add("gtlib.tooltip.io_widget.item", "Item Auto-Output");
+        add("gtlib.behaviour.3x3", "3x3 Mining");
+        add("gtlib.behaviour.1x0x2", "1x2 Mining");
     }
 
     private final void pipeTranslations() {
-        add("antimatter.pipe.cable.info", "Transmits amperages between machines. \nFor each cable the cable loss is subtracted \nfrom the total energy.");
-        add("antimatter.pipe.item.info", "Transfers up to capacity item stacks per tick. \nThis capacity is per stack and not per item transferred.");
-        add("antimatter.pipe.fluid.info", "Transfers up to capacity per tick, with a buffer of 20 times the capacity. \nEvery tick the capacity of the pipe is replenished, up to 20 times. \nThis allows large transfers at once, but \n" +
+        add("gtlib.pipe.cable.info", "Transmits amperages between machines. \nFor each cable the cable loss is subtracted \nfrom the total energy.");
+        add("gtlib.pipe.item.info", "Transfers up to capacity item stacks per tick. \nThis capacity is per stack and not per item transferred.");
+        add("gtlib.pipe.fluid.info", "Transfers up to capacity per tick, with a buffer of 20 times the capacity. \nEvery tick the capacity of the pipe is replenished, up to 20 times. \nThis allows large transfers at once, but \n" +
                 "continuous transfers is limited by capacity");
-        add("antimatter.pipe.item.input_side.enabled", "Accepting from selected Side enabled");
-        add("antimatter.pipe.item.output_side.enabled", "Emitting to selected Side enabled");
-        add("antimatter.pipe.item.input_side.disabled", "Accepting from selected Side disabled");
-        add("antimatter.pipe.item.output_side.disabled", "Emitting to selected Side disabled");
+        add("gtlib.pipe.item.input_side.enabled", "Accepting from selected Side enabled");
+        add("gtlib.pipe.item.output_side.enabled", "Emitting to selected Side enabled");
+        add("gtlib.pipe.item.input_side.disabled", "Accepting from selected Side disabled");
+        add("gtlib.pipe.item.output_side.disabled", "Emitting to selected Side disabled");
     }
 
     private void processAntimatterTranslations() {

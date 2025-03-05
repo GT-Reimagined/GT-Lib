@@ -54,9 +54,9 @@ public class BehaviourAOEBreak implements IBlockDestroyed<IBasicAntimatterTool>,
     public void onAddInformation(IBasicAntimatterTool instance, ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         CompoundTag tag = instance.getDataTag(stack);
         boolean enabled = tag != null && tag.getBoolean(Ref.KEY_TOOL_BEHAVIOUR_AOE_BREAK);
-        tooltip.add(Utils.translatable("antimatter.tooltip.behaviour.aoe_right_click", Utils.translatable("antimatter.behaviour." + tooltipKey)));
+        tooltip.add(Utils.translatable("gtlib.tooltip.behaviour.aoe_right_click", Utils.translatable("gtlib.behaviour." + tooltipKey)));
         String suffix = enabled ? "enabled" : "disabled";
-        tooltip.add(Utils.translatable("antimatter.tooltip.behaviour.aoe_" + suffix, Utils.translatable("antimatter.behaviour." + tooltipKey)));
+        tooltip.add(Utils.translatable("gtlib.tooltip.behaviour.aoe_" + suffix, Utils.translatable("gtlib.behaviour." + tooltipKey)));
     }
 
     @Override

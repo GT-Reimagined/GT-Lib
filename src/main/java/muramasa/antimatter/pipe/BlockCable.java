@@ -117,10 +117,10 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
         tooltip.add(Utils.translatable("generic.loss").append(": ").append(Utils.literal(String.valueOf(this.type.getLoss())).withStyle(ChatFormatting.BLUE)));
 
         if (!Screen.hasShiftDown()) {
-            tooltip.add(Utils.translatable("antimatter.tooltip.more").withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.add(Utils.translatable("gtlib.tooltip.more").withStyle(ChatFormatting.DARK_AQUA));
         } else {
             tooltip.add(Utils.literal("----------"));
-            tooltip.add(Utils.translatable("antimatter.pipe.cable.info").withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.add(Utils.translatable("gtlib.pipe.cable.info").withStyle(ChatFormatting.DARK_AQUA));
             tooltip.add(Utils.literal("----------"));
         }
     }

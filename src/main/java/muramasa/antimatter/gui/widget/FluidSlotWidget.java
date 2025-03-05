@@ -84,10 +84,10 @@ public class FluidSlotWidget extends Widget {
         List<Component> str = new ArrayList<>();
         str.add(FluidUtils.getFluidDisplayName(this.stack));
         int mb = this.stack.getAmount();
-        str.add(Utils.translatable("antimatter.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
-        str.add(Utils.translatable("antimatter.tooltip.fluid.temp", FluidUtils.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
+        str.add(Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
+        str.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidUtils.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";
-        str.add(Utils.translatable("antimatter.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
+        str.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
         AntimatterJEIREIPlugin.addModDescriptor(str, this.stack);
         drawHoverText(str, (int) mouseX, (int) mouseY, Minecraft.getInstance().font, stack);
     }
