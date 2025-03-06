@@ -142,6 +142,7 @@ public class Data {
         AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "muffler"), new ResourceLocation(Ref.ID, "muffler"));
         AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "dynamo"), new ResourceLocation(Ref.ID, "dynamo"));
         AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "energy"), new ResourceLocation(Ref.ID, "energy"));
+        AntimatterRemapping.remap(new ResourceLocation("antimatter", "fluid_icon"), new ResourceLocation(Ref.ID, "fluid_icon"));
     }
 
     public static void postInit() {
