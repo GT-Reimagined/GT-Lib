@@ -11,6 +11,7 @@ import muramasa.antimatter.machine.types.TankMachine;
 import muramasa.antimatter.util.FluidUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
@@ -82,17 +83,17 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
     }
 
     @Override
-    public void onFirstTick() {
-        super.onFirstTick();
+    public void onFirstTickServer(Level level, BlockPos pos, BlockState state) {
+        super.onFirstTickServer(level, pos, state);
         setAutoOutput();
     }
 
     protected void setAutoOutput(){
         coverHandler.ifPresent(t -> {
             ICover cover = t.getOutputCover();
-            if (!(cover instanceof CoverOutput))
+            if (!(cover instanceof CoverOutput output))
                 return;
-            ((CoverOutput) cover).setEjects(has(FLUID), has(ITEM));
+            output.setEjects(has(FLUID), has(ITEM));
         });
     }
 }

@@ -156,10 +156,13 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     }
 
     @Override
-    public void onFirstTick() {
-        if (isClientSide()){
-            StructureLibAPI.queryAlignment(this);
-        }
+    public void onFirstTickClient(Level level, BlockPos pos, BlockState state) {
+        StructureLibAPI.queryAlignment(this);
+        super.onFirstTickClient(level, pos, state);
+    }
+
+    @Override
+    public void onFirstTickServer(Level level, BlockPos pos, BlockState state) {
         // Register handlers to the structure cache.
         allHandlers.forEach(StructureHandle::register);
         // if INVALID_STRUCTURE was stored to disk don't bother rechecking on first
@@ -167,10 +170,10 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
         // This is not only behavioural but if INVALID_STRUCTURE are checked then
         // maxShares
         // might misbehave.
-        if (!validStructure && shouldCheckFirstTick && isServerSide()) {
+        if (!validStructure && shouldCheckFirstTick) {
             checkStructure();
         }
-        super.onFirstTick();
+        super.onFirstTickServer(level, pos, state);
     }
 
     @Override

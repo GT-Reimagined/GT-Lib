@@ -190,16 +190,14 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @Override
-    public void onFirstTick() {
-        super.onFirstTick();
-        if (isServerSide()) {
-            this.itemHandler.ifPresent(MachineItemHandler::init);
-            this.fluidHandler.ifPresent(MachineFluidHandler::init);
-            this.energyHandler.ifPresent(MachineEnergyHandler::init);
-            this.feHandler.ifPresent(MachineFEHandler::init);
-            this.recipeHandler.ifPresent(MachineRecipeHandler::init);
-            this.coverHandler.ifPresent(CoverHandler::onFirstTick);
-        }
+    public void onFirstTickServer(Level level, BlockPos pos, BlockState state) {
+        super.onFirstTickServer(level, pos, state);
+        this.itemHandler.ifPresent(MachineItemHandler::init);
+        this.fluidHandler.ifPresent(MachineFluidHandler::init);
+        this.energyHandler.ifPresent(MachineEnergyHandler::init);
+        this.feHandler.ifPresent(MachineFEHandler::init);
+        this.recipeHandler.ifPresent(MachineRecipeHandler::init);
+        this.coverHandler.ifPresent(CoverHandler::onFirstTick);
     }
 
     @Override

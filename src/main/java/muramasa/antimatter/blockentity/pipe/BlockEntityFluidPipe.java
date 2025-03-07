@@ -72,11 +72,6 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     }
 
     @Override
-    public void onFirstTick() {
-        super.onFirstTick();
-    }
-
-    @Override
     public void onBlockUpdate(BlockPos neighbour) {
         super.onBlockUpdate(neighbour);
     }

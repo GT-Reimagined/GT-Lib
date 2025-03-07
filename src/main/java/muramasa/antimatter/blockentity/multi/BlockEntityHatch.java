@@ -29,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -155,13 +156,13 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
     }
 
     @Override
-    public void onFirstTick() {
-        super.onFirstTick();
+    public void onFirstTickServer(Level level, BlockPos pos, BlockState state) {
+        super.onFirstTickServer(level, pos, state);
         coverHandler.ifPresent(t -> {
             ICover cover = t.getOutputCover();
-            if (!(cover instanceof CoverOutput))
+            if (!(cover instanceof CoverOutput output))
                 return;
-            ((CoverOutput) cover).setEjects(has(FLUID), has(ITEM));
+            output.setEjects(has(FLUID), has(ITEM));
         });
     }
 

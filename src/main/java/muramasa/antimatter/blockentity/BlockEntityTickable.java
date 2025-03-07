@@ -24,7 +24,8 @@ public class BlockEntityTickable<T extends BlockEntityTickable<T>> extends Block
     protected void tick(Level level, BlockPos pos, BlockState state) {
         level.getProfiler().push("GTLibTileTick");
         if (!hadFirstTick) {
-            onFirstTick();
+            if (level.isClientSide()) onFirstTickClient(level, pos, state);
+            else onFirstTickServer(level, pos, state);
             hadFirstTick = true;
         }
         if (level.isClientSide()) {
@@ -51,10 +52,19 @@ public class BlockEntityTickable<T extends BlockEntityTickable<T>> extends Block
         return hadFirstTick;
     }
 
-    /**
-     * Override this to do any initialization that requires the World and/or BlockState reference.
-     */
+
     public void onFirstTick() {
+
+    }
+
+    /**
+     * Override these to do any initialization that requires the World and/or BlockState reference.
+     */
+    public void onFirstTickServer(Level level, BlockPos pos, BlockState state) {
+
+    }
+
+    public void onFirstTickClient(Level level, BlockPos pos, BlockState state) {
 
     }
 
