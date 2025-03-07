@@ -2,6 +2,7 @@ package muramasa.antimatter.block;
 
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.blockentity.BlockEntityFakeBlock;
+import muramasa.antimatter.blockentity.BlockEntityTickable;
 import muramasa.antimatter.machine.MachineFlag;
 import muramasa.antimatter.registration.IRegistryEntryProvider;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -68,5 +70,11 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return TYPE.create(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return BlockEntityTickable::commonTick;
     }
 }

@@ -53,17 +53,23 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
                 AntimatterNetwork.NETWORK.sendToAllLoaded(new FakeTilePacket(this.getBlockPos(), controller.getBlockPos()), level, this.getBlockPos());
             }
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+            sidedSync(true);
+        }
+    }
+
+    @Override
+    public void onFirstTickClient(Level level, BlockPos pos, BlockState state) {
+        super.onFirstTickClient(level, pos, state);
+        if (controllerPos != null) {
+            if (level.getBlockEntity(controllerPos) instanceof BlockEntityBasicMultiMachine<?> basicMultiMachine && basicMultiMachine.allowsFakeTiles()) {
+                setController(basicMultiMachine);
+                controllerPos = null;
+            }
         }
     }
 
     @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
-        if (controllerPos != null){
-            if (level.getBlockEntity(pos) instanceof BlockEntityBasicMultiMachine<?> basicMultiMachine && basicMultiMachine.allowsFakeTiles()){
-                setController(basicMultiMachine);
-            }
-            controllerPos = null;
-        }
         covers.forEach((s, c) -> {
             if (c.ticks()) {
                 c.onUpdate();
@@ -139,6 +145,12 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
         }
         if (nbt.contains("P")) {
             controllerPos = BlockPos.of(nbt.getLong("P"));
+            if (level != null && level.isClientSide) {
+                if (level.getBlockEntity(controllerPos) instanceof BlockEntityBasicMultiMachine<?> basicMultiMachine && basicMultiMachine.allowsFakeTiles()) {
+                    setController(basicMultiMachine);
+                    controllerPos = null;
+                }
+            }
         }
     }
 
@@ -162,7 +174,7 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
         CompoundTag n = new CompoundTag();
         this.covers.forEach((k, v) -> CoverFactory.writeCover(n, v, v.side()));
         compound.put("C", n);
-        if (!send && controller != null) {
+        if (controller != null && send) {
             compound.putLong("P", controller.getBlockPos().asLong());
         }
     }
