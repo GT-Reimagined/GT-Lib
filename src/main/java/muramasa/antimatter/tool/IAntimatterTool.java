@@ -220,9 +220,9 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
 
     default void refillTool(ItemStack stack, Player player){
         if (this.getAntimatterToolType().isPowered()) {
-            Streams.concat(player.getInventory().items.stream(), player.getInventory().offhand.stream(), CuriosHelper.getCuriosItems("belt", player)).forEach(s -> {
+            Streams.concat(player.getInventory().items.stream(), player.getInventory().offhand.stream(), CuriosHelper.getCuriosItems(player, "belt", "back")).forEach(s -> {
                 if (this.getCurrentEnergy(stack) < getMaxEnergy(stack)){
-                    if (s.getItem() instanceof ItemBattery battery && battery.getTier().getIntegerId() == this.getEnergyTier()){
+                    if (s.getItem() instanceof ItemBattery battery && battery.getTier().getIntegerId() >= this.getEnergyTier()){
                         IEnergyHandlerItem batteryHandler = s.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).resolve().orElse(null);
                         IEnergyHandlerItem toolHandler = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).resolve().orElse(null);
                         if (batteryHandler != null && toolHandler != null){
