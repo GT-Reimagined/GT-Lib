@@ -755,38 +755,47 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Override
     public List<String> getInfo(boolean simple) {
         List<String> info = super.getInfo(simple);
-        if (simple) return info;
-        info.add("Machine: " + getMachineType().getId() + " Tier: " + getMachineTier().getId());
-        info.add("State: " + getMachineState().getId());
-        String slots = "";
-        if (getMachineType().has(ITEM)) {
-            int inputs = getMachineType().getSlots(SlotType.IT_IN, getMachineTier()).size();
-            int outputs = getMachineType().getSlots(SlotType.IT_OUT, getMachineTier()).size();
-            if (inputs > 0) slots += (" IT_IN: " + inputs + ",");
-            if (outputs > 0) slots += (" IT_OUT: " + outputs + ",");
-        }
-        if (getMachineType().has(FLUID) && getMachineType().has(GUI)) {
-            int inputs = getMachineType().getSlots(SlotType.FL_IN, getMachineTier()).size();
-            int outputs = getMachineType().getSlots(SlotType.FL_OUT, getMachineTier()).size();
-            if (inputs > 0) slots += (" FL_IN: " + inputs + ",");
-            if (outputs > 0) slots += (" FL_OUT: " + outputs + ",");
-        }
-        if (slots.length() > 0) info.add("Slots:" + slots);
-        if (type.has(FE))
-            feHandler.ifPresent(h -> info.add("FE: " + h.getEnergyStored() + " / " + h.getMaxEnergyStored()));
-        if (type.has(EU))
-            energyHandler.ifPresent(h -> info.add("EU: " + h.getEnergy() + " / " + h.getCapacity()));
-        coverHandler.ifPresent(h -> {
-            StringBuilder builder = new StringBuilder("Covers: ");
-            for (Direction side : Ref.DIRS) {
-                builder.append(h.get(side).getId()).append(" ");
+        if (!simple) {
+            info.add("Machine: " + getMachineType().getId() + " Tier: " + getMachineTier().getId());
+            info.add("State: " + getMachineState().getId());
+            String slots = "";
+            if (getMachineType().has(ITEM)) {
+                int inputs = getMachineType().getSlots(SlotType.IT_IN, getMachineTier()).size();
+                int outputs = getMachineType().getSlots(SlotType.IT_OUT, getMachineTier()).size();
+                if (inputs > 0) slots += (" IT_IN: " + inputs + ",");
+                if (outputs > 0) slots += (" IT_OUT: " + outputs + ",");
             }
-            info.add(builder.toString());
+            if (getMachineType().has(FLUID) && getMachineType().has(GUI)) {
+                int inputs = getMachineType().getSlots(SlotType.FL_IN, getMachineTier()).size();
+                int outputs = getMachineType().getSlots(SlotType.FL_OUT, getMachineTier()).size();
+                if (inputs > 0) slots += (" FL_IN: " + inputs + ",");
+                if (outputs > 0) slots += (" FL_OUT: " + outputs + ",");
+            }
+            if (slots.length() > 0) info.add("Slots:" + slots);
+            if (type.has(FE))
+                feHandler.ifPresent(h -> info.add("FE: " + h.getEnergyStored() + " / " + h.getMaxEnergyStored()));
+            if (type.has(EU))
+                energyHandler.ifPresent(h -> info.add("EU: " + h.getEnergy() + " / " + h.getCapacity()));
+
+            recipeHandler.ifPresent(rh -> {
+                rh.getInfo(info);
+            });
+            //multiTexture.ifPresent(mt -> info.add("Rendering using texture " + mt.toString() + "."));
+        }
+        coverHandler.ifPresent(h -> {
+            if (!simple){
+                StringBuilder builder = new StringBuilder("Covers: ");
+                for (Direction side : Ref.DIRS) {
+                    builder.append(h.get(side).getId()).append(" ");
+                }
+                info.add(builder.toString());
+            }
+            h.getCovers().forEach((d, c) -> {
+                if (!c.isEmpty()){
+                    info.addAll(c.getInfo(simple));
+                }
+            });
         });
-        recipeHandler.ifPresent(rh -> {
-            rh.getInfo(info);
-        });
-        //multiTexture.ifPresent(mt -> info.add("Rendering using texture " + mt.toString() + "."));
         return info;
     }
 

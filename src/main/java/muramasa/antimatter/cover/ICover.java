@@ -255,6 +255,10 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
         return !isEmpty();
     }
 
+    default List<String> getInfo(boolean simple){
+        return List.of();
+    }
+
     ICover empty = new ICover() {
         @Override
         public Direction side() {
