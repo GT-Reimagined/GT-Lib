@@ -309,7 +309,6 @@ public class AntimatterMaterialTypes {
         BOLT.dependents(ROD);
         RING.dependents(ROD);
         ROD_LONG.dependents(ROD);
-        ROD.dependents(ROD_LONG);
         CRUSHED.dependents(CRUSHED_PURIFIED, CRUSHED_REFINED, DUST_IMPURE);
         DUST_PURE.dependents(DUST);
         DUST_IMPURE.dependents(DUST_PURE);
