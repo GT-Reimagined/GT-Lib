@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static muramasa.antimatter.machine.MachineFlag.COVERABLE;
-import static muramasa.antimatter.machine.MachineFlag.MULTI;
+import static muramasa.antimatter.machine.MachineFlag.*;
 
 public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T> {
 
@@ -50,7 +49,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     @Override
     protected void setupGui() {
         super.setupGui();
-        if (!(this instanceof MultiMachine)) addGuiCallback(t -> t.addWidget(ProgressWidget.build()));
+        if (!(this instanceof MultiMachine) && this.has(RECIPE)) addGuiCallback(t -> t.addWidget(ProgressWidget.build()));
     }
 
     @Override
