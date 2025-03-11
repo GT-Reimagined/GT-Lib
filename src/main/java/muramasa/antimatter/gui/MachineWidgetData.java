@@ -1,6 +1,7 @@
 package muramasa.antimatter.gui;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.machine.Tier;
 import muramasa.antimatter.util.int2;
@@ -9,13 +10,17 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Map;
 
 public class MachineWidgetData {
+    @Getter
     public BarDir dir = BarDir.LEFT;
     public boolean barFill = true;
+    @Getter
     protected int2 progressSize = new int2(20, 18), progressPos = new int2(72, 18);
+    @Getter
     protected int2 ioPos = new int2(7, 62), machineStatePos = new int2(83, 43), machineStateSize = new int2(10, 11);
     protected Map<String, ResourceLocation> machineStateTextures = new Object2ObjectOpenHashMap<>();
     protected Map<String, ResourceLocation> progressTextures = new Object2ObjectOpenHashMap<>();
 
+    @Getter
     private final GuiData parent;
     public MachineWidgetData(GuiData parent){
         this.parent = parent;
@@ -78,37 +83,13 @@ public class MachineWidgetData {
         return this;
     }
 
-    public int2 getProgressSize() {
-        return progressSize;
-    }
-
     public ResourceLocation getProgressTexture(Tier tier) {
         if (tier != null && progressTextures.containsKey(tier.getId())) return progressTextures.get(tier.getId());
         return progressTextures.get("");
     }
 
-    public int2 getProgressPos() {
-        return progressPos;
-    }
-
-    public BarDir getDir() {
-        return dir;
-    }
-
-    public GuiData getParent() {
-        return parent;
-    }
-
     public boolean doesBarFill() {
         return barFill;
-    }
-
-    public int2 getMachineStatePos() {
-        return machineStatePos;
-    }
-
-    public int2 getMachineStateSize() {
-        return machineStateSize;
     }
 
     public ResourceLocation getMachineStateTexture(Tier tier) {
@@ -116,7 +97,4 @@ public class MachineWidgetData {
         return machineStateTextures.get("");
     }
 
-    public int2 getIoPos() {
-        return ioPos;
-    }
 }

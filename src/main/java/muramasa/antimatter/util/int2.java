@@ -23,8 +23,7 @@ public class int2 {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof int2)) return false;
-        int2 other = (int2) o;
+        if (!(o instanceof int2 other)) return false;
         return x == other.x && y == other.y;
     }
 

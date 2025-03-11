@@ -3,6 +3,7 @@ package muramasa.antimatter.capability.machine;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import lombok.Setter;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends EnergyHandler implements IMachineHandler, Dispatch.Sided<IEnergyHandler> {
 
     protected final T tile;
+    @Setter
     protected long capacty;
 
     protected List<Pair<ItemStack, IEnergyHandlerItem>> cachedItems = new ObjectArrayList<>();
@@ -54,10 +56,6 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
     @Override
     public void init() {
         this.cachedItems = tile.itemHandler.map(MachineItemHandler::getChargeableItems).map(ImmutableList::copyOf).orElse(ImmutableList.of());
-    }
-
-    public void setCapacty(long capacty) {
-        this.capacty = capacty;
     }
 
     public List<Pair<ItemStack, IEnergyHandlerItem>> getCachedEnergyItems() {

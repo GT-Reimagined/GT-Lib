@@ -232,11 +232,6 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     }
 
     @Override
-    public boolean canInput(FluidStack fluid, Direction direction) {
-        return true;
-    }
-
-    @Override
     public boolean canInput(Direction direction) {
         if (tile.getFacing().get3DDataValue() == direction.get3DDataValue() && !tile.getMachineType().allowsFrontIO())
             return false;
