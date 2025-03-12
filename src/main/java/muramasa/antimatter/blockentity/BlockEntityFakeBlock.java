@@ -139,7 +139,7 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
         this.covers = new EnumMap<>(Direction.class);
         CompoundTag c = nbt.getCompound("C");
         for (Direction dir : Ref.DIRS) {
-            ICover cover = CoverFactory.readCover(ICoverHandler.empty(this), dir, c);
+            ICover cover = CoverFactory.readCover(ICoverHandler.empty(this), dir, c, false);
             if (cover != null)
                 covers.put(dir, cover);
         }
@@ -172,7 +172,7 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
             compound.putInt("F", facing.ordinal());
         }
         CompoundTag n = new CompoundTag();
-        this.covers.forEach((k, v) -> CoverFactory.writeCover(n, v, v.side()));
+        this.covers.forEach((k, v) -> CoverFactory.writeCover(n, v, v.side(), false));
         compound.put("C", n);
         if (controller != null && send) {
             compound.putLong("P", controller.getBlockPos().asLong());

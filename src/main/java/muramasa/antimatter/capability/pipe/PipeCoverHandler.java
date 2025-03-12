@@ -56,7 +56,7 @@ public class PipeCoverHandler<T extends BlockEntityPipe<?>> extends CoverHandler
             byte sides = nbt.getByte(Ref.TAG_MACHINE_COVER_SIDE);
             for (int i = 0; i < Ref.DIRS.length; i++) {
                 if ((sides & (1 << i)) > 0) {
-                    ICover cover = CoverFactory.readCover(this, Direction.from3DDataValue(i), nbt);
+                    ICover cover = CoverFactory.readCover(this, Direction.from3DDataValue(i), nbt, true);
                     buildLookup(covers.get(Ref.DIRS[i]).getFactory(), cover.getFactory(), Ref.DIRS[i]);
                     covers.put(Ref.DIRS[i], cover);
                     boolean anyEmpty = this.covers.values().stream().anyMatch(ICover::isNode);
@@ -73,7 +73,7 @@ public class PipeCoverHandler<T extends BlockEntityPipe<?>> extends CoverHandler
         covers.forEach((s, cover) -> {
             if (!cover.isEmpty()) { // Don't store EMPTY covers unnecessarily
                 sides[0] |= (1 << s.get3DDataValue());
-                CoverFactory.writeCover(tag, cover, cover.side());
+                CoverFactory.writeCover(tag, cover, cover.side(), true);
             }
         });
         if (!tag.isEmpty()){

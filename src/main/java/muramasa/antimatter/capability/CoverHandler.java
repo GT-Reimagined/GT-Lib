@@ -225,7 +225,7 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
         covers.forEach((s, c) -> {
             if (!c.isEmpty()) { // Don't store EMPTY covers unnecessarily
                 sides[0] |= (1 << s.get3DDataValue());
-                CoverFactory.writeCover(tag, c, c.side());
+                CoverFactory.writeCover(tag, c, c.side(), false);
             }
         });
         tag.putByte(Ref.TAG_MACHINE_COVER_SIDE, sides[0]);
@@ -237,7 +237,7 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
         byte sides = nbt.getByte(Ref.TAG_MACHINE_COVER_SIDE);
         for (int i = 0; i < Ref.DIRS.length; i++) {
             if ((sides & (1 << i)) > 0) {
-                ICover cover = CoverFactory.readCover(this, Direction.from3DDataValue(i), nbt);
+                ICover cover = CoverFactory.readCover(this, Direction.from3DDataValue(i), nbt, false);
                 if (cover == null){
                     Antimatter.LOGGER.warn(nbt + "at d: " + Direction.from3DDataValue(i) + "at pos: " + tile.getBlockPos());
                     cover = ICover.empty;

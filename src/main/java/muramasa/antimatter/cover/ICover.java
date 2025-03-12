@@ -174,6 +174,10 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
 
     CompoundTag serialize();
 
+    void deserializeStack(@Nullable CompoundTag nbt);
+
+    CompoundTag serializeStack(CompoundTag nbt);
+
     ItemStack getItem();
 
     // Stack is not guaranteed to contain a real tile and side is nullable.
@@ -196,11 +200,14 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
     void setTextures(BiConsumer<String, Texture> texer);
 
     default ItemStack getDroppedStack() {
-        return getItem();
+        ItemStack stack =  getItem();
+        serializeStack(stack.getTag());
+        return stack;
     }
 
     default void addInfoFromStack(ItemStack stack){
-
+        CompoundTag tag = stack.getTag();
+        deserializeStack(tag);
     }
 
     default boolean isEqual(ICover cover) {
@@ -283,6 +290,16 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
         @Override
         public CompoundTag serialize() {
             return new CompoundTag();
+        }
+
+        @Override
+        public void deserializeStack(@Nullable CompoundTag nbt) {
+
+        }
+
+        @Override
+        public CompoundTag serializeStack(CompoundTag nbt) {
+            return nbt;
         }
 
         @Override

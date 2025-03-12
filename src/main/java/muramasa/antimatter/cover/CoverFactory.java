@@ -112,19 +112,19 @@ public class CoverFactory implements IAntimatterObject {
         return id;
     }
 
-    public static CompoundTag writeCover(CompoundTag nbt, ICover cover, Direction dir) {
+    public static CompoundTag writeCover(CompoundTag nbt, ICover cover, Direction dir, boolean stackDrop) {
         CoverFactory factory = cover.getFactory();
         nbt.putString(dir.get3DDataValue() + "d", factory.getDomain());
         nbt.putString(dir.get3DDataValue() + "i", factory.getId());
         if (cover.getTier() != null)
             nbt.putString(dir.get3DDataValue() + "t", cover.getTier().getId());
-        CompoundTag inner = cover.serialize();
+        CompoundTag inner = stackDrop ? cover.serializeStack(new CompoundTag()) : cover.serialize();
         if (!inner.isEmpty())
             nbt.put(dir.get3DDataValue() + "c", inner);
         return nbt;
     }
 
-    public static ICover readCover(ICoverHandler<?> source, Direction dir, CompoundTag nbt) {
+    public static ICover readCover(ICoverHandler<?> source, Direction dir, CompoundTag nbt, boolean stackDrop) {
         if (!nbt.contains(dir.get3DDataValue() + "d"))
             return null;
         String domain = nbt.getString(dir.get3DDataValue() + "d");
@@ -140,8 +140,13 @@ public class CoverFactory implements IAntimatterObject {
                 : null;
         ICover cover = factory.supplier.get(source, tier, dir, factory);
         cover.onCreate();
-        if (nbt.contains(dir.get3DDataValue() + "c"))
-            cover.deserialize((CompoundTag) nbt.get(dir.get3DDataValue() + "c"));
+        if (nbt.contains(dir.get3DDataValue() + "c")) {
+            if (!stackDrop) {
+                cover.deserialize((CompoundTag) nbt.get(dir.get3DDataValue() + "c"));
+            } else {
+                cover.deserializeStack((CompoundTag) nbt.get(dir.get3DDataValue() + "c"));
+            }
+        }
         return cover;
     }
 
@@ -162,7 +167,7 @@ public class CoverFactory implements IAntimatterObject {
         ICover cover = factory.supplier.get(source, tier, rotated, factory);
         cover.onCreate();
         if (nbt.contains(dir.get3DDataValue() + "c"))
-            cover.deserialize((CompoundTag) nbt.get(dir.get3DDataValue() + "c"));
+            cover.deserializeStack((CompoundTag) nbt.get(dir.get3DDataValue() + "c"));
         return cover;
     }
 

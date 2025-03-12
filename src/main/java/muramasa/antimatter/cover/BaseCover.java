@@ -148,24 +148,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     }
 
     @Override
-    public ItemStack getDroppedStack() {
-        ItemStack stack =  ICover.super.getDroppedStack();
-        if (inventories != null && getFactory().hasGui()){
-            CompoundTag nbt = new CompoundTag();
-            this.inventories.forEach((f, i) -> {
-                if (i.isEmpty()) return;
-                nbt.put(f.getId(), i.serializeNBT());
-            });
-            if (!nbt.isEmpty()) {
-                stack.getOrCreateTag().put("coverInventories", nbt);
-            }
-        }
-        return stack;
-    }
-
-    @Override
-    public void addInfoFromStack(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+    public void deserializeStack(@Nullable CompoundTag tag) {
         if (tag != null && tag.contains("coverInventories")){
             CompoundTag nbt = tag.getCompound("coverInventories");
             if (inventories != null && getFactory().hasGui()){
@@ -176,6 +159,21 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
                 handler.getTile().setChanged();
             }
         }
+    }
+
+    @Override
+    public CompoundTag serializeStack(CompoundTag tag) {
+        if (inventories != null && getFactory().hasGui()){
+            CompoundTag nbt = new CompoundTag();
+            this.inventories.forEach((f, i) -> {
+                if (i.isEmpty()) return;
+                nbt.put(f.getId(), i.serializeNBT());
+            });
+            if (!nbt.isEmpty()) {
+                tag.put("coverInventories", nbt);
+            }
+        }
+        return tag;
     }
 
     @Override

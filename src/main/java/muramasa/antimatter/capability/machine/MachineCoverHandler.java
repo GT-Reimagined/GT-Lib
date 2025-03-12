@@ -73,7 +73,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
                 if (!isCoverDefault(cover)) outputCoverOnly[0] = false;
                 Direction inverseRotated = Utils.rotateInverse(getTileFacing(), s);
                 sides[0] |= (1 << inverseRotated.get3DDataValue());
-                CoverFactory.writeCover(tag, cover, inverseRotated);
+                CoverFactory.writeCover(tag, cover, inverseRotated, true);
             }
         });
         if (!outputCoverOnly[0]){
