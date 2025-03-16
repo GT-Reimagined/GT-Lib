@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tesseract.TesseractCapUtils;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandler;
 
 public class EnergyInfoProvider implements IProbeInfoProvider {
@@ -29,7 +30,7 @@ public class EnergyInfoProvider implements IProbeInfoProvider {
         if (blockState.hasBlockEntity()) {
             BlockEntity tile = Utils.getTile(level, data.getPos());
 
-            IEnergyHandler energyHandler = TesseractCapUtils.INSTANCE.getEnergyHandler(tile, null).orElse(null);
+            IEnergyHandler energyHandler = tile.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY).resolve().orElse(null);
             if (energyHandler != null) {
                 long maxCapacity = energyHandler.getCapacity();
                 if (maxCapacity == 0) return;

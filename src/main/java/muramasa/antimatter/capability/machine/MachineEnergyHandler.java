@@ -22,6 +22,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import tesseract.TesseractCapUtils;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.gt.IEnergyHandlerItem;
 
@@ -230,7 +231,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
             if (canOutput(dir)) {
                 BlockEntity tile = this.tile.getCachedBlockEntity(dir);
                 if (tile == null) continue;
-                Optional<IEnergyHandler> handle = TesseractCapUtils.INSTANCE.getEnergyHandler(tile, dir.getOpposite());
+                Optional<IEnergyHandler> handle = tile.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY, dir.getOpposite()).resolve();
                 if (handle.map(h -> !h.canInput(dir.getOpposite())).orElse(true)) continue;
                 handle.ifPresent(eh -> Utils.transferEnergy(this, eh));
             }

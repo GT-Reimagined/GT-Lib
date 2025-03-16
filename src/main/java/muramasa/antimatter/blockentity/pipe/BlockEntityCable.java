@@ -19,6 +19,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import tesseract.TesseractCapUtils;
 import tesseract.TesseractGraphWrappers;
 import tesseract.api.capability.TesseractGTCapability;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.GTHolder;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.gt.IGTCable;
@@ -98,7 +99,7 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
         if (!super.validate(dir)) return false;
         BlockEntity tile = this.getCachedBlockEntity(dir);
         if (tile == null) return false;
-        return TesseractCapUtils.INSTANCE.getEnergyHandler(tile, dir.getOpposite()).isPresent();
+        return tile.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY, dir.getOpposite()).isPresent();
     }
 
     @Override
