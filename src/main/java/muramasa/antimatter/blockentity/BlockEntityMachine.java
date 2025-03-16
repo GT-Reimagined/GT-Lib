@@ -668,13 +668,11 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && itemHandler.isPresent()) {
             return itemHandler.side(side).cast();
         }
-        if (cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY || cap == CapabilityEnergy.ENERGY){
-            if (cap == CapabilityEnergy.ENERGY && feHandler.isPresent()){
-                return feHandler.side(side).cast();
-            } else if (energyHandler.isPresent()){
-                if (cap == CapabilityEnergy.ENERGY && side == null) return LazyOptional.empty();
-                return energyHandler.side(side).cast();
-            }
+        if (cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY && energyHandler.isPresent()) {
+            return energyHandler.side(side).cast();
+        }
+        if (cap == CapabilityEnergy.ENERGY && feHandler.isPresent()){
+            return feHandler.side(side).cast();
         }
         return super.getCapability(cap, side);
     }

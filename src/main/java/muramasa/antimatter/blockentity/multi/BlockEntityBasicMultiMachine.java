@@ -470,7 +470,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     @Override
     public <U> LazyOptional<U> getCapabilityFromFake(@NotNull Capability<U> cap, @Nullable Direction side, ICover cover) {
         if (!allowsFakeTiles()) return LazyOptional.empty();
-        if ((cap == CapabilityEnergy.ENERGY || cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY) && !(cover instanceof CoverDynamo || cover instanceof CoverEnergy)) return LazyOptional.empty();
+        if ((cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY) && !(cover instanceof CoverDynamo || cover instanceof CoverEnergy)) return LazyOptional.empty();
         return getCap(cap, side);
     }
 }
