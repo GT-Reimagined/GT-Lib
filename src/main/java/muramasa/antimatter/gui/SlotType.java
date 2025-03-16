@@ -44,8 +44,12 @@ public class SlotType<T extends Slot> implements IAntimatterObject, IMachineEven
     public static SlotType<SlotCell> CELL_IN = new SlotType<>("cell_in", (type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> i.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent(), true, false, new ResourceLocation(Ref.ID, "cell_in"));
     public static SlotType<SlotCell> CELL_OUT = new SlotType<>("cell_out", (type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> i.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent(), false, true, new ResourceLocation(Ref.ID, "cell_out"));
     public static SlotType<SlotEnergy> ENERGY = new SlotType<>("energy", (type, gui, inv, i, d) -> new SlotEnergy(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> {
-        if (t instanceof BlockEntity tile) {
-            return TesseractCapUtils.INSTANCE.getEnergyHandler(tile, null).map(eh -> i.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(inner -> ((inner.getInputVoltage() | inner.getOutputVoltage()) == (eh.getInputVoltage() | eh.getOutputVoltage()))).orElse(i.getCapability(CapabilityEnergy.ENERGY).isPresent())).orElse(tile.getCapability(CapabilityEnergy.ENERGY).isPresent() && i.getCapability(CapabilityEnergy.ENERGY).isPresent());
+        if (t instanceof BlockEntityMachine<?> machine) {
+            return machine.energyHandler.map(eh -> {
+                return i.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(inner -> {
+                    return ((inner.getInputVoltage() | inner.getOutputVoltage()) == (eh.getInputVoltage() | eh.getOutputVoltage()));
+                }).orElse(i.getCapability(CapabilityEnergy.ENERGY).isPresent());
+            }).orElse(false);
         }
         return true;
     }, true, false, new ResourceLocation(Ref.ID, "energy"));
