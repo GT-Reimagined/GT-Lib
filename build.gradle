@@ -83,7 +83,7 @@ mixin {
 dependencies {
     implementation(project(":tesseract-forge"))
     compileOnly(project(":tesseract-common"))
-    jarJar("org.gt-reimagined:tesseract-forge:0.2.6-1.18.2")
+    jarJar("org.gt-reimagined:tesseract-forge:0.2.7-1.18.2")
 
     //MIXIN
     annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
