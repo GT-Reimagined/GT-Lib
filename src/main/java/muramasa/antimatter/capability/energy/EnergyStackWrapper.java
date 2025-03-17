@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
-import tesseract.TesseractConfig;
 import tesseract.api.context.TesseractItemContext;
 import tesseract.api.gt.GTConsumer;
 import tesseract.api.gt.IEnergyHandlerItem;
