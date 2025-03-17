@@ -31,6 +31,7 @@ public class AntimatterConfig {
      * Gameplay config values
      */
     public static ConfigEntry.DoubleValue PIPE_LEAK;
+    public static ConfigEntry.DoubleValue EU_TO_FE_RATIO;
 
     public static ConfigEntry.IntValue AXE_TIMBER_MAX;
 
@@ -121,6 +122,7 @@ public class AntimatterConfig {
         INPUT_RESET_MULTIBLOCK = gameplay.addBool("input_reset_mulitblock", false, "Whether or not to reconsume recipe inputs on multiblock failure - Default : false");
         PIPE_LEAK = gameplay.addDouble("pipe_leak", 0.9, "Amount of gas retained passing through a leaky pipe - Default: 90%")
                 .setMin(Double.MIN_VALUE).setMax(1.0);
+        EU_TO_FE_RATIO = gameplay.addDouble("eu_to_fe_ratio", 4.0, "EU to FE ratio used by some addons - Default: (1.0 EU = 4.0 FE)").setMin(Double.MIN_VALUE);
         MACHINES_EXPLODE = gameplay.addBool("machines_explode", true, "Enable machines exploding on overvoltage - Default: true");
         EXPORT_DEFAULT_RECIPES = gameplay.addBool("export_default_recipes", false, "Exports default crafting and machine recipes to exported in the root minecraft folder. - Default: false");
         RAIN_EXPLODES_MACHINES = gameplay.addBool("rain_explodes_machines", true, "Enable machines exploding when it's raining - Default: true");

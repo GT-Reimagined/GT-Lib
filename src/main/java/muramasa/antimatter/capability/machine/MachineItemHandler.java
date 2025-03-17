@@ -13,6 +13,7 @@ import muramasa.antimatter.Ref;
 import muramasa.antimatter.blockentity.BlockEntityMachine;
 import muramasa.antimatter.capability.Dispatch;
 import muramasa.antimatter.capability.IMachineHandler;
+import muramasa.antimatter.capability.energy.EnergyStackWrapper;
 import muramasa.antimatter.capability.item.FakeTrackedItemHandler;
 import muramasa.antimatter.capability.item.ITrackedHandler;
 import muramasa.antimatter.capability.item.ROCombinedInvWrapper;
@@ -35,12 +36,14 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import tesseract.TesseractCapUtils;
 import tesseract.api.Serializable;
+import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandlerItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static muramasa.antimatter.machine.MachineFlag.GUI;
@@ -220,11 +223,24 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             for (int i = 0; i < chargeables.getSlots(); i++) {
                 ItemStack item = chargeables.getStackInSlot(i);
                 if (!item.isEmpty()) {
-                    TesseractCapUtils.INSTANCE.getWrappedEnergyHandlerItem(item).ifPresent(e -> list.add(new ObjectObjectImmutablePair<>(item, e)));
+                    getWrappedEnergyHandlerItem(item).ifPresent(e -> list.add(new ObjectObjectImmutablePair<>(item, e)));
                 }
             }
         }
         return list;
+    }
+
+    public Optional<IEnergyHandlerItem> getWrappedEnergyHandlerItem(ItemStack stack){
+        IEnergyHandlerItem energyHandler = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(e -> e).orElse(null);
+        if (energyHandler == null){
+            IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY).map(e -> e).orElse(null);
+            if (storage instanceof IEnergyHandlerItem e){
+                energyHandler = e;
+            } else if (storage != null){
+                energyHandler = new EnergyStackWrapper(stack, storage);
+            }
+        }
+        return Optional.ofNullable(energyHandler);
     }
 
     public List<IEnergyStorage> getFEChargeableItems() {
