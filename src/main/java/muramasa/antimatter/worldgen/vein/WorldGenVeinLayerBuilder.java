@@ -49,9 +49,6 @@ public class WorldGenVeinLayerBuilder {
     if (this.size == null) {
       throw new RuntimeException("size is required");
     }
-    if (this.dimensions.size() == 0) {
-      throw new RuntimeException("at least 1 dimension is required");
-    }
     if (this.primary == null || this.secondary == null || this.between == null || this.sporadic == null){
         throw new RuntimeException("materials must not be null!");
     }

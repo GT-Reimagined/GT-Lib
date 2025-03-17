@@ -180,7 +180,7 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
     // will be less, and veins that are completely above the average height will be much less.
     public static void generate(WorldGenLevel world, int chunkX, int chunkZ, int oreSeedX, int oreSeedZ) {
         List<WorldGenVeinLayer> veins = AntimatterWorldGenerator.all(WorldGenVeinLayer.class, world.getLevel().dimension());
-        if (veins == null || veins.size() == 0)
+        if (veins == null || veins.isEmpty())
             return;
 
         // Explanation of oreveinseed implementation.
