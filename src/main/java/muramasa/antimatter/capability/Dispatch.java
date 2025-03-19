@@ -35,12 +35,16 @@ public class Dispatch {
     }
 
     public Dispatch invalidate(Class<?> cap) {
-        capabilityHolderMap.get(cap).invalidate();
+        if (capabilityHolderMap.containsKey(cap)) {
+            capabilityHolderMap.get(cap).invalidate();
+        }
         return this;
     }
 
     public Dispatch invalidate(Class<?> cap, Direction side) {
-        capabilityHolderMap.get(cap).invalidate(side);
+        if (capabilityHolderMap.containsKey(cap)) {
+            capabilityHolderMap.get(cap).invalidate(side);
+        }
         return this;
     }
 
