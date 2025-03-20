@@ -261,7 +261,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
 
     public T setSound(SoundEvent loc, float volume) {
         this.soundVolume = volume;
-        this.machineNoise = getDatedMachineSound(loc);
+        this.machineNoise = loc;
         return (T) this;
     }
 
@@ -817,37 +817,18 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
             new Texture(Ref.ID, "block/machine/troll"),
     };
 
-    private static SoundEvent getDatedMachineSound(SoundEvent original){
+    public static boolean isAprilFools(){
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        if (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) == 1){
-            return Ref.JOHN_CENA;
-        }
-        if (calendar.get(Calendar.MONTH) == Calendar.MARCH && calendar.get(Calendar.DATE) == 31){
-            return Ref.JOHN_CENA;
-        }
-        return original;
+        return (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) == 1) ||
+        (calendar.get(Calendar.MONTH) == Calendar.MARCH && calendar.get(Calendar.DATE) == 20);
     }
 
     private IOverlayTexturer getDatedOverlayHandler(){
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        if (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) == 1){
-            return TROLL_OVERLAY_HANDLER;
-        }
-        if (calendar.get(Calendar.MONTH) == Calendar.MARCH && calendar.get(Calendar.DATE) == 31){
-            return TROLL_OVERLAY_HANDLER;
-        }
-        return overlayTextures;
+        return isAprilFools() ? TROLL_OVERLAY_HANDLER : overlayTextures;
     }
 
     private ITextureHandler getDatedBaseHandler(){
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        if (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) == 1){
-            return TROLL_BASE_HANDLER;
-        }
-        if (calendar.get(Calendar.MONTH) == Calendar.MARCH && calendar.get(Calendar.DATE) == 31){
-            return TROLL_BASE_HANDLER;
-        }
-        return baseTexture;
+        return isAprilFools() ? TROLL_BASE_HANDLER : baseTexture;
     }
 
     @Override

@@ -60,6 +60,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -1054,7 +1055,9 @@ public class Utils {
             } else {
                 world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY() + 0.5D, pos.getZ(), 0.0D, 0.0D, 0.0D);
             }
-            world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            if (modeIn != BlockInteraction.NONE) {
+                world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            }
         }
     }
 

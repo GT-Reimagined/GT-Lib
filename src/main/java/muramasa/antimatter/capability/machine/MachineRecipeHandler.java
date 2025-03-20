@@ -12,6 +12,7 @@ import muramasa.antimatter.machine.MachineFlag;
 import muramasa.antimatter.machine.MachineState;
 import muramasa.antimatter.machine.event.IMachineEvent;
 import muramasa.antimatter.machine.event.MachineEvent;
+import muramasa.antimatter.machine.types.Machine;
 import muramasa.antimatter.recipe.IRecipe;
 import muramasa.antimatter.recipe.IRecipeValidator;
 import muramasa.antimatter.recipe.ingredient.FluidIngredient;
@@ -22,8 +23,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -318,6 +321,15 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             }
         }
         this.currentProgress++;
+        if (Machine.isAprilFools()){
+            if (tile.getLevel().random.nextInt(10000) == 0){
+                tile.getLevel().playSound(null, tile.getBlockPos(), Ref.JOHN_CENA, SoundSource.BLOCKS, 1.0f, 1.0f);
+            }
+            if (tile.getLevel().random.nextInt(10000) == 0){
+                Utils.createExplosion(tile.getLevel(), tile.getBlockPos(), 6f, BlockInteraction.NONE);
+                tile.getLevel().playSound(null, tile.getBlockPos(), Ref.MACHINE_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
+            }
+        }
         tile.onRecipePostTick();
         return ACTIVE;
     }
