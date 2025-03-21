@@ -326,7 +326,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 tile.getLevel().playSound(null, tile.getBlockPos(), Ref.JOHN_CENA, SoundSource.BLOCKS, 1.0f, 1.0f);
             }
             if (tile.getLevel().random.nextInt(10000) == 0){
-                Utils.createExplosion(tile.getLevel(), tile.getBlockPos(), 6f, BlockInteraction.NONE);
+                tile.getLevel().playSound(null, tile.getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0f, (1.0F + (tile.getLevel().random.nextFloat() - tile.getLevel().random.nextFloat()) * 0.2F) * 0.7F);
                 tile.getLevel().playSound(null, tile.getBlockPos(), Ref.MACHINE_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
             }
         }
