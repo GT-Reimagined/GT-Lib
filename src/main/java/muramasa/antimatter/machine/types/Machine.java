@@ -820,7 +820,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
     public static boolean isAprilFools(){
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         return (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) == 1) ||
-        (calendar.get(Calendar.MONTH) == Calendar.MARCH && calendar.get(Calendar.DATE) == 20);
+        (calendar.get(Calendar.MONTH) == Calendar.MARCH && calendar.get(Calendar.DATE) == 31);
     }
 
     private IOverlayTexturer getDatedOverlayHandler(){
