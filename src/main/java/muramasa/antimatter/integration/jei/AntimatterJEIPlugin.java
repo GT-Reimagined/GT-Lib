@@ -27,6 +27,7 @@ import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
 import muramasa.antimatter.integration.jei.category.MultiMachineInfoCategory;
 import muramasa.antimatter.integration.jei.category.RecipeMapCategory;
+import muramasa.antimatter.integration.jei.category.VeinCategory;
 import muramasa.antimatter.integration.jei.extension.JEIMaterialRecipeExtension;
 import muramasa.antimatter.integration.jeirei.AntimatterJEIREIPlugin;
 import muramasa.antimatter.recipe.IRecipe;
@@ -35,6 +36,8 @@ import muramasa.antimatter.recipe.map.RecipeMap;
 import muramasa.antimatter.recipe.material.MaterialRecipe;
 import muramasa.antimatter.util.RegistryUtils;
 import muramasa.antimatter.util.Utils;
+import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
+import muramasa.antimatter.worldgen.vein.WorldGenVeinLayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
@@ -155,6 +158,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
 
         // multi machine
         registry.addRecipeCategories(new MultiMachineInfoCategory());
+        registry.addRecipeCategories(new VeinCategory());
     }
 
     @Override
@@ -188,6 +192,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
                 }
             }
         });
+        registration.addRecipes(VeinCategory.VEIN_LAYERS, AntimatterWorldGenerator.all(WorldGenVeinLayer.class));
         MultiMachineInfoCategory.registerRecipes(registration);
     }
 

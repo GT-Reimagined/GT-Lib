@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import lombok.Getter;
 import muramasa.antimatter.Antimatter;
 import muramasa.antimatter.AntimatterConfig;
 import muramasa.antimatter.Ref;
@@ -51,8 +52,11 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
 
     private Material[] materials;
     private String primary, secondary, between, sporadic;
+    @Getter
     private final int minY;
+    @Getter
     private final int maxY;
+    @Getter
     private final int weight;
     private final int density;
     private final int size;
@@ -145,10 +149,6 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
 
     public Material getMaterial(int i) {
         return materials[i];
-    }
-
-    public int getWeight() {
-        return weight;
     }
 
     public static int getTotalWeight() {

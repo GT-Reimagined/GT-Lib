@@ -43,6 +43,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -110,6 +111,11 @@ public class AntimatterWorldGenerator {
     public static <T> List<T> all(Class<T> c, ResourceKey<Level> dim) {
         AntimatterFeature<?> feat = AntimatterAPI.get(AntimatterFeature.class, c.getName());
         return feat != null ? feat.getRegistry().computeIfAbsent(dim.location(), k -> new LinkedList<>()).stream().map(c::cast).collect(Collectors.toList()) : Collections.emptyList();
+    }
+
+    public static <T> List<T> all(Class<T> c) {
+        AntimatterFeature<?> feat = AntimatterAPI.get(AntimatterFeature.class, c.getName());
+        return feat != null ? feat.getRegistry().values().stream().flatMap(Collection::stream).map(c::cast).distinct().toList() : Collections.emptyList();
     }
 
     private static void removeStoneFeatures(BiomeGenerationSettings.Builder builder) {

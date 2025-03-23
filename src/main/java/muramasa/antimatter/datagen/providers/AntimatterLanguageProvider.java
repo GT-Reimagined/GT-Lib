@@ -361,6 +361,7 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
         add("gtlib.tooltip.io_widget.item", "Item Auto-Output");
         add("gtlib.behaviour.3x3", "3x3 Mining");
         add("gtlib.behaviour.1x0x2", "1x2 Mining");
+        add("jei.category.gtlib.vein_layers", "Vein Layer Stats");
     }
 
     private final void pipeTranslations() {
