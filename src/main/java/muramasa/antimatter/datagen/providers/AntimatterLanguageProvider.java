@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectRBTreeMap;
 import muramasa.antimatter.AntimatterAPI;
 import muramasa.antimatter.Ref;
+import muramasa.antimatter.block.BlockDimensionMarker;
 import muramasa.antimatter.block.BlockFrame;
 import muramasa.antimatter.block.BlockStone;
 import muramasa.antimatter.block.BlockStoneSlab;
@@ -156,6 +157,7 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
         AntimatterAPI.all(Enchantment.class, domain, (en, d, i) -> {
             add("enchantment." + d + "." + i, lowerUnderscoreToUpperSpaced(i));
         });
+        AntimatterAPI.all(BlockDimensionMarker.class, domain).forEach(i -> this.add(i, Utils.lowerUnderscoreToUpperSpaced(i.getDimension())));
 
         if (domain.equals(Ref.ID)) {
             AntimatterAPI.all(IAntimatterTool.class, t -> {

@@ -1,6 +1,7 @@
 package muramasa.antimatter;
 
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
+import muramasa.antimatter.block.BlockDimensionMarker;
 import muramasa.antimatter.client.AntimatterModelManager;
 import muramasa.antimatter.client.ClientData;
 import muramasa.antimatter.common.event.ARRPEvents;
@@ -9,6 +10,7 @@ import muramasa.antimatter.data.AntimatterDefaultTools;
 import muramasa.antimatter.data.AntimatterMaterialTypes;
 import muramasa.antimatter.data.AntimatterMaterials;
 import muramasa.antimatter.data.AntimatterStoneTypes;
+import muramasa.antimatter.data.GTLibBlocks;
 import muramasa.antimatter.datagen.AntimatterDynamics;
 import muramasa.antimatter.datagen.AntimatterLoot;
 import muramasa.antimatter.datagen.loaders.MaterialRecipes;
@@ -170,6 +172,7 @@ public class Antimatter extends AntimatterMod {
             AntimatterMaterialTypes.init();
             AntimatterDefaultTools.init(side);
             AntimatterStoneTypes.init();
+            GTLibBlocks.init();
             Data.init(side);
             ICover.init();
             SubTag.init();
@@ -225,6 +228,7 @@ public class Antimatter extends AntimatterMod {
                 });
                 AntimatterAPI.all(IAntimatterTool.class).stream().filter(t -> t.getAntimatterToolType() == AntimatterDefaultTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
                 AntimatterAPI.all(AntimatterFluid.class).forEach(t -> l.add(t.getFluidBlock()));
+                AntimatterAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
             });
             AntimatterAPI.all(Material.class).forEach(m -> {
                 Map<MaterialType<?>, Integer> map = MaterialTags.FURNACE_FUELS.getMap(m);
