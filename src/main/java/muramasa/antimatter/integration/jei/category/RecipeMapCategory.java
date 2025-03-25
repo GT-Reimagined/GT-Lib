@@ -51,7 +51,7 @@ import java.util.List;
 public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
 
     protected static int JEI_OFFSET_X = 1, JEI_OFFSET_Y = 1;
-    protected static IGuiHelper guiHelper;
+    public static IGuiHelper guiHelper;
 
     protected String title;
     protected final ResourceLocation loc;
