@@ -1,17 +1,10 @@
 package muramasa.antimatter.worldgen.smallore;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import muramasa.antimatter.material.Material;
 import muramasa.antimatter.worldgen.AntimatterWorldGenerator;
-import muramasa.antimatter.worldgen.vein.old.WorldGenVein;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.Reader;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

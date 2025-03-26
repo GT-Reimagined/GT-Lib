@@ -15,7 +15,6 @@ import muramasa.antimatter.worldgen.feature.FeatureOre;
 import muramasa.antimatter.worldgen.feature.FeatureSmallOres;
 import muramasa.antimatter.worldgen.feature.FeatureStoneLayer;
 import muramasa.antimatter.worldgen.feature.FeatureVanillaOres;
-import muramasa.antimatter.worldgen.feature.FeatureVein;
 import muramasa.antimatter.worldgen.feature.FeatureVeinLayer;
 import muramasa.antimatter.worldgen.feature.IAntimatterFeature;
 import muramasa.antimatter.worldgen.object.WorldGenBase;
@@ -54,7 +53,6 @@ import java.util.stream.Collectors;
 import static muramasa.antimatter.Ref.GSON;
 
 public class AntimatterWorldGenerator {
-    static final AntimatterFeature<NoneFeatureConfiguration> VEIN = new FeatureVein();
     static final AntimatterFeature<NoneFeatureConfiguration> SMALL_ORE = new FeatureSmallOres();
 
     static final AntimatterFeature<NoneFeatureConfiguration> VANILLA_ORE = new FeatureVanillaOres();

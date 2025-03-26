@@ -13,9 +13,7 @@ import java.util.Collections;
 
 public class AntimatterConfiguredFeatures {
     
-    public static final Holder<PlacedFeature> VEIN = register("vein", FeatureUtils.register("vein", AntimatterWorldGenerator.VEIN, NoneFeatureConfiguration.NONE));
     public static final Holder<PlacedFeature> SMALL_ORES = register("small_ores", FeatureUtils.register("small_ores", AntimatterWorldGenerator.SMALL_ORE, NoneFeatureConfiguration.NONE));
-
     public static final Holder<PlacedFeature> VANILLA_ORES = register("vanilla_ores", FeatureUtils.register("vanilla_ores", AntimatterWorldGenerator.VANILLA_ORE, NoneFeatureConfiguration.NONE));
     public static final Holder<PlacedFeature> VEIN_LAYER = register("vein_layer", FeatureUtils.register("vein_layer", AntimatterWorldGenerator.VEIN_LAYER, NoneFeatureConfiguration.NONE));
     public static final Holder<PlacedFeature> ORE = register("ore", FeatureUtils.register("ore", AntimatterWorldGenerator.ORE, NoneFeatureConfiguration.NONE));
