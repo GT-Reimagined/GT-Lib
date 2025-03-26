@@ -210,7 +210,7 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
                 drop = null;
             }
             Item item = block.getStoneType().isSandLike() ? block.asItem() : AntimatterMaterialTypes.RAW_ORE.get(block.getMaterial());
-            return b -> createOreDropWithHammer(b, item, drop, 1);
+            return b -> createOreDropWithHammer(b, item, drop, MaterialTags.ORE_MULTI.get(block.getMaterial()));
         }
         return BlockLoot::createSingleItemTable;
     }
