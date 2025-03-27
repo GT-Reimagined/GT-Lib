@@ -1,0 +1,99 @@
+package org.gtreimagined.gtlib.blockentity.single;
+
+import it.unimi.dsi.fastutil.Pair;
+import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
+import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
+import org.gtreimagined.gtlib.capability.machine.MachineEnergyHandler;
+import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
+import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.machine.event.IMachineEvent;
+import org.gtreimagined.gtlib.machine.types.Machine;
+import org.gtreimagined.gtlib.util.Utils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import tesseract.api.gt.IGTNode;
+
+import java.util.List;
+
+
+public class BlockEntityBatteryBuffer<T extends BlockEntityBatteryBuffer<T>> extends BlockEntityMachine<T> {
+
+    public BlockEntityBatteryBuffer(Machine<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+        energyHandler.set(() -> new MachineEnergyHandler<T>((T) this, 0L, (long) getMachineTier().getVoltage() * itemHandler.map(m -> m.getChargeHandler().getSlots()).orElse(1), getMachineTier().getVoltage(), getMachineTier().getVoltage(), 1,0) {
+            @Override
+            public boolean canOutput(Direction direction) {
+                Direction dir = tile.getFacing();
+                return dir != null && dir.get3DDataValue() == direction.get3DDataValue();
+            }
+
+            @Override
+            public void onMachineEvent(IMachineEvent event, Object... data) {
+                super.onMachineEvent(event, data);
+            }
+
+            @Override
+            public void onUpdate() {
+                super.onUpdate();
+                if (this.energy > 0 && this.getEnergy() > this.voltageOut * 2 && !cachedItems.isEmpty()){
+                    long energyToInsert = this.energy % cachedItems.size() == 0 ? this.energy / cachedItems.size() : this.energy;
+                    cachedItems.forEach(h ->{
+                        long toAdd = Math.min(this.energy, Math.min(energyToInsert, h.right().getCapacity() - h.right().getEnergy()));
+                        if (toAdd > 0 && Utils.addEnergy(h.right(), toAdd)){
+                            h.left().setTag(h.right().getContainer().getTag());
+                            this.energy -= toAdd;
+                        }
+                    });
+                }
+
+                if (this.energy < this.voltageOut && this.getBatteryEnergy() < this.voltageOut){
+                    cachedItems.forEach(h ->{
+                        long toRemove = Math.min(this.capacty - this.energy, h.right().getEnergy());
+                        if (toRemove > 0 && Utils.removeEnergy(h.right(), toRemove)){
+                            h.left().setTag(h.right().getContainer().getTag());
+                            this.energy += toRemove;
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public long getInputAmperage() {
+                if (cachedItems != null && !cachedItems.isEmpty()){
+                    return cachedItems.stream().map(Pair::right).mapToLong(IGTNode::getInputAmperage).sum();
+                }
+                return 0;
+            }
+
+            @Override
+            public long getOutputAmperage() {
+                if (cachedItems != null && !cachedItems.isEmpty()){
+                    return cachedItems.stream().map(Pair::right).mapToLong(IGTNode::getOutputAmperage).sum();
+                }
+                return super.getOutputAmperage();
+            }
+        });
+        this.itemHandler.set(() -> new MachineItemHandler<>((T)this){
+            @Override
+            protected TrackedItemHandler<T> createTrackedHandler(SlotType<?> type, T tile) {
+                int count = tile.getMachineType().getCount(tile.getMachineTier(), type);
+                if (type == SlotType.ENERGY){
+                    return new TrackedItemHandler<>(tile, type, count, true, type.input, type.tester);
+                }
+                return super.createTrackedHandler(type, tile);
+            }
+        });
+    }
+
+    @Override
+    public List<String> getInfo(boolean simple) {
+        List<String> info = super.getInfo(simple);
+        energyHandler.ifPresent(h -> {
+            info.add("Amperage In: " + h.availableAmpsInput(this.getMaxInputVoltage()));
+            info.add("Amperage Out: " + h.availableAmpsOutput());
+        });
+        return info;
+    }
+}

@@ -1,0 +1,42 @@
+package org.gtreimagined.gtlib.integration.top;
+
+import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ProbeMode;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
+import org.gtreimagined.gtlib.util.Utils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class MultiblockInfoProvider implements IProbeInfoProvider {
+    public ResourceLocation getID() {
+        return new ResourceLocation(Ref.ID + ":multiblock_info");
+    }
+
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level level,
+                             BlockState blockState, IProbeHitData data) {
+
+        if (blockState.hasBlockEntity()) {
+            BlockEntity tile = Utils.getTile(level, data.getPos());
+
+            if (tile instanceof BlockEntityBasicMultiMachine<?> machine) {
+
+                IProbeInfo horizontalPane = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
+                if (machine.isStructureValid()) {
+                    horizontalPane.text(Utils.translatable("gtlib.tooltip.valid_structure").withStyle(ChatFormatting.GREEN));
+                } else {
+                    horizontalPane.text(Utils.translatable("gtlib.tooltip.invalid_structure").withStyle(ChatFormatting.RED));
+                }
+
+            }
+        }
+
+    }
+}

@@ -1,0 +1,67 @@
+package org.gtreimagined.gtlib.gui.widget;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
+import org.gtreimagined.gtlib.gui.GuiInstance;
+import org.gtreimagined.gtlib.gui.IGuiElement;
+import org.gtreimagined.gtlib.gui.Widget;
+import org.gtreimagined.gtlib.machine.MachineFlag;
+import org.gtreimagined.gtlib.machine.MachineState;
+import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.util.Utils;
+import org.gtreimagined.gtlib.util.int2;
+import org.gtreimagined.gtlib.util.int4;
+
+public class MachineStateWidget extends Widget {
+    /* Location in most machine textures. */
+    protected final int4 state = new int4(176, 56, 8, 8);
+    protected int2 location;
+    /* If the container contains recipe flag. */
+    protected final boolean isRecipe;
+    protected final Tier tier;
+    /* Synced machine state. */
+    //protected MachineState machineState = MachineState.IDLE;
+
+    protected MachineStateWidget(GuiInstance gui, IGuiElement parent) {
+        super(gui, parent);
+        this.tier = ((BlockEntityMachine<?>) gui.handler).getMachineTier();
+        this.setX(gui.handler.getGui().getMachineData().getMachineStatePos().x);
+        this.setY(gui.handler.getGui().getMachineData().getMachineStatePos().y);
+        this.setW(gui.handler.getGui().getMachineData().getMachineStateSize().x);
+        this.setH(gui.handler.getGui().getMachineData().getMachineStateSize().y);
+        this.isRecipe = ((BlockEntityMachine<?>) gui.handler).has(MachineFlag.RECIPE);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        //gui.syncInt(() -> ((ContainerMachine<?>)gui.container).getTile().getMachineState().ordinal(), v -> this.machineState = MachineState.values()[v]);
+    }
+
+    @Override
+    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+        //Draw error.
+        //No need to sync machine state.
+        MachineState machineState = ((BlockEntityMachine<?>) gui.handler).getMachineState();
+        if (isRecipe) {
+            if (machineState == MachineState.POWER_LOSS) {
+                drawTexture(matrixStack, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), getW(), 0, getW(), getH(), getW() * 2, getH());
+            } else {
+                drawTexture(matrixStack, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), 0, 0, getW(), getH(), getW() * 2, getH());
+            }
+        }
+    }
+
+    @Override
+    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
+        super.mouseOver(stack, mouseX, mouseY, partialTicks);
+        MachineState machineState = ((BlockEntityMachine<?>) gui.handler).getMachineState();
+        if (isRecipe) {
+            renderTooltip(stack, Utils.literal(machineState.getDisplayName()), mouseX, mouseY);
+        }
+    }
+
+    public static WidgetSupplier build() {
+        return builder(MachineStateWidget::new);
+    }
+}

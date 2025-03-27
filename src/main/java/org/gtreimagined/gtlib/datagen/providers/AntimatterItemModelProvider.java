@@ -1,0 +1,100 @@
+package org.gtreimagined.gtlib.datagen.providers;
+
+import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.client.AntimatterModelManager;
+import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
+import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.AntimatterItemModelBuilder;
+import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.util.RegistryUtils;
+import net.minecraft.data.HashCache;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+
+import java.io.IOException;
+
+public class AntimatterItemModelProvider extends AntimatterModelProvider<AntimatterItemModelBuilder> implements IAntimatterProvider {
+
+    protected final String providerName;
+
+    public AntimatterItemModelProvider(String providerDomain, String providerName) {
+        super(providerDomain, ITEM_FOLDER, AntimatterItemModelBuilder::new);
+        this.providerName = providerName;
+    }
+
+    @Override
+    public void run(HashCache cache) throws IOException {
+
+    }
+
+    @Override
+    public String getName() {
+        return providerName;
+    }
+
+    @Override
+    public void run() {
+        registerModels();
+    }
+
+    @Override
+    public void onCompletion() {
+        buildAll();
+    }
+
+    protected void registerModels() {
+        processItemModels(modid);
+    }
+
+    public void processItemModels(String domain) {
+        AntimatterAPI.all(Item.class, domain).forEach(i -> AntimatterModelManager.onItemModelBuild(i, this));
+        AntimatterAPI.all(Block.class, domain).forEach(b -> AntimatterModelManager.onItemModelBuild(b, this));
+        AntimatterAPI.all(AntimatterFluid.class, domain).forEach(f -> {
+            modelAndTexture(f.getContainerItem(), "forge", "item/bucket").bucketProperties(f.getFluid());
+            modelAndTexture(f.getFluidBlock(), AntimatterBlockModelBuilder.getSimple()).tex(a -> a.put("all", f.getAttributes().getFlowingTexture().toString()));
+        });
+    }
+
+    public AntimatterItemModelBuilder getBuilder(ItemLike item) {
+        return getBuilder(RegistryUtils.getIdFromItem(item.asItem()).getPath());
+    }
+
+    public AntimatterItemModelBuilder tex(ItemLike item, ResourceLocation... textures) {
+        return tex(item, "minecraft:item/generated", textures);
+    }
+
+    public AntimatterItemModelBuilder tex(ItemLike item, String parent, ResourceLocation... textures) {
+        AntimatterItemModelBuilder builder = getBuilder(item);
+        builder.parent(new ResourceLocation(parent));
+        for (int i = 0; i < textures.length; i++) {
+            builder.texture("layer" + i, textures[i]);
+        }
+        return builder;
+    }
+
+    public AntimatterItemModelBuilder blockItem(Block block) {
+        return blockItem(block.asItem());
+    }
+
+    public AntimatterItemModelBuilder blockItem(ItemLike item) {
+        return withParent(RegistryUtils.getIdFromItem(item.asItem()).getPath(), modLoc("block/" + RegistryUtils.getIdFromItem(item.asItem()).getPath()));
+    }
+
+    public ResourceLocation existing(String domain, String path) {
+        return new ResourceLocation(domain, path);
+    }
+
+    public AntimatterItemModelBuilder getAntimatterBuilder(ItemLike item) {
+        return getBuilder(RegistryUtils.getIdFromItem(item.asItem()).getPath());
+    }
+
+    public AntimatterItemModelBuilder modelAndTexture(ItemLike item, String namespace, String path) {
+        return getAntimatterBuilder(item).parent(new ResourceLocation(namespace, path));
+    }
+
+    public AntimatterItemModelBuilder modelAndTexture(ItemLike item, String resource) {
+        return getAntimatterBuilder(item).parent(new ResourceLocation(resource));
+    }
+}

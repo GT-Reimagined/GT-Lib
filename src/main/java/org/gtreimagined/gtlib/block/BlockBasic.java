@@ -1,0 +1,43 @@
+package org.gtreimagined.gtlib.block;
+
+import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IModelProvider;
+import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ITextureProvider;
+import org.gtreimagined.gtlib.texture.Texture;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+
+public class BlockBasic extends Block implements IAntimatterObject, ITextureProvider, IModelProvider {
+
+    protected final String domain, id;
+
+    public BlockBasic(String domain, String id, Properties properties) {
+        super(properties);
+        this.domain = domain;
+        this.id = id;
+        AntimatterAPI.register(getClass(), this);
+    }
+
+    public BlockBasic(String domain, String id) {
+        this(domain, id, Properties.of(Material.METAL).strength(1.0f, 1.0f).sound(SoundType.STONE));
+    }
+
+    public String getDomain() {
+        return this instanceof ISharedAntimatterObject ? Ref.SHARED_ID : domain;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public Texture[] getTextures() {
+        return new Texture[0];
+    }
+
+}

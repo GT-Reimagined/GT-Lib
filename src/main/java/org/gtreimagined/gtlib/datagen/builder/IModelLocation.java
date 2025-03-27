@@ -1,0 +1,8 @@
+package org.gtreimagined.gtlib.datagen.builder;
+
+import net.minecraft.resources.ResourceLocation;
+
+@FunctionalInterface
+public interface IModelLocation {
+    ResourceLocation getLocation();
+}
