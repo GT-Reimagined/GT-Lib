@@ -9,10 +9,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class AntimatterProvidersEvent extends AntimatterEvent implements IModBusEvent {
+public class GTProvidersEvent extends GTEvent implements IModBusEvent {
     private final List<IGTLibProvider> providers = new ObjectArrayList<>(10);
 
-    public AntimatterProvidersEvent(IAntimatterRegistrar registrar) {
+    public GTProvidersEvent(IAntimatterRegistrar registrar) {
         super(registrar);
     }
 

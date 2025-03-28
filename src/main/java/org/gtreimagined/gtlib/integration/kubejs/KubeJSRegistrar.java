@@ -11,7 +11,7 @@ import org.gtreimagined.gtlib.datagen.providers.GTBlockTagProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTItemTagProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
-import org.gtreimagined.gtlib.event.AntimatterProvidersEvent;
+import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import net.minecraftforge.api.distmarker.Dist;
 
@@ -28,7 +28,7 @@ public class KubeJSRegistrar extends AntimatterMod {
         GTLibDynamics.clientProvider(Ref.MOD_KJS, () -> new GTLanguageProvider(Ref.MOD_KJS, "KubeJS en_us Localization", "en_us"));
     }
 
-    public static void providerEvent(AntimatterProvidersEvent ev) {
+    public static void providerEvent(GTProvidersEvent ev) {
         final GTBlockTagProvider[] p = new GTBlockTagProvider[1];
         ev.addProvider(() -> {
             p[0] = new GTBlockTagProvider(Ref.MOD_KJS, "KubeJS Block Tags", false);

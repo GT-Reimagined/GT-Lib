@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class AntimatterWorldGenEvent extends AntimatterEvent {
+public class GTWorldGenEvent extends GTEvent {
 
     public final List<WorldGenVeinLayer> VEINS = new ObjectArrayList<>();
     public final List<WorldGenStoneLayer> STONE_LAYERS = new ObjectArrayList<>();
@@ -27,7 +27,7 @@ public class AntimatterWorldGenEvent extends AntimatterEvent {
     public final List<WorldGenBedrockVein> BEDROCK_VEINS = new ObjectArrayList<>();
     public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
 
-    public AntimatterWorldGenEvent(IAntimatterRegistrar registrar) {
+    public GTWorldGenEvent(IAntimatterRegistrar registrar) {
         super(registrar);
     }
 

@@ -16,10 +16,10 @@ import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
-import org.gtreimagined.gtlib.event.AntimatterCraftingEvent;
-import org.gtreimagined.gtlib.event.AntimatterLoaderEvent;
-import org.gtreimagined.gtlib.event.AntimatterProvidersEvent;
-import org.gtreimagined.gtlib.event.AntimatterWorldGenEvent;
+import org.gtreimagined.gtlib.event.GTCraftingEvent;
+import org.gtreimagined.gtlib.event.GTLoaderEvent;
+import org.gtreimagined.gtlib.event.GTProvidersEvent;
+import org.gtreimagined.gtlib.event.GTWorldGenEvent;
 import org.gtreimagined.gtlib.integration.kubejs.AMWorldEvent;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
 import org.gtreimagined.gtlib.integration.kubejs.RecipeLoaderEventKubeJS;
@@ -120,7 +120,7 @@ public class GTLibDynamics {
 
     public static void runDataProvidersDynamically() {
         GTBlockLootProvider.init();
-        AntimatterProvidersEvent ev = new AntimatterProvidersEvent(Antimatter.INSTANCE);
+        GTProvidersEvent ev = new GTProvidersEvent(Antimatter.INSTANCE);
         ModLoader.get().postEvent(ev);
         Collection<IGTLibProvider> providers = ev.getProviders();
         long time = System.currentTimeMillis();
@@ -157,7 +157,7 @@ public class GTLibDynamics {
      * @param rec consumer for IFinishedRecipe.
      */
     public static void collectRecipes(GTRecipeProvider provider, Consumer<FinishedRecipe> rec) {
-        AntimatterCraftingEvent event = new AntimatterCraftingEvent(Antimatter.INSTANCE);
+        GTCraftingEvent event = new GTCraftingEvent(Antimatter.INSTANCE);
         ModLoader.get().postEvent(event);
         for (ICraftingLoader loader : event.getLoaders()) {
             loader.loadRecipes(rec, provider);
@@ -245,7 +245,7 @@ public class GTLibDynamics {
             filter = Collections.emptySet();
         }
         Map<ResourceLocation, IRecipeRegistrate.IRecipeLoader> loaders = new Object2ObjectOpenHashMap<>(30);
-        MinecraftForge.EVENT_BUS.post(new AntimatterLoaderEvent(Antimatter.INSTANCE, (a, b, c) -> {
+        MinecraftForge.EVENT_BUS.post(new GTLoaderEvent(Antimatter.INSTANCE, (a, b, c) -> {
             if (filter.contains(new ResourceLocation(a, b)))
                 return;
             if (loaders.put(new ResourceLocation(a, b), c) != null) {
@@ -269,7 +269,7 @@ public class GTLibDynamics {
             runRegular = !ev.disableBuiltin;
         }
         if (runRegular) {
-            AntimatterWorldGenEvent ev = new AntimatterWorldGenEvent(Antimatter.INSTANCE);
+            GTWorldGenEvent ev = new GTWorldGenEvent(Antimatter.INSTANCE);
             MinecraftForge.EVENT_BUS.post(ev);
             veins.addAll(ev.VEINS);
             veins.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenVeinLayer.class, WorldGenVeinLayer::fromJson, "vein_layers"));

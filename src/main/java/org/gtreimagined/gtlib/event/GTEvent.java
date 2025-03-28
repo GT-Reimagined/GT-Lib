@@ -3,10 +3,10 @@ package org.gtreimagined.gtlib.event;
 import org.gtreimagined.gtlib.registration.IAntimatterRegistrar;
 import net.minecraftforge.eventbus.api.Event;
 
-public abstract class AntimatterEvent extends Event {
+public abstract class GTEvent extends Event {
     public final IAntimatterRegistrar sender;
 
-    public AntimatterEvent(IAntimatterRegistrar registrar) {
+    public GTEvent(IAntimatterRegistrar registrar) {
         this.sender = registrar;
     }
 }

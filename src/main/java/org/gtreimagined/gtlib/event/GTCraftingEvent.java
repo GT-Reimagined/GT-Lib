@@ -8,12 +8,12 @@ import net.minecraftforge.fml.event.IModBusEvent;
 import java.util.Collection;
 import java.util.List;
 
-public class AntimatterCraftingEvent extends AntimatterEvent implements IModBusEvent {
+public class GTCraftingEvent extends GTEvent implements IModBusEvent {
 
 
     private final List<ICraftingLoader> loaders = new ObjectArrayList<>();
 
-    public AntimatterCraftingEvent(IAntimatterRegistrar registrar) {
+    public GTCraftingEvent(IAntimatterRegistrar registrar) {
         super(registrar);
     }
 

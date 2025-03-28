@@ -23,8 +23,8 @@ import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTItemTagProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
-import org.gtreimagined.gtlib.event.AntimatterCraftingEvent;
-import org.gtreimagined.gtlib.event.AntimatterProvidersEvent;
+import org.gtreimagined.gtlib.event.GTCraftingEvent;
+import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
@@ -132,12 +132,12 @@ public class Antimatter extends AntimatterMod {
         ARRP.EVENT_BUS.register(ARRPEvents.class);
     }
 
-    public void addCraftingLoaders(AntimatterCraftingEvent ev) {
+    public void addCraftingLoaders(GTCraftingEvent ev) {
         ev.addLoader(StoneRecipes::loadRecipes);
         ev.addLoader(MaterialRecipes::init);
     }
 
-    public void providers(AntimatterProvidersEvent ev) {
+    public void providers(GTProvidersEvent ev) {
         final GTBlockTagProvider[] p = new GTBlockTagProvider[1];
         ev.addProvider(() -> {
             p[0] = new GTBlockTagProvider(Ref.ID, Ref.NAME.concat(" Block Tags"), false);
