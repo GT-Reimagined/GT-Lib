@@ -2,8 +2,8 @@ package org.gtreimagined.gtlib.client.event;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.AntimatterTextureStitcher;
-import org.gtreimagined.gtlib.client.model.loader.IAntimatterModelLoader;
+import org.gtreimagined.gtlib.client.GTTextureStitcher;
+import org.gtreimagined.gtlib.client.model.loader.IGTModelLoader;
 import org.gtreimagined.gtlib.proxy.ClientHandler;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEventsMod {
     @SubscribeEvent
     public static void onTextureStitch(final TextureStitchEvent.Pre event) {
-        AntimatterTextureStitcher.onTextureStitch(event.getAtlas(), event::addSprite);
+        GTTextureStitcher.onTextureStitch(event.getAtlas(), event::addSprite);
     }
 
     @SubscribeEvent
@@ -34,6 +34,6 @@ public class ClientEventsMod {
     @SubscribeEvent
     public static void preResourceRegistration(ParticleFactoryRegisterEvent ev) {
         AntimatterAPI.onRegistration(RegistrationEvent.CLIENT_DATA_INIT);
-        AntimatterAPI.all(IAntimatterModelLoader.class).forEach(l -> ModelLoaderRegistry.registerLoader(l.getLoc(), l));
+        AntimatterAPI.all(IGTModelLoader.class).forEach(l -> ModelLoaderRegistry.registerLoader(l.getLoc(), l));
     }
 }

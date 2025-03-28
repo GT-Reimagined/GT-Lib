@@ -5,8 +5,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.gtreimagined.gtlib.Antimatter;
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -89,14 +89,14 @@ public class WorldGenHelper {
     public static boolean setOre(LevelAccessor world, BlockPos pos, BlockState existing, Material material,
                                  MaterialType<?> type) {
         StoneType stone = STONE_MAP.get(existing);
-        if (stone == null || !stone.doesGenerateOre() || stone == AntimatterStoneTypes.BEDROCK)
+        if (stone == null || !stone.doesGenerateOre() || stone == VanillaStoneTypes.BEDROCK)
             return false;
-        BlockState oreState = type == AntimatterMaterialTypes.ORE ? AntimatterMaterialTypes.ORE.get().get(material, stone).asState()
-                : AntimatterMaterialTypes.ORE_SMALL.get().get(material, stone).asState();
+        BlockState oreState = type == GTMaterialTypes.ORE ? GTMaterialTypes.ORE.get().get(material, stone).asState()
+                : GTMaterialTypes.ORE_SMALL.get().get(material, stone).asState();
         if (!ORE_PREDICATE.test(existing))
             return false;
         boolean setState = setState(world, pos, oreState);
-        if (setState && (type == AntimatterMaterialTypes.ORE || type == AntimatterMaterialTypes.ORE_SMALL)){
+        if (setState && (type == GTMaterialTypes.ORE || type == GTMaterialTypes.ORE_SMALL)){
             ServerLevel serverLevel = null;
             if (world instanceof ServerLevel serverLevel1) serverLevel = serverLevel1;
             if (world instanceof WorldGenRegion worldGenRegion) serverLevel = worldGenRegion.getLevel();
@@ -131,7 +131,7 @@ public class WorldGenHelper {
     public static BlockState getStoneStateForRock(int y, BlockPos pos, LevelAccessor world){
         BlockState fill = world.getBlockState(new BlockPos(pos.getX(), y, pos.getZ()));
         StoneType stone = STONE_MAP.get(fill);
-        if (y <= world.getMinBuildHeight() || stone == AntimatterStoneTypes.BEDROCK){
+        if (y <= world.getMinBuildHeight() || stone == VanillaStoneTypes.BEDROCK){
             return fill;
         }
         if (stone == null || !stone.doesGenerateOre()){
@@ -152,9 +152,9 @@ public class WorldGenHelper {
         if (material == Material.NULL && stone == null) return false;
         BlockState rockState;
         if (material == Material.NULL){
-            rockState = AntimatterMaterialTypes.ROCK.get().get(stone.getMaterial()).asState();
+            rockState = GTMaterialTypes.ROCK.get().get(stone.getMaterial()).asState();
         } else {
-            rockState = AntimatterMaterialTypes.BEARING_ROCK.get().get(material, stone != null && stone.doesGenerateOre() ? stone : AntimatterStoneTypes.STONE).asState();
+            rockState = GTMaterialTypes.BEARING_ROCK.get().get(material, stone != null && stone.doesGenerateOre() ? stone : VanillaStoneTypes.STONE).asState();
         }
         final BlockState existingBelow = world.getBlockState(pos.below());
         if (existingBelow.isAir() || !existingBelow.getMaterial().isSolid())

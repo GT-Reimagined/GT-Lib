@@ -6,7 +6,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
-import org.gtreimagined.gtlib.client.model.loader.IAntimatterModelLoader;
+import org.gtreimagined.gtlib.client.model.loader.IGTModelLoader;
 import org.gtreimagined.gtlib.mixin.client.BlockModelAccessor;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
@@ -74,7 +74,7 @@ public class VanillaProxy implements ISimpleModel<VanillaProxy>
         return textures;
     }
 
-    public static class Loader implements IAntimatterModelLoader<VanillaProxy>
+    public static class Loader implements IGTModelLoader<VanillaProxy>
     {
         public static final VanillaProxy.Loader INSTANCE = new VanillaProxy.Loader();
 

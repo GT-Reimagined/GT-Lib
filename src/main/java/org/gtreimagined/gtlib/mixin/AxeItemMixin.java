@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.mixin;
 
 import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -30,7 +30,7 @@ public class AxeItemMixin extends DiggerItem {
         if (miningEntity instanceof Player player && !level.isClientSide) {
             if (this.isCorrectToolForDrops(state) && !player.isCrouching()) { // Only when player isn't shifting/crouching this ability activates
                 if (state.is(BlockTags.LOGS)) {
-                    Utils.treeLogging(AntimatterDefaultTools.AXE, stack, pos, player, level);
+                    Utils.treeLogging(GTTools.AXE, stack, pos, player, level);
                 }
             }
         }

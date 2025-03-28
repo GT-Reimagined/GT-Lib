@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.block;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
@@ -59,7 +59,7 @@ public class BlockStoneStair extends StairBlock implements ISharedAntimatterObje
     public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
         Texture bottom, top, side;
         bottom = top = side = getTextures()[0];
-        if (type == AntimatterStoneTypes.BASALT && (suffix.isEmpty() || suffix.equals("smooth"))){
+        if (type == VanillaStoneTypes.BASALT && (suffix.isEmpty() || suffix.equals("smooth"))){
             if (suffix.isEmpty()) {
                 top = bottom = new Texture("block/basalt_top");
                 side = new Texture("block/basalt_side");

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.worldgen.vanillaore;
 
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
@@ -54,7 +54,7 @@ public class WorldGenVanillaOreBuilder {
         if (this.dimensions.isEmpty()) {
             this.dimensions.add(new ResourceLocation("overworld"));
         }
-        MaterialTypeBlock<?> materialTypeBlock = this.materialType == null ? AntimatterMaterialTypes.ORE : materialType;
+        MaterialTypeBlock<?> materialTypeBlock = this.materialType == null ? GTMaterialTypes.ORE : materialType;
         WorldGenVanillaOre vanillaOre =  new WorldGenVanillaOre(
                 id != null ? id : material.getId(),
                 this.material,

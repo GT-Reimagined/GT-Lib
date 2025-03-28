@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.AntimatterModelManager;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.datagen.json.JConfigEntry;
 import org.gtreimagined.gtlib.datagen.json.JLoaderModel;
 import org.gtreimagined.gtlib.datagen.json.JModel;
@@ -55,27 +55,27 @@ public class AntimatterBlockModelBuilder extends AntimatterModelBuilder<Antimatt
     }
 
     public AntimatterBlockModelBuilder model(String parent, String... textures) {
-        loader(AntimatterModelManager.LOADER_MAIN);
+        loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(textures)));
     }
 
     public AntimatterBlockModelBuilder model(String parent, Texture... textures) {
-        loader(AntimatterModelManager.LOADER_MAIN);
+        loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(textures)));
     }
 
     public AntimatterBlockModelBuilder model(String parent, Function<ImmutableMap.Builder<String, Texture>, ImmutableMap.Builder<String, Texture>> func) {
-        loader(AntimatterModelManager.LOADER_MAIN);
+        loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(func.apply(new ImmutableMap.Builder<>()).build())));
     }
 
     public AntimatterBlockModelBuilder model(String parent, ImmutableMap<String, Texture> map) {
-        loader(AntimatterModelManager.LOADER_MAIN);
+        loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(map)));
     }
 
     public AntimatterBlockModelBuilder rot(int... rotations) {
-        loader(AntimatterModelManager.LOADER_MAIN);
+        loader(GTLibModelManager.LOADER_MAIN);
         if (rotations.length != 3){
             throw new IllegalStateException("rotations must have no more or less then 3 elements");
         }
@@ -88,7 +88,7 @@ public class AntimatterBlockModelBuilder extends AntimatterModelBuilder<Antimatt
     }
 
     public AntimatterBlockModelBuilder config(int id, IConfigFunction configFunc) {
-        loader(AntimatterModelManager.LOADER_DYNAMIC);
+        loader(GTLibModelManager.LOADER_DYNAMIC);
         ImmutableList<DynamicConfigBuilder> builders = configFunc.apply(new DynamicConfigBuilder(), new ImmutableList.Builder<>()).build();
         JConfigEntry entry = JConfigEntry.configEntry();
         entry.setID(id);
@@ -137,7 +137,7 @@ public class AntimatterBlockModelBuilder extends AntimatterModelBuilder<Antimatt
     }
 
     public AntimatterBlockModelBuilder staticConfigId(String mapId) {
-        loader(AntimatterModelManager.LOADER_DYNAMIC);
+        loader(GTLibModelManager.LOADER_DYNAMIC);
         return property("staticConfigId", mapId);
     }
 

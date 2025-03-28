@@ -34,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class ProxyBakedModel extends AntimatterBakedModel<ProxyBakedModel> {
+public class ProxyBakedModel extends GTBakedModel<ProxyBakedModel> {
 
     public ProxyBakedModel(TextureAtlasSprite particle) {
         super(particle);

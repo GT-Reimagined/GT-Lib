@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.tool;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -73,11 +73,11 @@ public class AntimatterItemTier implements Tier {
 
     @Override
     public Ingredient getRepairIngredient() {
-        if (primary.has(AntimatterMaterialTypes.GEM)) {
+        if (primary.has(GTMaterialTypes.GEM)) {
             return Ingredient.of(TagUtils.getForgelikeItemTag("gems/".concat(primary.getId())));
-        } else if (primary.has(AntimatterMaterialTypes.INGOT)) {
+        } else if (primary.has(GTMaterialTypes.INGOT)) {
             return Ingredient.of(TagUtils.getForgelikeItemTag("ingots/".concat(primary.getId())));
-        } else if (primary.has(AntimatterMaterialTypes.DUST)) {
+        } else if (primary.has(GTMaterialTypes.DUST)) {
             return Ingredient.of(TagUtils.getForgelikeItemTag("dusts/".concat(primary.getId())));
         } //else if (ItemTags.getAllTags().getTag(new ResourceLocation("forge", "blocks/".concat(primary.getId()))) != null) {
          //   return Ingredient.of(TagUtils.getForgeItemTag("blocks/".concat(primary.getId())));

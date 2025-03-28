@@ -13,7 +13,7 @@ import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.CoverReplacements;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.cover.IHaveCover;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterItemModelBuilder;
 import org.gtreimagined.gtlib.datagen.json.JLoaderModel;
@@ -171,12 +171,12 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         }
                     }
                     //Handle tool types.
-                    if (type == AntimatterDefaultTools.WRENCH) {
+                    if (type == GTTools.WRENCH) {
                         if (tile.wrenchMachine(player, hit, player.isCrouching())) {
                             Utils.damageStack(stack, hand, player);
                             return InteractionResult.SUCCESS;
                         }
-                    } else if (type == AntimatterDefaultTools.SOFT_HAMMER) {
+                    } else if (type == GTTools.SOFT_HAMMER) {
                         boolean wasDisabled = tile.toggleMachine();
                         if (wasDisabled) {
                             if (tile.getMachineState() == MachineState.DISABLED) {
@@ -187,7 +187,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                             Utils.damageStack(stack, player);
                             return InteractionResult.SUCCESS;
                         }
-                    } else if (type == AntimatterDefaultTools.CROWBAR) {
+                    } else if (type == GTTools.CROWBAR) {
                         if (!player.isCrouching()) {
                             if (tile.getCoverHandler().map(h -> h.removeCover(player, Utils.getInteractSide(hit), false)).orElse(false)) {
                                 Utils.damageStack(stack,hand, player);
@@ -199,7 +199,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                                 return InteractionResult.SUCCESS;
                             }
                         }
-                    } else if (type == AntimatterDefaultTools.SCREWDRIVER) {
+                    } else if (type == GTTools.SCREWDRIVER) {
                         ICover instance = tile.getCoverHandler().map(h -> h.get(Utils.getInteractSide(hit))).orElse(ICover.empty);
                         if (!player.isCrouching()) {
                             if (!instance.isEmpty() && instance.openGui(player, Utils.getInteractSide(hit))) {
@@ -367,7 +367,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                 builder1.put("overlay" + suffix, type.getOverlayTextures(state, tier, i)[dir.get3DDataValue()].toString());
             }
             JLoaderModel obj = builder.addModelObject(JLoaderModel.modelKeepElements(), this.getType().getOverlayModel(state, dir).toString(), builder1.build());
-            //obj.loader(AntimatterModelManager.LOADER_MACHINE_SIDE.getLoc().toString());
+            //obj.loader(GTLibModelManager.LOADER_MACHINE_SIDE.getLoc().toString());
             arr.add(obj);
         }
 

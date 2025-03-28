@@ -7,13 +7,13 @@ import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.Objects;
 
-public abstract class AntimatterBakedModel<T> implements IAntimatterBakedModel {
+public abstract class GTBakedModel<T> implements IGTBakedModel {
 
     protected TextureAtlasSprite particle;
     protected boolean onlyGeneralQuads = false; //If the model only has "general quads", like pipes
 
-    public AntimatterBakedModel(TextureAtlasSprite p) {
-        this.particle = Objects.requireNonNull(p, "Missing particle texture in AntimatterBakedModel");
+    public GTBakedModel(TextureAtlasSprite p) {
+        this.particle = Objects.requireNonNull(p, "Missing particle texture in GTBakedModel");
     }
 
 

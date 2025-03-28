@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.dynamic;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.client.baked.AntimatterBakedModel;
+import org.gtreimagined.gtlib.client.baked.GTBakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class DynamicBakedModel extends AntimatterBakedModel<DynamicBakedModel> {
+public class DynamicBakedModel extends GTBakedModel<DynamicBakedModel> {
 
     //protected IBakedModel bakedDefault;
     protected Int2ObjectOpenHashMap<BakedModel[]> bakedConfigs;

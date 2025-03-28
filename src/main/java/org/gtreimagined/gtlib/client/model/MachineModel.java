@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.client.model;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import org.gtreimagined.gtlib.client.IAntimatterModel;
+import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.baked.MachineBakedModel;
 import org.gtreimagined.gtlib.machine.MachineState;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class MachineModel implements IAntimatterModel<MachineModel>{
+public class MachineModel implements IGTModel<MachineModel> {
 
     protected final Map<MachineState, UnbakedModel[]> models;
     protected final ResourceLocation particle;

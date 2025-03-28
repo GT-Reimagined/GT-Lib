@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -100,7 +100,7 @@ public class CoverOutput extends BaseCover {
 
     @Override
     public InteractionResult onInteract(Player player, InteractionHand hand, Direction side, @org.jetbrains.annotations.Nullable AntimatterToolType type) {
-        if (type != null && type.getTag() == AntimatterDefaultTools.SCREWDRIVER.getTag()){
+        if (type != null && type.getTag() == GTTools.SCREWDRIVER.getTag()){
             allowInput = !allowInput;
             String suffix = allowInput ? "allow" : "no";
             player.sendMessage(Utils.translatable("gtlib.tooltip.cover.output." + suffix + "_input"), player.getUUID());

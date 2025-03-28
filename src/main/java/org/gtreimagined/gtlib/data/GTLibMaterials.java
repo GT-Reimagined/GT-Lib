@@ -8,7 +8,7 @@ import org.gtreimagined.gtlib.material.TextureSet;
 import static org.gtreimagined.gtlib.material.Element.*;
 import static org.gtreimagined.gtlib.material.TextureSet.*;
 
-public class AntimatterMaterials {
+public class GTLibMaterials {
     //Vanilla Stone Materials
     public static Material Stone = AntimatterAPI.register(Material.class, new Material(Ref.ID, "stone", 0xcdcdcd, NONE));
     public static Material Granite = AntimatterAPI.register(Material.class, new Material(Ref.ID, "granite", 0xa07882, NONE));

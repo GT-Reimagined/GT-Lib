@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.client.model;
 
 import com.mojang.datafixers.util.Pair;
-import org.gtreimagined.gtlib.client.IAntimatterModel;
+import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.baked.ProxyBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
-public class ProxyModel implements IAntimatterModel<ProxyModel> {
+public class ProxyModel implements IGTModel<ProxyModel> {
 
     public ProxyModel() {
         super();

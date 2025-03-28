@@ -12,7 +12,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.vein.WorldGenVeinLayer;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.ORE;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE;
 import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.JEI_OFFSET_X;
 import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.JEI_OFFSET_Y;
 
@@ -75,7 +75,7 @@ public class VeinCategory implements IRecipeCategory<WorldGenVeinLayer> {
             int finalI = i;
             builder.addSlot(RecipeIngredientRole.OUTPUT, 1 + (i * 18), 1)
                     .addIngredients(VanillaTypes.ITEM_STACK, AntimatterAPI.all(StoneType.class).stream()
-                            .filter(s -> s.doesGenerateOre() && s != AntimatterStoneTypes.BEDROCK)
+                            .filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK)
                             .map(s -> ORE.get().get(recipe.getMaterial(finalI), s).asBlock())
                             .map(ItemStack::new).toList());
         }

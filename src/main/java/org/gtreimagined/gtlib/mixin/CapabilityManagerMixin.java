@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
-import org.gtreimagined.gtlib.capability.AntimatterCaps;
+import org.gtreimagined.gtlib.capability.GTLibCaps;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import org.spongepowered.asm.mixin.Debug;
@@ -22,7 +22,7 @@ public class CapabilityManagerMixin {
     private void injectCaps(String realName, boolean registering, CallbackInfoReturnable<Capability<?>> info){
         try {
             Class<?> clazz = Class.forName(realName.replace("/", "."));
-            AntimatterCaps.CAP_MAP.putIfAbsent(clazz, providers.get(realName));
+            GTLibCaps.CAP_MAP.putIfAbsent(clazz, providers.get(realName));
         } catch (ClassNotFoundException e){
             e.printStackTrace();
         }

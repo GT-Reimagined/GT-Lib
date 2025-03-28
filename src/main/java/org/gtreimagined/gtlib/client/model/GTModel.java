@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.client.model;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import org.gtreimagined.gtlib.client.IAntimatterModel;
+import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.client.SimpleModelState;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -21,16 +21,16 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
-public class AntimatterModel<T extends AntimatterModel<T>> implements IAntimatterModel<T> {
+public class GTModel<T extends GTModel<T>> implements IGTModel<T> {
 
     protected UnbakedModel model;
     protected int[] rotations = new int[0];
 
-    public AntimatterModel() {
+    public GTModel() {
 
     }
 
-    public AntimatterModel(UnbakedModel model, int... rotations) {
+    public GTModel(UnbakedModel model, int... rotations) {
         this.model = model;
         this.rotations = rotations;
     }

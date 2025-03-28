@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.tool.armor;
 
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -45,11 +45,11 @@ public class MatArmorMaterial implements ArmorMaterial {
         if (material == null) {
             return Ingredient.EMPTY;
         }
-        if (material.has(AntimatterMaterialTypes.GEM)) {
+        if (material.has(GTMaterialTypes.GEM)) {
             return Ingredient.of(TagUtils.getForgelikeItemTag("gems/".concat(material.getId())));
-        } else if (material.has(AntimatterMaterialTypes.INGOT)) {
+        } else if (material.has(GTMaterialTypes.INGOT)) {
             return Ingredient.of(TagUtils.getForgelikeItemTag("ingots/".concat(material.getId())));
-        } else if (material.has(AntimatterMaterialTypes.DUST)) {
+        } else if (material.has(GTMaterialTypes.DUST)) {
             return Ingredient.of(TagUtils.getForgelikeItemTag("dusts/".concat(material.getId())));
         }
         return Ingredient.EMPTY;

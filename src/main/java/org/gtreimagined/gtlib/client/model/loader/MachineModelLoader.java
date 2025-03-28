@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.client.model.AntimatterGroupedModel;
+import org.gtreimagined.gtlib.client.model.GTGroupedModel;
 import org.gtreimagined.gtlib.client.model.MachineModel;
 import org.gtreimagined.gtlib.machine.MachineState;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MachineModelLoader extends AntimatterModelLoader<MachineModel> {
+public class MachineModelLoader extends GTModelLoader<MachineModel> {
 
     public MachineModelLoader(ResourceLocation loc) {
         super(loc);
@@ -47,9 +47,9 @@ public class MachineModelLoader extends AntimatterModelLoader<MachineModel> {
 
         @NotNull
         @Override
-        public AntimatterGroupedModel read(JsonDeserializationContext context, JsonObject json) {
-            AntimatterGroupedModel model = super.read(context, json);
-            return new AntimatterGroupedModel.MachineSideModel(model);
+        public GTGroupedModel read(JsonDeserializationContext context, JsonObject json) {
+            GTGroupedModel model = super.read(context, json);
+            return new GTGroupedModel.MachineSideModel(model);
         }
     }
 
@@ -60,9 +60,9 @@ public class MachineModelLoader extends AntimatterModelLoader<MachineModel> {
 
         @NotNull
         @Override
-        public AntimatterGroupedModel read(JsonDeserializationContext context, JsonObject json) {
-            AntimatterGroupedModel model = super.read(context, json);
-            return new AntimatterGroupedModel.CoverModel(model);
+        public GTGroupedModel read(JsonDeserializationContext context, JsonObject json) {
+            GTGroupedModel model = super.read(context, json);
+            return new GTGroupedModel.CoverModel(model);
         }
     }
     

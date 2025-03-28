@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockBasic;
-import org.gtreimagined.gtlib.client.AntimatterModelManager;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
 import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
@@ -106,7 +106,7 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
     }
 
     public void processBlocks(String domain) {
-        AntimatterAPI.all(Block.class, domain).forEach(b -> AntimatterModelManager.onBlockModelBuild(b, this));
+        AntimatterAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onBlockModelBuild(b, this));
         AntimatterAPI.all(AntimatterFluid.class, domain).forEach(f -> state(f.getFluidBlock(), getBuilder(f.getFluidBlock()).texture("particle", f.getAttributes().getStillTexture())));
     }
 

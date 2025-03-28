@@ -10,16 +10,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.block.AntimatterItemBlock;
+import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.client.AntimatterModelManager;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.gui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -101,11 +101,11 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
     protected BlockEntityBase.BlockEntitySupplier<BlockEntityMachine<?>, T> tileFunc = BlockEntityMachine::new;
     protected BiFunction<Machine<T>, Tier, BlockMachine> blockFunc = BlockMachine::new;
     @Getter
-    protected Function<BlockMachine, AntimatterItemBlock> itemBlockFunction = AntimatterItemBlock::new;
+    protected Function<BlockMachine, GTItemBlock> itemBlockFunction = GTItemBlock::new;
 
     protected Supplier<Class<? extends BlockMachine>> itemClassSupplier = () -> BlockMachine.class;
     @Getter
-    protected TagKey<Block> toolTag = AntimatterDefaultTools.WRENCH.getToolType();
+    protected TagKey<Block> toolTag = GTTools.WRENCH.getToolType();
     @Getter
     protected List<ITooltipInfo> tooltipFunctions = new ArrayList<>();
     @Getter
@@ -142,7 +142,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
     @Getter
     protected IMachineColorHandlerItem itemColorHandler = (stack, block, i) -> -1;
     @Getter
-    protected ResourceLocation modelLoader = AntimatterModelManager.LOADER_MACHINE;
+    protected ResourceLocation modelLoader = GTLibModelManager.LOADER_MACHINE;
 
     protected boolean tierSpecificLang = false;
 
@@ -499,7 +499,7 @@ public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegist
         return (T) this;
     }
 
-    public T setItemBlock(Function<BlockMachine, AntimatterItemBlock> function){
+    public T setItemBlock(Function<BlockMachine, GTItemBlock> function){
         itemBlockFunction = function;
         return (T) this;
     }

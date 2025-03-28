@@ -12,8 +12,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.WRENCH;
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.WRENCH_ALT;
+import static org.gtreimagined.gtlib.data.GTTools.WRENCH;
+import static org.gtreimagined.gtlib.data.GTTools.WRENCH_ALT;
 
 public class BehaviourWrenchSwitching implements IItemRightClick<IBasicAntimatterTool> {
 

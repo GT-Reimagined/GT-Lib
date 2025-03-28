@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.client.model;
 
-import org.gtreimagined.gtlib.client.IAntimatterModel;
+import org.gtreimagined.gtlib.client.IGTModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -12,7 +12,7 @@ import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.function.Function;
 
-public interface ISimpleModel<T extends ISimpleModel<T>> extends IAntimatterModel<T> {
+public interface ISimpleModel<T extends ISimpleModel<T>> extends IGTModel<T> {
     @Override
     default BakedModel bakeModel(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation)
     {

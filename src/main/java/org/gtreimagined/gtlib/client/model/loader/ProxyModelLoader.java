@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.client.model.ProxyModel;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class ProxyModelLoader extends AntimatterModelLoader<ProxyModel> {
+public class ProxyModelLoader extends GTModelLoader<ProxyModel> {
     public ProxyModelLoader(ResourceLocation location) {
         super(location);
     }

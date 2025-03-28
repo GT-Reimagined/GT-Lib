@@ -13,7 +13,7 @@ import org.gtreimagined.gtlib.block.BlockStoneWall;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.cover.CoverFactory;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
 import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
@@ -188,7 +188,7 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
             AntimatterAPI.all(Material.class).forEach(m -> add("material.".concat(m.getId()), getLocalizedType(m)));
             AntimatterAPI.all(BlockOre.class, o -> {
                 String nativeSuffix = o.getMaterial().getElement() != null ? "Native " : "";
-                if (o.getOreType() == AntimatterMaterialTypes.ORE)
+                if (o.getOreType() == GTMaterialTypes.ORE)
                     add(o, String.join("", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
                 else
                     add(o, String.join("", "Small ", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
@@ -257,20 +257,20 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
                     AntimatterAPI.all(StoneType.class, s -> {
                         add(Ref.ID + ".rei.group." + t.getId() + "." + s.getId(), getLocalizedType(s) + " " + getLocalizedType(t) + "s");
                     });
-                    if (t != AntimatterMaterialTypes.BEARING_ROCK){
+                    if (t != GTMaterialTypes.BEARING_ROCK){
                         return;
                     }
                 }
                 String[] split = getLocalizedMaterialType(t);
-                if (t == AntimatterMaterialTypes.CRUSHED)
+                if (t == GTMaterialTypes.CRUSHED)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Crushed Ores"));
-                else if (t == AntimatterMaterialTypes.CRUSHED_PURIFIED)
+                else if (t == GTMaterialTypes.CRUSHED_PURIFIED)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Purified Ores"));
-                else if (t == AntimatterMaterialTypes.CRUSHED_REFINED)
+                else if (t == GTMaterialTypes.CRUSHED_REFINED)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Refined Ores"));
-                else if (t == AntimatterMaterialTypes.RAW_ORE_BLOCK)
+                else if (t == GTMaterialTypes.RAW_ORE_BLOCK)
                     add(Ref.ID + ".rei.group." + t.getId(), "Raw Ore Blocks");
-                else if (t == AntimatterMaterialTypes.ITEM_CASING)
+                else if (t == GTMaterialTypes.ITEM_CASING)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Item Casings"));
                 else if (split.length > 1) {
                     if (t.isSplitName())

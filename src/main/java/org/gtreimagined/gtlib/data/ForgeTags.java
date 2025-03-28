@@ -31,6 +31,6 @@ public class ForgeTags {
     }
 
     public static void init(){
-        AntimatterTags.init();
+        GTLibTags.init();
     }
 }

@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
 import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.BiPredicate;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.ORE_SMALL;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE_SMALL;
 
 public class FeatureSmallOres extends AntimatterFeature<NoneFeatureConfiguration> {
     public FeatureSmallOres() {
@@ -105,6 +105,6 @@ public class FeatureSmallOres extends AntimatterFeature<NoneFeatureConfiguration
             }
             if (failed) return false;
         }
-        return WorldGenHelper.setOre(level, pos, smallOre.material, AntimatterMaterialTypes.ORE_SMALL);
+        return WorldGenHelper.setOre(level, pos, smallOre.material, GTMaterialTypes.ORE_SMALL);
     }
 }

@@ -4,7 +4,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.client.RenderHelper;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -64,7 +64,7 @@ public class CoverPlate extends CoverMaterial {
 
     @Override
     public ItemStack getDroppedStack() {
-        return AntimatterMaterialTypes.PLATE.get(material, 1);
+        return GTMaterialTypes.PLATE.get(material, 1);
     }
 
     /*
@@ -75,7 +75,7 @@ public class CoverPlate extends CoverMaterial {
 
     @Override
     public void setTextures(BiConsumer<String, Texture> texer) {
-        Texture[] tex = material.getSet().getTextures(AntimatterMaterialTypes.BLOCK);
+        Texture[] tex = material.getSet().getTextures(GTMaterialTypes.BLOCK);
         texer.accept("overlay", tex[0]);
     }
 
@@ -87,7 +87,7 @@ public class CoverPlate extends CoverMaterial {
 
     @Override
     public Texture[] getTextures() {
-        return new Texture[]{material.getSet().getTextures(AntimatterMaterialTypes.BLOCK)[0]};
+        return new Texture[]{material.getSet().getTextures(GTMaterialTypes.BLOCK)[0]};
     }
 
     @Override

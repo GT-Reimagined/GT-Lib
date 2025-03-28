@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
@@ -294,7 +294,7 @@ public class FeatureVanillaOres extends AntimatterFeature<NoneFeatureConfigurati
                                     MaterialType<?> type) {
 
         StoneType stone = WorldGenHelper.STONE_MAP.get(existing);
-        if (stone == null || !stone.doesGenerateOre() || stone == AntimatterStoneTypes.BEDROCK)
+        if (stone == null || !stone.doesGenerateOre() || stone == VanillaStoneTypes.BEDROCK)
             return null;
         BlockState oreState = type.get() instanceof MaterialTypeBlock.IOreGetter getter ? getter.get(material, stone).asState()
                 : type.get() instanceof MaterialTypeBlock.IBlockGetter getter ? getter.get(material).asState() : null;

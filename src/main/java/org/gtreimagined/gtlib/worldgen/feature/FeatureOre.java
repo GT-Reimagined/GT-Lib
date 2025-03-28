@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.worldgen.feature;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
@@ -56,7 +56,7 @@ public class FeatureOre extends AntimatterFeature<NoneFeatureConfiguration> {
         List<Triple<BlockPos, Material, Boolean>> ores = ORES.remove(world.getChunk(pos).getPos());
         if (ores == null) return false;
         for (Triple<BlockPos, Material, Boolean> o : ores) {
-            WorldGenHelper.setOre(world, o.getLeft(), world.getBlockState(o.getLeft()), o.getMiddle(), o.getRight() ? AntimatterMaterialTypes.ORE : AntimatterMaterialTypes.ORE_SMALL);
+            WorldGenHelper.setOre(world, o.getLeft(), world.getBlockState(o.getLeft()), o.getMiddle(), o.getRight() ? GTMaterialTypes.ORE : GTMaterialTypes.ORE_SMALL);
         }
         return true;
     }

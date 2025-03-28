@@ -33,10 +33,10 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.Ref.*;
-import static org.gtreimagined.gtlib.data.AntimatterMaterials.Wood;
+import static org.gtreimagined.gtlib.data.GTLibMaterials.Wood;
 import static org.gtreimagined.gtlib.material.MaterialTags.RUBBERTOOLS;
 
-public class AntimatterMaterialTypes {
+public class GTMaterialTypes {
     //Item Types
     public static MaterialTypeItem<?> DUST = new MaterialTypeItem<>("dust", 2, true, U);
     public static MaterialTypeItem<?> DUST_SMALL = new MaterialTypeItem<>("dust_small", 2, true, Ref.U4);
@@ -243,64 +243,64 @@ public class AntimatterMaterialTypes {
     }
 
     private static void replacements(){
-        NUGGET.replacement(AntimatterMaterials.Iron, () -> Items.IRON_NUGGET);
-        NUGGET.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_NUGGET);
-        INGOT.replacement(AntimatterMaterials.Iron, () -> Items.IRON_INGOT);
-        INGOT.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_INGOT);
-        INGOT.replacement(AntimatterMaterials.Netherite, () -> Items.NETHERITE_INGOT);
-        INGOT.replacement(AntimatterMaterials.Copper, () -> Items.COPPER_INGOT);
-        INGOT.replacement(AntimatterMaterials.NetheriteScrap, () -> Items.NETHERITE_SCRAP);
+        NUGGET.replacement(GTLibMaterials.Iron, () -> Items.IRON_NUGGET);
+        NUGGET.replacement(GTLibMaterials.Gold, () -> Items.GOLD_NUGGET);
+        INGOT.replacement(GTLibMaterials.Iron, () -> Items.IRON_INGOT);
+        INGOT.replacement(GTLibMaterials.Gold, () -> Items.GOLD_INGOT);
+        INGOT.replacement(GTLibMaterials.Netherite, () -> Items.NETHERITE_INGOT);
+        INGOT.replacement(GTLibMaterials.Copper, () -> Items.COPPER_INGOT);
+        INGOT.replacement(GTLibMaterials.NetheriteScrap, () -> Items.NETHERITE_SCRAP);
 
 
-        DUST.replacement(AntimatterMaterials.Redstone, () -> Items.REDSTONE);
-        DUST.replacement(AntimatterMaterials.Glowstone, () -> Items.GLOWSTONE_DUST);
-        DUST.replacement(AntimatterMaterials.Blaze, () -> Items.BLAZE_POWDER);
-        DUST.replacement(AntimatterMaterials.Sugar, () -> Items.SUGAR);
-        RAW_ORE.replacement(AntimatterMaterials.Iron, () -> Items.RAW_IRON);
-        RAW_ORE.replacement(AntimatterMaterials.Copper, () -> Items.RAW_COPPER);
-        RAW_ORE.replacement(AntimatterMaterials.Gold, () -> Items.RAW_GOLD);
-        GEM.replacement(AntimatterMaterials.Flint, () -> Items.FLINT);
-        GEM.replacement(AntimatterMaterials.Diamond, () -> Items.DIAMOND);
-        GEM.replacement(AntimatterMaterials.Emerald, () -> Items.EMERALD);
-        GEM.replacement(AntimatterMaterials.Lapis, () -> Items.LAPIS_LAZULI);
-        GEM.replacement(AntimatterMaterials.Quartz, () -> Items.QUARTZ);
-        GEM.replacement(AntimatterMaterials.Coal, () -> Items.COAL);
-        GEM.replacement(AntimatterMaterials.Charcoal, () -> Items.CHARCOAL);
-        GEM.replacement(AntimatterMaterials.EnderEye, () -> Items.ENDER_EYE);
-        GEM.replacement(AntimatterMaterials.EnderPearl, () -> Items.ENDER_PEARL);
+        DUST.replacement(GTLibMaterials.Redstone, () -> Items.REDSTONE);
+        DUST.replacement(GTLibMaterials.Glowstone, () -> Items.GLOWSTONE_DUST);
+        DUST.replacement(GTLibMaterials.Blaze, () -> Items.BLAZE_POWDER);
+        DUST.replacement(GTLibMaterials.Sugar, () -> Items.SUGAR);
+        RAW_ORE.replacement(GTLibMaterials.Iron, () -> Items.RAW_IRON);
+        RAW_ORE.replacement(GTLibMaterials.Copper, () -> Items.RAW_COPPER);
+        RAW_ORE.replacement(GTLibMaterials.Gold, () -> Items.RAW_GOLD);
+        GEM.replacement(GTLibMaterials.Flint, () -> Items.FLINT);
+        GEM.replacement(GTLibMaterials.Diamond, () -> Items.DIAMOND);
+        GEM.replacement(GTLibMaterials.Emerald, () -> Items.EMERALD);
+        GEM.replacement(GTLibMaterials.Lapis, () -> Items.LAPIS_LAZULI);
+        GEM.replacement(GTLibMaterials.Quartz, () -> Items.QUARTZ);
+        GEM.replacement(GTLibMaterials.Coal, () -> Items.COAL);
+        GEM.replacement(GTLibMaterials.Charcoal, () -> Items.CHARCOAL);
+        GEM.replacement(GTLibMaterials.EnderEye, () -> Items.ENDER_EYE);
+        GEM.replacement(GTLibMaterials.EnderPearl, () -> Items.ENDER_PEARL);
 
-        ROD.replacement(AntimatterMaterials.Blaze, () -> Items.BLAZE_ROD);
-        ROD.replacement(AntimatterMaterials.Bone, () -> Items.BONE);
+        ROD.replacement(GTLibMaterials.Blaze, () -> Items.BLAZE_ROD);
+        ROD.replacement(GTLibMaterials.Bone, () -> Items.BONE);
         ROD.replacement(Wood, () -> Items.STICK);
 
-        BLOCK.replacement(AntimatterMaterials.Coal, () -> Items.COAL_BLOCK);
-        BLOCK.replacement(AntimatterMaterials.Iron, () -> Items.IRON_BLOCK);
-        BLOCK.replacement(AntimatterMaterials.Copper, () -> Items.COPPER_BLOCK);
-        BLOCK.replacement(AntimatterMaterials.Gold, () -> Items.GOLD_BLOCK);
-        BLOCK.replacement(AntimatterMaterials.Diamond, () -> Items.DIAMOND_BLOCK);
-        BLOCK.replacement(AntimatterMaterials.Emerald, () -> Items.EMERALD_BLOCK);
-        BLOCK.replacement(AntimatterMaterials.Lapis, () -> Items.LAPIS_BLOCK);
-        BLOCK.replacement(AntimatterMaterials.Netherite, () -> Items.NETHERITE_BLOCK);
-        RAW_ORE_BLOCK.replacement(AntimatterMaterials.Iron, () -> Items.RAW_IRON_BLOCK);
-        RAW_ORE_BLOCK.replacement(AntimatterMaterials.Copper, () -> Items.RAW_COPPER_BLOCK);
-        RAW_ORE_BLOCK.replacement(AntimatterMaterials.Gold, () -> Items.RAW_GOLD_BLOCK);
-        ORE.replacement(AntimatterMaterials.Coal, AntimatterStoneTypes.STONE, () -> Items.COAL_ORE);
-        ORE.replacement(AntimatterMaterials.Coal, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COAL_ORE);
-        ORE.replacement(AntimatterMaterials.Iron, AntimatterStoneTypes.STONE, () -> Items.IRON_ORE);
-        ORE.replacement(AntimatterMaterials.Iron, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_IRON_ORE);
-        ORE.replacement(AntimatterMaterials.Copper, AntimatterStoneTypes.STONE, () -> Items.COPPER_ORE);
-        ORE.replacement(AntimatterMaterials.Copper, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COPPER_ORE);
-        ORE.replacement(AntimatterMaterials.Gold, AntimatterStoneTypes.STONE, () -> Items.GOLD_ORE);
-        ORE.replacement(AntimatterMaterials.Gold, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_GOLD_ORE);
-        ORE.replacement(AntimatterMaterials.Redstone, AntimatterStoneTypes.STONE, () -> Items.REDSTONE_ORE);
-        ORE.replacement(AntimatterMaterials.Redstone, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_REDSTONE_ORE);
-        ORE.replacement(AntimatterMaterials.Emerald, AntimatterStoneTypes.STONE, () -> Items.EMERALD_ORE);
-        ORE.replacement(AntimatterMaterials.Emerald, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_EMERALD_ORE);
-        ORE.replacement(AntimatterMaterials.Lapis, AntimatterStoneTypes.STONE, () -> Items.LAPIS_ORE);
-        ORE.replacement(AntimatterMaterials.Lapis, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_LAPIS_ORE);
-        ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.STONE, () -> Items.DIAMOND_ORE);
-        ORE.replacement(AntimatterMaterials.Diamond, AntimatterStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_DIAMOND_ORE);
-        ORE.replacement(AntimatterMaterials.Quartz, AntimatterStoneTypes.NETHERRACK, () -> Items.NETHER_QUARTZ_ORE);
+        BLOCK.replacement(GTLibMaterials.Coal, () -> Items.COAL_BLOCK);
+        BLOCK.replacement(GTLibMaterials.Iron, () -> Items.IRON_BLOCK);
+        BLOCK.replacement(GTLibMaterials.Copper, () -> Items.COPPER_BLOCK);
+        BLOCK.replacement(GTLibMaterials.Gold, () -> Items.GOLD_BLOCK);
+        BLOCK.replacement(GTLibMaterials.Diamond, () -> Items.DIAMOND_BLOCK);
+        BLOCK.replacement(GTLibMaterials.Emerald, () -> Items.EMERALD_BLOCK);
+        BLOCK.replacement(GTLibMaterials.Lapis, () -> Items.LAPIS_BLOCK);
+        BLOCK.replacement(GTLibMaterials.Netherite, () -> Items.NETHERITE_BLOCK);
+        RAW_ORE_BLOCK.replacement(GTLibMaterials.Iron, () -> Items.RAW_IRON_BLOCK);
+        RAW_ORE_BLOCK.replacement(GTLibMaterials.Copper, () -> Items.RAW_COPPER_BLOCK);
+        RAW_ORE_BLOCK.replacement(GTLibMaterials.Gold, () -> Items.RAW_GOLD_BLOCK);
+        ORE.replacement(GTLibMaterials.Coal, VanillaStoneTypes.STONE, () -> Items.COAL_ORE);
+        ORE.replacement(GTLibMaterials.Coal, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COAL_ORE);
+        ORE.replacement(GTLibMaterials.Iron, VanillaStoneTypes.STONE, () -> Items.IRON_ORE);
+        ORE.replacement(GTLibMaterials.Iron, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_IRON_ORE);
+        ORE.replacement(GTLibMaterials.Copper, VanillaStoneTypes.STONE, () -> Items.COPPER_ORE);
+        ORE.replacement(GTLibMaterials.Copper, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COPPER_ORE);
+        ORE.replacement(GTLibMaterials.Gold, VanillaStoneTypes.STONE, () -> Items.GOLD_ORE);
+        ORE.replacement(GTLibMaterials.Gold, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_GOLD_ORE);
+        ORE.replacement(GTLibMaterials.Redstone, VanillaStoneTypes.STONE, () -> Items.REDSTONE_ORE);
+        ORE.replacement(GTLibMaterials.Redstone, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_REDSTONE_ORE);
+        ORE.replacement(GTLibMaterials.Emerald, VanillaStoneTypes.STONE, () -> Items.EMERALD_ORE);
+        ORE.replacement(GTLibMaterials.Emerald, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_EMERALD_ORE);
+        ORE.replacement(GTLibMaterials.Lapis, VanillaStoneTypes.STONE, () -> Items.LAPIS_ORE);
+        ORE.replacement(GTLibMaterials.Lapis, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_LAPIS_ORE);
+        ORE.replacement(GTLibMaterials.Diamond, VanillaStoneTypes.STONE, () -> Items.DIAMOND_ORE);
+        ORE.replacement(GTLibMaterials.Diamond, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_DIAMOND_ORE);
+        ORE.replacement(GTLibMaterials.Quartz, VanillaStoneTypes.NETHERRACK, () -> Items.NETHER_QUARTZ_ORE);
     }
 
     private static void dependents() {

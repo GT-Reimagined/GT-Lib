@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
@@ -42,8 +42,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.BEARING_ROCK;
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.ROCK;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.ROCK;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedBlock, ISharedAntimatterObject, IColorHandler, IMaterialObject {
@@ -107,7 +107,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        return AntimatterConfig.DETAILED_ROCKS.get() ? new ItemStack(this) : !stoneType.getMaterial().has(ROCK) ? new ItemStack(ROCK.get().get(AntimatterMaterials.Stone).asItem()) : new ItemStack(ROCK.get().get(stoneType.getMaterial()).asItem());
+        return AntimatterConfig.DETAILED_ROCKS.get() ? new ItemStack(this) : !stoneType.getMaterial().has(ROCK) ? new ItemStack(ROCK.get().get(GTLibMaterials.Stone).asItem()) : new ItemStack(ROCK.get().get(stoneType.getMaterial()).asItem());
     }
 
     @Override

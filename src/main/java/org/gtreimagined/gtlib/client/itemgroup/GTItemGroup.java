@@ -5,13 +5,13 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
-public class AntimatterItemGroup extends CreativeModeTab {
+public class GTItemGroup extends CreativeModeTab {
 
     protected String domain, id;
     protected Supplier<ItemStack> iconSupplier;
 
 
-    public AntimatterItemGroup(String domain, String id, Supplier<ItemStack> iconSupplier) {
+    public GTItemGroup(String domain, String id, Supplier<ItemStack> iconSupplier) {
         super(domain + "." + id);
         this.domain = domain;
         this.id = id;

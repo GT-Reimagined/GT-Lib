@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.AntimatterTextureStitcher;
+import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
@@ -72,7 +72,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
 
     public ItemFluidCell(String domain, Material material, int capacity) {
         super(domain, material.getId() + "_cell");
-        AntimatterTextureStitcher.addStitcher(t -> {
+        GTTextureStitcher.addStitcher(t -> {
             t.accept(new ResourceLocation(domain, "item/other/" + getId() + "_cover"));
             t.accept(new ResourceLocation(domain, "item/other/" + getId() + "_fluid"));
         });

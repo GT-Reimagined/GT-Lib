@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterTags;
+import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
 import org.gtreimagined.gtlib.fluid.AntimatterMaterialFluid;
@@ -34,7 +34,7 @@ public class AntimatterFluidTagProvider extends AntimatterTagProvider<Fluid> imp
                         .add(f.getFluid())
                         .replace(replace);
                 if (m.has(MaterialTags.ACID)){
-                    tag(AntimatterTags.ACID).add(f.getFluid());
+                    tag(GTLibTags.ACID).add(f.getFluid());
                 }
             }
         });

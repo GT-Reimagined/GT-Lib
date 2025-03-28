@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.SAW;
+import static org.gtreimagined.gtlib.data.GTTools.SAW;
 
 @Mixin(IceBlock.class)
 public class IceBlockMixin extends HalfTransparentBlock {

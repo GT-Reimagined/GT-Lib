@@ -17,8 +17,8 @@ import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.jeirei.AntimatterJEIREIPlugin;
 import org.gtreimagined.gtlib.integration.rei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.rei.category.RecipeMapDisplay;
@@ -58,12 +58,12 @@ public class AntimatterREIClientPlugin implements REIClientPlugin {
         AntimatterAPI.all(MaterialType.class).stream().filter(t -> t instanceof MaterialTypeItem<?> || t instanceof MaterialTypeBlock<?>).forEach(t -> {
             if (t.get() instanceof MaterialTypeBlock.IOreGetter getter){
                 AntimatterAPI.all(StoneType.class, s -> {
-                    if (s != AntimatterStoneTypes.STONE && !AntimatterConfig.SHOW_ALL_ORES.get() && t != AntimatterMaterialTypes.BEARING_ROCK) return;
-                    if (t == AntimatterMaterialTypes.BEARING_ROCK && !AntimatterConfig.SHOW_ROCKS.get()) return;
+                    if (s != VanillaStoneTypes.STONE && !AntimatterConfig.SHOW_ALL_ORES.get() && t != GTMaterialTypes.BEARING_ROCK) return;
+                    if (t == GTMaterialTypes.BEARING_ROCK && !AntimatterConfig.SHOW_ROCKS.get()) return;
                     List<EntryStack<ItemStack>> entries = t.all().stream().map(m -> EntryStack.of(VanillaEntryTypes.ITEM, getter.get((Material) m, s).asStack())).toList();
                     registry.group(new ResourceLocation(Ref.SHARED_ID, t.getId() + "_" + s.getId()), Utils.translatable(Ref.ID + ".rei.group." + t.getId() + "." + s.getId()), entries);
                 });
-                if (t != AntimatterMaterialTypes.BEARING_ROCK){
+                if (t != GTMaterialTypes.BEARING_ROCK){
                     return;
                 }
             }

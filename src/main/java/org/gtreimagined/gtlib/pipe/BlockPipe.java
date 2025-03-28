@@ -9,16 +9,16 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.AntimatterRemapping;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.block.AntimatterItemBlock;
+import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
-import org.gtreimagined.gtlib.client.AntimatterModelManager;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.CoverReplacements;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.cover.IHaveCover;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
+import org.gtreimagined.gtlib.data.GTTools;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
@@ -104,7 +104,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     public static final BooleanProperty TICKING = BooleanProperty.create("ticking");
 
     public BlockPipe(String prefix, T type, PipeSize size, int modelId) {
-        this(prefix, type, size, modelId, type.getMaterial() == AntimatterMaterials.Wood ? Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of(Data.WRENCH_MATERIAL).strength(1.0f, 3.0f).requiresCorrectToolForDrops());
+        this(prefix, type, size, modelId, type.getMaterial() == GTLibMaterials.Wood ? Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of(Data.WRENCH_MATERIAL).strength(1.0f, 3.0f).requiresCorrectToolForDrops());
     }
 
     public BlockPipe(String prefix, T type, PipeSize size, int modelId, Properties properties) {
@@ -220,13 +220,13 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     @Override
-    public AntimatterItemBlock getItemBlock() {
+    public GTItemBlock getItemBlock() {
         return new PipeItemBlock(this);
     }
 
     public AntimatterToolType getToolType() {
         //if (type.getMaterial() == Data.Wood) return Data.AXE;
-        return AntimatterDefaultTools.WRENCH;
+        return GTTools.WRENCH;
     }
 
     @Override // Used to set connection for sides where neighbor has pre-set connection
@@ -334,7 +334,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
                 }
             }
             AntimatterToolType type = Utils.getToolType(player);
-            if (type == AntimatterDefaultTools.CROWBAR) {
+            if (type == GTTools.CROWBAR) {
                 if (!player.isCrouching()) {
                     if (tile.getCoverHandler().map(h -> h.removeCover(player, Utils.getInteractSide(hit), false)).orElse(false)) {
                         Utils.damageStack(stack, hand, player);
@@ -354,7 +354,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
             if (type == null) {
                 return InteractionResult.PASS;
             }
-            if (type == AntimatterDefaultTools.SCREWDRIVER) {
+            if (type == GTTools.SCREWDRIVER) {
                 /*if (player.isCrouching()) {
                     AntimatterPlatformUtils.INSTANCE.openGui((ServerPlayer) player, tile, extra -> extra.writeBlockPos(pos));
                     Utils.damageStack(stack, hand, player);
@@ -384,7 +384,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (size.ordinal() > 5) return Shapes.block();
         if (context instanceof EntityCollisionContext cont && cont.getEntity() instanceof Player player) {
-            if (Utils.isPlayerHolding(player, InteractionHand.MAIN_HAND, getToolType(), AntimatterDefaultTools.CROWBAR, AntimatterDefaultTools.SCREWDRIVER)) {
+            if (Utils.isPlayerHolding(player, InteractionHand.MAIN_HAND, getToolType(), GTTools.CROWBAR, GTTools.SCREWDRIVER)) {
                 return Shapes.block();
             }
             if (!player.getMainHandItem().isEmpty() && (player.getMainHandItem().getItem() instanceof IHaveCover || CoverReplacements.hasReplacement(player.getMainHandItem().getItem()))) {
@@ -593,7 +593,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         //All Shapes (6 Connections)
         builder.config(getPipeID(63, 0), getModelLoc("all", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
 
-        return builder.loader(AntimatterModelManager.LOADER_PIPE);
+        return builder.loader(GTLibModelManager.LOADER_PIPE);
     }
 
     public AntimatterBlockModelBuilder getPipeConfigForFullBlock(AntimatterBlockModelBuilder builder) {
@@ -685,7 +685,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         //All Shapes (6 Connections)
         builder.config(getPipeID(63, 0), SIMPLE, c -> c.tex(of("all", getFace())));
 
-        return builder.loader(AntimatterModelManager.LOADER_PIPE);
+        return builder.loader(GTLibModelManager.LOADER_PIPE);
     }
 
     @Override

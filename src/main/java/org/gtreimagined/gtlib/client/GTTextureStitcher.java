@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class AntimatterTextureStitcher {
+public class GTTextureStitcher {
 
     public interface ITextureSticher {
         void stitch(Consumer<ResourceLocation> consumer);

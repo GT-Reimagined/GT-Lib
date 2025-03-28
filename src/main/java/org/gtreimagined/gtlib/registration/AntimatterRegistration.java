@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.MaterialDataInit;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.block.AntimatterItemBlock;
+import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.event.MaterialEvent;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
 import org.gtreimagined.gtlib.integration.kubejs.AntimatterKubeJS;
@@ -87,7 +87,7 @@ public final class AntimatterRegistration {
                 if (b.getRegistryName() == null)
                     b.setRegistryName(d, i);
                 if (!(b instanceof IItemBlockProvider pb) || pb.generateItemBlock()) {
-                    AntimatterAPI.register(Item.class, i, d, b instanceof IItemBlockProvider pb ? pb.getItemBlock() : new AntimatterItemBlock(b));
+                    AntimatterAPI.register(Item.class, i, d, b instanceof IItemBlockProvider pb ? pb.getItemBlock() : new GTItemBlock(b));
                 }
                 ((IForgeRegistry) e.getRegistry()).register(b);
             });

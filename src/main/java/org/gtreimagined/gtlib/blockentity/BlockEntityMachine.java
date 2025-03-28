@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.AntimatterProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
-import org.gtreimagined.gtlib.capability.AntimatterCaps;
+import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.CoverHandler;
 import org.gtreimagined.gtlib.capability.EnergyHandler;
 import org.gtreimagined.gtlib.capability.Holder;
@@ -655,7 +655,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public <U> LazyOptional<U> getCapability(@NotNull Capability<U> cap, @Nullable Direction side) {
         int index = side == null ? 6 : side.get3DDataValue();
         if (side == getFacing() && !allowsFrontIO()) return LazyOptional.empty();
-        if (blocksCapability(AntimatterCaps.CAP_MAP.inverse().get(cap), side)) return LazyOptional.empty();
+        if (blocksCapability(GTLibCaps.CAP_MAP.inverse().get(cap), side)) return LazyOptional.empty();
         return getCap(cap, side);
     }
 

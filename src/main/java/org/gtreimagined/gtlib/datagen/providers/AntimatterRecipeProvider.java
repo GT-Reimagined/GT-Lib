@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import org.gtreimagined.gtlib.Antimatter;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterShapedRecipeBuilder;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterShapelessRecipeBuilder;
 import org.gtreimagined.gtlib.datagen.builder.SequencedAssemblyBuilder;
@@ -110,7 +110,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
                 }
             }
             if (criteria.isEmpty()){
-                recipeBuilder.addCriterion("has_wrench", hasSafeItem(AntimatterDefaultTools.WRENCH.getTag()));
+                recipeBuilder.addCriterion("has_wrench", hasSafeItem(GTTools.WRENCH.getTag()));
             }
         }
         return recipeBuilder;
@@ -146,7 +146,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
             }
         }
         if (criteria.isEmpty()){
-            builder.unlockedBy("has_wrench", hasSafeItem(AntimatterDefaultTools.WRENCH.getTag()));
+            builder.unlockedBy("has_wrench", hasSafeItem(GTTools.WRENCH.getTag()));
         }
         if (recipeID.isEmpty())builder.save(consumer);
         else {

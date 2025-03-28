@@ -2,8 +2,8 @@ package org.gtreimagined.gtlib.worldgen.feature;
 
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.BlockOreStone;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -30,8 +30,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import java.util.List;
 import java.util.Random;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.BEARING_ROCK;
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.ROCK;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.ROCK;
 
 public class FeatureStoneLayer extends AntimatterFeature<NoneFeatureConfiguration> {
 
@@ -100,9 +100,9 @@ public class FeatureStoneLayer extends AntimatterFeature<NoneFeatureConfiguratio
                     if (!isAir) {
                         if (layers[3].getStoneState().getBlock() == Blocks.STONE || layers[3].getStoneState().getBlock() == Blocks.DEEPSLATE){
                             if (existing.getBlock() == Blocks.STONE){
-                                topStoneType = AntimatterStoneTypes.STONE;
+                                topStoneType = VanillaStoneTypes.STONE;
                             } else if (existing.getBlock() == Blocks.DEEPSLATE){
-                                topStoneType = AntimatterStoneTypes.DEEPSLATE;
+                                topStoneType = VanillaStoneTypes.DEEPSLATE;
                             }
                             setStone = true;
                         } else if (existing != layers[3].getStoneState()) {
@@ -145,7 +145,7 @@ public class FeatureStoneLayer extends AntimatterFeature<NoneFeatureConfiguratio
                         }
                     }
 
-                    if (!placedRock && lastMaterial != null && lastMaterial.has(AntimatterMaterialTypes.ORE) && lastMaterial.has(BEARING_ROCK)) {
+                    if (!placedRock && lastMaterial != null && lastMaterial.has(GTMaterialTypes.ORE) && lastMaterial.has(BEARING_ROCK)) {
                         BlockState below = world.getBlockState(offset.offset(0, -1, 0));
                         int y = Math.min(world.getHeight(Heightmap.Types.OCEAN_FLOOR, offset.getX(), offset.getZ()), world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, offset.getX(), offset.getZ()));
                         if (!below.isAir() && below != WorldGenHelper.WATER_STATE && AntimatterConfig.STONE_LAYER_ORE_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()) {

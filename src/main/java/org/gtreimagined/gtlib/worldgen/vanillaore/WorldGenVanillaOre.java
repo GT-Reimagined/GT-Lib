@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -66,7 +66,7 @@ public class WorldGenVanillaOre extends WorldGenBase<WorldGenVanillaOre> {
     public JsonObject toJson(){
         JsonObject json = new JsonObject();
         json.addProperty("primary", primary.getId());
-        if (materialType != AntimatterMaterialTypes.ORE) json.addProperty("materialType", materialType.getId());
+        if (materialType != GTMaterialTypes.ORE) json.addProperty("materialType", materialType.getId());
         if (secondary != Material.NULL) {
             json.addProperty("secondary", secondary.getId());
             json.addProperty("secondaryChance", secondaryChance);
@@ -118,7 +118,7 @@ public class WorldGenVanillaOre extends WorldGenBase<WorldGenVanillaOre> {
                 }
             });
         }
-        MaterialType<?> materialType = json.has("materialType") ? AntimatterAPI.get(MaterialType.class, json.get("materialType").getAsString()) : AntimatterMaterialTypes.ORE;
+        MaterialType<?> materialType = json.has("materialType") ? AntimatterAPI.get(MaterialType.class, json.get("materialType").getAsString()) : GTMaterialTypes.ORE;
         return new WorldGenVanillaOre(
                 id,
                 Material.get(json.get("primary").getAsString()),

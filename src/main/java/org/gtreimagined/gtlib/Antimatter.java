@@ -2,14 +2,14 @@ package org.gtreimagined.gtlib;
 
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
-import org.gtreimagined.gtlib.client.AntimatterModelManager;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.ClientData;
 import org.gtreimagined.gtlib.common.event.ARRPEvents;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.GTTools;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.data.GTLibBlocks;
 import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
 import org.gtreimagined.gtlib.datagen.AntimatterLoot;
@@ -168,10 +168,10 @@ public class Antimatter extends AntimatterMod {
             SlotType.init();
             RecipeBuilders.init();
             MachineState.init();
-            AntimatterMaterials.init();
-            AntimatterMaterialTypes.init();
-            AntimatterDefaultTools.init(side);
-            AntimatterStoneTypes.init();
+            GTLibMaterials.init();
+            GTMaterialTypes.init();
+            GTTools.init(side);
+            VanillaStoneTypes.init();
             GTLibBlocks.init();
             Data.init(side);
             ICover.init();
@@ -185,7 +185,7 @@ public class Antimatter extends AntimatterMod {
             PropertyIngredient.Serializer.init();
         } else if (event == RegistrationEvent.WORLDGEN_INIT) {
             AntimatterWorldGenerator.init();
-            AntimatterDefaultTools.postInit();
+            GTTools.postInit();
         } else if (event == RegistrationEvent.DATA_READY) {
             CauldronInteractions.init();
             if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) || AntimatterAPI.isModLoaded(Ref.MOD_REI)){
@@ -194,15 +194,15 @@ public class Antimatter extends AntimatterMod {
             AntimatterJEIREIPlugin.addItemsToHide(l -> {
                 if (!AntimatterConfig.SHOW_ALL_ORES.get()){
                     AntimatterAPI.all(StoneType.class, s -> {
-                        if (s != AntimatterStoneTypes.STONE && s != AntimatterStoneTypes.SAND && s.doesGenerateOre()){
-                            AntimatterMaterialTypes.ORE.all().forEach(m -> {
-                                Block ore = AntimatterMaterialTypes.ORE.get().get(m, s).asBlock();
+                        if (s != VanillaStoneTypes.STONE && s != VanillaStoneTypes.SAND && s.doesGenerateOre()){
+                            GTMaterialTypes.ORE.all().forEach(m -> {
+                                Block ore = GTMaterialTypes.ORE.get().get(m, s).asBlock();
                                 if (ore instanceof BlockOre){
                                     l.add(ore);
                                 }
                             });
-                            AntimatterMaterialTypes.ORE_SMALL.all().forEach(m -> {
-                                Block ore = AntimatterMaterialTypes.ORE_SMALL.get().get(m, s).asBlock();
+                            GTMaterialTypes.ORE_SMALL.all().forEach(m -> {
+                                Block ore = GTMaterialTypes.ORE_SMALL.get().get(m, s).asBlock();
                                 if (ore instanceof BlockOre){
                                     l.add(ore);
                                 }
@@ -212,10 +212,10 @@ public class Antimatter extends AntimatterMod {
 
                 }
                 if (!AntimatterConfig.SHOW_ROCKS.get()){
-                    AntimatterMaterialTypes.BEARING_ROCK.all().forEach(m -> {
+                    GTMaterialTypes.BEARING_ROCK.all().forEach(m -> {
                         AntimatterAPI.all(StoneType.class, s -> {
                             if (s.doesGenerateOre()) {
-                                l.add(AntimatterMaterialTypes.BEARING_ROCK.get().get(m, s).asBlock());
+                                l.add(GTMaterialTypes.BEARING_ROCK.get().get(m, s).asBlock());
                             }
                         });
                     });
@@ -226,7 +226,7 @@ public class Antimatter extends AntimatterMod {
                     if (stacks.isEmpty()) return;
                     l.addAll(stacks);
                 });
-                AntimatterAPI.all(IAntimatterTool.class).stream().filter(t -> t.getAntimatterToolType() == AntimatterDefaultTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
+                AntimatterAPI.all(IAntimatterTool.class).stream().filter(t -> t.getAntimatterToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
                 AntimatterAPI.all(AntimatterFluid.class).forEach(t -> l.add(t.getFluidBlock()));
                 AntimatterAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
             });
@@ -244,7 +244,7 @@ public class Antimatter extends AntimatterMod {
 
             });
         } else if (event == RegistrationEvent.CLIENT_DATA_INIT){
-            AntimatterModelManager.init();
+            GTLibModelManager.init();
             ClientData.init();
             if (AntimatterConfig.OVERRIDE_BASALT_TEXTURE.get()){
                 try {

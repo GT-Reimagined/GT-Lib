@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.registration;
 
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.block.AntimatterItemBlock;
+import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.Block;
 public interface IItemBlockProvider {
 
     default BlockItem getItemBlock() {
-        return new AntimatterItemBlock((Block) this);
+        return new GTItemBlock((Block) this);
     }
 
     default CreativeModeTab getItemGroup() {

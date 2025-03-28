@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.block;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
@@ -144,9 +144,9 @@ public class BlockFrame extends BlockStorage implements IItemBlockProvider, Simp
     }
 
     @Override
-    public AntimatterItemBlock getItemBlock() {
+    public GTItemBlock getItemBlock() {
 
-        return new AntimatterItemBlock(this) {
+        return new GTItemBlock(this) {
 
             @Override
             @Nullable
@@ -204,7 +204,7 @@ public class BlockFrame extends BlockStorage implements IItemBlockProvider, Simp
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (!(entity instanceof LivingEntity)) return;
-        if (type == AntimatterMaterialTypes.BLOCK) return;
+        if (type == GTMaterialTypes.BLOCK) return;
         entity.setDeltaMovement(Mth.clamp(entity.getDeltaMovement().x, -0.15, 0.15), entity.getDeltaMovement().y, Mth.clamp(entity.getDeltaMovement().z, -0.15, 0.15));
         entity.fallDistance = 0.0F;
         if (entity.isCrouching() && entity instanceof Player) {

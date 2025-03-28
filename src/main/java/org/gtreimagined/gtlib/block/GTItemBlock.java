@@ -9,9 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
-public class AntimatterItemBlock extends BlockItem {
+public class GTItemBlock extends BlockItem {
 
-    public AntimatterItemBlock(Block block) {
+    public GTItemBlock(Block block) {
         super(block, new Properties().tab(block instanceof IItemBlockProvider ? ((IItemBlockProvider) block).getItemGroup() : Ref.TAB_BLOCKS));
     }
 

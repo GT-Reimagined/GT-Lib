@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
-public class AntimatterTags {
+public class GTLibTags {
     public static final TagKey<Fluid> ACID = TagUtils.getFluidTag(new ResourceLocation(Ref.ID, "acid"));
     public static final TagKey<Item> RADIOACTIVE = TagUtils.getItemTag(new ResourceLocation(Ref.ID, "radioactive"));
     public static final TagKey<Item> RADIATION_PROOF = TagUtils.getItemTag(new ResourceLocation(Ref.ID, "radiation_proof"));

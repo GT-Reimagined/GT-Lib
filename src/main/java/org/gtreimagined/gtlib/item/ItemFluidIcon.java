@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.AntimatterTextureStitcher;
+import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
 import org.gtreimagined.gtlib.integration.jeirei.AntimatterJEIREIPlugin;
 import org.gtreimagined.gtlib.util.FluidUtils;
@@ -39,7 +39,7 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
 
     public ItemFluidIcon() {
         super(Ref.ID, "fluid_icon");
-        AntimatterTextureStitcher.addStitcher(t -> {
+        GTTextureStitcher.addStitcher(t -> {
             t.accept(new ResourceLocation(domain, "item/mask/icon_fluid"));
         });
         this.capacity = 1;
@@ -49,9 +49,9 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
     /*@Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (this.allowdedIn(group)) {
-            //AntimatterMaterialTypes.LIQUID.all().forEach(m -> items.add(fill(m.getLiquid())));
-            //AntimatterMaterialTypes.GAS.all().forEach(m -> items.add(fill(m.getGas())));
-            //AntimatterMaterialTypes.PLASMA.all().forEach(m -> items.add(fill(m.getPlasma())));
+            //GTMaterialTypes.LIQUID.all().forEach(m -> items.add(fill(m.getLiquid())));
+            //GTMaterialTypes.GAS.all().forEach(m -> items.add(fill(m.getGas())));
+            //GTMaterialTypes.PLASMA.all().forEach(m -> items.add(fill(m.getPlasma())));
         }
     }*/
 

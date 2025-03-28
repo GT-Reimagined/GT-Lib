@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.pipe;
 
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.pipe.types.ItemPipe;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
@@ -77,7 +77,7 @@ public class BlockItemPipe<T extends ItemPipe<T>> extends BlockPipe<T> {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (context instanceof EntityCollisionContext cont && cont.getEntity() instanceof Player player){
-            if (Utils.getToolType(player) == AntimatterDefaultTools.WRENCH_ALT){
+            if (Utils.getToolType(player) == GTTools.WRENCH_ALT){
                 return Shapes.block();
             }
         }

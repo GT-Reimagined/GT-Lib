@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
@@ -229,25 +229,25 @@ public class Material implements ISharedAntimatterObject {
      * Fluid/Gas/Plasma Getters
      **/
     public Fluid getLiquid() {
-        return AntimatterMaterialTypes.LIQUID.get().get(this, 1).getFluid();
+        return GTMaterialTypes.LIQUID.get().get(this, 1).getFluid();
     }
 
     public Fluid getGas() {
-        return AntimatterMaterialTypes.GAS.get().get(this, 1).getFluid();
+        return GTMaterialTypes.GAS.get().get(this, 1).getFluid();
     }
 
     public FluidStack getLiquid(int mb) {
-        if (!this.has(AntimatterMaterialTypes.LIQUID)){
+        if (!this.has(GTMaterialTypes.LIQUID)){
             throw new RuntimeException("Material: " + this.getId() + " does not have liquid");
         }
-        return AntimatterMaterialTypes.LIQUID.get().get(this, mb);
+        return GTMaterialTypes.LIQUID.get().get(this, mb);
     }
 
     public FluidStack getGas(int mb) {
-        if (!this.has(AntimatterMaterialTypes.GAS)){
+        if (!this.has(GTMaterialTypes.GAS)){
             throw new RuntimeException("Material: " + this.getId() + " does not have gas");
         }
-        return AntimatterMaterialTypes.GAS.get().get(this, mb);
+        return GTMaterialTypes.GAS.get().get(this, mb);
     }
 
     public FluidIngredient getFluidIngredient(int mb){

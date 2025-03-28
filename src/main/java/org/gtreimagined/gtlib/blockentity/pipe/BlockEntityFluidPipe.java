@@ -9,7 +9,7 @@ import org.gtreimagined.gtlib.capability.fluid.FluidHandlerNullSideWrapper;
 import org.gtreimagined.gtlib.capability.fluid.PipeFluidHandlerSidedWrapper;
 import org.gtreimagined.gtlib.capability.pipe.PipeFluidHandler;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.data.AntimatterTags;
+import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.pipe.PipeSize;
 import org.gtreimagined.gtlib.pipe.TileTicker;
 import org.gtreimagined.gtlib.pipe.types.FluidPipe;
@@ -215,7 +215,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
                     } catch(Throwable e) {e.printStackTrace(ERR);}*/
                 }
 
-                if (!type.isAcidProof() && tFluid.getFluid().is(AntimatterTags.ACID)){
+                if (!type.isAcidProof() && tFluid.getFluid().is(GTLibTags.ACID)){
                     transferredAmount += tTank.drain(Utils.ca(16, tFluid), FluidAction.EXECUTE).getAmount();
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
                     if (level.random.nextInt(100) == 0){

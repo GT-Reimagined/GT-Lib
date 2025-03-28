@@ -12,7 +12,7 @@ import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.cover.CoverReplacements;
 import org.gtreimagined.gtlib.cover.IHaveCover;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.item.ICustomDurability;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.mixin.client.LevelRendererAccessor;
@@ -77,7 +77,7 @@ public class ClientEvents {
         IBasicAntimatterTool item = (IBasicAntimatterTool) stack.getItem();
         AntimatterToolType type = Utils.getToolType(player);
         if (type == null) return false;
-        if (player.isCrouching() && type != AntimatterDefaultTools.WRENCH && type != AntimatterDefaultTools.CROWBAR && type != AntimatterDefaultTools.WIRE_CUTTER)
+        if (player.isCrouching() && type != GTTools.WRENCH && type != GTTools.CROWBAR && type != GTTools.WIRE_CUTTER)
             return false;
         //Perform highlight of wrench
         InteractionResult res = item.onGenericHighlight(player, levelRenderer, camera, target, partialTick, poseStack, bufferSource);

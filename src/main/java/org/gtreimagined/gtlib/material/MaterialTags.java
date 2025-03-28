@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.material;
 
 import com.google.common.collect.ImmutableMap;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.material.data.ArmorData;
 import org.gtreimagined.gtlib.material.data.HandleData;
 import org.gtreimagined.gtlib.material.data.ToolData;
@@ -85,7 +85,7 @@ public class MaterialTags {
     public static TypeMaterialTag<ToolData> TOOLS = new TypeMaterialTag<>("tools"){
         @Override
         public ToolData get(Material mat) {
-            if (mat == Material.NULL) return mapping.computeIfAbsent(mat, m -> new ToolData(5.0f, 5.0f, Integer.MAX_VALUE, 3, AntimatterMaterials.Wood, ImmutableMap.of(), List.of()));
+            if (mat == Material.NULL) return mapping.computeIfAbsent(mat, m -> new ToolData(5.0f, 5.0f, Integer.MAX_VALUE, 3, GTLibMaterials.Wood, ImmutableMap.of(), List.of()));
             return super.get(mat);
         }
     };

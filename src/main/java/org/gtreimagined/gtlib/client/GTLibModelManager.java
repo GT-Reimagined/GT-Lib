@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
-public class AntimatterModelManager {
+public class GTLibModelManager {
 
     private static final Object2ObjectOpenHashMap<String, Supplier<Int2ObjectOpenHashMap<BakedModel[]>>> STATIC_CONFIG_MAPS = new Object2ObjectOpenHashMap<>();
     private static final Object2ObjectOpenHashMap<ResourceLocation, IItemProviderOverride> ITEM_OVERRIDES = new Object2ObjectOpenHashMap<>();
@@ -41,7 +41,7 @@ public class AntimatterModelManager {
     public static final ResourceLocation LOADER_PROXY = new ResourceLocation(Ref.ID, "proxy");
 
     public static void init() {
-        AntimatterModelManager.registerStaticConfigMap("pipe", () -> PipeBakedModel.CONFIGS);
+        GTLibModelManager.registerStaticConfigMap("pipe", () -> PipeBakedModel.CONFIGS);
 
         new DefaultModelLoader(LOADER_MAIN);
         new MachineModelLoader.CoverModelLoader(LOADER_COVER);

@@ -3,8 +3,8 @@ package org.gtreimagined.gtlib.dynamic;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.client.AntimatterModelManager;
-import org.gtreimagined.gtlib.client.IAntimatterModel;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
+import org.gtreimagined.gtlib.client.IGTModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -21,13 +21,13 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
-public class DynamicModel implements IAntimatterModel<DynamicModel> {
+public class DynamicModel implements IGTModel<DynamicModel> {
 
-    protected Int2ObjectOpenHashMap<IAntimatterModel[]> modelConfigs;
+    protected Int2ObjectOpenHashMap<IGTModel[]> modelConfigs;
     protected String staticMapId;
     protected ResourceLocation particle;
 
-    public DynamicModel(ResourceLocation particle, Int2ObjectOpenHashMap<IAntimatterModel[]> modelConfigs, String staticMapId) {
+    public DynamicModel(ResourceLocation particle, Int2ObjectOpenHashMap<IGTModel[]> modelConfigs, String staticMapId) {
         this.modelConfigs = modelConfigs;
         this.staticMapId = staticMapId;
         this.particle = particle;
@@ -45,7 +45,7 @@ public class DynamicModel implements IAntimatterModel<DynamicModel> {
     }
 
     public Int2ObjectOpenHashMap<BakedModel[]> getBakedConfigs(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
-        Int2ObjectOpenHashMap<BakedModel[]> bakedConfigs = AntimatterModelManager.getStaticConfigMap(staticMapId);
+        Int2ObjectOpenHashMap<BakedModel[]> bakedConfigs = GTLibModelManager.getStaticConfigMap(staticMapId);
         modelConfigs.forEach((k, v) -> {
             BakedModel[] baked = new BakedModel[v.length];
             for (int i = 0; i < baked.length; i++) {

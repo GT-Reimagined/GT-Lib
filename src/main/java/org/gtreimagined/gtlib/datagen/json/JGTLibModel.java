@@ -11,16 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class JAntimatterModel extends JRotationModel {
+public class JGTLibModel extends JRotationModel {
     List<JConfigEntry> config;
     Map<String, Object> properties = new Object2ObjectArrayMap<>();
 
-    public static JAntimatterModel model() {
-        return new JAntimatterModel();
+    public static JGTLibModel model() {
+        return new JGTLibModel();
     }
 
-    public static JAntimatterModel model(String parent) {
-        JAntimatterModel model = new JAntimatterModel();
+    public static JGTLibModel model(String parent) {
+        JGTLibModel model = new JGTLibModel();
         model.parent(parent);
         return model;
     }
@@ -28,18 +28,18 @@ public class JAntimatterModel extends JRotationModel {
     /**
      * @return a new jmodel that does not override it's parent's elements
      */
-    public static JAntimatterModel modelKeepElements() {
-        JAntimatterModel model = new JAntimatterModel();
+    public static JGTLibModel modelKeepElements() {
+        JGTLibModel model = new JGTLibModel();
         model.elements = null;
         return model;
     }
 
-    public JAntimatterModel property(String id, Object object){
+    public JGTLibModel property(String id, Object object){
         properties.put(id, object);
         return this;
     }
 
-    public JAntimatterModel configEntry(JConfigEntry... entry){
+    public JGTLibModel configEntry(JConfigEntry... entry){
         if (this.config == null){
             this.config = new ArrayList<>();
         }
@@ -47,10 +47,10 @@ public class JAntimatterModel extends JRotationModel {
         return this;
     }
 
-    public static class JAntimatterModelSerializer implements JsonSerializer<JAntimatterModel> {
+    public static class JAntimatterModelSerializer implements JsonSerializer<JGTLibModel> {
 
         @Override
-        public JsonElement serialize(JAntimatterModel src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(JGTLibModel src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject object = new JsonObject();
             if (src.parent != null){
                 object.addProperty("parent", src.parent);

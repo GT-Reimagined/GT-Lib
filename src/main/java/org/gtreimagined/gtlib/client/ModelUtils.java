@@ -6,7 +6,7 @@ import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.baked.CoverBakedModel;
-import org.gtreimagined.gtlib.client.baked.IAntimatterBakedModel;
+import org.gtreimagined.gtlib.client.baked.IGTBakedModel;
 import org.gtreimagined.gtlib.mixin.client.SimpleBakedModel$BuilderAccessor;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.client.Minecraft;
@@ -108,7 +108,7 @@ public class ModelUtils {
     }
 
     public static List<BakedQuad> getQuadsFromBaked(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos){
-        if (model instanceof IAntimatterBakedModel antimatterBaked){
+        if (model instanceof IGTBakedModel antimatterBaked){
             return antimatterBaked.getQuads(state, side, rand, level, pos);
         } else {
             IModelData data = model.getModelData(level, pos, state, EmptyModelData.INSTANCE);

@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
 import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStorage;
-import org.gtreimagined.gtlib.data.AntimatterTags;
+import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.data.ForgeTags;
 import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterTagBuilder;
@@ -39,8 +39,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.*;
-import static org.gtreimagined.gtlib.data.AntimatterMaterials.Quartz;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
+import static org.gtreimagined.gtlib.data.GTLibMaterials.Quartz;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
 import static org.gtreimagined.gtlib.util.TagUtils.*;
 import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
@@ -118,7 +118,7 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
                 this.tag(item.getTag()).add(item).replace(replace);
                 //if (item.getType() == INGOT || item.getType() == GEM) this.getBuilder(Tags.Items.BEACON_PAYMENT).add(item);
                 if (item.getType() == PLATE && item.getMaterial().has(RUBBERTOOLS) && item.getMaterial().has(TOOLS)){
-                    this.tag(AntimatterTags.PLATE_PLUNGER).add(item);
+                    this.tag(GTLibTags.PLATE_PLUNGER).add(item);
                 }
             });
             AntimatterAPI.all(MaterialType.class, t -> {

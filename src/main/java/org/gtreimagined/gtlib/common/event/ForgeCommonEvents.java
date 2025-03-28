@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.capability.fluid.FluidHandlerItem;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
 import org.gtreimagined.gtlib.datagen.AntimatterLoot;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockLootProvider;
@@ -59,8 +59,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.DUST;
-import static org.gtreimagined.gtlib.data.AntimatterMaterials.Stone;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.DUST;
+import static org.gtreimagined.gtlib.data.GTLibMaterials.Stone;
 import static org.gtreimagined.gtlib.material.Material.NULL;
 
 @Mod.EventBusSubscriber(modid = Ref.ID)
@@ -179,7 +179,7 @@ public class ForgeCommonEvents {
             if (id.startsWith("block_")) {
                 Material mat = Material.get(id.replace("block_", ""));
                 if (mat != NULL) {
-                    map.remap(AntimatterMaterialTypes.BLOCK.get().get(mat).asBlock());
+                    map.remap(GTMaterialTypes.BLOCK.get().get(mat).asBlock());
                     return;
                 }
             }

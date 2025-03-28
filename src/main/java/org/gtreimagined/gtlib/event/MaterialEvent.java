@@ -8,8 +8,8 @@ import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Antimatter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTTools;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.IMaterialTag;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialStack;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterials.Wood;
+import static org.gtreimagined.gtlib.data.GTLibMaterials.Wood;
 import static org.gtreimagined.gtlib.material.Material.NULL;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
 
@@ -48,7 +48,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     public T asDust(IMaterialTag... tags) {
-        flags(AntimatterMaterialTypes.DUST, AntimatterMaterialTypes.DUST_SMALL, AntimatterMaterialTypes.DUST_TINY);
+        flags(GTMaterialTypes.DUST, GTMaterialTypes.DUST_SMALL, GTMaterialTypes.DUST_TINY);
         flags(tags);
         return (T) this;
     }
@@ -63,7 +63,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
 
     public T asSolid(IMaterialTag... tags) {
         asDust(tags);
-        flags(AntimatterMaterialTypes.INGOT, AntimatterMaterialTypes.NUGGET, AntimatterMaterialTypes.CHUNK, AntimatterMaterialTypes.BLOCK).asFluid();
+        flags(GTMaterialTypes.INGOT, GTMaterialTypes.NUGGET, GTMaterialTypes.CHUNK, GTMaterialTypes.BLOCK).asFluid();
         return (T) this;
     }
 
@@ -92,8 +92,8 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     public T asOre(boolean small, IMaterialTag... tags) {
-        asDust(AntimatterMaterialTypes.ORE, AntimatterMaterialTypes.BEARING_ROCK, AntimatterMaterialTypes.CRUSHED, AntimatterMaterialTypes.CRUSHED_PURIFIED, AntimatterMaterialTypes.CRUSHED_REFINED, AntimatterMaterialTypes.DUST_IMPURE, AntimatterMaterialTypes.DUST_PURE, AntimatterMaterialTypes.RAW_ORE, AntimatterMaterialTypes.RAW_ORE_BLOCK);
-        if (small) flags(AntimatterMaterialTypes.ORE_SMALL);
+        asDust(GTMaterialTypes.ORE, GTMaterialTypes.BEARING_ROCK, GTMaterialTypes.CRUSHED, GTMaterialTypes.CRUSHED_PURIFIED, GTMaterialTypes.CRUSHED_REFINED, GTMaterialTypes.DUST_IMPURE, GTMaterialTypes.DUST_PURE, GTMaterialTypes.RAW_ORE, GTMaterialTypes.RAW_ORE_BLOCK);
+        if (small) flags(GTMaterialTypes.ORE_SMALL);
         if (!has(EXP_RANGE)) EXP_RANGE.add(material, UniformInt.of(1, 5));
         flags(tags);
         return (T) this;
@@ -101,34 +101,34 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
 
     public T asOreStone(int minXp, int maxXp, IMaterialTag... tags) {
         asOre(minXp, maxXp, false, tags);
-        flags(AntimatterMaterialTypes.ORE_STONE);
+        flags(GTMaterialTypes.ORE_STONE);
         return (T) this;
     }
 
     public T asOreStone(IMaterialTag... tags) {
         asOre(tags);
-        asDust(AntimatterMaterialTypes.ORE_STONE, AntimatterMaterialTypes.ORE, AntimatterMaterialTypes.BEARING_ROCK, AntimatterMaterialTypes.CRUSHED, AntimatterMaterialTypes.CRUSHED_PURIFIED, AntimatterMaterialTypes.CRUSHED_REFINED, AntimatterMaterialTypes.DUST_IMPURE, AntimatterMaterialTypes.DUST_PURE);
+        asDust(GTMaterialTypes.ORE_STONE, GTMaterialTypes.ORE, GTMaterialTypes.BEARING_ROCK, GTMaterialTypes.CRUSHED, GTMaterialTypes.CRUSHED_PURIFIED, GTMaterialTypes.CRUSHED_REFINED, GTMaterialTypes.DUST_IMPURE, GTMaterialTypes.DUST_PURE);
         flags(tags);
         return (T) this;
     }
 
     public T asGemBasic(boolean transparent, IMaterialTag... tags) {
         asDust(tags);
-        flags(AntimatterMaterialTypes.GEM, AntimatterMaterialTypes.BLOCK);
+        flags(GTMaterialTypes.GEM, GTMaterialTypes.BLOCK);
         if (transparent) {
-            flags(MaterialTags.TRANSPARENT, AntimatterMaterialTypes.PLATE, AntimatterMaterialTypes.LENS);
+            flags(MaterialTags.TRANSPARENT, GTMaterialTypes.PLATE, GTMaterialTypes.LENS);
         }
         return (T) this;
     }
 
     public T asGem(boolean transparent, IMaterialTag... tags) {
         asGemBasic(transparent, tags);
-        flags(AntimatterMaterialTypes.GEM_EXQUISITE);
+        flags(GTMaterialTypes.GEM_EXQUISITE);
         return (T) this;
     }
 
     public T asFluid() {
-        flags(AntimatterMaterialTypes.LIQUID);
+        flags(GTMaterialTypes.LIQUID);
         return (T) this;
     }
 
@@ -146,7 +146,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     public T asGas() {
-        flags(AntimatterMaterialTypes.GAS);
+        flags(GTMaterialTypes.GAS);
         return (T) this;
     }
 
@@ -187,7 +187,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
             Antimatter.LOGGER.info("Material " + this.material.getId() + " unable to add armor, protection array must have exactly 4 values");
             return (T) this;
         }
-        if (has(AntimatterMaterialTypes.INGOT)) flags(AntimatterMaterialTypes.PLATE);
+        if (has(GTMaterialTypes.INGOT)) flags(GTMaterialTypes.PLATE);
         MaterialTags.ARMOR.add(this.material, new ArmorData(armor, toughness, knockbackResistance, armorDurabilityFactor, toolEnchantment));
         return (T) this;
     }
@@ -209,7 +209,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     public T addHandleStat(int durability, float speed, ImmutableMap<Enchantment, Integer> toolEnchantment) {
-        if (!has(AntimatterMaterialTypes.ROD)) flags(AntimatterMaterialTypes.ROD);
+        if (!has(GTMaterialTypes.ROD)) flags(GTMaterialTypes.ROD);
         HANDLE.add(this.material, new HandleData(durability, speed, toolEnchantment));
         return (T) this;
     }
@@ -366,7 +366,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
                     toolTypes.remove(allowedToolType);
                 }
             }
-            if (toolTypes.contains(AntimatterDefaultTools.WRENCH) && !toolTypes.contains(AntimatterDefaultTools.WRENCH_ALT)) toolTypes.add(AntimatterDefaultTools.WRENCH_ALT);
+            if (toolTypes.contains(GTTools.WRENCH) && !toolTypes.contains(GTTools.WRENCH_ALT)) toolTypes.add(GTTools.WRENCH_ALT);
             allowedToolTypes = ImmutableList.copyOf(toolTypes);
             int toolDurability = AntimatterAPI.isModLoaded(Ref.MOD_TFC) ? this.toolDurability * 4 : this.toolDurability;
             return MaterialEvent.this.buildTool(new ToolData(toolDamage, toolSpeed, toolDurability, toolQuality, handleMaterial, toolEnchantments, allowedToolTypes));
@@ -374,9 +374,9 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     protected T buildTool(ToolData builder){
-        if (has(AntimatterMaterialTypes.INGOT))
-            flags(AntimatterMaterialTypes.PLATE, AntimatterMaterialTypes.ROD, AntimatterMaterialTypes.SCREW, AntimatterMaterialTypes.BOLT); //TODO: We need to add bolt for now since screws depends on bolt, need to find time to change it
-        else flags(AntimatterMaterialTypes.ROD);
+        if (has(GTMaterialTypes.INGOT))
+            flags(GTMaterialTypes.PLATE, GTMaterialTypes.ROD, GTMaterialTypes.SCREW, GTMaterialTypes.BOLT); //TODO: We need to add bolt for now since screws depends on bolt, need to find time to change it
+        else flags(GTMaterialTypes.ROD);
         List<AntimatterToolType> toolTypesList = builder.toolTypes();
         MaterialTags.TOOLS.add(this.material, builder);
         MaterialTags.MINING_LEVEL.add(this.material, builder.toolQuality() - 1);

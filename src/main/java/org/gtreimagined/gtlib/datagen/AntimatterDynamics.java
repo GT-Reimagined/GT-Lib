@@ -11,7 +11,7 @@ import org.gtreimagined.gtlib.Antimatter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.json.JAntimatterModel;
+import org.gtreimagined.gtlib.datagen.json.JGTLibModel;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockLootProvider;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterLanguageProvider;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterRecipeProvider;
@@ -74,7 +74,7 @@ public class AntimatterDynamics {
             .disableHtmlEscaping()
             .registerTypeAdapter(Advancement.Builder.class, (JsonSerializer<Advancement.Builder>) (src, typeOfSrc, context) -> src.serializeToJson())
             .registerTypeAdapter(FinishedRecipe.class, (JsonSerializer<FinishedRecipe>) (src, typeOfSrc, context) -> src.serializeRecipe())
-            .registerTypeAdapter(JAntimatterModel.class, new JAntimatterModel.JAntimatterModelSerializer())
+            .registerTypeAdapter(JGTLibModel.class, new JGTLibModel.JAntimatterModelSerializer())
             .registerTypeAdapter(JTextures.class, new JTextures.Serializer())
             .registerTypeAdapter(JCondition.class, new JCondition.Serializer())
             .create();

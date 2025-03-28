@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +44,7 @@ public abstract class ChestBlockMixin extends AbstractChestBlock<ChestBlockEntit
     @Inject(method = "getShape", at = @At("HEAD"), cancellable = true)
     private void injectShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir){
         if (context instanceof EntityCollisionContext collisionContext && collisionContext.getEntity() instanceof Player player){
-            if (Utils.isPlayerHolding(player, InteractionHand.MAIN_HAND, AntimatterDefaultTools.WRENCH)){
+            if (Utils.isPlayerHolding(player, InteractionHand.MAIN_HAND, GTTools.WRENCH)){
                 cir.setReturnValue(Shapes.block());
             }
         }
@@ -52,7 +52,7 @@ public abstract class ChestBlockMixin extends AbstractChestBlock<ChestBlockEntit
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     private void injectUse(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir){
-        if (!level.isClientSide && Utils.isPlayerHolding(player, hand, AntimatterDefaultTools.WRENCH)){
+        if (!level.isClientSide && Utils.isPlayerHolding(player, hand, GTTools.WRENCH)){
             Direction side = Utils.getInteractSide(hit);
             Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
             if (side.getAxis().isHorizontal()){

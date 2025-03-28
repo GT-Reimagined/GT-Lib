@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.item.ItemFluidCell;
 import org.gtreimagined.gtlib.material.MaterialItem;
 import net.minecraft.core.cauldron.CauldronInteraction;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.*;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 
 /**
  * All antimatter cauldron interactions.

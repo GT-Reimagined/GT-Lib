@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.client.baked;
 
-import org.gtreimagined.gtlib.client.AntimatterModelProperties;
+import org.gtreimagined.gtlib.client.GTLibModelProperties;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public interface IAntimatterBakedModel extends IDynamicBakedModel {
+public interface IGTBakedModel extends IDynamicBakedModel {
     List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos);
 
      default List<BakedQuad> getQuads(BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos){
@@ -40,8 +40,8 @@ public interface IAntimatterBakedModel extends IDynamicBakedModel {
     @NotNull
     @Override
     default List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData data){
-        BlockAndTintGetter world = data.getData(AntimatterModelProperties.WORLD);
-        BlockPos pos = data.getData(AntimatterModelProperties.POS);
+        BlockAndTintGetter world = data.getData(GTLibModelProperties.WORLD);
+        BlockPos pos = data.getData(GTLibModelProperties.POS);
         if (world == null || pos == null) return Collections.emptyList();
         return getQuads(state, side, rand, world, pos);
     }
@@ -51,15 +51,15 @@ public interface IAntimatterBakedModel extends IDynamicBakedModel {
     default IModelData getModelData(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData modelData) {
         IModelData d = IDynamicBakedModel.super.getModelData(level, pos, state, modelData);
         if (d == EmptyModelData.INSTANCE) d = new ModelDataMap.Builder().build();
-        d.setData(AntimatterModelProperties.WORLD, level);
-        d.setData(AntimatterModelProperties.POS, pos);
+        d.setData(GTLibModelProperties.WORLD, level);
+        d.setData(GTLibModelProperties.POS, pos);
         return d;
     }
 
     @Override
     default TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
-        BlockAndTintGetter world = data.getData(AntimatterModelProperties.WORLD);
-        BlockPos pos = data.getData(AntimatterModelProperties.POS);
+        BlockAndTintGetter world = data.getData(GTLibModelProperties.WORLD);
+        BlockPos pos = data.getData(GTLibModelProperties.POS);
         if (world == null || pos == null) return IDynamicBakedModel.super.getParticleIcon(data);
         return getParticleIcon(world, pos);
     }

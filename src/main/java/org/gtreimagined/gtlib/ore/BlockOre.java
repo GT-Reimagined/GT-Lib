@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.ore;
 
 import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -232,7 +232,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
         //TODO use tags for this instead?
-        if (i == 1 && material == AntimatterMaterials.Iron){
+        if (i == 1 && material == GTLibMaterials.Iron){
             return 0xe2c0aa;
         }
         return super.getBlockColor(state, world, pos, i);
@@ -240,7 +240,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
 
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
-        if (i == 1 && material == AntimatterMaterials.Iron){
+        if (i == 1 && material == GTLibMaterials.Iron){
             return 0xe2c0aa;
         }
         return super.getItemColor(stack, block, i);

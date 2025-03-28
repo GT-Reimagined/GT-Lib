@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Ref.ID)
-public class AntimatterCaps {
+public class GTLibCaps {
     public static final BiMap<Class<?>, Capability<?>> CAP_MAP = HashBiMap.create();
 
 

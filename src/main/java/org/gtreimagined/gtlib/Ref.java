@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.gtreimagined.gtlib.client.itemgroup.AntimatterItemGroup;
+import org.gtreimagined.gtlib.client.itemgroup.GTItemGroup;
 import org.gtreimagined.gtlib.util.XSTR;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -28,11 +28,11 @@ public class Ref {
     /**
      * Creative Tabs
      **/
-    public static final CreativeModeTab TAB_ITEMS = new AntimatterItemGroup(ID, "items", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_TOOLS = new AntimatterItemGroup(ID, "tools", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_BLOCKS = new AntimatterItemGroup(ID, "blocks", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MATERIALS = new AntimatterItemGroup(ID, "materials", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MACHINES = new AntimatterItemGroup(ID, "machines", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_ITEMS = new GTItemGroup(ID, "items", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_TOOLS = new GTItemGroup(ID, "tools", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_BLOCKS = new GTItemGroup(ID, "blocks", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_MATERIALS = new GTItemGroup(ID, "materials", () -> new ItemStack(Data.DEBUG_SCANNER));
+    public static final CreativeModeTab TAB_MACHINES = new GTItemGroup(ID, "machines", () -> new ItemStack(Data.DEBUG_SCANNER));
 
     /**
      * Sound Events

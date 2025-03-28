@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
-import org.gtreimagined.gtlib.capability.AntimatterCaps;
+import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.CoverHandler;
 import org.gtreimagined.gtlib.capability.Holder;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
@@ -505,7 +505,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
             return pipeCaps[side.get3DDataValue()].cast();
         }*/
         try {
-            if (cap == AntimatterCaps.CAP_MAP.get(getCapClass())){
+            if (cap == GTLibCaps.CAP_MAP.get(getCapClass())){
                return pipeCapHolder.side(side).cast();
             }
         } catch (Exception e){

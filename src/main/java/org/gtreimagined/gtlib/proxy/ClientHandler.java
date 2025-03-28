@@ -6,12 +6,12 @@ import org.gtreimagined.gtlib.block.BlockFakeTile;
 import org.gtreimagined.gtlib.block.BlockFrame;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
-import org.gtreimagined.gtlib.client.AntimatterTextureStitcher;
+import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.client.tesr.MachineTESR;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
 import org.gtreimagined.gtlib.gui.MenuHandler;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -42,7 +42,7 @@ public class ClientHandler implements IProxyHandler {
 
     @SuppressWarnings("ConstantConditions")
     public ClientHandler() {
-        AntimatterTextureStitcher.addStitcher(event -> AntimatterAPI.all(CoverFactory.class).forEach(cover -> {
+        GTTextureStitcher.addStitcher(event -> AntimatterAPI.all(CoverFactory.class).forEach(cover -> {
             if (cover == ICover.emptyFactory)
                 return;
             for (ResourceLocation r : cover.getTextures()) {
@@ -80,9 +80,9 @@ public class ClientHandler implements IProxyHandler {
             AntimatterAPI.all(BlockMultiMachine.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
             AntimatterAPI.all(BlockOre.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
             AntimatterAPI.all(BlockPipe.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockStorage.class).stream().filter(b -> b.getType() == AntimatterMaterialTypes.RAW_ORE_BLOCK)
+            AntimatterAPI.all(BlockStorage.class).stream().filter(b -> b.getType() == GTMaterialTypes.RAW_ORE_BLOCK)
                     .forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockFrame.class).stream().filter(b -> b.getType() == AntimatterMaterialTypes.FRAME)
+            AntimatterAPI.all(BlockFrame.class).stream().filter(b -> b.getType() == GTMaterialTypes.FRAME)
                     .forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
             AntimatterAPI.all(BlockSurfaceRock.class).stream().forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
             AntimatterAPI.all(AntimatterFluid.class).forEach(f -> {

@@ -13,7 +13,7 @@ import org.gtreimagined.gtlib.cover.CoverInput;
 import org.gtreimagined.gtlib.cover.CoverMuffler;
 import org.gtreimagined.gtlib.cover.CoverOutput;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.gui.MenuHandlerCover;
 import org.gtreimagined.gtlib.gui.MenuHandlerMachine;
 import org.gtreimagined.gtlib.gui.MenuHandlerPipe;
@@ -146,6 +146,6 @@ public class Data {
     }
 
     public static void postInit() {
-        AntimatterMaterialTypes.postInit();
+        GTMaterialTypes.postInit();
     }
 }

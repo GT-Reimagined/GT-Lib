@@ -2,8 +2,8 @@ package org.gtreimagined.gtlib.worldgen.feature;
 
 import org.gtreimagined.gtlib.Antimatter;
 import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import java.util.List;
 import java.util.Random;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.BEARING_ROCK;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
 
 public class FeatureBedrockOre extends AntimatterFeature<NoneFeatureConfiguration>{
 
@@ -115,13 +115,13 @@ public class FeatureBedrockOre extends AntimatterFeature<NoneFeatureConfiguratio
             for (int tX = 5; tX < 11; tX++) {
                 for (int tZ = 5; tZ < 11; tZ++) {
                     switch (random.nextInt(6)) {
-                        case 0 -> WorldGenHelper.setState(level, new BlockPos(minX + tX, level.getMinBuildHeight(), minZ + tZ), AntimatterMaterialTypes.ORE.get().get(material, AntimatterStoneTypes.BEDROCK).asState());
-                        case 1, 2 -> WorldGenHelper.setState(level, new BlockPos(minX + tX, level.getMinBuildHeight(), minZ + tZ), AntimatterMaterialTypes.ORE_SMALL.get().get(material, AntimatterStoneTypes.BEDROCK).asState());
+                        case 0 -> WorldGenHelper.setState(level, new BlockPos(minX + tX, level.getMinBuildHeight(), minZ + tZ), GTMaterialTypes.ORE.get().get(material, VanillaStoneTypes.BEDROCK).asState());
+                        case 1, 2 -> WorldGenHelper.setState(level, new BlockPos(minX + tX, level.getMinBuildHeight(), minZ + tZ), GTMaterialTypes.ORE_SMALL.get().get(material, VanillaStoneTypes.BEDROCK).asState());
                     }
                 }
             }
             // At least one Ore Block must be there. So force place a large one somewhere in the Center.
-            WorldGenHelper.setState(level, new BlockPos(minX + 6 + random.nextInt(4), level.getMinBuildHeight(), minZ + 6 + random.nextInt(4)), AntimatterMaterialTypes.ORE.get().get(material, AntimatterStoneTypes.BEDROCK).asState());
+            WorldGenHelper.setState(level, new BlockPos(minX + 6 + random.nextInt(4), level.getMinBuildHeight(), minZ + 6 + random.nextInt(4)), GTMaterialTypes.ORE.get().get(material, VanillaStoneTypes.BEDROCK).asState());
             // Use Deepslate if available, except in the Nether.
             tStone = Blocks.DEEPSLATE;
             int yOffset = level.getMinBuildHeight() < 0 ? Math.abs(level.getMinBuildHeight()) : -level.getMinBuildHeight();
@@ -132,8 +132,8 @@ public class FeatureBedrockOre extends AntimatterFeature<NoneFeatureConfiguratio
             for (int tY = 1; tY < tD1.length; tY++) for (int tX = tD1[tY]; tX < tD2[tY]; tX++) for (int tZ = tD1[tY]; tZ < tD2[tY]; tZ++) {
                 level.setBlock(new BlockPos(minX + tX, tY - yOffset, minZ + tZ), tStone.defaultBlockState(), 0);
                 switch (random.nextInt(6)) {
-                    case 0 -> WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY - yOffset, minZ + tZ), material, AntimatterMaterialTypes.ORE);
-                    case 1, 2 -> WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY - yOffset, minZ + tZ), material, AntimatterMaterialTypes.ORE_SMALL);
+                    case 0 -> WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY - yOffset, minZ + tZ), material, GTMaterialTypes.ORE);
+                    case 1, 2 -> WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY - yOffset, minZ + tZ), material, GTMaterialTypes.ORE_SMALL);
                 }
             }
 
@@ -161,10 +161,10 @@ public class FeatureBedrockOre extends AntimatterFeature<NoneFeatureConfiguratio
                     }
                     if (tY >= tW) break;
                     if (tX <= 0 || tX >= 15 || tZ <= 0 || tZ >= 15) {
-                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, AntimatterMaterialTypes.ORE_SMALL);
+                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, GTMaterialTypes.ORE_SMALL);
                         break;
                     } else if (random.nextInt(3) != 0) {
-                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, AntimatterMaterialTypes.ORE_SMALL);
+                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, GTMaterialTypes.ORE_SMALL);
                     }
                 }
             }

@@ -35,8 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.WRENCH;
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.WRENCH_ALT;
+import static org.gtreimagined.gtlib.data.GTTools.WRENCH;
+import static org.gtreimagined.gtlib.data.GTTools.WRENCH_ALT;
 
 public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
 

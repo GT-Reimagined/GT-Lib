@@ -14,7 +14,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
-import org.gtreimagined.gtlib.data.AntimatterTags;
+import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.entity.IRadiationEntity;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -609,7 +609,7 @@ public class Utils {
     public static boolean isFullHazmatSuit(LivingEntity livingEntity){
         int radiationProof = 0;
         for (ItemStack stack : livingEntity.getArmorSlots()) {
-            if (stack.is(AntimatterTags.RADIATION_PROOF)) radiationProof++;
+            if (stack.is(GTLibTags.RADIATION_PROOF)) radiationProof++;
         }
         return radiationProof == 4;
 

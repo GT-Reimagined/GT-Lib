@@ -1,11 +1,11 @@
 package org.gtreimagined.gtlib.pipe;
 
-import org.gtreimagined.gtlib.block.AntimatterItemBlock;
+import org.gtreimagined.gtlib.block.GTItemBlock;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import org.jetbrains.annotations.NotNull;
 
-public class PipeItemBlock extends AntimatterItemBlock {
+public class PipeItemBlock extends GTItemBlock {
 
     private final BlockPipe<?> pipe;
 

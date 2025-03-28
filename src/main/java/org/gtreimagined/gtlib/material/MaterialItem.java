@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.material;
 
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.item.ItemBasic;
 import org.gtreimagined.gtlib.material.data.ToolData;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.*;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.TOOLS;
 
 public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAntimatterObject, IColorHandler, ITextureProvider, IModelProvider, IMaterialObject {
@@ -86,7 +86,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         //Here only add specific types, events are handled below.
-        if (type == AntimatterMaterialTypes.BEARING_ROCK) {
+        if (type == GTMaterialTypes.BEARING_ROCK) {
             tooltip.add(Utils.translatable("gtlib.tooltip.occurrence").append(Utils.literal(material.getDisplayName().getString()).withStyle(ChatFormatting.YELLOW)));
         }
     }
@@ -115,7 +115,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (type == AntimatterMaterialTypes.BEARING_ROCK || type == ROCK){
+        if (type == GTMaterialTypes.BEARING_ROCK || type == ROCK){
             return tryPlace(new BlockPlaceContext(context));
         }
         return super.useOn(context);
@@ -128,8 +128,8 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
             BlockState blockstate;
             if (this.type == BEARING_ROCK){
                 BlockState existing = WorldGenHelper.getStoneStateForRock(context.getClickedPos().getY() - 1, context.getClickedPos(), context.getLevel());
-                StoneType type = WorldGenHelper.STONE_MAP.get(existing) != null ? WorldGenHelper.STONE_MAP.get(existing) : AntimatterStoneTypes.STONE;
-                blockstate = AntimatterMaterialTypes.BEARING_ROCK.get().get(material, type).asState();
+                StoneType type = WorldGenHelper.STONE_MAP.get(existing) != null ? WorldGenHelper.STONE_MAP.get(existing) : VanillaStoneTypes.STONE;
+                blockstate = GTMaterialTypes.BEARING_ROCK.get().get(material, type).asState();
             } else {
                 blockstate = ROCK.get().get(material).asState();
             }
@@ -205,7 +205,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
             int level = state.getValue(LayeredCauldronBlock.LEVEL);
             if (level > 0){
                 Material material = ((MaterialItem) stack.getItem()).getMaterial();
-                if (type == AntimatterMaterialTypes.DUST_IMPURE || type == AntimatterMaterialTypes.DUST_PURE) {
+                if (type == GTMaterialTypes.DUST_IMPURE || type == GTMaterialTypes.DUST_PURE) {
                     if (material.has(DUST)) {
                         stack.shrink(1);
                         if (!player.addItem(DUST.get(material, 1))) {
@@ -215,7 +215,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
                         world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                         return InteractionResult.SUCCESS;
                     }
-                } else if (type == AntimatterMaterialTypes.CRUSHED) {
+                } else if (type == GTMaterialTypes.CRUSHED) {
                     if (material.has(CRUSHED_PURIFIED)) {
                         stack.shrink(1);
                         if (!player.addItem(CRUSHED_PURIFIED.get(material, 1))) {
@@ -262,7 +262,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedAnti
     }
 
     public static boolean doesShowExtendedHighlight(ItemStack stack) {
-        return hasType(stack, AntimatterMaterialTypes.PLATE);
+        return hasType(stack, GTMaterialTypes.PLATE);
     }
 
     @Override

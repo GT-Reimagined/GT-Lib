@@ -7,7 +7,7 @@ import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,8 +15,8 @@ import snownee.jade.addon.harvest.HarvestToolProvider;
 import snownee.jade.addon.harvest.SimpleToolHandler;
 import tesseract.Tesseract;
 
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.WIRE_CUTTER;
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.WRENCH;
+import static org.gtreimagined.gtlib.data.GTTools.WIRE_CUTTER;
+import static org.gtreimagined.gtlib.data.GTTools.WRENCH;
 
 @WailaPlugin
 public class JadePlugin implements IWailaPlugin {
@@ -33,8 +33,8 @@ public class JadePlugin implements IWailaPlugin {
         registration.addConfig(HU, true);
         registration.addConfig(PROGRESS, true);
         registration.addConfig(STRUCTURE, true);
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(AntimatterMaterials.Iron), WRENCH.getToolItem(AntimatterMaterials.Diamond), WRENCH.getToolItem(AntimatterMaterials.NetherizedDiamond)));
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(AntimatterMaterials.Iron), WIRE_CUTTER.getToolItem(AntimatterMaterials.Diamond), WIRE_CUTTER.getToolItem(AntimatterMaterials.NetherizedDiamond)));
+        HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(GTLibMaterials.Iron), WRENCH.getToolItem(GTLibMaterials.Diamond), WRENCH.getToolItem(GTLibMaterials.NetherizedDiamond)));
+        HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(GTLibMaterials.Iron), WIRE_CUTTER.getToolItem(GTLibMaterials.Diamond), WIRE_CUTTER.getToolItem(GTLibMaterials.NetherizedDiamond)));
     }
 
     @Override

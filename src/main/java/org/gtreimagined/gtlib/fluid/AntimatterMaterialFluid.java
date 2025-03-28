@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.fluid;
 
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -47,8 +47,8 @@ public class AntimatterMaterialFluid extends AntimatterFluid {
     }
 
     private static FluidAttributes.Builder prepareAttributes(String domain, Material material, MaterialType<?> type) {
-        int density = material.has(MaterialTags.FLUID_DENSITY) ? MaterialTags.FLUID_DENSITY.getInt(material) : type == AntimatterMaterialTypes.GAS ? 1 : material.has(MOLTEN) ? 3000 : 1000;
-        if (type == AntimatterMaterialTypes.GAS) {
+        int density = material.has(MaterialTags.FLUID_DENSITY) ? MaterialTags.FLUID_DENSITY.getInt(material) : type == GTMaterialTypes.GAS ? 1 : material.has(MOLTEN) ? 3000 : 1000;
+        if (type == GTMaterialTypes.GAS) {
             return FluidAttributes.builder(GAS_TEXTURE, GAS_FLOW_TEXTURE).overlay(OVERLAY_TEXTURE).color((70 << 24) | (material.getRGB() & 0x00ffffff))
                     .viscosity(200).density(density).gaseous().temperature(MaterialTags.GAS_TEMPERATURE.getInt(material))
                     .sound(SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_EMPTY);
@@ -82,6 +82,6 @@ public class AntimatterMaterialFluid extends AntimatterFluid {
     }
 
     private boolean isGasType(){
-        return type == AntimatterMaterialTypes.GAS || this.getAttributes().isGaseous();
+        return type == GTMaterialTypes.GAS || this.getAttributes().isGaseous();
     }
 }

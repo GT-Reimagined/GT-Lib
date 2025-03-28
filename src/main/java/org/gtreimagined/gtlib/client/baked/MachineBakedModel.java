@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-public class MachineBakedModel extends AntimatterBakedModel<MachineBakedModel> {
+public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
 
     private final ImmutableMap<MachineState, BakedModel[]> sides;
     public MachineBakedModel(TextureAtlasSprite particle, ImmutableMap<MachineState, BakedModel[]> sides) {

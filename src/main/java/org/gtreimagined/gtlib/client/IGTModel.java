@@ -14,7 +14,7 @@ import net.minecraftforge.client.model.geometry.IModelGeometry;
 
 import java.util.function.Function;
 
-public interface IAntimatterModel<T extends IAntimatterModel<T>> extends IModelGeometry<T> {
+public interface IGTModel<T extends IGTModel<T>> extends IModelGeometry<T> {
 
     default ModelState getModelTransform(ModelState base, int[] rots) {
         if (rots == null || rots.length != 3 || (rots[0] == 0 && rots[1] == 0 && rots[2] == 0)) return base;

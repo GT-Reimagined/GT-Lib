@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class GroupedBakedModel extends AntimatterBakedModel<GroupedBakedModel> {
+public class GroupedBakedModel extends GTBakedModel<GroupedBakedModel> {
 
     protected final Map<String, BakedModel> models;
     protected BakedQuad[][] CACHE = new BakedQuad[7][];

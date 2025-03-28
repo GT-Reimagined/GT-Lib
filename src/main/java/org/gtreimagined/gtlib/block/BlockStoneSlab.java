@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.block;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
@@ -46,7 +46,7 @@ public class BlockStoneSlab extends BlockBasicSlab implements ISharedAntimatterO
         Texture topTexture, bottomTexture, sideTexture;
         topTexture = bottomTexture = sideTexture = getTextures()[0];
         ResourceLocation both = prov.existing(this.getDomain(), "block/" + this.getId().replace("_slab", ""));
-        if (type == AntimatterStoneTypes.BASALT && (suffix.isEmpty() || suffix.equals("smooth"))){
+        if (type == VanillaStoneTypes.BASALT && (suffix.isEmpty() || suffix.equals("smooth"))){
             if (suffix.isEmpty()) {
                 both = prov.existing("minecraft", "block/basalt");
                 topTexture = bottomTexture = new Texture("block/basalt_top");

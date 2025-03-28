@@ -9,7 +9,7 @@ import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.IInfoProvider;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.machine.MachineFlag;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.ore.BlockOre;
@@ -60,8 +60,8 @@ public class ScannerItem extends ItemBasic<ScannerItem> {
             tooltip.add(Utils.literal("Ores: " + AntimatterAPI.all(BlockOre.class).size()));
             tooltip.add(Utils.literal("Stones: " + AntimatterAPI.all(BlockStone.class).size()));
             tooltip.add(Utils.literal("Data:"));
-            tooltip.add(Utils.literal("Ore Materials: " + AntimatterMaterialTypes.ORE.all().size()));
-            tooltip.add(Utils.literal("Small Ore Materials: " + AntimatterMaterialTypes.ORE_SMALL.all().size()));
+            tooltip.add(Utils.literal("Ore Materials: " + GTMaterialTypes.ORE.all().size()));
+            tooltip.add(Utils.literal("Small Ore Materials: " + GTMaterialTypes.ORE_SMALL.all().size()));
         }
     }
 

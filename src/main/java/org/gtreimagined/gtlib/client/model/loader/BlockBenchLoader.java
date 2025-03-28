@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.client.model.AntimatterGroupedModel;
+import org.gtreimagined.gtlib.client.model.GTGroupedModel;
 import org.gtreimagined.gtlib.client.model.VanillaProxy;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class BlockBenchLoader extends AntimatterModelLoader<AntimatterGroupedModel> {
+public class BlockBenchLoader extends GTModelLoader<GTGroupedModel> {
 
     public BlockBenchLoader(ResourceLocation loc) {
         super(loc);
@@ -26,7 +26,7 @@ public class BlockBenchLoader extends AntimatterModelLoader<AntimatterGroupedMod
 
     @NotNull
     @Override
-    public AntimatterGroupedModel read(JsonDeserializationContext context, JsonObject json) {
+    public GTGroupedModel read(JsonDeserializationContext context, JsonObject json) {
         try {
             ResourceLocation particle = json.has("particle") ? new ResourceLocation(json.get("particle").getAsString()) : MissingTextureAtlasSprite.getLocation();
             Map<Integer, String> offsets = new Object2ObjectOpenHashMap<>();
@@ -50,7 +50,7 @@ public class BlockBenchLoader extends AntimatterModelLoader<AntimatterGroupedMod
                     map.computeIfAbsent(name == null ? "" : name, a -> new ObjectArrayList<>()).add(context.deserialize(jsonelement, BlockElement.class));
                 }
             }
-            return new AntimatterGroupedModel(particle, map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, k -> new VanillaProxy(k.getValue()))));
+            return new GTGroupedModel(particle, map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, k -> new VanillaProxy(k.getValue()))));
         } catch (Exception e) {
             throw new RuntimeException("Caught error deserializing model : " + e);
         }

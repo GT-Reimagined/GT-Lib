@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.client.model;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import org.gtreimagined.gtlib.client.IAntimatterModel;
+import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.baked.BakedMachineSide;
 import org.gtreimagined.gtlib.client.baked.CoverBakedModel;
 import org.gtreimagined.gtlib.client.baked.GroupedBakedModel;
@@ -24,11 +24,11 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class AntimatterGroupedModel implements IAntimatterModel<AntimatterGroupedModel> {
-    final Map<String, IAntimatterModel<?>> models;
+public class GTGroupedModel implements IGTModel<GTGroupedModel> {
+    final Map<String, IGTModel<?>> models;
     final ResourceLocation particle;
 
-    public AntimatterGroupedModel(ResourceLocation particle, Map<String, IAntimatterModel<?>> models) {
+    public GTGroupedModel(ResourceLocation particle, Map<String, IGTModel<?>> models) {
         this.models = models;
         this.particle = particle;
     }
@@ -39,9 +39,9 @@ public class AntimatterGroupedModel implements IAntimatterModel<AntimatterGroupe
         return new GroupedBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())), builder.build());
     }
 
-    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IAntimatterModel<?>>> entries) {
+    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IGTModel<?>>> entries) {
         ImmutableMap.Builder<String, BakedModel> builder = ImmutableMap.builder();
-        for (Map.Entry<String, IAntimatterModel<?>> entry : entries) {
+        for (Map.Entry<String, IGTModel<?>> entry : entries) {
             builder.put(entry.getKey(), entry.getValue().bake(configuration, bakery, getter, transform, overrides, loc));
         }
         return builder;
@@ -52,9 +52,9 @@ public class AntimatterGroupedModel implements IAntimatterModel<AntimatterGroupe
         return models.values().stream().flatMap(t -> t.getTextures(configuration, modelGetter, missingTextureErrors).stream()).collect(Collectors.toList());
     }
 
-    public static class CoverModel extends AntimatterGroupedModel {
+    public static class CoverModel extends GTGroupedModel {
 
-        public CoverModel(AntimatterGroupedModel model) {
+        public CoverModel(GTGroupedModel model) {
             super(model.particle, model.models);
         }
 
@@ -65,9 +65,9 @@ public class AntimatterGroupedModel implements IAntimatterModel<AntimatterGroupe
         }
     }
 
-    public static class MachineSideModel extends AntimatterGroupedModel {
+    public static class MachineSideModel extends GTGroupedModel {
 
-        public MachineSideModel(AntimatterGroupedModel model) {
+        public MachineSideModel(GTGroupedModel model) {
             super(model.particle, model.models);
         }
 

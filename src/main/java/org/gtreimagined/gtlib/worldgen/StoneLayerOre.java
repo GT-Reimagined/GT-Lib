@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -53,8 +53,8 @@ public class StoneLayerOre {
     }
 
     public StoneLayerOre setStatesByStoneType(StoneType stoneType) {
-        this.oreState = AntimatterMaterialTypes.ORE.get().get(material, stoneType).asState();
-        this.oreSmallState = AntimatterMaterialTypes.ORE_SMALL.get().get(material, stoneType).asState();
+        this.oreState = GTMaterialTypes.ORE.get().get(material, stoneType).asState();
+        this.oreSmallState = GTMaterialTypes.ORE_SMALL.get().get(material, stoneType).asState();
         this.stoneType = stoneType;
         return this;
     }

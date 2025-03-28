@@ -8,11 +8,11 @@ import org.gtreimagined.gtlib.block.BlockStoneSlab;
 import org.gtreimagined.gtlib.block.BlockStoneStair;
 import org.gtreimagined.gtlib.block.BlockStoneWall;
 import org.gtreimagined.gtlib.block.BlockStorage;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
-import org.gtreimagined.gtlib.data.AntimatterStoneTypes;
-import org.gtreimagined.gtlib.data.AntimatterTags;
+import org.gtreimagined.gtlib.data.GTTools;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
@@ -49,12 +49,12 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
                 this.tag(getForgelikeBlockTag(getConventionalMaterialType(o.getOreType()))).add(o).replace(replace);
                 this.tag(getForgelikeBlockTag(getConventionalStoneType(o.getStoneType()) + "_" + getConventionalMaterialType(o.getOreType()))).add(o).replace(replace);
 
-                if (o.getStoneType() == AntimatterStoneTypes.SAND || o.getStoneType() == AntimatterStoneTypes.SAND_RED || o.getStoneType() == AntimatterStoneTypes.GRAVEL)
+                if (o.getStoneType() == VanillaStoneTypes.SAND || o.getStoneType() == VanillaStoneTypes.SAND_RED || o.getStoneType() == VanillaStoneTypes.GRAVEL)
                     this.tag(BlockTags.MINEABLE_WITH_SHOVEL).add(o).replace(replace);
                 else
                     this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(o).replace(replace);
                 int oreMiningLevel = o.getMaterial().has(MaterialTags.MINING_LEVEL) ? MaterialTags.MINING_LEVEL.getInt(o.getMaterial()) : 0;
-                if (o.getOreType() == AntimatterMaterialTypes.ORE_SMALL && oreMiningLevel > 0){
+                if (o.getOreType() == GTMaterialTypes.ORE_SMALL && oreMiningLevel > 0){
                     oreMiningLevel--;
                 }
                 int stoneMiningLevel = o.getStoneType().getHarvestLevel();
@@ -65,7 +65,7 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
                         this.tag(tagKey).add(o);
                     }
                 }
-                if (o.getOreType() == AntimatterMaterialTypes.ORE) this.tag(TagUtils.getForgelikeBlockTag("ores")).add(o);
+                if (o.getOreType() == GTMaterialTypes.ORE) this.tag(TagUtils.getForgelikeBlockTag("ores")).add(o);
             });
             AntimatterAPI.all(BlockStone.class, s -> {
                 if (s.getSuffix().isEmpty()) {
@@ -106,12 +106,12 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
             AntimatterAPI.all(BlockStorage.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
                 String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
-                if (block.getMaterial() == AntimatterMaterials.Wood){
-                    this.tag(AntimatterDefaultTools.AXE.getToolType()).add(block);
-                } else if (block.getType() == AntimatterMaterialTypes.FRAME){
-                    this.tag(AntimatterDefaultTools.WRENCH.getToolType()).add(block).replace(replace);
+                if (block.getMaterial() == GTLibMaterials.Wood){
+                    this.tag(GTTools.AXE.getToolType()).add(block);
+                } else if (block.getType() == GTMaterialTypes.FRAME){
+                    this.tag(GTTools.WRENCH.getToolType()).add(block).replace(replace);
                 } else {
-                    this.tag(AntimatterDefaultTools.PICKAXE.getToolType()).add(block);
+                    this.tag(GTTools.PICKAXE.getToolType()).add(block);
                 }
                 this.tag(getForgelikeBlockTag(name)).add(block);
                 // if (block.getType() == FRAME) add climbable tag in 1.16
@@ -119,10 +119,10 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
             AntimatterAPI.all(BlockFrame.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
                 String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
-                if (block.getMaterial() == AntimatterMaterials.Wood){
-                    this.tag(AntimatterDefaultTools.AXE.getToolType()).add(block);
+                if (block.getMaterial() == GTLibMaterials.Wood){
+                    this.tag(GTTools.AXE.getToolType()).add(block);
                 } else {
-                    this.tag(AntimatterDefaultTools.WRENCH.getToolType()).add(block).replace(replace);
+                    this.tag(GTTools.WRENCH.getToolType()).add(block).replace(replace);
                 }
                 this.tag(getForgelikeBlockTag(name)).add(block);
                 // if (block.getType() == FRAME) add climbable tag in 1.16
@@ -132,8 +132,8 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
             });
             AntimatterAPI.all(BlockPipe.class, pipe -> {
                 this.tag(pipe.getToolType().getToolType()).add(pipe);
-                if (pipe.getType().getMaterial() == AntimatterMaterials.Wood){
-                    this.tag(AntimatterDefaultTools.AXE.getToolType()).add(pipe);
+                if (pipe.getType().getMaterial() == GTLibMaterials.Wood){
+                    this.tag(GTTools.AXE.getToolType()).add(pipe);
                 }
             });
             AntimatterAPI.all(BlockMachine.class, pipe -> {
@@ -153,8 +153,8 @@ public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
             case 1 -> BlockTags.NEEDS_STONE_TOOL;
             case 2 -> BlockTags.NEEDS_IRON_TOOL;
             case 3 -> BlockTags.NEEDS_DIAMOND_TOOL;
-            case 4 -> AntimatterTags.NEEDS_NETHERITE_TOOL;
-            case 5 -> AntimatterTags.NEEDS_ADAMANTIUM_TOOL;
+            case 4 -> GTLibTags.NEEDS_NETHERITE_TOOL;
+            case 5 -> GTLibTags.NEEDS_ADAMANTIUM_TOOL;
             default -> null;
         };
     }

@@ -2,9 +2,9 @@ package org.gtreimagined.gtlib.datagen.loaders;
 
 import com.google.common.collect.ImmutableMap;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
-import org.gtreimagined.gtlib.data.AntimatterMaterialTypes;
-import org.gtreimagined.gtlib.data.AntimatterMaterials;
+import org.gtreimagined.gtlib.data.GTTools;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.AntimatterCookingRecipeBuilder;
 import org.gtreimagined.gtlib.datagen.providers.AntimatterRecipeProvider;
 import org.gtreimagined.gtlib.material.Material;
@@ -19,50 +19,50 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.ImmutableMap.of;
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.CHUNK;
-import static org.gtreimagined.gtlib.data.AntimatterMaterialTypes.INGOT;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.CHUNK;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.INGOT;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
 
 public class MaterialRecipes {
     public static void init(Consumer<FinishedRecipe> consumer, AntimatterRecipeProvider provider) {
-        final CriterionTriggerInstance in = provider.hasSafeItem(AntimatterDefaultTools.WRENCH.getTag());
-        AntimatterMaterialTypes.DUST.all().forEach(m -> {
-            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "gtlib_dusts", AntimatterMaterialTypes.DUST.get(m, 1), of('D', AntimatterMaterialTypes.DUST_SMALL.getMaterialTag(m)), "DD", "DD");
-            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "gtlib_dusts", AntimatterMaterialTypes.DUST.get(m, 1), of('D', AntimatterMaterialTypes.DUST_TINY.getMaterialTag(m)), "DDD", "DDD", "DDD");
+        final CriterionTriggerInstance in = provider.hasSafeItem(GTTools.WRENCH.getTag());
+        GTMaterialTypes.DUST.all().forEach(m -> {
+            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_SMALL.getMaterialTag(m)), "DD", "DD");
+            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_TINY.getMaterialTag(m)), "DDD", "DDD", "DDD");
         });
-        AntimatterMaterialTypes.INGOT.all().forEach(m -> {
-            if (m.has(AntimatterMaterialTypes.NUGGET) && m != AntimatterMaterials.Iron && m != AntimatterMaterials.Gold){
-                provider.addItemRecipe(consumer, Ref.ID, m.getId() + "_ingot", "ingots", AntimatterMaterialTypes.INGOT.get(m), ImmutableMap.of('I', AntimatterMaterialTypes.NUGGET.getMaterialTag(m)), "III", "III", "III");
-                provider.shapeless(consumer,"nugget_" + m.getId() + "_from_ingot", "ingots", AntimatterMaterialTypes.NUGGET.get(m, 9), AntimatterMaterialTypes.INGOT.getMaterialTag(m));
+        GTMaterialTypes.INGOT.all().forEach(m -> {
+            if (m.has(GTMaterialTypes.NUGGET) && m != GTLibMaterials.Iron && m != GTLibMaterials.Gold){
+                provider.addItemRecipe(consumer, Ref.ID, m.getId() + "_ingot", "ingots", GTMaterialTypes.INGOT.get(m), ImmutableMap.of('I', GTMaterialTypes.NUGGET.getMaterialTag(m)), "III", "III", "III");
+                provider.shapeless(consumer,"nugget_" + m.getId() + "_from_ingot", "ingots", GTMaterialTypes.NUGGET.get(m, 9), GTMaterialTypes.INGOT.getMaterialTag(m));
             }
-            if (m.has(AntimatterMaterialTypes.CHUNK)){
+            if (m.has(GTMaterialTypes.CHUNK)){
                 provider.addItemRecipe(consumer, Ref.ID, "", "ingots", INGOT.get(m), ImmutableMap.of('I', CHUNK.getMaterialTag(m)), "II", "II");
             }
         });
-        AntimatterMaterialTypes.RAW_ORE.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.INGOT)).forEach(m -> {
-            if (m != AntimatterMaterials.Iron && m != AntimatterMaterials.Copper && m != AntimatterMaterials.Gold) {
-                addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.RAW_ORE, AntimatterMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
+        GTMaterialTypes.RAW_ORE.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
+            if (m != GTLibMaterials.Iron && m != GTLibMaterials.Copper && m != GTLibMaterials.Gold) {
+                addSmeltingRecipe(consumer, provider, GTMaterialTypes.RAW_ORE, GTMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
             }
-            addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.ORE, AntimatterMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.ORE, GTMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
         });
-        AntimatterMaterialTypes.CRUSHED.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.INGOT)).forEach(m -> {
-            if (m != SMELT_INTO.getMapping(m) || !m.has(AntimatterMaterialTypes.NUGGET)) return;
-            addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.CRUSHED, AntimatterMaterialTypes.NUGGET, 12, m);
-            addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST_IMPURE, INGOT, 1, m);
-            addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.CRUSHED_PURIFIED, AntimatterMaterialTypes.NUGGET, 11, m);
-            addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST_PURE, INGOT, 1, m);
-            addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.CRUSHED_REFINED, AntimatterMaterialTypes.NUGGET, 10, m);
+        GTMaterialTypes.CRUSHED.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
+            if (m != SMELT_INTO.getMapping(m) || !m.has(GTMaterialTypes.NUGGET)) return;
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.CRUSHED, GTMaterialTypes.NUGGET, 12, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_IMPURE, INGOT, 1, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.CRUSHED_PURIFIED, GTMaterialTypes.NUGGET, 11, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_PURE, INGOT, 1, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.CRUSHED_REFINED, GTMaterialTypes.NUGGET, 10, m);
         });
-        AntimatterMaterialTypes.DUST.all().forEach(m -> {
+        GTMaterialTypes.DUST.all().forEach(m -> {
             if (m.has(MaterialTags.HAS_CUSTOM_SMELTING)) return;
-            if (DIRECT_SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.INGOT)) {
-                addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST, AntimatterMaterialTypes.INGOT, 1, m, DIRECT_SMELT_INTO.getMapping(m));
+            if (DIRECT_SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)) {
+                addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST, GTMaterialTypes.INGOT, 1, m, DIRECT_SMELT_INTO.getMapping(m));
             }
-            if (DIRECT_SMELT_INTO.getMapping(m).has(AntimatterMaterialTypes.NUGGET)) {
-                addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST_TINY, AntimatterMaterialTypes.NUGGET, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
+            if (DIRECT_SMELT_INTO.getMapping(m).has(GTMaterialTypes.NUGGET)) {
+                addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_TINY, GTMaterialTypes.NUGGET, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
             }
             if (DIRECT_SMELT_INTO.getMapping(m).has(CHUNK)) {
-                addSmeltingRecipe(consumer, provider, AntimatterMaterialTypes.DUST_SMALL, CHUNK, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
+                addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_SMALL, CHUNK, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
             }
         });
     }

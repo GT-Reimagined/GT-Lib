@@ -9,7 +9,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.behaviour.IDestroySpeed;
 import org.gtreimagined.gtlib.capability.energy.ItemEnergyHandler;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -54,7 +54,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.KNIFE;
+import static org.gtreimagined.gtlib.data.GTTools.KNIFE;
 
 //@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -127,7 +127,7 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool {
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
-        return Utils.doesStackHaveToolTypes(stack, AntimatterDefaultTools.WRENCH, AntimatterDefaultTools.SCREWDRIVER, AntimatterDefaultTools.CROWBAR, AntimatterDefaultTools.WIRE_CUTTER); // ???
+        return Utils.doesStackHaveToolTypes(stack, GTTools.WRENCH, GTTools.SCREWDRIVER, GTTools.CROWBAR, GTTools.WIRE_CUTTER); // ???
     }
 
     @Override

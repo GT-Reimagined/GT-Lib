@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.pipe;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
-import org.gtreimagined.gtlib.data.AntimatterDefaultTools;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.tool.AntimatterToolType;
@@ -60,7 +60,7 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
 
     @Override
     public AntimatterToolType getToolType() {
-        return AntimatterDefaultTools.WIRE_CUTTER;
+        return GTTools.WIRE_CUTTER;
     }
 
     public boolean isFireSource(BlockState state, LevelReader world, BlockPos pos, Direction side) {

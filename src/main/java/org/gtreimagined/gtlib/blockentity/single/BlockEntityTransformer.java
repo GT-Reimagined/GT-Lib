@@ -19,7 +19,7 @@ import tesseract.api.gt.IEnergyHandler;
 import java.util.List;
 import java.util.function.LongFunction;
 
-import static org.gtreimagined.gtlib.data.AntimatterDefaultTools.SOFT_HAMMER;
+import static org.gtreimagined.gtlib.data.GTTools.SOFT_HAMMER;
 
 public class BlockEntityTransformer<T extends BlockEntityTransformer<T>> extends BlockEntityMachine<T> {
 

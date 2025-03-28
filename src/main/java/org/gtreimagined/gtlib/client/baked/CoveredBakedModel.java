@@ -32,7 +32,7 @@ public class CoveredBakedModel extends AttachableBakedModel {
         BlockEntityBase<?> tile = data.getData(AntimatterProperties.TILE_PROPERTY);
         if (tile == null)
             return quads;
-        CoverHandler<?> covers = tile.getCapability(AntimatterCaps.COVERABLE_HANDLER_CAPABILITY, side)
+        CoverHandler<?> covers = tile.getCapability(GTLibCaps.COVERABLE_HANDLER_CAPABILITY, side)
                 .filter(t -> t instanceof CoverHandler).map(t -> (CoverHandler) t).orElse(null);
         if (covers == null)
             return quads;
