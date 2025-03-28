@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibTags;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
 import org.gtreimagined.gtlib.fluid.AntimatterMaterialFluid;
 import org.gtreimagined.gtlib.material.Material;
@@ -14,11 +14,11 @@ import net.minecraft.world.level.material.Fluids;
 
 import static org.gtreimagined.gtlib.util.TagUtils.getForgelikeFluidTag;
 
-public class AntimatterFluidTagProvider extends AntimatterTagProvider<Fluid> implements IAntimatterProvider {
+public class GTFluidTagProvider extends GTTagProvider<Fluid> implements IGTLibProvider {
 
     private final boolean replace;
 
-    public AntimatterFluidTagProvider(String providerDomain, String providerName, boolean replace) {
+    public GTFluidTagProvider(String providerDomain, String providerName, boolean replace) {
         super(Registry.FLUID, providerDomain, providerName, "fluids");
         this.replace = replace;
     }

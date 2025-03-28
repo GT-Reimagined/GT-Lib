@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.machine;
 
 import org.gtreimagined.gtlib.client.GTLibModelManager;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,8 +25,8 @@ public class BlockMultiMachine extends BlockMachine {
     }
 
     @Override
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
-        AntimatterBlockModelBuilder builder = prov.getBuilder(block);
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
+        GTBlockModelBuilder builder = prov.getBuilder(block);
         buildModelsForState(builder, MachineState.IDLE);
         buildModelsForState(builder, MachineState.ACTIVE);
         buildModelsForState(builder, MachineState.INVALID_STRUCTURE);

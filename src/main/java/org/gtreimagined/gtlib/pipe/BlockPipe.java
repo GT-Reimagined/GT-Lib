@@ -19,10 +19,10 @@ import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.cover.IHaveCover;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.dynamic.BlockDynamic;
 import org.gtreimagined.gtlib.dynamic.ModelConfig;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -81,7 +81,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.collect.ImmutableMap.of;
-import static org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder.SIMPLE;
+import static org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder.SIMPLE;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic implements IItemBlockProvider, EntityBlock, IColorHandler, IMaterialObject, SimpleWaterloggedBlock, ISharedAntimatterObject {
@@ -483,7 +483,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     @Override
-    public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         if (size.ordinal() > 5){
             prov.getBuilder(item).parent(new ResourceLocation(SIMPLE)).texture("all", getSide()).texture("north", getFace());
         } else {
@@ -492,7 +492,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     @Override
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
         prov.getVariantBuilder(block).forAllStates(s -> new VariantBlockStateBuilder.VariantBuilder()
                 .modelFile(getPipeConfig(prov.getBuilder(block)))
                 .uvLock()
@@ -503,7 +503,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         return Ref.ID + ":block/pipe/" + getSize().getId() + "/" + shape + (cull == 0 ? "" : (shape.equals("base") ? "" : "_culled"));
     }
 
-    public AntimatterBlockModelBuilder getPipeConfig(AntimatterBlockModelBuilder builder) {
+    public GTBlockModelBuilder getPipeConfig(GTBlockModelBuilder builder) {
         if (size.ordinal() > 5) return getPipeConfigForFullBlock(builder);
         builder.model(getModelLoc("base", 0), of("all", getSide(), "overlay", getFace()));
         builder.staticConfigId("pipe");
@@ -596,7 +596,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         return builder.loader(GTLibModelManager.LOADER_PIPE);
     }
 
-    public AntimatterBlockModelBuilder getPipeConfigForFullBlock(AntimatterBlockModelBuilder builder) {
+    public GTBlockModelBuilder getPipeConfigForFullBlock(GTBlockModelBuilder builder) {
         builder.model(SIMPLE, of("all", getFace()));
         builder.staticConfigId("pipe");
         builder.particle(getFace());

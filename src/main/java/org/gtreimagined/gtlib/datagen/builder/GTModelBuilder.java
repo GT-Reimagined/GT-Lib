@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AntimatterModelBuilder<T extends AntimatterModelBuilder<T>> implements IModelLocation {
+public class GTModelBuilder<T extends GTModelBuilder<T>> implements IModelLocation {
     protected JGTLibModel model = JGTLibModel.modelKeepElements();
     protected JTextures textures = null;
     protected List<JElement> elements = new ArrayList<>();
@@ -20,7 +20,7 @@ public class AntimatterModelBuilder<T extends AntimatterModelBuilder<T>> impleme
 
     private final ResourceLocation location;
 
-    public AntimatterModelBuilder(ResourceLocation location){
+    public GTModelBuilder(ResourceLocation location){
         this.location = location;
     }
 

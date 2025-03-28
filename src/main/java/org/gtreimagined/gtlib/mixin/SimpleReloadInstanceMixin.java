@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.ReloadableServerResources;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,6 +16,6 @@ public class SimpleReloadInstanceMixin {
     @Inject(method = "updateRegistryTags(Lnet/minecraft/core/RegistryAccess;)V", at = @At(value = "TAIL"))
     public void onUpdateTags(RegistryAccess p_206869, CallbackInfo info) {
         ReloadableServerResources rs = (ReloadableServerResources) (Object) this;
-        AntimatterDynamics.onRecipeCompile(true, rs.getRecipeManager());
+        GTLibDynamics.onRecipeCompile(true, rs.getRecipeManager());
     }
 }

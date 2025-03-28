@@ -2,9 +2,9 @@ package org.gtreimagined.gtlib.block;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IModelProvider;
@@ -56,7 +56,7 @@ public class BlockStoneStair extends StairBlock implements ISharedAntimatterObje
         return new Texture[]{new Texture(type.getDomain(), type.getBeginningPath() + type.getId() + "/" + (suffix.isEmpty() ? "stone" : suffix))};
     }
 
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
         Texture bottom, top, side;
         bottom = top = side = getTextures()[0];
         if (type == VanillaStoneTypes.BASALT && (suffix.isEmpty() || suffix.equals("smooth"))){
@@ -67,12 +67,12 @@ public class BlockStoneStair extends StairBlock implements ISharedAntimatterObje
                 top = bottom = side = new Texture("block/smooth_basalt");
             }
         }
-        AntimatterBlockModelBuilder outer = prov.models().getBuilder(getId() + "_outer").parent(prov.existing("minecraft", "block/outer_stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
-        AntimatterBlockModelBuilder inner = prov.models().getBuilder(getId() + "_inner").parent(prov.existing("minecraft", "block/inner_stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
-        AntimatterBlockModelBuilder regular = prov.models().getBuilder(getId()).parent(prov.existing("minecraft", "block/stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
+        GTBlockModelBuilder outer = prov.models().getBuilder(getId() + "_outer").parent(prov.existing("minecraft", "block/outer_stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
+        GTBlockModelBuilder inner = prov.models().getBuilder(getId() + "_inner").parent(prov.existing("minecraft", "block/inner_stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
+        GTBlockModelBuilder regular = prov.models().getBuilder(getId()).parent(prov.existing("minecraft", "block/stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
         prov.getVariantBuilder(block).forAllStates(s -> {
             VariantBuilder builder = new VariantBuilder();
-            AntimatterBlockModelBuilder b = regular;
+            GTBlockModelBuilder b = regular;
             StairsShape shape = s.getValue(SHAPE);
             Half half = s.getValue(HALF);
             Direction facing = s.getValue(FACING);

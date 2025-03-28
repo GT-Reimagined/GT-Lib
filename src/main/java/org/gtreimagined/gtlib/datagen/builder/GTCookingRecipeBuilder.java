@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class AntimatterCookingRecipeBuilder {
+public class GTCookingRecipeBuilder {
     private final ItemStack result;
     private final Ingredient ingredient;
     private final float experience;
@@ -27,7 +27,7 @@ public class AntimatterCookingRecipeBuilder {
     private String group;
     private final SimpleCookingSerializer<?> recipeSerializer;
 
-    private AntimatterCookingRecipeBuilder(ItemStack resultIn, Ingredient ingredientIn, float experienceIn, int cookingTimeIn, SimpleCookingSerializer<?> serializer) {
+    private GTCookingRecipeBuilder(ItemStack resultIn, Ingredient ingredientIn, float experienceIn, int cookingTimeIn, SimpleCookingSerializer<?> serializer) {
         this.result = resultIn;
         this.ingredient = ingredientIn;
         this.experience = experienceIn;
@@ -35,19 +35,19 @@ public class AntimatterCookingRecipeBuilder {
         this.recipeSerializer = serializer;
     }
 
-    public static AntimatterCookingRecipeBuilder cookingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn, SimpleCookingSerializer<?> serializer) {
-        return new AntimatterCookingRecipeBuilder(resultIn, ingredientIn, experienceIn, cookingTimeIn, serializer);
+    public static GTCookingRecipeBuilder cookingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn, SimpleCookingSerializer<?> serializer) {
+        return new GTCookingRecipeBuilder(resultIn, ingredientIn, experienceIn, cookingTimeIn, serializer);
     }
 
-    public static AntimatterCookingRecipeBuilder blastingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn) {
+    public static GTCookingRecipeBuilder blastingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn) {
         return cookingRecipe(ingredientIn, resultIn, experienceIn, cookingTimeIn, RecipeSerializer.BLASTING_RECIPE);
     }
 
-    public static AntimatterCookingRecipeBuilder smeltingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn) {
+    public static GTCookingRecipeBuilder smeltingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn) {
         return cookingRecipe(ingredientIn, resultIn, experienceIn, cookingTimeIn, RecipeSerializer.SMELTING_RECIPE);
     }
 
-    public AntimatterCookingRecipeBuilder addCriterion(String name, CriterionTriggerInstance criterionIn) {
+    public GTCookingRecipeBuilder addCriterion(String name, CriterionTriggerInstance criterionIn) {
         this.advancementBuilder.addCriterion(name, criterionIn);
         return this;
     }

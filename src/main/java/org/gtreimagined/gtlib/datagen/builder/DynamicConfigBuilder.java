@@ -41,7 +41,7 @@ public class DynamicConfigBuilder {
     }
 
     public DynamicConfigBuilder tex(Texture... textures) {
-        this.textures = AntimatterBlockModelBuilder.buildTextures(textures);
+        this.textures = GTBlockModelBuilder.buildTextures(textures);
         return this;
     }
     @Nullable
@@ -50,12 +50,12 @@ public class DynamicConfigBuilder {
     }
 
     public DynamicConfigBuilder tex(Function<ImmutableMap.Builder<String, Texture>, ImmutableMap.Builder<String, Texture>> func) {
-        this.textures = AntimatterBlockModelBuilder.buildTextures(func.apply(new ImmutableMap.Builder<>()).build());
+        this.textures = GTBlockModelBuilder.buildTextures(func.apply(new ImmutableMap.Builder<>()).build());
         return this;
     }
 
     public DynamicConfigBuilder tex(ImmutableMap<String, Texture> map) {
-        this.textures = AntimatterBlockModelBuilder.buildTextures(map);
+        this.textures = GTBlockModelBuilder.buildTextures(map);
         return this;
     }
 

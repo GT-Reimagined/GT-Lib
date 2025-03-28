@@ -2,8 +2,8 @@ package org.gtreimagined.gtlib.item;
 
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.RenderHelper;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterItemModelBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
@@ -22,11 +22,11 @@ public class ItemMultiTextureBattery extends ItemBattery {
     }
 
     @Override
-    public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         String id = this.getId();
-        AntimatterItemModelBuilder[] builders = new AntimatterItemModelBuilder[8];
+        GTItemModelBuilder[] builders = new GTItemModelBuilder[8];
         for (int i = 0; i < 8; i++) {
-            AntimatterItemModelBuilder builder = prov.getBuilder(id + i);
+            GTItemModelBuilder builder = prov.getBuilder(id + i);
             builder.parent(new ResourceLocation("minecraft", "item/handheld"));
             builder.texture("layer0", new Texture(getDomain(), "item/basic/" + getId() + "/" + i));
             builders[i] = builder;

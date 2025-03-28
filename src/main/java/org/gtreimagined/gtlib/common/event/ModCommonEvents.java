@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.common.event;
 
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import net.devtech.arrp.api.RRPInitEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,7 +14,7 @@ public class ModCommonEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onRRPInit(RRPInitEvent event){
-        AntimatterDynamics.runAssetProvidersDynamically();
+        GTLibDynamics.runAssetProvidersDynamically();
     }
 
 

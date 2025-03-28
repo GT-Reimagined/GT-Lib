@@ -14,11 +14,11 @@ import org.gtreimagined.gtlib.cover.CoverReplacements;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.cover.IHaveCover;
 import org.gtreimagined.gtlib.data.GTTools;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterItemModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
 import org.gtreimagined.gtlib.datagen.json.JLoaderModel;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
@@ -328,8 +328,8 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     }
 
     @Override
-    public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
-        AntimatterItemModelBuilder b = prov.getBuilder(item).parent(type.getItemModelParent()).texture("base", type.getBaseTexture(tier, MachineState.IDLE)[0]);
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
+        GTItemModelBuilder b = prov.getBuilder(item).parent(type.getItemModelParent()).texture("base", type.getBaseTexture(tier, MachineState.IDLE)[0]);
         Texture[] base = type.getBaseTexture(tier, MachineState.ACTIVE);
         if (base.length >= 6) {
             for (int s = 0; s < 6; s++) {
@@ -347,8 +347,8 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     }
 
     @Override
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
-        AntimatterBlockModelBuilder builder = prov.getBuilder(block);
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
+        GTBlockModelBuilder builder = prov.getBuilder(block);
         buildModelsForState(builder, MachineState.IDLE);
         buildModelsForState(builder, MachineState.ACTIVE);
         builder.loader(type.getModelLoader());
@@ -356,7 +356,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
         prov.state(block, builder);
     }
 
-    protected void buildModelsForState(AntimatterBlockModelBuilder builder, MachineState state) {
+    protected void buildModelsForState(GTBlockModelBuilder builder, MachineState state) {
         List<JLoaderModel> arr = new ArrayList<>();
 
         for (Direction dir : Ref.DIRS) {

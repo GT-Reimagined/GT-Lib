@@ -22,59 +22,59 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class AntimatterBlockModelBuilder extends AntimatterModelBuilder<AntimatterBlockModelBuilder>{
+public class GTBlockModelBuilder extends GTModelBuilder<GTBlockModelBuilder> {
 
     public static final String SIMPLE = Ref.ID.concat(":block/preset/simple");
     protected static final String LAYERED = Ref.ID.concat(":block/preset/layered");
 
     protected final List<Consumer<Object>> properties = new ObjectArrayList<>();
 
-    public AntimatterBlockModelBuilder(ResourceLocation outputLocation) {
+    public GTBlockModelBuilder(ResourceLocation outputLocation) {
         super(outputLocation);
     }
 
-    public AntimatterBlockModelBuilder property(String property, Object element) {
+    public GTBlockModelBuilder property(String property, Object element) {
         model.property(property, element);
         return this;
     }
 
-    public AntimatterBlockModelBuilder property(String property, String value) {
+    public GTBlockModelBuilder property(String property, String value) {
         model.property(property, value);
         return this;
     }
 
-    public AntimatterBlockModelBuilder property(String property, String key, String value) {
+    public GTBlockModelBuilder property(String property, String key, String value) {
         return property(property, new StringToString(key, value));
     }
     
     private record StringToString(String key, String value){}
 
-    public AntimatterBlockModelBuilder particle(Texture tex) {
+    public GTBlockModelBuilder particle(Texture tex) {
         model.property("particle", tex.toString());
         return this;
     }
 
-    public AntimatterBlockModelBuilder model(String parent, String... textures) {
+    public GTBlockModelBuilder model(String parent, String... textures) {
         loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(textures)));
     }
 
-    public AntimatterBlockModelBuilder model(String parent, Texture... textures) {
+    public GTBlockModelBuilder model(String parent, Texture... textures) {
         loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(textures)));
     }
 
-    public AntimatterBlockModelBuilder model(String parent, Function<ImmutableMap.Builder<String, Texture>, ImmutableMap.Builder<String, Texture>> func) {
+    public GTBlockModelBuilder model(String parent, Function<ImmutableMap.Builder<String, Texture>, ImmutableMap.Builder<String, Texture>> func) {
         loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(func.apply(new ImmutableMap.Builder<>()).build())));
     }
 
-    public AntimatterBlockModelBuilder model(String parent, ImmutableMap<String, Texture> map) {
+    public GTBlockModelBuilder model(String parent, ImmutableMap<String, Texture> map) {
         loader(GTLibModelManager.LOADER_MAIN);
         return property("model", addModelObject(JLoaderModel.model(), parent, buildTextures(map)));
     }
 
-    public AntimatterBlockModelBuilder rot(int... rotations) {
+    public GTBlockModelBuilder rot(int... rotations) {
         loader(GTLibModelManager.LOADER_MAIN);
         if (rotations.length != 3){
             throw new IllegalStateException("rotations must have no more or less then 3 elements");
@@ -83,11 +83,11 @@ public class AntimatterBlockModelBuilder extends AntimatterModelBuilder<Antimatt
         return this;
     }
 
-    public AntimatterBlockModelBuilder config(int id, String parent, Function<DynamicConfigBuilder, DynamicConfigBuilder> builderFunc) {
+    public GTBlockModelBuilder config(int id, String parent, Function<DynamicConfigBuilder, DynamicConfigBuilder> builderFunc) {
         return config(id, (b, l) -> l.add(builderFunc.apply(b.of(parent))));
     }
 
-    public AntimatterBlockModelBuilder config(int id, IConfigFunction configFunc) {
+    public GTBlockModelBuilder config(int id, IConfigFunction configFunc) {
         loader(GTLibModelManager.LOADER_DYNAMIC);
         ImmutableList<DynamicConfigBuilder> builders = configFunc.apply(new DynamicConfigBuilder(), new ImmutableList.Builder<>()).build();
         JConfigEntry entry = JConfigEntry.configEntry();
@@ -136,7 +136,7 @@ public class AntimatterBlockModelBuilder extends AntimatterModelBuilder<Antimatt
         return LAYERED;
     }
 
-    public AntimatterBlockModelBuilder staticConfigId(String mapId) {
+    public GTBlockModelBuilder staticConfigId(String mapId) {
         loader(GTLibModelManager.LOADER_DYNAMIC);
         return property("staticConfigId", mapId);
     }
@@ -163,7 +163,7 @@ public class AntimatterBlockModelBuilder extends AntimatterModelBuilder<Antimatt
         return builder.build();
     }
 
-    public AntimatterBlockModelBuilder basicConfig(Block block, Texture[] tex) {
+    public GTBlockModelBuilder basicConfig(Block block, Texture[] tex) {
         if (!(block instanceof ITextureProvider) || tex.length < 13) return this;
         model(SIMPLE, ((ITextureProvider) block).getTextures());
 

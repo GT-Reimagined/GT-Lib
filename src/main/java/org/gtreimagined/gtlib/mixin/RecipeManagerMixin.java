@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.mixin;
 
 import com.google.gson.JsonElement;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterRecipeProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -26,6 +26,6 @@ public class RecipeManagerMixin {
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
             at = @At(value = "HEAD"))
     private void removeVanillaRecipes(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
-        AntimatterRecipeProvider.getRECIPES_TO_REMOVE().forEach(map::remove);
+        GTRecipeProvider.getRECIPES_TO_REMOVE().forEach(map::remove);
     }
 }

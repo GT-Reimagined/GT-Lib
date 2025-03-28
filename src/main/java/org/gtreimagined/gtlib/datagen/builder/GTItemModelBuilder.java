@@ -14,44 +14,44 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class AntimatterItemModelBuilder extends AntimatterModelBuilder<AntimatterItemModelBuilder> {
+public class GTItemModelBuilder extends GTModelBuilder<GTItemModelBuilder> {
 
     protected ResourceLocation loader;
 
-    public AntimatterItemModelBuilder(ResourceLocation outputLocation) {
+    public GTItemModelBuilder(ResourceLocation outputLocation) {
         super(outputLocation);
     }
 
-    public AntimatterItemModelBuilder property(String property, Object element) {
+    public GTItemModelBuilder property(String property, Object element) {
         model.property(property, element);
         return this;
     }
 
-    public AntimatterItemModelBuilder property(String property, String value) {
+    public GTItemModelBuilder property(String property, String value) {
         model.property(property, value);
         return this;
     }
 
-    public AntimatterItemModelBuilder property(String property, boolean value) {
+    public GTItemModelBuilder property(String property, boolean value) {
         model.property(property, value);
         return this;
     }
 
-    public AntimatterItemModelBuilder bucketLoader() {
+    public GTItemModelBuilder bucketLoader() {
         super.loader(new ResourceLocation("forge", "bucket"));
         return this;
     }
 
-    public AntimatterItemModelBuilder cell() {
+    public GTItemModelBuilder cell() {
         super.loader(new ResourceLocation(Ref.ID, "cell"));
         return this;
     }
 
-    public AntimatterItemModelBuilder bucketProperties(Fluid fluid) {
+    public GTItemModelBuilder bucketProperties(Fluid fluid) {
         return bucketProperties(fluid, true, FluidUtils.isFluidGaseous(fluid));
     }
 
-    public AntimatterItemModelBuilder bucketProperties(Fluid fluid, boolean tint, boolean islighter) {
+    public GTItemModelBuilder bucketProperties(Fluid fluid, boolean tint, boolean islighter) {
         property("fluid", RegistryUtils.getIdFromFluid(fluid).toString());
         property("flipGas", islighter);
         property("applyTint", tint);
@@ -59,14 +59,14 @@ public class AntimatterItemModelBuilder extends AntimatterModelBuilder<Antimatte
         return bucketLoader();
     }
 
-    public AntimatterItemModelBuilder tex(Consumer<Map<String, String>> texer) {
+    public GTItemModelBuilder tex(Consumer<Map<String, String>> texer) {
         Map<String, String> textureMap = new Object2ObjectArrayMap<>();
         texer.accept(textureMap);
         textureMap.forEach(this::texture);
         return this;
     }
 
-    public AntimatterItemModelBuilder tex(Map<String, Texture> textureMap) {
+    public GTItemModelBuilder tex(Map<String, Texture> textureMap) {
         textureMap.forEach(this::texture);
         return this;
     }
@@ -95,11 +95,11 @@ public class AntimatterItemModelBuilder extends AntimatterModelBuilder<Antimatte
             return this;
         }
 
-        public AntimatterItemModelBuilder end() {
+        public GTItemModelBuilder end() {
             JCondition condition = new JCondition();
             predicates.forEach((k, v) -> condition.parameter(k.toString(), v));
-            AntimatterItemModelBuilder.this.model.addOverride(new JOverride(condition, model.toString()));
-            return AntimatterItemModelBuilder.this;
+            GTItemModelBuilder.this.model.addOverride(new JOverride(condition, model.toString()));
+            return GTItemModelBuilder.this;
         }
     }
 }

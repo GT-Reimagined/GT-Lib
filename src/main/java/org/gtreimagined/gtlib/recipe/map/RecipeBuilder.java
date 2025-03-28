@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.Recipe;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
@@ -104,7 +104,7 @@ public class RecipeBuilder {
             if (advancementBuilder != null){
                 this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
             }
-            AntimatterDynamics.FINISHED_RECIPE_CONSUMER.accept(new Result(this.id, recipe, advancementID));
+            GTLibDynamics.FINISHED_RECIPE_CONSUMER.accept(new Result(this.id, recipe, advancementID));
         }
         return recipe;
     }

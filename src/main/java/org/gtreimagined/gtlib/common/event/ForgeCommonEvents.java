@@ -8,9 +8,9 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.capability.fluid.FluidHandlerItem;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.AntimatterLoot;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockLootProvider;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.GTLoot;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
 import org.gtreimagined.gtlib.gui.container.IAntimatterContainer;
 import org.gtreimagined.gtlib.item.IFluidItem;
 import org.gtreimagined.gtlib.material.Material;
@@ -127,11 +127,11 @@ public class ForgeCommonEvents {
             if (RegistryUtils.blockExists(blockId)) {
                 Block block = RegistryUtils.getBlockFromId(blockId);
                 if (block == Blocks.ICE || block == Blocks.PACKED_ICE || block == Blocks.BLUE_ICE) {
-                    event.getTable().addPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(AntimatterBlockLootProvider.SAW).add(LootItem.lootTableItem(block)).build());
+                    event.getTable().addPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(GTBlockLootProvider.SAW).add(LootItem.lootTableItem(block)).build());
                 }
             }
         }
-        AntimatterLoot.onLootTableLoad(event.getTable().getPool("main"), event.getName());
+        GTLoot.onLootTableLoad(event.getTable().getPool("main"), event.getName());
     }
 
     @SubscribeEvent
@@ -296,8 +296,8 @@ public class ForgeCommonEvents {
     @SubscribeEvent
     public static void recipeEvent(RecipesUpdatedEvent ev) {
         if (ClientHandler.isLocal()) {
-            //AntimatterDynamics.onResourceReload(false);
-            AntimatterDynamics.onRecipeCompile(false, ev.getRecipeManager());
+            //GTLibDynamics.onResourceReload(false);
+            GTLibDynamics.onRecipeCompile(false, ev.getRecipeManager());
         }
     }
 
@@ -308,8 +308,8 @@ public class ForgeCommonEvents {
     @SubscribeEvent
     public static void tagsEvent(TagsUpdatedEvent ev) {
         if (FMLEnvironment.dist == Dist.CLIENT && !ClientHandler.isLocal()) {
-            //AntimatterDynamics.onResourceReload(false);
-            AntimatterDynamics.onRecipeCompile(true, Minecraft.getInstance().getConnection().getRecipeManager());
+            //GTLibDynamics.onResourceReload(false);
+            GTLibDynamics.onRecipeCompile(true, Minecraft.getInstance().getConnection().getRecipeManager());
         }
     }
 

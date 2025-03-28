@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.ForgeTags;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterRecipeProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -27,7 +27,7 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.data.GTLibMaterials.*;
 
 public class StoneRecipes {
-    public static void loadRecipes(Consumer<FinishedRecipe> output, AntimatterRecipeProvider provider){
+    public static void loadRecipes(Consumer<FinishedRecipe> output, GTRecipeProvider provider){
         provider.addItemRecipe(output, "minecraft", "", "furnaces", Items.FURNACE,
                 ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS), "CCC", "C C", "CCC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.DROPPER,

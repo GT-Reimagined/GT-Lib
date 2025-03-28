@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.registration;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterRecipeProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
 import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
 
 /**
@@ -33,5 +33,5 @@ public abstract class ModRegistrar implements IAntimatterObject {
      *
      * @param provider the AM provider.
      */
-    public abstract void craftingRecipes(AntimatterRecipeProvider provider);
+    public abstract void craftingRecipes(GTRecipeProvider provider);
 }

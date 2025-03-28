@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.integration.jeirei.AntimatterJEIREIPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -372,7 +372,7 @@ public final class AntimatterAPI {
          }
     }
 
-    private static void runProvider(IAntimatterProvider provider) {
+    private static void runProvider(IGTLibProvider provider) {
         LogManager.getLogger().debug("Running " + provider.getName());
         provider.run();
     }

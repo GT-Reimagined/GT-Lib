@@ -9,9 +9,9 @@ import org.gtreimagined.gtlib.client.model.loader.DynamicModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.MachineModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.PipeModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.ProxyModelLoader;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.client.resources.model.BakedModel;
@@ -68,23 +68,23 @@ public class GTLibModelManager {
         BLOCK_OVERRIDES.put(RegistryUtils.getIdFromBlock(block), override);
     }
 
-    public static void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    public static void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         IItemProviderOverride override = ITEM_OVERRIDES.get(RegistryUtils.getIdFromItem(item.asItem()));
         if (override != null) override.apply(item.asItem(), prov);
         else if (item instanceof IModelProvider) ((IModelProvider) item).onItemModelBuild(item, prov);
     }
 
-    public static void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
+    public static void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
         IBlockProviderOverride override = BLOCK_OVERRIDES.get(RegistryUtils.getIdFromBlock(block));
         if (override != null) override.apply(block, prov, prov.getBuilder(block));
         else if (block instanceof IModelProvider) ((IModelProvider) block).onBlockModelBuild(block, prov);
     }
 
     public interface IItemProviderOverride {
-        void apply(ItemLike item, AntimatterItemModelProvider prov);
+        void apply(ItemLike item, GTItemModelProvider prov);
     }
 
     public interface IBlockProviderOverride {
-        void apply(Block block, AntimatterBlockStateProvider stateProv, AntimatterBlockModelBuilder modelBuilder);
+        void apply(Block block, GTBlockStateProvider stateProv, GTBlockModelBuilder modelBuilder);
     }
 }

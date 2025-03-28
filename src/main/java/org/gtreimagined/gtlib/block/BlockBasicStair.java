@@ -3,9 +3,9 @@ package org.gtreimagined.gtlib.block;
 import lombok.Getter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.registration.IAntimatterObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
@@ -53,14 +53,14 @@ public class BlockBasicStair extends StairBlock implements IAntimatterObject, IT
         return new Texture[0];
     }
 
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
         Texture texture = getTextures()[0];
-        AntimatterBlockModelBuilder outer = prov.models().getBuilder(getId() + "_outer").parent(prov.existing(Ref.ID, "block/outer_stairs")).texture("bottom", texture).texture("top", texture).texture("side", texture);
-        AntimatterBlockModelBuilder inner = prov.models().getBuilder(getId() + "_inner").parent(prov.existing(Ref.ID, "block/inner_stairs")).texture("bottom", texture).texture("top", texture).texture("side", texture);
-        AntimatterBlockModelBuilder regular = prov.models().getBuilder(getId()).parent(prov.existing(Ref.ID, "block/stairs")).texture("bottom", texture).texture("top", texture).texture("side", texture);
+        GTBlockModelBuilder outer = prov.models().getBuilder(getId() + "_outer").parent(prov.existing(Ref.ID, "block/outer_stairs")).texture("bottom", texture).texture("top", texture).texture("side", texture);
+        GTBlockModelBuilder inner = prov.models().getBuilder(getId() + "_inner").parent(prov.existing(Ref.ID, "block/inner_stairs")).texture("bottom", texture).texture("top", texture).texture("side", texture);
+        GTBlockModelBuilder regular = prov.models().getBuilder(getId()).parent(prov.existing(Ref.ID, "block/stairs")).texture("bottom", texture).texture("top", texture).texture("side", texture);
         prov.getVariantBuilder(block).forAllStates(s -> {
             VariantBlockStateBuilder.VariantBuilder builder = new VariantBlockStateBuilder.VariantBuilder();
-            AntimatterBlockModelBuilder b = regular;
+            GTBlockModelBuilder b = regular;
             StairsShape shape = s.getValue(SHAPE);
             Half half = s.getValue(HALF);
             Direction facing = s.getValue(FACING);

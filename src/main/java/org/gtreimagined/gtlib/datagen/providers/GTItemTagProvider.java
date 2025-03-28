@@ -7,8 +7,8 @@ import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.data.ForgeTags;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterTagBuilder;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTTagBuilder;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialItem;
@@ -46,11 +46,11 @@ import static org.gtreimagined.gtlib.util.TagUtils.*;
 import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
 import static org.gtreimagined.gtlib.util.Utils.getConventionalStoneType;
 
-public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> implements IAntimatterProvider {
+public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProvider {
     private final boolean replace;
-    private final Function<TagKey<Block>, AntimatterTagBuilder<Block>> blockTags;
+    private final Function<TagKey<Block>, GTTagBuilder<Block>> blockTags;
 
-    public AntimatterItemTagProvider(String providerDomain, String providerName, boolean replace, AntimatterBlockTagProvider p) {
+    public GTItemTagProvider(String providerDomain, String providerName, boolean replace, GTBlockTagProvider p) {
         super(Registry.ITEM, providerDomain, providerName, "items");
         Objects.requireNonNull(p);
         this.blockTags = p::getOrCreateRawBuilder;
@@ -113,7 +113,7 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
             });
             AntimatterAPI.all(MaterialItem.class, item -> {
                 TagKey<Item> type = item.getType().getTag();
-                AntimatterTagBuilder<Item> provider = this.tag(type);
+                GTTagBuilder<Item> provider = this.tag(type);
                 provider.add(item).replace(replace);
                 this.tag(item.getTag()).add(item).replace(replace);
                 //if (item.getType() == INGOT || item.getType() == GEM) this.getBuilder(Tags.Items.BEACON_PAYMENT).add(item);
@@ -163,8 +163,8 @@ public class AntimatterItemTagProvider extends AntimatterTagProvider<Item> imple
     }
 
     protected void copy(TagKey<Block> blockTag, TagKey<Item> itemTag) {
-        AntimatterTagBuilder<Item> builder = this.getOrCreateRawBuilder(itemTag);
-        AntimatterTagBuilder<Block> builder2 = this.blockTags.apply(blockTag);
+        GTTagBuilder<Item> builder = this.getOrCreateRawBuilder(itemTag);
+        GTTagBuilder<Block> builder2 = this.blockTags.apply(blockTag);
         Stream<Tag.BuilderEntry> stream = builder2.builder.getEntries();
         Objects.requireNonNull(builder);
         stream.forEach(builder::add);

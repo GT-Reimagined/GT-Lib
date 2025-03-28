@@ -5,9 +5,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterTagBuilder;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTTagBuilder;
 import net.devtech.arrp.json.tags.JTag;
 import net.minecraft.core.Registry;
 import net.minecraft.data.HashCache;
@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
+public abstract class GTTagProvider<T> implements IGTLibProvider {
     private final String providerDomain, providerName, prefix;
-    protected final Map<ResourceLocation, AntimatterTagBuilder<T>> builders;
+    protected final Map<ResourceLocation, GTTagBuilder<T>> builders;
     protected final Registry<T> registry;
     public Object2ObjectMap<ResourceLocation, JsonObject> TAGS = new Object2ObjectOpenHashMap<>();
     public static Object2ObjectOpenHashMap<ResourceLocation, JsonObject> TAGS_GLOBAL = new Object2ObjectOpenHashMap<>();
@@ -32,7 +32,7 @@ public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
 
     public static Object2ObjectOpenHashMap<Registry<?>, Map<ResourceLocation, List<Object>>> TAGS_TO_REMOVE_GLOBAL = new Object2ObjectOpenHashMap<>();
 
-    public AntimatterTagProvider(Registry<T> registry, String providerDomain, String providerName, String prefix) {
+    public GTTagProvider(Registry<T> registry, String providerDomain, String providerName, String prefix) {
         this.builders = Maps.newLinkedHashMap();
         this.registry = registry;
         this.providerDomain = providerDomain;
@@ -43,7 +43,7 @@ public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
 
     @Override
     public void run() {
-        Map<ResourceLocation, AntimatterTagBuilder<T>> b = new HashMap<>(this.builders);
+        Map<ResourceLocation, GTTagBuilder<T>> b = new HashMap<>(this.builders);
         this.builders.clear();
         processTags(providerDomain);
         builders.forEach(this::addTag);
@@ -72,12 +72,12 @@ public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
         return providerName;
     }
 
-    protected AntimatterTagBuilder<T> tag(TagKey<T> tag) {
+    protected GTTagBuilder<T> tag(TagKey<T> tag) {
         return getOrCreateRawBuilder(tag);
     }
 
-    protected AntimatterTagBuilder<T> getOrCreateRawBuilder(TagKey<T> tag) {
-        return this.builders.computeIfAbsent(tag.location(), (location) -> new AntimatterTagBuilder<>(new Tag.Builder(), registry, providerDomain));
+    protected GTTagBuilder<T> getOrCreateRawBuilder(TagKey<T> tag) {
+        return this.builders.computeIfAbsent(tag.location(), (location) -> new GTTagBuilder<>(new Tag.Builder(), registry, providerDomain));
     }
 
     // Must append 's' in the identifier
@@ -102,7 +102,7 @@ public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
 
     // Must append 's' in the identifier
     // Appends data to the tag.
-    public void addTag(ResourceLocation loc, AntimatterTagBuilder<T> obj) {
+    public void addTag(ResourceLocation loc, GTTagBuilder<T> obj) {
         JsonObject json = TAGS.get(loc);
         //if no tag just put this one in.
         if (json == null) {
@@ -118,7 +118,7 @@ public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
     @Override
     public void onCompletion() {
         TAGS.forEach((k, v) -> {
-            ResourceLocation fixed = AntimatterDynamics.getTagLoc(prefix, k);
+            ResourceLocation fixed = GTLibDynamics.getTagLoc(prefix, k);
             JsonObject json = TAGS_GLOBAL.get(fixed);
             if (json != null) {
                 JsonArray local = v.getAsJsonArray("values");
@@ -135,6 +135,6 @@ public abstract class AntimatterTagProvider<T> implements IAntimatterProvider {
     }
 
     public static void afterCompletion(){
-        TAGS_GLOBAL.forEach((k, v) -> AntimatterDynamics.RUNTIME_DATA_PACK.addTag(k, fromJson(v)));
+        TAGS_GLOBAL.forEach((k, v) -> GTLibDynamics.RUNTIME_DATA_PACK.addTag(k, fromJson(v)));
     }
 }

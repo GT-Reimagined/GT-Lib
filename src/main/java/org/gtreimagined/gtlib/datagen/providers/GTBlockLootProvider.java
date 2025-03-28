@@ -11,10 +11,9 @@ import org.gtreimagined.gtlib.block.BlockStoneWall;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.data.GTTools;
-import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.material.Material;
@@ -53,7 +52,7 @@ import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 
-public class AntimatterBlockLootProvider extends BlockLoot implements DataProvider, IAntimatterProvider {
+public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTLibProvider {
     protected final String providerDomain, providerName;
     protected final Map<Block, Function<Block, LootTable.Builder>> tables = new Object2ObjectOpenHashMap<>();
     protected static final Map<Block, Function<Block, LootTable.Builder>> GLOBAL_TABLES = new Object2ObjectOpenHashMap<>();
@@ -72,7 +71,7 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
     //public static final ILootCondition.IBuilder BRANCH_CUTTER_SHEARS_SILK_TOUCH_INVERTED = BRANCH_CUTTER_SHEARS_SILK_TOUCH.inverted();
 
 
-    public AntimatterBlockLootProvider(String providerDomain, String providerName) {
+    public GTBlockLootProvider(String providerDomain, String providerName) {
         this.providerDomain = providerDomain;
         this.providerName = providerName;
     }
@@ -130,7 +129,7 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
     public static void afterCompletion(){
         for (var e : GLOBAL_TABLES.entrySet()) {
             LootTable table = e.getValue().apply(e.getKey()).setParamSet(LootContextParamSets.BLOCK).build();
-            AntimatterDynamics.RUNTIME_DATA_PACK.addData(AntimatterDynamics.fix(RegistryUtils.getIdFromBlock(e.getKey()), "loot_tables/blocks", "json"), AntimatterDynamics.serialize(table));
+            GTLibDynamics.RUNTIME_DATA_PACK.addData(GTLibDynamics.fix(RegistryUtils.getIdFromBlock(e.getKey()), "loot_tables/blocks", "json"), GTLibDynamics.serialize(table));
         }
     }
 
@@ -177,13 +176,13 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
 
     public static Function<Block, LootTable.Builder> addToFortuneWithoutCustomDrops(BlockOre block) {
         if (block.getOreType() == ORE_SMALL) {
-            if (!block.getMaterial().has(GTMaterialTypes.GEM) && !(block.getMaterial().has(GTMaterialTypes.CRUSHED))) {
+            if (!block.getMaterial().has(GEM) && !(block.getMaterial().has(CRUSHED))) {
                 if (block.getMaterial().has(DUST)){
                     return b -> BlockLoot.createSingleItemTable(DUST.get(block.getMaterial()));
                 }
                 return BlockLoot::createSingleItemTable;
             }
-            Item item = block.getMaterial().has(GTMaterialTypes.GEM) ? GTMaterialTypes.GEM.get(block.getMaterial()) : null;
+            Item item = block.getMaterial().has(GEM) ? GEM.get(block.getMaterial()) : null;
             int multiplier = MaterialTags.ORE_MULTI.getInt(block.getMaterial());
             LootPool.Builder builder;
             if (item != null) {
@@ -191,25 +190,25 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
             } else {
                 builder = LootPool.lootPool();
             }
-            if (block.getMaterial().has(GTMaterialTypes.CRUSHED)) {
-                Item crushed = GTMaterialTypes.CRUSHED.get(block.getMaterial());
+            if (block.getMaterial().has(CRUSHED)) {
+                Item crushed = CRUSHED.get(block.getMaterial());
                 //builder.addLootPool(withSurvivesExplosion(crushed, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(crushed))));
                 builder.add(applyExplosionDecay(crushed, LootItem.lootTableItem(crushed).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f * multiplier, 2.0f * multiplier))).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE)).setWeight(40)));
             }
-            if (block.getMaterial().has(GTMaterialTypes.DUST_IMPURE)) {
-                Item dirty = GTMaterialTypes.DUST_IMPURE.get(block.getMaterial());
+            if (block.getMaterial().has(DUST_IMPURE)) {
+                Item dirty = DUST_IMPURE.get(block.getMaterial());
                 //builder.addLootPool(withSurvivesExplosion(dirty, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(dirty))));
                 builder.add(applyExplosionDecay(dirty, LootItem.lootTableItem(dirty).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f * multiplier, 2.0f * multiplier))).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))).setWeight(60));
             }
             return b -> LootTable.lootTable().withPool(builder);
         } else if (block.getOreType() == ORE) {
             Item drop;
-            if (block.getMaterial().has(GTMaterialTypes.CRUSHED) || block.getMaterial().has(GTMaterialTypes.DUST)){
-                drop = block.getMaterial().has(GTMaterialTypes.CRUSHED) ? GTMaterialTypes.CRUSHED.get(block.getMaterial()) : GTMaterialTypes.DUST.get(block.getMaterial());
+            if (block.getMaterial().has(CRUSHED) || block.getMaterial().has(DUST)){
+                drop = block.getMaterial().has(CRUSHED) ? CRUSHED.get(block.getMaterial()) : DUST.get(block.getMaterial());
             } else {
                 drop = null;
             }
-            Item item = block.getStoneType().isSandLike() ? block.asItem() : GTMaterialTypes.RAW_ORE.get(block.getMaterial());
+            Item item = block.getStoneType().isSandLike() ? block.asItem() : RAW_ORE.get(block.getMaterial());
             return b -> createOreDropWithHammer(b, item, drop, MaterialTags.ORE_MULTI.get(block.getMaterial()));
         }
         return BlockLoot::createSingleItemTable;
@@ -237,8 +236,8 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
             tables.put(block, b -> MaterialTags.CUSTOM_ORE_STONE_DROPS.getBuilderFunction(block.getMaterial()).apply(block));
             return;
         }
-        if (block.getMaterial().has(GTMaterialTypes.RAW_ORE)) {
-            Item item = GTMaterialTypes.RAW_ORE.get(block.getMaterial());
+        if (block.getMaterial().has(RAW_ORE)) {
+            Item item = RAW_ORE.get(block.getMaterial());
             tables.put(block, b -> createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))).apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE)))));
             return;
         }
@@ -260,6 +259,6 @@ public class AntimatterBlockLootProvider extends BlockLoot implements DataProvid
 
 
     protected static LootTable.Builder droppingWithBranchCutters(Block block, Block sapling, float... chances) {
-        return createLeavesDrops(block, sapling, chances).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(AntimatterBlockLootProvider.BRANCH_CUTTER).add(LootItem.lootTableItem(sapling)));
+        return createLeavesDrops(block, sapling, chances).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(GTBlockLootProvider.BRANCH_CUTTER).add(LootItem.lootTableItem(sapling)));
     }
 }

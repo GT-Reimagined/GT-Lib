@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.mixin;
 
 import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterTagProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -36,7 +36,7 @@ public abstract class TagLoaderMixin {
         if (directory.equals("tags/items")) {
             try {
                 Map<ResourceLocation, Tag<Holder<Item>>> tags = Utils.cast(cir.getReturnValue());
-                Map<ResourceLocation, List<Item>> tagMap = Utils.cast(AntimatterTagProvider.TAGS_TO_REMOVE_GLOBAL.get(Registry.ITEM));
+                Map<ResourceLocation, List<Item>> tagMap = Utils.cast(GTTagProvider.TAGS_TO_REMOVE_GLOBAL.get(Registry.ITEM));
                 tagMap.forEach((resourceLocation, items) -> {
                     if (tags.containsKey(resourceLocation)){
                         Tag<Holder<Item>> tag = tags.get(resourceLocation);
@@ -51,7 +51,7 @@ public abstract class TagLoaderMixin {
         if (directory.equals("tags/blocks")) {
             try {
                 Map<ResourceLocation, Tag<Holder<Block>>> tags = Utils.cast(cir.getReturnValue());
-                Map<ResourceLocation, List<Block>> tagMap = Utils.cast(AntimatterTagProvider.TAGS_TO_REMOVE_GLOBAL.get(Registry.BLOCK));
+                Map<ResourceLocation, List<Block>> tagMap = Utils.cast(GTTagProvider.TAGS_TO_REMOVE_GLOBAL.get(Registry.BLOCK));
                 tagMap.forEach((resourceLocation, items) -> {
                     if (tags.containsKey(resourceLocation)){
                         Tag<Holder<Block>> tag = tags.get(resourceLocation);
@@ -66,7 +66,7 @@ public abstract class TagLoaderMixin {
         if (directory.equals("tags/fluids")) {
             try {
                 Map<ResourceLocation, Tag<Holder<Fluid>>> tags = Utils.cast(cir.getReturnValue());
-                Map<ResourceLocation, List<Fluid>> tagMap = Utils.cast(AntimatterTagProvider.TAGS_TO_REMOVE_GLOBAL.get(Registry.FLUID));
+                Map<ResourceLocation, List<Fluid>> tagMap = Utils.cast(GTTagProvider.TAGS_TO_REMOVE_GLOBAL.get(Registry.FLUID));
                 tagMap.forEach((resourceLocation, items) -> {
                     if (tags.containsKey(resourceLocation)){
                         Tag<Holder<Fluid>> tag = tags.get(resourceLocation);

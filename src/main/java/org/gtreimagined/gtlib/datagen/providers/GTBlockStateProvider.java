@@ -6,9 +6,9 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.IModelLocation;
 import org.gtreimagined.gtlib.datagen.builder.IStateBuilder;
 import org.gtreimagined.gtlib.datagen.builder.MultiPartBlockStateBuilder;
@@ -53,17 +53,17 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class AntimatterBlockStateProvider implements IAntimatterProvider {
+public class GTBlockStateProvider implements IGTLibProvider {
 
     protected final String modid, providerName;
-    protected final AntimatterBlockModelProvider blockModelProvider;
+    protected final GTBlockModelProvider blockModelProvider;
     protected final Map<Block, IStateBuilder> registeredBlocks = new LinkedHashMap<>();
 
-    public AntimatterBlockStateProvider(String modid, String providerName) {
-        this(modid, providerName, AntimatterBlockModelProvider::new);
+    public GTBlockStateProvider(String modid, String providerName) {
+        this(modid, providerName, GTBlockModelProvider::new);
     }
 
-    public AntimatterBlockStateProvider(String modid, String providerName, BiFunction<String, String, AntimatterBlockModelProvider> function) {
+    public GTBlockStateProvider(String modid, String providerName, BiFunction<String, String, GTBlockModelProvider> function) {
         this.modid = modid;
         this.providerName = providerName;
         this.blockModelProvider = function.apply(modid, providerName);
@@ -96,12 +96,12 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
             if (RegistryUtils.getIdFromBlock(b) == null) { //TODO ?
                 BlockBasic block = (BlockBasic) b;
             } else {
-                AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addBlockState(s.toState(), RegistryUtils.getIdFromBlock(b));
+                GTLibDynamics.DYNAMIC_RESOURCE_PACK.addBlockState(s.toState(), RegistryUtils.getIdFromBlock(b));
             }
         });
     }
 
-    public AntimatterBlockModelProvider models() {
+    public GTBlockModelProvider models() {
         return blockModelProvider;
     }
 
@@ -110,14 +110,14 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
         AntimatterAPI.all(AntimatterFluid.class, domain).forEach(f -> state(f.getFluidBlock(), getBuilder(f.getFluidBlock()).texture("particle", f.getAttributes().getStillTexture())));
     }
 
-    public AntimatterBlockModelBuilder getBuilder(Block block) {
+    public GTBlockModelBuilder getBuilder(Block block) {
         if (RegistryUtils.getIdFromBlock(block) == null) {
             return models().getBuilder(((BlockBasic) block).getId());
         }
         return models().getBuilder(RegistryUtils.getIdFromBlock(block).getPath());
     }
 
-    public AntimatterBlockModelBuilder cubeAll(Block block, ResourceLocation texture) {
+    public GTBlockModelBuilder cubeAll(Block block, ResourceLocation texture) {
         return models().cubeAll(RegistryUtils.getIdFromBlock(block).toString(), texture);
     }
 
@@ -137,19 +137,19 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
         }
     }
 
-    public AntimatterBlockModelBuilder getSimpleModel(Block block, ResourceLocation texture) {
+    public GTBlockModelBuilder getSimpleModel(Block block, ResourceLocation texture) {
         return getBuilder(block).parent(loc(Ref.ID, "block/preset/simple")).texture("all", texture);
     }
 
-    public AntimatterBlockModelBuilder getSimpleModel(Block block, ResourceLocation... texture) {
+    public GTBlockModelBuilder getSimpleModel(Block block, ResourceLocation... texture) {
         return getBuilder(block).parent(loc(Ref.ID, "block/preset/simple")).texture("down", texture[0]).texture("up", texture[1]).texture("south", texture[2]).texture("north", texture[3]).texture("west", texture[4]).texture("east", texture[5]).texture("particle", texture[1]);
     }
 
-    public AntimatterBlockModelBuilder getLayeredModel(Block block, ResourceLocation... texture) {
+    public GTBlockModelBuilder getLayeredModel(Block block, ResourceLocation... texture) {
         return getBuilder(block).parent(loc(Ref.ID, "block/preset/layered")).texture("basedown", texture[0]).texture("baseup", texture[1]).texture("basesouth", texture[2]).texture("basenorth", texture[3]).texture("basewest", texture[4]).texture("baseeast", texture[5]).texture("overlaydown", texture[6]).texture("overlayup", texture[7]).texture("overlaysouth", texture[8]).texture("overlaynorth", texture[9]).texture("overlaywest", texture[10]).texture("overlayeast", texture[11]).texture("particle", texture[1]);
     }
 
-    public AntimatterBlockModelBuilder getLayeredModel(Block block, ResourceLocation base, ResourceLocation overlay) {
+    public GTBlockModelBuilder getLayeredModel(Block block, ResourceLocation base, ResourceLocation overlay) {
         return getBuilder(block).parent(loc(Ref.ID, "block/preset/layered")).texture("base", base).texture("overlay", overlay);
     }
 
@@ -168,7 +168,7 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
 
     public ResourceLocation blockTexture(Block block) {
         ResourceLocation name = RegistryUtils.getIdFromBlock(block);
-        return new ResourceLocation(name.getNamespace(), AntimatterModelProvider.BLOCK_FOLDER + "/" + name.getPath());
+        return new ResourceLocation(name.getNamespace(), GTModelProvider.BLOCK_FOLDER + "/" + name.getPath());
     }
 
     public VariantBlockStateBuilder getVariantBuilder(Block b) {
@@ -199,7 +199,7 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
         return new ResourceLocation(rl.getNamespace(), rl.getPath() + suffix);
     }
 
-    public AntimatterBlockModelBuilder cubeAll(Block block) {
+    public GTBlockModelBuilder cubeAll(Block block) {
         return models().cubeAll(name(block), blockTexture(block));
     }
 
@@ -338,9 +338,9 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
     }
 
     private void stairsBlockInternal(StairBlock block, String baseName, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
-        AntimatterBlockModelBuilder stairs = models().stairs(baseName, side, bottom, top);
-        AntimatterBlockModelBuilder stairsInner = models().stairsInner(baseName + "_inner", side, bottom, top);
-        AntimatterBlockModelBuilder stairsOuter = models().stairsOuter(baseName + "_outer", side, bottom, top);
+        GTBlockModelBuilder stairs = models().stairs(baseName, side, bottom, top);
+        GTBlockModelBuilder stairsInner = models().stairsInner(baseName + "_inner", side, bottom, top);
+        GTBlockModelBuilder stairsOuter = models().stairsOuter(baseName + "_outer", side, bottom, top);
         stairsBlock(block, stairs, stairsInner, stairsOuter);
     }
 
@@ -387,8 +387,8 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
     }
 
     public void buttonBlock(ButtonBlock block, ResourceLocation texture) {
-        AntimatterBlockModelBuilder button = models().button(name(block), texture);
-        AntimatterBlockModelBuilder buttonPressed = models().buttonPressed(name(block) + "_pressed", texture);
+        GTBlockModelBuilder button = models().button(name(block), texture);
+        GTBlockModelBuilder buttonPressed = models().buttonPressed(name(block) + "_pressed", texture);
         buttonBlock(block, button, buttonPressed);
     }
 
@@ -407,8 +407,8 @@ public class AntimatterBlockStateProvider implements IAntimatterProvider {
     }
 
     public void pressurePlateBlock(PressurePlateBlock block, ResourceLocation texture) {
-        AntimatterBlockModelBuilder pressurePlate = models().pressurePlate(name(block), texture);
-        AntimatterBlockModelBuilder pressurePlateDown = models().pressurePlateDown(name(block) + "_down", texture);
+        GTBlockModelBuilder pressurePlate = models().pressurePlate(name(block), texture);
+        GTBlockModelBuilder pressurePlateDown = models().pressurePlateDown(name(block) + "_down", texture);
         pressurePlateBlock(block, pressurePlate, pressurePlateDown);
     }
 

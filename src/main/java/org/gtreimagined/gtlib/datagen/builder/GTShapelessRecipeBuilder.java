@@ -23,56 +23,56 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AntimatterShapelessRecipeBuilder {
+public class GTShapelessRecipeBuilder {
 
     private final ItemStack result;
     private final List<Ingredient> ingredients = Lists.newArrayList();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
 
-    public AntimatterShapelessRecipeBuilder(ItemStack result) {
+    public GTShapelessRecipeBuilder(ItemStack result) {
         this.result = result;
     }
 
     /**
      * Creates a new builder for a shapeless recipe.
      */
-    public static AntimatterShapelessRecipeBuilder shapeless(ItemLike result) {
-        return new AntimatterShapelessRecipeBuilder(new ItemStack(result, 1));
+    public static GTShapelessRecipeBuilder shapeless(ItemLike result) {
+        return new GTShapelessRecipeBuilder(new ItemStack(result, 1));
     }
 
     /**
      * Creates a new builder for a shapeless recipe.
      */
-    public static AntimatterShapelessRecipeBuilder shapeless(ItemLike result, int count) {
-        return new AntimatterShapelessRecipeBuilder(new ItemStack(result, count));
+    public static GTShapelessRecipeBuilder shapeless(ItemLike result, int count) {
+        return new GTShapelessRecipeBuilder(new ItemStack(result, count));
     }
 
     /**
      * Creates a new builder for a shapeless recipe.
      */
-    public static AntimatterShapelessRecipeBuilder shapeless(ItemStack stack) {
-        return new AntimatterShapelessRecipeBuilder(stack);
+    public static GTShapelessRecipeBuilder shapeless(ItemStack stack) {
+        return new GTShapelessRecipeBuilder(stack);
     }
 
     /**
      * Adds an ingredient that can be any item in the given tag.
      */
-    public AntimatterShapelessRecipeBuilder requires(TagKey<Item> tagIn) {
+    public GTShapelessRecipeBuilder requires(TagKey<Item> tagIn) {
         return this.requires(Ingredient.of(tagIn));
     }
 
     /**
      * Adds an ingredient of the given item.
      */
-    public AntimatterShapelessRecipeBuilder requires(ItemLike itemIn) {
+    public GTShapelessRecipeBuilder requires(ItemLike itemIn) {
         return this.requires(itemIn, 1);
     }
 
     /**
      * Adds the given ingredient multiple times.
      */
-    public AntimatterShapelessRecipeBuilder requires(ItemLike itemIn, int quantity) {
+    public GTShapelessRecipeBuilder requires(ItemLike itemIn, int quantity) {
         for (int i = 0; i < quantity; ++i) {
             this.requires(Ingredient.of(itemIn));
         }
@@ -82,14 +82,14 @@ public class AntimatterShapelessRecipeBuilder {
     /**
      * Adds an ingredient.
      */
-    public AntimatterShapelessRecipeBuilder requires(Ingredient ingredientIn) {
+    public GTShapelessRecipeBuilder requires(Ingredient ingredientIn) {
         return this.requires(ingredientIn, 1);
     }
 
     /**
      * Adds an ingredient multiple times.
      */
-    public AntimatterShapelessRecipeBuilder requires(Ingredient ingredientIn, int quantity) {
+    public GTShapelessRecipeBuilder requires(Ingredient ingredientIn, int quantity) {
         for (int i = 0; i < quantity; ++i) {
             this.ingredients.add(ingredientIn);
         }
@@ -99,12 +99,12 @@ public class AntimatterShapelessRecipeBuilder {
     /**
      * Adds a criterion needed to unlock the recipe.
      */
-    public AntimatterShapelessRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterionIn) {
+    public GTShapelessRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterionIn) {
         this.advancementBuilder.addCriterion(name, criterionIn);
         return this;
     }
 
-    public AntimatterShapelessRecipeBuilder group(String groupIn) {
+    public GTShapelessRecipeBuilder group(String groupIn) {
         this.group = groupIn;
         return this;
     }

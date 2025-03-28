@@ -2,8 +2,8 @@ package org.gtreimagined.gtlib.tool;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterItemModelBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.registration.IAntimatterObject;
@@ -73,10 +73,10 @@ public interface IAntimatterArmor extends IAntimatterObject, IColorHandler, ITex
     }
 
     @Override
-    default void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    default void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         if (this.getAntimatterArmorType().getSlot() == EquipmentSlot.HEAD) {
             String id = this.getId();
-            AntimatterItemModelBuilder builder = prov.getBuilder(id + "_probe");
+            GTItemModelBuilder builder = prov.getBuilder(id + "_probe");
             builder.parent(new ResourceLocation("minecraft", "item/handheld"));
             Texture[] textures = getTextures();
             for (int i = 0; i < textures.length + 1; i++) {

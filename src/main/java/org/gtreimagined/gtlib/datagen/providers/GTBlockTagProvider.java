@@ -33,10 +33,10 @@ import static org.gtreimagined.gtlib.util.TagUtils.getForgelikeBlockTag;
 import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
 import static org.gtreimagined.gtlib.util.Utils.getConventionalStoneType;
 
-public class AntimatterBlockTagProvider extends AntimatterTagProvider<Block> {
+public class GTBlockTagProvider extends GTTagProvider<Block> {
     private final boolean replace;
 
-    public AntimatterBlockTagProvider(String providerDomain, String providerName, boolean replace) {
+    public GTBlockTagProvider(String providerDomain, String providerName, boolean replace) {
         super(Registry.BLOCK, providerDomain, providerName, "blocks");
         this.replace = replace;
     }

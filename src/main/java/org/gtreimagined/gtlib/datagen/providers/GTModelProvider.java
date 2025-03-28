@@ -2,15 +2,15 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterModelBuilder;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.builder.GTModelBuilder;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AntimatterModelProvider<T extends AntimatterModelBuilder<T>> {
+public abstract class GTModelProvider<T extends GTModelBuilder<T>> {
     public static final String BLOCK_FOLDER = "block";
     public static final String ITEM_FOLDER = "item";
     protected final String modid;
@@ -18,7 +18,7 @@ public abstract class AntimatterModelProvider<T extends AntimatterModelBuilder<T
     protected final Function<ResourceLocation, T> factory;
     @VisibleForTesting
     public final Map<ResourceLocation, T> generatedModels = new HashMap<>();
-    public AntimatterModelProvider(String modid, String folder, Function<ResourceLocation, T> factory){
+    public GTModelProvider(String modid, String folder, Function<ResourceLocation, T> factory){
         this.modid = modid;
         this.folder = folder;
         this.factory = factory;
@@ -329,6 +329,6 @@ public abstract class AntimatterModelProvider<T extends AntimatterModelBuilder<T
     }
 
     public void buildAll(){
-        this.generatedModels.forEach((r, m) -> AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addAsset(AntimatterDynamics.fix(r, "models", "json"), AntimatterDynamics.serialize(m.build())));
+        this.generatedModels.forEach((r, m) -> GTLibDynamics.DYNAMIC_RESOURCE_PACK.addAsset(GTLibDynamics.fix(r, "models", "json"), GTLibDynamics.serialize(m.build())));
     }
 }

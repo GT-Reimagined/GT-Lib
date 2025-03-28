@@ -11,18 +11,18 @@ import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.data.GTLibBlocks;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.AntimatterLoot;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.GTLoot;
 import org.gtreimagined.gtlib.datagen.loaders.MaterialRecipes;
 import org.gtreimagined.gtlib.datagen.loaders.StoneRecipes;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockLootProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockTagProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterFluidTagProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemTagProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterLanguageProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterTagProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockTagProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTFluidTagProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemTagProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
 import org.gtreimagined.gtlib.event.AntimatterCraftingEvent;
 import org.gtreimagined.gtlib.event.AntimatterProvidersEvent;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
@@ -105,18 +105,18 @@ public class Antimatter extends AntimatterMod {
         if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)){
             new KubeJSRegistrar();
         }
-        AntimatterDynamics.clientProvider(Ref.ID,
-                () -> new AntimatterBlockStateProvider(Ref.ID, Ref.NAME.concat(" BlockStates")));
-        AntimatterDynamics.clientProvider(Ref.ID,
-                () -> new AntimatterItemModelProvider(Ref.ID, Ref.NAME.concat(" Item Models")));
-        AntimatterDynamics.clientProvider(Ref.SHARED_ID,
-                () -> new AntimatterBlockStateProvider(Ref.SHARED_ID, "GT Shared BlockStates"));
-        AntimatterDynamics.clientProvider(Ref.SHARED_ID,
-                () -> new AntimatterItemModelProvider(Ref.SHARED_ID, "GT Shared Item Models"));
-        AntimatterDynamics.clientProvider(Ref.ID,
-                () -> new AntimatterLanguageProvider(Ref.ID, Ref.NAME.concat(" en_us Localization"), "en_us"));
-        AntimatterDynamics.clientProvider(Ref.SHARED_ID,
-                () -> new AntimatterLanguageProvider(Ref.SHARED_ID, Ref.NAME.concat(" en_us Localization (Shared)"), "en_us"));
+        GTLibDynamics.clientProvider(Ref.ID,
+                () -> new GTBlockStateProvider(Ref.ID, Ref.NAME.concat(" BlockStates")));
+        GTLibDynamics.clientProvider(Ref.ID,
+                () -> new GTItemModelProvider(Ref.ID, Ref.NAME.concat(" Item Models")));
+        GTLibDynamics.clientProvider(Ref.SHARED_ID,
+                () -> new GTBlockStateProvider(Ref.SHARED_ID, "GT Shared BlockStates"));
+        GTLibDynamics.clientProvider(Ref.SHARED_ID,
+                () -> new GTItemModelProvider(Ref.SHARED_ID, "GT Shared Item Models"));
+        GTLibDynamics.clientProvider(Ref.ID,
+                () -> new GTLanguageProvider(Ref.ID, Ref.NAME.concat(" en_us Localization"), "en_us"));
+        GTLibDynamics.clientProvider(Ref.SHARED_ID,
+                () -> new GTLanguageProvider(Ref.SHARED_ID, Ref.NAME.concat(" en_us Localization (Shared)"), "en_us"));
         AntimatterAPI.init();
         AntimatterNetwork.register();
         AntimatterConfig.createConfig();
@@ -138,17 +138,17 @@ public class Antimatter extends AntimatterMod {
     }
 
     public void providers(AntimatterProvidersEvent ev) {
-        final AntimatterBlockTagProvider[] p = new AntimatterBlockTagProvider[1];
+        final GTBlockTagProvider[] p = new GTBlockTagProvider[1];
         ev.addProvider(() -> {
-            p[0] = new AntimatterBlockTagProvider(Ref.ID, Ref.NAME.concat(" Block Tags"), false);
+            p[0] = new GTBlockTagProvider(Ref.ID, Ref.NAME.concat(" Block Tags"), false);
             return p[0];
         });
-        ev.addProvider(() -> new AntimatterFluidTagProvider(Ref.SHARED_ID,
+        ev.addProvider(() -> new GTFluidTagProvider(Ref.SHARED_ID,
                 "GT Shared Fluid Tags", false));
-        ev.addProvider(() -> new AntimatterItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
+        ev.addProvider(() -> new GTItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
                 false, p[0]));
-        ev.addProvider(() -> new AntimatterBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
-        ev.addProvider(() -> new AntimatterTagProvider<Biome>(BuiltinRegistries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome") {
+        ev.addProvider(() -> new GTBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
+        ev.addProvider(() -> new GTTagProvider<Biome>(BuiltinRegistries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome") {
             @Override
             protected void processTags(String domain) {
                 this.tag(TagUtils.getBiomeTag(new ResourceLocation("is_desert"))).add(Biomes.DESERT);
@@ -164,7 +164,7 @@ public class Antimatter extends AntimatterMod {
     public void onRegistrationEvent(RegistrationEvent event, Dist side) {
         if (event == RegistrationEvent.DATA_INIT) {
             Recipe.init();
-            AntimatterLoot.RandomWeightLootFunction.init();
+            GTLoot.RandomWeightLootFunction.init();
             SlotType.init();
             RecipeBuilders.init();
             MachineState.init();
@@ -248,9 +248,9 @@ public class Antimatter extends AntimatterMod {
             ClientData.init();
             if (AntimatterConfig.OVERRIDE_BASALT_TEXTURE.get()){
                 try {
-                    AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_top"), readImage("block/stone/basalt/stone"));
-                    AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_side"), readImage("block/stone/basalt/stone"));
-                    AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/smooth_basalt"), readImage("block/stone/basalt/smooth"));
+                    GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_top"), readImage("block/stone/basalt/stone"));
+                    GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_side"), readImage("block/stone/basalt/stone"));
+                    GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/smooth_basalt"), readImage("block/stone/basalt/smooth"));
                 } catch (IOException e){
                     e.printStackTrace();
                 }
@@ -272,7 +272,7 @@ public class Antimatter extends AntimatterMod {
     private void clientSetup(final FMLClientSetupEvent e) {
         ClientHandler.setup();
         AntimatterAPI.onRegistration(RegistrationEvent.DATA_READY);
-        AntimatterDynamics.runDataProvidersDynamically();
+        GTLibDynamics.runDataProvidersDynamically();
         e.enqueueWork(() -> AntimatterAPI.getClientDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {
@@ -286,7 +286,7 @@ public class Antimatter extends AntimatterMod {
 
     private void commonSetup(final FMLCommonSetupEvent e) {
         CommonHandler.setup();
-        AntimatterDynamics.setInitialized();
+        GTLibDynamics.setInitialized();
         LOGGER.info("GTLib Data Processing has Finished. All Data Objects can now be Modified!");
         e.enqueueWork(() -> AntimatterAPI.getCommonDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
@@ -305,7 +305,7 @@ public class Antimatter extends AntimatterMod {
     private void serverSetup(final FMLDedicatedServerSetupEvent e) {
         ServerHandler.setup();
         AntimatterAPI.onRegistration(RegistrationEvent.DATA_READY);
-        AntimatterDynamics.runDataProvidersDynamically();
+        GTLibDynamics.runDataProvidersDynamically();
         e.enqueueWork(() -> AntimatterAPI.getServerDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {

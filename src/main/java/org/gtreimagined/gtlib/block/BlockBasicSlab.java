@@ -2,9 +2,9 @@ package org.gtreimagined.gtlib.block;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.registration.IAntimatterObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
@@ -45,11 +45,11 @@ public class BlockBasicSlab extends SlabBlock implements IAntimatterObject, ITex
         return new Texture[0];
     }
 
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
         Texture texture = getTextures()[0];
         ResourceLocation both = prov.existing(this.getDomain(), "block/" + this.getId().replace("_slab", ""));
-        AntimatterBlockModelBuilder top = prov.models().getBuilder(getId() + "_top").parent(prov.existing(Ref.ID, "block/slab_top")).texture("bottom", texture).texture("top", texture).texture("side", texture);
-        AntimatterBlockModelBuilder bottom = prov.models().getBuilder(getId()).parent(prov.existing(Ref.ID, "block/slab")).texture("bottom", texture).texture("top", texture).texture("side", texture);
+        GTBlockModelBuilder top = prov.models().getBuilder(getId() + "_top").parent(prov.existing(Ref.ID, "block/slab_top")).texture("bottom", texture).texture("top", texture).texture("side", texture);
+        GTBlockModelBuilder bottom = prov.models().getBuilder(getId()).parent(prov.existing(Ref.ID, "block/slab")).texture("bottom", texture).texture("top", texture).texture("side", texture);
         ResourceLocation finalBoth = both;
         prov.getVariantBuilder(block).forAllStates(s -> {
             if (s.getValue(TYPE) == SlabType.DOUBLE) {

@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.energy.ItemEnergyHandler;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.integration.curios.CuriosHelper;
 import org.gtreimagined.gtlib.item.ICustomDurability;
 import org.gtreimagined.gtlib.item.ItemBattery;
@@ -333,7 +333,7 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
     }
 
     @Override
-    default void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    default void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         prov.tex(item, "minecraft:item/handheld", getTextures());
     }
 

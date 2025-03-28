@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class AntimatterShapedRecipeBuilder {
+public class GTShapedRecipeBuilder {
 
     private final List<ItemStack> result;
     private final List<String> pattern = Lists.newArrayList();
@@ -43,11 +43,11 @@ public class AntimatterShapedRecipeBuilder {
     private String group;
     private boolean mirrored = false;
 
-    public AntimatterShapedRecipeBuilder(ItemStack result) {
+    public GTShapedRecipeBuilder(ItemStack result) {
         this.result = Collections.singletonList(result);
     }
 
-    public AntimatterShapedRecipeBuilder(List<ItemStack> result) {
+    public GTShapedRecipeBuilder(List<ItemStack> result) {
         this.result = result;
     }
 
@@ -55,46 +55,46 @@ public class AntimatterShapedRecipeBuilder {
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static AntimatterShapedRecipeBuilder shapedRecipe(ItemLike result) {
-        return new AntimatterShapedRecipeBuilder(new ItemStack(result, 1));
+    public static GTShapedRecipeBuilder shapedRecipe(ItemLike result) {
+        return new GTShapedRecipeBuilder(new ItemStack(result, 1));
     }
 
-    public static AntimatterShapedRecipeBuilder shapedRecipe(List<ItemStack> result) {
-        return new AntimatterShapedRecipeBuilder(result);
-    }
-
-    /**
-     * Creates a new builder for a shaped recipe.
-     */
-    public static AntimatterShapedRecipeBuilder shapedRecipe(ItemLike result, int count) {
-        return new AntimatterShapedRecipeBuilder(new ItemStack(result, count));
+    public static GTShapedRecipeBuilder shapedRecipe(List<ItemStack> result) {
+        return new GTShapedRecipeBuilder(result);
     }
 
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static AntimatterShapedRecipeBuilder shapedRecipe(ItemStack result) {
-        return new AntimatterShapedRecipeBuilder(result);
+    public static GTShapedRecipeBuilder shapedRecipe(ItemLike result, int count) {
+        return new GTShapedRecipeBuilder(new ItemStack(result, count));
+    }
+
+    /**
+     * Creates a new builder for a shaped recipe.
+     */
+    public static GTShapedRecipeBuilder shapedRecipe(ItemStack result) {
+        return new GTShapedRecipeBuilder(result);
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public AntimatterShapedRecipeBuilder key(Character symbol, TagKey<Item> tag) {
+    public GTShapedRecipeBuilder key(Character symbol, TagKey<Item> tag) {
         return this.key(symbol, Ingredient.of(tag));
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public AntimatterShapedRecipeBuilder key(Character symbol, ItemLike item) {
+    public GTShapedRecipeBuilder key(Character symbol, ItemLike item) {
         return this.key(symbol, Ingredient.of(item));
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public AntimatterShapedRecipeBuilder key(Character symbol, Ingredient ingredient) {
+    public GTShapedRecipeBuilder key(Character symbol, Ingredient ingredient) {
         if (this.key.containsKey(symbol)) {
             throw new IllegalArgumentException("Symbol '" + symbol + "' is already defined!");
         } else if (symbol == ' ') {
@@ -108,7 +108,7 @@ public class AntimatterShapedRecipeBuilder {
     /**
      * Adds a new entry to the patterns for this recipe.
      */
-    public AntimatterShapedRecipeBuilder patternLine(String pattern) {
+    public GTShapedRecipeBuilder patternLine(String pattern) {
         if (!this.pattern.isEmpty() && pattern.length() != this.pattern.get(0).length()) {
             throw new IllegalArgumentException("Pattern must be the same width on every line!");
         } else {
@@ -120,17 +120,17 @@ public class AntimatterShapedRecipeBuilder {
     /**
      * Adds a criterion needed to unlock the recipe.
      */
-    public AntimatterShapedRecipeBuilder addCriterion(String name, CriterionTriggerInstance criterion) {
+    public GTShapedRecipeBuilder addCriterion(String name, CriterionTriggerInstance criterion) {
         this.advBuilder.addCriterion(name, criterion);
         return this;
     }
 
-    public AntimatterShapedRecipeBuilder setGroup(String group) {
+    public GTShapedRecipeBuilder setGroup(String group) {
         this.group = group;
         return this;
     }
 
-    public AntimatterShapedRecipeBuilder setMirrored(boolean mirrored) {
+    public GTShapedRecipeBuilder setMirrored(boolean mirrored) {
         this.mirrored = mirrored;
         return this;
     }

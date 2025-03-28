@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.integration.create.client;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry;
 import com.simibubi.create.foundation.ponder.Selection;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.BasicMultiMachine;
@@ -86,8 +86,8 @@ public class PonderIntegration {
                     e.printStackTrace();
                     return;
                 }
-                AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addAsset(new ResourceLocation(machine.getDomain(), "ponder/" + machine.getBlockState(t).getId() + "/" +  i + ".nbt"), stream.toByteArray());
-                AntimatterDynamics.RUNTIME_DATA_PACK.addData(new ResourceLocation(machine.getDomain(), "structures/" + machine.getBlockState(t).getId() + "/" +  i + ".nbt"), stream.toByteArray());
+                GTLibDynamics.DYNAMIC_RESOURCE_PACK.addAsset(new ResourceLocation(machine.getDomain(), "ponder/" + machine.getBlockState(t).getId() + "/" +  i + ".nbt"), stream.toByteArray());
+                GTLibDynamics.RUNTIME_DATA_PACK.addData(new ResourceLocation(machine.getDomain(), "structures/" + machine.getBlockState(t).getId() + "/" +  i + ".nbt"), stream.toByteArray());
                 var storyBoardentry = new PonderStoryBoardEntry((scene, util) -> {
                     scene.title(machine.getBlockState(t).getId(), machine.getLang("en_us") + " Multiblock");
                     scene.rotateCameraY(180f);

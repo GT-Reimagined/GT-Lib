@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.ItemLike;
@@ -20,7 +20,7 @@ public class ItemStoneCover extends ItemCover {
     }
 
     @Override
-    public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         prov.getBuilder(item).parent(prov.existing(Ref.ID, "block/cover/cover_inventory")).texture("overlay", stone.getTextures()[stone.getTextures().length == 6 ? Direction.NORTH.get3DDataValue() : 0]);
     }
 }

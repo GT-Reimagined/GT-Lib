@@ -14,8 +14,8 @@ import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.fluid.AntimatterFluid;
 import org.gtreimagined.gtlib.item.ItemBasic;
 import org.gtreimagined.gtlib.item.ItemStoneCover;
@@ -61,14 +61,14 @@ import java.util.function.Supplier;
 
 import static org.gtreimagined.gtlib.util.Utils.*;
 
-public class AntimatterLanguageProvider implements DataProvider, IAntimatterProvider {
+public class GTLanguageProvider implements DataProvider, IGTLibProvider {
 
     private final String providerDomain, providerName, locale;
     private final Object2ObjectMap<String, String> data = new Object2ObjectRBTreeMap<>();
 
     private static final Object2ObjectMap<String, Object2ObjectMap<String, Object2ObjectMap<String, String>>> GLOBAL_DATA = new Object2ObjectRBTreeMap<>();
 
-    public AntimatterLanguageProvider(String providerDomain, String providerName, String locale) {
+    public GTLanguageProvider(String providerDomain, String providerName, String locale) {
         this.providerDomain = providerDomain;
         this.providerName = providerName;
         this.locale = locale;
@@ -93,7 +93,7 @@ public class AntimatterLanguageProvider implements DataProvider, IAntimatterProv
             map.forEach((locale, data) -> {
                 JLang lang = JLang.lang();
                 data.forEach(lang::entry);
-                AntimatterDynamics.DYNAMIC_RESOURCE_PACK.addLang(new ResourceLocation(domain, locale), lang);
+                GTLibDynamics.DYNAMIC_RESOURCE_PACK.addLang(new ResourceLocation(domain, locale), lang);
             });
         });
 

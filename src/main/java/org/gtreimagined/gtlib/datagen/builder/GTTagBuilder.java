@@ -12,30 +12,30 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class AntimatterTagBuilder<T> {
+public class GTTagBuilder<T> {
     public final Tag.Builder builder;
     public final Registry<T> registry;
     public final List<T> removeElements = new ArrayList<>();
     private final String source;
     boolean replace = false;
 
-    public AntimatterTagBuilder(Tag.Builder builder, Registry<T> registry, String string) {
+    public GTTagBuilder(Tag.Builder builder, Registry<T> registry, String string) {
         this.builder = builder;
         this.registry = registry;
         this.source = string;
     }
 
-    public AntimatterTagBuilder<T> add(T item) {
+    public GTTagBuilder<T> add(T item) {
         this.builder.addElement(this.registry.getKey(item), this.source);
         return this;
     }
 
-    public AntimatterTagBuilder<T> add(Tag.BuilderEntry builderEntry){
+    public GTTagBuilder<T> add(Tag.BuilderEntry builderEntry){
         this.builder.add(builderEntry);
         return this;
     }
 
-    public AntimatterTagBuilder<T> add(ResourceKey<T>... resourceKeys) {
+    public GTTagBuilder<T> add(ResourceKey<T>... resourceKeys) {
         for(ResourceKey<T> resourceKey : resourceKeys) {
             this.builder.addElement(resourceKey.location(), this.source);
         }
@@ -43,43 +43,43 @@ public class AntimatterTagBuilder<T> {
         return this;
     }
 
-    public AntimatterTagBuilder<T> addOptional(ResourceLocation location) {
+    public GTTagBuilder<T> addOptional(ResourceLocation location) {
         this.builder.addOptionalElement(location, this.source);
         return this;
     }
 
-    public AntimatterTagBuilder<T> addTag(TagKey<T> tag) {
+    public GTTagBuilder<T> addTag(TagKey<T> tag) {
         this.builder.addTag(tag.location(), this.source);
         return this;
     }
 
-    public AntimatterTagBuilder<T> addOptionalTag(ResourceLocation location) {
+    public GTTagBuilder<T> addOptionalTag(ResourceLocation location) {
         this.builder.addOptionalTag(location, this.source);
         return this;
     }
 
     @SafeVarargs
-    public final AntimatterTagBuilder<T> add(T... toAdd) {
+    public final GTTagBuilder<T> add(T... toAdd) {
         Stream.of(toAdd).map(this.registry::getKey).forEach(resourceLocation -> this.builder.addElement(resourceLocation, this.source));
         return this;
     }
 
     @SafeVarargs
-    public final AntimatterTagBuilder<T> remove(T... remove){
+    public final GTTagBuilder<T> remove(T... remove){
         removeElements.addAll(Arrays.asList(remove));
         return this;
     }
 
-    public AntimatterTagBuilder<T> replace() {
+    public GTTagBuilder<T> replace() {
         return replace(true);
     }
 
-    public AntimatterTagBuilder<T> replace(boolean value) {
+    public GTTagBuilder<T> replace(boolean value) {
         replace = value;
         return this;
     }
 
-    public AntimatterTagBuilder<T> addFromJson(JsonObject json, String source) {
+    public GTTagBuilder<T> addFromJson(JsonObject json, String source) {
         builder.addFromJson(json, source);
         return this;
     }

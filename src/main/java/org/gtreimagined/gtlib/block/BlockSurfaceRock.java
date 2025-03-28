@@ -5,9 +5,9 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.dynamic.BlockDynamic;
 import org.gtreimagined.gtlib.dynamic.ModelConfig;
 import org.gtreimagined.gtlib.dynamic.ModelConfigRandom;
@@ -147,8 +147,8 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
     }
 
     @Override
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
-        AntimatterBlockModelBuilder builder = prov.getBuilder(block);
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
+        GTBlockModelBuilder builder = prov.getBuilder(block);
         //builder.model("simple", stoneType.getTexture());
         builder.model(Ref.ID + ":block/rock/surface_rock_0", textureMap).particle(textureMap.get("all"));
         IntStream.range(0, SURFACE_ROCK_MODEL_COUNT).forEach(i -> builder.config(i, Ref.ID + ":block/rock/surface_rock_" + i, c -> c.tex(textureMap)));
@@ -156,7 +156,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
     }
 
     @Override
-    public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         prov.getBuilder(item).parent(prov.existing(Ref.ID, "block/rock/surface_rock_0")).tex(textureMap);
     }
 

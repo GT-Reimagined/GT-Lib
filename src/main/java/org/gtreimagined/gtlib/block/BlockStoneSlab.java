@@ -2,9 +2,9 @@ package org.gtreimagined.gtlib.block;
 
 import lombok.Getter;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
@@ -42,7 +42,7 @@ public class BlockStoneSlab extends BlockBasicSlab implements ISharedAntimatterO
         return new Texture[]{new Texture(type.getDomain(), type.getBeginningPath() + type.getId() + "/" + (suffix.isEmpty() ? "stone" : suffix))};
     }
 
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
         Texture topTexture, bottomTexture, sideTexture;
         topTexture = bottomTexture = sideTexture = getTextures()[0];
         ResourceLocation both = prov.existing(this.getDomain(), "block/" + this.getId().replace("_slab", ""));
@@ -56,8 +56,8 @@ public class BlockStoneSlab extends BlockBasicSlab implements ISharedAntimatterO
                 topTexture = bottomTexture = sideTexture = new Texture("block/smooth_basalt");
             }
         }
-        AntimatterBlockModelBuilder top = prov.models().getBuilder(getId() + "_top").parent(prov.existing("minecraft", "block/slab_top")).texture("bottom", bottomTexture).texture("top", topTexture).texture("side", sideTexture);
-        AntimatterBlockModelBuilder bottom = prov.models().getBuilder(getId()).parent(prov.existing("minecraft", "block/slab")).texture("bottom", bottomTexture).texture("top", topTexture).texture("side", sideTexture);
+        GTBlockModelBuilder top = prov.models().getBuilder(getId() + "_top").parent(prov.existing("minecraft", "block/slab_top")).texture("bottom", bottomTexture).texture("top", topTexture).texture("side", sideTexture);
+        GTBlockModelBuilder bottom = prov.models().getBuilder(getId()).parent(prov.existing("minecraft", "block/slab")).texture("bottom", bottomTexture).texture("top", topTexture).texture("side", sideTexture);
         ResourceLocation finalBoth = both;
         prov.getVariantBuilder(block).forAllStates(s -> {
             if (s.getValue(TYPE) == SlabType.DOUBLE) {

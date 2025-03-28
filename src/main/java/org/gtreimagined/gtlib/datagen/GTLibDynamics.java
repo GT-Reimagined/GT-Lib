@@ -12,10 +12,10 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.json.JGTLibModel;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockLootProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterLanguageProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterRecipeProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterTagProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
 import org.gtreimagined.gtlib.event.AntimatterCraftingEvent;
 import org.gtreimagined.gtlib.event.AntimatterLoaderEvent;
 import org.gtreimagined.gtlib.event.AntimatterProvidersEvent;
@@ -66,7 +66,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AntimatterDynamics {
+public class GTLibDynamics {
     public static final RuntimeResourcePack DYNAMIC_RESOURCE_PACK = RuntimeResourcePack.create(new ResourceLocation(Ref.ID, "dynamic"));
     public static final RuntimeResourcePack RUNTIME_DATA_PACK = RuntimeResourcePack.create(new ResourceLocation(Ref.ID, "data"), 8);
     public static final Gson GSON = Deserializers.createLootTableSerializer()
@@ -92,7 +92,7 @@ public class AntimatterDynamics {
         }
     };
 
-    private static final Object2ObjectOpenHashMap<String, List<Supplier<IAntimatterProvider>>> PROVIDERS = new Object2ObjectOpenHashMap<>();
+    private static final Object2ObjectOpenHashMap<String, List<Supplier<IGTLibProvider>>> PROVIDERS = new Object2ObjectOpenHashMap<>();
 
     public static void addResourcePacks(Consumer<PackResources> function){
         function.accept(DYNAMIC_RESOURCE_PACK);
@@ -104,7 +104,7 @@ public class AntimatterDynamics {
 
     public static void addDataPacks(Consumer<PackResources> function){
         if (initialized) {
-            AntimatterDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
+            GTLibDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
         function.accept(new DynamicDataPack("gtlib:recipes", AntimatterAPI.all(IAntimatterRegistrar.class).stream().map(IAntimatterRegistrar::getDomain).collect(Collectors.toSet())));
@@ -114,22 +114,22 @@ public class AntimatterDynamics {
     /**
      * Providers and Dynamic Resource Pack Section
      **/
-    public static void clientProvider(String domain, Supplier<IAntimatterProvider> providerFunc) {
+    public static void clientProvider(String domain, Supplier<IGTLibProvider> providerFunc) {
         PROVIDERS.computeIfAbsent(domain, k -> new ObjectArrayList<>()).add(providerFunc);
     }
 
     public static void runDataProvidersDynamically() {
-        AntimatterBlockLootProvider.init();
+        GTBlockLootProvider.init();
         AntimatterProvidersEvent ev = new AntimatterProvidersEvent(Antimatter.INSTANCE);
         ModLoader.get().postEvent(ev);
-        Collection<IAntimatterProvider> providers = ev.getProviders();
+        Collection<IGTLibProvider> providers = ev.getProviders();
         long time = System.currentTimeMillis();
-        Stream<IAntimatterProvider> async = providers.stream().filter(IAntimatterProvider::async).parallel();
-        Stream<IAntimatterProvider> sync = providers.stream().filter(t -> !t.async());
-        Stream.concat(async, sync).forEach(IAntimatterProvider::run);
-        providers.forEach(IAntimatterProvider::onCompletion);
-        AntimatterTagProvider.afterCompletion();
-        AntimatterBlockLootProvider.afterCompletion();
+        Stream<IGTLibProvider> async = providers.stream().filter(IGTLibProvider::async).parallel();
+        Stream<IGTLibProvider> sync = providers.stream().filter(t -> !t.async());
+        Stream.concat(async, sync).forEach(IGTLibProvider::run);
+        providers.forEach(IGTLibProvider::onCompletion);
+        GTTagProvider.afterCompletion();
+        GTBlockLootProvider.afterCompletion();
         Antimatter.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
         if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get() || !FMLEnvironment.production) {
             RUNTIME_DATA_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
@@ -137,14 +137,14 @@ public class AntimatterDynamics {
     }
 
     public static void runAssetProvidersDynamically() {
-        List<IAntimatterProvider> providers = PROVIDERS.object2ObjectEntrySet().stream()
+        List<IGTLibProvider> providers = PROVIDERS.object2ObjectEntrySet().stream()
                 .flatMap(v -> v.getValue().stream().map(Supplier::get)).toList();
         long time = System.currentTimeMillis();
-        Stream<IAntimatterProvider> async = providers.stream().filter(IAntimatterProvider::async).parallel();
-        Stream<IAntimatterProvider> sync = providers.stream().filter(t -> !t.async());
-        Stream.concat(async, sync).forEach(IAntimatterProvider::run);
-        providers.forEach(IAntimatterProvider::onCompletion);
-        AntimatterLanguageProvider.postCompletion();
+        Stream<IGTLibProvider> async = providers.stream().filter(IGTLibProvider::async).parallel();
+        Stream<IGTLibProvider> sync = providers.stream().filter(t -> !t.async());
+        Stream.concat(async, sync).forEach(IGTLibProvider::run);
+        providers.forEach(IGTLibProvider::onCompletion);
+        GTLanguageProvider.postCompletion();
         Antimatter.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
         if (!FMLEnvironment.production) {
             DYNAMIC_RESOURCE_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
@@ -156,7 +156,7 @@ public class AntimatterDynamics {
      *
      * @param rec consumer for IFinishedRecipe.
      */
-    public static void collectRecipes(AntimatterRecipeProvider provider, Consumer<FinishedRecipe> rec) {
+    public static void collectRecipes(GTRecipeProvider provider, Consumer<FinishedRecipe> rec) {
         AntimatterCraftingEvent event = new AntimatterCraftingEvent(Antimatter.INSTANCE);
         ModLoader.get().postEvent(event);
         for (ICraftingLoader loader : event.getLoaders()) {
@@ -166,13 +166,13 @@ public class AntimatterDynamics {
 
     public static void onRecipeManagerBuild(Consumer<FinishedRecipe> objectIn) {
         Antimatter.LOGGER.info("GTLib recipe manager running..");
-        collectRecipes(new AntimatterRecipeProvider(Ref.ID, "provider"), objectIn);
+        collectRecipes(new GTRecipeProvider(Ref.ID, "provider"), objectIn);
         AntimatterAPI.all(ModRegistrar.class, t -> {
             for (String mod : t.modIds()) {
                 if (!AntimatterAPI.isModLoaded(mod))
                     return;
             }
-            t.craftingRecipes(new AntimatterRecipeProvider(Ref.ID, "Custom recipes"));
+            t.craftingRecipes(new GTRecipeProvider(Ref.ID, "Custom recipes"));
         });
         Antimatter.LOGGER.info("GTLib recipe manager done..");
     }
@@ -231,7 +231,7 @@ public class AntimatterDynamics {
      * Reloads dynamic assets during resource reload.
      */
     public static void onResourceReload(boolean serverEvent) {
-        AntimatterRecipeProvider provider = new AntimatterRecipeProvider(Ref.ID, "provider");
+        GTRecipeProvider provider = new GTRecipeProvider(Ref.ID, "provider");
         DynamicDataPack.clearServer();
         RECIPE_IDS.clear();
         collectRecipes(provider , FINISHED_RECIPE_CONSUMER);

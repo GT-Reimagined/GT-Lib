@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.datagen;
 
 import net.minecraft.data.DataProvider;
 
-public interface IAntimatterProvider extends DataProvider {
+public interface IGTLibProvider extends DataProvider {
 
     // Only runs when dynamically generating assets/data
     void run();

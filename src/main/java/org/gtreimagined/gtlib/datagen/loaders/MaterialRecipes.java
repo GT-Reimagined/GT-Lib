@@ -5,8 +5,8 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterCookingRecipeBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterRecipeProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTCookingRecipeBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -24,7 +24,7 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.INGOT;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
 
 public class MaterialRecipes {
-    public static void init(Consumer<FinishedRecipe> consumer, AntimatterRecipeProvider provider) {
+    public static void init(Consumer<FinishedRecipe> consumer, GTRecipeProvider provider) {
         final CriterionTriggerInstance in = provider.hasSafeItem(GTTools.WRENCH.getTag());
         GTMaterialTypes.DUST.all().forEach(m -> {
             provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_SMALL.getMaterialTag(m)), "DD", "DD");
@@ -67,15 +67,15 @@ public class MaterialRecipes {
         });
     }
 
-    public static void addSmeltingRecipe(Consumer<FinishedRecipe> consumer, AntimatterRecipeProvider provider, MaterialType<?> input, MaterialTypeItem<?> output, int amount, Material in){
+    public static void addSmeltingRecipe(Consumer<FinishedRecipe> consumer, GTRecipeProvider provider, MaterialType<?> input, MaterialTypeItem<?> output, int amount, Material in){
         addSmeltingRecipe(consumer, provider, input, output, amount, in, in);
     }
 
-    public static void addSmeltingRecipe(Consumer<FinishedRecipe> consumer, AntimatterRecipeProvider provider, MaterialType<?> input, MaterialTypeItem<?> output, int amount, Material in, Material out){
-        AntimatterCookingRecipeBuilder.blastingRecipe(RecipeIngredient.of(input.getMaterialTag(in), 1), new ItemStack(output.get(out), MaterialTags.SMELTING_MULTI.getInt(in) * amount), 2.0F, 100)
+    public static void addSmeltingRecipe(Consumer<FinishedRecipe> consumer, GTRecipeProvider provider, MaterialType<?> input, MaterialTypeItem<?> output, int amount, Material in, Material out){
+        GTCookingRecipeBuilder.blastingRecipe(RecipeIngredient.of(input.getMaterialTag(in), 1), new ItemStack(output.get(out), MaterialTags.SMELTING_MULTI.getInt(in) * amount), 2.0F, 100)
                 .addCriterion("has_material_" + in.getId(), provider.hasSafeItem(output.getMaterialTag(out)))
                 .build(consumer, provider.fixLoc(Ref.ID, in.getId().concat("_" + input.getId() + "_to_" + output.getId())));
-        AntimatterCookingRecipeBuilder.smeltingRecipe(RecipeIngredient.of(input.getMaterialTag(in), 1), new ItemStack(output.get(out), MaterialTags.SMELTING_MULTI.getInt(in) * amount), 2.0F, 200)
+        GTCookingRecipeBuilder.smeltingRecipe(RecipeIngredient.of(input.getMaterialTag(in), 1), new ItemStack(output.get(out), MaterialTags.SMELTING_MULTI.getInt(in) * amount), 2.0F, 200)
                 .addCriterion("has_material_" + in.getId(), provider.hasSafeItem(output.getMaterialTag(out)))
                 .build(consumer, provider.fixLoc(Ref.ID, in.getId().concat("_" + input.getId() + "_to_" + output.getId() + "_smelting")));
     }

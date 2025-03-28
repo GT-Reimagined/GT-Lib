@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -21,14 +21,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class AntimatterAdvancementProvider implements DataProvider, IAntimatterProvider {
+public class GTAdvancementProvider implements DataProvider, IGTLibProvider {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private final List<Consumer<Consumer<Advancement>>> advancements;
     private final String providerDomain, providerName;
 
     @SafeVarargs
-    public AntimatterAdvancementProvider(String providerDomain, String providerName, Consumer<Consumer<Advancement>>... advancements) {
+    public GTAdvancementProvider(String providerDomain, String providerName, Consumer<Consumer<Advancement>>... advancements) {
         this.providerDomain = providerDomain;
         this.providerName = providerName;
         if (advancements.length == 0)
@@ -47,7 +47,7 @@ public class AntimatterAdvancementProvider implements DataProvider, IAntimatterP
         Consumer<Advancement> consumer = a -> {
             if (!locs.add(a.getId())) throw new IllegalStateException("Duplicate advancement " + a.getId());
             else {
-                AntimatterDynamics.RUNTIME_DATA_PACK.addData(AntimatterDynamics.fix(a.getId(), "advancements", "json"), AntimatterDynamics.serialize(a.deconstruct()));
+                GTLibDynamics.RUNTIME_DATA_PACK.addData(GTLibDynamics.fix(a.getId(), "advancements", "json"), GTLibDynamics.serialize(a.deconstruct()));
             }
         };
         advancements.forEach(a -> a.accept(consumer));

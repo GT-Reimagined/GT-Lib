@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.item;
 import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.mixin.BucketItemAccessor;
@@ -402,7 +402,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
     }
 
     @Override
-    public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         prov.getAntimatterBuilder(item).bucketProperties(stack, true, false).parent(new ResourceLocation(Ref.ID + ":item/bucket")).tex((map) -> {
             map.put("base", getDomain() + ":item/basic/" + getId());
             map.put("cover", getDomain() + ":item/other/" + getId() + "_cover");

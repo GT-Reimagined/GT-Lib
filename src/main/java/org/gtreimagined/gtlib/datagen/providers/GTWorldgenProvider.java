@@ -2,20 +2,20 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.datagen.AntimatterDynamics;
-import org.gtreimagined.gtlib.datagen.IAntimatterProvider;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class AntimatterWorldgenProvider implements IAntimatterProvider {
+public class GTWorldgenProvider implements IGTLibProvider {
     protected final String providerDomain, providerName;
     protected final String subDir;
     protected final Map<ResourceLocation, JsonObject> JSOM_MAP = new Object2ObjectOpenHashMap<>();
 
-    public AntimatterWorldgenProvider(String providerDomain, String providerName, String subDir) {
+    public GTWorldgenProvider(String providerDomain, String providerName, String subDir) {
         this.providerDomain = providerDomain;
         this.providerName = providerName;
         this.subDir = subDir;
@@ -29,7 +29,7 @@ public class AntimatterWorldgenProvider implements IAntimatterProvider {
     @Override
     public void onCompletion() {
         JSOM_MAP.forEach((r, j) -> {
-            AntimatterDynamics.RUNTIME_DATA_PACK.addData(fix(r, "worldgen/" + subDir), j.toString().getBytes());
+            GTLibDynamics.RUNTIME_DATA_PACK.addData(fix(r, "worldgen/" + subDir), j.toString().getBytes());
         });
     }
     private static ResourceLocation fix(ResourceLocation identifier, String prefix) {

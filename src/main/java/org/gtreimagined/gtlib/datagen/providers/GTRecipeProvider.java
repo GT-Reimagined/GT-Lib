@@ -5,8 +5,8 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.Antimatter;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTTools;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterShapedRecipeBuilder;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterShapelessRecipeBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTShapedRecipeBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTShapelessRecipeBuilder;
 import org.gtreimagined.gtlib.datagen.builder.SequencedAssemblyBuilder;
 import org.gtreimagined.gtlib.recipe.condition.ConfigCondition;
 import org.gtreimagined.gtlib.recipe.condition.TomlConfigCondition;
@@ -39,14 +39,14 @@ import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.util.TagUtils.nc;
 
-public class AntimatterRecipeProvider extends RecipeProvider {
+public class GTRecipeProvider extends RecipeProvider {
 
     protected final String providerDomain, providerName;
     @Getter
     private static final Set<ResourceLocation> RECIPES_TO_REMOVE = new HashSet<>();
 
     @SuppressWarnings("ConstantConditions")
-    public AntimatterRecipeProvider(String providerDomain, String providerName) {
+    public GTRecipeProvider(String providerDomain, String providerName) {
         super(null);
         this.providerDomain = providerDomain;
         this.providerName = providerName;
@@ -65,29 +65,29 @@ public class AntimatterRecipeProvider extends RecipeProvider {
         return new SequencedAssemblyBuilder(input);
     }
 
-    public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, Class configClass, String configFieldName, String recipeDomain, String recipeName) {
+    public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, GTShapedRecipeBuilder builtRecipe, Class configClass, String configFieldName, String recipeDomain, String recipeName) {
         ConditionalRecipe.builder().addCondition(new ConfigCondition(configClass, configFieldName))
                 .addRecipe(builtRecipe::build).build(consumer, recipeDomain, recipeName);
     }
 
-    public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, AntimatterShapedRecipeBuilder builtRecipe, String config, String configField, String recipeDomain, String recipeName) {
+    public void addConditionalRecipe(Consumer<FinishedRecipe> consumer, GTShapedRecipeBuilder builtRecipe, String config, String configField, String recipeDomain, String recipeName) {
         ConditionalRecipe.builder().addCondition(new TomlConfigCondition(config, configField))
                 .addRecipe(builtRecipe::build).build(consumer, recipeDomain, recipeName);
     }
 
-    public AntimatterShapedRecipeBuilder getItemRecipe(String groupName, boolean customCriterion, ItemLike output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
+    public GTShapedRecipeBuilder getItemRecipe(String groupName, boolean customCriterion, ItemLike output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
         return getStackRecipe(groupName, customCriterion, new ItemStack(output), inputs, inputPattern);
     }
 
-    public AntimatterShapedRecipeBuilder getStackRecipe(String groupName, boolean customCriterion, ItemStack output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
+    public GTShapedRecipeBuilder getStackRecipe(String groupName, boolean customCriterion, ItemStack output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
         return getStackRecipe(groupName, customCriterion, Collections.singletonList(output), inputs, inputPattern);
     }
 
-    public AntimatterShapedRecipeBuilder getStackRecipe(String groupName, boolean customCriterion, List<ItemStack> output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
+    public GTShapedRecipeBuilder getStackRecipe(String groupName, boolean customCriterion, List<ItemStack> output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
         if (inputs.isEmpty()) Utils.onInvalidData("Inputs should not be empty!");
         if (inputPattern.length < 1 || inputPattern.length > 3)
             Utils.onInvalidData("Input pattern must have between 1 and 3 rows!");
-        AntimatterShapedRecipeBuilder recipeBuilder = AntimatterShapedRecipeBuilder.shapedRecipe(output);
+        GTShapedRecipeBuilder recipeBuilder = GTShapedRecipeBuilder.shapedRecipe(output);
         recipeBuilder = resolveKeys(recipeBuilder, inputs);
         for (String s : inputPattern) {
             if (s.length() > 3) Utils.onInvalidData("Input pattern rows must have between 0 and 3 characters!");
@@ -121,7 +121,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
     }
 
     public void shapeless(Consumer<FinishedRecipe> consumer, String domain, String recipeID, String groupName, ItemStack output, Object... inputs) {
-        AntimatterShapelessRecipeBuilder builder = AntimatterShapelessRecipeBuilder.shapeless(output.getItem(), output.getCount())
+        GTShapelessRecipeBuilder builder = GTShapelessRecipeBuilder.shapeless(output.getItem(), output.getCount())
                 .group(groupName);
         List<String> criteria = new ArrayList<>();
         for (Object input : inputs) {
@@ -172,7 +172,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
     }
 
     public void addStackRecipe(Consumer<FinishedRecipe> consumer, String recipeDomain, String recipeName, String groupName, ItemStack output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
-        AntimatterShapedRecipeBuilder recipeBuilder = getStackRecipe(groupName, false, output, inputs, inputPattern);
+        GTShapedRecipeBuilder recipeBuilder = getStackRecipe(groupName, false, output, inputs, inputPattern);
         if (recipeName.isEmpty()) recipeBuilder.build(consumer);
         else {
             if (recipeDomain.isEmpty()) recipeBuilder.build(consumer, recipeName);
@@ -185,7 +185,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
             Antimatter.LOGGER.warn("Material recipe " + recipeDomain + ":" + recipeName + "has an empty output.");
             return;
         }
-        AntimatterShapedRecipeBuilder recipeBuilder = getStackRecipe(groupName, false, output, inputs, inputPattern);
+        GTShapedRecipeBuilder recipeBuilder = getStackRecipe(groupName, false, output, inputs, inputPattern);
         if (recipeName.isEmpty()) recipeBuilder.buildTool(consumer, builder);
         else {
             if (recipeDomain.isEmpty()) recipeBuilder.buildTool(consumer, builder, recipeName);
@@ -194,7 +194,7 @@ public class AntimatterRecipeProvider extends RecipeProvider {
     }
 
     @SuppressWarnings("unchecked")
-    protected AntimatterShapedRecipeBuilder resolveKeys(AntimatterShapedRecipeBuilder incompleteBuilder, ImmutableMap<Character, Object> inputs) {
+    protected GTShapedRecipeBuilder resolveKeys(GTShapedRecipeBuilder incompleteBuilder, ImmutableMap<Character, Object> inputs) {
         for (Map.Entry<Character, Object> entry : inputs.entrySet()) {
             if (entry.getValue() instanceof ItemLike l) {
                 incompleteBuilder = incompleteBuilder.key(entry.getKey(), l);

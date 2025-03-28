@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class AntimatterLoot {
+public class GTLoot {
 
     private static final Map<ResourceLocation, List<LootEntryItem>> lootEntryItems = new Object2ObjectOpenHashMap<>();
     private static final Map<ResourceLocation, NumberProvider> rollValues = new Object2ObjectOpenHashMap<>();

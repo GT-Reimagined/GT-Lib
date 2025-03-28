@@ -1,9 +1,9 @@
 package org.gtreimagined.gtlib.block;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.datagen.builder.AntimatterBlockModelBuilder;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterBlockStateProvider;
-import org.gtreimagined.gtlib.datagen.providers.AntimatterItemModelProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IModelProvider;
@@ -55,15 +55,15 @@ public class BlockStoneWall extends WallBlock implements ISharedAntimatterObject
     }
 
     @Override
-    public void onItemModelBuild(ItemLike item, AntimatterItemModelProvider prov) {
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
         prov.getBuilder(item).parent(new ResourceLocation("minecraft", "block/wall_inventory")).texture("wall", getTextures()[0]);
     }
 
     @Override
-    public void onBlockModelBuild(Block block, AntimatterBlockStateProvider prov) {
-        AntimatterBlockModelBuilder post = prov.models().getBuilder(getId() + "_post").parent(prov.existing("minecraft", "block/template_wall_post")).texture("wall", getTextures()[0]);
-        AntimatterBlockModelBuilder side = prov.models().getBuilder(getId() + "_side").parent(prov.existing("minecraft", "block/template_wall_side")).texture("wall", getTextures()[0]);
-        AntimatterBlockModelBuilder side_tall = prov.models().getBuilder(getId() + "_side_tall").parent(prov.existing("minecraft", "block/template_wall_side_tall")).texture("wall", getTextures()[0]);
+    public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
+        GTBlockModelBuilder post = prov.models().getBuilder(getId() + "_post").parent(prov.existing("minecraft", "block/template_wall_post")).texture("wall", getTextures()[0]);
+        GTBlockModelBuilder side = prov.models().getBuilder(getId() + "_side").parent(prov.existing("minecraft", "block/template_wall_side")).texture("wall", getTextures()[0]);
+        GTBlockModelBuilder side_tall = prov.models().getBuilder(getId() + "_side_tall").parent(prov.existing("minecraft", "block/template_wall_side_tall")).texture("wall", getTextures()[0]);
         prov.getMultipartBuilder(block)
                 .part().modelFile(post).addModel().condition(UP, true).end()
                 .part().modelFile(side).uvLock().addModel().condition(NORTH_WALL, LOW).end()
