@@ -7,7 +7,6 @@ import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.gui.core.RTree;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
-import org.gtreimagined.gtlib.gui.screen.AntimatterContainerScreen;
 import org.gtreimagined.gtlib.gui.screen.GTContainerScreen;
 import org.gtreimagined.gtlib.gui.widget.ButtonWidget;
 import org.gtreimagined.gtlib.gui.widget.CycleButtonWidget;
