@@ -10,7 +10,7 @@ import org.gtreimagined.gtlib.client.dynamic.DynamicTexturer;
 import org.gtreimagined.gtlib.client.dynamic.DynamicTexturers;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.network.AntimatterNetwork;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.network.packets.FakeTilePacket;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -50,7 +50,7 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
         this.controller = controller;
         if (level != null) {
             if (controller != null && !level.isClientSide){
-                AntimatterNetwork.NETWORK.sendToAllLoaded(new FakeTilePacket(this.getBlockPos(), controller.getBlockPos()), level, this.getBlockPos());
+                GTLibNetwork.NETWORK.sendToAllLoaded(new FakeTilePacket(this.getBlockPos(), controller.getBlockPos()), level, this.getBlockPos());
             }
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
             sidedSync(true);

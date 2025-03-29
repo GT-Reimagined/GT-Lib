@@ -2,10 +2,10 @@ package org.gtreimagined.gtlib.block;
 
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 
-public class BlockStone extends BlockBasic implements ISharedAntimatterObject {
+public class BlockStone extends BlockBasic implements ISharedGTObject {
 
     protected StoneType type;
     protected String suffix;

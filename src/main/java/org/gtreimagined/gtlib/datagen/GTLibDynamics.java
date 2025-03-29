@@ -28,7 +28,7 @@ import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.recipe.map.RecipeBuilder;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
-import org.gtreimagined.gtlib.registration.IAntimatterRegistrar;
+import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.registration.ModRegistrar;
 import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
@@ -107,7 +107,7 @@ public class GTLibDynamics {
             GTLibDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
-        function.accept(new DynamicDataPack("gtlib:recipes", AntimatterAPI.all(IAntimatterRegistrar.class).stream().map(IAntimatterRegistrar::getDomain).collect(Collectors.toSet())));
+        function.accept(new DynamicDataPack("gtlib:recipes", AntimatterAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDomain).collect(Collectors.toSet())));
 
     }
 

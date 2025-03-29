@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 //A screen showing the GUI for the cover.
-public class ScreenCover<T extends ContainerCover> extends AntimatterContainerScreen<T> implements MenuAccess<T> {
+public class ScreenCover<T extends ContainerCover> extends GTContainerScreen<T> implements MenuAccess<T> {
 
     protected ContainerCover container;
     protected String name;

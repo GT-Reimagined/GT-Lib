@@ -58,11 +58,11 @@ import static org.gtreimagined.gtlib.data.GTTools.KNIFE;
 
 //@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class MaterialTool extends DiggerItem implements IAntimatterTool {
+public class MaterialTool extends DiggerItem implements IGTTool {
 
     protected final String domain;
-    protected final AntimatterToolType type;
-    protected final AntimatterItemTier itemTier;
+    protected final GTToolType type;
+    protected final GTItemTier itemTier;
 
     /**
      * -- GETTER --
@@ -72,24 +72,24 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool {
     protected final int energyTier;
     protected final long maxEnergy;
 
-    public MaterialTool(String domain, AntimatterToolType type, AntimatterItemTier tier, Properties properties) {
+    public MaterialTool(String domain, GTToolType type, GTItemTier tier, Properties properties) {
         super(type.getBaseAttackDamage(), type.getBaseAttackSpeed(), tier, type.getToolType(), properties);
         this.domain = domain;
         this.type = type;
         this.itemTier = tier;
         this.energyTier = -1;
         this.maxEnergy = -1;
-        AntimatterAPI.register(IAntimatterTool.class, this);
+        AntimatterAPI.register(IGTTool.class, this);
     }
 
-    public MaterialTool(String domain, AntimatterToolType type, AntimatterItemTier tier, Properties properties, int energyTier) {
+    public MaterialTool(String domain, GTToolType type, GTItemTier tier, Properties properties, int energyTier) {
         super(type.getBaseAttackDamage(), type.getBaseAttackSpeed(), tier, type.getToolType(), properties);
         this.domain = domain;
         this.type = type;
         this.itemTier = tier;
         this.energyTier = energyTier;
         this.maxEnergy = type.getBaseMaxEnergy() * energyTier;
-        AntimatterAPI.register(IAntimatterTool.class, this);
+        AntimatterAPI.register(IGTTool.class, this);
     }
 
     @Override
@@ -105,12 +105,12 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool {
 
     @NotNull
     @Override
-    public AntimatterToolType getAntimatterToolType() {
+    public GTToolType getAntimatterToolType() {
         return type;
     }
 
     @Override
-    public AntimatterItemTier getAntimatterItemTier() {
+    public GTItemTier getAntimatterItemTier() {
         return itemTier;
     }
 
@@ -179,7 +179,7 @@ public class MaterialTool extends DiggerItem implements IAntimatterTool {
         if (type.isPowered() && getCurrentEnergy(stack)  == 0){
             destroySpeed = 0.0f;
         }
-        for (Map.Entry<String, IBehaviour<IBasicAntimatterTool>> e : getAntimatterToolType().getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getAntimatterToolType().getBehaviours().entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IDestroySpeed destroySpeed1)) continue;
             float i = destroySpeed1.getDestroySpeed(this, destroySpeed, stack, state);

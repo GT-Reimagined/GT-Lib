@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class BehaviourWaterlogToggle implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourWaterlogToggle implements IItemUse<IBasicGTTool> {
 
     public static final BehaviourWaterlogToggle INSTANCE = new BehaviourWaterlogToggle();
 
@@ -20,7 +20,7 @@ public class BehaviourWaterlogToggle implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         BlockState state = c.getLevel().getBlockState(c.getClickedPos());
         if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
             if (state.getValue(BlockStateProperties.WATERLOGGED)) {

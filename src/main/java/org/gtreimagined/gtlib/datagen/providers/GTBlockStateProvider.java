@@ -14,7 +14,7 @@ import org.gtreimagined.gtlib.datagen.builder.IStateBuilder;
 import org.gtreimagined.gtlib.datagen.builder.MultiPartBlockStateBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -107,7 +107,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
 
     public void processBlocks(String domain) {
         AntimatterAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onBlockModelBuild(b, this));
-        AntimatterAPI.all(AntimatterFluid.class, domain).forEach(f -> state(f.getFluidBlock(), getBuilder(f.getFluidBlock()).texture("particle", f.getAttributes().getStillTexture())));
+        AntimatterAPI.all(GTFluid.class, domain).forEach(f -> state(f.getFluidBlock(), getBuilder(f.getFluidBlock()).texture("particle", f.getAttributes().getStillTexture())));
     }
 
     public GTBlockModelBuilder getBuilder(Block block) {

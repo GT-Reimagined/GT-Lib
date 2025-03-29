@@ -1,10 +1,10 @@
 package org.gtreimagined.gtlib.pipe;
 
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 
 import java.util.Locale;
 
-public enum PipeShape implements IAntimatterObject {
+public enum PipeShape implements IGTObject {
 
     ALL,
     ARROW,

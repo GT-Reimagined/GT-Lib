@@ -17,7 +17,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.integration.rei.REIUtils;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
-import org.gtreimagined.gtlib.recipe.serializer.AntimatterRecipeSerializer;
+import org.gtreimagined.gtlib.recipe.serializer.GTRecipeSerializer;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.GsonHelper;
@@ -60,7 +60,7 @@ public class KubeJSRecipe extends RecipeJS {
             if (inputFluid instanceof FluidStackJS fluidStack){
                 this.fluidInput.add(FluidIngredient.of(REIUtils.fromREIFluidStack(fluidStack.getFluidStack())));
             } else if (inputFluid instanceof MapJS map){
-                this.fluidInput.add(AntimatterRecipeSerializer.getFluidIngredient(map.toJson()));
+                this.fluidInput.add(GTRecipeSerializer.getFluidIngredient(map.toJson()));
             } else {
                 throw new IllegalArgumentException("Invalid entry type in fluid output");
             }
@@ -70,7 +70,7 @@ public class KubeJSRecipe extends RecipeJS {
             if (outputFluid instanceof FluidStackJS fluidStack){
                 this.fluidOutput.add(REIUtils.fromREIFluidStack(fluidStack.getFluidStack()));
             } else if (outputFluid instanceof MapJS map){
-                this.fluidOutput.add(AntimatterRecipeSerializer.getStack(map.toJson()));
+                this.fluidOutput.add(GTRecipeSerializer.getStack(map.toJson()));
             } else {
                 throw new IllegalArgumentException("Invalid entry type in fluid output");
             }
@@ -111,10 +111,10 @@ public class KubeJSRecipe extends RecipeJS {
             this.outputItems.add(ItemStackJS.of(e));
         }
         for (JsonElement e : GsonHelper.getAsJsonArray(json, "inputFluids", new JsonArray())) {
-            this.fluidInput.add(AntimatterRecipeSerializer.getFluidIngredient(e));
+            this.fluidInput.add(GTRecipeSerializer.getFluidIngredient(e));
         }
         for (JsonElement e : GsonHelper.getAsJsonArray(json, "outputFluids", new JsonArray())) {
-            this.fluidOutput.add(AntimatterRecipeSerializer.getStack(e));
+            this.fluidOutput.add(GTRecipeSerializer.getStack(e));
         }
         this.duration = GsonHelper.getAsInt(json, "duration");
         this.special = GsonHelper.getAsInt(json, "special", 0);

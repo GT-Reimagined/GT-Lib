@@ -1,10 +1,10 @@
 package org.gtreimagined.gtlib.gui;
 
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.resources.ResourceLocation;
 
-public class ButtonOverlay implements IAntimatterObject {
+public class ButtonOverlay implements IGTObject {
 
     public static ButtonOverlay STOP = new ButtonOverlay(Ref.ID,"stop",16, 16);
     public static ButtonOverlay TORCH_OFF = new ButtonOverlay(Ref.ID,"torch_off",16, 16);

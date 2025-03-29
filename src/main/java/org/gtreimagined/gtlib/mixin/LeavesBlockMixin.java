@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.mixin;
 
 import org.gtreimagined.gtlib.data.GTTools;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -28,8 +28,8 @@ public abstract class LeavesBlockMixin extends Block {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> list = super.getDrops(state, builder);
         ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
-        if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IAntimatterTool) {
-            IAntimatterTool tool = (IAntimatterTool) stack.getItem();
+        if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IGTTool) {
+            IGTTool tool = (IGTTool) stack.getItem();
             if (tool.getAntimatterToolType() == GTTools.BRANCH_CUTTER) {
                 ResourceLocation resourcelocation = this.getLootTable();
                 if (resourcelocation == BuiltInLootTables.EMPTY) {

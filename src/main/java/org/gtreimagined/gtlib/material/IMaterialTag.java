@@ -2,13 +2,13 @@ package org.gtreimagined.gtlib.material;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
-public interface IMaterialTag extends ISharedAntimatterObject {
+public interface IMaterialTag extends ISharedGTObject {
 
     //TODO use a static id -> material set map, instead of each IMaterialTag class having it's own collection
     Set<Material> all();

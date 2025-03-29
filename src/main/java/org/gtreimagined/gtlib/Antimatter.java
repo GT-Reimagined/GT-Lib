@@ -25,7 +25,7 @@ import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
 import org.gtreimagined.gtlib.event.GTCraftingEvent;
 import org.gtreimagined.gtlib.event.GTProvidersEvent;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.integration.Integrations;
@@ -39,7 +39,7 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.material.SubTag;
-import org.gtreimagined.gtlib.network.AntimatterNetwork;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.ore.BlockOre;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.proxy.ClientHandler;
@@ -54,7 +54,7 @@ import org.gtreimagined.gtlib.recipe.ingredient.PropertyIngredient;
 import org.gtreimagined.gtlib.recipe.material.MaterialSerializer;
 import org.gtreimagined.gtlib.recipe.serializer.MachineRecipeSerializer;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
 import net.devtech.arrp.ARRP;
@@ -118,7 +118,7 @@ public class Antimatter extends AntimatterMod {
         GTLibDynamics.clientProvider(Ref.SHARED_ID,
                 () -> new GTLanguageProvider(Ref.SHARED_ID, Ref.NAME.concat(" en_us Localization (Shared)"), "en_us"));
         AntimatterAPI.init();
-        AntimatterNetwork.register();
+        GTLibNetwork.register();
         AntimatterConfig.createConfig();
         /* Lifecycle events */
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -226,8 +226,8 @@ public class Antimatter extends AntimatterMod {
                     if (stacks.isEmpty()) return;
                     l.addAll(stacks);
                 });
-                AntimatterAPI.all(IAntimatterTool.class).stream().filter(t -> t.getAntimatterToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
-                AntimatterAPI.all(AntimatterFluid.class).forEach(t -> l.add(t.getFluidBlock()));
+                AntimatterAPI.all(IGTTool.class).stream().filter(t -> t.getAntimatterToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
+                AntimatterAPI.all(GTFluid.class).forEach(t -> l.add(t.getFluidBlock()));
                 AntimatterAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
             });
             AntimatterAPI.all(Material.class).forEach(m -> {

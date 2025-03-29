@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.registration;
 import org.gtreimagined.gtlib.event.MaterialEvent;
 import net.minecraftforge.api.distmarker.Dist;
 
-public interface IAntimatterRegistrar extends IAntimatterObject {
+public interface IGTRegistrar extends IGTObject {
 
     default String getDomain() {
         return getId();

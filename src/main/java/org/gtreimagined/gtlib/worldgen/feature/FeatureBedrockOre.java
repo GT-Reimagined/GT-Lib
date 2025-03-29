@@ -30,7 +30,7 @@ import java.util.Random;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
 
-public class FeatureBedrockOre extends AntimatterFeature<NoneFeatureConfiguration>{
+public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
 
     public FeatureBedrockOre() {
         super(NoneFeatureConfiguration.CODEC, WorldGenBedrockVein.class);

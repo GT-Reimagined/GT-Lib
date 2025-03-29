@@ -13,34 +13,34 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.Optional;
 
-public class AntimatterItemTier implements Tier {
+public class GTItemTier implements Tier {
 
     private final Material primary;
     private final Material secondary;
 
-    public static final AntimatterItemTier NULL = new AntimatterItemTier(Material.NULL, Material.NULL);
+    public static final GTItemTier NULL = new GTItemTier(Material.NULL, Material.NULL);
 
-    private static final Int2ObjectMap<AntimatterItemTier> TIERS_LOOKUP = new Int2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<GTItemTier> TIERS_LOOKUP = new Int2ObjectOpenHashMap<>();
 
     static {
         TIERS_LOOKUP.put(NULL.hashCode(), NULL);
     }
 
-    AntimatterItemTier(@NotNull Material primary, @NotNull Material secondary) {
+    GTItemTier(@NotNull Material primary, @NotNull Material secondary) {
         this.primary = primary.has(MaterialTags.TOOLS) ? primary : Material.NULL;
         this.secondary = secondary;
     }
 
-    public static Optional<AntimatterItemTier> get(int key) {
+    public static Optional<GTItemTier> get(int key) {
         return Optional.ofNullable(TIERS_LOOKUP.get(key));
     }
 
-    public static AntimatterItemTier getOrCreate(String primaryName, String secondaryName) {
-        return TIERS_LOOKUP.computeIfAbsent(Objects.hash(primaryName, secondaryName), m -> new AntimatterItemTier(Material.get(primaryName), Material.get(secondaryName)));
+    public static GTItemTier getOrCreate(String primaryName, String secondaryName) {
+        return TIERS_LOOKUP.computeIfAbsent(Objects.hash(primaryName, secondaryName), m -> new GTItemTier(Material.get(primaryName), Material.get(secondaryName)));
     }
 
-    public static AntimatterItemTier getOrCreate(Material primary, Material secondary) {
-        return TIERS_LOOKUP.computeIfAbsent(Objects.hash(primary.hashCode(), secondary.hashCode()), m -> new AntimatterItemTier(primary, secondary));
+    public static GTItemTier getOrCreate(Material primary, Material secondary) {
+        return TIERS_LOOKUP.computeIfAbsent(Objects.hash(primary.hashCode(), secondary.hashCode()), m -> new GTItemTier(primary, secondary));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class AntimatterItemTier implements Tier {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (!(obj instanceof AntimatterItemTier tier)) return false;
+        if (!(obj instanceof GTItemTier tier)) return false;
         return primary == tier.getPrimary() && secondary == tier.getSecondary();
     }
 

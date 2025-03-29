@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends BaseRecipeSerializer<T> implements IAntimatterRecipeSerializer<T> {
+public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSerializer<T> implements IGTRecipeSerializer<T> {
 
-    protected AntimatterRecipeSerializer(String domain, String id){
+    protected GTRecipeSerializer(String domain, String id){
         super(domain, id);
     }
 
@@ -70,7 +70,7 @@ public abstract class AntimatterRecipeSerializer<T extends IRecipe> extends Base
             }
             FluidStack[] fluidOutputs = null;
             if (json.has("outputFluids")) {
-                fluidOutputs = Streams.stream(json.getAsJsonArray("outputFluids")).map(AntimatterRecipeSerializer::getStack).toArray(FluidStack[]::new);
+                fluidOutputs = Streams.stream(json.getAsJsonArray("outputFluids")).map(GTRecipeSerializer::getStack).toArray(FluidStack[]::new);
             }
             long eut = json.get("eu").getAsLong();
             int duration = json.get("duration").getAsInt();

@@ -7,15 +7,15 @@ import org.gtreimagined.gtlib.MaterialDataInit;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.event.MaterialEvent;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.integration.kubejs.AntimatterKubeJS;
 import org.gtreimagined.gtlib.recipe.condition.ConfigCondition;
 import org.gtreimagined.gtlib.recipe.condition.TomlConfigCondition;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
-import org.gtreimagined.gtlib.tool.IAntimatterArmor;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
-import org.gtreimagined.gtlib.tool.armor.AntimatterArmorType;
-import org.gtreimagined.gtlib.worldgen.feature.IAntimatterFeature;
+import org.gtreimagined.gtlib.tool.GTToolType;
+import org.gtreimagined.gtlib.tool.IGTArmor;
+import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.tool.armor.GTArmorType;
+import org.gtreimagined.gtlib.worldgen.feature.IGTFeature;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
@@ -38,18 +38,18 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Ref.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public final class AntimatterRegistration {
+public final class GTRegistration {
 
     @SubscribeEvent
     public static void onRegister(final RegistryEvent.Register<?> e) {
         final String domain = ModLoadingContext.get().getActiveNamespace();
-        List<IAntimatterRegistrar> list2 = AntimatterAPI.all(IAntimatterRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
+        List<IGTRegistrar> list2 = AntimatterAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
         if (list2.size() < 4) {
             Antimatter.LOGGER.info("Mod ID: " + domain + " & event: " + e.getRegistry().getRegistryName());
         }
         onRegister(domain, e);
         onRegister(Ref.SHARED_ID, e);
-        List<IAntimatterRegistrar> list = AntimatterAPI.all(IAntimatterRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
+        List<IGTRegistrar> list = AntimatterAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
         list.forEach(r -> {
             onRegister(r.getId(), e);
         });
@@ -64,7 +64,7 @@ public final class AntimatterRegistration {
             ModLoadingContext.get().setActiveContainer(newContainer);
         }
         if (domain.equals(Ref.ID)) {
-            List<IAntimatterRegistrar> list = AntimatterAPI.all(IAntimatterRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IAntimatterRegistrar::isEnabled).toList();
+            List<IGTRegistrar> list = AntimatterAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
             if (e.getRegistry() == ForgeRegistries.BLOCKS) {
                 AntimatterAPI.onRegistration(RegistrationEvent.DATA_INIT);
                 AntimatterAPI.all(SoundEvent.class, t -> {
@@ -105,7 +105,7 @@ public final class AntimatterRegistration {
                 ((IForgeRegistry) e.getRegistry()).register(t);
             });
         } else if (e.getRegistry() == ForgeRegistries.FLUIDS) {
-            AntimatterAPI.all(AntimatterFluid.class, domain, f -> {
+            AntimatterAPI.all(GTFluid.class, domain, f -> {
                 if (f.getFluid().getRegistryName() == null) f.getFluid().setRegistryName(domain, f.getId());
                 if (f.getFlowingFluid().getRegistryName() == null) f.getFlowingFluid().setRegistryName(domain, "flowing_".concat(f.getId()));
                 ((IForgeRegistry) e.getRegistry()).registerAll(f.getFluid(), f.getFlowingFluid());
@@ -136,7 +136,7 @@ public final class AntimatterRegistration {
                 ((IForgeRegistry) e.getRegistry()).register(r);
             });
         } else if (e.getRegistry() == ForgeRegistries.FEATURES) {
-            AntimatterAPI.all(IAntimatterFeature.class, domain,(t, d, i) -> {
+            AntimatterAPI.all(IGTFeature.class, domain,(t, d, i) -> {
                 if (t.asFeature().getRegistryName() == null) t.asFeature().setRegistryName(d, i);
                 ((IForgeRegistry) e.getRegistry()).register(t.asFeature());
             });
@@ -153,15 +153,15 @@ public final class AntimatterRegistration {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void registerTools(String domain, IForgeRegistry registry) {
-        AntimatterAPI.all(AntimatterToolType.class, domain, t -> {
-            List<IAntimatterTool> tools = t.isPowered() ? t.instantiatePoweredTools(domain) : t.instantiateTools(domain);
-            for (IAntimatterTool i : tools) {
+        AntimatterAPI.all(GTToolType.class, domain, t -> {
+            List<IGTTool> tools = t.isPowered() ? t.instantiatePoweredTools(domain) : t.instantiateTools(domain);
+            for (IGTTool i : tools) {
                 if (i.getItem().getRegistryName() == null) i.getItem().setRegistryName(domain, i.getId());
                 registry.register(i.getItem());
             }
         });
-        AntimatterAPI.all(AntimatterArmorType.class, domain, t -> {
-            List<IAntimatterArmor> i = t.instantiateTools();
+        AntimatterAPI.all(GTArmorType.class, domain, t -> {
+            List<IGTArmor> i = t.instantiateTools();
             i.forEach(a -> {
                 if (a.getItem().getRegistryName() == null) a.getItem().setRegistryName(domain, a.getId());
                 registry.register(a.getItem());

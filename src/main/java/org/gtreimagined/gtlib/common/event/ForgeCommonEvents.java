@@ -11,7 +11,7 @@ import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.GTLoot;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
-import org.gtreimagined.gtlib.gui.container.IAntimatterContainer;
+import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.item.IFluidItem;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.BlockOre;
@@ -19,7 +19,7 @@ import org.gtreimagined.gtlib.pipe.BlockPipe;
 import org.gtreimagined.gtlib.pipe.TileTicker;
 import org.gtreimagined.gtlib.proxy.ClientHandler;
 import org.gtreimagined.gtlib.structure.StructureCache;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
 import net.minecraft.client.Minecraft;
@@ -69,7 +69,7 @@ public class ForgeCommonEvents {
     @SubscribeEvent
     public static void onContainerOpen(PlayerContainerEvent.Open ev) {
         if (ev.getPlayer() instanceof ServerPlayer serverPlayer) {
-            if (ev.getContainer() instanceof IAntimatterContainer antimatterContainer) {
+            if (ev.getContainer() instanceof IGTContainer antimatterContainer) {
                 antimatterContainer.listeners().add(serverPlayer);
             }
         }
@@ -81,7 +81,7 @@ public class ForgeCommonEvents {
         Player player = e.getPlayer();
         if (!AntimatterConfig.PLAY_CRAFTING_SOUNDS.get()) return;
         for (int i = 0; i < inv.getContainerSize(); i++) {
-            if (inv.getItem(i).getItem() instanceof IAntimatterTool tool) {
+            if (inv.getItem(i).getItem() instanceof IGTTool tool) {
                 SoundEvent type = tool.getAntimatterToolType().getUseSound();
                 if (type != null) {
                     player.playSound(type, 0.75F, 0.75F);
@@ -112,7 +112,7 @@ public class ForgeCommonEvents {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
         if (left.getItem() == right.getItem()) {
-            if (left.getItem() instanceof IAntimatterTool leftTool && right.getItem() instanceof IAntimatterTool rightTool) {
+            if (left.getItem() instanceof IGTTool leftTool && right.getItem() instanceof IGTTool rightTool) {
                 if (leftTool.getPrimaryMaterial(left) != rightTool.getPrimaryMaterial(right) || leftTool.getSecondaryMaterial(left) != rightTool.getSecondaryMaterial(right)) {
                     event.setCanceled(true);
                 }

@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
 
-public class BehaviourTorchPlacing implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourTorchPlacing implements IItemUse<IBasicGTTool> {
     public static final BehaviourTorchPlacing INSTANCE = new BehaviourTorchPlacing();
 
     @Override
@@ -36,7 +36,7 @@ public class BehaviourTorchPlacing implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         ItemStack stack = ItemStack.EMPTY;
         if (c.getPlayer() == null) return InteractionResult.PASS;
         for (ItemStack stack1 : c.getPlayer().getInventory().items) {

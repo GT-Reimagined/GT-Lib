@@ -22,7 +22,7 @@ import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.pipe.PipeSize;
 import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.pipe.types.Wire;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.TagUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -136,7 +136,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                 }
             });
             processSubtags();
-            AntimatterAPI.all(IAntimatterTool.class, tool -> {
+            AntimatterAPI.all(IGTTool.class, tool -> {
                 this.tag(tool.getAntimatterToolType().getTag()).add(tool.getItem()).replace(replace);
                 this.tag(tool.getAntimatterToolType().getForgeTag()).add(tool.getItem()).replace(replace);
             });

@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +51,7 @@ public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> imp
     public void processItemModels(String domain) {
         AntimatterAPI.all(Item.class, domain).forEach(i -> GTLibModelManager.onItemModelBuild(i, this));
         AntimatterAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onItemModelBuild(b, this));
-        AntimatterAPI.all(AntimatterFluid.class, domain).forEach(f -> {
+        AntimatterAPI.all(GTFluid.class, domain).forEach(f -> {
             modelAndTexture(f.getContainerItem(), "forge", "item/bucket").bucketProperties(f.getFluid());
             modelAndTexture(f.getFluidBlock(), GTBlockModelBuilder.getSimple()).tex(a -> a.put("all", f.getAttributes().getFlowingTexture().toString()));
         });

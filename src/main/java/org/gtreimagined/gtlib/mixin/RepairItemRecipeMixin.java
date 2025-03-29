@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.mixin;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -47,7 +47,7 @@ public abstract class RepairItemRecipeMixin extends CustomRecipe {
         if (list.size() == 2) {
             ItemStack a = list.get(0);
             ItemStack b = list.get(1);
-            if (a.getItem() == b.getItem() && a.getCount() == 1 && b.getCount() == 1 && a.isRepairable() && a.getItem() instanceof IAntimatterTool tool) {
+            if (a.getItem() == b.getItem() && a.getCount() == 1 && b.getCount() == 1 && a.isRepairable() && a.getItem() instanceof IGTTool tool) {
                 boolean match = tool.getPrimaryMaterial(a) == tool.getPrimaryMaterial(b) && tool.getSecondaryMaterial(a) == tool.getSecondaryMaterial(b);
                 if (!match) {
                     ci.setReturnValue(ItemStack.EMPTY);
@@ -104,7 +104,7 @@ public abstract class RepairItemRecipeMixin extends CustomRecipe {
             ItemStack a = list.get(0);
             ItemStack b = list.get(1);
             boolean match = true;
-            if (a.getItem() instanceof IAntimatterTool tool) {
+            if (a.getItem() instanceof IGTTool tool) {
                 match = tool.getPrimaryMaterial(a) == tool.getPrimaryMaterial(b) && tool.getSecondaryMaterial(a) == tool.getSecondaryMaterial(b);
             }
             if (!match) ci.setReturnValue(false);

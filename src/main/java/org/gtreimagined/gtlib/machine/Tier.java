@@ -3,11 +3,11 @@ package org.gtreimagined.gtlib.machine;
 import lombok.Getter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.ChatFormatting;
 
-public class Tier implements ISharedAntimatterObject {
+public class Tier implements ISharedGTObject {
 
     /**
      * Electricity Tiers

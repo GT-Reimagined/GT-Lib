@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IModelProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.WallBlock;
 import static net.minecraft.world.level.block.state.properties.WallSide.LOW;
 import static net.minecraft.world.level.block.state.properties.WallSide.TALL;
 
-public class BlockStoneWall extends WallBlock implements ISharedAntimatterObject, ITextureProvider, IModelProvider {
+public class BlockStoneWall extends WallBlock implements ISharedGTObject, ITextureProvider, IModelProvider {
     protected String domain, id, suffix;
     CobbleStoneType type;
 

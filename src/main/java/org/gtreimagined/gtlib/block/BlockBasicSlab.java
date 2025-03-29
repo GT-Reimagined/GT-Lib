@@ -5,9 +5,9 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.material.Material;
 
-public class BlockBasicSlab extends SlabBlock implements IAntimatterObject, ITextureProvider, IModelProvider {
+public class BlockBasicSlab extends SlabBlock implements IGTObject, ITextureProvider, IModelProvider {
     protected final String domain, id;
 
     public BlockBasicSlab(String domain, String id, Properties properties) {
@@ -32,7 +32,7 @@ public class BlockBasicSlab extends SlabBlock implements IAntimatterObject, ITex
     }
 
     public String getDomain() {
-        return this instanceof ISharedAntimatterObject ? Ref.SHARED_ID : domain;
+        return this instanceof ISharedGTObject ? Ref.SHARED_ID : domain;
     }
 
     @Override

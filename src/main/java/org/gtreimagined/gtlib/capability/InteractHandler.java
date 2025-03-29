@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.capability;
 
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ public class InteractHandler<T extends BlockEntity> implements IInteractHandler<
     }
 
     @Override
-    public boolean onInteract(Player player, InteractionHand hand, Direction side, @Nullable AntimatterToolType type) {
+    public boolean onInteract(Player player, InteractionHand hand, Direction side, @Nullable GTToolType type) {
         return false;
     }
 

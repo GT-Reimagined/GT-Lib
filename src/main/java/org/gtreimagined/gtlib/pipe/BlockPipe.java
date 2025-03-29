@@ -30,9 +30,9 @@ import org.gtreimagined.gtlib.material.IMaterialObject;
 import org.gtreimagined.gtlib.pipe.types.PipeType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -84,7 +84,7 @@ import static com.google.common.collect.ImmutableMap.of;
 import static org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder.SIMPLE;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic implements IItemBlockProvider, EntityBlock, IColorHandler, IMaterialObject, SimpleWaterloggedBlock, ISharedAntimatterObject {
+public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic implements IItemBlockProvider, EntityBlock, IColorHandler, IMaterialObject, SimpleWaterloggedBlock, ISharedGTObject {
 
     @Getter
     protected T type;
@@ -224,7 +224,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         return new PipeItemBlock(this);
     }
 
-    public AntimatterToolType getToolType() {
+    public GTToolType getToolType() {
         //if (type.getMaterial() == Data.Wood) return Data.AXE;
         return GTTools.WRENCH;
     }
@@ -333,7 +333,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
                     return InteractionResult.SUCCESS;
                 }
             }
-            AntimatterToolType type = Utils.getToolType(player);
+            GTToolType type = Utils.getToolType(player);
             if (type == GTTools.CROWBAR) {
                 if (!player.isCrouching()) {
                     if (tile.getCoverHandler().map(h -> h.removeCover(player, Utils.getInteractSide(hit), false)).orElse(false)) {

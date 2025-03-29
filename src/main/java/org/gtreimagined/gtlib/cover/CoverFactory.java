@@ -10,7 +10,7 @@ import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.gui.MenuHandler;
 import org.gtreimagined.gtlib.machine.Tier;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-public class CoverFactory implements IAntimatterObject {
+public class CoverFactory implements IGTObject {
 
     final String id;
     final String domain;

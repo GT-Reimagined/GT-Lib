@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.tool.behaviour;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class BehaviourVanillaShovel implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourVanillaShovel implements IItemUse<IBasicGTTool> {
 
     public static final BehaviourVanillaShovel INSTANCE = new BehaviourVanillaShovel();
 
@@ -37,7 +37,7 @@ public class BehaviourVanillaShovel implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         if (c.getClickedFace() == Direction.DOWN) return InteractionResult.PASS;
         BlockState state = c.getLevel().getBlockState(c.getClickedPos());
         BlockState changedState = null;

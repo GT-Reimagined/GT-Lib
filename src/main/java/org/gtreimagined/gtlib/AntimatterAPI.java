@@ -18,10 +18,10 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
-import org.gtreimagined.gtlib.registration.IAntimatterRegistrar;
+import org.gtreimagined.gtlib.registration.IGTObject;
+import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import org.gtreimagined.gtlib.util.NonNullSupplier;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -61,7 +61,7 @@ import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
 
 public final class AntimatterAPI {
 
-    private static final Map<Class<?>, Map<String, Either<ISharedAntimatterObject, Map<String, Object>>>> OBJECTS = new Object2ObjectOpenHashMap<>();
+    private static final Map<Class<?>, Map<String, Either<ISharedGTObject, Map<String, Object>>>> OBJECTS = new Object2ObjectOpenHashMap<>();
     private static final EnumMap<RegistrationEvent, List<Runnable>> CALLBACKS = new EnumMap<>(RegistrationEvent.class);
     private static final EnumSet<RegistrationEvent> REGISTRATION_EVENTS_HANDLED = EnumSet
             .noneOf(RegistrationEvent.class);
@@ -72,7 +72,7 @@ public final class AntimatterAPI {
 
     private static RegistrationEvent PHASE = null;
 
-    private static IAntimatterRegistrar INTERNAL_REGISTRAR;
+    private static IGTRegistrar INTERNAL_REGISTRAR;
 
     public static void init() {
 
@@ -92,9 +92,9 @@ public final class AntimatterAPI {
                         " has already been registered by: ", present.toString()));
             }
         } else {
-            Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.computeIfAbsent(c,
+            Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.computeIfAbsent(c,
                     t -> new Object2ObjectLinkedOpenHashMap<>());
-            if ((present = map.put(id, Either.left((ISharedAntimatterObject) o))) != null) {
+            if ((present = map.put(id, Either.left((ISharedGTObject) o))) != null) {
                 throw new IllegalStateException(String.join("", "Class ", c.getName(), "'s object: ", id,
                         " has already been registered by: ", present.toString()));
             }
@@ -113,12 +113,12 @@ public final class AntimatterAPI {
             if (!allowRegistration()) {
                 throw new IllegalStateException("Registering after DataDone in AntimatterAPI - badbad!");
             }
-            if (o instanceof IAntimatterObject && !((IAntimatterObject) o).shouldRegister())
+            if (o instanceof IGTObject && !((IGTObject) o).shouldRegister())
                 return (T) o;
-            if (o instanceof ISharedAntimatterObject && getInternal((Class) c, id) != null) {
+            if (o instanceof ISharedGTObject && getInternal((Class) c, id) != null) {
                 return (T) getInternal((Class) c, id);
             }
-            registerInternal(c, id, o instanceof ISharedAntimatterObject ? null : domain, o);
+            registerInternal(c, id, o instanceof ISharedGTObject ? null : domain, o);
             if (o instanceof Block && notRegistered(Block.class, id, domain))
                 registerInternal(Block.class, id, domain, o);
             else if (o instanceof Item && notRegistered(Item.class, id, domain))
@@ -132,7 +132,7 @@ public final class AntimatterAPI {
         }
     }
 
-    public static <T> T register(Class<T> c, IAntimatterObject o) {
+    public static <T> T register(Class<T> c, IGTObject o) {
         return register(c, o.getId(), o.getDomain(), o);
     }
 
@@ -141,9 +141,9 @@ public final class AntimatterAPI {
     }
 
     private static <T> T getInternal(Class<T> c, String id, String domain) {
-        Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.get(c);
+        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
         if (map != null) {
-            Either<ISharedAntimatterObject, Map<String, Object>> inner = map.get(domain);
+            Either<ISharedGTObject, Map<String, Object>> inner = map.get(domain);
             if (inner != null) {
                 return inner.map(t -> null, t -> {
                     Object o = t.get(id);
@@ -175,15 +175,15 @@ public final class AntimatterAPI {
         return PHASE == RegistrationEvent.DATA_INIT || PHASE == RegistrationEvent.CLIENT_DATA_INIT || PHASE == RegistrationEvent.WORLDGEN_INIT;
     }
 
-    private static <T extends ISharedAntimatterObject> T getInternal(Class<? extends T> c, String id) {
-        Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.get(c);
+    private static <T extends ISharedGTObject> T getInternal(Class<? extends T> c, String id) {
+        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
         if (map == null)
             return null;
-        Either<ISharedAntimatterObject, Map<String, Object>> obj = map.get(id);
+        Either<ISharedGTObject, Map<String, Object>> obj = map.get(id);
         return obj == null ? null : c.cast(obj.map(t -> t, t -> null));
     }
 
-    public static <T extends ISharedAntimatterObject> T get(Class<? extends T> c, String id) {
+    public static <T extends ISharedGTObject> T get(Class<? extends T> c, String id) {
         if (!allowRegistration()) {
             synchronized (OBJECTS) {
                 return getInternal(c, id);
@@ -209,8 +209,8 @@ public final class AntimatterAPI {
     }
 
     @NotNull
-    public static <T extends ISharedAntimatterObject> T getOrThrow(Class<T> c, String id,
-                                                                   Supplier<? extends RuntimeException> supplier) {
+    public static <T extends ISharedGTObject> T getOrThrow(Class<T> c, String id,
+                                                           Supplier<? extends RuntimeException> supplier) {
         Object obj = get(c, id);
         if (obj != null) {
             return c.cast(obj);
@@ -219,9 +219,9 @@ public final class AntimatterAPI {
     }
 
     public static <T> boolean has(Class<T> c, String id, String domain) {
-        Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.get(c);
+        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
         if (map != null) {
-            Either<ISharedAntimatterObject, Map<String, Object>> either = map.get(domain);
+            Either<ISharedGTObject, Map<String, Object>> either = map.get(domain);
             if (either == null)
                 return false;
             return either.map(t -> true, t -> t.containsKey(id));
@@ -230,9 +230,9 @@ public final class AntimatterAPI {
     }
 
     public static <T> boolean has(Class<T> c, String id) {
-        Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.get(c);
+        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
         if (map != null) {
-            Either<ISharedAntimatterObject, Map<String, Object>> inner = map.get(id);
+            Either<ISharedGTObject, Map<String, Object>> inner = map.get(id);
             return inner != null && inner.left().isPresent();
         }
         return false;
@@ -289,20 +289,20 @@ public final class AntimatterAPI {
     }
 
     private static <T> Stream<T> allInternal(Class<T> c) {
-        Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.get(c);
+        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
         return map == null ? Stream.empty()
                 : new Object2ObjectArrayMap<>(map).values().stream().flatMap(t -> t.map(Stream::of, right -> right.values().stream())).map(c::cast);
     }
 
     private static <T> Stream<T> allInternal(Class<T> c, @NotNull String domain) {
         return allInternal(c)
-                .filter(o -> o instanceof IAntimatterObject && ((IAntimatterObject) o).getDomain().equals(domain)
+                .filter(o -> o instanceof IGTObject && ((IGTObject) o).getDomain().equals(domain)
                         || isRegistryEntry(o, domain));
     }
 
     public static <T> void all(Class<T> c, TriConsumer<T, String, String> consumer){
         synchronized (OBJECTS){
-            Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.get(c);
+            Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
             if (map != null) {
                 new Object2ObjectArrayMap<>(map).forEach((d, e) -> {
                     if (e.left().isPresent()) {
@@ -319,7 +319,7 @@ public final class AntimatterAPI {
 
     public static <T> void all(Class<T> c, String domain, TriConsumer<T, String, String> consumer){
         synchronized (OBJECTS){
-            Map<String, Either<ISharedAntimatterObject, Map<String, Object>>> map = OBJECTS.get(c);
+            Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
             if (map != null) {
                 new Object2ObjectArrayMap<>(map).forEach((d, e) -> {
                     if (e.left().isPresent()) {
@@ -426,8 +426,8 @@ public final class AntimatterAPI {
             throw new IllegalStateException("The RegistrationEvent " + event.name() + " has already been handled");
         }
         INTERNAL_REGISTRAR.onRegistrationEvent(event, side);
-        List<IAntimatterRegistrar> list = all(IAntimatterRegistrar.class).stream()
-                .sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IAntimatterRegistrar::isEnabled).toList();
+        List<IGTRegistrar> list = all(IGTRegistrar.class).stream()
+                .sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
         list.forEach(r -> r.onRegistrationEvent(event, side));
         if (CALLBACKS.containsKey(event))
             CALLBACKS.get(event).forEach(Runnable::run);
@@ -446,12 +446,12 @@ public final class AntimatterAPI {
         CALLBACKS.computeIfAbsent(event, k -> new ObjectArrayList<>()).add(runnable);
     }
 
-    public static void addRegistrar(IAntimatterRegistrar registrar) {
+    public static void addRegistrar(IGTRegistrar registrar) {
         if (INTERNAL_REGISTRAR == null && registrar instanceof Antimatter)
             INTERNAL_REGISTRAR = registrar;
         else if (registrar.isEnabled()) {
             synchronized (OBJECTS){
-                registerInternal(IAntimatterRegistrar.class, registrar.getId(), registrar.getDomain(), registrar);
+                registerInternal(IGTRegistrar.class, registrar.getId(), registrar.getDomain(), registrar);
             }
         }
     }
@@ -461,12 +461,12 @@ public final class AntimatterAPI {
                 && r.getRegistryName().getNamespace().equals(domain);
     }
 
-    public static Optional<IAntimatterRegistrar> getRegistrar(String id) {
-        return allInternal(IAntimatterRegistrar.class).filter(t -> t.getId().equals(id)).findFirst();
+    public static Optional<IGTRegistrar> getRegistrar(String id) {
+        return allInternal(IGTRegistrar.class).filter(t -> t.getId().equals(id)).findFirst();
     }
 
     public static boolean isRegistrarEnabled(String id) {
-        return getRegistrar(id).map(IAntimatterRegistrar::isEnabled).orElse(false);
+        return getRegistrar(id).map(IGTRegistrar::isEnabled).orElse(false);
     }
 
     /**

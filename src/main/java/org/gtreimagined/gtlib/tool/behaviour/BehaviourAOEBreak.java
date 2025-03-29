@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.behaviour.IAddInformation;
 import org.gtreimagined.gtlib.behaviour.IBlockDestroyed;
 import org.gtreimagined.gtlib.behaviour.IDestroySpeed;
 import org.gtreimagined.gtlib.behaviour.IItemRightClick;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class BehaviourAOEBreak implements IBlockDestroyed<IBasicAntimatterTool>, IItemRightClick<IBasicAntimatterTool>, IAddInformation<IBasicAntimatterTool>, IDestroySpeed<IBasicAntimatterTool> {
+public class BehaviourAOEBreak implements IBlockDestroyed<IBasicGTTool>, IItemRightClick<IBasicGTTool>, IAddInformation<IBasicGTTool>, IDestroySpeed<IBasicGTTool> {
 
     @Getter
     protected int column, row, depth;
@@ -44,14 +44,14 @@ public class BehaviourAOEBreak implements IBlockDestroyed<IBasicAntimatterTool>,
     }
 
     @Override
-    public float getDestroySpeed(IBasicAntimatterTool instance, float currentDestroySpeed, ItemStack stack, BlockState state) {
+    public float getDestroySpeed(IBasicGTTool instance, float currentDestroySpeed, ItemStack stack, BlockState state) {
         CompoundTag tag = instance.getDataTag(stack);
         if (tag == null || !tag.getBoolean(Ref.KEY_TOOL_BEHAVIOUR_AOE_BREAK)) return currentDestroySpeed;
         return currentDestroySpeed / destroySpedDivider;
     }
 
     @Override
-    public void onAddInformation(IBasicAntimatterTool instance, ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
+    public void onAddInformation(IBasicGTTool instance, ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         CompoundTag tag = instance.getDataTag(stack);
         boolean enabled = tag != null && tag.getBoolean(Ref.KEY_TOOL_BEHAVIOUR_AOE_BREAK);
         tooltip.add(Utils.translatable("gtlib.tooltip.behaviour.aoe_right_click", Utils.translatable("gtlib.behaviour." + tooltipKey)));
@@ -60,7 +60,7 @@ public class BehaviourAOEBreak implements IBlockDestroyed<IBasicAntimatterTool>,
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> onRightClick(IBasicAntimatterTool instance, Level level, Player player, InteractionHand usedHand) {
+    public InteractionResultHolder<ItemStack> onRightClick(IBasicGTTool instance, Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if (player.isShiftKeyDown() && !level.isClientSide){
             CompoundTag tag = instance.getOrCreateDataTag(stack);
@@ -72,7 +72,7 @@ public class BehaviourAOEBreak implements IBlockDestroyed<IBasicAntimatterTool>,
     }
 
     @Override
-    public boolean onBlockDestroyed(IBasicAntimatterTool instance, ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
+    public boolean onBlockDestroyed(IBasicGTTool instance, ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         //if(!super.onBlockDestroyed(stack, world, state, pos, entity)) return false;
         if (!(entity instanceof Player player)) return true;
         CompoundTag tag = instance.getDataTag(stack);

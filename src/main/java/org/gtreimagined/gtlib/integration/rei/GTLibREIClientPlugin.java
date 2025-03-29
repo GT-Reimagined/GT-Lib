@@ -45,7 +45,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 @REIPluginClient()
-public class AntimatterREIClientPlugin implements REIClientPlugin {
+public class GTLibREIClientPlugin implements REIClientPlugin {
     @Override
     public String getPluginProviderName() {
         return Ref.ID + ":rei";

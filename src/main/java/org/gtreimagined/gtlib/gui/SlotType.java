@@ -15,7 +15,7 @@ import org.gtreimagined.gtlib.gui.slot.SlotFluidDisplaySettable;
 import org.gtreimagined.gtlib.gui.slot.SlotInput;
 import org.gtreimagined.gtlib.gui.slot.SlotOutput;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,7 @@ import tesseract.api.forge.TesseractCaps;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
-public class SlotType<T extends Slot> implements IAntimatterObject, IMachineEvent {
+public class SlotType<T extends Slot> implements IGTObject, IMachineEvent {
 
     public static SlotType<SlotInput> IT_IN = new SlotType<>("item_in", (type, gui, inv, i, d) -> new SlotInput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), new ItIn(), true, false);
     public static SlotType<SlotOutput> IT_OUT = new SlotType<>("item_out", (type, gui, inv, i, d) -> new SlotOutput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> false, false, true);

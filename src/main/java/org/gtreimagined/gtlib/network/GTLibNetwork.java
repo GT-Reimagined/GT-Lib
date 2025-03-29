@@ -10,7 +10,7 @@ import org.gtreimagined.gtlib.network.packets.ServerboundGuiSyncPacket;
 import org.gtreimagined.gtlib.network.packets.TileGuiEventPacket;
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class AntimatterNetwork {
+public abstract class GTLibNetwork {
 
     public static final NetworkChannel NETWORK = new NetworkChannel(Ref.ID, 0, "main");
 

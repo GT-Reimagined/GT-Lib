@@ -21,7 +21,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 
-public class FeatureOre extends AntimatterFeature<NoneFeatureConfiguration> {
+public class FeatureOre extends GTFeature<NoneFeatureConfiguration> {
 
     public static final Object2ObjectOpenHashMap<ChunkPos, List<Triple<BlockPos, Material, Boolean>>> ORES = new Object2ObjectOpenHashMap<>();
 

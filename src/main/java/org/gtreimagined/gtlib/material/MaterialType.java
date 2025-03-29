@@ -10,7 +10,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 import static org.gtreimagined.gtlib.util.Utils.getLocalizedMaterialType;
 import static org.gtreimagined.gtlib.util.Utils.getLocalizedType;
 
-public class MaterialType<T> implements IMaterialTag, ISharedAntimatterObject, IRegistryEntryProvider {
+public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistryEntryProvider {
 
     protected final String id;
     @Getter

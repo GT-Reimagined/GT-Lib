@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class StoneType implements ISharedAntimatterObject, IRegistryEntryProvider {
+public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
 
     @Getter
     private final String domain, id;

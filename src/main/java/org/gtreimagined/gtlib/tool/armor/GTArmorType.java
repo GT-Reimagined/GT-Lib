@@ -7,8 +7,8 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.IMaterialTag;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
-import org.gtreimagined.gtlib.tool.IAntimatterArmor;
+import org.gtreimagined.gtlib.registration.IGTObject;
+import org.gtreimagined.gtlib.tool.IGTArmor;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class AntimatterArmorType implements IAntimatterObject {
+public class GTArmorType implements IGTObject {
     private final String domain, id;
     @Getter
     private final List<Component> tooltip = new ObjectArrayList<>();
@@ -48,7 +48,7 @@ public class AntimatterArmorType implements IAntimatterObject {
     private IMaterialTag materialRequirement;
 
     /**
-     * Instantiates a AntimatterArmorType with its basic values
+     * Instantiates a GTArmorType with its basic values
      *
      * @param domain           unique identifier provided by the mod
      * @param id               unique identifier
@@ -57,9 +57,9 @@ public class AntimatterArmorType implements IAntimatterObject {
      * @param extraToughness   extra toughness that would be applied to item's attribute on top of material value
      * @param extraKnockback   extra knockback resistance that would be applied to the item's attributes on top of material value
      * @param slot             armor slot the item goes in
-     * @return a brand new AntimatterArmorType for enjoyment
+     * @return a brand new GTArmorType for enjoyment
      */
-    public AntimatterArmorType(String domain, String id, int durabilityFactor, int extraArmor, float extraToughness, float extraKnockback, EquipmentSlot slot) {
+    public GTArmorType(String domain, String id, int durabilityFactor, int extraArmor, float extraToughness, float extraKnockback, EquipmentSlot slot) {
         this.domain = domain;
         this.id = id;
         this.repairable = true;
@@ -71,19 +71,19 @@ public class AntimatterArmorType implements IAntimatterObject {
         this.slot = slot;
         this.event = SoundEvents.ARMOR_EQUIP_IRON;
         this.overlayLayers = 0;
-        AntimatterAPI.register(AntimatterArmorType.class, this);
+        AntimatterAPI.register(GTArmorType.class, this);
     }
 
-    public List<IAntimatterArmor> instantiateTools() {
-        List<IAntimatterArmor> armors = new ArrayList<>();
+    public List<IGTArmor> instantiateTools() {
+        List<IGTArmor> armors = new ArrayList<>();
         MaterialTags.ARMOR.all().forEach(m -> {
             armors.add(new MaterialArmor(domain, this, m, slot, prepareInstantiation(domain)));
         });
         return armors;
     }
 
-    public List<IAntimatterArmor> instantiateTools(String domain, Supplier<Item.Properties> properties) {
-        List<IAntimatterArmor> armors = new ArrayList<>();
+    public List<IGTArmor> instantiateTools(String domain, Supplier<Item.Properties> properties) {
+        List<IGTArmor> armors = new ArrayList<>();
         MaterialTags.ARMOR.all().forEach(m -> {
             armors.add(new MaterialArmor(domain, this, m, slot, properties.get()));
         });
@@ -91,41 +91,41 @@ public class AntimatterArmorType implements IAntimatterObject {
     }
 
     private Item.Properties prepareInstantiation(String domain) {
-        if (domain.isEmpty()) Utils.onInvalidData("An AntimatterArmorType was instantiated with an empty domain name!");
+        if (domain.isEmpty()) Utils.onInvalidData("An GTArmorType was instantiated with an empty domain name!");
         Item.Properties properties = new Item.Properties().tab(itemGroup);
         if (!repairable) properties.setNoRepair();
         return properties;
     }
 
-    public AntimatterArmorType setOverlayLayers(int overlayLayers) {
+    public GTArmorType setOverlayLayers(int overlayLayers) {
         this.overlayLayers = overlayLayers;
         return this;
     }
 
-    public AntimatterArmorType setEvent(SoundEvent event) {
+    public GTArmorType setEvent(SoundEvent event) {
         this.event = event;
         return this;
     }
 
-    public AntimatterArmorType setArmorSlot(EquipmentSlot slot) {
+    public GTArmorType setArmorSlot(EquipmentSlot slot) {
         this.slot = slot;
         return this;
     }
 
-    public AntimatterArmorType setToolTip(Component... tooltip) {
+    public GTArmorType setToolTip(Component... tooltip) {
         this.tooltip.addAll(Arrays.asList(tooltip));
         return this;
     }
 
-    public AntimatterArmorType setPrimaryRequirement(IMaterialTag tag) {
+    public GTArmorType setPrimaryRequirement(IMaterialTag tag) {
         if (tag == null)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterArmorType was set to have no primary material requirement even when it was explicitly called!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTArmorType was set to have no primary material requirement even when it was explicitly called!");
         this.materialRequirement = tag;
         return this;
     }
 
     public ItemStack getToolStack(Material primary) {
-        IAntimatterArmor armor = AntimatterAPI.get(IAntimatterArmor.class, primary.getId() + "_" + id, domain);
+        IGTArmor armor = AntimatterAPI.get(IGTArmor.class, primary.getId() + "_" + id, domain);
         return Objects.requireNonNull(armor).asItemStack();
     }
 

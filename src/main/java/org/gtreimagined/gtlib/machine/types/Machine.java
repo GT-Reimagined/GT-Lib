@@ -37,7 +37,7 @@ import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
 import org.gtreimagined.gtlib.structure.Structure;
 import org.gtreimagined.gtlib.structure.StructureBuilder;
@@ -91,7 +91,7 @@ import static org.gtreimagined.gtlib.machine.Tier.NONE;
  *
  * @param <T> this class as a generic argument.
  */
-public class Machine<T extends Machine<T>> implements IAntimatterObject, IRegistryEntryProvider, ISlotProvider<Machine<T>>, IGuiHandler.IHaveWidgets, IDynamicModelProvider {
+public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryProvider, ISlotProvider<Machine<T>>, IGuiHandler.IHaveWidgets, IDynamicModelProvider {
 
     
     /**

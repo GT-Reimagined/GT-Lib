@@ -23,7 +23,7 @@ import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
 import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -150,7 +150,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
         BlockEntityMachine<?> tile = (BlockEntityMachine<?>) world.getBlockEntity(pos);
         if (tile != null) {
             ItemStack stack = player.getItemInHand(hand);
-            AntimatterToolType type = Utils.getToolType(player);
+            GTToolType type = Utils.getToolType(player);
             ty = tile.onInteractBoth(state, world, pos, player, hand, hit, type);
             if (ty.consumesAction()) return ty;
             if (!world.isClientSide) {

@@ -4,7 +4,7 @@ import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.cover.CoverOutput;
-import org.gtreimagined.gtlib.gui.screen.AntimatterContainerScreen;
+import org.gtreimagined.gtlib.gui.screen.GTContainerScreen;
 import org.gtreimagined.gtlib.gui.widget.IOWidget;
 import org.gtreimagined.gtlib.gui.widget.MachineStateWidget;
 import org.gtreimagined.gtlib.gui.widget.ProgressWidget;
@@ -26,7 +26,7 @@ public class BasicMachine extends Machine<BasicMachine> {
     protected void setupGui() {
         super.setupGui();
         addGuiCallback(t -> {
-            t.addWidget(WidgetSupplier.build((a, b) -> TextWidget.build(((AntimatterContainerScreen<?>) b).getTitle().getString(), 4210752, false).build(a, b)).setPos(9, 5).clientSide());
+            t.addWidget(WidgetSupplier.build((a, b) -> TextWidget.build(((GTContainerScreen<?>) b).getTitle().getString(), 4210752, false).build(a, b)).setPos(9, 5).clientSide());
             if (has(RECIPE)) {
                 t.addWidget(ProgressWidget.build())
                         .addWidget(MachineStateWidget.build());

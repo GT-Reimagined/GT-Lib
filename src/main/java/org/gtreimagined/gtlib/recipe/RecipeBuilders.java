@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.recipe.ingredient.PropertyIngredient;
 import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.TagUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -52,7 +52,7 @@ public class RecipeBuilders {
         @Override
         public ItemStack build(CraftingContainer inv, MaterialRecipe.Result mats) {
             int dye = ((DyeColor) mats.mats.get("secondary")).getMaterialColor().col;
-            IAntimatterTool type = AntimatterAPI.get(IAntimatterTool.class, id, Ref.SHARED_ID);
+            IGTTool type = AntimatterAPI.get(IGTTool.class, id, Ref.SHARED_ID);
             ItemStack stack = type.asItemStack(type.getAntimatterItemTier().getPrimary(), NULL);
             stack.getOrCreateTagElement(Ref.TAG_TOOL_DATA).putInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR, dye);
             return stack;

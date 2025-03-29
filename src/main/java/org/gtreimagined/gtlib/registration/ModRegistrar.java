@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
 /**
  * ModRegistrar is the base class for registering mod registrars.
  */
-public abstract class ModRegistrar implements IAntimatterObject {
+public abstract class ModRegistrar implements IGTObject {
 
     public ModRegistrar() {
         AntimatterAPI.register(ModRegistrar.class, this);

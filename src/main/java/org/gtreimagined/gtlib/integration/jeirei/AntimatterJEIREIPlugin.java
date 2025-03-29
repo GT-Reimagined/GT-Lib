@@ -10,7 +10,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
 import org.gtreimagined.gtlib.integration.create.client.PonderIntegration;
-import org.gtreimagined.gtlib.integration.jei.AntimatterJEIPlugin;
+import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.rei.REIUtils;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -150,7 +150,7 @@ public class AntimatterJEIREIPlugin{
 
     public static void showCategories(ResourceLocation... categories){
         if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
-            AntimatterJEIPlugin.showCategories(categories);
+            GTLibJEIPlugin.showCategories(categories);
         } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.showCategories(categories);
         }
@@ -160,7 +160,7 @@ public class AntimatterJEIREIPlugin{
 
     public static void uses(FluidStack val, boolean USE) {
         if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
-            AntimatterJEIPlugin.uses(val, USE);
+            GTLibJEIPlugin.uses(val, USE);
         } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.uses(val, USE);
         }
@@ -168,7 +168,7 @@ public class AntimatterJEIREIPlugin{
 
     public static <T> void addModDescriptor(List<Component> tooltip, T t) {
         if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
-            AntimatterJEIPlugin.addModDescriptor(tooltip, t);
+            GTLibJEIPlugin.addModDescriptor(tooltip, t);
         } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.addModDescriptor(tooltip, t);
         }

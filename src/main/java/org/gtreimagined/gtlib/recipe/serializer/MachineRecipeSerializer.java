@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class MachineRecipeSerializer extends AntimatterRecipeSerializer<Recipe>{
+public class MachineRecipeSerializer extends GTRecipeSerializer<Recipe> {
     public static final MachineRecipeSerializer INSTANCE = new MachineRecipeSerializer();
 
     protected MachineRecipeSerializer() {

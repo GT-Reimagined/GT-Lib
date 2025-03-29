@@ -1,14 +1,14 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Blocks;
 import tesseract.api.forge.TesseractCaps;
 
-public class BehaviourPoweredDebug implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourPoweredDebug implements IItemUse<IBasicGTTool> {
 
     public static final BehaviourPoweredDebug INSTANCE = new BehaviourPoweredDebug();
 
@@ -18,7 +18,7 @@ public class BehaviourPoweredDebug implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         if (instance.getAntimatterToolType().isPowered() && c.getLevel().getBlockState(c.getClickedPos()) == Blocks.REDSTONE_BLOCK.defaultBlockState() && c.getPlayer() != null && c.getPlayer().isCreative()) {
             ItemStack stack = c.getPlayer().getItemInHand(c.getHand());
             stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).ifPresent(i -> {

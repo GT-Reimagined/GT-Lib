@@ -14,7 +14,7 @@ import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
@@ -161,7 +161,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
      * Fires once per Side. Return defines whether or not to consume the
      * interaction.
      **/
-    default InteractionResult onInteract(Player player, InteractionHand hand, Direction side, @Nullable AntimatterToolType type) {
+    default InteractionResult onInteract(Player player, InteractionHand hand, Direction side, @Nullable GTToolType type) {
         // Do not consume behaviour per default.
         return InteractionResult.PASS;
     }

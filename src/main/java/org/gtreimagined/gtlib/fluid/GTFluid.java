@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -25,7 +25,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 /**
- * AntimatterFluid is an object that includes all essential information of what a normal fluid would compose of in Minecraft
+ * GTFluid is an object that includes all essential information of what a normal fluid would compose of in Minecraft
  * Source + Flowing fluid instances, with a FlowingFluidBlock that handles the in-world block form of them.
  * Item instance is also provided, usually BucketItem or its derivatives.
  * But is generified to an Item instance: {@link net.minecraftforge.fluids.ForgeFlowingFluid#getFilledBucket}
@@ -33,7 +33,7 @@ import net.minecraftforge.registries.IForgeRegistry;
  * TODO: generic getFluidContainer()
  * TODO: Cell Models
  */
-public class AntimatterFluid implements ISharedAntimatterObject, IRegistryEntryProvider {
+public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
 
     public static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation("block/water_overlay");
     public static final ResourceLocation LIQUID_STILL_TEXTURE = new ResourceLocation(Ref.ID, "block/liquid/still");
@@ -58,7 +58,7 @@ public class AntimatterFluid implements ISharedAntimatterObject, IRegistryEntryP
     @Getter
     protected Item containerItem = Items.AIR;
 
-    public AntimatterFluid(String domain, String id, FluidAttributes.Builder builder, Block.Properties blockProperties) {
+    public GTFluid(String domain, String id, FluidAttributes.Builder builder, Block.Properties blockProperties) {
         this.domain = domain;
         this.id = id;
         this.fluidProperties = new Properties(this::getFluid, this::getFlowingFluid, builder).bucket(this::getContainerItem).block(this::getFluidBlock);
@@ -66,19 +66,19 @@ public class AntimatterFluid implements ISharedAntimatterObject, IRegistryEntryP
         this.attributes = builder.translationKey(Util.makeDescriptionId("fluid_type", this.getLoc())).build(this.source);
     }
 
-    public AntimatterFluid(String domain, String id) {
+    public GTFluid(String domain, String id) {
         this(domain, id, getDefaultAttributesBuilder(), getDefaultBlockProperties());
     }
 
-    public AntimatterFluid(String domain, String id, FluidAttributes.Builder builder) {
+    public GTFluid(String domain, String id, FluidAttributes.Builder builder) {
         this(domain, id, builder, getDefaultBlockProperties());
     }
 
-    public AntimatterFluid(String domain, String id, ResourceLocation stillLoc, ResourceLocation flowLoc) {
+    public GTFluid(String domain, String id, ResourceLocation stillLoc, ResourceLocation flowLoc) {
         this(domain, id, FluidAttributes.builder(stillLoc, flowLoc), getDefaultBlockProperties());
     }
 
-    public AntimatterFluid(String domain, String id, Block.Properties properties) {
+    public GTFluid(String domain, String id, Block.Properties properties) {
         this(domain, id, getDefaultAttributesBuilder(), properties);
     }
 
@@ -97,22 +97,22 @@ public class AntimatterFluid implements ISharedAntimatterObject, IRegistryEntryP
         }
     }
 
-    public AntimatterFluid source(Source source) {
+    public GTFluid source(Source source) {
         this.source = source;
         return this;
     }
 
-    public AntimatterFluid flowing(Flowing flowing) {
+    public GTFluid flowing(Flowing flowing) {
         this.flowing = flowing;
         return this;
     }
 
-    public AntimatterFluid flowingBlock(LiquidBlock fluidBlock) {
+    public GTFluid flowingBlock(LiquidBlock fluidBlock) {
         this.fluidBlock = fluidBlock;
         return this;
     }
 
-    public AntimatterFluid containerItem(Item item) {
+    public GTFluid containerItem(Item item) {
         this.containerItem = item;
         return this;
     }

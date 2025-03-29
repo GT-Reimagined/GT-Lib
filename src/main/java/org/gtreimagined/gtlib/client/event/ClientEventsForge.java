@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.client.event;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.SoundHelper;
 import org.gtreimagined.gtlib.material.MaterialType;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -42,8 +42,8 @@ public class ClientEventsForge {
             Player player = e.player;
             if (player == null || player.getMainHandItem().isEmpty()) return;
             ItemStack stack = player.getMainHandItem();
-            if (!(stack.getItem() instanceof IAntimatterTool)) return;
-            IAntimatterTool item = (IAntimatterTool) stack.getItem();
+            if (!(stack.getItem() instanceof IGTTool)) return;
+            IGTTool item = (IGTTool) stack.getItem();
             if (item.getAntimatterToolType().getUseAction() != UseAnim.NONE && player.swinging) {
                 item.getItem().onUsingTick(stack, player, stack.getCount());
                 //player.swingProgress = player.prevSwingProgress;

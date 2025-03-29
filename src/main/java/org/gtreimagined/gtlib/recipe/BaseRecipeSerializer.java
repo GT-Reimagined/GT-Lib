@@ -1,13 +1,13 @@
 package org.gtreimagined.gtlib.recipe;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BaseRecipeSerializer<T extends Recipe<?>> implements RecipeSerializer<T>, IAntimatterObject {
+public abstract class BaseRecipeSerializer<T extends Recipe<?>> implements RecipeSerializer<T>, IGTObject {
     private final String domain;
     private final String id;
     private ResourceLocation registryName = null;

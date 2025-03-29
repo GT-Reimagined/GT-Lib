@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.tool.enchantment;
 
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -25,7 +25,7 @@ public class ElectricEnchantment extends Enchantment {
 
     @Override
     public boolean canEnchant(ItemStack stack) {
-        return stack.getItem() instanceof IAntimatterTool tool && tool.getAntimatterToolType().isPowered();
+        return stack.getItem() instanceof IGTTool tool && tool.getAntimatterToolType().isPowered();
     }
 
     //TODO implement interface on fabric side

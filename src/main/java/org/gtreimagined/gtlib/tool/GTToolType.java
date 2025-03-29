@@ -14,7 +14,7 @@ import org.gtreimagined.gtlib.material.IMaterialTag;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -40,7 +40,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class AntimatterToolType implements IAntimatterObject {
+public class GTToolType implements IGTObject {
 
     private final String domain, id;
     @Getter
@@ -54,7 +54,7 @@ public class AntimatterToolType implements IAntimatterObject {
     @Getter
     private final Set<net.minecraft.world.level.material.Material> effectiveMaterials = new ObjectOpenHashSet<>();
     @Getter
-    private final Object2ObjectMap<String, IBehaviour<IBasicAntimatterTool>> behaviours = new Object2ObjectOpenHashMap<>();
+    private final Object2ObjectMap<String, IBehaviour<IBasicGTTool>> behaviours = new Object2ObjectOpenHashMap<>();
     @Getter
     @Setter
     private ImmutableMap<String, Function<ItemStack, ItemStack>> brokenItems = ImmutableMap.of();
@@ -99,7 +99,7 @@ public class AntimatterToolType implements IAntimatterObject {
     @Setter
     private UseAnim useAction;
     @Setter
-    private Class<? extends IAntimatterTool> toolClass;
+    private Class<? extends IGTTool> toolClass;
     @Setter
     private IToolSupplier toolSupplier = null;
     @Nullable
@@ -118,7 +118,7 @@ public class AntimatterToolType implements IAntimatterObject {
     private String customName = "";
 
     /**
-     * Instantiates a AntimatterToolType with its basic values
+     * Instantiates a GTToolType with its basic values
      *
      * @param domain             unique identifier provided by the mod
      * @param id                 unique identifier
@@ -129,10 +129,10 @@ public class AntimatterToolType implements IAntimatterObject {
      * @param baseAttackSpeed    base attack speed that would be applied to the item's attributes
      * @param vanillaType          if the mining type uses vanilla resource location for tool tag.
      */
-    public AntimatterToolType(String domain, String id, int useDurability, int attackDurability, int craftingDurability, float baseAttackDamage, float baseAttackSpeed, boolean vanillaType) {
-        if (domain.isEmpty()) Utils.onInvalidData("AntimatterToolType registered with no domain name!");
+    public GTToolType(String domain, String id, int useDurability, int attackDurability, int craftingDurability, float baseAttackDamage, float baseAttackSpeed, boolean vanillaType) {
+        if (domain.isEmpty()) Utils.onInvalidData("GTToolType registered with no domain name!");
         this.domain = domain;
-        if (id.isEmpty()) Utils.onInvalidData("AntimatterToolType registered with an empty ID!");
+        if (id.isEmpty()) Utils.onInvalidData("GTToolType registered with an empty ID!");
         this.id = id;
         if (useDurability < 0) Utils.onInvalidData(id + " cannot have a negative use durability value!");
         if (attackDurability < 0) Utils.onInvalidData(id + " cannot have a negative attack durability value!");
@@ -165,7 +165,7 @@ public class AntimatterToolType implements IAntimatterObject {
         setBrokenItems(ImmutableMap.of(id, (i) -> ItemStack.EMPTY));
     }
 
-    public AntimatterToolType(String domain, String id, AntimatterToolType inheritType) {
+    public GTToolType(String domain, String id, GTToolType inheritType) {
         this(domain, id, inheritType.useDurability, inheritType.attackDurability, inheritType.craftingDurability, inheritType.baseAttackDamage, inheritType.baseAttackSpeed, false);
     }
 
@@ -174,20 +174,20 @@ public class AntimatterToolType implements IAntimatterObject {
         return domain;
     }
 
-    /* IAntimatterTool Instantiations */
+    /* IGTTool Instantiations */
 
     /**
      * Instantiates powered MaterialTools
      */
-    public List<IAntimatterTool> instantiatePoweredTools(String domain) {
+    public List<IGTTool> instantiatePoweredTools(String domain) {
         Item.Properties properties = prepareInstantiation(domain);
         return instantiatePoweredTools(domain, () -> properties);
     }
 
-    public List<IAntimatterTool> instantiatePoweredTools(String domain, Supplier<Item.Properties> properties) {
-        List<IAntimatterTool> poweredTools = new ObjectArrayList<>();
+    public List<IGTTool> instantiatePoweredTools(String domain, Supplier<Item.Properties> properties) {
+        List<IGTTool> poweredTools = new ObjectArrayList<>();
         for (int energyTier : energyTiers) {
-            poweredTools.add(instantiatePoweredTool(domain, AntimatterItemTier.NULL, properties, energyTier));
+            poweredTools.add(instantiatePoweredTool(domain, GTItemTier.NULL, properties, energyTier));
         }
         return poweredTools;
     }
@@ -195,40 +195,40 @@ public class AntimatterToolType implements IAntimatterObject {
     /**
      * Instantiates a MaterialTool
      */
-    public List<IAntimatterTool> instantiateTools(String domain) {
+    public List<IGTTool> instantiateTools(String domain) {
         return instantiateTools(domain, () -> prepareInstantiation(domain));
     }
 
-    protected IAntimatterTool instantiatePoweredTool(String domain, AntimatterItemTier tier, Supplier<Item.Properties> properties, int energyTier) {
+    protected IGTTool instantiatePoweredTool(String domain, GTItemTier tier, Supplier<Item.Properties> properties, int energyTier) {
         if (toolSupplier != null) return toolSupplier.create(domain, this, tier, properties.get(), energyTier);
         if (toolClass == MaterialSword.class) return new MaterialSword(domain, this, tier, properties.get(), energyTier);
         return new MaterialTool(domain, this, tier, properties.get(), energyTier);
     }
 
-    protected IAntimatterTool instantiateTool(String domain, AntimatterItemTier tier, Supplier<Item.Properties> properties) {
+    protected IGTTool instantiateTool(String domain, GTItemTier tier, Supplier<Item.Properties> properties) {
         if (toolSupplier != null) return toolSupplier.create(domain, this, tier, properties.get());
         if (toolClass == MaterialSword.class) return new MaterialSword(domain, this, tier, properties.get());
         return new MaterialTool(domain, this, tier, properties.get());
     }
 
-    public List<IAntimatterTool> instantiateTools(String domain, Supplier<Item.Properties> properties) {
-        List<IAntimatterTool> tools = new ArrayList<>();
+    public List<IGTTool> instantiateTools(String domain, Supplier<Item.Properties> properties) {
+        List<IGTTool> tools = new ArrayList<>();
         if (simple){
             MaterialTags.TOOLS.getAll().forEach((m, t) -> {
                 if (primaryMaterialRequirement != null && !m.has(primaryMaterialRequirement)) return;
                 if (replacements.containsKey(m.getId())) return;
                 if (t.toolTypes().contains(this)){
-                    tools.add(instantiateTool(domain, AntimatterItemTier.getOrCreate(m, hasSecondary ? t.handleMaterial() : Material.NULL), properties));
+                    tools.add(instantiateTool(domain, GTItemTier.getOrCreate(m, hasSecondary ? t.handleMaterial() : Material.NULL), properties));
                 }
             });
         } else {
-            tools.add(instantiateTool(domain, AntimatterItemTier.NULL, properties));
+            tools.add(instantiateTool(domain, GTItemTier.NULL, properties));
         }
         return tools;
     }
 
     protected Item.Properties prepareInstantiation(String domain) {
-        if (domain.isEmpty()) Utils.onInvalidData("An AntimatterToolType was instantiated with an empty domain name!");
+        if (domain.isEmpty()) Utils.onInvalidData("An GTToolType was instantiated with an empty domain name!");
         Item.Properties properties = new Item.Properties().tab(itemGroup);
         if (!repairable) properties.setNoRepair();
         return properties;
@@ -236,37 +236,37 @@ public class AntimatterToolType implements IAntimatterObject {
 
     /* SETTERS */
 
-    public AntimatterToolType addReplacement(Material material, Supplier<Item> item){
+    public GTToolType addReplacement(Material material, Supplier<Item> item){
         this.replacements.put(material.getId(), item);
         return this;
     }
 
-    public AntimatterToolType setToolTip(Component... tooltip) {
+    public GTToolType setToolTip(Component... tooltip) {
         this.tooltip.addAll(Arrays.asList(tooltip));
         return this;
     }
 
-    public AntimatterToolType setTag(AntimatterToolType tag) {
+    public GTToolType setTag(GTToolType tag) {
         this.originalTag = false;
         this.tag = tag.getTag();
         this.forgeTag = tag.getForgeTag();
         return this;
     }
 
-    public AntimatterToolType setType(AntimatterToolType tag) {
+    public GTToolType setType(GTToolType tag) {
         this.toolTypes.remove(this.toolType);
         this.toolType = tag.getToolType();
         this.toolTypes.add(this.toolType);
         return this;
     }
-    public AntimatterToolType setTag(ResourceLocation loc) {
+    public GTToolType setTag(ResourceLocation loc) {
         this.originalTag = false;
         this.tag = TagUtils.getItemTag(loc);
         this.forgeTag = TagUtils.getForgelikeItemTag("tools/" + loc.getPath());
         return this;
     }
 
-    public AntimatterToolType setPowered(long baseMaxEnergy, int... energyTiers) {
+    public GTToolType setPowered(long baseMaxEnergy, int... energyTiers) {
         this.powered = true;
         this.baseMaxEnergy = baseMaxEnergy;
         this.energyTiers = energyTiers;
@@ -274,9 +274,9 @@ public class AntimatterToolType implements IAntimatterObject {
         return this;
     }
 
-    public AntimatterToolType addTags(String... types) {
+    public GTToolType addTags(String... types) {
         if (types.length == 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have no additional tool types even when it was explicitly called!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have no additional tool types even when it was explicitly called!");
         Arrays.stream(types).map(t -> {
             String domain = t.equals("pickaxe") || t.equals("axe") || t.equals("shovel") || t.equals("hoe") || t.equals("sword") ? "minecraft" : Ref.ID;
             return TagUtils.getBlockTag(new ResourceLocation(domain, "mineable/" + t));
@@ -284,42 +284,42 @@ public class AntimatterToolType implements IAntimatterObject {
         return this;
     }
 
-    public AntimatterToolType addEffectiveBlocks(Block... blocks) {
+    public GTToolType addEffectiveBlocks(Block... blocks) {
         if (blocks.length == 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have no effective blocks even when it was explicitly called!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have no effective blocks even when it was explicitly called!");
         this.effectiveBlocks.addAll(Arrays.asList(blocks));
         return this;
     }
 
     @SafeVarargs
-    public final AntimatterToolType addEffectiveBlockTags(TagKey<Block>... blocks) {
+    public final GTToolType addEffectiveBlockTags(TagKey<Block>... blocks) {
         if (blocks.length == 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have no effective block tags even when it was explicitly called!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have no effective block tags even when it was explicitly called!");
         this.effectiveBlockTags.addAll(Arrays.asList(blocks));
         return this;
     }
 
-    public AntimatterToolType addEffectiveMaterials(net.minecraft.world.level.material.Material... materials) {
+    public GTToolType addEffectiveMaterials(net.minecraft.world.level.material.Material... materials) {
         if (materials.length == 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have no effective materials even when it was explicitly called!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have no effective materials even when it was explicitly called!");
         this.effectiveMaterials.addAll(Arrays.asList(materials));
         return this;
     }
-    public AntimatterToolType addBlacklistedEnchantments(Enchantment... enchantments){
+    public GTToolType addBlacklistedEnchantments(Enchantment... enchantments){
         blacklistedEnchantments.addAll(Arrays.asList(enchantments));
         return this;
     }
 
-    public AntimatterToolType setPrimaryRequirement(IMaterialTag tag) {
+    public GTToolType setPrimaryRequirement(IMaterialTag tag) {
         if (tag == null)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have no primary material requirement even when it was explicitly called!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have no primary material requirement even when it was explicitly called!");
         this.primaryMaterialRequirement = tag;
         return this;
     }
 
-    public AntimatterToolType setSecondaryRequirement(IMaterialTag tag) {
+    public GTToolType setSecondaryRequirement(IMaterialTag tag) {
         if (tag == null)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have no secondary material requirement even when it was explicitly called!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have no secondary material requirement even when it was explicitly called!");
         this.secondaryMaterialRequirement = tag;
         return this;
     }
@@ -328,37 +328,37 @@ public class AntimatterToolType implements IAntimatterObject {
         return blockBreakability;
     }
 
-    public AntimatterToolType setBlockBreakability(boolean breakable) {
+    public GTToolType setBlockBreakability(boolean breakable) {
         this.blockBreakability = breakable;
         return this;
     }
 
-    public AntimatterToolType setBaseQuality(int quality) {
+    public GTToolType setBaseQuality(int quality) {
         if (quality < 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have negative Base Quality!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have negative Base Quality!");
         this.baseQuality = quality;
         return this;
     }
 
-    public AntimatterToolType setToolSpeedMultiplier(float multiplier){
+    public GTToolType setToolSpeedMultiplier(float multiplier){
         if (multiplier < 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have negative Speed Multiplier!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have negative Speed Multiplier!");
         this.miningSpeedMultiplier = multiplier;
         return this;
     }
 
-    public AntimatterToolType setOverlayLayers(int layers) {
+    public GTToolType setOverlayLayers(int layers) {
         if (layers < 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " AntimatterToolType was set to have less than 0 overlayer layers!");
+            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have less than 0 overlayer layers!");
         this.overlayLayers = layers;
         return this;
     }
 
-    public void addBehaviour(IBehaviour<IBasicAntimatterTool>... behaviours) {
+    public void addBehaviour(IBehaviour<IBasicGTTool>... behaviours) {
         Arrays.stream(behaviours).forEach(b -> this.behaviours.put(b.getId(), b));
     }
 
-    public IBehaviour<IBasicAntimatterTool> getBehaviour(String id) {
+    public IBehaviour<IBasicGTTool> getBehaviour(String id) {
         return behaviours.get(id);
     }
 
@@ -370,7 +370,7 @@ public class AntimatterToolType implements IAntimatterObject {
 
     public ItemStack getToolStack(Material primary, Material secondary) {
         String id = simple ? primary.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id, domain)).asItemStack(primary, secondary);
+        return Objects.requireNonNull(AntimatterAPI.get(IGTTool.class, id, domain)).asItemStack(primary, secondary);
     }
 
     public ItemStack getToolStack(Material primary) {
@@ -389,7 +389,7 @@ public class AntimatterToolType implements IAntimatterObject {
             }
         }
         String id = simple ? primary.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id, domain)).asItemStack(primary, Material.NULL);
+        return Objects.requireNonNull(AntimatterAPI.get(IGTTool.class, id, domain)).asItemStack(primary, Material.NULL);
     }
 
     public Item getToolItem(Material material){
@@ -397,7 +397,7 @@ public class AntimatterToolType implements IAntimatterObject {
             return replacements.get(material.getId()).get();
         }
         String id = simple ? material.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IAntimatterTool.class, id, domain)).getItem();
+        return Objects.requireNonNull(AntimatterAPI.get(IGTTool.class, id, domain)).getItem();
     }
 
     @Override
@@ -414,9 +414,9 @@ public class AntimatterToolType implements IAntimatterObject {
     }
 
     public interface IToolSupplier{
-        IAntimatterTool create(String domain, AntimatterToolType toolType, AntimatterItemTier tier, Item.Properties properties);
+        IGTTool create(String domain, GTToolType toolType, GTItemTier tier, Item.Properties properties);
 
-        default IAntimatterTool create(String domain, AntimatterToolType toolType, AntimatterItemTier tier, Item.Properties properties, int energyTier){
+        default IGTTool create(String domain, GTToolType toolType, GTItemTier tier, Item.Properties properties, int energyTier){
             return create(domain, toolType, tier, properties);
         }
     }

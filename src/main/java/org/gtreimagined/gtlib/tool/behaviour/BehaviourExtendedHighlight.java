@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.capability.ICoverHandlerProvider;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class BehaviourExtendedHighlight implements IItemHighlight<IBasicAntimatterTool> {
+public class BehaviourExtendedHighlight implements IItemHighlight<IBasicGTTool> {
 
     final float INDENTATION_SIDE = 0.25F;
     final double INTERACT_DISTANCE = 5;

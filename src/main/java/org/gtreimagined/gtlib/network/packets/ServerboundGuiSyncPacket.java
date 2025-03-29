@@ -5,8 +5,8 @@ import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.ICanSyncData;
-import org.gtreimagined.gtlib.gui.container.AntimatterContainer;
-import org.gtreimagined.gtlib.network.AntimatterNetwork;
+import org.gtreimagined.gtlib.gui.container.GTContainer;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -25,7 +25,7 @@ public class ServerboundGuiSyncPacket extends GuiSyncPacket<ServerboundGuiSyncPa
 
     @Override
     public ResourceLocation getID() {
-        return AntimatterNetwork.GUI_SYNC_PACKET_ID_SERVERBOUND;
+        return GTLibNetwork.GUI_SYNC_PACKET_ID_SERVERBOUND;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ServerboundGuiSyncPacket extends GuiSyncPacket<ServerboundGuiSyncPa
         @Override
         public PacketContext handle(ServerboundGuiSyncPacket msg) {
             return (sender, level) -> {
-                ((AntimatterContainer) sender.containerMenu).handler.receivePacket(msg, ICanSyncData.SyncDirection.CLIENT_TO_SERVER);
+                ((GTContainer) sender.containerMenu).handler.receivePacket(msg, ICanSyncData.SyncDirection.CLIENT_TO_SERVER);
             };
         }
     }

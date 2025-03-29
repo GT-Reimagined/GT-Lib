@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.capability;
 
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -37,7 +37,7 @@ public interface ICoverHandler<T extends BlockEntity> extends Serializable {
 
     // If the player uses a cover in hand -> place cover if none exists.. Otherwises
     // interact with the cover, if present.
-    InteractionResult onInteract(Player player, InteractionHand hand, Direction side, @Nullable AntimatterToolType type);
+    InteractionResult onInteract(Player player, InteractionHand hand, Direction side, @Nullable GTToolType type);
 
     /**
      * Helpers
@@ -120,7 +120,7 @@ public interface ICoverHandler<T extends BlockEntity> extends Serializable {
         }
 
         @Override
-        public InteractionResult onInteract(Player player, InteractionHand hand, Direction side, AntimatterToolType type) {
+        public InteractionResult onInteract(Player player, InteractionHand hand, Direction side, GTToolType type) {
             return InteractionResult.PASS;
         }
 

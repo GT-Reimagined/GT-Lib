@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.gui.event;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
@@ -50,7 +50,7 @@ public interface IGuiEvent extends IMachineEvent {
 
     }
 
-    interface IGuiEventFactory extends ISharedAntimatterObject {
+    interface IGuiEventFactory extends ISharedGTObject {
         /**
          * Default method for simplicity.
          */

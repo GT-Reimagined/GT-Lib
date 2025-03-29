@@ -17,7 +17,7 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTag;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.TagUtils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -55,18 +55,18 @@ public class PropertyIngredient extends Ingredient {
     private final Set<ItemLike> items;
     private final String id;
     private final IMaterialTag[] tags;
-    private final Object2BooleanMap<AntimatterToolType> optionalTools;
+    private final Object2BooleanMap<GTToolType> optionalTools;
     private final Set<Material> fixedMats;
     private final boolean inverse;
 
-    protected static PropertyIngredient build(Set<MaterialTypeItem<?>> type, Set<TagKey<Item>> itemTags, Set<ItemLike> items, String id, IMaterialTag[] tags, Set<Material> fixedMats, boolean inverse, Object2BooleanMap<AntimatterToolType> tools) {
+    protected static PropertyIngredient build(Set<MaterialTypeItem<?>> type, Set<TagKey<Item>> itemTags, Set<ItemLike> items, String id, IMaterialTag[] tags, Set<Material> fixedMats, boolean inverse, Object2BooleanMap<GTToolType> tools) {
         Predicate<Material> filter = t -> {
             boolean ok = t.has(tags);
             boolean types = true;
             if (tools.size() > 0)
                 if (t.has(MaterialTags.TOOLS)) {
-                    Set<AntimatterToolType> set = new HashSet<>(MaterialTags.TOOLS.get(t).toolTypes());
-                    for (Object2BooleanMap.Entry<AntimatterToolType> entry : tools.object2BooleanEntrySet()) {
+                    Set<GTToolType> set = new HashSet<>(MaterialTags.TOOLS.get(t).toolTypes());
+                    for (Object2BooleanMap.Entry<GTToolType> entry : tools.object2BooleanEntrySet()) {
                         types &= entry.getBooleanValue() == set.contains(entry.getKey());
                     }
                 } else {
@@ -88,7 +88,7 @@ public class PropertyIngredient extends Ingredient {
         return new PropertyIngredient(stream, type, itemTags, items, id, tags, fixedMats, inverse, tools);
     }
 
-    protected PropertyIngredient(Stream<Value> stream, Set<MaterialTypeItem<?>> type, Set<TagKey<Item>> itemTags, Set<ItemLike> items, String id, IMaterialTag[] tags, Set<Material> fixedMats, boolean inverse, Object2BooleanMap<AntimatterToolType> tools) {
+    protected PropertyIngredient(Stream<Value> stream, Set<MaterialTypeItem<?>> type, Set<TagKey<Item>> itemTags, Set<ItemLike> items, String id, IMaterialTag[] tags, Set<Material> fixedMats, boolean inverse, Object2BooleanMap<GTToolType> tools) {
         super(stream);
         this.type = type;
         this.id = id;
@@ -174,7 +174,7 @@ public class PropertyIngredient extends Ingredient {
         }
         if (optionalTools.size() > 0) {
             JsonObject map = new JsonObject();
-            for (Object2BooleanMap.Entry<AntimatterToolType> entry : optionalTools.object2BooleanEntrySet()) {
+            for (Object2BooleanMap.Entry<GTToolType> entry : optionalTools.object2BooleanEntrySet()) {
                 map.addProperty(entry.getKey().getLoc().toString(), entry.getBooleanValue());
             }
             obj.add("tools", map);
@@ -254,9 +254,9 @@ public class PropertyIngredient extends Ingredient {
                 tags[i] = AntimatterAPI.get(IMaterialTag.class, buffer.readUtf());
             }
             size = buffer.readVarInt();
-            Object2BooleanMap<AntimatterToolType> map = new Object2BooleanOpenHashMap<>(size);
+            Object2BooleanMap<GTToolType> map = new Object2BooleanOpenHashMap<>(size);
             for (int i = 0; i < size; i++) {
-                map.put(AntimatterAPI.get(AntimatterToolType.class, buffer.readUtf(), buffer.readUtf()), buffer.readBoolean());
+                map.put(AntimatterAPI.get(GTToolType.class, buffer.readUtf(), buffer.readUtf()), buffer.readBoolean());
             }
             size = buffer.readVarInt();
             Set<Material> fixedMats = new ObjectArraySet<>(size);
@@ -300,11 +300,11 @@ public class PropertyIngredient extends Ingredient {
             } else {
                 tags = new IMaterialTag[0];
             }
-            Object2BooleanMap<AntimatterToolType> map = new Object2BooleanOpenHashMap<>();
+            Object2BooleanMap<GTToolType> map = new Object2BooleanOpenHashMap<>();
             if (json.has("tools")) {
                 for (Map.Entry<String, JsonElement> entry : GsonHelper.getAsJsonObject(json, "tools").entrySet()) {
                     ResourceLocation location = new ResourceLocation(entry.getKey());
-                    map.put(AntimatterAPI.get(AntimatterToolType.class, location.getPath(), location.getNamespace()), entry.getValue().getAsBoolean());
+                    map.put(AntimatterAPI.get(GTToolType.class, location.getPath(), location.getNamespace()), entry.getValue().getAsBoolean());
                 }
             }
             Set<Material> fixedMats = Collections.emptySet();
@@ -331,7 +331,7 @@ public class PropertyIngredient extends Ingredient {
                 buffer.writeUtf(tag.getId());
             }
             buffer.writeVarInt(ingredient.optionalTools.size());
-            for (Object2BooleanMap.Entry<AntimatterToolType> entry : ingredient.optionalTools.object2BooleanEntrySet()) {
+            for (Object2BooleanMap.Entry<GTToolType> entry : ingredient.optionalTools.object2BooleanEntrySet()) {
                 buffer.writeUtf(entry.getKey().getId());
                 buffer.writeUtf(entry.getKey().getDomain());
                 buffer.writeBoolean(entry.getBooleanValue());
@@ -363,7 +363,7 @@ public class PropertyIngredient extends Ingredient {
         private Set<Material> fixedMats;
         private final String id;
         private IMaterialTag[] tags = new IMaterialTag[0];
-        private final Object2BooleanMap<AntimatterToolType> optionalTools = new Object2BooleanOpenHashMap<>();
+        private final Object2BooleanMap<GTToolType> optionalTools = new Object2BooleanOpenHashMap<>();
         private boolean inverse = false;
 
         private Builder(String id) {
@@ -401,7 +401,7 @@ public class PropertyIngredient extends Ingredient {
             return this;
         }
 
-        public Builder tool(AntimatterToolType type, boolean has) {
+        public Builder tool(GTToolType type, boolean has) {
             this.optionalTools.put(type, has);
             return this;
         }

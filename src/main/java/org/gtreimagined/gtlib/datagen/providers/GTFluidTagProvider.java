@@ -4,8 +4,8 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
-import org.gtreimagined.gtlib.fluid.AntimatterMaterialFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
+import org.gtreimagined.gtlib.fluid.GTMaterialFluid;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import net.minecraft.core.Registry;
@@ -24,12 +24,12 @@ public class GTFluidTagProvider extends GTTagProvider<Fluid> implements IGTLibPr
     }
 
     protected void processTags(String domain) {
-        AntimatterAPI.all(AntimatterFluid.class, domain).forEach(f -> {
+        AntimatterAPI.all(GTFluid.class, domain).forEach(f -> {
             tag(getForgelikeFluidTag(f.getId()))
                     .add(f.getFluid())
                     .replace(replace);
-            if (f instanceof AntimatterMaterialFluid) {
-                Material m = ((AntimatterMaterialFluid) f).getMaterial();
+            if (f instanceof GTMaterialFluid) {
+                Material m = ((GTMaterialFluid) f).getMaterial();
                 tag(getForgelikeFluidTag(m.getId()))
                         .add(f.getFluid())
                         .replace(replace);

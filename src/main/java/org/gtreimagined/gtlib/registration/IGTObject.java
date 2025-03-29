@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.registration;
 import org.gtreimagined.gtlib.Ref;
 import net.minecraft.resources.ResourceLocation;
 
-public interface IAntimatterObject {
+public interface IGTObject {
 
     default String getDomain() {
         return Ref.ID;

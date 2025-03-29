@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -59,7 +59,7 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
     }
 
     @Override
-    public AntimatterToolType getToolType() {
+    public GTToolType getToolType() {
         return GTTools.WIRE_CUTTER;
     }
 

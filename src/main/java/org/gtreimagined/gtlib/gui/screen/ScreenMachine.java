@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 // TODO - recipe stuff only when tile.getMachineType().has(MachineFlag.RECIPE)
-public class ScreenMachine<T extends BlockEntityMachine<T>, U extends ContainerMachine<T>> extends AntimatterContainerScreen<U> implements MenuAccess<U> {
+public class ScreenMachine<T extends BlockEntityMachine<T>, U extends ContainerMachine<T>> extends GTContainerScreen<U> implements MenuAccess<U> {
 
     protected U container;
     protected String name;

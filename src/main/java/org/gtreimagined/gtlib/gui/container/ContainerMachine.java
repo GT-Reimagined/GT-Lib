@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ContainerMachine<T extends BlockEntityMachine<T>> extends AntimatterContainer {
+public abstract class ContainerMachine<T extends BlockEntityMachine<T>> extends GTContainer {
 
     @Getter
     protected final T tile;

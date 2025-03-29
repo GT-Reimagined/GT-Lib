@@ -12,14 +12,14 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 
 import java.util.List;
 
-public abstract class AntimatterFeature<F extends FeatureConfiguration> extends Feature<F> implements IAntimatterFeature {
+public abstract class GTFeature<F extends FeatureConfiguration> extends Feature<F> implements IGTFeature {
 
     Object2ObjectMap<ResourceLocation, List<WorldGenBase<?>>> REGISTRY = new Object2ObjectOpenHashMap<>();
 
-    public AntimatterFeature(Codec<F> codec, Class<?> c) {
+    public GTFeature(Codec<F> codec, Class<?> c) {
         super(codec);
-        AntimatterAPI.register(AntimatterFeature.class, c.getName(), getDomain(), this);
-        AntimatterAPI.register(IAntimatterFeature.class, c.getName(), getDomain(), this);
+        AntimatterAPI.register(GTFeature.class, c.getName(), getDomain(), this);
+        AntimatterAPI.register(IGTFeature.class, c.getName(), getDomain(), this);
         //this.setRegistryName(new ResourceLocation(getDomain(), getId()));
     }
 

@@ -2,10 +2,10 @@ package org.gtreimagined.gtlib.material;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 
-public class TextureSet implements IAntimatterObject {
+public class TextureSet implements IGTObject {
 
     public static final TextureSet NONE = new TextureSet(Ref.ID, "none");
     public static final TextureSet CUBE = new TextureSet(Ref.ID, "cube");

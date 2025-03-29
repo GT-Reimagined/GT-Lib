@@ -3,9 +3,9 @@ package org.gtreimagined.gtlib.network.packets;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketContext;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.gui.container.IAntimatterContainer;
+import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.network.AntimatterNetwork;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,7 +15,7 @@ public class TileGuiEventPacket extends AbstractGuiEventPacket<TileGuiEventPacke
     public static final PacketHandler<TileGuiEventPacket> HANDLER = new Handler();
 
     public TileGuiEventPacket(IGuiEvent event, BlockPos pos) {
-        super(event, pos, AntimatterNetwork.TILE_GUI_PACKET_ID);
+        super(event, pos, GTLibNetwork.TILE_GUI_PACKET_ID);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class TileGuiEventPacket extends AbstractGuiEventPacket<TileGuiEventPacke
                         if (msg.event.forward()) {
                             ((IGuiHandler) tile).onGuiEvent(msg.event, sender);
                         } else {
-                            msg.event.handle(sender, ((IAntimatterContainer) sender.containerMenu).source());
+                            msg.event.handle(sender, ((IGTContainer) sender.containerMenu).source());
                         }
                     }
                 }

@@ -13,7 +13,7 @@ import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.data.GTLibTags;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.material.MaterialTags;
@@ -142,7 +142,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
             AntimatterAPI.all(BlockMultiMachine.class, pipe -> {
                 this.tag(pipe.getType().getToolTag()).add(pipe);
             });
-            AntimatterAPI.all(AntimatterFluid.class, f -> {
+            AntimatterAPI.all(GTFluid.class, f -> {
                 this.tag(TagUtils.getBlockTag(new ResourceLocation("replaceable"))).add(f.getFluidBlock());
             });
         }

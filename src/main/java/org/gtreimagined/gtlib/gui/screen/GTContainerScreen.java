@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
-import org.gtreimagined.gtlib.gui.container.IAntimatterContainer;
+import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -21,9 +21,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AntimatterContainerScreen<T extends AbstractContainerMenu & IAntimatterContainer> extends AbstractContainerScreen<T> implements MenuAccess<T>, IGuiElement {
+public class GTContainerScreen<T extends AbstractContainerMenu & IGTContainer> extends AbstractContainerScreen<T> implements MenuAccess<T>, IGuiElement {
 
-    public AntimatterContainerScreen(T container, Inventory invPlayer, Component title) {
+    public GTContainerScreen(T container, Inventory invPlayer, Component title) {
         super(container, invPlayer, title);
         
         container.source().initClient(this);

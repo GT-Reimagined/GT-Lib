@@ -4,7 +4,7 @@ import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.tool.IAntimatterArmor;
+import org.gtreimagined.gtlib.tool.IGTArmor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,18 +27,18 @@ import java.util.function.Consumer;
 
 import static org.gtreimagined.gtlib.material.Material.NULL;
 
-public class MaterialArmor extends ArmorItem implements IAntimatterArmor, DyeableLeatherItem {
+public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeatherItem {
     private static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
     protected String domain;
-    protected AntimatterArmorType type;
+    protected GTArmorType type;
     protected Material material;
 
-    public MaterialArmor(String domain, AntimatterArmorType type, Material materialIn, EquipmentSlot slot, Properties builderIn) {
+    public MaterialArmor(String domain, GTArmorType type, Material materialIn, EquipmentSlot slot, Properties builderIn) {
         super(new MatArmorMaterial(type, materialIn), slot, builderIn);
         this.domain = domain;
         this.material = materialIn;
         this.type = type;
-        AntimatterAPI.register(IAntimatterArmor.class, this);
+        AntimatterAPI.register(IGTArmor.class, this);
         if (type.getSlot() == EquipmentSlot.HEAD && FMLEnvironment.dist.isClient()) {
             RenderHelper.registerProbePropertyOverrides(this);
         }
@@ -55,7 +55,7 @@ public class MaterialArmor extends ArmorItem implements IAntimatterArmor, Dyeabl
     }
 
     @Override
-    public AntimatterArmorType getAntimatterArmorType() {
+    public GTArmorType getAntimatterArmorType() {
         return type;
     }
 

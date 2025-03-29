@@ -46,11 +46,11 @@ import java.util.function.Consumer;
 
 //@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class MaterialSword extends SwordItem implements IAntimatterTool {
+public class MaterialSword extends SwordItem implements IGTTool {
 
     protected String domain;
-    protected AntimatterToolType type;
-    protected AntimatterItemTier itemTier;
+    protected GTToolType type;
+    protected GTItemTier itemTier;
 
     /**
      * -- GETTER --
@@ -60,24 +60,24 @@ public class MaterialSword extends SwordItem implements IAntimatterTool {
     protected int energyTier;
     protected long maxEnergy;
 
-    public MaterialSword(String domain, AntimatterToolType type, AntimatterItemTier tier, Properties properties) {
-        super(AntimatterItemTier.NULL, 0, type.getBaseAttackSpeed(), properties);  // 0 as base attack as it adds
+    public MaterialSword(String domain, GTToolType type, GTItemTier tier, Properties properties) {
+        super(GTItemTier.NULL, 0, type.getBaseAttackSpeed(), properties);  // 0 as base attack as it adds
         this.domain = domain;
         this.type = type;
         this.itemTier = tier;
         this.energyTier = -1;
         this.maxEnergy = -1;
-        AntimatterAPI.register(IAntimatterTool.class, this);
+        AntimatterAPI.register(IGTTool.class, this);
     }
 
-    public MaterialSword(String domain, AntimatterToolType type, AntimatterItemTier tier, Properties properties, int energyTier) {
-        super(AntimatterItemTier.NULL, (int) type.getBaseAttackDamage(), type.getBaseAttackSpeed(), properties);
+    public MaterialSword(String domain, GTToolType type, GTItemTier tier, Properties properties, int energyTier) {
+        super(GTItemTier.NULL, (int) type.getBaseAttackDamage(), type.getBaseAttackSpeed(), properties);
         this.domain = domain;
         this.type = type;
         this.itemTier = tier;
         this.energyTier = energyTier;
         this.maxEnergy = type.getBaseMaxEnergy() * energyTier;
-        AntimatterAPI.register(IAntimatterTool.class, this);
+        AntimatterAPI.register(IGTTool.class, this);
     }
 
     @Override
@@ -93,12 +93,12 @@ public class MaterialSword extends SwordItem implements IAntimatterTool {
 
     @NotNull
     @Override
-    public AntimatterToolType getAntimatterToolType() {
+    public GTToolType getAntimatterToolType() {
         return type;
     }
 
     @Override
-    public AntimatterItemTier getAntimatterItemTier() {
+    public GTItemTier getAntimatterItemTier() {
         return itemTier;
     }
 
@@ -167,7 +167,7 @@ public class MaterialSword extends SwordItem implements IAntimatterTool {
         if (type.isPowered() && getCurrentEnergy(stack)  == 0){
             destroySpeed = 0.0f;
         }
-        for (Map.Entry<String, IBehaviour<IBasicAntimatterTool>> e : getAntimatterToolType().getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getAntimatterToolType().getBehaviours().entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IDestroySpeed destroySpeed1)) continue;
             float i = destroySpeed1.getDestroySpeed(this, destroySpeed, stack, state);

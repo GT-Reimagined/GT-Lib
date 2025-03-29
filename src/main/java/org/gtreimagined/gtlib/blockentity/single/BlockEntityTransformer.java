@@ -4,7 +4,7 @@ import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.machine.MachineEnergyHandler;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.types.Machine;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,7 +50,7 @@ public class BlockEntityTransformer<T extends BlockEntityTransformer<T>> extends
         /*
         interactHandler.setup((tile, tag) -> new MachineInteractHandler<BlockEntityMachine>(tile, tag) {
             @Override
-            public boolean onInteract(PlayerEntity player, Hand hand, Direction side, @Nullable AntimatterToolType type) {
+            public boolean onInteract(PlayerEntity player, Hand hand, Direction side, @Nullable GTToolType type) {
                 if (type == HAMMER && hand == Hand.MAIN_HAND) {
                     toggleMachine();
                     energyHandler.ifPresent(h -> {
@@ -72,7 +72,7 @@ public class BlockEntityTransformer<T extends BlockEntityTransformer<T>> extends
     }
 
     @Override
-    public InteractionResult onInteractServer(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, AntimatterToolType type) {
+    public InteractionResult onInteractServer(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, GTToolType type) {
         if (type == SOFT_HAMMER && hand == InteractionHand.MAIN_HAND) {
             toggleMachine();
             energyHandler.ifPresent(h -> {

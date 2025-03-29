@@ -11,7 +11,7 @@ import org.gtreimagined.gtlib.item.ICustomDurability;
 import org.gtreimagined.gtlib.item.ItemBattery;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -45,9 +45,9 @@ import java.util.Optional;
 
 import static org.gtreimagined.gtlib.material.Material.NULL;
 
-public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool, IEnergyItem, ICustomDurability {
+public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDurability {
 
-    AntimatterItemTier getAntimatterItemTier();
+    GTItemTier getAntimatterItemTier();
 
     @Override
     default Tier getItemTier(){
@@ -135,7 +135,7 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
     default Tier getTier(ItemStack stack) {
         if (getAntimatterToolType().isSimple()) return getAntimatterItemTier();
         CompoundTag dataTag = getOrCreateDataTag(stack);
-        Optional<AntimatterItemTier> tier = AntimatterItemTier.get(dataTag.getInt(Ref.KEY_TOOL_DATA_TIER));
+        Optional<GTItemTier> tier = GTItemTier.get(dataTag.getInt(Ref.KEY_TOOL_DATA_TIER));
         return tier.orElseGet(() -> resolveTierTag(dataTag));
     }
 
@@ -178,8 +178,8 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
         return stack.getOrCreateTagElement(Ref.TAG_ITEM_ENERGY_DATA);
     }
 
-    default AntimatterItemTier resolveTierTag(CompoundTag dataTag) {
-        AntimatterItemTier tier = AntimatterItemTier.getOrCreate(dataTag.getString(Ref.KEY_TOOL_DATA_PRIMARY_MATERIAL), dataTag.getString(Ref.KEY_TOOL_DATA_SECONDARY_MATERIAL));
+    default GTItemTier resolveTierTag(CompoundTag dataTag) {
+        GTItemTier tier = GTItemTier.getOrCreate(dataTag.getString(Ref.KEY_TOOL_DATA_PRIMARY_MATERIAL), dataTag.getString(Ref.KEY_TOOL_DATA_SECONDARY_MATERIAL));
         dataTag.putInt(Ref.KEY_TOOL_DATA_TIER, tier.hashCode());
         return tier;
     }
@@ -214,7 +214,7 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
         if (flag.isAdvanced() && getAntimatterToolType().isPowered())
             tooltip.add(Utils.translatable("gtlib.tooltip.energy").append(": " + getCurrentEnergy(stack) + " / " + getMaxEnergy(stack)));
         tooltip.add(Utils.translatable("gtlib.tooltip.durability", Utils.literal((stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GREEN)));
-        IBasicAntimatterTool.super.onGenericAddInformation(stack, tooltip, flag);
+        IBasicGTTool.super.onGenericAddInformation(stack, tooltip, flag);
     }
 
     default void refillTool(ItemStack stack, Player player){
@@ -302,7 +302,7 @@ public interface IAntimatterTool extends IAntimatterObject, IBasicAntimatterTool
 
     default void onItemBreak(ItemStack stack, Player entity) {
         String name = this.getId();
-        AntimatterToolType type = getAntimatterToolType();
+        GTToolType type = getAntimatterToolType();
         if (!type.getBrokenItems().containsKey(name)) {
             return;
         }

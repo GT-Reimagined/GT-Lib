@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ public abstract class ItemRendererMixin {
 
     @Inject(method = "renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
     private void injectRenderGuiItemDecorations(Font fr, ItemStack stack, int xPosition, int yPosition, String text, CallbackInfo ci){
-        if (stack.getItem() instanceof IAntimatterTool tool && tool.getAntimatterToolType().isPowered() && tool.isPoweredBarVisible(stack)) {
+        if (stack.getItem() instanceof IGTTool tool && tool.getAntimatterToolType().isPowered() && tool.isPoweredBarVisible(stack)) {
             RenderSystem.disableDepthTest();
             RenderSystem.disableTexture();
             RenderSystem.disableBlend();

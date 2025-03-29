@@ -7,8 +7,8 @@ import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.CoverPlate;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
-import org.gtreimagined.gtlib.fluid.AntimatterMaterialFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
+import org.gtreimagined.gtlib.fluid.GTMaterialFluid;
 import org.gtreimagined.gtlib.item.CoverMaterialItem;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialItem;
@@ -182,13 +182,13 @@ public class GTMaterialTypes {
             if (m == null || !LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(LIQUID, m);
             if (m.getId().equals("water")) return new FluidStack(Fluids.WATER, i);
             else if (m.getId().equals("lava")) return new FluidStack(Fluids.LAVA, i);
-            AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, LIQUID.getId() + "_" + m.getId());
+            GTFluid fluid = AntimatterAPI.get(GTFluid.class, LIQUID.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
         });
         GAS.set((m, i) -> {
             if (m == null || !GAS.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(GAS, m);
-            AntimatterFluid fluid = AntimatterAPI.get(AntimatterFluid.class, GAS.getId() + "_" + m.getId());
+            GTFluid fluid = AntimatterAPI.get(GTFluid.class, GAS.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
         });
@@ -319,8 +319,8 @@ public class GTMaterialTypes {
     }
 
     public static void postInit() {
-        LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> AntimatterAPI.register(AntimatterFluid.class, new AntimatterMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
-        GAS.all().forEach(m -> AntimatterAPI.register(AntimatterFluid.class, new AntimatterMaterialFluid(Ref.SHARED_ID, m, GAS)));
+        LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> AntimatterAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
+        GAS.all().forEach(m -> AntimatterAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, GAS)));
         ORE_STONE.all().forEach(m -> AntimatterAPI.register(StoneType.class, new StoneType(ID, m.getId(), m, new Texture(m.materialDomain(), "block/stone/" + m.getId()), SoundType.STONE, false).setGenerateOre(false).setStateSupplier(() -> ORE_STONE.get().get(m).asState())));
     }
 }

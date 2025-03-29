@@ -55,7 +55,7 @@ public class StructureBuilder<T extends BlockEntityBasicMultiMachine<T>> {
         List<IStructureElement<T>> elements = new ArrayList<>();
         for (Object object : objects) {
             if (object instanceof HatchMachine machine){
-                elements.add(AntimatterStructureUtility.ofHatch(machine));
+                elements.add(GTLibStructureUtility.ofHatch(machine));
             } else if (object instanceof Block block){
                 elements.add(StructureUtility.ofBlock(block));
             } else if (object instanceof TagKey<?> tag && tag.isFor(Registry.BLOCK_REGISTRY)){
@@ -131,14 +131,14 @@ public class StructureBuilder<T extends BlockEntityBasicMultiMachine<T>> {
         return new Structure<>(STRUCTURE_BUILDER.build(), structureParts.build(), minMaxMap.build(), offset, callback);
     }
 
-    /*public static IAntimatterObject[] getAntiObjects(Object... objects) {
-        List<IAntimatterObject> antiObjects = new ObjectArrayList<>();
+    /*public static IGTObject[] getAntiObjects(Object... objects) {
+        List<IGTObject> antiObjects = new ObjectArrayList<>();
         Arrays.stream(objects).forEach(o -> {
-            if (o instanceof RegistryObject && ((RegistryObject<?>) o).get() instanceof IAntimatterObject)
-                antiObjects.add((IAntimatterObject) ((RegistryObject<?>) o).get());
-            if (o instanceof IAntimatterObject) antiObjects.add((IAntimatterObject) o);
+            if (o instanceof RegistryObject && ((RegistryObject<?>) o).get() instanceof IGTObject)
+                antiObjects.add((IGTObject) ((RegistryObject<?>) o).get());
+            if (o instanceof IGTObject) antiObjects.add((IGTObject) o);
         });
-        return antiObjects.toArray(new IAntimatterObject[0]);
+        return antiObjects.toArray(new IGTObject[0]);
     }*/
 
     public class StructurePartBuilder{

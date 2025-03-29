@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
@@ -20,7 +20,7 @@ import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 
-public class BehaviourBlockTilling implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourBlockTilling implements IItemUse<IBasicGTTool> {
 
     public static final BehaviourBlockTilling INSTANCE = new BehaviourBlockTilling();
 
@@ -37,7 +37,7 @@ public class BehaviourBlockTilling implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         if (c.getClickedFace() != Direction.DOWN && c.getLevel().isEmptyBlock(c.getClickedPos().above())) {
             BlockState blockstate = getToolModifiedState(c.getLevel().getBlockState(c.getClickedPos()), c, "hoe_dig");
             if (blockstate == null) return InteractionResult.PASS;

@@ -16,7 +16,7 @@ import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.item.ItemBasic;
 import org.gtreimagined.gtlib.item.ItemStoneCover;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -35,9 +35,9 @@ import org.gtreimagined.gtlib.pipe.BlockItemPipe;
 import org.gtreimagined.gtlib.pipe.BlockPipe;
 import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
-import org.gtreimagined.gtlib.tool.IAntimatterArmor;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.registration.IGTObject;
+import org.gtreimagined.gtlib.tool.IGTArmor;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.devtech.arrp.json.lang.JLang;
 import net.minecraft.Util;
@@ -108,7 +108,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         if (providerDomain.equals(Ref.ID)) processAntimatterTranslations();
     }
 
-    private String tryComponent(String lang, IAntimatterObject object, Supplier<String> otherwise) {
+    private String tryComponent(String lang, IGTObject object, Supplier<String> otherwise) {
         String component = object.getLang(lang);
         if (component != null) {
             return component;
@@ -158,7 +158,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         AntimatterAPI.all(BlockDimensionMarker.class, domain).forEach(i -> this.add(i, Utils.lowerUnderscoreToUpperSpaced(i.getDimension())));
 
         if (domain.equals(Ref.ID)) {
-            AntimatterAPI.all(IAntimatterTool.class, t -> {
+            AntimatterAPI.all(IGTTool.class, t -> {
                 String customName = t.getAntimatterToolType().getCustomName().isEmpty() ? Utils.getLocalizedType(t.getAntimatterToolType()) : t.getAntimatterToolType().getCustomName();
                 if (t.getAntimatterToolType().isPowered()) {
                     String defaultName = Utils.getLocalizedType(t.getAntimatterToolType());
@@ -237,7 +237,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 if (s.getSuffix().contains("smooth")) localized = "Polished " + localized.replace(" Smooth", "");
                 add(s, localized);
             });
-            AntimatterAPI.all(AntimatterFluid.class).forEach((AntimatterFluid s) -> {
+            AntimatterAPI.all(GTFluid.class).forEach((GTFluid s) -> {
                 add(Util.makeDescriptionId("fluid_type", s.getLoc()), tryComponent(locale, s, () -> lowerUnderscoreToUpperSpaced(s.getId())));
                 Item bucket = AntimatterAPI.get(Item.class, s.getId() + "_bucket", Ref.SHARED_ID);
                 if (bucket != null) add(bucket, tryComponent(locale, s, () -> lowerUnderscoreToUpperSpaced(s.getId())) + " Bucket");
@@ -288,7 +288,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 MaterialType<?> type = item.getType();
                 add(item, type.getLang().apply(item.getMaterial()));
             });
-            AntimatterAPI.all(IAntimatterArmor.class, t -> {
+            AntimatterAPI.all(IGTArmor.class, t -> {
                 add(t.getItem().getDescriptionId(), Utils.getLocalizedType(t.getMat()) + " " + Utils.getLocalizedType(t.getAntimatterArmorType()));
             });
             customTranslations();

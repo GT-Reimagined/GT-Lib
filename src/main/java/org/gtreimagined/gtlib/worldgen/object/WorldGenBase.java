@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.worldgen.object;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class WorldGenBase<T extends WorldGenBase<?>> implements IAntimatterObject {
+public class WorldGenBase<T extends WorldGenBase<?>> implements IGTObject {
 
     @Getter
     private final String id;

@@ -1,12 +1,12 @@
 package org.gtreimagined.gtlib.machine;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.Locale;
 
-public enum MachineState implements IAntimatterObject, StringRepresentable {
+public enum MachineState implements IGTObject, StringRepresentable {
 
     //OverlayID: 0(Idle), 1(Active), 2(Error)
 

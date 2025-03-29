@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.tool.behaviour;
 
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.behaviour.IBlockDestroyed;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class BehaviourTreeFelling implements IBlockDestroyed<IBasicAntimatterTool> {
+public class BehaviourTreeFelling implements IBlockDestroyed<IBasicGTTool> {
 
     public static final BehaviourTreeFelling INSTANCE = new BehaviourTreeFelling();
     public static final Tree NO_TREE = new Tree(Collections.emptyList());
@@ -48,7 +48,7 @@ public class BehaviourTreeFelling implements IBlockDestroyed<IBasicAntimatterToo
     }
 
     @Override
-    public boolean onBlockDestroyed(IBasicAntimatterTool instance, ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
+    public boolean onBlockDestroyed(IBasicGTTool instance, ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!AntimatterConfig.AXE_TIMBER.get()) return true;
         if (entity instanceof Player player && !world.isClientSide) {
             if (instance.genericIsCorrectToolForDrops(stack, state) && !player.isCrouching()) { // Only when player isn't shifting/crouching this ability activates

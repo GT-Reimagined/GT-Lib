@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.List;
 import java.util.Objects;
 
-public class ContainerCover extends AntimatterContainer {
+public class ContainerCover extends GTContainer {
     protected BlockEntity onEntity;
     private final ICover c;
     private final MenuHandlerCover<?> m;

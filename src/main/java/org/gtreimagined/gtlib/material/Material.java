@@ -8,7 +8,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static org.gtreimagined.gtlib.Ref.U;
 import static org.gtreimagined.gtlib.material.TextureSet.NONE;
 
-public class Material implements ISharedAntimatterObject {
+public class Material implements ISharedGTObject {
 
     public static final Material NULL = AntimatterAPI.register(Material.class, new Material(Ref.ID, "null", 0xffffff, NONE));
     @Getter

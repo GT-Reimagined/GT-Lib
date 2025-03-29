@@ -6,7 +6,7 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.tags.TagKey;
@@ -52,8 +52,8 @@ public class MaterialTypeBlock<T> extends MaterialType<T> {
 
     }
 
-    public static Container getEmptyBlockAndLog(MaterialType<?> type, IAntimatterObject... objects) {
-        Utils.onInvalidData("Tried to create " + type.getId() + " for objects: " + Arrays.toString(Arrays.stream(objects).map(IAntimatterObject::getId).toArray(String[]::new)));
+    public static Container getEmptyBlockAndLog(MaterialType<?> type, IGTObject... objects) {
+        Utils.onInvalidData("Tried to create " + type.getId() + " for objects: " + Arrays.toString(Arrays.stream(objects).map(IGTObject::getId).toArray(String[]::new)));
         return new Container(Blocks.AIR.defaultBlockState());
     }
 

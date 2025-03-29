@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
 import org.gtreimagined.gtlib.machine.Tier;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.util.int4;
 import net.minecraft.resources.ResourceLocation;
 
@@ -59,7 +59,7 @@ public class GuiData {
         this.menuHandler = menuHandler;
     }
 
-    public GuiData(IAntimatterObject type, MenuHandler menuHandler) {
+    public GuiData(IGTObject type, MenuHandler menuHandler) {
         this(type.getDomain(), type.getId());
         this.menuHandler = menuHandler;
     }
@@ -80,9 +80,9 @@ public class GuiData {
        return backgroundTextures.get("");
     }
 
-    /*public void screenCreationCallBack(AntimatterContainerScreen<? extends T> screen, IGuiHandler handler, @Nullable Object lookup) {
+    /*public void screenCreationCallBack(GTContainerScreen<? extends T> screen, IGuiHandler handler, @Nullable Object lookup) {
         this.widgets.forEach(t -> screen.addWidget(t.apply(screen, handler)));
-        List<BiFunction<AntimatterContainerScreen<? extends T>, IGuiHandler, Widget>> wid = this.objectWidgets.get(lookup);
+        List<BiFunction<GTContainerScreen<? extends T>, IGuiHandler, Widget>> wid = this.objectWidgets.get(lookup);
         if (wid != null) wid.forEach(t -> t.apply(screen, handler));
     }*/
 

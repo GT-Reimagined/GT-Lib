@@ -15,7 +15,7 @@ import org.gtreimagined.gtlib.material.IMaterialObject;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.ROCK;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedBlock, ISharedAntimatterObject, IColorHandler, IMaterialObject {
+public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedBlock, ISharedGTObject, IColorHandler, IMaterialObject {
 
     protected static final int SURFACE_ROCK_MODEL_COUNT = 7;
     protected static final int[] CONFIG_ARRAY = new int[SURFACE_ROCK_MODEL_COUNT];

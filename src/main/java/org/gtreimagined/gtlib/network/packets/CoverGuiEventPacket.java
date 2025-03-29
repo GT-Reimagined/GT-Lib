@@ -3,9 +3,9 @@ package org.gtreimagined.gtlib.network.packets;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketContext;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
 import org.gtreimagined.gtlib.capability.ICoverHandlerProvider;
-import org.gtreimagined.gtlib.gui.container.IAntimatterContainer;
+import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.network.AntimatterNetwork;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +17,7 @@ public class CoverGuiEventPacket extends AbstractGuiEventPacket<CoverGuiEventPac
     Direction facing;
 
     public CoverGuiEventPacket(IGuiEvent event, BlockPos pos, Direction facing) {
-        super(event, pos, AntimatterNetwork.COVER_GUI_PACKET_ID);
+        super(event, pos, GTLibNetwork.COVER_GUI_PACKET_ID);
         this.facing = facing;
     }
 
@@ -50,7 +50,7 @@ public class CoverGuiEventPacket extends AbstractGuiEventPacket<CoverGuiEventPac
                     if (msg.event.forward()) {
                         coverHandler.ifPresent(ch -> ch.get(msg.facing).onGuiEvent(msg.event, sender));
                     } else {
-                        msg.event.handle(sender, ((IAntimatterContainer) sender.containerMenu).source());
+                        msg.event.handle(sender, ((IGTContainer) sender.containerMenu).source());
                     }
                 }
             };

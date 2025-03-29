@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.event;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.datagen.ICraftingLoader;
-import org.gtreimagined.gtlib.registration.IAntimatterRegistrar;
+import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import net.minecraftforge.fml.event.IModBusEvent;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ public class GTCraftingEvent extends GTEvent implements IModBusEvent {
 
     private final List<ICraftingLoader> loaders = new ObjectArrayList<>();
 
-    public GTCraftingEvent(IAntimatterRegistrar registrar) {
+    public GTCraftingEvent(IGTRegistrar registrar) {
         super(registrar);
     }
 

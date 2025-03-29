@@ -5,7 +5,7 @@ import com.teamresourceful.resourcefullib.common.networking.base.PacketContext;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
 import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
-import org.gtreimagined.gtlib.network.AntimatterNetwork;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -23,7 +23,7 @@ public class FakeTilePacket implements Packet<FakeTilePacket> {
 
     @Override
     public ResourceLocation getID() {
-        return AntimatterNetwork.FAKE_TILE_PACKET_ID;
+        return GTLibNetwork.FAKE_TILE_PACKET_ID;
     }
 
     @Override

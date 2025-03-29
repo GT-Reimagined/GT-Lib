@@ -33,7 +33,7 @@ import java.util.Random;
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.ROCK;
 
-public class FeatureStoneLayer extends AntimatterFeature<NoneFeatureConfiguration> {
+public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
     public FeatureStoneLayer() {
         super(NoneFeatureConfiguration.CODEC, WorldGenStoneLayer.class);

@@ -1,13 +1,13 @@
 package org.gtreimagined.gtlib.pipe;
 
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.AABB;
 
 import java.util.Locale;
 
-public enum PipeSize implements IAntimatterObject {
+public enum PipeSize implements IGTObject {
 
     VTINY(1),
     TINY(2),

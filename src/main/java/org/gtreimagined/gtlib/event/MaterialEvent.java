@@ -19,7 +19,7 @@ import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.material.data.ArmorData;
 import org.gtreimagined.gtlib.material.data.HandleData;
 import org.gtreimagined.gtlib.material.data.ToolData;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -170,10 +170,10 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         return (T) this;
     }
 
-    public T setAllowedTypes(AntimatterToolType... toolTypes) {
+    public T setAllowedTypes(GTToolType... toolTypes) {
         if (!has(MaterialTags.TOOLS)) return (T) this;
         ToolData data = MaterialTags.TOOLS.get(this.material);
-        List<AntimatterToolType> toolTypesList = toolTypes.length > 0 ? Arrays.asList(toolTypes) : AntimatterAPI.all(AntimatterToolType.class);
+        List<GTToolType> toolTypesList = toolTypes.length > 0 ? Arrays.asList(toolTypes) : AntimatterAPI.all(GTToolType.class);
         MaterialTags.TOOLS.add(this.material, new ToolData(data.toolDamage(), data.toolSpeed(), data.toolDurability(), data.toolQuality(), data.handleMaterial(), data.toolEnchantment(), toolTypesList));
         return (T) this;
     }
@@ -342,7 +342,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     @Accessors(fluent = true)
     @Setter
     public class ToolBuiler {
-        List<AntimatterToolType> allowedToolTypes;
+        List<GTToolType> allowedToolTypes;
         float toolDamage;
         float toolSpeed;
         int toolDurability;
@@ -350,18 +350,18 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         ImmutableMap<Enchantment, Integer> toolEnchantments = ImmutableMap.of();
         Material handleMaterial;
         public ToolBuiler(){
-            allowedToolTypes = AntimatterAPI.all(AntimatterToolType.class);
+            allowedToolTypes = AntimatterAPI.all(GTToolType.class);
             handleMaterial = Wood;
         }
 
-        public ToolBuiler blacklistToolTypes(AntimatterToolType... types){
+        public ToolBuiler blacklistToolTypes(GTToolType... types){
             allowedToolTypes.removeAll(List.of(types));
             return this;
         }
 
         public T build(){
-            List<AntimatterToolType> toolTypes = new ArrayList<>(allowedToolTypes);
-            for (AntimatterToolType allowedToolType : allowedToolTypes) {
+            List<GTToolType> toolTypes = new ArrayList<>(allowedToolTypes);
+            for (GTToolType allowedToolType : allowedToolTypes) {
                 if (allowedToolType.getPrimaryMaterialRequirement() != null && !material.has(allowedToolType.getPrimaryMaterialRequirement())){
                     toolTypes.remove(allowedToolType);
                 }
@@ -377,10 +377,10 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         if (has(GTMaterialTypes.INGOT))
             flags(GTMaterialTypes.PLATE, GTMaterialTypes.ROD, GTMaterialTypes.SCREW, GTMaterialTypes.BOLT); //TODO: We need to add bolt for now since screws depends on bolt, need to find time to change it
         else flags(GTMaterialTypes.ROD);
-        List<AntimatterToolType> toolTypesList = builder.toolTypes();
+        List<GTToolType> toolTypesList = builder.toolTypes();
         MaterialTags.TOOLS.add(this.material, builder);
         MaterialTags.MINING_LEVEL.add(this.material, builder.toolQuality() - 1);
-        for (AntimatterToolType type : toolTypesList){
+        for (GTToolType type : toolTypesList){
             if (type.getMaterialTypeItem() != null && !material.has(FLINT) && material != NULL && !material.has(RUBBERTOOLS) && !material.has(WOOD)){
                 flags(type.getMaterialTypeItem());
             }

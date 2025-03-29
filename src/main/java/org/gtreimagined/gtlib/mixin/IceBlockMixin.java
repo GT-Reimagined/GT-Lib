@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.mixin;
 
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.GTToolType;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +26,8 @@ public class IceBlockMixin extends HalfTransparentBlock {
 
     @Inject(method = "playerDestroy", at = @At(value = "HEAD"), cancellable = true)
     private void stopSpawnWater(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack, CallbackInfo info) {
-        if (!stack.isEmpty() && stack.getItem() instanceof IAntimatterTool) {
-            AntimatterToolType type = ((IAntimatterTool) stack.getItem()).getAntimatterToolType();
+        if (!stack.isEmpty() && stack.getItem() instanceof IGTTool) {
+            GTToolType type = ((IGTTool) stack.getItem()).getAntimatterToolType();
             if (type == SAW) {
                 super.playerDestroy(worldIn, player, pos, state, te, stack);
                 info.cancel();

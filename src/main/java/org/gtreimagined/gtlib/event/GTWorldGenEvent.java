@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.event;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.registration.IAntimatterRegistrar;
+import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
@@ -27,7 +27,7 @@ public class GTWorldGenEvent extends GTEvent {
     public final List<WorldGenBedrockVein> BEDROCK_VEINS = new ObjectArrayList<>();
     public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
 
-    public GTWorldGenEvent(IAntimatterRegistrar registrar) {
+    public GTWorldGenEvent(IGTRegistrar registrar) {
         super(registrar);
     }
 

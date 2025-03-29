@@ -28,7 +28,7 @@ import java.util.function.BiPredicate;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE_SMALL;
 
-public class FeatureSmallOres extends AntimatterFeature<NoneFeatureConfiguration> {
+public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
     public FeatureSmallOres() {
         super(NoneFeatureConfiguration.CODEC, WorldGenSmallOre.class);
     }

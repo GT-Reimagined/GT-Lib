@@ -3,8 +3,8 @@ package org.gtreimagined.gtlib.gui;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.gui.container.IAntimatterContainer;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.gui.container.IGTContainer;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import org.apache.commons.lang3.function.TriFunction;
 
 
 //An arbitrary menu handler for e.g. guiclass.
-public abstract class MenuHandler<T extends AbstractContainerMenu & IAntimatterContainer> implements IAntimatterObject {
+public abstract class MenuHandler<T extends AbstractContainerMenu & IGTContainer> implements IGTObject {
 
     protected ResourceLocation loc;
     private MenuType<T> containerType;

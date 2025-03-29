@@ -13,28 +13,28 @@ import net.minecraftforge.fluids.FluidAttributes;
 import static org.gtreimagined.gtlib.material.MaterialTags.MOLTEN;
 
 /**
- * AntimatterMaterialFluid is an extension of AntimatterFluid that includes both {@link Material} and {@link MaterialType} parameters
+ * GTMaterialFluid is an extension of GTFluid that includes both {@link Material} and {@link MaterialType} parameters
  * <p>
  * This allows for straightforward fluid generation derived from base Material values, these are of course overridable with the different constructors still.
  */
-public class AntimatterMaterialFluid extends AntimatterFluid {
+public class GTMaterialFluid extends GTFluid {
 
     protected Material material;
     protected MaterialType<?> type;
 
-    public AntimatterMaterialFluid(String domain, Material material, MaterialType<?> type, FluidAttributes.Builder builder, Block.Properties blockProperties) {
+    public GTMaterialFluid(String domain, Material material, MaterialType<?> type, FluidAttributes.Builder builder, Block.Properties blockProperties) {
         super(domain, type.getId() + "_" + material.getId(), builder, blockProperties);
         this.material = material;
         this.type = type;
     }
 
-    public AntimatterMaterialFluid(String domain, Material material, MaterialType<?> type, ResourceLocation stillLoc, ResourceLocation flowLoc) {
+    public GTMaterialFluid(String domain, Material material, MaterialType<?> type, ResourceLocation stillLoc, ResourceLocation flowLoc) {
         super(domain, type.getId() + "_" + material.getId(), stillLoc, flowLoc);
         this.material = material;
         this.type = type;
     }
 
-    public AntimatterMaterialFluid(String domain, Material material, MaterialType<?> type) {
+    public GTMaterialFluid(String domain, Material material, MaterialType<?> type) {
         this(domain, material, type, prepareAttributes(domain, material, type), prepareProperties(material));
     }
 

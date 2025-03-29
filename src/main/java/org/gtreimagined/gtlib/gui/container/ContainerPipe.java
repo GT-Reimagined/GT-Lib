@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
-public class ContainerPipe<T extends BlockEntityPipe<?>> extends AntimatterContainer {
+public class ContainerPipe<T extends BlockEntityPipe<?>> extends GTContainer {
 
     protected T tile;
 

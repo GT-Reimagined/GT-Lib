@@ -6,9 +6,9 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.core.Direction;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.material.Material;
 import static net.minecraft.core.Direction.*;
 import static net.minecraft.world.level.block.state.properties.StairsShape.STRAIGHT;
 
-public class BlockBasicStair extends StairBlock implements IAntimatterObject, ITextureProvider, IModelProvider {
+public class BlockBasicStair extends StairBlock implements IGTObject, ITextureProvider, IModelProvider {
     protected final String domain, id;
     @Getter
     protected final Block base;
@@ -40,7 +40,7 @@ public class BlockBasicStair extends StairBlock implements IAntimatterObject, IT
     }
 
     public String getDomain() {
-        return this instanceof ISharedAntimatterObject ? Ref.SHARED_ID : domain;
+        return this instanceof ISharedGTObject ? Ref.SHARED_ID : domain;
     }
 
     @Override

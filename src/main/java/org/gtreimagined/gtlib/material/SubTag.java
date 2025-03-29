@@ -1,9 +1,9 @@
 package org.gtreimagined.gtlib.material;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 
-public class SubTag implements IAntimatterObject {
+public class SubTag implements IGTObject {
 
     public static final SubTag GOOD_SOLDER = new SubTag("solder_good");
     public static final SubTag BAD_SOLDER = new SubTag("solder_bad");

@@ -18,9 +18,9 @@ import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.mixin.client.LevelRendererAccessor;
 import org.gtreimagined.gtlib.mixin.client.MultiPlayerGameModeAccessor;
 import org.gtreimagined.gtlib.pipe.BlockPipe;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.GTToolType;
+import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.tool.behaviour.BehaviourAOEBreak;
 import org.gtreimagined.gtlib.tool.behaviour.BehaviourExtendedHighlight;
 import org.gtreimagined.gtlib.util.Utils;
@@ -67,15 +67,15 @@ public class ClientEvents {
         Player player = MC.player;
         Level world = player.getCommandSenderWorld();
         ItemStack stack = player.getMainHandItem();
-        if (stack.isEmpty() || (!(stack.getItem() instanceof IBasicAntimatterTool) && !(stack.getItem() instanceof IHaveCover) && !CoverReplacements.hasReplacement(stack.getItem())))
+        if (stack.isEmpty() || (!(stack.getItem() instanceof IBasicGTTool) && !(stack.getItem() instanceof IHaveCover) && !CoverReplacements.hasReplacement(stack.getItem())))
             return false;
         if (stack.getItem() instanceof IHaveCover || CoverReplacements.hasReplacement(stack.getItem())) {
             if (player.isCrouching()) return false;
             RenderHelper.onDrawHighlight(player, levelRenderer, camera, target, partialTick, poseStack, bufferSource, b -> b instanceof BlockMachine || b instanceof BlockPipe, BehaviourExtendedHighlight.COVER_FUNCTION);
             return true;
         }
-        IBasicAntimatterTool item = (IBasicAntimatterTool) stack.getItem();
-        AntimatterToolType type = Utils.getToolType(player);
+        IBasicGTTool item = (IBasicGTTool) stack.getItem();
+        GTToolType type = Utils.getToolType(player);
         if (type == null) return false;
         if (player.isCrouching() && type != GTTools.WRENCH && type != GTTools.CROWBAR && type != GTTools.WIRE_CUTTER)
             return false;
@@ -87,7 +87,7 @@ public class ClientEvents {
         if (res.shouldSwing()) {
             return false;
         }
-        IBehaviour<IBasicAntimatterTool> behaviour = type.getBehaviour("aoe_break");
+        IBehaviour<IBasicGTTool> behaviour = type.getBehaviour("aoe_break");
         if (!(behaviour instanceof BehaviourAOEBreak aoeBreak)) return false;
 
         BlockPos currentPos = target.getBlockPos();
@@ -128,8 +128,8 @@ public class ClientEvents {
     public static void onPlayerTickEnd(Player player) {
         if (player == null || player.getMainHandItem().isEmpty()) return;
         ItemStack stack = player.getMainHandItem();
-        if (!(stack.getItem() instanceof IAntimatterTool)) return;
-        IAntimatterTool item = (IAntimatterTool) stack.getItem();
+        if (!(stack.getItem() instanceof IGTTool)) return;
+        IGTTool item = (IGTTool) stack.getItem();
         if (item.getAntimatterToolType().getUseAction() != UseAnim.NONE && player.swinging) {
             //todo abstract this
             //item.getItem().onUsingTick(stack, player, stack.getCount());

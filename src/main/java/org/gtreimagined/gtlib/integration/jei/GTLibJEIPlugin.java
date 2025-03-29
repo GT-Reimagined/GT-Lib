@@ -70,13 +70,13 @@ import java.util.Set;
 
 @SuppressWarnings("removal")
 @JeiPlugin
-public class AntimatterJEIPlugin implements IModPlugin {
+public class GTLibJEIPlugin implements IModPlugin {
     public static final Map<String, RecipeType<IRecipe>> RECIPE_TYPES = new Object2ObjectOpenHashMap<>();
     @Getter
     private static IJeiRuntime runtime;
     private static IJeiHelpers helpers;
 
-    public AntimatterJEIPlugin() {
+    public GTLibJEIPlugin() {
         Antimatter.LOGGER.info("Creating AntimatterAPI's JEI Plugin");
     }
 
@@ -274,7 +274,7 @@ public class AntimatterJEIPlugin implements IModPlugin {
     }
 
     public static void uses(FluidStack val, boolean USE) {
-        AntimatterJEIPlugin.getRuntime().getRecipesGui().show(new IFocus<FluidStack>() {
+        GTLibJEIPlugin.getRuntime().getRecipesGui().show(new IFocus<FluidStack>() {
             @Override
             public ITypedIngredient<FluidStack> getTypedValue() {
                 return new ITypedIngredient<>() {

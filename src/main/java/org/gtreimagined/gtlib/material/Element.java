@@ -1,12 +1,12 @@
 package org.gtreimagined.gtlib.material;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Element implements IAntimatterObject {
+public class Element implements IGTObject {
     public static final Map<String, Element> ELEMENTS = new LinkedHashMap<>();
     public static Element H = new Element(1, 0, 0, 1,90,"hydrogen", "H", -1,null,null,null, false);
     public static Element He = new Element(2, 2, 0, 1,179,"helium", "He", -1,null,null,null, false);

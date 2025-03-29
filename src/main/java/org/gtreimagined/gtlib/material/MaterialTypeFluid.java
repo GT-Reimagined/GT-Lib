@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.material;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.tags.TagKey;
@@ -17,8 +17,8 @@ public class MaterialTypeFluid<T> extends MaterialType<T> {
         AntimatterAPI.register(MaterialTypeFluid.class, this);
     }
 
-    public static FluidStack getEmptyFluidAndLog(MaterialType<?> type, IAntimatterObject... objects) {
-        Utils.onInvalidData("Tried to create " + type.getId() + " for objects: " + Arrays.toString(Arrays.stream(objects).map(IAntimatterObject::getId).toArray(String[]::new)));
+    public static FluidStack getEmptyFluidAndLog(MaterialType<?> type, IGTObject... objects) {
+        Utils.onInvalidData("Tried to create " + type.getId() + " for objects: " + Arrays.toString(Arrays.stream(objects).map(IGTObject::getId).toArray(String[]::new)));
         return new FluidStack(Fluids.WATER, 1);
     }
 

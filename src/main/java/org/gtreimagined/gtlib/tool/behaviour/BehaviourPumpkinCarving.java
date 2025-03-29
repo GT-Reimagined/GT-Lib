@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BehaviourPumpkinCarving implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourPumpkinCarving implements IItemUse<IBasicGTTool> {
     public static final BehaviourPumpkinCarving INSTANCE = new BehaviourPumpkinCarving();
 
     @Override
@@ -25,7 +25,7 @@ public class BehaviourPumpkinCarving implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         Level worldIn = c.getLevel();
         BlockPos pos = c.getClickedPos();
         BlockState state = worldIn.getBlockState(pos);

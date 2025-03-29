@@ -4,16 +4,17 @@ import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.gui.container.IAntimatterContainer;
+import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.gui.core.RTree;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.screen.AntimatterContainerScreen;
+import org.gtreimagined.gtlib.gui.screen.GTContainerScreen;
 import org.gtreimagined.gtlib.gui.widget.ButtonWidget;
 import org.gtreimagined.gtlib.gui.widget.CycleButtonWidget;
 import org.gtreimagined.gtlib.gui.widget.SwitchButtonWidget;
 import org.gtreimagined.gtlib.gui.widget.TextButtonWidget;
 import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
-import org.gtreimagined.gtlib.network.AntimatterNetwork;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
 import org.gtreimagined.gtlib.network.packets.ClientboundGuiSyncPacket;
 import org.gtreimagined.gtlib.network.packets.GuiSyncPacket;
@@ -53,7 +54,7 @@ public class GuiInstance implements ICanSyncData {
 
     @OnlyIn(Dist.CLIENT)
     @Nullable
-    public AntimatterContainerScreen<?> screen;
+    public GTContainerScreen<?> screen;
 
     private final List<WidgetSupplier> builders = new ObjectArrayList<>();
     private final RTree<Widget> widgetLookup = new RTree<>();
@@ -168,7 +169,7 @@ public class GuiInstance implements ICanSyncData {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void initClient(AntimatterContainerScreen<?> parent) {
+    public void initClient(GTContainerScreen<?> parent) {
         this.screen = parent;
         initWidgets(parent);
         for (Widget mut : unsortedWidgets()) {
@@ -263,7 +264,7 @@ public class GuiInstance implements ICanSyncData {
     }
 
     public void sendPacket(AbstractGuiEventPacket pkt) {
-        AntimatterNetwork.NETWORK.sendToServer(pkt);
+        GTLibNetwork.NETWORK.sendToServer(pkt);
     }
 
     /**
@@ -307,14 +308,14 @@ public class GuiInstance implements ICanSyncData {
 
     private void writeToClient(final List<SyncHolder> data) {
         GuiSyncPacket pkt = new ClientboundGuiSyncPacket(data);
-        for (ServerPlayer listener : ((IAntimatterContainer)container).listeners()) {
-            AntimatterNetwork.NETWORK.sendToPlayer(pkt, listener);
+        for (ServerPlayer listener : ((IGTContainer)container).listeners()) {
+            GTLibNetwork.NETWORK.sendToPlayer(pkt, listener);
         }
     }
 
     private void writeToServer(final List<SyncHolder> data) {
         GuiSyncPacket pkt = new ServerboundGuiSyncPacket(data);
-        AntimatterNetwork.NETWORK.sendToServer(pkt);
+        GTLibNetwork.NETWORK.sendToServer(pkt);
     }
 
     @Override

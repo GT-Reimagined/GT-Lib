@@ -11,11 +11,11 @@ import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class MatArmorMaterial implements ArmorMaterial {
-    final AntimatterArmorType type;
+    final GTArmorType type;
     final Material material;
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
 
-    public MatArmorMaterial(AntimatterArmorType type, Material material) {
+    public MatArmorMaterial(GTArmorType type, Material material) {
         this.type = type;
         this.material = material;
     }

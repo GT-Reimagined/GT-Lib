@@ -12,7 +12,7 @@ import org.gtreimagined.gtlib.client.tesr.MachineTESR;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
-import org.gtreimagined.gtlib.fluid.AntimatterFluid;
+import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.gui.MenuHandler;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
@@ -85,7 +85,7 @@ public class ClientHandler implements IProxyHandler {
             AntimatterAPI.all(BlockFrame.class).stream().filter(b -> b.getType() == GTMaterialTypes.FRAME)
                     .forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
             AntimatterAPI.all(BlockSurfaceRock.class).stream().forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(AntimatterFluid.class).forEach(f -> {
+            AntimatterAPI.all(GTFluid.class).forEach(f -> {
                 ModelUtils.setRenderLayer(f.getFluid(), RenderType.translucent());
                 ModelUtils.setRenderLayer(f.getFlowingFluid(), RenderType.translucent());
             });

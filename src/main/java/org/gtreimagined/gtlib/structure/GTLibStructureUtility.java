@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class AntimatterStructureUtility {
+public class GTLibStructureUtility {
     public static <T extends BlockEntityBasicMultiMachine<T>> IStructureElement<T> ofHatch(HatchMachine machine){
         return ofHatch(machine, (t, world, pos, machine1, handler) -> {
             t.addComponent(machine1.getId(), handler);

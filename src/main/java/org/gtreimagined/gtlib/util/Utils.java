@@ -22,10 +22,10 @@ import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.Recipe;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.registration.IGTObject;
+import org.gtreimagined.gtlib.tool.GTToolType;
+import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.tool.behaviour.BehaviourTreeFelling;
 import net.minecraft.advancements.critereon.EnterBlockTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -270,8 +270,8 @@ public class Utils {
 
     public static void damageStack(ItemStack stack, LivingEntity player) {
         int durability = 1;
-        if (stack.getItem() instanceof IAntimatterTool) {
-            durability = ((IAntimatterTool) stack.getItem()).getAntimatterToolType().getUseDurability();
+        if (stack.getItem() instanceof IGTTool) {
+            durability = ((IGTTool) stack.getItem()).getAntimatterToolType().getUseDurability();
         }
         damageStack(durability, stack, player);
     }
@@ -279,8 +279,8 @@ public class Utils {
 
     public static void damageStack(ItemStack stack, InteractionHand hand, LivingEntity player) {
         int durability = 1;
-        if (stack.getItem() instanceof IAntimatterTool) {
-            durability = ((IAntimatterTool) stack.getItem()).getAntimatterToolType().getUseDurability();
+        if (stack.getItem() instanceof IGTTool) {
+            durability = ((IGTTool) stack.getItem()).getAntimatterToolType().getUseDurability();
         }
         stack.hurtAndBreak(durability, player, p -> {
             p.broadcastBreakEvent(hand);
@@ -1114,7 +1114,7 @@ public class Utils {
      * @param world  World instance
      * @return if tree logging was successful
      */
-    public static boolean treeLogging(@NotNull AntimatterToolType tool, @NotNull ItemStack stack, @NotNull BlockPos start, @NotNull Player player, @NotNull Level world) {
+    public static boolean treeLogging(@NotNull GTToolType tool, @NotNull ItemStack stack, @NotNull BlockPos start, @NotNull Player player, @NotNull Level world) {
         boolean[] harvested = new boolean[1];
         if (!AntimatterConfig.SMARTER_TREE_DETECTION.get()) {
             BlockState tpCompare = world.getBlockState(start);
@@ -1154,7 +1154,7 @@ public class Utils {
     }
 
     /**
-     * Gets harvestables out of a ImmutableSet of block positions, this is IAntimatterTool sensitive, and will not work for normal ItemStacks, for that, check out BlockState#isToolEffective
+     * Gets harvestables out of a ImmutableSet of block positions, this is IGTTool sensitive, and will not work for normal ItemStacks, for that, check out BlockState#isToolEffective
      *
      * @param world  World instance of the PlayerEntity
      * @param player PlayerEntity that is breaking the blocks
@@ -1163,7 +1163,7 @@ public class Utils {
      * @param depth  depth amount of blocks
      * @return set of harvestable BlockPos in the specified range with specified player
      */
-    public static ImmutableSet<BlockPos> getHarvestableBlocksToBreak(@NotNull Level world, @NotNull Player player, @NotNull IBasicAntimatterTool tool, ItemStack stack, int column, int row, int depth) {
+    public static ImmutableSet<BlockPos> getHarvestableBlocksToBreak(@NotNull Level world, @NotNull Player player, @NotNull IBasicGTTool tool, ItemStack stack, int column, int row, int depth) {
         ImmutableSet<BlockPos> totalBlocks = getBlocksToBreak(world, player, column, row, depth);
         return totalBlocks.stream().filter(b -> tool.genericIsCorrectToolForDrops(stack, world.getBlockState(b)) && world.getBlockState(b).getDestroySpeed(world, b) >= 0).collect(ImmutableSet.toImmutableSet());
     }
@@ -1360,7 +1360,7 @@ public class Utils {
         return new String[]{lowerUnderscoreToUpperSpaced(id).replace('_', ' ')};
     }
 
-    public static String getLocalizedType(IAntimatterObject type) {
+    public static String getLocalizedType(IGTObject type) {
         String id = type.getId();
         if (type instanceof Material material){
             return material.getDisplayNameString();
@@ -1390,9 +1390,9 @@ public class Utils {
         return false;
     }
 
-    public static boolean doesStackHaveToolTypes(ItemStack stack, AntimatterToolType... types) {
+    public static boolean doesStackHaveToolTypes(ItemStack stack, GTToolType... types) {
         List<TagKey<Item>> ret = new ObjectArrayList<>();
-        for (AntimatterToolType ty : types) {
+        for (GTToolType ty : types) {
             ret.add(ty.getForgeTag());
         }
         TagKey<Item>[] t =  (TagKey<Item>[]) ret.toArray(new TagKey[0]);
@@ -1400,14 +1400,14 @@ public class Utils {
     }
 
 
-    public static boolean isPlayerHolding(Player player, InteractionHand hand, AntimatterToolType... t) {
+    public static boolean isPlayerHolding(Player player, InteractionHand hand, GTToolType... t) {
         return doesStackHaveToolTypes(player.getItemInHand(hand), t);
     }
 
     @Nullable
-    public static AntimatterToolType getToolType(Player player) {
+    public static GTToolType getToolType(Player player) {
         ItemStack stack = player.getMainHandItem();
-        for (AntimatterToolType ty : AntimatterAPI.all(AntimatterToolType.class)) {
+        for (GTToolType ty : AntimatterAPI.all(GTToolType.class)) {
             if (!ty.hasOriginalTag()) continue;
             if (stack.is(ty.getTag())){
                 return ty;

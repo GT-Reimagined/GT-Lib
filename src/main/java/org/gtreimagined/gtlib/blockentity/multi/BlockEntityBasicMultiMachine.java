@@ -29,12 +29,12 @@ import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.machine.event.MachineEvent;
 import org.gtreimagined.gtlib.machine.types.BasicMultiMachine;
 import org.gtreimagined.gtlib.machine.types.Machine;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.structure.Structure;
 import org.gtreimagined.gtlib.structure.StructureCache;
 import org.gtreimagined.gtlib.structure.StructureHandle;
 import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.tool.AntimatterToolType;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -175,7 +175,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     }
 
     @Override
-    public InteractionResult onInteractServer(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, @Nullable AntimatterToolType type) {
+    public InteractionResult onInteractServer(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, @Nullable GTToolType type) {
         if (!validStructure && checkingStructure == 0){
             if (checkStructure()){
                 return InteractionResult.SUCCESS;
@@ -369,7 +369,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     /**
      * Returns a list of Components
      **/
-    public List<IComponentHandler> getComponents(IAntimatterObject object) {
+    public List<IComponentHandler> getComponents(IGTObject object) {
         return getComponents(object.getId());
     }
 

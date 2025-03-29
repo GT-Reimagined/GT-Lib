@@ -40,7 +40,7 @@ import java.util.function.Function;
 import static org.gtreimagined.gtlib.Antimatter.LOGGER;
 import static org.gtreimagined.gtlib.worldgen.WorldGenHelper.ORE_PREDICATE;
 
-public class FeatureVanillaOres extends AntimatterFeature<NoneFeatureConfiguration> {
+public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
     public FeatureVanillaOres() {
         super(NoneFeatureConfiguration.CODEC, WorldGenVanillaOre.class);
     }

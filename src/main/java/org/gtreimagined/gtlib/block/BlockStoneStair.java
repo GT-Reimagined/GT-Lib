@@ -8,7 +8,7 @@ import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IModelProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.StairsShape;
 import static net.minecraft.core.Direction.*;
 import static net.minecraft.world.level.block.state.properties.StairsShape.STRAIGHT;
 
-public class BlockStoneStair extends StairBlock implements ISharedAntimatterObject, ITextureProvider, IModelProvider {
+public class BlockStoneStair extends StairBlock implements ISharedGTObject, ITextureProvider, IModelProvider {
     protected String domain, id, suffix;
     CobbleStoneType type;
 

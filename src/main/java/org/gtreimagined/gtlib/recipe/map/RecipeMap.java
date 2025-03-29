@@ -22,9 +22,9 @@ import org.gtreimagined.gtlib.recipe.ingredient.MapItemStackIngredient;
 import org.gtreimagined.gtlib.recipe.ingredient.MapTagIngredient;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.recipe.ingredient.SpecialIngredientWrapper;
-import org.gtreimagined.gtlib.recipe.serializer.IAntimatterRecipeSerializer;
+import org.gtreimagined.gtlib.recipe.serializer.IGTRecipeSerializer;
 import org.gtreimagined.gtlib.recipe.serializer.MachineRecipeSerializer;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -55,7 +55,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObject, IRecipeMap {
+public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRecipeMap {
 
     private static final ItemStack[] EMPTY_ITEM = new ItemStack[0];
     private static final FluidStack[] EMPTY_FLUID = new FluidStack[0];
@@ -86,7 +86,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
     private Map<String, SubCategory> subCategories = new Object2ObjectOpenHashMap<>();
 
     @Getter
-    private IAntimatterRecipeSerializer<? extends IRecipe> recipeSerializer = MachineRecipeSerializer.INSTANCE;
+    private IGTRecipeSerializer<? extends IRecipe> recipeSerializer = MachineRecipeSerializer.INSTANCE;
 
     private static final Set<RecipeType<? extends IRecipe>> RECIPE_TYPES = new HashSet<>(Collections.singleton(Recipe.RECIPE_TYPE));
 
@@ -207,7 +207,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedAntimatterObje
         return Collections.unmodifiableSet(RECIPE_TYPES);
     }
 
-    public<T extends IRecipe> RecipeMap<B>  setRecipeSerializer(IAntimatterRecipeSerializer<T> serializer) {
+    public<T extends IRecipe> RecipeMap<B>  setRecipeSerializer(IGTRecipeSerializer<T> serializer) {
         this.recipeSerializer = serializer;
         RECIPE_TYPES.add(serializer.getRecipeType());
         return this;

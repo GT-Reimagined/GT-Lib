@@ -2,16 +2,16 @@ package org.gtreimagined.gtlib.block;
 
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 
-public class BlockBasic extends Block implements IAntimatterObject, ITextureProvider, IModelProvider {
+public class BlockBasic extends Block implements IGTObject, ITextureProvider, IModelProvider {
 
     protected final String domain, id;
 
@@ -27,7 +27,7 @@ public class BlockBasic extends Block implements IAntimatterObject, ITextureProv
     }
 
     public String getDomain() {
-        return this instanceof ISharedAntimatterObject ? Ref.SHARED_ID : domain;
+        return this instanceof ISharedGTObject ? Ref.SHARED_ID : domain;
     }
 
     @Override

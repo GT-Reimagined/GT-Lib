@@ -186,7 +186,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                             widgets.add(Widgets.createSlot(point).entries(getInput(display, s + inputFluidOffset)).disableBackground().markInput());
                             /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                             slot.addTooltipCallback((ing, list) -> {
-                            if (Utils.hasNoConsumeTag(AntimatterJEIPlugin.getIngredient(ing.getDisplayedIngredient().get())))
+                            if (Utils.hasNoConsumeTag(GTLibJEIPlugin.getIngredient(ing.getDisplayedIngredient().get())))
                                 list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
                             });*/
                             inputFluids++;
@@ -213,7 +213,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                             widgets.add(Widgets.createSlot(point).entries(getOutput(display, s + outputFluidOffset)).disableBackground().markOutput());
                             /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                             slot.addTooltipCallback((ing, list) -> {
-                            if (Utils.hasNoConsumeTag(AntimatterJEIPlugin.getIngredient(ing.getDisplayedIngredient().get())))
+                            if (Utils.hasNoConsumeTag(GTLibJEIPlugin.getIngredient(ing.getDisplayedIngredient().get())))
                                 list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
                             });*/
                             inputFluids++;

@@ -6,17 +6,17 @@ import org.gtreimagined.gtlib.Antimatter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.AntimatterConfig;
 import org.gtreimagined.gtlib.mixin.BiomeGenerationBuilderAccessor;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import org.gtreimagined.gtlib.util.Utils;
-import org.gtreimagined.gtlib.worldgen.feature.AntimatterFeature;
+import org.gtreimagined.gtlib.worldgen.feature.GTFeature;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureBedrockOre;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureOre;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureSmallOres;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureStoneLayer;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureVanillaOres;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureVeinLayer;
-import org.gtreimagined.gtlib.worldgen.feature.IAntimatterFeature;
+import org.gtreimagined.gtlib.worldgen.feature.IGTFeature;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -53,17 +53,17 @@ import java.util.stream.Collectors;
 import static org.gtreimagined.gtlib.Ref.GSON;
 
 public class AntimatterWorldGenerator {
-    static final AntimatterFeature<NoneFeatureConfiguration> SMALL_ORE = new FeatureSmallOres();
+    static final GTFeature<NoneFeatureConfiguration> SMALL_ORE = new FeatureSmallOres();
 
-    static final AntimatterFeature<NoneFeatureConfiguration> VANILLA_ORE = new FeatureVanillaOres();
+    static final GTFeature<NoneFeatureConfiguration> VANILLA_ORE = new FeatureVanillaOres();
 
-    static final AntimatterFeature<NoneFeatureConfiguration> VEIN_LAYER = new FeatureVeinLayer();
-    static final AntimatterFeature<NoneFeatureConfiguration> ORE = new FeatureOre();
-    static final AntimatterFeature<NoneFeatureConfiguration> STONE_LAYER = new FeatureStoneLayer();
-    static final AntimatterFeature<NoneFeatureConfiguration> BEDROCK_VEINS = new FeatureBedrockOre();
+    static final GTFeature<NoneFeatureConfiguration> VEIN_LAYER = new FeatureVeinLayer();
+    static final GTFeature<NoneFeatureConfiguration> ORE = new FeatureOre();
+    static final GTFeature<NoneFeatureConfiguration> STONE_LAYER = new FeatureStoneLayer();
+    static final GTFeature<NoneFeatureConfiguration> BEDROCK_VEINS = new FeatureBedrockOre();
 
     public static void clear() {
-        AntimatterAPI.all(AntimatterFeature.class, t -> t.getRegistry().clear());
+        AntimatterAPI.all(GTFeature.class, t -> t.getRegistry().clear());
     }
 
     public static void preinit() {
@@ -74,7 +74,7 @@ public class AntimatterWorldGenerator {
         AntimatterAPI.runLaterCommon(() -> {
             WorldGenHelper.init();
             try {
-                AntimatterAPI.all(AntimatterFeature.class).stream().filter(AntimatterFeature::enabled).forEach(f -> {
+                AntimatterAPI.all(GTFeature.class).stream().filter(GTFeature::enabled).forEach(f -> {
                     f.onDataOverride(new JsonObject());
                     f.init();
                 });
@@ -101,18 +101,18 @@ public class AntimatterWorldGenerator {
     }
 
     public static void register(Class<?> c, WorldGenBase<?> base) {
-        AntimatterFeature<?> feature = AntimatterAPI.get(AntimatterFeature.class, c.getName());
+        GTFeature<?> feature = AntimatterAPI.get(GTFeature.class, c.getName());
         if (feature != null)
             base.getDimensions().forEach(d -> feature.getRegistry().computeIfAbsent(d, k -> new LinkedList<>()).add(base));
     }
 
     public static <T> List<T> all(Class<T> c, ResourceKey<Level> dim) {
-        AntimatterFeature<?> feat = AntimatterAPI.get(AntimatterFeature.class, c.getName());
+        GTFeature<?> feat = AntimatterAPI.get(GTFeature.class, c.getName());
         return feat != null ? feat.getRegistry().computeIfAbsent(dim.location(), k -> new LinkedList<>()).stream().map(c::cast).collect(Collectors.toList()) : Collections.emptyList();
     }
 
     public static <T> List<T> all(Class<T> c) {
-        AntimatterFeature<?> feat = AntimatterAPI.get(AntimatterFeature.class, c.getName());
+        GTFeature<?> feat = AntimatterAPI.get(GTFeature.class, c.getName());
         return feat != null ? feat.getRegistry().values().stream().flatMap(Collection::stream).map(c::cast).distinct().toList() : Collections.emptyList();
     }
 
@@ -196,7 +196,7 @@ public class AntimatterWorldGenerator {
 
     public static void reloadEvent(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
 
-        AntimatterAPI.all(IAntimatterFeature.class, t -> {
+        AntimatterAPI.all(IGTFeature.class, t -> {
             t.build(name, climate, category, effects, gen, spawns);
         });
         handleFeatureRemoval(gen);
@@ -232,7 +232,7 @@ public class AntimatterWorldGenerator {
         }
     }
 
-    public static <T extends IAntimatterObject> List<T> readCustomJsonObjects(Class<T> clazz, BiFunction<String, JsonObject, T> function, String path){
+    public static <T extends IGTObject> List<T> readCustomJsonObjects(Class<T> clazz, BiFunction<String, JsonObject, T> function, String path){
         File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "gtlib/" + path + "/custom");
         if (dir.listFiles() == null) return Collections.emptyList();
         List<File> files = Arrays.asList(dir.listFiles());
@@ -255,7 +255,7 @@ public class AntimatterWorldGenerator {
         return objects;
     }
 
-    public static  <T extends IAntimatterObject> T readJson(Class<T> clazz, T original, BiFunction<String, JsonObject, T> function, String path){
+    public static  <T extends IGTObject> T readJson(Class<T> clazz, T original, BiFunction<String, JsonObject, T> function, String path){
         File dir = new File(FMLPaths.CONFIGDIR.get().toFile(), "/" + path + "/overrides");
         File target = new File(dir, original.getId() + ".json");
 

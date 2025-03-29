@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.tool.behaviour;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class BehaviourLogStripping implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourLogStripping implements IItemUse<IBasicGTTool> {
 
     public static final BehaviourLogStripping INSTANCE = new BehaviourLogStripping();
 
@@ -37,7 +37,7 @@ public class BehaviourLogStripping implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         BlockState state = c.getLevel().getBlockState(c.getClickedPos());
         BlockState stripped = getToolModifiedState(state, c, "axe_strip");
         if (stripped != null) {

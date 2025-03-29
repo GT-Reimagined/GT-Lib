@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
 import org.gtreimagined.gtlib.behaviour.IItemUse;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +14,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
-public class BehaviourCropHarvesting implements IItemUse<IBasicAntimatterTool> {
+public class BehaviourCropHarvesting implements IItemUse<IBasicGTTool> {
     public static final BehaviourCropHarvesting INSTANCE = new BehaviourCropHarvesting();
 
 
@@ -24,7 +24,7 @@ public class BehaviourCropHarvesting implements IItemUse<IBasicAntimatterTool> {
     }
 
     @Override
-    public InteractionResult onItemUse(IBasicAntimatterTool instance, UseOnContext c) {
+    public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
         BlockPos original = c.getClickedPos();
         BlockState clickedState = c.getLevel().getBlockState(original);
         if (clickedState.getBlock() instanceof CropBlock && c.getLevel() instanceof ServerLevel serverLevel){

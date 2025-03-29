@@ -7,13 +7,13 @@ import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder.VariantBu
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
-public class BlockStoneSlab extends BlockBasicSlab implements ISharedAntimatterObject {
+public class BlockStoneSlab extends BlockBasicSlab implements ISharedGTObject {
     @Getter
     protected String suffix;
     CobbleStoneType type;

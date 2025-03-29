@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 @ZenRegister
 @ZenCodeType.Name("mods.gtlib.Api")
-public class AntimatterCraftTweaker {
+public class GTCraftTweaker {
 
     @ZenCodeType.Method
     public static Object get(String clazz, String domain, String name) {

@@ -25,7 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.Set;
 
-public abstract class AntimatterContainer extends AbstractContainerMenu implements IAntimatterContainer {
+public abstract class GTContainer extends AbstractContainerMenu implements IGTContainer {
 
     @Getter
     protected Inventory playerInv;
@@ -36,7 +36,7 @@ public abstract class AntimatterContainer extends AbstractContainerMenu implemen
     public final NonNullList<Slot> playerSlots = NonNullList.create();
     private final MenuType<?> containerType;
 
-    public AntimatterContainer(IGuiHandler handler, MenuType<?> containerType, int windowId, Inventory playerInv, int invSize) {
+    public GTContainer(IGuiHandler handler, MenuType<?> containerType, int windowId, Inventory playerInv, int invSize) {
         super(containerType, windowId);
         this.playerInv = playerInv;
         this.invSize = invSize;

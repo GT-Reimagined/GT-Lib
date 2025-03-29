@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
 import org.gtreimagined.gtlib.behaviour.IInteractEntity;
-import org.gtreimagined.gtlib.tool.IBasicAntimatterTool;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 
-public class BehaviourShearing implements IInteractEntity<IBasicAntimatterTool> {
+public class BehaviourShearing implements IInteractEntity<IBasicGTTool> {
     public static final BehaviourShearing INSTANCE = new BehaviourShearing();
     @Override
     public String getId() {
@@ -19,7 +19,7 @@ public class BehaviourShearing implements IInteractEntity<IBasicAntimatterTool> 
     }
 
     @Override
-    public InteractionResult interactLivingEntity(IBasicAntimatterTool instance, ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
+    public InteractionResult interactLivingEntity(IBasicGTTool instance, ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
         if (!player.getLevel().isClientSide && interactionTarget instanceof Sheep sheep && sheep.readyForShearing()){
             sheep.shear(SoundSource.PLAYERS);
             sheep.gameEvent(GameEvent.SHEAR, player);

@@ -16,7 +16,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 
 import java.util.List;
 
-public class FeatureVeinLayer extends AntimatterFeature<NoneFeatureConfiguration> {
+public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
 
     public FeatureVeinLayer() {
         super(NoneFeatureConfiguration.CODEC, WorldGenVeinLayer.class);

@@ -3,9 +3,9 @@ package org.gtreimagined.gtlib.item;
 import lombok.Getter;
 import org.gtreimagined.gtlib.AntimatterAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.registration.IAntimatterObject;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
-import org.gtreimagined.gtlib.registration.ISharedAntimatterObject;
+import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemBasic<T extends ItemBasic<T>> extends Item implements IAntimatterObject, ITextureProvider, IModelProvider {
+public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject, ITextureProvider, IModelProvider {
 
     @Getter
     protected String domain, id, tooltip = "", subDir = "";
@@ -61,7 +61,7 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IAntimatt
 
     @Override
     public String getDomain() {
-        return this instanceof ISharedAntimatterObject ? Ref.SHARED_ID : domain;
+        return this instanceof ISharedGTObject ? Ref.SHARED_ID : domain;
     }
 
     @Override

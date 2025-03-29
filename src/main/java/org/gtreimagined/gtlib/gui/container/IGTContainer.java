@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Set;
 
-public interface IAntimatterContainer {
+public interface IGTContainer {
     GuiInstance source();
     Set<ServerPlayer> listeners();
 }

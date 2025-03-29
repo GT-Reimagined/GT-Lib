@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
-import org.gtreimagined.gtlib.tool.IAntimatterTool;
+import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.GrindstoneMenu;
@@ -43,8 +43,8 @@ public abstract class GrindstoneContainerMixin extends AbstractContainerMenu {
         ItemStack b = this.repairSlots.getItem(1);
         boolean match = true;
         if (a.getItem() == b.getItem()) {
-            if (a.getItem() instanceof IAntimatterTool) {
-                IAntimatterTool tool = (IAntimatterTool) a.getItem();
+            if (a.getItem() instanceof IGTTool) {
+                IGTTool tool = (IGTTool) a.getItem();
                 match = tool.getPrimaryMaterial(a) == tool.getPrimaryMaterial(b) && tool.getSecondaryMaterial(a) == tool.getSecondaryMaterial(b);
                 if (match) {
                     int k = a.getMaxDamage() - a.getDamageValue();
