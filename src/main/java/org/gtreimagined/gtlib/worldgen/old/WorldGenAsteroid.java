@@ -30,19 +30,19 @@ public class WorldGenAsteroid extends WorldGenBase {
     @Override
     public WorldGenBase build() {
         END_STONE_STATE = Blocks.END_STONE.getDefaultState();
-        GRANITE_RED_STATE = AntimatterAPI.get(BlockStone.class, "granite_red").getDefaultState();
+        GRANITE_RED_STATE = GTAPI.get(BlockStone.class, "granite_red").getDefaultState();
         return this;
     }
 
     public boolean generate(World world, XSTR rand, int passedX, int passedZ, BlockPos.Mutable pos, BlockState state, ChunkGenerator generator, AbstractChunkProvider provider) {
         if (mEndAsteroidProbability <= 1 || rand.nextInt(mEndAsteroidProbability) == 0) {
-            List<WorldGenVeinLayer> layers = AntimatterWorldGenerator.all(WorldGenVeinLayer.class, world.getDimension().getType().getId());
+            List<WorldGenVeinLayer> layers = GTLibWorldGenerator.all(WorldGenVeinLayer.class, world.getDimension().getType().getId());
             int layerCount = layers.size();
             WorldGenVeinLayer layerToGen = null;
             if (WorldGenVeinLayer.getTotalWeight() > 0 && layerCount > 0) {
                 int randomWeight;
                 WorldGenVeinLayer layer;
-                for (int i = 0; i < AntimatterConfig.WORLD.ORE_VEIN_FIND_ATTEMPTS; i++) {
+                for (int i = 0; i < GTLibConfig.WORLD.ORE_VEIN_FIND_ATTEMPTS; i++) {
                     randomWeight = rand.nextInt(WorldGenVeinLayer.getTotalWeight());
                     for (int j = 0; j < layerCount; j++) {
                         layer = layers.get(j);

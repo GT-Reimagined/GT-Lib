@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.pipe.types;
 
 import com.mojang.datafixers.util.Pair;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityItemPipe;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
@@ -61,7 +61,7 @@ public class ItemPipe<T extends ItemPipe<T>> extends PipeType<T> {
         registeredRestrictedBlocks = restrictedBlocks.stream().map(t -> new Pair<>(((BlockPipe<?>) t).getSize(),t))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
         tileType = new BlockEntityType<>((pos, state) -> tileFunc.create((T) this, pos, state), Stream.concat(blocks.stream(), restrictedBlocks.stream()).collect(Collectors.toSet()), null);
-        AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
+        GTAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }
 
     public Block getRestrictedBlock(PipeSize size) {

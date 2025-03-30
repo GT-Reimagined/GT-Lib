@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.cover;
 
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.util.RegistryUtils;
@@ -24,7 +24,7 @@ public class CoverDebug extends BaseCover {
             } else {
                 fmt = object.toString();
             }
-            Antimatter.LOGGER.info(String.format("Transfer type: %s, data: %s, position: %s, side: %s", object.getClass().getSimpleName(), fmt, this.handler.getTile().getBlockPos().toString(), side));
+            GTLib.LOGGER.info(String.format("Transfer type: %s, data: %s, position: %s, side: %s", object.getClass().getSimpleName(), fmt, this.handler.getTile().getBlockPos().toString(), side));
         }
         return false;
     }

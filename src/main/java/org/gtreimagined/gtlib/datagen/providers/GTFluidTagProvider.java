@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
@@ -24,7 +24,7 @@ public class GTFluidTagProvider extends GTTagProvider<Fluid> implements IGTLibPr
     }
 
     protected void processTags(String domain) {
-        AntimatterAPI.all(GTFluid.class, domain).forEach(f -> {
+        GTAPI.all(GTFluid.class, domain).forEach(f -> {
             tag(getForgelikeFluidTag(f.getId()))
                     .add(f.getFluid())
                     .replace(replace);

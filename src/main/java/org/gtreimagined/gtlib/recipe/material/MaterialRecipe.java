@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.container.MirroredShapedRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.PropertyIngredient;
 import net.minecraft.core.NonNullList;
@@ -40,7 +40,7 @@ public class MaterialRecipe extends MirroredShapedRecipe {
     public static Provider registerProvider(String loc, String domain, Provider obj) {
         if (loc.contains("/"))
             throw new RuntimeException("invalid input identifier to MaterialRecipe.Provider, contains /");
-        AntimatterAPI.register(Provider.class, loc, domain, obj);
+        GTAPI.register(Provider.class, loc, domain, obj);
         IDS.put(obj, new ResourceLocation(domain, loc));
         return obj;
     }
@@ -64,7 +64,7 @@ public class MaterialRecipe extends MirroredShapedRecipe {
         String[] ids = builderId.split("/");
         ResourceLocation lookup = new ResourceLocation(ids[0]);
         this.builderId = builderId;
-        this.builder = Objects.requireNonNull(AntimatterAPI.get(Provider.class, lookup.getPath(), lookup.getNamespace()), "Failed to get builder provider in MaterialRecipe" + builderId).provide(ids[1]);
+        this.builder = Objects.requireNonNull(GTAPI.get(Provider.class, lookup.getPath(), lookup.getNamespace()), "Failed to get builder provider in MaterialRecipe" + builderId).provide(ids[1]);
         this.outputs = recipeOutputIn;
     }
 

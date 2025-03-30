@@ -9,9 +9,9 @@ import it.unimi.dsi.fastutil.doubles.Double2ObjectMap;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.data.GTLibTags;
@@ -772,7 +772,7 @@ public class Utils {
 
     @Nullable
     public static BlockEntity getTileFromBuf(FriendlyByteBuf buf) {
-        return DistExecutor.unsafeRunForDist(() -> () -> Antimatter.PROXY.getClientWorld().getBlockEntity(buf.readBlockPos()), () -> () -> {
+        return DistExecutor.unsafeRunForDist(() -> () -> GTLib.PROXY.getClientWorld().getBlockEntity(buf.readBlockPos()), () -> () -> {
             throw new RuntimeException("Shouldn't be called on server!");
         });
     }
@@ -1116,7 +1116,7 @@ public class Utils {
      */
     public static boolean treeLogging(@NotNull GTToolType tool, @NotNull ItemStack stack, @NotNull BlockPos start, @NotNull Player player, @NotNull Level world) {
         boolean[] harvested = new boolean[1];
-        if (!AntimatterConfig.SMARTER_TREE_DETECTION.get()) {
+        if (!GTLibConfig.SMARTER_TREE_DETECTION.get()) {
             BlockState tpCompare = world.getBlockState(start);
             if (!BehaviourTreeFelling.isLog(tpCompare)) return false;
             for (int y = start.getY() + 1; y < start.getY() + world.getHeight(); y++) {
@@ -1407,7 +1407,7 @@ public class Utils {
     @Nullable
     public static GTToolType getToolType(Player player) {
         ItemStack stack = player.getMainHandItem();
-        for (GTToolType ty : AntimatterAPI.all(GTToolType.class)) {
+        for (GTToolType ty : GTAPI.all(GTToolType.class)) {
             if (!ty.hasOriginalTag()) continue;
             if (stack.is(ty.getTag())){
                 return ty;
@@ -1446,16 +1446,16 @@ public class Utils {
      */
     public static void onInvalidData(String msg) {
         if (Ref.DATA_EXCEPTIONS) throw new IllegalStateException(msg);
-        Antimatter.LOGGER.error(msg);
+        GTLib.LOGGER.error(msg);
     }
 
     /**
      * @param msg redirects to the main logger with a border
      */
     public static void printError(String msg) {
-        Antimatter.LOGGER.error("====================================================");
-        Antimatter.LOGGER.error(msg);
-        Antimatter.LOGGER.error("====================================================");
+        GTLib.LOGGER.error("====================================================");
+        GTLib.LOGGER.error(msg);
+        GTLib.LOGGER.error("====================================================");
     }
 
     public static <T> T cast(Object o){

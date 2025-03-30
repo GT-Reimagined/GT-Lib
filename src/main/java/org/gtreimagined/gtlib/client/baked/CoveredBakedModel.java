@@ -29,16 +29,16 @@ public class CoveredBakedModel extends AttachableBakedModel {
 /*
     protected final List<BakedQuad> attachCoverQuads(List<BakedQuad> quads, BlockState state, Direction side,
                                                      @NotNull IModelData data) {
-        BlockEntityBase<?> tile = data.getData(AntimatterProperties.TILE_PROPERTY);
+        BlockEntityBase<?> tile = data.getData(GTLibProperties.TILE_PROPERTY);
         if (tile == null)
             return quads;
         CoverHandler<?> covers = tile.getCapability(GTLibCaps.COVERABLE_HANDLER_CAPABILITY, side)
                 .filter(t -> t instanceof CoverHandler).map(t -> (CoverHandler) t).orElse(null);
         if (covers == null)
             return quads;
-        Texture tex = data.hasProperty(AntimatterProperties.MULTI_MACHINE_TEXTURE)
-                ? data.getData(AntimatterProperties.MULTI_MACHINE_TEXTURE).apply(side)
-                : data.getData(AntimatterProperties.MACHINE_TEXTURE).apply(side);
+        Texture tex = data.hasProperty(GTLibProperties.MULTI_MACHINE_TEXTURE)
+                ? data.getData(GTLibProperties.MULTI_MACHINE_TEXTURE).apply(side)
+                : data.getData(GTLibProperties.MACHINE_TEXTURE).apply(side);
         ICover c = covers.get(side);
         if (c.isEmpty())
             return quads;

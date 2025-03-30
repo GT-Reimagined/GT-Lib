@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.proxy;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.block.BlockFakeTile;
 import org.gtreimagined.gtlib.block.BlockFrame;
 import org.gtreimagined.gtlib.block.BlockStorage;
@@ -42,7 +42,7 @@ public class ClientHandler implements IProxyHandler {
 
     @SuppressWarnings("ConstantConditions")
     public ClientHandler() {
-        GTTextureStitcher.addStitcher(event -> AntimatterAPI.all(CoverFactory.class).forEach(cover -> {
+        GTTextureStitcher.addStitcher(event -> GTAPI.all(CoverFactory.class).forEach(cover -> {
             if (cover == ICover.emptyFactory)
                 return;
             for (ResourceLocation r : cover.getTextures()) {
@@ -62,44 +62,44 @@ public class ClientHandler implements IProxyHandler {
     @SuppressWarnings({"unchecked", "unused"})
     public static void setup() {
         MaterialType.buildTooltips();
-        AntimatterAPI.all(Material.class, Material::setChemicalFormula);
+        GTAPI.all(Material.class, Material::setChemicalFormula);
         /* Register screens. */
-        AntimatterAPI.runLaterClient(() -> {
+        GTAPI.runLaterClient(() -> {
             Set<ResourceLocation> registered = new ObjectOpenHashSet<>();
-            AntimatterAPI.all(MenuHandler.class, h -> {
+            GTAPI.all(MenuHandler.class, h -> {
                 if (!registered.contains(ForgeRegistries.CONTAINERS.getKey(h.getContainerType()))) {
                     registered.add(ForgeRegistries.CONTAINERS.getKey(h.getContainerType()));
-                    MenuScreens.register(h.getContainerType(), AntimatterAPI.get(MenuScreens.ScreenConstructor.class, h.screenID(), h.screenDomain()));
+                    MenuScreens.register(h.getContainerType(), GTAPI.get(MenuScreens.ScreenConstructor.class, h.screenID(), h.screenDomain()));
                 }
             });
         });
         /* Set up render types. */
-        AntimatterAPI.runLaterClient(() -> {
-            AntimatterAPI.all(BlockMachine.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockFakeTile.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockMultiMachine.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockOre.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockPipe.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockStorage.class).stream().filter(b -> b.getType() == GTMaterialTypes.RAW_ORE_BLOCK)
+        GTAPI.runLaterClient(() -> {
+            GTAPI.all(BlockMachine.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
+            GTAPI.all(BlockFakeTile.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
+            GTAPI.all(BlockMultiMachine.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
+            GTAPI.all(BlockOre.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
+            GTAPI.all(BlockPipe.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
+            GTAPI.all(BlockStorage.class).stream().filter(b -> b.getType() == GTMaterialTypes.RAW_ORE_BLOCK)
                     .forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockFrame.class).stream().filter(b -> b.getType() == GTMaterialTypes.FRAME)
+            GTAPI.all(BlockFrame.class).stream().filter(b -> b.getType() == GTMaterialTypes.FRAME)
                     .forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(BlockSurfaceRock.class).stream().forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
-            AntimatterAPI.all(GTFluid.class).forEach(f -> {
+            GTAPI.all(BlockSurfaceRock.class).stream().forEach(b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));
+            GTAPI.all(GTFluid.class).forEach(f -> {
                 ModelUtils.setRenderLayer(f.getFluid(), RenderType.translucent());
                 ModelUtils.setRenderLayer(f.getFlowingFluid(), RenderType.translucent());
             });
         });
-        AntimatterAPI.all(Machine.class).stream().filter(Machine::renderAsTesr).filter(Machine::renderContainerLiquids).map(Machine::getTileType).distinct().forEach(i -> BlockEntityRenderers.register(i, MachineTESR::new));
+        GTAPI.all(Machine.class).stream().filter(Machine::renderAsTesr).filter(Machine::renderContainerLiquids).map(Machine::getTileType).distinct().forEach(i -> BlockEntityRenderers.register(i, MachineTESR::new));
     }
 
     public static void onItemColorHandler(ItemColors colors) {
-        for (Item item : AntimatterAPI.all(Item.class)) {
+        for (Item item : GTAPI.all(Item.class)) {
             if (item instanceof IColorHandler h && h.registerColorHandlers()) {
                 colors.register((stack, i) -> h.getItemColor(stack, null, i), item);
             }
         }
-        for (Block block : AntimatterAPI.all(Block.class)) {
+        for (Block block : GTAPI.all(Block.class)) {
             if (block instanceof IColorHandler h && h.registerColorHandlers()) {
                 colors.register((stack, i) -> h.getItemColor(stack, null, i),
                         block.asItem());
@@ -108,7 +108,7 @@ public class ClientHandler implements IProxyHandler {
     }
 
     public static void onBlockColorHandler(BlockColors colors) {
-        for (Block block : AntimatterAPI.all(Block.class)) {
+        for (Block block : GTAPI.all(Block.class)) {
             if (block instanceof IColorHandler h && h.registerColorHandlers())
                 colors.register(h::getBlockColor, block);
         }

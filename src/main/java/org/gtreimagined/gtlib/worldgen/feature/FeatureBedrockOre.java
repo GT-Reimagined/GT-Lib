@@ -1,12 +1,12 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return AntimatterConfig.BEDROCK_VEINS.get() && !getRegistry().isEmpty();
+        return GTLibConfig.BEDROCK_VEINS.get() && !getRegistry().isEmpty();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, AntimatterConfiguredFeatures.BEDROCK_VEINS);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.BEDROCK_VEINS);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
         BlockPos pos = ctxt.origin();
         Random rand = ctxt.random();
 
-        List<WorldGenBedrockVein> veins = AntimatterWorldGenerator.all(WorldGenBedrockVein.class, world.getLevel().dimension());
+        List<WorldGenBedrockVein> veins = GTLibWorldGenerator.all(WorldGenBedrockVein.class, world.getLevel().dimension());
         if (veins.isEmpty()) return false;
         for (WorldGenBedrockVein vein : veins) {
             if(generateBedrockVein(vein, world, pos.getX(), pos.getZ(), pos.getX() + 16, pos.getZ() + 16, rand)){
@@ -92,13 +92,13 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
                         if (tFlowers && (!tRocks || random.nextInt(4) > 0) && vein.flower.canSurvive(vein.flower.defaultBlockState(), level, offset)){
                             level.setBlock(offset, vein.flower.defaultBlockState(), 0);
                         } else if (tRocks){
-                            if (!below.isAir() && below != WorldGenHelper.WATER_STATE && AntimatterConfig.STONE_LAYER_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()) {
+                            if (!below.isAir() && below != WorldGenHelper.WATER_STATE && GTLibConfig.STONE_LAYER_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()) {
                                 WorldGenHelper.setRock(level, offset, vein.material, Blocks.BEDROCK.defaultBlockState(), 1);
                             }
                         }
                     }
                 } catch(Throwable e) {
-                    Antimatter.LOGGER.error(e);
+                    GTLib.LOGGER.error(e);
                 }
             }
         }
@@ -171,7 +171,7 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
 
             return true;
         } catch(Throwable e) {
-            Antimatter.LOGGER.error(e);
+            GTLib.LOGGER.error(e);
         }
         return false;
     }

@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.tool.armor;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.IMaterialTag;
 import org.gtreimagined.gtlib.material.Material;
@@ -71,7 +71,7 @@ public class GTArmorType implements IGTObject {
         this.slot = slot;
         this.event = SoundEvents.ARMOR_EQUIP_IRON;
         this.overlayLayers = 0;
-        AntimatterAPI.register(GTArmorType.class, this);
+        GTAPI.register(GTArmorType.class, this);
     }
 
     public List<IGTArmor> instantiateTools() {
@@ -125,7 +125,7 @@ public class GTArmorType implements IGTObject {
     }
 
     public ItemStack getToolStack(Material primary) {
-        IGTArmor armor = AntimatterAPI.get(IGTArmor.class, primary.getId() + "_" + id, domain);
+        IGTArmor armor = GTAPI.get(IGTArmor.class, primary.getId() + "_" + id, domain);
         return Objects.requireNonNull(armor).asItemStack();
     }
 

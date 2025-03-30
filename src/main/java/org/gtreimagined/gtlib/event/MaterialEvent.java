@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
@@ -173,7 +173,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     public T setAllowedTypes(GTToolType... toolTypes) {
         if (!has(MaterialTags.TOOLS)) return (T) this;
         ToolData data = MaterialTags.TOOLS.get(this.material);
-        List<GTToolType> toolTypesList = toolTypes.length > 0 ? Arrays.asList(toolTypes) : AntimatterAPI.all(GTToolType.class);
+        List<GTToolType> toolTypesList = toolTypes.length > 0 ? Arrays.asList(toolTypes) : GTAPI.all(GTToolType.class);
         MaterialTags.TOOLS.add(this.material, new ToolData(data.toolDamage(), data.toolSpeed(), data.toolDurability(), data.toolQuality(), data.handleMaterial(), data.toolEnchantment(), toolTypesList));
         return (T) this;
     }
@@ -184,7 +184,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
 
     public T addArmor(int[] armor, float toughness, float knockbackResistance, int armorDurabilityFactor, ImmutableMap<Enchantment, Integer> toolEnchantment) {
         if (armor.length != 4) {
-            Antimatter.LOGGER.info("Material " + this.material.getId() + " unable to add armor, protection array must have exactly 4 values");
+            GTLib.LOGGER.info("Material " + this.material.getId() + " unable to add armor, protection array must have exactly 4 values");
             return (T) this;
         }
         if (has(GTMaterialTypes.INGOT)) flags(GTMaterialTypes.PLATE);
@@ -350,7 +350,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         ImmutableMap<Enchantment, Integer> toolEnchantments = ImmutableMap.of();
         Material handleMaterial;
         public ToolBuiler(){
-            allowedToolTypes = AntimatterAPI.all(GTToolType.class);
+            allowedToolTypes = GTAPI.all(GTToolType.class);
             handleMaterial = Wood;
         }
 
@@ -368,7 +368,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
             }
             if (toolTypes.contains(GTTools.WRENCH) && !toolTypes.contains(GTTools.WRENCH_ALT)) toolTypes.add(GTTools.WRENCH_ALT);
             allowedToolTypes = ImmutableList.copyOf(toolTypes);
-            int toolDurability = AntimatterAPI.isModLoaded(Ref.MOD_TFC) ? this.toolDurability * 4 : this.toolDurability;
+            int toolDurability = GTAPI.isModLoaded(Ref.MOD_TFC) ? this.toolDurability * 4 : this.toolDurability;
             return MaterialEvent.this.buildTool(new ToolData(toolDamage, toolSpeed, toolDurability, toolQuality, handleMaterial, toolEnchantments, allowedToolTypes));
         }
     }

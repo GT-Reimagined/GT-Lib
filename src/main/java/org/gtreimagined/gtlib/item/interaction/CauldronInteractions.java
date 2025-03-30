@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.item.interaction;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
 import org.gtreimagined.gtlib.material.MaterialItem;
 import net.minecraft.core.cauldron.CauldronInteraction;
@@ -16,6 +16,6 @@ public class CauldronInteractions {
         DUST_IMPURE.all().stream().filter(t -> t.has(DUST)).map(t -> DUST_IMPURE.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
         DUST_PURE.all().stream().filter(t -> t.has(DUST)).map(t -> DUST_PURE.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
         CRUSHED.all().stream().filter(t -> t.has(CRUSHED_PURIFIED) && t.has(DUST)).map(t -> CRUSHED.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
-        AntimatterAPI.all(ItemFluidCell.class, t -> CauldronInteraction.WATER.put(t, ItemFluidCell::interactWithCauldron));
+        GTAPI.all(ItemFluidCell.class, t -> CauldronInteraction.WATER.put(t, ItemFluidCell::interactWithCauldron));
     }
 }

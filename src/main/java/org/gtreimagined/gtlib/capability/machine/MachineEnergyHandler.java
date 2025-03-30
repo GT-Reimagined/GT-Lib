@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.Dispatch;
@@ -69,7 +69,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
     @Override
     protected boolean checkVoltage(long voltage) {
         if (voltage > this.getInputVoltage()) {
-            if (AntimatterConfig.MACHINES_EXPLODE.get()) {
+            if (GTLibConfig.MACHINES_EXPLODE.get()) {
                 if (!exploded){
                     Utils.createExplosion(this.tile.getLevel(), tile.getBlockPos(), 4.0F, Explosion.BlockInteraction.DESTROY);
                     tile.getLevel().playSound(null, tile.getBlockPos(), Ref.MACHINE_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);

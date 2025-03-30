@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.recipe;
 
 import com.google.common.collect.ImmutableMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.recipe.ingredient.PropertyIngredient;
 import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
@@ -52,7 +52,7 @@ public class RecipeBuilders {
         @Override
         public ItemStack build(CraftingContainer inv, MaterialRecipe.Result mats) {
             int dye = ((DyeColor) mats.mats.get("secondary")).getMaterialColor().col;
-            IGTTool type = AntimatterAPI.get(IGTTool.class, id, Ref.SHARED_ID);
+            IGTTool type = GTAPI.get(IGTTool.class, id, Ref.SHARED_ID);
             ItemStack stack = type.asItemStack(type.getAntimatterItemTier().getPrimary(), NULL);
             stack.getOrCreateTagElement(Ref.TAG_TOOL_DATA).putInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR, dye);
             return stack;

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.material;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
@@ -40,7 +40,7 @@ public class TextureSet implements IGTObject {
         this.domain = domain;
         this.id = id;
         this.force = force;
-        AntimatterAPI.register(TextureSet.class, this);
+        GTAPI.register(TextureSet.class, this);
     }
 
     @Override

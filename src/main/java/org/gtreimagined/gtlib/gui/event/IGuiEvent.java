@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.gui.event;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
@@ -55,7 +55,7 @@ public interface IGuiEvent extends IMachineEvent {
          * Default method for simplicity.
          */
         default void register() {
-            AntimatterAPI.register(IGuiEventFactory.class, this);
+            GTAPI.register(IGuiEventFactory.class, this);
         }
 
         /**
@@ -80,7 +80,7 @@ public interface IGuiEvent extends IMachineEvent {
          * @return an IGuiEvent instance.
          */
         static IGuiEvent read(FriendlyByteBuf buffer) {
-            IGuiEventFactory ev = AntimatterAPI.get(IGuiEventFactory.class, buffer.readUtf(32767));
+            IGuiEventFactory ev = GTAPI.get(IGuiEventFactory.class, buffer.readUtf(32767));
             return ev.factory().apply(ev, buffer);
         }
     }

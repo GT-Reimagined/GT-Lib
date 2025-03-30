@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import lombok.Setter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.material.IMaterialTag;
@@ -370,7 +370,7 @@ public class GTToolType implements IGTObject {
 
     public ItemStack getToolStack(Material primary, Material secondary) {
         String id = simple ? primary.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IGTTool.class, id, domain)).asItemStack(primary, secondary);
+        return Objects.requireNonNull(GTAPI.get(IGTTool.class, id, domain)).asItemStack(primary, secondary);
     }
 
     public ItemStack getToolStack(Material primary) {
@@ -389,7 +389,7 @@ public class GTToolType implements IGTObject {
             }
         }
         String id = simple ? primary.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IGTTool.class, id, domain)).asItemStack(primary, Material.NULL);
+        return Objects.requireNonNull(GTAPI.get(IGTTool.class, id, domain)).asItemStack(primary, Material.NULL);
     }
 
     public Item getToolItem(Material material){
@@ -397,7 +397,7 @@ public class GTToolType implements IGTObject {
             return replacements.get(material.getId()).get();
         }
         String id = simple ? material.getId() + "_" + this.id : this.id;
-        return Objects.requireNonNull(AntimatterAPI.get(IGTTool.class, id, domain)).getItem();
+        return Objects.requireNonNull(GTAPI.get(IGTTool.class, id, domain)).getItem();
     }
 
     @Override

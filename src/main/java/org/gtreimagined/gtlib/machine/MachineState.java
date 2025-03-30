@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.machine;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.util.StringRepresentable;
 
@@ -32,7 +32,7 @@ public enum MachineState implements IGTObject, StringRepresentable {
         this.recipeCheck = recipeCheck;
         this.loopTick = loopTick;
         this.renderUpdate = renderUpdate;
-        AntimatterAPI.register(MachineState.class, this);
+        GTAPI.register(MachineState.class, this);
     }
 
     public int getOverlayId() {

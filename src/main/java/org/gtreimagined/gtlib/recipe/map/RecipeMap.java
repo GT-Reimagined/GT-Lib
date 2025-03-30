@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.integration.jeirei.renderer.IRecipeInfoRenderer;
@@ -97,7 +97,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
         this.domainCreatedWith = domain;
         this.builder = builder;
         this.builder.setMap(this);
-        AntimatterAPI.register(IRecipeMap.class, this);
+        GTAPI.register(IRecipeMap.class, this);
     }
 
     // In the case of split stacks, merge the items, 2 aluminium dust in separate
@@ -159,7 +159,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
      */
     public RecipeMap<B> setGuiData(GuiData gui) {
         this.GUI = gui;
-        AntimatterAPI.registerJEICategory(this, this.GUI);
+        GTAPI.registerJEICategory(this, this.GUI);
         return this;
     }
 
@@ -172,7 +172,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
      */
     public RecipeMap<B> setGuiData(GuiData gui, Machine<?> machine) {
         this.GUI = gui;
-        AntimatterAPI.registerJEICategory(this, this.GUI, machine, machine.getFirstTier(), true);
+        GTAPI.registerJEICategory(this, this.GUI, machine, machine.getFirstTier(), true);
         return this;
     }
 
@@ -283,7 +283,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
 
         // Recipe r = recurseItemTreeFind(items, map, rr -> true);
         // if (r != null) {
-        // Antimatter.LOGGER.warn("Recipe collision, adding both but only first is
+        // GTLib.LOGGER.warn("Recipe collision, adding both but only first is
         // available.");
         // }
         if (recurseItemTreeAdd(recipe, items, LOOKUP, 0, 0)) {
@@ -548,7 +548,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
         // Find recipe.
         // long current = System.nanoTime();
         IRecipe r = recurseItemTreeFind(list, LOOKUP, canHandle);
-        // Antimatter.LOGGER.info("Time to lookup (µs): " + ((System.nanoTime() -
+        // GTLib.LOGGER.info("Time to lookup (µs): " + ((System.nanoTime() -
         // current) / 1000));
 
         return r;

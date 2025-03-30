@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
@@ -106,8 +106,8 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void processBlocks(String domain) {
-        AntimatterAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onBlockModelBuild(b, this));
-        AntimatterAPI.all(GTFluid.class, domain).forEach(f -> state(f.getFluidBlock(), getBuilder(f.getFluidBlock()).texture("particle", f.getAttributes().getStillTexture())));
+        GTAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onBlockModelBuild(b, this));
+        GTAPI.all(GTFluid.class, domain).forEach(f -> state(f.getFluidBlock(), getBuilder(f.getFluidBlock()).texture("particle", f.getAttributes().getStillTexture())));
     }
 
     public GTBlockModelBuilder getBuilder(Block block) {

@@ -6,8 +6,8 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.TagUtils;
-import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
 import net.minecraft.core.BlockPos;
@@ -37,7 +37,7 @@ import java.util.Random;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
-import static org.gtreimagined.gtlib.Antimatter.LOGGER;
+import static org.gtreimagined.gtlib.GTLib.LOGGER;
 import static org.gtreimagined.gtlib.worldgen.WorldGenHelper.ORE_PREDICATE;
 
 public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
@@ -63,7 +63,7 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, AntimatterConfiguredFeatures.VANILLA_ORES);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VANILLA_ORES);
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> placer) {
@@ -77,7 +77,7 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
         final int chunkCornerZ = chunkZ * 16;
         final int worldMinY = world.dimensionType().minY();
         final int worldMaxY = world.dimensionType().minY() + world.dimensionType().height();
-        List<WorldGenVanillaOre> vanillaOres = AntimatterWorldGenerator.all(WorldGenVanillaOre.class, world.getLevel().dimension());
+        List<WorldGenVanillaOre> vanillaOres = GTLibWorldGenerator.all(WorldGenVanillaOre.class, world.getLevel().dimension());
         int spawned = 0;
         for (WorldGenVanillaOre vanillaOre : vanillaOres) {
             if (!vanillaOre.primary.has(vanillaOre.materialType) || (vanillaOre.secondary != Material.NULL && !vanillaOre.secondary.has(vanillaOre.secondaryType))) continue;

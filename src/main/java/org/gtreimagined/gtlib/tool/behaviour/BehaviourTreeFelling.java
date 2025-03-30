@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.behaviour.IBlockDestroyed;
 import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import org.gtreimagined.gtlib.util.Utils;
@@ -49,7 +49,7 @@ public class BehaviourTreeFelling implements IBlockDestroyed<IBasicGTTool> {
 
     @Override
     public boolean onBlockDestroyed(IBasicGTTool instance, ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
-        if (!AntimatterConfig.AXE_TIMBER.get()) return true;
+        if (!GTLibConfig.AXE_TIMBER.get()) return true;
         if (entity instanceof Player player && !world.isClientSide) {
             if (instance.genericIsCorrectToolForDrops(stack, state) && !player.isCrouching()) { // Only when player isn't shifting/crouching this ability activates
                 if (state.is(BlockTags.LOGS)) {

@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.client.model.loader;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.client.model.GTModel;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -28,7 +28,7 @@ public class DefaultModelLoader extends GTModelLoader {
     }
 
     public GTModel onModelLoadingException(Exception e) {
-        Antimatter.LOGGER.error("ModelLoader Exception for " + getLoc().toString());
+        GTLib.LOGGER.error("ModelLoader Exception for " + getLoc().toString());
         e.printStackTrace();
         return new GTModel(ModelUtils.getMissingModel());
     }

@@ -11,7 +11,7 @@ import carbonconfiglib.impl.ReloadMode;
 import carbonconfiglib.utils.AutomationType;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-public class AntimatterConfig {
+public class GTLibConfig {
 
 
     /**
@@ -126,13 +126,13 @@ public class AntimatterConfig {
         MACHINES_EXPLODE = gameplay.addBool("machines_explode", true, "Enable machines exploding on overvoltage - Default: true");
         EXPORT_DEFAULT_RECIPES = gameplay.addBool("export_default_recipes", false, "Exports default crafting and machine recipes to exported in the root minecraft folder. - Default: false");
         RAIN_EXPLODES_MACHINES = gameplay.addBool("rain_explodes_machines", true, "Enable machines exploding when it's raining - Default: true");
-        PLAY_CRAFTING_SOUNDS = gameplay.addBool("play_crafting_sounds", true, "Hear various crafting sounds when you craft with any of Antimatter's tools that has a custom SoundType. Default: true");
+        PLAY_CRAFTING_SOUNDS = gameplay.addBool("play_crafting_sounds", true, "Hear various crafting sounds when you craft with any of GTLib's tools that has a custom SoundType. Default: true");
 
         ConfigSection treefelling = gameplay.addSubSection("treefelling");
         SMARTER_TREE_DETECTION = treefelling.addBool("smarter_tree_detection", false,"Smart tree detection, instead of just going up in a column, it searches surrounding connected blocks too. Default: false",
                 "Note: may have issues discerning between trees and placed down wood, use at your own risk.");
-        AXE_TIMBER = treefelling.addBool("axe_timber", true, "Allow Antimatter Axe types to fell trees - Default: true");
-        AXE_TIMBER_MAX = treefelling.addInt("axe_timber_max", 150, "Max height of a column of logs an Antimatter Axe type can fell - Default: 150")
+        AXE_TIMBER = treefelling.addBool("axe_timber", true, "Allow GTLib Axe types to fell trees - Default: true");
+        AXE_TIMBER_MAX = treefelling.addInt("axe_timber_max", 150, "Max height of a column of logs an GTLib Axe type can fell - Default: 150")
                 .setMin(1).setMax(2304);
         CONFIG_COMMON = CarbonConfig.CONFIGS.createConfig(config);
         CONFIG_COMMON.register();

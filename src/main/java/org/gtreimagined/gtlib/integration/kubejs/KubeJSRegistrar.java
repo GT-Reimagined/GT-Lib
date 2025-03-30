@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.integration.kubejs;
 
 import dev.latvian.mods.kubejs.KubeJSPaths;
 import dev.latvian.mods.kubejs.server.ServerScriptManager;
-import org.gtreimagined.gtlib.AntimatterMod;
+import org.gtreimagined.gtlib.GTMod;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
@@ -20,7 +20,7 @@ import java.nio.file.LinkOption;
 
 ;
 
-public class KubeJSRegistrar extends AntimatterMod {
+public class KubeJSRegistrar extends GTMod {
     public KubeJSRegistrar() {
         super();
         GTLibDynamics.clientProvider(Ref.MOD_KJS, () -> new GTBlockStateProvider(Ref.MOD_KJS, "KubeJS BlockStates"));

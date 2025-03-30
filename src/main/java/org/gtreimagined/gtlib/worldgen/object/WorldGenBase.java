@@ -39,7 +39,7 @@ public class WorldGenBase<T extends WorldGenBase<?>> implements IGTObject {
         this.id = id;
         this.dimensions = dimensions.stream().map(ResourceKey::location).collect(Collectors.toCollection(ObjectOpenHashSet::new));
         this.toRegister = c;
-        //AntimatterWorldGenerator.register(c, this);
+        //GTLibWorldGenerator.register(c, this);
     }
 
     public WorldGenBase<T> asCustom() {

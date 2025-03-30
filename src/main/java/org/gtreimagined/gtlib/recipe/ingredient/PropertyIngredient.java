@@ -10,7 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.IMaterialTag;
 import org.gtreimagined.gtlib.material.Material;
@@ -232,7 +232,7 @@ public class PropertyIngredient extends Ingredient {
         public static final ResourceLocation ID = new ResourceLocation(Ref.ID, "material");
 
         public static void init(){
-            AntimatterAPI.register(IIngredientSerializer.class, "material", Ref.ID, INSTANCE);
+            GTAPI.register(IIngredientSerializer.class, "material", Ref.ID, INSTANCE);
         }
 
         @Override
@@ -241,7 +241,7 @@ public class PropertyIngredient extends Ingredient {
             int size = buffer.readVarInt();
             Set<MaterialTypeItem<?>> items = new ObjectArraySet<>(size);
             for (int i = 0; i < size; i++) {
-                items.add(AntimatterAPI.get(MaterialTypeItem.class, buffer.readUtf()));
+                items.add(GTAPI.get(MaterialTypeItem.class, buffer.readUtf()));
             }
             size = buffer.readVarInt();
             Set<TagKey<Item>> t = new ObjectArraySet<>(size);
@@ -251,17 +251,17 @@ public class PropertyIngredient extends Ingredient {
             boolean inverse = buffer.readBoolean();
             IMaterialTag[] tags = new IMaterialTag[buffer.readVarInt()];
             for (int i = 0; i < tags.length; i++) {
-                tags[i] = AntimatterAPI.get(IMaterialTag.class, buffer.readUtf());
+                tags[i] = GTAPI.get(IMaterialTag.class, buffer.readUtf());
             }
             size = buffer.readVarInt();
             Object2BooleanMap<GTToolType> map = new Object2BooleanOpenHashMap<>(size);
             for (int i = 0; i < size; i++) {
-                map.put(AntimatterAPI.get(GTToolType.class, buffer.readUtf(), buffer.readUtf()), buffer.readBoolean());
+                map.put(GTAPI.get(GTToolType.class, buffer.readUtf(), buffer.readUtf()), buffer.readBoolean());
             }
             size = buffer.readVarInt();
             Set<Material> fixedMats = new ObjectArraySet<>(size);
             for (int i = 0; i < size; i++) {
-                fixedMats.add(AntimatterAPI.get(Material.class, buffer.readUtf()));
+                fixedMats.add(GTAPI.get(Material.class, buffer.readUtf()));
             }
             size = buffer.readVarInt();
             Set<ItemLike> itemProviders = new ObjectArraySet<>(size);
@@ -282,7 +282,7 @@ public class PropertyIngredient extends Ingredient {
         public PropertyIngredient parse(JsonObject json) {
             JsonArray arr = json.getAsJsonArray("material_type");
             Set<MaterialTypeItem<?>> items = new ObjectArraySet<>(arr.size());
-            arr.forEach(el -> items.add(AntimatterAPI.get(MaterialTypeItem.class, el.getAsString())));
+            arr.forEach(el -> items.add(GTAPI.get(MaterialTypeItem.class, el.getAsString())));
             arr = json.getAsJsonArray("item_tags");
             Set<TagKey<Item>> itemTags = new ObjectArraySet<>(arr.size());
             arr.forEach(el -> itemTags.add(TagUtils.getItemTag(new ResourceLocation(el.getAsString()))));
@@ -296,7 +296,7 @@ public class PropertyIngredient extends Ingredient {
             boolean inverse = json.get("inverse").getAsBoolean();
             IMaterialTag[] tags;
             if (json.has("tags")) {
-                tags = Streams.stream(GsonHelper.getAsJsonArray(json, "tags")).map(t -> AntimatterAPI.get(IMaterialTag.class, t.getAsString())).toArray(IMaterialTag[]::new);
+                tags = Streams.stream(GsonHelper.getAsJsonArray(json, "tags")).map(t -> GTAPI.get(IMaterialTag.class, t.getAsString())).toArray(IMaterialTag[]::new);
             } else {
                 tags = new IMaterialTag[0];
             }
@@ -304,12 +304,12 @@ public class PropertyIngredient extends Ingredient {
             if (json.has("tools")) {
                 for (Map.Entry<String, JsonElement> entry : GsonHelper.getAsJsonObject(json, "tools").entrySet()) {
                     ResourceLocation location = new ResourceLocation(entry.getKey());
-                    map.put(AntimatterAPI.get(GTToolType.class, location.getPath(), location.getNamespace()), entry.getValue().getAsBoolean());
+                    map.put(GTAPI.get(GTToolType.class, location.getPath(), location.getNamespace()), entry.getValue().getAsBoolean());
                 }
             }
             Set<Material> fixedMats = Collections.emptySet();
             if (json.has("fixed")) {
-                fixedMats = Streams.stream(GsonHelper.getAsJsonArray(json, "fixed")).map(t -> AntimatterAPI.get(Material.class, t.getAsString())).collect(Collectors.toSet());
+                fixedMats = Streams.stream(GsonHelper.getAsJsonArray(json, "fixed")).map(t -> GTAPI.get(Material.class, t.getAsString())).collect(Collectors.toSet());
             }
             return PropertyIngredient.build(items, itemTags, items2, ingId, tags, fixedMats, inverse, map);
         }

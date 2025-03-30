@@ -49,7 +49,7 @@ public class WorldGenStone extends WorldGenBase<WorldGenStone> {
     @Override
     public WorldGenStone build() {
         super.build();
-        this.block = AntimatterAPI.get(BlockStone.class, type);
+        this.block = GTAPI.get(BlockStone.class, type);
         if (block == null) throw new IllegalArgumentException("WorldGenStone - " + getId() + ": was given a invalid stone type");
         this.stone = block.getDefaultState();
         this.CHECKED_SEEDS = new LongOpenHashSet();

@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -56,13 +56,13 @@ public class DynamicDataPack implements PackResources {
         JsonObject recipeJson = recipe.serializeRecipe();
         Path parent = FMLPaths.CONFIGDIR.get().getParent()
                 .resolve("dumped/antimatter-dynamic-data/data");
-        if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get()){
+        if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
             writeJson(recipe.getId(), "recipes", parent, recipeJson);
         }
         DATA.put(getRecipeLog(recipe.getId()), recipeJson);
         if (recipe.serializeAdvancement() != null) {
             JsonObject advancement = recipe.serializeAdvancement();
-            if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get()){
+            if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
                 writeJson(recipe.getAdvancementId(), "advancements", parent, advancement);
             }
             DATA.put(getAdvancementLoc(Objects.requireNonNull(recipe.getAdvancementId())), advancement);

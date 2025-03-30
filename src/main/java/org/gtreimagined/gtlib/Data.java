@@ -59,8 +59,8 @@ public class Data {
 
     public static final MobType CREEPER = new MobType();
 
-    public static Enchantment ENERGY_EFFICIENCY = AntimatterAPI.register(Enchantment.class, "energy_efficiency", Ref.ID, new ElectricEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentCategory.BREAKABLE, EquipmentSlot.MAINHAND));
-    public static Enchantment IMPLOSION = AntimatterAPI.register(Enchantment.class, "implosion", Ref.ID, new DamageEnchantment(Enchantment.Rarity.UNCOMMON, 2, EquipmentSlot.MAINHAND){
+    public static Enchantment ENERGY_EFFICIENCY = GTAPI.register(Enchantment.class, "energy_efficiency", Ref.ID, new ElectricEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentCategory.BREAKABLE, EquipmentSlot.MAINHAND));
+    public static Enchantment IMPLOSION = GTAPI.register(Enchantment.class, "implosion", Ref.ID, new DamageEnchantment(Enchantment.Rarity.UNCOMMON, 2, EquipmentSlot.MAINHAND){
         @Override
         public float getDamageBonus(int level, MobType type) {
             return type == CREEPER ? (float)level * 2.5F : 0.0F;
@@ -137,12 +137,12 @@ public class Data {
                         .addButton(152, 63, APAD_RIGHT, false);
             });
         }
-        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "output"), new ResourceLocation(Ref.ID, "output"));
-        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "input"), new ResourceLocation(Ref.ID, "input"));
-        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "muffler"), new ResourceLocation(Ref.ID, "muffler"));
-        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "dynamo"), new ResourceLocation(Ref.ID, "dynamo"));
-        AntimatterRemapping.remapCover(new ResourceLocation("antimatter", "energy"), new ResourceLocation(Ref.ID, "energy"));
-        AntimatterRemapping.remap(new ResourceLocation("antimatter", "fluid_icon"), new ResourceLocation(Ref.ID, "fluid_icon"));
+        GTRemapping.remapCover(new ResourceLocation("antimatter", "output"), new ResourceLocation(Ref.ID, "output"));
+        GTRemapping.remapCover(new ResourceLocation("antimatter", "input"), new ResourceLocation(Ref.ID, "input"));
+        GTRemapping.remapCover(new ResourceLocation("antimatter", "muffler"), new ResourceLocation(Ref.ID, "muffler"));
+        GTRemapping.remapCover(new ResourceLocation("antimatter", "dynamo"), new ResourceLocation(Ref.ID, "dynamo"));
+        GTRemapping.remapCover(new ResourceLocation("antimatter", "energy"), new ResourceLocation(Ref.ID, "energy"));
+        GTRemapping.remap(new ResourceLocation("antimatter", "fluid_icon"), new ResourceLocation(Ref.ID, "fluid_icon"));
     }
 
     public static void postInit() {

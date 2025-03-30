@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
+import org.gtreimagined.gtlib.GTLibConfig;
+import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.vein.WorldGenVeinLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -29,7 +29,7 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return AntimatterConfig.ORE_VEINS.get() && getRegistry().size() > 0;
+        return GTLibConfig.ORE_VEINS.get() && getRegistry().size() > 0;
     }
 
     @Override
@@ -49,10 +49,10 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
 
     public static List<Tuple<Integer, Integer>> getVeinSeeds(int chunkX, int chunkZ) {
         // Determine bounding box on how far out to check for ore veins affecting this chunk
-        int westX = chunkX - (AntimatterConfig.ORE_VEIN_MAX_SIZE.get() / 16);
-        int eastX = chunkX + (AntimatterConfig.ORE_VEIN_MAX_SIZE.get() / 16 + 1); // Need to add 1 since it is compared using a <
-        int northZ = chunkZ - (AntimatterConfig.ORE_VEIN_MAX_SIZE.get() / 16);
-        int southZ = chunkZ + (AntimatterConfig.ORE_VEIN_MAX_SIZE.get() / 16 + 1);
+        int westX = chunkX - (GTLibConfig.ORE_VEIN_MAX_SIZE.get() / 16);
+        int eastX = chunkX + (GTLibConfig.ORE_VEIN_MAX_SIZE.get() / 16 + 1); // Need to add 1 since it is compared using a <
+        int northZ = chunkZ - (GTLibConfig.ORE_VEIN_MAX_SIZE.get() / 16);
+        int southZ = chunkZ + (GTLibConfig.ORE_VEIN_MAX_SIZE.get() / 16 + 1);
         List<Tuple<Integer, Integer>> res = new ObjectArrayList<>();
         // Search for oreVein seeds and add to the list;
         for (int x = westX; x < eastX; x++) {
@@ -67,6 +67,6 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, AntimatterConfiguredFeatures.VEIN_LAYER);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VEIN_LAYER);
     }
 }

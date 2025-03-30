@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.blockentity;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.capability.Dispatch;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public abstract class BlockEntityBase<T extends BlockEntityBase<T>> extends Bloc
             BlockEntity finalEntity = entity;
             return blockEntityCache.get(side, () -> finalEntity);
         } catch (ExecutionException e) {
-            Antimatter.LOGGER.error(e);
+            GTLib.LOGGER.error(e);
             return null;
         }
     }

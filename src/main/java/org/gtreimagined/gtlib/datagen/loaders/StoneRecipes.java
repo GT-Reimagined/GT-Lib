@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.datagen.loaders;
 
 import com.google.common.collect.ImmutableMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.ForgeTags;
 import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
@@ -46,10 +46,10 @@ public class StoneRecipes {
                 of('T', Items.REDSTONE_TORCH, 'Q', ForgeTags.GEMS_QUARTZ_ALL, 'S', TagUtils.getForgelikeItemTag("stone")), " T ", "TQT", "SSS");
         provider.addItemRecipe(output, "stones", Items.SAND, of('S', DUST.getMaterialTag(Sand)), "SS", "SS");
         provider.addItemRecipe(output, "stones", Items.RED_SAND, of('S', DUST.getMaterialTag(RedSand)), "SS", "SS");
-        if (AntimatterAPI.isModLoaded(Ref.MOD_AE)){
+        if (GTAPI.isModLoaded(Ref.MOD_AE)){
             provider.removeRecipe(new ResourceLocation(Ref.MOD_AE, "misc/vanilla_comparator"));
         }
-        AntimatterAPI.all(StoneType.class).forEach(s -> {
+        GTAPI.all(StoneType.class).forEach(s -> {
             Material m = s.getMaterial();
             if (s instanceof CobbleStoneType c){
                 SimpleCookingRecipeBuilder.smelting(Ingredient.of(c.getBlock("cobble")), c.getBlock(""), 0.1F, 200).unlockedBy("has_cobble", provider.hasSafeItem(c.getBlock("cobble"))).save(output, m.getId() + "_stone");
@@ -78,11 +78,11 @@ public class StoneRecipes {
                 }
                 for (String type : CobbleStoneType.SUFFIXES){
                     String id = (type.isEmpty() ? c.getId() : c.getId() + "_" + type) + "_cover";
-                    Item cover = AntimatterAPI.get(Item.class, id, Ref.SHARED_ID);
+                    Item cover = GTAPI.get(Item.class, id, Ref.SHARED_ID);
                     if (cover == null) continue;
                     SingleItemRecipeBuilder.stonecutting(Ingredient.of(c.getBlock(type)), cover, 4).unlockedBy("has_stone", provider.hasSafeItem(c.getBlock(type))).save(output, id);
                     if (type.equals("bricks") || type.equals("smooth") || type.equals("bricks_chiseled")) {
-                        Item coverStone = AntimatterAPI.get(Item.class, c.getId() + "_cover", Ref.SHARED_ID);
+                        Item coverStone = GTAPI.get(Item.class, c.getId() + "_cover", Ref.SHARED_ID);
                         if (coverStone == null) continue;
                         SingleItemRecipeBuilder.stonecutting(Ingredient.of(coverStone), cover, 1).unlockedBy("has_stone", provider.hasSafeItem(c.getBlock(""))).save(output, id + "_from_regular_cover");
                     }

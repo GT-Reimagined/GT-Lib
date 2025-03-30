@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.ore;
 
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
@@ -210,7 +210,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     }
 
     public static Properties getOreProperties(Properties properties, StoneType type) {
-        if (AntimatterConfig.ORE_VEIN_SPECTATOR_DEBUG.get()) properties.noOcclusion().lightLevel(b -> 15);
+        if (GTLibConfig.ORE_VEIN_SPECTATOR_DEBUG.get()) properties.noOcclusion().lightLevel(b -> 15);
         properties.strength(type.getHardness() * 2, type.getResistence() / 2).sound(type.getSoundType());
         if (type.doesRequireTool()) properties.requiresCorrectToolForDrops();
         return properties;

@@ -6,8 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
@@ -101,7 +101,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
         if (!mat.enabled) return;
         replacements.put(mat, replacement);
         this.add(mat);
-        AntimatterAPI.addReplacement(getMaterialTag(mat), replacement);
+        GTAPI.addReplacement(getMaterialTag(mat), replacement);
     }
 
     public Material getMaterialFromStack(ItemStack stack) {
@@ -218,11 +218,11 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     }
 
     public boolean isVisible() {
-        return visible || AntimatterConfig.SHOW_ALL_MATERIAL_ITEMS.get();
+        return visible || GTLibConfig.SHOW_ALL_MATERIAL_ITEMS.get();
     }
 
     public boolean allowGen(Material material) {
-        return generating && materials.contains(material) && AntimatterAPI.getReplacement(this, material) == null;
+        return generating && materials.contains(material) && GTAPI.getReplacement(this, material) == null;
     }
 
     @Override
@@ -235,7 +235,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     @OnlyIn(Dist.CLIENT)
     public static void buildTooltips() {
         ImmutableMap.Builder<Item, Tuple<MaterialType, Material>> builder = ImmutableMap.builder();
-        AntimatterAPI.all(MaterialType.class, t -> {
+        GTAPI.all(MaterialType.class, t -> {
             BiMap<Supplier<Item>, Material> map = t.getReplacements().inverse();
             for (Map.Entry<Supplier<Item>, Material> entry : map.entrySet()) {
                 builder.put(entry.getKey().get(), new Tuple<>(t, entry.getValue()));
@@ -259,7 +259,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     public static Material getMaterialFromStackTypeless(ItemStack stack) {
         Material material = null;
-        for (MaterialType<?> type : AntimatterAPI.all(MaterialType.class)) {
+        for (MaterialType<?> type : GTAPI.all(MaterialType.class)) {
             material = type.getMaterialFromStack(stack);
             if (material != null) {
                 break;

@@ -33,7 +33,7 @@ public class ButtonType {
         return b -> {
             int shiftHold = Screen.hasShiftDown() ? 1 : 0;
             handler.onGuiEvent(GuiEvent.EXTRA_BUTTON, inv.player, button.getId(), shiftHold);
-            Antimatter.NETWORK.sendToServer(handler.createGuiPacket(GuiEvent.EXTRA_BUTTON, button.getId(), shiftHold));
+            GTLib.NETWORK.sendToServer(handler.createGuiPacket(GuiEvent.EXTRA_BUTTON, button.getId(), shiftHold));
         };
     }
 
@@ -41,7 +41,7 @@ public class ButtonType {
         return (b, s) -> {
             int shiftHold = Screen.hasShiftDown() ? 1 : 0;
             handler.onGuiEvent(GuiEvent.EXTRA_SWITCH, inv.player, button.getId(), shiftHold, s ? 1 : 0);
-            Antimatter.NETWORK.sendToServer(handler.createGuiPacket(GuiEvent.EXTRA_SWITCH, button.getId(), shiftHold, s ? 1 : 0));
+            GTLib.NETWORK.sendToServer(handler.createGuiPacket(GuiEvent.EXTRA_SWITCH, button.getId(), shiftHold, s ? 1 : 0));
         };
     }*/
 }

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.material;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
@@ -14,7 +14,7 @@ public class MaterialTypeFluid<T> extends MaterialType<T> {
 
     public MaterialTypeFluid(String id, int layers, boolean visible, long unitValue) {
         super(id, layers, visible, unitValue);
-        AntimatterAPI.register(MaterialTypeFluid.class, this);
+        GTAPI.register(MaterialTypeFluid.class, this);
     }
 
     public static FluidStack getEmptyFluidAndLog(MaterialType<?> type, IGTObject... objects) {

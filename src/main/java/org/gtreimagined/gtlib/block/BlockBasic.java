@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.block;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
@@ -19,7 +19,7 @@ public class BlockBasic extends Block implements IGTObject, ITextureProvider, IM
         super(properties);
         this.domain = domain;
         this.id = id;
-        AntimatterAPI.register(getClass(), this);
+        GTAPI.register(getClass(), this);
     }
 
     public BlockBasic(String domain, String id) {

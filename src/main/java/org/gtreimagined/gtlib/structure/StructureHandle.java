@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.structure;
 
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.util.Dir;
 import org.gtreimagined.gtlib.util.int3;
@@ -64,7 +64,7 @@ public class StructureHandle<T extends BlockEntityBasicMultiMachine<T>> {
     }
 
     public void structureCacheRemoval() {
-        if (debug) Antimatter.LOGGER.debug("removed structure handle");
+        if (debug) GTLib.LOGGER.debug("removed structure handle");
         T obj = this.object;
         this.object = null;
         if (onRemoval != null && obj != null) onRemoval.accept(obj);
@@ -72,7 +72,7 @@ public class StructureHandle<T extends BlockEntityBasicMultiMachine<T>> {
 
     public void structureCacheAddition(BlockEntity t) {
         if (!clazz.isInstance(t)) return;
-        if (debug) Antimatter.LOGGER.debug("added to structure handle");
+        if (debug) GTLib.LOGGER.debug("added to structure handle");
         this.object = (T) t;
         if (onAdd != null) onAdd.accept(this.object);
     }

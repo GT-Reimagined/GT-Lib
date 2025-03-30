@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.datagen.builder.GTShapedRecipeBuilder;
@@ -182,7 +182,7 @@ public class GTRecipeProvider extends RecipeProvider {
 
     public void addToolRecipe(String builder, Consumer<FinishedRecipe> consumer, String recipeDomain, String recipeName, String groupName, ItemStack output, ImmutableMap<Character, Object> inputs, String... inputPattern) {
         if (output.isEmpty()) {
-            Antimatter.LOGGER.warn("Material recipe " + recipeDomain + ":" + recipeName + "has an empty output.");
+            GTLib.LOGGER.warn("Material recipe " + recipeDomain + ":" + recipeName + "has an empty output.");
             return;
         }
         GTShapedRecipeBuilder recipeBuilder = getStackRecipe(groupName, false, output, inputs, inputPattern);

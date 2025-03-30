@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.capability.energy;
 
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -24,22 +24,22 @@ public class EnergyStackWrapper implements IEnergyHandlerItem {
 
     @Override
     public long insertEu(long voltage, boolean simulate) {
-        return (long) (storage.receiveEnergy((int) (voltage * AntimatterConfig.EU_TO_FE_RATIO.get()), simulate) / AntimatterConfig.EU_TO_FE_RATIO.get());
+        return (long) (storage.receiveEnergy((int) (voltage * GTLibConfig.EU_TO_FE_RATIO.get()), simulate) / GTLibConfig.EU_TO_FE_RATIO.get());
     }
 
     @Override
     public long extractEu(long voltage, boolean simulate) {
-        return (long) (storage.extractEnergy((int) (voltage * AntimatterConfig.EU_TO_FE_RATIO.get()), simulate) / AntimatterConfig.EU_TO_FE_RATIO.get());
+        return (long) (storage.extractEnergy((int) (voltage * GTLibConfig.EU_TO_FE_RATIO.get()), simulate) / GTLibConfig.EU_TO_FE_RATIO.get());
     }
 
     @Override
     public long getEnergy() {
-        return (long) (storage.getEnergyStored() / AntimatterConfig.EU_TO_FE_RATIO.get());
+        return (long) (storage.getEnergyStored() / GTLibConfig.EU_TO_FE_RATIO.get());
     }
 
     @Override
     public long getCapacity() {
-        return (long) (storage.getMaxEnergyStored() / AntimatterConfig.EU_TO_FE_RATIO.get());
+        return (long) (storage.getMaxEnergyStored() / GTLibConfig.EU_TO_FE_RATIO.get());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class EnergyStackWrapper implements IEnergyHandlerItem {
     @Override
     public long availableAmpsInput(long voltage) {
         if (!canInput()) return 0;
-        int inserted = storage.receiveEnergy((int) (voltage * AntimatterConfig.EU_TO_FE_RATIO.get()), false);
+        int inserted = storage.receiveEnergy((int) (voltage * GTLibConfig.EU_TO_FE_RATIO.get()), false);
         return inserted == voltage ? 1 : 0;
     }
 

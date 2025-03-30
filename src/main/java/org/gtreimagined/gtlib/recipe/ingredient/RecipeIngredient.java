@@ -7,7 +7,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.TagUtils;
 import net.minecraft.core.Registry;
@@ -113,7 +113,7 @@ public class RecipeIngredient extends Ingredient {
                 try {
                     stack.setTag(TagParser.parseTag(json.get("nbt").getAsString()));
                 } catch (CommandSyntaxException e) {
-                    Antimatter.LOGGER.error("Nbt of a ingredient errored, defaulting to stack with no nbt", e);
+                    GTLib.LOGGER.error("Nbt of a ingredient errored, defaulting to stack with no nbt", e);
                 }
             }
             return new RecipeValue(stack);

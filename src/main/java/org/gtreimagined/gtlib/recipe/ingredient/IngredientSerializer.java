@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.recipe.ingredient;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ public class IngredientSerializer implements IIngredientSerializer<RecipeIngredi
     public static final IngredientSerializer INSTANCE = new IngredientSerializer();
 
     public static void init() {
-        AntimatterAPI.register(IIngredientSerializer.class, "ingredient", Ref.ID, INSTANCE);
+        GTAPI.register(IIngredientSerializer.class, "ingredient", Ref.ID, INSTANCE);
     }
     @Override
     public RecipeIngredient parse(FriendlyByteBuf buffer) {

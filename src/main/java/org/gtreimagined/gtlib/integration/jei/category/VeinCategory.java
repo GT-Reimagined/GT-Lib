@@ -9,7 +9,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
@@ -74,7 +74,7 @@ public class VeinCategory implements IRecipeCategory<WorldGenVeinLayer> {
         for (int i = 0; i < 4; i++) {
             int finalI = i;
             builder.addSlot(RecipeIngredientRole.OUTPUT, 1 + (i * 18), 1)
-                    .addIngredients(VanillaTypes.ITEM_STACK, AntimatterAPI.all(StoneType.class).stream()
+                    .addIngredients(VanillaTypes.ITEM_STACK, GTAPI.all(StoneType.class).stream()
                             .filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK)
                             .map(s -> ORE.get().get(recipe.getMaterial(finalI), s).asBlock())
                             .map(ItemStack::new).toList());
@@ -84,7 +84,7 @@ public class VeinCategory implements IRecipeCategory<WorldGenVeinLayer> {
         for (ResourceLocation dimension : recipe.getDimensions()) {
             int y = i / 9;
             int x = i % 9;
-            Block dimensionMarker = AntimatterAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
+            Block dimensionMarker = GTAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
             ItemStack world;
             if (dimensionMarker != null){
                 if (markers.contains(dimensionMarker)) {

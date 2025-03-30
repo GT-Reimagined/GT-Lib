@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.integration.kubejs;
 import dev.latvian.mods.kubejs.event.EventJS;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
@@ -56,7 +56,7 @@ public class AMWorldEvent extends EventJS {
             dimensionKeys = new String[]{"overworld"};
         }
         List<ResourceKey<Level>> dimension = Arrays.stream(dimensionKeys).map((dimensionKey) -> ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimensionKey))).toList();
-        StoneType type = Objects.requireNonNull(AntimatterAPI.get(StoneType.class, stoneType));
+        StoneType type = Objects.requireNonNull(GTAPI.get(StoneType.class, stoneType));
 
         STONE_LAYERS.addAll(new WorldGenStoneLayerBuilder(id).withStone(type).withWeight(weight).atHeight(minHeight, maxHeight).inDimensions(dimension).buildVein());
         /*VEINS.addAll(new WorldGenVeinBuilder(id)

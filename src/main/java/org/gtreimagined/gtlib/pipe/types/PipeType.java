@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.pipe.types;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.material.Material;
@@ -50,7 +50,7 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
         registeredBlocks = blocks.stream().map(t -> new Pair<>(((BlockPipe<?>) t).getSize(),t))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
         tileType = new BlockEntityType<>((pos,state) -> tileFunc.create((T) this, pos, state), blocks, null);
-        AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
+        GTAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }
 
     public Block getBlock(PipeSize size) {

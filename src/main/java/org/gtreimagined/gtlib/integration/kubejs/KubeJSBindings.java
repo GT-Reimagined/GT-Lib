@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.integration.kubejs;
 
 import dev.latvian.mods.kubejs.item.ItemStackJS;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialItem;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 public class KubeJSBindings {
 
   public Item material_item(String type, String material) {
-    MaterialType t = AntimatterAPI.get(MaterialType.class, type);
+    MaterialType t = GTAPI.get(MaterialType.class, type);
     if (t == null)
       return Items.AIR;
-    Material mat = AntimatterAPI.get(Material.class, material);
+    Material mat = GTAPI.get(Material.class, material);
     if (mat == null)
       return Items.AIR;
     if (t instanceof MaterialTypeItem) {
@@ -34,7 +34,7 @@ public class KubeJSBindings {
   }
 
   public MaterialType type(String type) {
-    return AntimatterAPI.get(MaterialType.class, type);
+    return GTAPI.get(MaterialType.class, type);
   }
 
   public ItemStackJS material_stack(String type, Material material, int count) {
@@ -65,7 +65,7 @@ public class KubeJSBindings {
   }
 
   public List<Item> all(String type) {
-    MaterialType t = AntimatterAPI.get(MaterialType.class, type);
+    MaterialType t = GTAPI.get(MaterialType.class, type);
     if (t == null)
       Collections.emptyList();
     if (t instanceof MaterialTypeItem<?> item) {
@@ -76,11 +76,11 @@ public class KubeJSBindings {
   }
 
   public List<StoneType> all_stone_types(String domain) {
-    return AntimatterAPI.all(StoneType.class, domain);
+    return GTAPI.all(StoneType.class, domain);
   }
 
   public List<StoneType> all_stone_types() {
-    return AntimatterAPI.all(StoneType.class);
+    return GTAPI.all(StoneType.class);
   }
 
   public Material get_material(Object stack) {
@@ -98,7 +98,7 @@ public class KubeJSBindings {
   }
 
   public List<ItemStackJS> all_stack(String type, int count) {
-    MaterialType t = AntimatterAPI.get(MaterialType.class, type);
+    MaterialType t = GTAPI.get(MaterialType.class, type);
     if (t == null)
       Collections.emptyList();
     if (t instanceof MaterialTypeItem) {
@@ -110,10 +110,10 @@ public class KubeJSBindings {
   }
 
   public String material_tag(String type, String material) {
-    MaterialType t = AntimatterAPI.get(MaterialType.class, type);
+    MaterialType t = GTAPI.get(MaterialType.class, type);
     if (t == null)
       return "";
-    Material mat = AntimatterAPI.get(Material.class, material);
+    Material mat = GTAPI.get(Material.class, material);
     if (mat == null)
       return "";
     return t.getMaterialTag(mat).location().toString();

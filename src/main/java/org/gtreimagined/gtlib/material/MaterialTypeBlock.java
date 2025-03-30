@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.material;
 import com.google.common.collect.HashBiMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.registration.IGTObject;
@@ -34,7 +34,7 @@ public class MaterialTypeBlock<T> extends MaterialType<T> {
 
     public MaterialTypeBlock(String id, int layers, boolean visible, long unitValue, BlockSupplier supplier) {
         super(id, layers, visible, unitValue);
-        AntimatterAPI.register(MaterialTypeBlock.class, this);
+        GTAPI.register(MaterialTypeBlock.class, this);
         this.supplier = supplier;
     }
 
@@ -47,7 +47,7 @@ public class MaterialTypeBlock<T> extends MaterialType<T> {
             Map<StoneType, Supplier<Item>> subMap = oreReplacements.computeIfAbsent(mat, m -> new Object2ObjectArrayMap<>());
             subMap.put(type, replacement);
             this.add(mat);
-            AntimatterAPI.addReplacement(getMaterialTag(mat, type), replacement);
+            GTAPI.addReplacement(getMaterialTag(mat, type), replacement);
         }
 
     }

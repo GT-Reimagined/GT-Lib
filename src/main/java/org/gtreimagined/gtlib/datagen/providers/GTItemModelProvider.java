@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
@@ -49,9 +49,9 @@ public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> imp
     }
 
     public void processItemModels(String domain) {
-        AntimatterAPI.all(Item.class, domain).forEach(i -> GTLibModelManager.onItemModelBuild(i, this));
-        AntimatterAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onItemModelBuild(b, this));
-        AntimatterAPI.all(GTFluid.class, domain).forEach(f -> {
+        GTAPI.all(Item.class, domain).forEach(i -> GTLibModelManager.onItemModelBuild(i, this));
+        GTAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onItemModelBuild(b, this));
+        GTAPI.all(GTFluid.class, domain).forEach(f -> {
             modelAndTexture(f.getContainerItem(), "forge", "item/bucket").bucketProperties(f.getFluid());
             modelAndTexture(f.getFluidBlock(), GTBlockModelBuilder.getSimple()).tex(a -> a.put("all", f.getAttributes().getFlowingTexture().toString()));
         });

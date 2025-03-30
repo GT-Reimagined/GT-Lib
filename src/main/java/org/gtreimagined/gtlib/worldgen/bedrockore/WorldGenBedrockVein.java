@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.util.RegistryUtils;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -33,8 +33,8 @@ public class WorldGenBedrockVein extends WorldGenBase<WorldGenBedrockVein> {
 
     public static WorldGenBedrockVein create(String id, int probability, Material material, boolean indicatorRocks, boolean indicatorFlowers, Block flower, ResourceLocation... dimensions) {
         WorldGenBedrockVein vein = new WorldGenBedrockVein(id, probability, material, indicatorRocks, indicatorFlowers, flower, List.of(dimensions));
-        AntimatterWorldGenerator.writeJson(vein.toJson(), vein.getId(), "bedrock_veins");
-        return AntimatterWorldGenerator.readJson(WorldGenBedrockVein.class, vein, WorldGenBedrockVein::fromJson, "bedrock_veins");
+        GTLibWorldGenerator.writeJson(vein.toJson(), vein.getId(), "bedrock_veins");
+        return GTLibWorldGenerator.readJson(WorldGenBedrockVein.class, vein, WorldGenBedrockVein::fromJson, "bedrock_veins");
     }
 
     public static WorldGenBedrockVein create(String id, int probability, Material material, ResourceLocation... dimensions) {

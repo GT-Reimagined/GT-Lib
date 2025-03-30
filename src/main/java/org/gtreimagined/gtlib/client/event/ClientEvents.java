@@ -146,7 +146,7 @@ public class ClientEvents {
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof IInfoProvider info) {
             left.add("");
-            left.add(ChatFormatting.AQUA + "[Antimatter Debug Server]");
+            left.add(ChatFormatting.AQUA + "[GTLib Debug Server]");
             left.addAll(info.getInfo(new ObjectArrayList<>(), world, state, pos, false));
         }
         BlockEntity tile = world.getBlockEntity(pos);
@@ -155,7 +155,7 @@ public class ClientEvents {
         }
         if (MC.player.isCrouching()) {
             left.add("");
-            left.add(ChatFormatting.AQUA + "[Antimatter Debug Client]");
+            left.add(ChatFormatting.AQUA + "[GTLib Debug Client]");
         }
     }
 

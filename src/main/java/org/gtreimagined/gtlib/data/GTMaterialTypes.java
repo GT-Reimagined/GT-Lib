@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.data;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
 import org.gtreimagined.gtlib.block.BlockStorage;
@@ -44,13 +44,13 @@ public class GTMaterialTypes {
     public static MaterialTypeItem<?> DUST_IMPURE = new MaterialTypeItem<>("dust_impure", 2, true, -1);
     public static MaterialTypeItem<?> DUST_PURE = new MaterialTypeItem<>("dust_pure", 2, true, -1);
     public static MaterialTypeItem<MaterialTypeBlock.IOreGetter> BEARING_ROCK = new MaterialTypeItem<>("bearing_rock", 2, false, Ref.U4, (domain, type, mat) -> {
-        AntimatterAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).forEach(s -> AntimatterAPI.register(BlockSurfaceRock.class, new BlockSurfaceRock(domain, mat, s)));
+        GTAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).forEach(s -> GTAPI.register(BlockSurfaceRock.class, new BlockSurfaceRock(domain, mat, s)));
         new MaterialItem(domain, type, mat);
     });
     public static MaterialTypeItem<MaterialTypeBlock.IBlockGetter> ROCK = new MaterialTypeItem<>("rock", 2, false, Ref.U4, (domain, type, mat) -> {
-        StoneType type1 = AntimatterAPI.get(StoneType.class, mat.getId());
+        StoneType type1 = GTAPI.get(StoneType.class, mat.getId());
         if (type1 != null){
-            AntimatterAPI.register(BlockSurfaceRock.class, new BlockSurfaceRock(domain, Material.NULL, type1));
+            GTAPI.register(BlockSurfaceRock.class, new BlockSurfaceRock(domain, Material.NULL, type1));
         }
         new MaterialItem(domain, type, mat);
     });
@@ -98,8 +98,8 @@ public class GTMaterialTypes {
     public static final MaterialTypeItem<?> SCREWDRIVER_TIP = new MaterialTypeItem<>("screwdriver_tip", 2, true, U);
     public static final MaterialTypeItem<?> SCYTHE_BLADE = new MaterialTypeItem<>("scythe_blade", 2, true, U * 3);
     //Block Types
-    public static MaterialTypeBlock<MaterialTypeBlock.IOreGetter> ORE = new MaterialTypeBlock<>("ore", 1, true, -1, (domain, type, mat) -> AntimatterAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).filter(s -> !AntimatterAPI.hasReplacement(((MaterialTypeBlock<?>)type).getMaterialTag(mat, s))).forEach(s -> new BlockOre(domain, mat, s, type)));
-    public static MaterialTypeBlock<MaterialTypeBlock.IOreGetter> ORE_SMALL = new MaterialTypeBlock<>("ore_small", 1, false, -1, (domain, type, mat) -> AntimatterAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).filter(s -> !AntimatterAPI.hasReplacement(((MaterialTypeBlock<?>)type).getMaterialTag(mat, s))).forEach(s -> new BlockOre(domain, mat, s, type)));
+    public static MaterialTypeBlock<MaterialTypeBlock.IOreGetter> ORE = new MaterialTypeBlock<>("ore", 1, true, -1, (domain, type, mat) -> GTAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).filter(s -> !GTAPI.hasReplacement(((MaterialTypeBlock<?>)type).getMaterialTag(mat, s))).forEach(s -> new BlockOre(domain, mat, s, type)));
+    public static MaterialTypeBlock<MaterialTypeBlock.IOreGetter> ORE_SMALL = new MaterialTypeBlock<>("ore_small", 1, false, -1, (domain, type, mat) -> GTAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).filter(s -> !GTAPI.hasReplacement(((MaterialTypeBlock<?>)type).getMaterialTag(mat, s))).forEach(s -> new BlockOre(domain, mat, s, type)));
     public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> ORE_STONE = new MaterialTypeBlock<>("ore_stone", 1, true, -1,(domain, type, mat) -> new BlockOreStone(domain, mat));
     public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> BLOCK = new MaterialTypeBlock<>("block", 1, false, U * 9, BlockStorage::new);
     public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> RAW_ORE_BLOCK = new MaterialTypeBlock<>("raw_ore_block", 2, false, -1, BlockStorage::new);
@@ -113,68 +113,68 @@ public class GTMaterialTypes {
     static {
         BEARING_ROCK.set((m, s) -> {
             if (m == null || s == null || !s.doesGenerateOre() || !BEARING_ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(BEARING_ROCK, m, s);
-            BlockSurfaceRock rock = AntimatterAPI.get(BlockSurfaceRock.class, "surface_rock_" + m.getId() + "_" + s.getId());
+            BlockSurfaceRock rock = GTAPI.get(BlockSurfaceRock.class, "surface_rock_" + m.getId() + "_" + s.getId());
             return new MaterialTypeBlock.Container(rock != null ? rock.defaultBlockState() : Blocks.AIR.defaultBlockState());
         });
         ROCK.set((m) -> {
-            StoneType s = AntimatterAPI.get(StoneType.class, m.getId());
+            StoneType s = GTAPI.get(StoneType.class, m.getId());
             if (s == null || !ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ROCK, m, s);
-            BlockSurfaceRock rock = AntimatterAPI.get(BlockSurfaceRock.class, "surface_rock_" + s.getId());
+            BlockSurfaceRock rock = GTAPI.get(BlockSurfaceRock.class, "surface_rock_" + s.getId());
             return new MaterialTypeBlock.Container(rock != null ? rock.defaultBlockState() : Blocks.AIR.defaultBlockState());
         });
         ORE.set((m, s) -> {
             if (m != null && s != null) {
-                Item item = AntimatterAPI.getReplacement(ORE, m, s);
+                Item item = GTAPI.getReplacement(ORE, m, s);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
             if (m == null || s == null || !s.doesGenerateOre() || !ORE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE, m, s);
-            BlockOre block = AntimatterAPI.get(BlockOre.class, ORE.getId() + "_" + m.getId() + "_" + s.getId());
+            BlockOre block = GTAPI.get(BlockOre.class, ORE.getId() + "_" + m.getId() + "_" + s.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         ORE_SMALL.set((m, s) -> {
             if (m != null && s != null) {
-                Item item = AntimatterAPI.getReplacement(ORE_SMALL, m, s);
+                Item item = GTAPI.getReplacement(ORE_SMALL, m, s);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
             if (m == null || s == null || !ORE_SMALL.allowGen(m))
                 return MaterialTypeBlock.getEmptyBlockAndLog(ORE_SMALL, m, s);
-            BlockOre block = AntimatterAPI.get(BlockOre.class, ORE_SMALL.getId() + "_" + m.getId() + "_" + Utils.getConventionalStoneType(s));
+            BlockOre block = GTAPI.get(BlockOre.class, ORE_SMALL.getId() + "_" + m.getId() + "_" + Utils.getConventionalStoneType(s));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         ORE_STONE.set(m -> {
             if (m == null || !ORE_STONE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE_STONE, m);
-            BlockOreStone block = AntimatterAPI.get(BlockOreStone.class, ORE_STONE.getId() + "_" + m.getId());
+            BlockOreStone block = GTAPI.get(BlockOreStone.class, ORE_STONE.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         BLOCK.set(m -> {
             if (m != null) {
-                Item item = AntimatterAPI.getReplacement(BLOCK, m);
+                Item item = GTAPI.getReplacement(BLOCK, m);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
             if (m == null || !BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(BLOCK, m);
-            BlockStorage block = AntimatterAPI.get(BlockStorage.class, BLOCK.getId() + "_" + m.getId());
+            BlockStorage block = GTAPI.get(BlockStorage.class, BLOCK.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         RAW_ORE_BLOCK.set(m -> {
             if (m != null) {
-                Item item = AntimatterAPI.getReplacement(RAW_ORE_BLOCK, m);
+                Item item = GTAPI.getReplacement(RAW_ORE_BLOCK, m);
                 if (item instanceof BlockItem) {
                     return new MaterialTypeBlock.Container(((BlockItem) item).getBlock().defaultBlockState());
                 }
             }
             if (m == null || !RAW_ORE_BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(RAW_ORE_BLOCK, m);
-            BlockStorage block = AntimatterAPI.get(BlockStorage.class, RAW_ORE_BLOCK.getId() + "_" + m.getId());
+            BlockStorage block = GTAPI.get(BlockStorage.class, RAW_ORE_BLOCK.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         FRAME.set(m -> {
             if (m == null || !FRAME.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(FRAME, m);
-            BlockFrame block = AntimatterAPI.get(BlockFrame.class, FRAME.getId() + "_" + m.getId());
+            BlockFrame block = GTAPI.get(BlockFrame.class, FRAME.getId() + "_" + m.getId());
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
 
@@ -182,13 +182,13 @@ public class GTMaterialTypes {
             if (m == null || !LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(LIQUID, m);
             if (m.getId().equals("water")) return new FluidStack(Fluids.WATER, i);
             else if (m.getId().equals("lava")) return new FluidStack(Fluids.LAVA, i);
-            GTFluid fluid = AntimatterAPI.get(GTFluid.class, LIQUID.getId() + "_" + m.getId());
+            GTFluid fluid = GTAPI.get(GTFluid.class, LIQUID.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
         });
         GAS.set((m, i) -> {
             if (m == null || !GAS.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(GAS, m);
-            GTFluid fluid = AntimatterAPI.get(GTFluid.class, GAS.getId() + "_" + m.getId());
+            GTFluid fluid = GTAPI.get(GTFluid.class, GAS.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
         });
@@ -319,8 +319,8 @@ public class GTMaterialTypes {
     }
 
     public static void postInit() {
-        LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> AntimatterAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
-        GAS.all().forEach(m -> AntimatterAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, GAS)));
-        ORE_STONE.all().forEach(m -> AntimatterAPI.register(StoneType.class, new StoneType(ID, m.getId(), m, new Texture(m.materialDomain(), "block/stone/" + m.getId()), SoundType.STONE, false).setGenerateOre(false).setStateSupplier(() -> ORE_STONE.get().get(m).asState())));
+        LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
+        GAS.all().forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, GAS)));
+        ORE_STONE.all().forEach(m -> GTAPI.register(StoneType.class, new StoneType(ID, m.getId(), m, new Texture(m.materialDomain(), "block/stone/" + m.getId()), SoundType.STONE, false).setGenerateOre(false).setStateSupplier(() -> ORE_STONE.get().get(m).asState())));
     }
 }

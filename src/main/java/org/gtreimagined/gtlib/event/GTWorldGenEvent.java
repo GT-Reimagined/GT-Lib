@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.event;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
@@ -33,7 +33,7 @@ public class GTWorldGenEvent extends GTEvent {
 
     public void vein(WorldGenVeinLayer veins) {
         if (VEINS.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
-            Antimatter.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.getId());
+            GTLib.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.getId());
             return;
         }
         VEINS.add(veins);
@@ -45,7 +45,7 @@ public class GTWorldGenEvent extends GTEvent {
 
     public void smallOre(WorldGenSmallOre veins) {
         if (SMALL_ORES.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
-            Antimatter.LOGGER.warn("Duplicate small ore spawn, aborting. Id: " + veins.getId());
+            GTLib.LOGGER.warn("Duplicate small ore spawn, aborting. Id: " + veins.getId());
             return;
         }
         SMALL_ORES.add(veins);
@@ -53,7 +53,7 @@ public class GTWorldGenEvent extends GTEvent {
 
     public void vanillaOre(WorldGenVanillaOre veins) {
         if (VANILLA_ORES.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
-            Antimatter.LOGGER.warn("Duplicate vanilla ore vein, aborting. Id: " + veins.getId());
+            GTLib.LOGGER.warn("Duplicate vanilla ore vein, aborting. Id: " + veins.getId());
             return;
         }
         VANILLA_ORES.add(veins);
@@ -61,7 +61,7 @@ public class GTWorldGenEvent extends GTEvent {
 
     public void bedrockOre(WorldGenBedrockVein veins) {
         if (BEDROCK_VEINS.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
-            Antimatter.LOGGER.warn("Duplicate bedrock vein, aborting. Id: " + veins.getId());
+            GTLib.LOGGER.warn("Duplicate bedrock vein, aborting. Id: " + veins.getId());
             return;
         }
         BEDROCK_VEINS.add(veins);

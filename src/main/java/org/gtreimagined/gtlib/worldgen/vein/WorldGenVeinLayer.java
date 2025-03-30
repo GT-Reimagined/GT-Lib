@@ -5,13 +5,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.util.XSTR;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.VeinLayerResult;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
@@ -176,7 +176,7 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
     // in the dimension. For example veins that range above and below the average height
     // will be less, and veins that are completely above the average height will be much less.
     public static void generate(WorldGenLevel world, int chunkX, int chunkZ, int oreSeedX, int oreSeedZ) {
-        List<WorldGenVeinLayer> veins = AntimatterWorldGenerator.all(WorldGenVeinLayer.class, world.getLevel().dimension());
+        List<WorldGenVeinLayer> veins = GTLibWorldGenerator.all(WorldGenVeinLayer.class, world.getLevel().dimension());
         if (veins == null || veins.isEmpty())
             return;
 
@@ -189,17 +189,17 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
         XSTR oreVeinRNG = new XSTR(oreVeinSeed);
         int oreVeinPercentageRoll = oreVeinRNG.nextInt(100); // Roll the dice, see if we get an orevein here at all
         if (Ref.debugOreVein)
-            Antimatter.LOGGER.info("Finding oreveins for oreVeinSeed=" + oreVeinSeed + " chunkX=" + chunkX + " chunkZ=" + chunkZ + " oreSeedX=" + oreSeedX + " oreSeedZ=" + oreSeedZ + " worldSeed=" + world.getSeed());
+            GTLib.LOGGER.info("Finding oreveins for oreVeinSeed=" + oreVeinSeed + " chunkX=" + chunkX + " chunkZ=" + chunkZ + " oreSeedX=" + oreSeedX + " oreSeedZ=" + oreSeedZ + " worldSeed=" + world.getSeed());
 
         // Search for a valid orevein for this dimension
         if (!VALID_VEINS.containsKey(oreVeinSeed)) {
             int veinCount = veins.size();
-            if (oreVeinPercentageRoll < AntimatterConfig.ORE_VEIN_CHANCE.get() && WorldGenVeinLayer.TOTAL_WEIGHT > 0 && veinCount > 0) {
+            if (oreVeinPercentageRoll < GTLibConfig.ORE_VEIN_CHANCE.get() && WorldGenVeinLayer.TOTAL_WEIGHT > 0 && veinCount > 0) {
                 int placementAttempts = 0;
                 boolean oreVeinFound = false;
                 int i;
 
-                for (i = 0; i < AntimatterConfig.ORE_VEIN_FIND_ATTEMPTS.get() && !oreVeinFound && placementAttempts < AntimatterConfig.ORE_VEIN_PLACE_ATTEMPTS.get(); i++) {
+                for (i = 0; i < GTLibConfig.ORE_VEIN_FIND_ATTEMPTS.get() && !oreVeinFound && placementAttempts < GTLibConfig.ORE_VEIN_PLACE_ATTEMPTS.get(); i++) {
                     int tRandomWeight = oreVeinRNG.nextInt(WorldGenVeinLayer.TOTAL_WEIGHT);
                     for (WorldGenVeinLayer vein : veins) {
                         tRandomWeight -= vein.weight;
@@ -210,7 +210,7 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
                             switch (placementResult) {
                                 case ORE_PLACED -> {
                                     if (Ref.debugOreVein)
-                                        Antimatter.LOGGER.info("Added near oreVeinSeed=" + oreVeinSeed + " " + vein.getId() + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
+                                        GTLib.LOGGER.info("Added near oreVeinSeed=" + oreVeinSeed + " " + vein.getId() + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
                                     VALID_VEINS.put(oreVeinSeed, vein);
                                     oreVeinFound = true;
                                 }
@@ -218,13 +218,13 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
                                 // Should do retry in this case until out of chances
                                 case NO_OVERLAP -> {
                                     if (Ref.debugOreVein)
-                                        Antimatter.LOGGER.info("Added far oreVeinSeed=" + oreVeinSeed + " " + vein.getId() + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
+                                        GTLib.LOGGER.info("Added far oreVeinSeed=" + oreVeinSeed + " " + vein.getId() + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
                                     VALID_VEINS.put(oreVeinSeed, vein);
                                     oreVeinFound = true;
                                 }
                                 case NO_OVERLAP_AIR_BLOCK -> {
                                     if (Ref.debugOreVein)
-                                        Antimatter.LOGGER.info("No overlap and air block in test spot=" + oreVeinSeed + " " + vein.getId() + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
+                                        GTLib.LOGGER.info("No overlap and air block in test spot=" + oreVeinSeed + " " + vein.getId() + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
                                     placementAttempts++;
                                 } // Should do retry in this case until out of chances
                             }
@@ -235,18 +235,18 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
                 // Only add an empty orevein if unable to place a vein at the oreseed chunk.
                 if (!oreVeinFound && chunkX == oreSeedX && chunkZ == oreSeedZ) {
                     if (Ref.debugOreVein)
-                        Antimatter.LOGGER.info("Empty oreVeinSeed=" + oreVeinSeed + " chunkX=" + chunkX + " chunkZ=" + chunkZ + " oreSeedX=" + oreSeedX + " oreSeedZ=" + oreSeedZ + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
+                        GTLib.LOGGER.info("Empty oreVeinSeed=" + oreVeinSeed + " chunkX=" + chunkX + " chunkZ=" + chunkZ + " oreSeedX=" + oreSeedX + " oreSeedZ=" + oreSeedZ + " tries at oremix=" + i + " placementAttempts=" + placementAttempts + " dimension=" + world.getLevel().dimension().location());
                     VALID_VEINS.put(oreVeinSeed, NO_ORES_IN_VEIN);
                 }
-            } else if (oreVeinPercentageRoll >= AntimatterConfig.ORE_VEIN_CHANCE.get()) {
+            } else if (oreVeinPercentageRoll >= GTLibConfig.ORE_VEIN_CHANCE.get()) {
                 if (Ref.debugOreVein)
-                    Antimatter.LOGGER.info("Skipped oreVeinSeed=" + oreVeinSeed + " chunkX=" + chunkX + " chunkZ=" + chunkZ + " oreSeedX=" + oreSeedX + " oreSeedZ=" + oreSeedZ + " RNG=" + oreVeinPercentageRoll + " %=" + AntimatterConfig.ORE_VEIN_CHANCE.get() + " dimension=" + world.getLevel().dimension().location());
+                    GTLib.LOGGER.info("Skipped oreVeinSeed=" + oreVeinSeed + " chunkX=" + chunkX + " chunkZ=" + chunkZ + " oreSeedX=" + oreSeedX + " oreSeedZ=" + oreSeedZ + " RNG=" + oreVeinPercentageRoll + " %=" + GTLibConfig.ORE_VEIN_CHANCE.get() + " dimension=" + world.getLevel().dimension().location());
                 VALID_VEINS.put(oreVeinSeed, NO_ORES_IN_VEIN);
             }
         } else {
             // oreseed is located in the previously processed table
             if (Ref.debugOreVein)
-                Antimatter.LOGGER.info("Valid oreVeinSeed=" + oreVeinSeed + " VALID_VEINS.size()=" + VALID_VEINS.size() + " ");
+                GTLib.LOGGER.info("Valid oreVeinSeed=" + oreVeinSeed + " VALID_VEINS.size()=" + VALID_VEINS.size() + " ");
             WorldGenVeinLayer vein = VALID_VEINS.get(oreVeinSeed);
             if (vein == null)
                 throw new IllegalStateException("Valid veins returned null in WorldGenVeinlayer. This is an error");
@@ -256,11 +256,11 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
             switch (placementResult) {
                 case NO_ORE_IN_BOTTOM_LAYER:
                     if (Ref.debugOreVein)
-                        Antimatter.LOGGER.info(" No ore in bottom layer");
+                        GTLib.LOGGER.info(" No ore in bottom layer");
                     break;
                 case NO_OVERLAP:
                     if (Ref.debugOreVein)
-                        Antimatter.LOGGER.info(" No overlap");
+                        GTLib.LOGGER.info(" No overlap");
                     break;
             }
         }
@@ -313,14 +313,14 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
         }
 
         if (Ref.debugOreVein)
-            Antimatter.LOGGER.info("Trying Orevein:" + getId() + " Dimension=" + world.getLevel().dimension() + " posX=" + posX / 16 + " posZ=" + posZ / 16 + " oreseedX=" + seedX / 16 + " oreseedZ=" + seedZ / 16 + " cY=" + tMinY);
+            GTLib.LOGGER.info("Trying Orevein:" + getId() + " Dimension=" + world.getLevel().dimension() + " posX=" + posX / 16 + " posZ=" + posZ / 16 + " oreseedX=" + seedX / 16 + " oreseedZ=" + seedZ / 16 + " cY=" + tMinY);
         if (!generateSquare(world, rand, posX, posZ, seedX, seedZ, tMinY, wXVein, eXVein, nZVein, sZVein, wX, eX, nZ, sZ))
         //if (!generateByFunction(world, rand, tMinY, wXVein, eXVein, nZVein, sZVein, wX, eX, nZ, sZ))
             return NO_ORE_IN_BOTTOM_LAYER;  // Exit early, didn't place anything in the bottom layer
 
         //Place small ores for the vein
-        if (AntimatterConfig.ORE_VEIN_SMALL_ORE_MARKERS.get()) {
-            int nSmallOres = (eX - wX) * (sZ - nZ) * this.density / 20 * AntimatterConfig.ORE_VEIN_SMALL_ORE_MARKERS_MULTI.get();
+        if (GTLibConfig.ORE_VEIN_SMALL_ORE_MARKERS.get()) {
+            int nSmallOres = (eX - wX) * (sZ - nZ) * this.density / 20 * GTLibConfig.ORE_VEIN_SMALL_ORE_MARKERS_MULTI.get();
             generateMarkers(world, rand, posX, posZ, nSmallOres, 7);
         }
         // Something (at least the bottom layer must have 1 block) must have been placed, return true
@@ -355,20 +355,20 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
             pos.set(tX, tY, tZ);
             setOre(world, pos, world.getBlockState(pos), materials[3], GTMaterialTypes.ORE_SMALL);
         }
-        if (AntimatterConfig.ORE_VEIN_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()){
+        if (GTLibConfig.ORE_VEIN_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()){
             for (int rockCount = 0; rockCount < nRocks; rockCount++) {
                 int tX = rand.nextInt(16) + posX;
                 int tZ = rand.nextInt(16) + posZ;
-                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0], AntimatterConfig.ORE_VEIN_ROCK_CHANCE.get());
+                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0], GTLibConfig.ORE_VEIN_ROCK_CHANCE.get());
                 tX = rand.nextInt(16) + posX;
                 tZ = rand.nextInt(16) + posZ;
-                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0],  AntimatterConfig.ORE_VEIN_ROCK_CHANCE.get()*3/2);
+                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0],  GTLibConfig.ORE_VEIN_ROCK_CHANCE.get()*3/2);
                 tX = rand.nextInt(16) + posX;
                 tZ = rand.nextInt(16) + posZ;
-                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0],  AntimatterConfig.ORE_VEIN_ROCK_CHANCE.get()*2);
+                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0],  GTLibConfig.ORE_VEIN_ROCK_CHANCE.get()*2);
                 tX = rand.nextInt(16) + posX;
                 tZ = rand.nextInt(16) + posZ;
-                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0],  AntimatterConfig.ORE_VEIN_ROCK_CHANCE.get()*5/2);
+                WorldGenHelper.addRock(world, pos.set(tX, 0, tZ), materials[0],  GTLibConfig.ORE_VEIN_ROCK_CHANCE.get()*5/2);
             }
         }
     }
@@ -401,7 +401,7 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
         }
         if (placeCount[1] + placeCount[3] == 0) {
             if (Ref.debugOreVein)
-                Antimatter.LOGGER.info(" No ore in bottom layer");
+                GTLib.LOGGER.info(" No ore in bottom layer");
             return false;
         }
         // Layers 0 & 1 Secondary and Sporadic
@@ -536,7 +536,7 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
             }
         }
         if (Ref.debugOreVein)
-            Antimatter.LOGGER.info(" wXVein" + wXVein + " eXVein" + eXVein + " nZVein" + nZVein + " sZVein" + sZVein + " locDen=" + localDensity
+            GTLib.LOGGER.info(" wXVein" + wXVein + " eXVein" + eXVein + " nZVein" + nZVein + " sZVein" + sZVein + " locDen=" + localDensity
                     + " Den=" + this.density + " Sec=" + placeCount[1] + " Spo=" + placeCount[3] + " Bet=" + placeCount[2] + " Pri=" + placeCount[0]);
         return true;
     }
@@ -577,13 +577,13 @@ public class WorldGenVeinLayer extends WorldGenBase<WorldGenVeinLayer> {
             if (y == tMinY + 1) { // early bail out test
                 if ((placeCount[0] + placeCount[1] + placeCount[2] + placeCount[3]) == 0) {
                     if (Ref.debugOreVein)
-                        Antimatter.LOGGER.info(" No ore in bottom layer");
+                        GTLib.LOGGER.info(" No ore in bottom layer");
                     return false;
                 }
             }
         }
         if (Ref.debugOreVein)
-            Antimatter.LOGGER.info(" wXVein" + wXVein + " eXVein" + eXVein + " nZVein" + nZVein + " sZVein" + sZVein
+            GTLib.LOGGER.info(" wXVein" + wXVein + " eXVein" + eXVein + " nZVein" + nZVein + " sZVein" + sZVein
                     + " Den=" + this.density + " Sec=" + placeCount[1] + " Spo=" + placeCount[3] + " Bet=" + placeCount[2] + " Pri=" + placeCount[0]);
         return true;
     }

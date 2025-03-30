@@ -56,7 +56,7 @@ import org.gtreimagined.gtlib.recipe.serializer.MachineRecipeSerializer;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.TagUtils;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.devtech.arrp.ARRP;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -85,24 +85,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mod(Ref.ID)
-public class Antimatter extends AntimatterMod {
+public class GTLib extends GTMod {
 
-    public static Antimatter INSTANCE;
+    public static GTLib INSTANCE;
     public static final Logger LOGGER = LogManager.getLogger(Ref.ID);
     public static IProxyHandler PROXY;
 
     static {
-        // AntimatterAPI.runBackgroundProviders();
+        // GTAPI.runBackgroundProviders();
     }
 
-    public Antimatter() {
+    public GTLib() {
         super();
 
-        LOGGER.info("Loading Antimatter");
+        LOGGER.info("Loading GTLib");
         INSTANCE = this;
         PROXY = DistExecutor.unsafeRunForDist(() -> ClientHandler::new, () -> ServerHandler::new);
         // change in new Forge
-        if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)){
+        if (GTAPI.isModLoaded(Ref.MOD_KJS)){
             new KubeJSRegistrar();
         }
         GTLibDynamics.clientProvider(Ref.ID,
@@ -117,9 +117,9 @@ public class Antimatter extends AntimatterMod {
                 () -> new GTLanguageProvider(Ref.ID, Ref.NAME.concat(" en_us Localization"), "en_us"));
         GTLibDynamics.clientProvider(Ref.SHARED_ID,
                 () -> new GTLanguageProvider(Ref.SHARED_ID, Ref.NAME.concat(" en_us Localization (Shared)"), "en_us"));
-        AntimatterAPI.init();
+        GTAPI.init();
         GTLibNetwork.register();
-        AntimatterConfig.createConfig();
+        GTLibConfig.createConfig();
         /* Lifecycle events */
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::clientSetup);
@@ -176,7 +176,7 @@ public class Antimatter extends AntimatterMod {
             Data.init(side);
             ICover.init();
             SubTag.init();
-            AntimatterWorldGenerator.preinit();
+            GTLibWorldGenerator.preinit();
             GuiEvents.init();
             MaterialSerializer.init();
             MirroredShapedRecipe.init();
@@ -184,16 +184,16 @@ public class Antimatter extends AntimatterMod {
             IngredientSerializer.init();
             PropertyIngredient.Serializer.init();
         } else if (event == RegistrationEvent.WORLDGEN_INIT) {
-            AntimatterWorldGenerator.init();
+            GTLibWorldGenerator.init();
             GTTools.postInit();
         } else if (event == RegistrationEvent.DATA_READY) {
             CauldronInteractions.init();
-            if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) || AntimatterAPI.isModLoaded(Ref.MOD_REI)){
+            if (GTAPI.isModLoaded(Ref.MOD_JEI) || GTAPI.isModLoaded(Ref.MOD_REI)){
                 AntimatterJEIREIPlugin.registerMissingMaps();
             }
             AntimatterJEIREIPlugin.addItemsToHide(l -> {
-                if (!AntimatterConfig.SHOW_ALL_ORES.get()){
-                    AntimatterAPI.all(StoneType.class, s -> {
+                if (!GTLibConfig.SHOW_ALL_ORES.get()){
+                    GTAPI.all(StoneType.class, s -> {
                         if (s != VanillaStoneTypes.STONE && s != VanillaStoneTypes.SAND && s.doesGenerateOre()){
                             GTMaterialTypes.ORE.all().forEach(m -> {
                                 Block ore = GTMaterialTypes.ORE.get().get(m, s).asBlock();
@@ -211,26 +211,26 @@ public class Antimatter extends AntimatterMod {
                     });
 
                 }
-                if (!AntimatterConfig.SHOW_ROCKS.get()){
+                if (!GTLibConfig.SHOW_ROCKS.get()){
                     GTMaterialTypes.BEARING_ROCK.all().forEach(m -> {
-                        AntimatterAPI.all(StoneType.class, s -> {
+                        GTAPI.all(StoneType.class, s -> {
                             if (s.doesGenerateOre()) {
                                 l.add(GTMaterialTypes.BEARING_ROCK.get().get(m, s).asBlock());
                             }
                         });
                     });
                 }
-                AntimatterAPI.all(MaterialTypeItem.class, t -> {
+                GTAPI.all(MaterialTypeItem.class, t -> {
                     if (!t.hidden()) return;
                     List<ItemLike> stacks = (List<ItemLike>) t.all().stream().map(obj -> t.get((Material)obj)).collect(Collectors.toList());
                     if (stacks.isEmpty()) return;
                     l.addAll(stacks);
                 });
-                AntimatterAPI.all(IGTTool.class).stream().filter(t -> t.getAntimatterToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
-                AntimatterAPI.all(GTFluid.class).forEach(t -> l.add(t.getFluidBlock()));
-                AntimatterAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
+                GTAPI.all(IGTTool.class).stream().filter(t -> t.getAntimatterToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
+                GTAPI.all(GTFluid.class).forEach(t -> l.add(t.getFluidBlock()));
+                GTAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
             });
-            AntimatterAPI.all(Material.class).forEach(m -> {
+            GTAPI.all(Material.class).forEach(m -> {
                 Map<MaterialType<?>, Integer> map = MaterialTags.FURNACE_FUELS.getMap(m);
                 if (map != null){
                     map.forEach((t, i) -> {
@@ -246,7 +246,7 @@ public class Antimatter extends AntimatterMod {
         } else if (event == RegistrationEvent.CLIENT_DATA_INIT){
             GTLibModelManager.init();
             ClientData.init();
-            if (AntimatterConfig.OVERRIDE_BASALT_TEXTURE.get()){
+            if (GTLibConfig.OVERRIDE_BASALT_TEXTURE.get()){
                 try {
                     GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_top"), readImage("block/stone/basalt/stone"));
                     GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_side"), readImage("block/stone/basalt/stone"));
@@ -259,7 +259,7 @@ public class Antimatter extends AntimatterMod {
     }
 
     private static BufferedImage readImage(String imagePath) throws IOException {
-        InputStream in = Antimatter.class.getResourceAsStream("/assets/" + Ref.ID + "/textures/" + imagePath + ".png");
+        InputStream in = GTLib.class.getResourceAsStream("/assets/" + Ref.ID + "/textures/" + imagePath + ".png");
         return ImageIO.read(in);
     }
 
@@ -271,9 +271,9 @@ public class Antimatter extends AntimatterMod {
 
     private void clientSetup(final FMLClientSetupEvent e) {
         ClientHandler.setup();
-        AntimatterAPI.onRegistration(RegistrationEvent.DATA_READY);
+        GTAPI.onRegistration(RegistrationEvent.DATA_READY);
         GTLibDynamics.runDataProvidersDynamically();
-        e.enqueueWork(() -> AntimatterAPI.getClientDeferredQueue().ifPresent(t -> {
+        e.enqueueWork(() -> GTAPI.getClientDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {
                     r.run();
@@ -288,7 +288,7 @@ public class Antimatter extends AntimatterMod {
         CommonHandler.setup();
         GTLibDynamics.setInitialized();
         LOGGER.info("GTLib Data Processing has Finished. All Data Objects can now be Modified!");
-        e.enqueueWork(() -> AntimatterAPI.getCommonDeferredQueue().ifPresent(t -> {
+        e.enqueueWork(() -> GTAPI.getCommonDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {
                     r.run();
@@ -304,9 +304,9 @@ public class Antimatter extends AntimatterMod {
 
     private void serverSetup(final FMLDedicatedServerSetupEvent e) {
         ServerHandler.setup();
-        AntimatterAPI.onRegistration(RegistrationEvent.DATA_READY);
+        GTAPI.onRegistration(RegistrationEvent.DATA_READY);
         GTLibDynamics.runDataProvidersDynamically();
-        e.enqueueWork(() -> AntimatterAPI.getServerDeferredQueue().ifPresent(t -> {
+        e.enqueueWork(() -> GTAPI.getServerDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {
                     r.run();

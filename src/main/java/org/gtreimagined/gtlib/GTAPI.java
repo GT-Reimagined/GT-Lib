@@ -59,7 +59,7 @@ import java.util.stream.Stream;
 
 import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
 
-public final class AntimatterAPI {
+public final class GTAPI {
 
     private static final Map<Class<?>, Map<String, Either<ISharedGTObject, Map<String, Object>>>> OBJECTS = new Object2ObjectOpenHashMap<>();
     private static final EnumMap<RegistrationEvent, List<Runnable>> CALLBACKS = new EnumMap<>(RegistrationEvent.class);
@@ -111,7 +111,7 @@ public final class AntimatterAPI {
     public static <T> T register(Class<?> c, String id, String domain, Object o) {
         synchronized (OBJECTS) {
             if (!allowRegistration()) {
-                throw new IllegalStateException("Registering after DataDone in AntimatterAPI - badbad!");
+                throw new IllegalStateException("Registering after DataDone in GTAPI - badbad!");
             }
             if (o instanceof IGTObject && !((IGTObject) o).shouldRegister())
                 return (T) o;
@@ -418,7 +418,7 @@ public final class AntimatterAPI {
     public static void onRegistration(RegistrationEvent event) {
         RegistrationEvent previous = PHASE;
         PHASE = event;
-        Antimatter.LOGGER.info("Registration event " + event);
+        GTLib.LOGGER.info("Registration event " + event);
         Dist side = FMLEnvironment.dist;
         if (!REGISTRATION_EVENTS_HANDLED.add(event)) {
             if (ModLoadingContext.get().getActiveNamespace().equals(Ref.ID))
@@ -447,7 +447,7 @@ public final class AntimatterAPI {
     }
 
     public static void addRegistrar(IGTRegistrar registrar) {
-        if (INTERNAL_REGISTRAR == null && registrar instanceof Antimatter)
+        if (INTERNAL_REGISTRAR == null && registrar instanceof GTLib)
             INTERNAL_REGISTRAR = registrar;
         else if (registrar.isEnabled()) {
             synchronized (OBJECTS){
@@ -531,7 +531,7 @@ public final class AntimatterAPI {
      */
     public static <T> T getReplacement(@Nullable T originalItem, TagKey<T> tag, String... namespaces) {
         if (tag == null)
-            throw new IllegalArgumentException("AntimatterAPI#getReplacement received a null tag!");
+            throw new IllegalArgumentException("GTAPI#getReplacement received a null tag!");
         if (REPLACEMENTS.containsKey(tag.location()))
             return (T) REPLACEMENTS.get(tag.location()).get();// return
         // RecipeIngredient.of(REPLACEMENTS.get(tag.getName().getPath().hashCode()),1);

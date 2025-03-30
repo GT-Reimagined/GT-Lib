@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.client.tesr;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
@@ -101,7 +101,7 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
                         off = Integer.parseInt(parts[1]);
                         height = Integer.parseInt(parts[2]);
                     } catch (Exception ex) {
-                        Antimatter.LOGGER.warn("Caught exception building model" + ex);
+                        GTLib.LOGGER.warn("Caught exception building model" + ex);
                         continue;
                     }
                     FluidStack fluid = tile.fluidHandler.map(fh -> {

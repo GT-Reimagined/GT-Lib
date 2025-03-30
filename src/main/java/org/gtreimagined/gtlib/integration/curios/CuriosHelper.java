@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.integration.curios;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class CuriosHelper {
     public static Stream<ItemStack> getCuriosItems(Player player, String... slotTypes){
-        if (!AntimatterAPI.isModLoaded("curios")) {
+        if (!GTAPI.isModLoaded("curios")) {
             return Stream.empty();
         }
         var handler = CuriosApi.getCuriosHelper().getCuriosHandler(player).resolve().orElse(null);

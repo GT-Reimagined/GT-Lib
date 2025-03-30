@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.recipe;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -15,7 +15,7 @@ public abstract class BaseRecipeSerializer<T extends Recipe<?>> implements Recip
     public BaseRecipeSerializer(String domain, String id) {
         this.domain = domain;
         this.id = id;
-        AntimatterAPI.register(RecipeSerializer.class, this);
+        GTAPI.register(RecipeSerializer.class, this);
     }
 
     @Override

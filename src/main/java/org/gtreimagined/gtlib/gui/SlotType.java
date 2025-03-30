@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.gui;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
@@ -76,7 +76,7 @@ public class SlotType<T extends Slot> implements IGTObject, IMachineEvent {
         this.tester = validator;
         this.input = input;
         this.textureName = textureName;
-        AntimatterAPI.register(SlotType.class, this);
+        GTAPI.register(SlotType.class, this);
     }
 
     public interface ISlotSupplier<T extends Slot> {

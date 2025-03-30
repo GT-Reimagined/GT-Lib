@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.block;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
@@ -29,7 +29,7 @@ public class BlockStoneWall extends WallBlock implements ISharedGTObject, ITextu
         id = type.getId() + s + suffix + "_wall";
         this.suffix = suffix;
         this.type = type;
-        AntimatterAPI.register(getClass(), this);
+        GTAPI.register(getClass(), this);
     }
 
     private static Properties getProps(StoneType type) {

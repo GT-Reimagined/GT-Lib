@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.integration.kubejs;
 
 import dev.latvian.mods.kubejs.event.EventJS;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.machine.types.BasicMachine;
@@ -28,21 +28,21 @@ import java.util.Objects;
 public class AMCreationEvent extends EventJS {
     public static final Map<String, SoundType> SOUND_TYPE_REGISTRY = new Object2ObjectOpenHashMap<>();
     public StoneType createStoneType(String id, String material, String texture, SoundType soundType, boolean generateBlock) {
-        return AntimatterAPI.register(StoneType.class, new StoneType(Ref.MOD_KJS, id, Material.get(material), new Texture(texture), soundType, generateBlock));
+        return GTAPI.register(StoneType.class, new StoneType(Ref.MOD_KJS, id, Material.get(material), new Texture(texture), soundType, generateBlock));
     }
 
     public StoneType createStoneType(String id, String material, String texture, SoundType soundType, String stoneState) {
-        return AntimatterAPI.register(StoneType.class, new StoneType(Ref.MOD_KJS, id, Material.get(material), new Texture(texture), soundType, false).setStateSupplier(() -> RegistryUtils.getBlockFromId(new ResourceLocation(stoneState)).defaultBlockState()));
+        return GTAPI.register(StoneType.class, new StoneType(Ref.MOD_KJS, id, Material.get(material), new Texture(texture), soundType, false).setStateSupplier(() -> RegistryUtils.getBlockFromId(new ResourceLocation(stoneState)).defaultBlockState()));
     }
 
     public Material createMaterial(String id, int rgb, String textureSet, String textureSetDomain) {
-        TextureSet set = Objects.requireNonNull(AntimatterAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via kubejs event is null");
-        return AntimatterAPI.register(Material.class, new Material(Ref.MOD_KJS, id, rgb, set));
+        TextureSet set = Objects.requireNonNull(GTAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via kubejs event is null");
+        return GTAPI.register(Material.class, new Material(Ref.MOD_KJS, id, rgb, set));
     }
 
     public Material createMaterial(String id, int rgb, String textureSet, String textureSetDomain, String element) {
-        TextureSet set = Objects.requireNonNull(AntimatterAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via kubejs event is null");
-        return AntimatterAPI.register(Material.class, new Material(Ref.MOD_KJS, id, rgb, set, Element.getFromElementId(element)));
+        TextureSet set = Objects.requireNonNull(GTAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via kubejs event is null");
+        return GTAPI.register(Material.class, new Material(Ref.MOD_KJS, id, rgb, set, Element.getFromElementId(element)));
     }
 
     public BasicMachine createBasicMachine(String id){
@@ -62,7 +62,7 @@ public class AMCreationEvent extends EventJS {
     }
 
     public RecipeMap createRecipeMap(String id){
-        return AntimatterAPI.register(RecipeMap.class, new RecipeMap<>(Ref.MOD_KJS, id, new RecipeBuilder()));
+        return GTAPI.register(RecipeMap.class, new RecipeMap<>(Ref.MOD_KJS, id, new RecipeBuilder()));
     }
 
 
@@ -70,7 +70,7 @@ public class AMCreationEvent extends EventJS {
     public void addFlagsToMaterial(String materialId, String... flags) {
         if (Material.get(materialId) != Material.NULL) {
             for (String flag : flags) {
-                IMaterialTag tag = AntimatterAPI.get(IMaterialTag.class, flag);
+                IMaterialTag tag = GTAPI.get(IMaterialTag.class, flag);
                 if (tag != null) {
                     Material.get(materialId).flags(type(flag));
                 }
@@ -79,15 +79,15 @@ public class AMCreationEvent extends EventJS {
     }
 
     public MaterialType type(String type) {
-        return AntimatterAPI.get(MaterialType.class, type);
+        return GTAPI.get(MaterialType.class, type);
     }
 
     public RecipeMap recipeMap(String id){
-        return AntimatterAPI.get(RecipeMap.class, id);
+        return GTAPI.get(RecipeMap.class, id);
     }
 
     public SlotType slotType(String id){
-        return AntimatterAPI.get(SlotType.class, id, Ref.ID);
+        return GTAPI.get(SlotType.class, id, Ref.ID);
     }
 
     public static void init(){

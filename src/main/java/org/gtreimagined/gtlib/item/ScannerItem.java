@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.item;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -52,13 +52,13 @@ public class ScannerItem extends ItemBasic<ScannerItem> {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Utils.literal(this.tooltip));
         if (Screen.hasShiftDown() && this == Data.DEBUG_SCANNER) {
-            tooltip.add(Utils.literal("Blocks: " + AntimatterAPI.all(Block.class).size()));
+            tooltip.add(Utils.literal("Blocks: " + GTAPI.all(Block.class).size()));
             tooltip.add(Utils.literal("Machines: " + Machine.getTypes(MachineFlag.BASIC, MachineFlag.MULTI, MachineFlag.HATCH).size()));
-            tooltip.add(Utils.literal("Pipes: " + AntimatterAPI.all(BlockPipe.class).size()));
-            tooltip.add(Utils.literal("Storage: " + AntimatterAPI.all(BlockStorage.class).size()));
-            tooltip.add(Utils.literal("Frame: " + AntimatterAPI.all(BlockFrame.class).size()));
-            tooltip.add(Utils.literal("Ores: " + AntimatterAPI.all(BlockOre.class).size()));
-            tooltip.add(Utils.literal("Stones: " + AntimatterAPI.all(BlockStone.class).size()));
+            tooltip.add(Utils.literal("Pipes: " + GTAPI.all(BlockPipe.class).size()));
+            tooltip.add(Utils.literal("Storage: " + GTAPI.all(BlockStorage.class).size()));
+            tooltip.add(Utils.literal("Frame: " + GTAPI.all(BlockFrame.class).size()));
+            tooltip.add(Utils.literal("Ores: " + GTAPI.all(BlockOre.class).size()));
+            tooltip.add(Utils.literal("Stones: " + GTAPI.all(BlockStone.class).size()));
             tooltip.add(Utils.literal("Data:"));
             tooltip.add(Utils.literal("Ore Materials: " + GTMaterialTypes.ORE.all().size()));
             tooltip.add(Utils.literal("Small Ore Materials: " + GTMaterialTypes.ORE_SMALL.all().size()));

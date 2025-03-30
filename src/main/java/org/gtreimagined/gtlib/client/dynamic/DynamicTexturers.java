@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.AntimatterProperties;
+import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
@@ -99,7 +99,7 @@ public class DynamicTexturers {
                 if (!(blockEntity instanceof BlockEntityMachine<?> machine) ||!(model instanceof BlockModel m)) return Collections.emptyList();
                 ((BlockModelAccessor)m).getTextureMap().put("base", Either.left(
                     ModelUtils.getBlockMaterial(machine.getMultiTexture().apply(side))));
-                   AntimatterProperties.MachineProperties prop = t.key.properties;
+                   GTLibProperties.MachineProperties prop = t.key.properties;
                 for (int i = 0; i < prop.type.getOverlayLayers(); i++) {
                     String suffix = i == 0 ? "" : String.valueOf(i);
                     ((BlockModelAccessor)m).getTextureMap().put("overlay" + suffix,

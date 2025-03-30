@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.integration.kubejs;
 
 import dev.latvian.mods.kubejs.event.EventJS;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.event.MaterialEvent;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -19,7 +19,7 @@ public class AMMaterialEvent extends EventJS {
     }
 
     public MaterialType type(String type) {
-        return AntimatterAPI.get(MaterialType.class, type);
+        return GTAPI.get(MaterialType.class, type);
     }
 
     public void setReplacement(String material, String item, MaterialType type){

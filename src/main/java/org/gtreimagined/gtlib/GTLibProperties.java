@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class AntimatterProperties {
+public class GTLibProperties {
     public static class MachineProperties {
         public final ICover[] covers;
         public final MachineState state;

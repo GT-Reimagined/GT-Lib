@@ -8,7 +8,7 @@ import tesseract.api.context.TesseractItemContext;
 import tesseract.api.gt.IEnergyHandlerItem;
 
 /**
- * ItemEnergyHandler represents the Antimatter Energy capability implementation for items.
+ * ItemEnergyHandler represents the GTLib Energy capability implementation for items.
  * It wraps an item and provides the ability to charge it & remove it, depending on if the item supports it.
  */
 public class ItemEnergyHandler extends EnergyHandler implements IEnergyHandlerItem {

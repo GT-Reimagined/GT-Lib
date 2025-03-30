@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.integration.rei.mixin;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -22,7 +22,7 @@ public class REIMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return AntimatterAPI.isModLoaded(Ref.MOD_REI);
+        return GTAPI.isModLoaded(Ref.MOD_REI);
     }
 
     @Override

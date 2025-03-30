@@ -20,7 +20,7 @@ public class TagUtils {
     //Initialized in onResourceReload.
     //private static TagContainer TAG_GETTER;
 
-    //A list of all registered tags for all Antimatter mods.
+    //A list of all registered tags for all GTLib mods.
     private static final Map<Class, Map<ResourceLocation, TagKey>> TAG_MAP = new Object2ObjectOpenHashMap<>();
 
     /**
@@ -37,7 +37,7 @@ public class TagUtils {
      * Redirects an BlockTag to a ItemTag
      *
      * @param tag a BlockTag, preferably already created
-     *            This is NOT safe to use for recipes outside of Antimatter recipe builders,
+     *            This is NOT safe to use for recipes outside of GTLib recipe builders,
      *            call nc() to get content. (NamedToContent)
      * @return ItemTag variant of the BlockTag
      */
@@ -67,7 +67,7 @@ public class TagUtils {
 
     /**
      * @param loc ResourceLocation of a ItemTag, can be new or old
-     *            This is NOT safe to use for recipes outside of Antimatter recipe builders,
+     *            This is NOT safe to use for recipes outside of GTLib recipe builders,
      *            call nc() to get content. (NamedToContent)
      * @return ItemTag
      */
@@ -77,7 +77,7 @@ public class TagUtils {
 
     /**
      * @param name name of a ItemTag, can be new or old, has the namespace "forge" or "c" attached.
-     *             This is NOT safe to use for recipes outside of Antimatter recipe builders,
+     *             This is NOT safe to use for recipes outside of GTLib recipe builders,
      *             call nc() to get content. (NamedToContent)
      * @return ItemTag
      */

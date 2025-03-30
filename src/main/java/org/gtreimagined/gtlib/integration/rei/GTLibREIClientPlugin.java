@@ -14,8 +14,8 @@ import me.shedaniel.rei.api.common.plugins.PluginManager;
 import me.shedaniel.rei.api.common.registry.ReloadStage;
 import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
@@ -53,13 +53,13 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
-        if (!AntimatterConfig.ADD_REI_GROUPS.get()) return;
+        if (!GTLibConfig.ADD_REI_GROUPS.get()) return;
 
-        AntimatterAPI.all(MaterialType.class).stream().filter(t -> t instanceof MaterialTypeItem<?> || t instanceof MaterialTypeBlock<?>).forEach(t -> {
+        GTAPI.all(MaterialType.class).stream().filter(t -> t instanceof MaterialTypeItem<?> || t instanceof MaterialTypeBlock<?>).forEach(t -> {
             if (t.get() instanceof MaterialTypeBlock.IOreGetter getter){
-                AntimatterAPI.all(StoneType.class, s -> {
-                    if (s != VanillaStoneTypes.STONE && !AntimatterConfig.SHOW_ALL_ORES.get() && t != GTMaterialTypes.BEARING_ROCK) return;
-                    if (t == GTMaterialTypes.BEARING_ROCK && !AntimatterConfig.SHOW_ROCKS.get()) return;
+                GTAPI.all(StoneType.class, s -> {
+                    if (s != VanillaStoneTypes.STONE && !GTLibConfig.SHOW_ALL_ORES.get() && t != GTMaterialTypes.BEARING_ROCK) return;
+                    if (t == GTMaterialTypes.BEARING_ROCK && !GTLibConfig.SHOW_ROCKS.get()) return;
                     List<EntryStack<ItemStack>> entries = t.all().stream().map(m -> EntryStack.of(VanillaEntryTypes.ITEM, getter.get((Material) m, s).asStack())).toList();
                     registry.group(new ResourceLocation(Ref.SHARED_ID, t.getId() + "_" + s.getId()), Utils.translatable(Ref.ID + ".rei.group." + t.getId() + "." + s.getId()), entries);
                 });
@@ -67,7 +67,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                     return;
                 }
             }
-            if (AntimatterConfig.GROUP_ORES_ONLY.get()) return;
+            if (GTLibConfig.GROUP_ORES_ONLY.get()) return;
             Function<Material, ItemStack> func = null;
             if (t instanceof MaterialTypeItem<?> typeItem){
                 func = m -> typeItem.get(m, 1);
@@ -83,8 +83,8 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
             List<EntryStack<ItemStack>> entries = t.all().stream().map(m -> EntryStack.of(VanillaEntryTypes.ITEM, finalFunc.apply((Material) m))).toList();
             registry.group(new ResourceLocation(Ref.SHARED_ID, t.getId()), Utils.translatable(Ref.ID + ".rei.group." + t.getId()), entries);
         });
-        if (AntimatterConfig.GROUP_ORES_ONLY.get()) return;
-        AntimatterAPI.all(StoneType.class, s -> {
+        if (GTLibConfig.GROUP_ORES_ONLY.get()) return;
+        GTAPI.all(StoneType.class, s -> {
             if (s instanceof CobbleStoneType cobble){
                 List<EntryStack<ItemStack>> entries = cobble.getBlocks().values().stream().map(b -> EntryStack.of(VanillaEntryTypes.ITEM, new ItemStack(b.asItem()))).toList();
                 registry.group(new ResourceLocation(Ref.SHARED_ID, s.getId()), Utils.translatable(Ref.ID + ".rei.group." + s.getId()), entries);

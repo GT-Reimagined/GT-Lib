@@ -2,9 +2,9 @@ package org.gtreimagined.gtlib.blockentity;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.AntimatterProperties;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLibConfig;
+import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.capability.GTLibCaps;
@@ -301,7 +301,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     protected boolean allowExplosionsInRain(){
-        return AntimatterConfig.RAIN_EXPLODES_MACHINES.get();
+        return GTLibConfig.RAIN_EXPLODES_MACHINES.get();
     }
 
     @Override
@@ -475,7 +475,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         if (event.getFactory() == SlotClickEvent.SLOT_CLICKED) {
             itemHandler.ifPresent(t -> {
                // ItemStack stack = player.get;
-              //  Antimatter.LOGGER.info("packet got");
+              //  GTLib.LOGGER.info("packet got");
             });
         }
     }
@@ -582,7 +582,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     public CoverFactory[] getValidCovers() {
-        return AntimatterAPI.all(CoverFactory.class).stream().filter(t -> t.getIsValid().test(this)).toArray(CoverFactory[]::new);
+        return GTAPI.all(CoverFactory.class).stream().filter(t -> t.getIsValid().test(this)).toArray(CoverFactory[]::new);
     }
 
     public ICover getCover(Direction side) {
@@ -814,9 +814,9 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         public final Texture tex;
         public Direction facing;
         public final MachineState state;
-        public AntimatterProperties.MachineProperties properties;
+        public GTLibProperties.MachineProperties properties;
 
-        public DynamicKey(ResourceLocation model, Texture tex, Direction dir, MachineState state, AntimatterProperties.MachineProperties properties) {
+        public DynamicKey(ResourceLocation model, Texture tex, Direction dir, MachineState state, GTLibProperties.MachineProperties properties) {
             this.model = model;
             this.tex = tex;
             this.facing = dir;

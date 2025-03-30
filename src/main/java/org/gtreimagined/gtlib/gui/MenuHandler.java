@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.gui;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.container.IGTContainer;
@@ -23,9 +23,9 @@ public abstract class MenuHandler<T extends AbstractContainerMenu & IGTContainer
 
     public MenuHandler(String domain, String id) {
         loc = new ResourceLocation(domain, id);
-        AntimatterAPI.register(MenuHandler.class, this);
+        GTAPI.register(MenuHandler.class, this);
         MenuType<?> type = getContainerType();
-        AntimatterAPI.register(MenuType.class, id, domain, type);
+        GTAPI.register(MenuType.class, id, domain, type);
     }
 
     @Override

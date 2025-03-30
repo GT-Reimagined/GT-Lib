@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.material;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
@@ -28,7 +28,7 @@ import static org.gtreimagined.gtlib.material.TextureSet.NONE;
 
 public class Material implements ISharedGTObject {
 
-    public static final Material NULL = AntimatterAPI.register(Material.class, new Material(Ref.ID, "null", 0xffffff, NONE));
+    public static final Material NULL = GTAPI.register(Material.class, new Material(Ref.ID, "null", 0xffffff, NONE));
     @Getter
     final Set<MaterialType<?>> types = new HashSet<>();
     /**
@@ -66,7 +66,7 @@ public class Material implements ISharedGTObject {
         this.displayNameString = Utils.lowerUnderscoreToUpperSpaced(id);
         if (modIds != null && modIds.length > 0) {
             for (String modId : modIds) {
-                if (!AntimatterAPI.isModLoaded(modId)) {
+                if (!GTAPI.isModLoaded(modId)) {
                     enabled = false;
                     return;
                 }
@@ -285,7 +285,7 @@ public class Material implements ISharedGTObject {
     }
 
     public static Material get(String id) {
-        Material material = AntimatterAPI.get(Material.class, id);
+        Material material = GTAPI.get(Material.class, id);
         return material == null ? NULL : material;
     }
 

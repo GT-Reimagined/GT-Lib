@@ -6,7 +6,7 @@ import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.Recipe;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
@@ -25,7 +25,7 @@ public class CTRecipeBuilder {
     RecipeManager manager;
 
     public CTRecipeBuilder(String mapId, RecipeManager manager) {
-        IRecipeMap map = AntimatterAPI.get(IRecipeMap.class, mapId);
+        IRecipeMap map = GTAPI.get(IRecipeMap.class, mapId);
         if(!(map instanceof RecipeMap<?> recipeMap)) {
             throw new IllegalArgumentException("Invalid recipe map: " + mapId);
         }

@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.common.event;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
-import org.gtreimagined.gtlib.AntimatterRemapping;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLibConfig;
+import org.gtreimagined.gtlib.GTRemapping;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
@@ -21,7 +21,7 @@ import org.gtreimagined.gtlib.proxy.ClientHandler;
 import org.gtreimagined.gtlib.structure.StructureCache;
 import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.RegistryUtils;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -79,7 +79,7 @@ public class ForgeCommonEvents {
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent e) {
         Container inv = e.getInventory();
         Player player = e.getPlayer();
-        if (!AntimatterConfig.PLAY_CRAFTING_SOUNDS.get()) return;
+        if (!GTLibConfig.PLAY_CRAFTING_SOUNDS.get()) return;
         for (int i = 0; i < inv.getContainerSize(); i++) {
             if (inv.getItem(i).getItem() instanceof IGTTool tool) {
                 SoundEvent type = tool.getAntimatterToolType().getUseSound();
@@ -162,11 +162,11 @@ public class ForgeCommonEvents {
 
     @SubscribeEvent
     public static void remapMissingBlocks(final RegistryEvent.MissingMappings<Block> event) {
-        for (String modid : AntimatterRemapping.getRemappingMap().keySet()) {
+        for (String modid : GTRemapping.getRemappingMap().keySet()) {
             for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings(modid)) {
-                var map = AntimatterRemapping.getRemappingMap().get(modid);
+                var map = GTRemapping.getRemappingMap().get(modid);
                 if (map.containsKey(mapping.key.getPath())){
-                    Block replacement = AntimatterAPI.get(Block.class, map.get(mapping.key.getPath()));
+                    Block replacement = GTAPI.get(Block.class, map.get(mapping.key.getPath()));
                     if (replacement != null){
                         mapping.remap(replacement);
                     }
@@ -184,13 +184,13 @@ public class ForgeCommonEvents {
                 }
             }
             if (id.startsWith("ore_")) {
-                Block replacement = AntimatterAPI.get(BlockOre.class, id);
+                Block replacement = GTAPI.get(BlockOre.class, id);
                 if (replacement != null) {
                     map.remap(replacement);
                     return;
                 }
             }
-            Block replacement = AntimatterAPI.get(Block.class, id, Ref.SHARED_ID);
+            Block replacement = GTAPI.get(Block.class, id, Ref.SHARED_ID);
             if (replacement != null) {
                 map.remap(replacement);
             }
@@ -215,7 +215,7 @@ public class ForgeCommonEvents {
                 replacement = replacement.isEmpty() ? id.replace("__", "_") : replacement.replace("__", "_");
             }
             if (!replacement.isEmpty()) {
-                Block replacementBlock = AntimatterAPI.get(Block.class, replacement, Ref.SHARED_ID);
+                Block replacementBlock = GTAPI.get(Block.class, replacement, Ref.SHARED_ID);
                 if (replacementBlock != null){
                     map.remap(replacementBlock);
                 }
@@ -225,11 +225,11 @@ public class ForgeCommonEvents {
 
     @SubscribeEvent
     public static void remapMissingItems(final RegistryEvent.MissingMappings<Item> event) {
-        for (String modid : AntimatterRemapping.getRemappingMap().keySet()) {
+        for (String modid : GTRemapping.getRemappingMap().keySet()) {
             for (RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings(modid)) {
-                var map = AntimatterRemapping.getRemappingMap().get(modid);
+                var map = GTRemapping.getRemappingMap().get(modid);
                 if (map.containsKey(mapping.key.getPath())){
-                    Item replacement = AntimatterAPI.get(Item.class, map.get(mapping.key.getPath()));
+                    Item replacement = GTAPI.get(Item.class, map.get(mapping.key.getPath()));
                     if (replacement != null){
                         mapping.remap(replacement);
                     }
@@ -237,7 +237,7 @@ public class ForgeCommonEvents {
             }
         }
         event.getMappings(Ref.ID).forEach(map -> {
-            Item replacement = AntimatterAPI.get(Item.class, map.key.getPath(), Ref.SHARED_ID);
+            Item replacement = GTAPI.get(Item.class, map.key.getPath(), Ref.SHARED_ID);
             if (replacement != null) {
                 map.remap(replacement);
             }
@@ -254,14 +254,14 @@ public class ForgeCommonEvents {
                 return;
             }
             if (id.startsWith("rock_")){
-                Item replacement = AntimatterAPI.get(Item.class, id.replace("rock_", "bearing_rock_"), Ref.SHARED_ID);
+                Item replacement = GTAPI.get(Item.class, id.replace("rock_", "bearing_rock_"), Ref.SHARED_ID);
                 if (replacement != null) {
                     map.remap(replacement);
                     return;
                 }
             }
             if (id.contains("crushed_centrifuged")){
-                Item replacement = AntimatterAPI.get(Item.class, id.replace("centrifuged", "refined"), Ref.SHARED_ID);
+                Item replacement = GTAPI.get(Item.class, id.replace("centrifuged", "refined"), Ref.SHARED_ID);
                 if (replacement != null) {
                     map.remap(replacement);
                     return;
@@ -281,7 +281,7 @@ public class ForgeCommonEvents {
                 replacement = replacement.isEmpty() ? id.replace("__", "_") : replacement.replace("__", "_");
             }
             if (!replacement.isEmpty()) {
-                Item replacementBlock = AntimatterAPI.get(Item.class, replacement, Ref.SHARED_ID);
+                Item replacementBlock = GTAPI.get(Item.class, replacement, Ref.SHARED_ID);
                 if (replacementBlock != null){
                     map.remap(replacementBlock);
                 }
@@ -315,7 +315,7 @@ public class ForgeCommonEvents {
 
     @SubscribeEvent
     public static void biomeLoadEvent(BiomeLoadingEvent event){
-        AntimatterWorldGenerator.reloadEvent(event.getName(),  event.getClimate(), event.getCategory(), event.getEffects(), event.getGeneration(), event.getSpawns());
+        GTLibWorldGenerator.reloadEvent(event.getName(),  event.getClimate(), event.getCategory(), event.getEffects(), event.getGeneration(), event.getSpawns());
     }
 
     @SubscribeEvent

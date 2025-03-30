@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.mixin.LootPoolAccessor;
 import org.gtreimagined.gtlib.util.ItemStackHashStrategy;
@@ -51,7 +51,7 @@ public class GTLoot {
             List<LootEntryItem> entryItems = lootEntryItems.get(name);
             for (LootEntryItem entry : entryItems) {
                 /*if (ConfigHolder.INSTANCE.dev.debug) {
-                    Antimatter.LOGGER.info("adding {} to lootTable {}", entry, name);
+                    GTLib.LOGGER.info("adding {} to lootTable {}", entry, name);
                 }*/
 
                 try {
@@ -59,7 +59,7 @@ public class GTLoot {
                     entries = ArrayUtils.add(entries, entry);
                     ((LootPoolAccessor) mainPool).setEntries(entries);
                 } catch (RuntimeException e) {
-                    Antimatter.LOGGER.error("Couldn't add {} to lootTable {}: {}", entry, name, e.getMessage());
+                    GTLib.LOGGER.error("Couldn't add {} to lootTable {}: {}", entry, name, e.getMessage());
                 }
             }
         }

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.block;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
 import org.gtreimagined.gtlib.machine.MachineFlag;
@@ -31,7 +31,7 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
     private static Set<Block> TILE_SET = new HashSet<>();
     public BlockFakeTile(String domain, String id, Properties properties) {
         super(domain, id, properties.isValidSpawn((blockState, blockGetter, blockPos, object) -> false));
-        AntimatterAPI.register(IRegistryEntryProvider.class, this);
+        GTAPI.register(IRegistryEntryProvider.class, this);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
             if (TYPE == null){
                 TYPE = new BlockEntityType<>(BlockEntityFakeBlock::new, TILE_SET, null);
                 //((IForgeRegistry<BlockEntityType<?>>)registry).register(TYPE);
-                AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), TYPE);
+                GTAPI.register(BlockEntityType.class, getId(), getDomain(), TYPE);
             }
 
         }

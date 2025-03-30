@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.gui.event;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 public class SlotClickEvent implements IGuiEvent {
 
-    public static final IGuiEventFactory SLOT_CLICKED = AntimatterAPI.register(IGuiEventFactory.class, new IGuiEventFactory() {
+    public static final IGuiEventFactory SLOT_CLICKED = GTAPI.register(IGuiEventFactory.class, new IGuiEventFactory() {
         @Override
         public BiFunction<IGuiEventFactory, FriendlyByteBuf, IGuiEvent> factory() {
             return SlotClickEvent::new;
@@ -38,7 +38,7 @@ public class SlotClickEvent implements IGuiEvent {
     public SlotClickEvent(IGuiEventFactory factory, FriendlyByteBuf buffer) {
         this.index = buffer.readVarInt();
         ResourceLocation loc = buffer.readResourceLocation();
-        this.type = AntimatterAPI.get(SlotType.class, loc.getPath(), loc.getNamespace());
+        this.type = GTAPI.get(SlotType.class, loc.getPath(), loc.getNamespace());
     }
 
     public SlotClickEvent(int slotIndex, SlotType<?> type) {

@@ -4,9 +4,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterRemapping;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTRemapping;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
@@ -124,7 +124,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
                 new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_huge"),
                 new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_quadruple"),
                 new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_nonuple")};
-        AntimatterAPI.register(BlockPipe.class, this);
+        GTAPI.register(BlockPipe.class, this);
         registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false).setValue(TICKING, false));
         this.modelId = modelId;
     }
@@ -145,10 +145,10 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
                         String domain = covers.getString(dir.get3DDataValue() + "d");
                         String id = covers.getString(dir.get3DDataValue() + "i");
                         ResourceLocation location = new ResourceLocation(domain, id);
-                        if (AntimatterRemapping.getCoverRemappingMap().containsKey(location)) location = AntimatterRemapping.getCoverRemappingMap().get(location);
-                        CoverFactory factory = AntimatterAPI.get(CoverFactory.class, location);
+                        if (GTRemapping.getCoverRemappingMap().containsKey(location)) location = GTRemapping.getCoverRemappingMap().get(location);
+                        CoverFactory factory = GTAPI.get(CoverFactory.class, location);
                         Tier tier = covers.contains(dir.get3DDataValue() + "t")
-                                ? AntimatterAPI.get(Tier.class, covers.getString(dir.get3DDataValue() + "t"))
+                                ? GTAPI.get(Tier.class, covers.getString(dir.get3DDataValue() + "t"))
                                 : null;
                         if (factory != null) {
                             ItemStack item = factory.getItem(tier);
@@ -399,7 +399,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         try {
             shape = getOrCreateShape(tile);
         } catch (ExecutionException e) {
-            Antimatter.LOGGER.error(e);
+            GTLib.LOGGER.error(e);
         }
         return shape != null ? shape : Shapes.block();
     }

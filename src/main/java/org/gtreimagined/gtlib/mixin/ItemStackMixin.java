@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.tool.IGTArmor;
 import org.gtreimagined.gtlib.tool.IGTTool;
@@ -30,7 +30,7 @@ public abstract class ItemStackMixin {
         }
         if (invoker.getItem() instanceof IGTArmor) {
             IGTArmor armor = (IGTArmor) invoker.getItem();
-            if (armor.getAntimatterArmorType().getSlot() == EquipmentSlot.HEAD && AntimatterAPI.isModLoaded(Ref.MOD_TOP)) {
+            if (armor.getAntimatterArmorType().getSlot() == EquipmentSlot.HEAD && GTAPI.isModLoaded(Ref.MOD_TOP)) {
                 if (invoker.getTag() != null && invoker.getTag().contains("theoneprobe") && invoker.getTag().getBoolean("theoneprobe")) {
                     if (entity instanceof Player) {
                         ItemStack probe = new ItemStack(RegistryUtils.getItemFromID(new ResourceLocation(Ref.MOD_TOP, "probe")));

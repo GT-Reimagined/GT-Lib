@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.dynamic.DynamicTexturer;
 import org.gtreimagined.gtlib.client.dynamic.DynamicTexturers;
@@ -239,7 +239,7 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
             if ((sides & (1 << i)) > 0) {
                 ICover cover = CoverFactory.readCover(this, Direction.from3DDataValue(i), nbt, false);
                 if (cover == null){
-                    Antimatter.LOGGER.warn(nbt + "at d: " + Direction.from3DDataValue(i) + "at pos: " + tile.getBlockPos());
+                    GTLib.LOGGER.warn(nbt + "at d: " + Direction.from3DDataValue(i) + "at pos: " + tile.getBlockPos());
                     cover = ICover.empty;
                 }
                 buildLookup(covers.get(Ref.DIRS[i]).getFactory(), cover.getFactory(), Ref.DIRS[i]);

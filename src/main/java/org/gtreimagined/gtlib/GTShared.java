@@ -3,5 +3,5 @@ package org.gtreimagined.gtlib;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(Ref.SHARED_ID)
-public class AntimatterShared {
+public class GTShared {
 }

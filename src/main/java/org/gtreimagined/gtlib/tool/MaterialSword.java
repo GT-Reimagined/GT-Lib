@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.tool;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.behaviour.IDestroySpeed;
@@ -67,7 +67,7 @@ public class MaterialSword extends SwordItem implements IGTTool {
         this.itemTier = tier;
         this.energyTier = -1;
         this.maxEnergy = -1;
-        AntimatterAPI.register(IGTTool.class, this);
+        GTAPI.register(IGTTool.class, this);
     }
 
     public MaterialSword(String domain, GTToolType type, GTItemTier tier, Properties properties, int energyTier) {
@@ -77,7 +77,7 @@ public class MaterialSword extends SwordItem implements IGTTool {
         this.itemTier = tier;
         this.energyTier = energyTier;
         this.maxEnergy = type.getBaseMaxEnergy() * energyTier;
-        AntimatterAPI.register(IGTTool.class, this);
+        GTAPI.register(IGTTool.class, this);
     }
 
     @Override

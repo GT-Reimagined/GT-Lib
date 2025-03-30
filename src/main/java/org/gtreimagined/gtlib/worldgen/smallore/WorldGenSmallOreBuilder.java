@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.worldgen.smallore;
 
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,8 +46,8 @@ public class WorldGenSmallOreBuilder {
                 this.biomes,
                 this.biomeBlacklist
         );
-        AntimatterWorldGenerator.writeJson(smallOre.toJson(), smallOre.getId(), "small_ore");
-        return AntimatterWorldGenerator.readJson(WorldGenSmallOre.class, smallOre, WorldGenSmallOre::fromJson, "small_ore");
+        GTLibWorldGenerator.writeJson(smallOre.toJson(), smallOre.getId(), "small_ore");
+        return GTLibWorldGenerator.readJson(WorldGenSmallOre.class, smallOre, WorldGenSmallOre::fromJson, "small_ore");
     }
 
 

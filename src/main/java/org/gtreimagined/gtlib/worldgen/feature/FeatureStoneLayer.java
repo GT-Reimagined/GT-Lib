@@ -1,14 +1,14 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.BlockOreStone;
 import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.NoiseGenerator;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
@@ -46,7 +46,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return AntimatterConfig.STONE_LAYERS.get() && getRegistry().size() > 0;
+        return GTLibConfig.STONE_LAYERS.get() && getRegistry().size() > 0;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, AntimatterConfiguredFeatures.STONE_LAYER);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_STRUCTURES, GTLibConfiguredFeatures.STONE_LAYER);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
         WorldGenLevel world = ctxt.level();
         BlockPos pos = ctxt.origin();
         Random rand = ctxt.random();
-        List<WorldGenStoneLayer> stones = AntimatterWorldGenerator.all(WorldGenStoneLayer.class, world.getLevel().dimension());
+        List<WorldGenStoneLayer> stones = GTLibWorldGenerator.all(WorldGenStoneLayer.class, world.getLevel().dimension());
         if (stones.size() == 0) return false;
         WorldGenStoneLayer[] layers = new WorldGenStoneLayer[7];
         NoiseGenerator noise = new NoiseGenerator(world);
@@ -124,7 +124,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                         }
                     }
 
-                    if (setStone && !isAir && AntimatterConfig.STONE_LAYER_ORES.get()) {
+                    if (setStone && !isAir && GTLibConfig.STONE_LAYER_ORES.get()) {
                         if (layers[1] == layers[5]) {
                             for (StoneLayerOre ore : layers[3].getOres()) {
                                 if (ore.canPlace(offset, rand, world) && WorldGenHelper.addOre(world, offset, ore.getMaterial(), layers[0] == layers[6])) {
@@ -148,8 +148,8 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                     if (!placedRock && lastMaterial != null && lastMaterial.has(GTMaterialTypes.ORE) && lastMaterial.has(BEARING_ROCK)) {
                         BlockState below = world.getBlockState(offset.offset(0, -1, 0));
                         int y = Math.min(world.getHeight(Heightmap.Types.OCEAN_FLOOR, offset.getX(), offset.getZ()), world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, offset.getX(), offset.getZ()));
-                        if (!below.isAir() && below != WorldGenHelper.WATER_STATE && AntimatterConfig.STONE_LAYER_ORE_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()) {
-                            if (WorldGenHelper.setRock(world, offset.mutable().setY(y).immutable(), lastMaterial, below, AntimatterConfig.STONE_LAYER_ORE_ROCK_CHANCE.get())){
+                        if (!below.isAir() && below != WorldGenHelper.WATER_STATE && GTLibConfig.STONE_LAYER_ORE_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()) {
+                            if (WorldGenHelper.setRock(world, offset.mutable().setY(y).immutable(), lastMaterial, below, GTLibConfig.STONE_LAYER_ORE_ROCK_CHANCE.get())){
                                 placedRock = true;
                             }
                         }
@@ -157,8 +157,8 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                     if (!placedRock && rockType != null){
                         BlockState below = world.getBlockState(offset.offset(0, -1, 0));
                         int y = Math.min(world.getHeight(Heightmap.Types.OCEAN_FLOOR, offset.getX(), offset.getZ()), world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, offset.getX(), offset.getZ()));
-                        if (!below.isAir() && below != WorldGenHelper.WATER_STATE && AntimatterConfig.STONE_LAYER_DENSE_ORE_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()) {
-                            if (WorldGenHelper.setRock(world, offset.mutable().setY(y).immutable(), Material.NULL, rockType.getState(), AntimatterConfig.STONE_LAYER_DENSE_ORE_ROCK_CHANCE.get())){
+                        if (!below.isAir() && below != WorldGenHelper.WATER_STATE && GTLibConfig.STONE_LAYER_DENSE_ORE_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()) {
+                            if (WorldGenHelper.setRock(world, offset.mutable().setY(y).immutable(), Material.NULL, rockType.getState(), GTLibConfig.STONE_LAYER_DENSE_ORE_ROCK_CHANCE.get())){
                                 placedRock = true;
                             }
                         }
@@ -172,8 +172,8 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                     BlockPos offset = pos.offset(i, 0, j);
                     int y = Math.min(world.getHeight(Heightmap.Types.OCEAN_FLOOR, offset.getX(), offset.getZ()), world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, offset.getX(), offset.getZ()));
                     BlockState below = world.getBlockState(offset.mutable().setY(y - 1));
-                    if (!below.isAir() && below != WorldGenHelper.WATER_STATE && AntimatterConfig.STONE_LAYER_ROCKS.get() && AntimatterConfig.SURFACE_ROCKS.get()) {
-                        WorldGenHelper.setRock(world, offset.mutable().setY(y).immutable(), Material.NULL, topStoneType.getState(), AntimatterConfig.STONE_LAYER_ROCK_CHANCE.get());
+                    if (!below.isAir() && below != WorldGenHelper.WATER_STATE && GTLibConfig.STONE_LAYER_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()) {
+                        WorldGenHelper.setRock(world, offset.mutable().setY(y).immutable(), Material.NULL, topStoneType.getState(), GTLibConfig.STONE_LAYER_ROCK_CHANCE.get());
                     }
                 }
             }

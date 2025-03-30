@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.registration;
 
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.MaterialDataInit;
 import org.gtreimagined.gtlib.Ref;
@@ -43,13 +43,13 @@ public final class GTRegistration {
     @SubscribeEvent
     public static void onRegister(final RegistryEvent.Register<?> e) {
         final String domain = ModLoadingContext.get().getActiveNamespace();
-        List<IGTRegistrar> list2 = AntimatterAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
+        List<IGTRegistrar> list2 = GTAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
         if (list2.size() < 4) {
-            Antimatter.LOGGER.info("Mod ID: " + domain + " & event: " + e.getRegistry().getRegistryName());
+            GTLib.LOGGER.info("Mod ID: " + domain + " & event: " + e.getRegistry().getRegistryName());
         }
         onRegister(domain, e);
         onRegister(Ref.SHARED_ID, e);
-        List<IGTRegistrar> list = AntimatterAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
+        List<IGTRegistrar> list = GTAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
         list.forEach(r -> {
             onRegister(r.getId(), e);
         });
@@ -64,84 +64,84 @@ public final class GTRegistration {
             ModLoadingContext.get().setActiveContainer(newContainer);
         }
         if (domain.equals(Ref.ID)) {
-            List<IGTRegistrar> list = AntimatterAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
+            List<IGTRegistrar> list = GTAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
             if (e.getRegistry() == ForgeRegistries.BLOCKS) {
-                AntimatterAPI.onRegistration(RegistrationEvent.DATA_INIT);
-                AntimatterAPI.all(SoundEvent.class, t -> {
+                GTAPI.onRegistration(RegistrationEvent.DATA_INIT);
+                GTAPI.all(SoundEvent.class, t -> {
                     if (t.getRegistryName() == null) t.setRegistryName(t.getLocation());
                 });
                 MaterialEvent event = new MaterialEvent();
                 MaterialDataInit.onMaterialEvent(event);
                 list.forEach(r -> r.onMaterialEvent(event));
-                if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)) {
+                if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
                     AntimatterKubeJS.loadMaterialEvent(event);
                 }
                 Data.postInit();
             }
-            AntimatterAPI.all(IRegistryEntryProvider.class, domain, p -> p.onRegistryBuild(e.getRegistry()));
-            AntimatterAPI.all(IRegistryEntryProvider.class, Ref.SHARED_ID, p -> p.onRegistryBuild(e.getRegistry()));
-            list.forEach(r -> AntimatterAPI.all(IRegistryEntryProvider.class, r.getDomain(), p -> p.onRegistryBuild(e.getRegistry())));
+            GTAPI.all(IRegistryEntryProvider.class, domain, p -> p.onRegistryBuild(e.getRegistry()));
+            GTAPI.all(IRegistryEntryProvider.class, Ref.SHARED_ID, p -> p.onRegistryBuild(e.getRegistry()));
+            list.forEach(r -> GTAPI.all(IRegistryEntryProvider.class, r.getDomain(), p -> p.onRegistryBuild(e.getRegistry())));
         }
         if (e.getRegistry() == ForgeRegistries.BLOCKS) {
-            AntimatterAPI.all(Block.class, domain, (b, d, i) -> {
+            GTAPI.all(Block.class, domain, (b, d, i) -> {
                 if (b.getRegistryName() == null)
                     b.setRegistryName(d, i);
                 if (!(b instanceof IItemBlockProvider pb) || pb.generateItemBlock()) {
-                    AntimatterAPI.register(Item.class, i, d, b instanceof IItemBlockProvider pb ? pb.getItemBlock() : new GTItemBlock(b));
+                    GTAPI.register(Item.class, i, d, b instanceof IItemBlockProvider pb ? pb.getItemBlock() : new GTItemBlock(b));
                 }
                 ((IForgeRegistry) e.getRegistry()).register(b);
             });
 
         } else if (e.getRegistry() == ForgeRegistries.ITEMS) {
-            AntimatterAPI.all(Item.class, domain, (i, d, id) -> {
+            GTAPI.all(Item.class, domain, (i, d, id) -> {
                 if (i.getRegistryName() == null)
                     i.setRegistryName(d, id);
                 ((IForgeRegistry) e.getRegistry()).register(i);
             });
             registerTools(domain, e.getRegistry());
         } else if (e.getRegistry() == ForgeRegistries.BLOCK_ENTITIES) {
-            AntimatterAPI.all(BlockEntityType.class, domain, (t, d, i) -> {
+            GTAPI.all(BlockEntityType.class, domain, (t, d, i) -> {
                 if (t.getRegistryName() == null) t.setRegistryName(d, i);
                 ((IForgeRegistry) e.getRegistry()).register(t);
             });
         } else if (e.getRegistry() == ForgeRegistries.FLUIDS) {
-            AntimatterAPI.all(GTFluid.class, domain, f -> {
+            GTAPI.all(GTFluid.class, domain, f -> {
                 if (f.getFluid().getRegistryName() == null) f.getFluid().setRegistryName(domain, f.getId());
                 if (f.getFlowingFluid().getRegistryName() == null) f.getFlowingFluid().setRegistryName(domain, "flowing_".concat(f.getId()));
                 ((IForgeRegistry) e.getRegistry()).registerAll(f.getFluid(), f.getFlowingFluid());
             });
         } else if (e.getRegistry() == ForgeRegistries.CONTAINERS) {
-            AntimatterAPI.all(MenuType.class, domain, (h, d, i) -> {
+            GTAPI.all(MenuType.class, domain, (h, d, i) -> {
                 if (h.getRegistryName() == null) h.setRegistryName(d, i);
                 ((IForgeRegistry) e.getRegistry()).register(h);
             });
         } else if (e.getRegistry() == ForgeRegistries.SOUND_EVENTS) {
-            AntimatterAPI.all(SoundEvent.class, domain, (t, d, i) -> {
+            GTAPI.all(SoundEvent.class, domain, (t, d, i) -> {
                 if (t.getRegistryName() == null) t.setRegistryName(d, i);
                 ((IForgeRegistry) e.getRegistry()).register(t);
             });
         } else if (e.getRegistry() == ForgeRegistries.RECIPE_SERIALIZERS) {
             //TODO better solution for this
-            AntimatterAPI.all(IIngredientSerializer.class, domain, (s, d, i) -> {
+            GTAPI.all(IIngredientSerializer.class, domain, (s, d, i) -> {
                 CraftingHelper.register(new ResourceLocation(d, i), s);
             });
             if (domain.equals(Ref.ID)) {
                 CraftingHelper.register(ConfigCondition.Serializer.INSTANCE);
                 CraftingHelper.register(TomlConfigCondition.Serializer.INSTANCE);
             }
-            AntimatterAPI.all(RecipeSerializer.class, domain, (r, d, i) -> {
+            GTAPI.all(RecipeSerializer.class, domain, (r, d, i) -> {
                 if (r.getRegistryName() == null){
                     r.setRegistryName(new ResourceLocation(d, i));
                 }
                 ((IForgeRegistry) e.getRegistry()).register(r);
             });
         } else if (e.getRegistry() == ForgeRegistries.FEATURES) {
-            AntimatterAPI.all(IGTFeature.class, domain,(t, d, i) -> {
+            GTAPI.all(IGTFeature.class, domain,(t, d, i) -> {
                 if (t.asFeature().getRegistryName() == null) t.asFeature().setRegistryName(d, i);
                 ((IForgeRegistry) e.getRegistry()).register(t.asFeature());
             });
         } else if (e.getRegistry() == ForgeRegistries.ENCHANTMENTS){
-            AntimatterAPI.all(Enchantment.class, domain, (en, d, i) -> {
+            GTAPI.all(Enchantment.class, domain, (en, d, i) -> {
                 if (en.getRegistryName() == null) en.setRegistryName(d, i);
                 ((IForgeRegistry) e.getRegistry()).register(en);
             });
@@ -153,14 +153,14 @@ public final class GTRegistration {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void registerTools(String domain, IForgeRegistry registry) {
-        AntimatterAPI.all(GTToolType.class, domain, t -> {
+        GTAPI.all(GTToolType.class, domain, t -> {
             List<IGTTool> tools = t.isPowered() ? t.instantiatePoweredTools(domain) : t.instantiateTools(domain);
             for (IGTTool i : tools) {
                 if (i.getItem().getRegistryName() == null) i.getItem().setRegistryName(domain, i.getId());
                 registry.register(i.getItem());
             }
         });
-        AntimatterAPI.all(GTArmorType.class, domain, t -> {
+        GTAPI.all(GTArmorType.class, domain, t -> {
             List<IGTArmor> i = t.instantiateTools();
             i.forEach(a -> {
                 if (a.getItem().getRegistryName() == null) a.getItem().setRegistryName(domain, a.getId());

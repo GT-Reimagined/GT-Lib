@@ -22,8 +22,8 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.integration.jei.category.MultiMachineInfoCategory;
 import org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory;
@@ -36,7 +36,7 @@ import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.Utils;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.vein.WorldGenVeinLayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -77,7 +77,7 @@ public class GTLibJEIPlugin implements IModPlugin {
     private static IJeiHelpers helpers;
 
     public GTLibJEIPlugin() {
-        Antimatter.LOGGER.info("Creating AntimatterAPI's JEI Plugin");
+        GTLib.LOGGER.info("Creating GTAPI's JEI Plugin");
     }
 
     @Override
@@ -87,7 +87,7 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_REI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         runtime = jeiRuntime;
         //Remove fluid "blocks".
         List<ItemLike> list = new ArrayList<>();
@@ -102,8 +102,8 @@ public class GTLibJEIPlugin implements IModPlugin {
             runtime.getIngredientManager().removeIngredientsAtRuntime(ForgeTypes.FLUID_STACK,  fluidList.stream().map(f -> new FluidStack(f, 1)).toList());
             runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, fluidList.stream().map(i -> i.getBucket().getDefaultInstance()).toList());
         }
-        //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, AntimatterAPI.all(BlockSurfaceRock.class).stream().map(b -> new ItemStack(b, 1)).filter(t -> !t.isEmpty()).collect(Collectors.toList()));
-        //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, AntimatterAPI.all(BlockOre.class).stream().filter(b -> b.getStoneType() != Data.STONE).map(b -> new ItemStack(b, 1)).collect(Collectors.toList()));
+        //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, GTAPI.all(BlockSurfaceRock.class).stream().map(b -> new ItemStack(b, 1)).filter(t -> !t.isEmpty()).collect(Collectors.toList()));
+        //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, GTAPI.all(BlockOre.class).stream().filter(b -> b.getStoneType() != Data.STONE).map(b -> new ItemStack(b, 1)).collect(Collectors.toList()));
         //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, Data.MACHINE_INVALID.getTiers().stream().map(t -> Data.MACHINE_INVALID.getItem(t).getDefaultInstance()).collect(Collectors.toList()));
     }
 
@@ -111,10 +111,10 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_REI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         List<ItemLike> list = new ArrayList<>();
         AntimatterJEIREIPlugin.getItemsToHide().forEach(c -> c.accept(list));
-        AntimatterAPI.all(Item.class).forEach(i -> {
+        GTAPI.all(Item.class).forEach(i -> {
             if (list.contains(i)) return;
             if (i instanceof IEnergyItem energyItem && energyItem.canCreate(new ItemStackWrapper(i.getDefaultInstance()))) {
                 registration.registerSubtypeInterpreter(i, (s, c) -> {
@@ -129,7 +129,7 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_REI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         RecipeMapCategory.setGuiHelper(registry.getJeiHelpers().getGuiHelper());
         MultiMachineInfoCategory.setGuiHelper(registry.getJeiHelpers().getGuiHelper());
         if (helpers == null) helpers = registry.getJeiHelpers();
@@ -162,13 +162,13 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_REI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         if (helpers == null) helpers = registration.getJeiHelpers();
         AntimatterJEIREIPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (tuple.map.getSubCategories().isEmpty()) {
                 registration.addRecipes(RECIPE_TYPES.get(id.toString()), getRecipes(tuple.map));
             } else {
-                Antimatter.LOGGER.info(tuple.map.getId());
+                GTLib.LOGGER.info(tuple.map.getId());
                 List<IRecipe> recipes = getRecipes(tuple.map);
                 List<IRecipe> mainRecipes = new ArrayList<>();
                 Map<String, List<IRecipe>> recipeMap = new HashMap<>();
@@ -191,7 +191,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 }
             }
         });
-        registration.addRecipes(VeinCategory.VEIN_LAYERS, AntimatterWorldGenerator.all(WorldGenVeinLayer.class));
+        registration.addRecipes(VeinCategory.VEIN_LAYERS, GTLibWorldGenerator.all(WorldGenVeinLayer.class));
         MultiMachineInfoCategory.registerRecipes(registration);
     }
 
@@ -233,7 +233,7 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_REI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         registration.getCraftingCategory().addCategoryExtension(MaterialRecipe.class, JEIMaterialRecipeExtension::new);
     }
 
@@ -252,7 +252,7 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(@NotNull IRecipeCatalystRegistration registration) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_REI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         AntimatterJEIREIPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (tuple.workstations.isEmpty()) return;
             tuple.workstations.forEach(s -> {

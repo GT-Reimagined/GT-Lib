@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * StructureCache represents an efficient cache of multiblock structures in Antimatter. It listens to block updates to send updates to controllers.
+ * StructureCache represents an efficient cache of multiblock structures in GTLib. It listens to block updates to send updates to controllers.
  * StructureCache also ensures MAX_SHARES in multiblocks are handled.
  * It also supports listeners for positions to keep track of valid multiblocks.
  */
@@ -32,7 +32,7 @@ public class StructureCache {
     private static final Object2ObjectMap<Level, Long2ObjectMap<Set<StructureHandle<?>>>> CALLBACKS = new Object2ObjectOpenHashMap<>();
 
     static {
-        AntimatterAPI.registerBlockUpdateHandler((world, pos, oldState, newState, flags) -> {
+        GTAPI.registerBlockUpdateHandler((world, pos, oldState, newState, flags) -> {
             if (oldState == newState) return;  // TODO: better checks?
             //if no block update is actually queried, ignore it here.
             if ((flags & (1)) == 0) {

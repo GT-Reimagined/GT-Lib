@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
@@ -29,9 +29,9 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject
         this.domain = domain;
         this.id = id;
         this.subDir = subDir;
-        AntimatterAPI.register(getClass(), this);
+        GTAPI.register(getClass(), this);
         if (getClass() != ItemBasic.class){
-            AntimatterAPI.register(ItemBasic.class, this);
+            GTAPI.register(ItemBasic.class, this);
         }
     }
 
@@ -43,7 +43,7 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject
         super(properties);
         this.domain = domain;
         this.id = id;
-        AntimatterAPI.register(clazz, this);
+        GTAPI.register(clazz, this);
     }
 
     public ItemBasic(String domain, String id) {

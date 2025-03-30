@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.machine;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
@@ -57,7 +57,7 @@ public class Tier implements ISharedGTObject {
         this.rarityFormatting = rarityFormatting;
         this.baseTexture = "block/machine/base/" + id;
         this.integerId = integerId;
-        AntimatterAPI.register(Tier.class, this);
+        GTAPI.register(Tier.class, this);
     }
 
     @Override

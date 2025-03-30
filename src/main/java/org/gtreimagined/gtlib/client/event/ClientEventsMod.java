@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.client.event;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.client.model.loader.IGTModelLoader;
@@ -33,7 +33,7 @@ public class ClientEventsMod {
 
     @SubscribeEvent
     public static void preResourceRegistration(ParticleFactoryRegisterEvent ev) {
-        AntimatterAPI.onRegistration(RegistrationEvent.CLIENT_DATA_INIT);
-        AntimatterAPI.all(IGTModelLoader.class).forEach(l -> ModelLoaderRegistry.registerLoader(l.getLoc(), l));
+        GTAPI.onRegistration(RegistrationEvent.CLIENT_DATA_INIT);
+        GTAPI.all(IGTModelLoader.class).forEach(l -> ModelLoaderRegistry.registerLoader(l.getLoc(), l));
     }
 }

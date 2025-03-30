@@ -2,9 +2,9 @@ package org.gtreimagined.gtlib.worldgen;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.mixin.BiomeGenerationBuilderAccessor;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 
 import static org.gtreimagined.gtlib.Ref.GSON;
 
-public class AntimatterWorldGenerator {
+public class GTLibWorldGenerator {
     static final GTFeature<NoneFeatureConfiguration> SMALL_ORE = new FeatureSmallOres();
 
     static final GTFeature<NoneFeatureConfiguration> VANILLA_ORE = new FeatureVanillaOres();
@@ -63,7 +63,7 @@ public class AntimatterWorldGenerator {
     static final GTFeature<NoneFeatureConfiguration> BEDROCK_VEINS = new FeatureBedrockOre();
 
     public static void clear() {
-        AntimatterAPI.all(GTFeature.class, t -> t.getRegistry().clear());
+        GTAPI.all(GTFeature.class, t -> t.getRegistry().clear());
     }
 
     public static void preinit() {
@@ -71,15 +71,15 @@ public class AntimatterWorldGenerator {
     }
 
     public static void init() {
-        AntimatterAPI.runLaterCommon(() -> {
+        GTAPI.runLaterCommon(() -> {
             WorldGenHelper.init();
             try {
-                AntimatterAPI.all(GTFeature.class).stream().filter(GTFeature::enabled).forEach(f -> {
+                GTAPI.all(GTFeature.class).stream().filter(GTFeature::enabled).forEach(f -> {
                     f.onDataOverride(new JsonObject());
                     f.init();
                 });
             } catch (Exception ex) {
-                Antimatter.LOGGER.warn("Caught exception during World generator later init: " + ex.toString());
+                GTLib.LOGGER.warn("Caught exception during World generator later init: " + ex.toString());
             }
         });
         /*
@@ -87,32 +87,32 @@ public class AntimatterWorldGenerator {
             //Path config = FMLPaths.CONFIGDIR.get().resolve("GregTech/WorldGenDefault.json");
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("AntimatterWorldGenerator caught an exception while initializing");
+            throw new RuntimeException("GTLibWorldGenerator caught an exception while initializing");
         }
          */
     }
 
     public static void setup() {
-        Antimatter.LOGGER.info("GTLib WorldGen Initialization Stage...");
-        AntimatterAPI.onRegistration(RegistrationEvent.WORLDGEN_INIT);
-        //if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)) {
+        GTLib.LOGGER.info("GTLib WorldGen Initialization Stage...");
+        GTAPI.onRegistration(RegistrationEvent.WORLDGEN_INIT);
+        //if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
         //    AntimatterKubeJS.loadWorldgenScripts();
         //}
     }
 
     public static void register(Class<?> c, WorldGenBase<?> base) {
-        GTFeature<?> feature = AntimatterAPI.get(GTFeature.class, c.getName());
+        GTFeature<?> feature = GTAPI.get(GTFeature.class, c.getName());
         if (feature != null)
             base.getDimensions().forEach(d -> feature.getRegistry().computeIfAbsent(d, k -> new LinkedList<>()).add(base));
     }
 
     public static <T> List<T> all(Class<T> c, ResourceKey<Level> dim) {
-        GTFeature<?> feat = AntimatterAPI.get(GTFeature.class, c.getName());
+        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName());
         return feat != null ? feat.getRegistry().computeIfAbsent(dim.location(), k -> new LinkedList<>()).stream().map(c::cast).collect(Collectors.toList()) : Collections.emptyList();
     }
 
     public static <T> List<T> all(Class<T> c) {
-        GTFeature<?> feat = AntimatterAPI.get(GTFeature.class, c.getName());
+        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName());
         return feat != null ? feat.getRegistry().values().stream().flatMap(Collection::stream).map(c::cast).distinct().toList() : Collections.emptyList();
     }
 
@@ -136,7 +136,7 @@ public class AntimatterWorldGenerator {
     public static void removeDecoratedFeatureFromAllBiomes(BiomeGenerationSettings.Builder builder, @NotNull final GenerationStep.Decoration stage, @NotNull final Feature<?> featureToRemove, BlockState... states) {
         if (states.length == 0) Utils.onInvalidData("No BlockStates specified to be removed!");
         Set<BlockState> set = Set.of(states);
-        // AntimatterAPI.runLaterCommon(() -> {
+        // GTAPI.runLaterCommon(() -> {
         //  for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
         ((BiomeGenerationBuilderAccessor)builder).getFeatures().get(stage.ordinal()).removeIf(f -> isDecoratedFeatureDisabled(f.value().feature().value(), featureToRemove, set));
 
@@ -152,7 +152,7 @@ public class AntimatterWorldGenerator {
      */
     public static void removeDecoratedFeaturesFromBiome(@NotNull final Biome biome, final @NotNull GenerationStep.Decoration stage, final @NotNull Feature<?> featureToRemove, BlockState... states) {
         if (states.length == 0) Utils.onInvalidData("No BlockStates specified to be removed!");
-        AntimatterAPI.runLaterCommon(() -> {
+        GTAPI.runLaterCommon(() -> {
             for (BlockState state : states) {
                 // biome.getFeatures(stage).removeIf(f -> isDecoratedFeatureDisabled(f, featureToRemove, state));
             }
@@ -196,18 +196,18 @@ public class AntimatterWorldGenerator {
 
     public static void reloadEvent(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
 
-        AntimatterAPI.all(IGTFeature.class, t -> {
+        GTAPI.all(IGTFeature.class, t -> {
             t.build(name, climate, category, effects, gen, spawns);
         });
         handleFeatureRemoval(gen);
-        AntimatterAPI.all(IAntimatterWorldgenFunction.class, t -> t.build(name, climate, category, effects, gen, spawns));
+        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(name, climate, category, effects, gen, spawns));
     }
 
     private static void handleFeatureRemoval(BiomeGenerationSettings.Builder gen) {
-        if (AntimatterConfig.VANILLA_ORE_GEN.get()) {
+        if (GTLibConfig.VANILLA_ORE_GEN.get()) {
             removeOreFeatures(gen);
         }
-        if (AntimatterConfig.VANILLA_STONE_GEN.get()) {
+        if (GTLibConfig.VANILLA_STONE_GEN.get()) {
             removeStoneFeatures(gen);
         }
     }

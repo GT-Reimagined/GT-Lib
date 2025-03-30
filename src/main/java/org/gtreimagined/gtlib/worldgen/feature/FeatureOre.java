@@ -1,10 +1,10 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
+import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +31,7 @@ public class FeatureOre extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return AntimatterConfig.STONE_LAYER_ORES.get();
+        return GTLibConfig.STONE_LAYER_ORES.get();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FeatureOre extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, AntimatterConfiguredFeatures.ORE);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.ORE);
     }
 
     @Override

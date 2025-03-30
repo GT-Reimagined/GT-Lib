@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.machine.Tier.NONE;
 
-public class AntimatterRemapping {
+public class GTRemapping {
     private static final Map<String, Map<String, ResourceLocation>> REMAPPING_MAP = new Object2ObjectArrayMap<>();
 
     private static final Map<ResourceLocation, ResourceLocation> BE_REMAPPING_MAP = new Object2ObjectArrayMap<>();

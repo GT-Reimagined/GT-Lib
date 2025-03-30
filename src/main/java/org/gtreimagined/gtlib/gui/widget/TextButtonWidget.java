@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.cover.ICover;
@@ -54,7 +54,7 @@ public class TextButtonWidget<T> extends ButtonWidget {
             gui.syncFluidStack(() -> (FluidStack) syncFunction.apply(gui.handler), i -> this.state = (T) i, ICanSyncData.SyncDirection.SERVER_TO_CLIENT);
         } else {
             String object = gui.handler instanceof BlockEntityMachine<?> machine ? machine.getMachineType().getLoc().toString() : gui.handler instanceof ICover cover ? cover.getLoc().toString() : gui.handler.getClass().toString();
-            Antimatter.LOGGER.warn("Unknown sync type in text widget in: " + object);
+            GTLib.LOGGER.warn("Unknown sync type in text widget in: " + object);
         }
     }
 

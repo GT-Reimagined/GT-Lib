@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.block;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
@@ -76,7 +76,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
         shapes.put(4, Block.box(6.0D, 0.0D, 2.0D, 11.0D, 3.0D, 9.0D));
         shapes.put(5, Block.box(9.0D, 0.0D, 4.0D, 12.0D, 1.0D, 8.0D));
         shapes.put(6, Block.box(5.0D, 0.0D, 4.0D, 12.0D, 2.0D, 8.0D));
-        String overlay = material == Material.NULL || !AntimatterConfig.DETAILED_ROCKS.get() ? "block/empty" : "material/surface_rock_overlay";
+        String overlay = material == Material.NULL || !GTLibConfig.DETAILED_ROCKS.get() ? "block/empty" : "material/surface_rock_overlay";
         textureMap = ImmutableMap.of("all", stoneType.getTexture(), "overlay", new Texture(Ref.ID, overlay));
     }
 
@@ -107,7 +107,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        return AntimatterConfig.DETAILED_ROCKS.get() ? new ItemStack(this) : !stoneType.getMaterial().has(ROCK) ? new ItemStack(ROCK.get().get(GTLibMaterials.Stone).asItem()) : new ItemStack(ROCK.get().get(stoneType.getMaterial()).asItem());
+        return GTLibConfig.DETAILED_ROCKS.get() ? new ItemStack(this) : !stoneType.getMaterial().has(ROCK) ? new ItemStack(ROCK.get().get(GTLibMaterials.Stone).asItem()) : new ItemStack(ROCK.get().get(stoneType.getMaterial()).asItem());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.fluid;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
@@ -85,15 +85,15 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     @Override
     public void onRegistryBuild(IForgeRegistry<?> registry) {
         if (registry == ForgeRegistries.ITEMS) {
-            AntimatterAPI.register(Item.class, getId() + "_bucket", getDomain(), containerItem = new BucketItem(this::getFluid, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET).tab(CreativeModeTab.TAB_MISC)));
+            GTAPI.register(Item.class, getId() + "_bucket", getDomain(), containerItem = new BucketItem(this::getFluid, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET).tab(CreativeModeTab.TAB_MISC)));
         } else if (registry == ForgeRegistries.BLOCKS) {
             this.source = new Source(this.fluidProperties);
             this.flowing = new Flowing(this.fluidProperties);
             this.fluidBlock = new LiquidBlock(this::getFluid, blockProperties);
-            AntimatterAPI.register(Block.class, "block_fluid_".concat(getId()), getDomain(), fluidBlock);
+            GTAPI.register(Block.class, "block_fluid_".concat(getId()), getDomain(), fluidBlock);
         } else if (registry == ForgeRegistries.FLUIDS) {
-            AntimatterAPI.register(Fluid.class, getId(), getDomain(), source);
-            AntimatterAPI.register(FlowingFluid.class, "flowing_".concat(getId()), getDomain(), flowing);
+            GTAPI.register(Fluid.class, getId(), getDomain(), source);
+            GTAPI.register(FlowingFluid.class, "flowing_".concat(getId()), getDomain(), flowing);
         }
     }
 

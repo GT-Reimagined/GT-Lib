@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.block;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
@@ -32,7 +32,7 @@ public class BlockBasicStair extends StairBlock implements IGTObject, ITexturePr
         this.domain = domain;
         this.id = id;
         this.base = base;
-        AntimatterAPI.register(getClass(), this);
+        GTAPI.register(getClass(), this);
     }
 
     public BlockBasicStair(String domain, String id, Block base) {

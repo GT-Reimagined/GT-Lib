@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import lombok.Setter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
@@ -86,7 +86,7 @@ import static org.gtreimagined.gtlib.machine.MachineFlag.RECIPE;
 import static org.gtreimagined.gtlib.machine.Tier.NONE;
 
 /**
- * Machine represents the base class for an Antimatter Machine. It provides tile entities, blocks as well as
+ * Machine represents the base class for an GTLib Machine. It provides tile entities, blocks as well as
  * features to configure machines such as vertical facing, the recipe map and smaller behaviours like if front IO is allowed.
  *
  * @param <T> this class as a generic argument.
@@ -223,7 +223,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         };
         itemModelParent = new ResourceLocation(Ref.ID, "block/preset/layered");
         tiers = Arrays.asList(Tier.getStandard());
-        AntimatterAPI.register(Machine.class, this);
+        GTAPI.register(Machine.class, this);
         //if (FMLEnvironment.dist.isClient()) {
         setupGui();
         //}
@@ -346,7 +346,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     public void onRegistryBuild(IForgeRegistry<?> registry) {
         if (registry != ForgeRegistries.BLOCKS) return;
         tileType = new BlockEntityType<>(new BlockEntityBase.BlockEntityGetter<>(tileFunc, (T)this), tiers.stream().map(t -> getBlock(this, t)).collect(Collectors.toSet()), null);
-        AntimatterAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
+        GTAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }
 
     @Override
@@ -360,7 +360,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
 
     public BlockMachine getBlockState(Tier tier) {
         if (tileType == null) return null;
-        return AntimatterAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), this.getDomain());
+        return GTAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), this.getDomain());
     }
 
     /**
@@ -370,7 +370,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * @return this as an item.
      */
     public Item getItem(Tier tier) {
-        return BlockItem.BY_BLOCK.get(AntimatterAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), getDomain()));
+        return BlockItem.BY_BLOCK.get(GTAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), getDomain()));
     }
 
     /**
@@ -383,19 +383,19 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                     for (int i = 0; i < tiers.size(); i++) {
                         Tier tier = tiers.get(i);
                         if (i == 0 && r.getGui() == null && !AntimatterJEIREIPlugin.containsCategory(r)){
-                            AntimatterAPI.registerJEICategory(r, this.guiData, this, tier, false);
+                            GTAPI.registerJEICategory(r, this.guiData, this, tier, false);
                         } else {
-                            AntimatterAPI.registerJEICategoryWorkstation(r, this, tier);
+                            GTAPI.registerJEICategoryWorkstation(r, this, tier);
                         }
                     }
                     return;
                 }
-                Tier t = AntimatterAPI.get(Tier.class, s);
+                Tier t = GTAPI.get(Tier.class, s);
                 //If the recipe map has another GUI present don't register it.
                 if (r.getGui() == null && !AntimatterJEIREIPlugin.containsCategory(r)) {
-                    AntimatterAPI.registerJEICategory(r, this.guiData, this, t, false);
+                    GTAPI.registerJEICategory(r, this.guiData, this, t, false);
                 } else {
-                    AntimatterAPI.registerJEICategoryWorkstation(r, this, t);
+                    GTAPI.registerJEICategoryWorkstation(r, this, t);
                 }
             });
 
@@ -769,7 +769,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * Static Methods
      **/
     public static Optional<Machine<?>> get(String name, String domain) {
-        Machine<?> machine = AntimatterAPI.get(Machine.class, name, domain);
+        Machine<?> machine = GTAPI.get(Machine.class, name, domain);
         return Optional.ofNullable(machine);
     }
 

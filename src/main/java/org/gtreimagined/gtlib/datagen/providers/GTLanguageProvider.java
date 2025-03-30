@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectRBTreeMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -121,13 +121,13 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
     }
 
     protected void english(String domain, String locale) {
-        AntimatterAPI.all(ItemBasic.class, domain).forEach(i -> {
+        GTAPI.all(ItemBasic.class, domain).forEach(i -> {
             add(i, lowerUnderscoreToUpperSpaced(i.getId()));
             if (!i.getTooltip().isEmpty()){
                 add("tooltip." + i.getDomain() + "." + i.getId().replace("/", "."), i.getTooltip());
             }
         });
-        AntimatterAPI.all(Machine.class, domain).forEach(i -> {
+        GTAPI.all(Machine.class, domain).forEach(i -> {
             String lang = i.getLang(locale);
             if (!(i instanceof BasicMultiMachine<?>) || i.getTiers().size() > 1){
                 lang = lang.concat(" (%s)");
@@ -149,16 +149,16 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 }
             });
         });
-        AntimatterAPI.all(CoverFactory.class, domain).forEach(c -> {
+        GTAPI.all(CoverFactory.class, domain).forEach(c -> {
             add("cover." + domain + "." + c.getId(), Utils.lowerUnderscoreToUpperSpaced(c.getId()));
         });
-        AntimatterAPI.all(Enchantment.class, domain, (en, d, i) -> {
+        GTAPI.all(Enchantment.class, domain, (en, d, i) -> {
             add("enchantment." + d + "." + i, lowerUnderscoreToUpperSpaced(i));
         });
-        AntimatterAPI.all(BlockDimensionMarker.class, domain).forEach(i -> this.add(i, Utils.lowerUnderscoreToUpperSpaced(i.getDimension())));
+        GTAPI.all(BlockDimensionMarker.class, domain).forEach(i -> this.add(i, Utils.lowerUnderscoreToUpperSpaced(i.getDimension())));
 
         if (domain.equals(Ref.ID)) {
-            AntimatterAPI.all(IGTTool.class, t -> {
+            GTAPI.all(IGTTool.class, t -> {
                 String customName = t.getAntimatterToolType().getCustomName().isEmpty() ? Utils.getLocalizedType(t.getAntimatterToolType()) : t.getAntimatterToolType().getCustomName();
                 if (t.getAntimatterToolType().isPowered()) {
                     String defaultName = Utils.getLocalizedType(t.getAntimatterToolType());
@@ -172,7 +172,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 }
 
             });
-            AntimatterAPI.all(BlockPipe.class).forEach(s -> {
+            GTAPI.all(BlockPipe.class).forEach(s -> {
                 String str = s.getSize().getId();
                 //hmmmm
                 if (str.equals("vtiny")) str = "very_tiny";
@@ -185,8 +185,8 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 String prefix = str.contains("_") ? Utils.lowerUnderscoreToUpperSpaced(str) : str.substring(0, 1).toUpperCase() + str.substring(1);
                 add(s, StringUtils.join(prefix, " ", Utils.getLocalizedType(s.getType().getMaterial()), " ", Utils.lowerUnderscoreToUpperSpaced(s.getType().getType())));
             });
-            AntimatterAPI.all(Material.class).forEach(m -> add("material.".concat(m.getId()), getLocalizedType(m)));
-            AntimatterAPI.all(BlockOre.class, o -> {
+            GTAPI.all(Material.class).forEach(m -> add("material.".concat(m.getId()), getLocalizedType(m)));
+            GTAPI.all(BlockOre.class, o -> {
                 String nativeSuffix = o.getMaterial().getElement() != null ? "Native " : "";
                 if (o.getOreType() == GTMaterialTypes.ORE)
                     add(o, String.join("", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
@@ -194,10 +194,10 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                     add(o, String.join("", "Small ", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
             });
 
-            AntimatterAPI.all(BlockOreStone.class, o -> {
+            GTAPI.all(BlockOreStone.class, o -> {
                 add(o, getLocalizedType(o.getMaterial()));
             });
-            AntimatterAPI.all(BlockStone.class).forEach(s -> {
+            GTAPI.all(BlockStone.class).forEach(s -> {
                 String localized = getLocalizedType(s);
                 if (s.getSuffix().contains("mossy")) localized = "Mossy " + localized.replace(" Mossy", "");
                 if (s.getSuffix().contains("chiseled")) localized = "Chiseled " + localized.replace(" Chiseled", "");
@@ -205,7 +205,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 if (s.getSuffix().contains("smooth")) localized = "Polished " + localized.replace(" Smooth", "");
                 add(s, localized);
             });
-            AntimatterAPI.all(ItemStoneCover.class).forEach(i -> {
+            GTAPI.all(ItemStoneCover.class).forEach(i -> {
                 String localized = getLocalizedType(i);
                 if (i.getSuffix().contains("mossy")) localized = "Mossy " + localized.replace(" Mossy", "");
                 if (i.getSuffix().contains("chiseled")) localized = "Chiseled " + localized.replace(" Chiseled", "");
@@ -213,7 +213,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 if (i.getSuffix().contains("smooth")) localized = "Polished " + localized.replace(" Smooth", "");
                 override(i.getDescriptionId(), localized);
             });
-            AntimatterAPI.all(BlockStoneSlab.class).forEach(s -> {
+            GTAPI.all(BlockStoneSlab.class).forEach(s -> {
                 String localized = getLocalizedType(s);
                 if (s.getSuffix().contains("mossy")) localized = "Mossy " + localized.replace(" Mossy", "");
                 if (s.getSuffix().contains("chiseled")) localized = "Chiseled " + localized.replace(" Chiseled", "");
@@ -221,7 +221,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 if (s.getSuffix().contains("smooth")) localized = "Polished " + localized.replace(" Smooth", "");
                 add(s, localized);
             });
-            AntimatterAPI.all(BlockStoneStair.class).forEach(s -> {
+            GTAPI.all(BlockStoneStair.class).forEach(s -> {
                 String localized = getLocalizedType(s);
                 if (s.getSuffix().contains("mossy")) localized = "Mossy " + localized.replace(" Mossy", "");
                 if (s.getSuffix().contains("chiseled")) localized = "Chiseled " + localized.replace(" Chiseled", "");
@@ -229,7 +229,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 if (s.getSuffix().contains("smooth")) localized = "Polished " + localized.replace(" Smooth", "");
                 add(s, localized);
             });
-            AntimatterAPI.all(BlockStoneWall.class).forEach(s -> {
+            GTAPI.all(BlockStoneWall.class).forEach(s -> {
                 String localized = getLocalizedType(s);
                 if (s.getSuffix().contains("mossy")) localized = "Mossy " + localized.replace(" Mossy", "");
                 if (s.getSuffix().contains("chiseled")) localized = "Chiseled " + localized.replace(" Chiseled", "");
@@ -237,24 +237,24 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 if (s.getSuffix().contains("smooth")) localized = "Polished " + localized.replace(" Smooth", "");
                 add(s, localized);
             });
-            AntimatterAPI.all(GTFluid.class).forEach((GTFluid s) -> {
+            GTAPI.all(GTFluid.class).forEach((GTFluid s) -> {
                 add(Util.makeDescriptionId("fluid_type", s.getLoc()), tryComponent(locale, s, () -> lowerUnderscoreToUpperSpaced(s.getId())));
-                Item bucket = AntimatterAPI.get(Item.class, s.getId() + "_bucket", Ref.SHARED_ID);
+                Item bucket = GTAPI.get(Item.class, s.getId() + "_bucket", Ref.SHARED_ID);
                 if (bucket != null) add(bucket, tryComponent(locale, s, () -> lowerUnderscoreToUpperSpaced(s.getId())) + " Bucket");
             });
-            AntimatterAPI.all(BlockStorage.class).forEach(block -> {
+            GTAPI.all(BlockStorage.class).forEach(block -> {
                 MaterialType<?> type = block.getType();
                 add(block, type.getLang().apply(block.getMaterial()));
             });
-            AntimatterAPI.all(BlockFrame.class).forEach(block -> {
+            GTAPI.all(BlockFrame.class).forEach(block -> {
                 add(block, String.join("", getLocalizedType(block.getMaterial()), " ", getLocalizedType(block.getType())));
             });
-            AntimatterAPI.all(BlockSurfaceRock.class).forEach(b -> {
+            GTAPI.all(BlockSurfaceRock.class).forEach(b -> {
                 add(b, String.join("", getLocalizeStoneType(b.getStoneType()) + " ", (b.getMaterial() == Material.NULL ? "" : getLocalizedType(b.getMaterial()) + " "), "Surface Rock"));
             });
-            AntimatterAPI.all(MaterialType.class).stream().filter(t -> t instanceof MaterialTypeBlock<?> || t instanceof MaterialTypeItem<?>).forEach(t -> {
+            GTAPI.all(MaterialType.class).stream().filter(t -> t instanceof MaterialTypeBlock<?> || t instanceof MaterialTypeItem<?>).forEach(t -> {
                 if (t.get() instanceof MaterialTypeBlock.IOreGetter){
-                    AntimatterAPI.all(StoneType.class, s -> {
+                    GTAPI.all(StoneType.class, s -> {
                         add(Ref.ID + ".rei.group." + t.getId() + "." + s.getId(), getLocalizedType(s) + " " + getLocalizedType(t) + "s");
                     });
                     if (t != GTMaterialTypes.BEARING_ROCK){
@@ -279,21 +279,21 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                         add(Ref.ID + ".rei.group." + t.getId(), String.join("", split[1], " ", split[0], "s"));
                 } else add(Ref.ID + ".rei.group." + t.getId(), split[0] + "s");
             });
-            AntimatterAPI.all(StoneType.class, s -> {
+            GTAPI.all(StoneType.class, s -> {
                 if (s instanceof CobbleStoneType){
                     add(Ref.ID + ".rei.group." + s.getId(), getLocalizedType(s));
                 }
             });
-            AntimatterAPI.all(MaterialItem.class).forEach(item -> {
+            GTAPI.all(MaterialItem.class).forEach(item -> {
                 MaterialType<?> type = item.getType();
                 add(item, type.getLang().apply(item.getMaterial()));
             });
-            AntimatterAPI.all(IGTArmor.class, t -> {
+            GTAPI.all(IGTArmor.class, t -> {
                 add(t.getItem().getDescriptionId(), Utils.getLocalizedType(t.getMat()) + " " + Utils.getLocalizedType(t.getAntimatterArmorType()));
             });
             customTranslations();
             pipeTranslations();
-            AntimatterAPI.all(RecipeMap.class, t -> {
+            GTAPI.all(RecipeMap.class, t -> {
                 String id = "jei.category." + t.getId();
                 add(id, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
             });

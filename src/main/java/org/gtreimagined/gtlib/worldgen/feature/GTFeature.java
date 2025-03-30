@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -18,8 +18,8 @@ public abstract class GTFeature<F extends FeatureConfiguration> extends Feature<
 
     public GTFeature(Codec<F> codec, Class<?> c) {
         super(codec);
-        AntimatterAPI.register(GTFeature.class, c.getName(), getDomain(), this);
-        AntimatterAPI.register(IGTFeature.class, c.getName(), getDomain(), this);
+        GTAPI.register(GTFeature.class, c.getName(), getDomain(), this);
+        GTAPI.register(IGTFeature.class, c.getName(), getDomain(), this);
         //this.setRegistryName(new ResourceLocation(getDomain(), getId()));
     }
 

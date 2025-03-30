@@ -28,7 +28,7 @@ public interface IGTModel<T extends IGTModel<T>> extends IModelGeometry<T> {
         try {
             return bakeModel(configuration, bakery, getter, transform, overrides, loc);
         } catch (Exception e) {
-            //Antimatter.LOGGER.error("ModelBaking Exception for " + owner.getModelName());
+            //GTLib.LOGGER.error("ModelBaking Exception for " + owner.getModelName());
             e.printStackTrace();
             return ModelUtils.getMissingModel().bake(bakery, getter, transform, loc);
         }

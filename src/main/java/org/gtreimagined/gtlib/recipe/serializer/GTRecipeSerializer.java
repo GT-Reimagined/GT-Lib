@@ -5,8 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.recipe.BaseRecipeSerializer;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.RecipeUtil;
@@ -47,7 +47,7 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
     public T fromJson(ResourceLocation recipeId, JsonObject json) {
         try {
             String mapId = json.get("map").getAsString();
-            RecipeMap<?> map = AntimatterAPI.get(RecipeMap.class, mapId);
+            RecipeMap<?> map = GTAPI.get(RecipeMap.class, mapId);
             if (map == null) throw new IllegalStateException("Recipe map: " + mapId + " is unknown");
             if (map.getRecipeSerializer().getRecipeType() != this.getRecipeType()) throw new IllegalStateException("Recipe map: " + mapId + " doesn't use recipe type: " + this.getRecipeType());
             List<Ingredient> list = new ObjectArrayList<>();
@@ -101,8 +101,8 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
             r.setIds(recipeId, mapId);
             return r;
         } catch (Exception ex) {
-            Antimatter.LOGGER.error(ex);
-            Antimatter.LOGGER.error(json.toString());
+            GTLib.LOGGER.error(ex);
+            GTLib.LOGGER.error(json.toString());
         }
         return null;
     }
@@ -124,7 +124,7 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
             }
             return stack;
         } catch (Exception ex) {
-            Antimatter.LOGGER.error(ex);
+            GTLib.LOGGER.error(ex);
         }
         return FluidStack.EMPTY;
     }
@@ -142,7 +142,7 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
             }
             return FluidIngredient.of(getStack(element));
         } catch (Exception ex) {
-            Antimatter.LOGGER.error(ex);
+            GTLib.LOGGER.error(ex);
         }
         return FluidIngredient.EMPTY;
     }

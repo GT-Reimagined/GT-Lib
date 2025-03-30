@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.worldgen.vanillaore;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,8 +75,8 @@ public class WorldGenVanillaOreBuilder {
                 this.biomes,
                 this.biomeBlacklist
         );
-        AntimatterWorldGenerator.writeJson(vanillaOre.toJson(), vanillaOre.getId(), "vanilla_ore");
-        return AntimatterWorldGenerator.readJson(WorldGenVanillaOre.class, vanillaOre, WorldGenVanillaOre::fromJson, "vanilla_ore");
+        GTLibWorldGenerator.writeJson(vanillaOre.toJson(), vanillaOre.getId(), "vanilla_ore");
+        return GTLibWorldGenerator.readJson(WorldGenVanillaOre.class, vanillaOre, WorldGenVanillaOre::fromJson, "vanilla_ore");
     }
 
     final public WorldGenVanillaOreBuilder withMaterial(Material material) {

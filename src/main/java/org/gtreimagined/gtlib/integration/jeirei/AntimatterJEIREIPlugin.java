@@ -4,8 +4,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
@@ -73,7 +73,7 @@ public class AntimatterJEIREIPlugin{
     private static final Object2ObjectMap<ResourceLocation, RegistryValue> REGISTRY = new Object2ObjectLinkedOpenHashMap<>();
 
     public static void registerMissingMaps(){
-        AntimatterAPI.all(RecipeMap.class).forEach(r -> {
+        GTAPI.all(RecipeMap.class).forEach(r -> {
             if (!REGISTRY.containsKey(r.getLoc())){
                 registerCategory(r, BACKUP_MAP_GUI, Tier.LV, null, false);
             }
@@ -82,7 +82,7 @@ public class AntimatterJEIREIPlugin{
 
     public static void registerCategory(IRecipeMap map, GuiData gui, Tier tier, ResourceLocation model, boolean override) {
         if (REGISTRY.containsKey(new ResourceLocation(map.getDomain(), map.getId())) && !override) {
-            Antimatter.LOGGER.info("Attempted duplicate category registration: " + map.getId());
+            GTLib.LOGGER.info("Attempted duplicate category registration: " + map.getId());
             return;
         }
         REGISTRY.put(new ResourceLocation(map.getDomain(), map.getId()), new RegistryValue(map, map.getGui() == null ? gui : map.getGui(), tier).addWorkstation(model));//new Tuple<>(map, new Tuple<>(gui, tier)));
@@ -106,7 +106,7 @@ public class AntimatterJEIREIPlugin{
     }
     public static void registerPatternForJei(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
         STRUCTURES.put(machine.getBlockState(tier), patternList);
-        if (AntimatterAPI.isModLoaded(Ref.MOD_CREATE) && FMLEnvironment.dist.isClient()){
+        if (GTAPI.isModLoaded(Ref.MOD_CREATE) && FMLEnvironment.dist.isClient()){
             PonderIntegration.registerMultiblock(machine, tier, patternList);
         }
     }
@@ -149,9 +149,9 @@ public class AntimatterJEIREIPlugin{
     }
 
     public static void showCategories(ResourceLocation... categories){
-        if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
+        if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){
             GTLibJEIPlugin.showCategories(categories);
-        } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
+        } else if (GTAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.showCategories(categories);
         }
     }
@@ -159,17 +159,17 @@ public class AntimatterJEIREIPlugin{
     //To perform a JEI lookup for fluid. Use defines direction.
 
     public static void uses(FluidStack val, boolean USE) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
+        if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){
             GTLibJEIPlugin.uses(val, USE);
-        } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
+        } else if (GTAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.uses(val, USE);
         }
     }
 
     public static <T> void addModDescriptor(List<Component> tooltip, T t) {
-        if (AntimatterAPI.isModLoaded(Ref.MOD_JEI) && !AntimatterAPI.isModLoaded(Ref.MOD_REI)){
+        if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){
             GTLibJEIPlugin.addModDescriptor(tooltip, t);
-        } else if (AntimatterAPI.isModLoaded(Ref.MOD_REI)){
+        } else if (GTAPI.isModLoaded(Ref.MOD_REI)){
             REIUtils.addModDescriptor(tooltip, t);
         }
     }

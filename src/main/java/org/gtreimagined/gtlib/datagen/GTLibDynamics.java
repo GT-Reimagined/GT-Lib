@@ -7,9 +7,9 @@ import dev.latvian.mods.kubejs.script.ScriptType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.json.JGTLibModel;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
@@ -30,7 +30,7 @@ import org.gtreimagined.gtlib.recipe.map.RecipeBuilder;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.registration.ModRegistrar;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
@@ -88,7 +88,7 @@ public class GTLibDynamics {
         if (RECIPE_IDS.add(f.getId())){
             DynamicDataPack.addRecipe(f);
         } else {
-            Antimatter.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
+            GTLib.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
         }
     };
 
@@ -107,7 +107,7 @@ public class GTLibDynamics {
             GTLibDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
-        function.accept(new DynamicDataPack("gtlib:recipes", AntimatterAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDomain).collect(Collectors.toSet())));
+        function.accept(new DynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDomain).collect(Collectors.toSet())));
 
     }
 
@@ -120,7 +120,7 @@ public class GTLibDynamics {
 
     public static void runDataProvidersDynamically() {
         GTBlockLootProvider.init();
-        GTProvidersEvent ev = new GTProvidersEvent(Antimatter.INSTANCE);
+        GTProvidersEvent ev = new GTProvidersEvent(GTLib.INSTANCE);
         ModLoader.get().postEvent(ev);
         Collection<IGTLibProvider> providers = ev.getProviders();
         long time = System.currentTimeMillis();
@@ -130,8 +130,8 @@ public class GTLibDynamics {
         providers.forEach(IGTLibProvider::onCompletion);
         GTTagProvider.afterCompletion();
         GTBlockLootProvider.afterCompletion();
-        Antimatter.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
-        if (AntimatterConfig.EXPORT_DEFAULT_RECIPES.get() || !FMLEnvironment.production) {
+        GTLib.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
+        if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get() || !FMLEnvironment.production) {
             RUNTIME_DATA_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
     }
@@ -145,7 +145,7 @@ public class GTLibDynamics {
         Stream.concat(async, sync).forEach(IGTLibProvider::run);
         providers.forEach(IGTLibProvider::onCompletion);
         GTLanguageProvider.postCompletion();
-        Antimatter.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
+        GTLib.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
         if (!FMLEnvironment.production) {
             DYNAMIC_RESOURCE_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
@@ -157,7 +157,7 @@ public class GTLibDynamics {
      * @param rec consumer for IFinishedRecipe.
      */
     public static void collectRecipes(GTRecipeProvider provider, Consumer<FinishedRecipe> rec) {
-        GTCraftingEvent event = new GTCraftingEvent(Antimatter.INSTANCE);
+        GTCraftingEvent event = new GTCraftingEvent(GTLib.INSTANCE);
         ModLoader.get().postEvent(event);
         for (ICraftingLoader loader : event.getLoaders()) {
             loader.loadRecipes(rec, provider);
@@ -165,23 +165,23 @@ public class GTLibDynamics {
     }
 
     public static void onRecipeManagerBuild(Consumer<FinishedRecipe> objectIn) {
-        Antimatter.LOGGER.info("GTLib recipe manager running..");
+        GTLib.LOGGER.info("GTLib recipe manager running..");
         collectRecipes(new GTRecipeProvider(Ref.ID, "provider"), objectIn);
-        AntimatterAPI.all(ModRegistrar.class, t -> {
+        GTAPI.all(ModRegistrar.class, t -> {
             for (String mod : t.modIds()) {
-                if (!AntimatterAPI.isModLoaded(mod))
+                if (!GTAPI.isModLoaded(mod))
                     return;
             }
             t.craftingRecipes(new GTRecipeProvider(Ref.ID, "Custom recipes"));
         });
-        Antimatter.LOGGER.info("GTLib recipe manager done..");
+        GTLib.LOGGER.info("GTLib recipe manager done..");
     }
 
     public static void onRecipeCompile(boolean server, RecipeManager manager) {
-        Antimatter.LOGGER.info("Compiling GT recipes");
+        GTLib.LOGGER.info("Compiling GT recipes");
         long time = System.nanoTime();
 
-        for (RecipeMap<?> m : AntimatterAPI.all(RecipeMap.class)) {
+        for (RecipeMap<?> m : GTAPI.all(RecipeMap.class)) {
             if (m.getProxy() != null) {
                 List<net.minecraft.world.item.crafting.Recipe<?>> recipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(m.getProxy().loc());
                 recipes.forEach(recipe -> m.compileRecipe(m.getProxy().handler().apply(recipe, m.RB())));
@@ -202,7 +202,7 @@ public class GTLibDynamics {
                 } else {
                     continue;
                 }
-                IRecipeMap rmap = AntimatterAPI.get(IRecipeMap.class, name);
+                IRecipeMap rmap = GTAPI.get(IRecipeMap.class, name);
                 if (rmap != null){
                     entry.getValue().forEach(rmap::compileRecipe);
                     //entry.getValue().forEach(rmap::add);
@@ -213,15 +213,15 @@ public class GTLibDynamics {
 
 
         time = System.nanoTime() - time;
-        int size = AntimatterAPI.all(IRecipeMap.class).stream().mapToInt(t -> t.getRecipes(false).size()).sum();
+        int size = GTAPI.all(IRecipeMap.class).stream().mapToInt(t -> t.getRecipes(false).size()).sum();
 
-        Antimatter.LOGGER.info("Time to compile GT recipes: (ms) " + (time) / (1000 * 1000));
-        Antimatter.LOGGER.info("No. of GT recipes: " + size);
-        Antimatter.LOGGER.info("Average loading time / recipe: (µs) " + (size > 0 ? time / size : time) / 1000);
+        GTLib.LOGGER.info("Time to compile GT recipes: (ms) " + (time) / (1000 * 1000));
+        GTLib.LOGGER.info("No. of GT recipes: " + size);
+        GTLib.LOGGER.info("Average loading time / recipe: (µs) " + (size > 0 ? time / size : time) / 1000);
 
         /*
-         * AntimatterAPI.all(RecipeMap.class, t -> {
-         * Antimatter.LOGGER.info("Recipe map " + t.getId() + " compiled " +
+         * GTAPI.all(RecipeMap.class, t -> {
+         * GTLib.LOGGER.info("Recipe map " + t.getId() + " compiled " +
          * t.getRecipes(false).size() + " recipes."); });
          */
         // Invalidate old tag getter.
@@ -235,9 +235,9 @@ public class GTLibDynamics {
         DynamicDataPack.clearServer();
         RECIPE_IDS.clear();
         collectRecipes(provider , FINISHED_RECIPE_CONSUMER);
-        AntimatterAPI.all(RecipeMap.class, RecipeMap::reset);
+        GTAPI.all(RecipeMap.class, RecipeMap::reset);
         final Set<ResourceLocation> filter;
-        if (AntimatterAPI.isModLoaded(Ref.MOD_KJS)) {
+        if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
             if (serverEvent) KubeJSRegistrar.checkKubeJSServerScriptManager();
             RecipeLoaderEventKubeJS ev = RecipeLoaderEventKubeJS.createAndPost(serverEvent);
             filter = ev.forLoaders;
@@ -245,11 +245,11 @@ public class GTLibDynamics {
             filter = Collections.emptySet();
         }
         Map<ResourceLocation, IRecipeRegistrate.IRecipeLoader> loaders = new Object2ObjectOpenHashMap<>(30);
-        MinecraftForge.EVENT_BUS.post(new GTLoaderEvent(Antimatter.INSTANCE, (a, b, c) -> {
+        MinecraftForge.EVENT_BUS.post(new GTLoaderEvent(GTLib.INSTANCE, (a, b, c) -> {
             if (filter.contains(new ResourceLocation(a, b)))
                 return;
             if (loaders.put(new ResourceLocation(a, b), c) != null) {
-                Antimatter.LOGGER.warn("Duplicate recipe loader: " + new ResourceLocation(a, b));
+                GTLib.LOGGER.warn("Duplicate recipe loader: " + new ResourceLocation(a, b));
             }
         }));
         List<WorldGenVeinLayer> veins = new ObjectArrayList<>();
@@ -260,7 +260,7 @@ public class GTLibDynamics {
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
         WorldGenVeinLayer.resetTotalWeight();
-        if (AntimatterAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
+        if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
             AMWorldEvent ev = new AMWorldEvent();
             ev.post(ScriptType.SERVER, "gtlib.worldgen");
             veins.addAll(ev.VEINS);
@@ -269,58 +269,58 @@ public class GTLibDynamics {
             runRegular = !ev.disableBuiltin;
         }
         if (runRegular) {
-            GTWorldGenEvent ev = new GTWorldGenEvent(Antimatter.INSTANCE);
+            GTWorldGenEvent ev = new GTWorldGenEvent(GTLib.INSTANCE);
             MinecraftForge.EVENT_BUS.post(ev);
             veins.addAll(ev.VEINS);
-            veins.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenVeinLayer.class, WorldGenVeinLayer::fromJson, "vein_layers"));
+            veins.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenVeinLayer.class, WorldGenVeinLayer::fromJson, "vein_layers"));
             smallOres.addAll(ev.SMALL_ORES);
-            smallOres.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenSmallOre.class, WorldGenSmallOre::fromJson, "small_ore"));
+            smallOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenSmallOre.class, WorldGenSmallOre::fromJson, "small_ore"));
             stoneLayers.addAll(ev.STONE_LAYERS);
-            stoneLayers.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenStoneLayer.class, WorldGenStoneLayer::fromJson, "stone_layers"));
+            stoneLayers.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenStoneLayer.class, WorldGenStoneLayer::fromJson, "stone_layers"));
             vanillaOres.addAll(ev.VANILLA_ORES);
-            vanillaOres.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenVanillaOre.class, WorldGenVanillaOre::fromJson, "vanilla_ore"));
+            vanillaOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenVanillaOre.class, WorldGenVanillaOre::fromJson, "vanilla_ore"));
             bedrockVeins.addAll(ev.BEDROCK_VEINS);
-            bedrockVeins.addAll(AntimatterWorldGenerator.readCustomJsonObjects(WorldGenBedrockVein.class, WorldGenBedrockVein::fromJson, "bedrock_veins"));
+            bedrockVeins.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenBedrockVein.class, WorldGenBedrockVein::fromJson, "bedrock_veins"));
             ev.COLLISION_MAP.forEach((i, l) -> {
                 collisionMap.computeIfAbsent(i, i2 -> new ArrayList<>()).addAll(l);
             });
         }
-        AntimatterWorldGenerator.clear();
+        GTLibWorldGenerator.clear();
         for (WorldGenVeinLayer vein : veins) {
-            AntimatterWorldGenerator.register(vein.toRegister, vein);
+            GTLibWorldGenerator.register(vein.toRegister, vein);
         }
         for (WorldGenStoneLayer stoneLayer : stoneLayers) {
-            AntimatterWorldGenerator.register(stoneLayer.toRegister, stoneLayer);
+            GTLibWorldGenerator.register(stoneLayer.toRegister, stoneLayer);
         }
         WorldGenStoneLayer.setCollisionMap(collisionMap);
         for (WorldGenSmallOre smallOre : smallOres){
-            AntimatterWorldGenerator.register(smallOre.toRegister, smallOre);
+            GTLibWorldGenerator.register(smallOre.toRegister, smallOre);
         }
         for (WorldGenVanillaOre vanillaOre : vanillaOres){
-            AntimatterWorldGenerator.register(vanillaOre.toRegister, vanillaOre);
+            GTLibWorldGenerator.register(vanillaOre.toRegister, vanillaOre);
         }
         for (WorldGenBedrockVein vein : bedrockVeins){
-            AntimatterWorldGenerator.register(vein.toRegister, vein);
+            GTLibWorldGenerator.register(vein.toRegister, vein);
         }
-        if (AntimatterConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.get()) {
-            AntimatterConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.set(false);
-            AntimatterConfig.CONFIG_COMMON.save();
-            AntimatterConfig.CONFIG_COMMON.reload();
+        if (GTLibConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.get()) {
+            GTLibConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.set(false);
+            GTLibConfig.CONFIG_COMMON.save();
+            GTLibConfig.CONFIG_COMMON.reload();
         }
         loaders.forEach((r, l) -> {
             RecipeBuilder.setCurrentModId(r.getNamespace());
             l.init();
             RecipeBuilder.setCurrentModId(Ref.SHARED_ID);
         });
-        AntimatterAPI.all(ModRegistrar.class, t -> {
+        GTAPI.all(ModRegistrar.class, t -> {
             for (String mod : t.modIds()) {
-                if (!AntimatterAPI.isModLoaded(mod))
+                if (!GTAPI.isModLoaded(mod))
                     return;
             }
-            // t.antimatterRecipes(AntimatterAPI.getRecipeRegistrate(Ref.ID));
+            // t.antimatterRecipes(GTAPI.getRecipeRegistrate(Ref.ID));
         });
 
-        Antimatter.LOGGER.info("Amount of Antimatter Recipe Loaders registered: " + loaders.size());
+        GTLib.LOGGER.info("Amount of GTLib Recipe Loaders registered: " + loaders.size());
     }
 
     public static ResourceLocation getTagLoc(String identifier, ResourceLocation tagId) {
@@ -344,7 +344,7 @@ public class GTLibDynamics {
     }
     /*
      * public static void runBackgroundProviders() {
-     * Antimatter.LOGGER.info("Running DummyTagProviders...");
+     * GTLib.LOGGER.info("Running DummyTagProviders...");
      * Ref.BACKGROUND_GEN.addProviders(DummyTagProviders.DUMMY_PROVIDERS); try {
      * Ref.BACKGROUND_GEN.run(); } catch (IOException e) { e.printStackTrace(); } }
      */

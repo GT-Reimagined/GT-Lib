@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.integration.jei;
 
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.container.ContainerBasicMachine;
 import org.gtreimagined.gtlib.machine.types.Machine;
@@ -36,7 +36,7 @@ public class MachineTransferHandler implements IRecipeTransferInfo<ContainerBasi
         } else {
             return false;
         }
-        IRecipeMap rmap = AntimatterAPI.get(IRecipeMap.class, name);
+        IRecipeMap rmap = GTAPI.get(IRecipeMap.class, name);
         if (rmap == null) return false;
         Machine<?> machine = container.getTile().getMachineType();
         if (machine.getRecipeMap(container.getTile().getMachineTier()) == null || machine.getRecipeMap(container.getTile().getMachineTier()) != rmap) return false;

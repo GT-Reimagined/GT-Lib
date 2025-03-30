@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
 import org.gtreimagined.gtlib.block.BlockStone;
@@ -43,7 +43,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
 
     protected void processTags(String domain) {
         if (domain.equals(Ref.ID)) {
-            AntimatterAPI.all(BlockOre.class, o -> {
+            GTAPI.all(BlockOre.class, o -> {
                 this.tag(getForgelikeBlockTag(String.join("", getConventionalStoneType(o.getStoneType()), "_", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o).replace(replace);
                 this.tag(getForgelikeBlockTag(String.join("", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o).replace(replace);
                 this.tag(getForgelikeBlockTag(getConventionalMaterialType(o.getOreType()))).add(o).replace(replace);
@@ -67,7 +67,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
                 }
                 if (o.getOreType() == GTMaterialTypes.ORE) this.tag(TagUtils.getForgelikeBlockTag("ores")).add(o);
             });
-            AntimatterAPI.all(BlockStone.class, s -> {
+            GTAPI.all(BlockStone.class, s -> {
                 if (s.getSuffix().isEmpty()) {
                     this.tag(TagUtils.getForgelikeBlockTag("stone")).add(s);
                 } else if (s.getSuffix().equals("cobble")) {
@@ -85,25 +85,25 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
                 }
                 this.tag(getBlockTag(new ResourceLocation(Ref.ID, "blocks/".concat(s.getId())))).add(s).replace(replace);
             });
-            AntimatterAPI.all(BlockStoneWall.class, b -> {
+            GTAPI.all(BlockStoneWall.class, b -> {
                 this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(b).replace(replace);
                 this.tag(BlockTags.WALLS).add(b);
             });
-            AntimatterAPI.all(BlockStoneSlab.class, b -> {
+            GTAPI.all(BlockStoneSlab.class, b -> {
                 this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(b).replace(replace);
                 this.tag(BlockTags.SLABS).add(b);
             });
-            AntimatterAPI.all(BlockStoneStair.class, b -> {
+            GTAPI.all(BlockStoneStair.class, b -> {
                 this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(b).replace(replace);
                 this.tag(BlockTags.STAIRS).add(b);
             });
-            AntimatterAPI.all(BlockOreStone.class, s -> {
+            GTAPI.all(BlockOreStone.class, s -> {
                 String id = "ore_stones/" + s.getMaterial().getId();
                 this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(s).replace(replace);
                 this.tag(TagUtils.getForgelikeBlockTag("ores")).add(s);
                 this.tag(getForgelikeBlockTag(id)).add(s);
             });
-            AntimatterAPI.all(BlockStorage.class, block -> {
+            GTAPI.all(BlockStorage.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
                 String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
                 if (block.getMaterial() == GTLibMaterials.Wood){
@@ -116,7 +116,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
                 this.tag(getForgelikeBlockTag(name)).add(block);
                 // if (block.getType() == FRAME) add climbable tag in 1.16
             });
-            AntimatterAPI.all(BlockFrame.class, block -> {
+            GTAPI.all(BlockFrame.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
                 String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
                 if (block.getMaterial() == GTLibMaterials.Wood){
@@ -127,22 +127,22 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
                 this.tag(getForgelikeBlockTag(name)).add(block);
                 // if (block.getType() == FRAME) add climbable tag in 1.16
             });
-            AntimatterAPI.all(BlockItemPipe.class, pipe -> {
+            GTAPI.all(BlockItemPipe.class, pipe -> {
                 this.tag(TagUtils.getBlockTag(new ResourceLocation(Ref.ID, "item_pipe"))).add(pipe);
             });
-            AntimatterAPI.all(BlockPipe.class, pipe -> {
+            GTAPI.all(BlockPipe.class, pipe -> {
                 this.tag(pipe.getToolType().getToolType()).add(pipe);
                 if (pipe.getType().getMaterial() == GTLibMaterials.Wood){
                     this.tag(GTTools.AXE.getToolType()).add(pipe);
                 }
             });
-            AntimatterAPI.all(BlockMachine.class, pipe -> {
+            GTAPI.all(BlockMachine.class, pipe -> {
                 this.tag(pipe.getType().getToolTag()).add(pipe);
             });
-            AntimatterAPI.all(BlockMultiMachine.class, pipe -> {
+            GTAPI.all(BlockMultiMachine.class, pipe -> {
                 this.tag(pipe.getType().getToolTag()).add(pipe);
             });
-            AntimatterAPI.all(GTFluid.class, f -> {
+            GTAPI.all(GTFluid.class, f -> {
                 this.tag(TagUtils.getBlockTag(new ResourceLocation("replaceable"))).add(f.getFluidBlock());
             });
         }

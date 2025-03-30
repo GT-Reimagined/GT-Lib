@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.material;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.world.item.Item;
@@ -17,13 +17,13 @@ public class MaterialTypeItem<T> extends MaterialType<T> {
 
     public MaterialTypeItem(String id, int layers, boolean visible, long unitValue) {
         super(id, layers, visible, unitValue);
-        AntimatterAPI.register(MaterialTypeItem.class, this);
+        GTAPI.register(MaterialTypeItem.class, this);
         this.itemSupplier = MaterialItem::new;
     }
 
     public MaterialTypeItem(String id, int layers, boolean visible, long unitValue, ItemSupplier itemSupplier) {
         super(id, layers, visible, unitValue);
-        AntimatterAPI.register(MaterialTypeItem.class, this);
+        GTAPI.register(MaterialTypeItem.class, this);
         this.itemSupplier = itemSupplier;
     }
 
@@ -37,11 +37,11 @@ public class MaterialTypeItem<T> extends MaterialType<T> {
     }
 
     public Item get(Material material) {
-        Item replacement = AntimatterAPI.getReplacement(this, material);
+        Item replacement = GTAPI.getReplacement(this, material);
         if (replacement == null) {
             if (!allowItemGen(material))
                 Utils.onInvalidData(String.join("", "GET ERROR - DOES NOT GENERATE: T(", id, ") M(", material.getId(), ")"));
-            else return AntimatterAPI.get(MaterialItem.class, id + "_" + material.getId());
+            else return GTAPI.get(MaterialItem.class, id + "_" + material.getId());
         }
         return replacement;
     }

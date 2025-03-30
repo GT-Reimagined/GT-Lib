@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.pipe;
 
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.blockentity.IPostTickTile;
 import org.gtreimagined.gtlib.blockentity.IPreTickTile;
 import net.minecraft.server.MinecraftServer;
@@ -33,7 +33,7 @@ public class TileTicker {
                     } catch(Throwable e) {
                         SERVER_TICK_PRE.remove(i--);
                         //tTileEntity.setError("Server Tick Pre 1 - " + e);
-                        Antimatter.LOGGER.error("Pipe errored", e);
+                        GTLib.LOGGER.error("Pipe errored", e);
                     }
                 }
             }
@@ -50,7 +50,7 @@ public class TileTicker {
                     } catch(Throwable e) {
                         SERVER_TICK_PR2.remove(i--);
                         //tTileEntity.setError("Server Tick Pre 1 - " + e);
-                        Antimatter.LOGGER.error("Pipe errored", e);
+                        GTLib.LOGGER.error("Pipe errored", e);
                     }
                 }
             }
@@ -68,7 +68,7 @@ public class TileTicker {
                     } catch(Throwable e) {
                         SERVER_TICK_POST.remove(i--);
                         //tTileEntity.setError("Server Tick Pre 1 - " + e);
-                        Antimatter.LOGGER.error("Pipe errored", e);
+                        GTLib.LOGGER.error("Pipe errored", e);
                     }
                 }
             }
@@ -85,7 +85,7 @@ public class TileTicker {
                     } catch(Throwable e) {
                         SERVER_TICK_PO2T.remove(i--);
                         //tTileEntity.setError("Server Tick Pre 1 - " + e);
-                        Antimatter.LOGGER.error("Pipe errored", e);
+                        GTLib.LOGGER.error("Pipe errored", e);
                     }
                 }
             }

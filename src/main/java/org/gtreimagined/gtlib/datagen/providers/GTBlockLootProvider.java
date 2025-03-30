@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
 import org.gtreimagined.gtlib.block.BlockStone;
@@ -84,31 +84,31 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
     }
 
     protected void loot() {
-        AntimatterAPI.all(BlockMachine.class, providerDomain, this::add);
-        AntimatterAPI.all(BlockMultiMachine.class, providerDomain, this::add);
+        GTAPI.all(BlockMachine.class, providerDomain, this::add);
+        GTAPI.all(BlockMultiMachine.class, providerDomain, this::add);
         if (providerDomain.equals(Ref.ID)) {
-            AntimatterAPI.all(BlockPipe.class, this::add);
-            AntimatterAPI.all(BlockStorage.class, block -> {
+            GTAPI.all(BlockPipe.class, this::add);
+            GTAPI.all(BlockStorage.class, block -> {
                 if (block.getType() == RAW_ORE_BLOCK && block.getMaterial().has(CRUSHED)){
                     tables.put(block, b -> createOreDropWithHammer(block, block.asItem(), CRUSHED.get(block.getMaterial()), 9 * MaterialTags.ORE_MULTI.get(block.getMaterial())));
                 } else {
                     add(block);
                 }
             });
-            AntimatterAPI.all(BlockFrame.class, this::add);
-            AntimatterAPI.all(BlockStone.class, b -> {
+            GTAPI.all(BlockFrame.class, this::add);
+            GTAPI.all(BlockStone.class, b -> {
                 if (b.getType() instanceof CobbleStoneType && b.getSuffix().isEmpty()) {
                     tables.put(b, b2 -> createSingleItemTableWithSilkTouch(b, ((CobbleStoneType) b.getType()).getBlock("cobble")));
                     return;
                 }
                 this.add(b);
             });
-            AntimatterAPI.all(BlockStoneSlab.class, b -> tables.put(b, BlockLoot::createSlabItemTable));
-            AntimatterAPI.all(BlockStoneStair.class, this::add);
-            AntimatterAPI.all(BlockStoneWall.class, this::add);
-            AntimatterAPI.all(BlockOre.class, this::addToFortune);
-            AntimatterAPI.all(BlockOreStone.class, this::addToStone);
-            AntimatterAPI.all(BlockSurfaceRock.class, b -> {
+            GTAPI.all(BlockStoneSlab.class, b -> tables.put(b, BlockLoot::createSlabItemTable));
+            GTAPI.all(BlockStoneStair.class, this::add);
+            GTAPI.all(BlockStoneWall.class, this::add);
+            GTAPI.all(BlockOre.class, this::addToFortune);
+            GTAPI.all(BlockOreStone.class, this::addToStone);
+            GTAPI.all(BlockSurfaceRock.class, b -> {
                 ItemStack drop = b.getMaterial() != Material.NULL && b.getMaterial().has(BEARING_ROCK) ? BEARING_ROCK.get(b.getMaterial(), 1) : b.getStoneType().getMaterial().has(ROCK) ? ROCK.get(b.getStoneType().getMaterial(), 1) : ItemStack.EMPTY;
                 if (!drop.isEmpty()) {
                     tables.put(b, b2 -> BlockLoot.createSingleItemTable(drop.getItem()));
@@ -148,7 +148,7 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
 
     protected void overrideOre(Material ore, Function<BlockOre, LootTable.Builder> builderFunction){
         if (ore.has(ORE)){
-            AntimatterAPI.all(StoneType.class).stream().filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK).forEach(s -> {
+            GTAPI.all(StoneType.class).stream().filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK).forEach(s -> {
                 if (ORE.get().get(ore, s).asBlock() instanceof BlockOre blockOre) {
                     GLOBAL_TABLES.put(blockOre, b -> builderFunction.apply((BlockOre) b));
                 }
@@ -158,7 +158,7 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
 
     protected void overrideSmallOre(Material ore, Function<BlockOre, LootTable.Builder> builderFunction){
         if (ore.has(ORE_SMALL)){
-            AntimatterAPI.all(StoneType.class).stream().filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK).forEach(s -> {
+            GTAPI.all(StoneType.class).stream().filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK).forEach(s -> {
                 if (ORE_SMALL.get().get(ore, s).asBlock() instanceof BlockOre blockOre) {
                     GLOBAL_TABLES.put(blockOre, b -> builderFunction.apply((BlockOre) b));
                 }

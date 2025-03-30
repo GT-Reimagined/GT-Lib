@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.block;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder.VariantBuilder;
@@ -31,7 +31,7 @@ public class BlockStoneStair extends StairBlock implements ISharedGTObject, ITex
         id = type.getId() + s + suffix + "_stairs";
         this.suffix = suffix;
         this.type = type;
-        AntimatterAPI.register(getClass(), this);
+        GTAPI.register(getClass(), this);
     }
 
     private static Properties getProps(StoneType type) {

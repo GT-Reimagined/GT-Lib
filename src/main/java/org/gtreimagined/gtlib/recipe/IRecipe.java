@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.recipe;
 
 import com.google.gson.JsonObject;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.recipe.serializer.MachineRecipeSerializer;
@@ -99,7 +99,7 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
 
     default JsonObject toJson() {
         JsonObject json = new JsonObject();
-        RecipeMap<?> recipeMap = AntimatterAPI.get(RecipeMap.class, getMapId());
+        RecipeMap<?> recipeMap = GTAPI.get(RecipeMap.class, getMapId());
         if (recipeMap != null) {
             recipeMap.getRecipeSerializer().toJson(json, this);
         } else {

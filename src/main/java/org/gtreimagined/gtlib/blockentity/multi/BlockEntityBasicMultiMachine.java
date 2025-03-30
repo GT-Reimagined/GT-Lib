@@ -14,8 +14,8 @@ import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.IFakeTileCap;
@@ -191,7 +191,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
 
     public boolean checkStructure() {
         if (level != null && isClientSide()){
-            Antimatter.LOGGER.warn("Checking structure on client side");
+            GTLib.LOGGER.warn("Checking structure on client side");
             Thread.dumpStack();
             return false;
         }
@@ -232,7 +232,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
                         setMachineState(MachineState.IDLE);
                     }
                     this.recipeHandler.ifPresent(
-                            t -> t.onMultiBlockStateChange(true, AntimatterConfig.INPUT_RESET_MULTIBLOCK.get()));
+                            t -> t.onMultiBlockStateChange(true, GTLibConfig.INPUT_RESET_MULTIBLOCK.get()));
                 } else {
                     this.components.forEach((k, v) -> v.forEach(c -> {
                         Utils.markTileForRenderUpdate(c.getTile());
@@ -331,7 +331,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
 
     public void invalidateStructure() {
         if (level != null && isClientSide()){
-            Antimatter.LOGGER.warn("Invalidating structure on client side");
+            GTLib.LOGGER.warn("Invalidating structure on client side");
             Thread.dumpStack();
             return;
         }
@@ -353,7 +353,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
         onStructureInvalidated();
         if (isServerSide()) {
             recipeHandler.ifPresent(
-                    t -> t.onMultiBlockStateChange(false, AntimatterConfig.INPUT_RESET_MULTIBLOCK.get()));
+                    t -> t.onMultiBlockStateChange(false, GTLibConfig.INPUT_RESET_MULTIBLOCK.get()));
             components.clear();
         } else {
             this.components.forEach((k, v) -> v.forEach(c -> {

@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.IHaveCover;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -20,13 +20,13 @@ public class ItemCover extends ItemBasic<ItemCover> implements IHaveCover {
 
     public ItemCover(String domain, String id) {
         super(domain, id);
-        cover = Objects.requireNonNull(AntimatterAPI.get(CoverFactory.class, id, this.getDomain()));
+        cover = Objects.requireNonNull(GTAPI.get(CoverFactory.class, id, this.getDomain()));
         this.tier = null;
     }
 
     public ItemCover(String domain, String id, Tier tier) {
         super(domain, id + "_" + tier.getId());
-        cover = Objects.requireNonNull(AntimatterAPI.get(CoverFactory.class, id, this.getDomain()));
+        cover = Objects.requireNonNull(GTAPI.get(CoverFactory.class, id, this.getDomain()));
         this.tier = tier;
     }
 

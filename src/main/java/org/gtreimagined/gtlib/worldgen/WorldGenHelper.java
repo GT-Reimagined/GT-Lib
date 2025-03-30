@@ -3,8 +3,8 @@ package org.gtreimagined.gtlib.worldgen;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.Antimatter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
@@ -42,7 +42,7 @@ public class WorldGenHelper {
     public static Predicate<BlockState> STONE_PREDICATE = state -> STONE_SET.contains(state);
 
     public static void init() {
-        AntimatterAPI.all(StoneType.class).forEach(t -> STONE_MAP.put(t.getState(), t));
+        GTAPI.all(StoneType.class).forEach(t -> STONE_MAP.put(t.getState(), t));
 
         ROCK_SET.add(Blocks.AIR.defaultBlockState());
         ROCK_SET.add(Blocks.WATER.defaultBlockState());
@@ -75,7 +75,7 @@ public class WorldGenHelper {
      **/
     public static boolean setState(LevelAccessor world, BlockPos pos, BlockState state) {
         if (state == null) {
-            Antimatter.LOGGER.error("WorldGenHelper: tried to place null state at " + pos.toString());
+            GTLib.LOGGER.error("WorldGenHelper: tried to place null state at " + pos.toString());
             return false;
         }
         return world.setBlock(pos, state, 0);

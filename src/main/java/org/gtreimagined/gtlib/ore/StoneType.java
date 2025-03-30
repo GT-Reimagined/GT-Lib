@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.ore;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -182,7 +182,7 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
 
     //TODO collection
     public static StoneType[] getAllGeneratingBlock() {
-        return AntimatterAPI.all(StoneType.class).stream().filter(s -> s.generateBlock).toArray(StoneType[]::new);
+        return GTAPI.all(StoneType.class).stream().filter(s -> s.generateBlock).toArray(StoneType[]::new);
     }
 
     public void initSuppliedState() {
@@ -192,6 +192,6 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     public static StoneType get(String id) {
-        return AntimatterAPI.get(StoneType.class, id);
+        return GTAPI.get(StoneType.class, id);
     }
 }

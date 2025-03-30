@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.material;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 
 import java.util.Arrays;
@@ -14,8 +14,8 @@ public interface IMaterialTag extends ISharedGTObject {
     Set<Material> all();
 
     default void register(Class<?> c, String id) {
-        AntimatterAPI.register(c, this);
-        AntimatterAPI.register(IMaterialTag.class, this);
+        GTAPI.register(c, this);
+        GTAPI.register(IMaterialTag.class, this);
     }
 
     default void add(Material... m) {

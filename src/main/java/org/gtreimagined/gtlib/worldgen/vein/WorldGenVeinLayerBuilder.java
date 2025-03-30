@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.worldgen.vein;
 
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -69,8 +69,8 @@ public class WorldGenVeinLayerBuilder {
               this.between,
               this.sporadic,
               this.dimensions);
-      AntimatterWorldGenerator.writeJson(vein.toJson(), this.id, "vein_layers");
-      return AntimatterWorldGenerator.readJson(WorldGenVeinLayer.class, vein, WorldGenVeinLayer::fromJson, "vein_layers");
+      GTLibWorldGenerator.writeJson(vein.toJson(), this.id, "vein_layers");
+      return GTLibWorldGenerator.readJson(WorldGenVeinLayer.class, vein, WorldGenVeinLayer::fromJson, "vein_layers");
   }
     public final WorldGenVeinLayerBuilder withWeight(int weight) {
         this.weight = weight;

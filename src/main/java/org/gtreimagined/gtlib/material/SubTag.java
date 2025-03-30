@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.material;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.registration.IGTObject;
 
 public class SubTag implements IGTObject {
@@ -15,7 +15,7 @@ public class SubTag implements IGTObject {
 
     public SubTag(String id) {
         this.id = id + "_subtag";
-        AntimatterAPI.register(SubTag.class, this);
+        GTAPI.register(SubTag.class, this);
     }
 
     @Override

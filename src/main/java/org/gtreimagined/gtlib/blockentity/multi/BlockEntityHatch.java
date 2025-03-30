@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.blockentity.multi;
 
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.ComponentHandler;
@@ -73,7 +73,7 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
                     if (type.getOutputCover().getId().contains("energy")) {
                         flag = voltage <= getInputVoltage();
                     }
-                    if (!flag && AntimatterConfig.MACHINES_EXPLODE.get()) {
+                    if (!flag && GTLibConfig.MACHINES_EXPLODE.get()) {
                         Utils.createExplosion(tile.getLevel(), tile.getBlockPos(), 4.0F, Explosion.BlockInteraction.BREAK);
                     }
                     return flag;
@@ -179,7 +179,7 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("textureBlock")) {
-            Block block = AntimatterAPI.get(Block.class, new ResourceLocation(tag.getString("textureBlock")));
+            Block block = GTAPI.get(Block.class, new ResourceLocation(tag.getString("textureBlock")));
             if (block instanceof BlockBasic blockBasic){
                 textureBlock = blockBasic;
             } else textureBlock = null;

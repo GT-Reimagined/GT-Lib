@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.worldgen.object;
 
 import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -102,7 +102,7 @@ public class WorldGenStoneLayerBuilder {
                 this.maxY == null ? Integer.MAX_VALUE : this.maxY,
                 this.dimensions);
         vein.addOres(this.ores);
-        AntimatterWorldGenerator.writeJson(vein.toJson(), this.id, "stone_layers");
-        return AntimatterWorldGenerator.readJson(WorldGenStoneLayer.class, vein, WorldGenStoneLayer::fromJson, "stone_layers");
+        GTLibWorldGenerator.writeJson(vein.toJson(), this.id, "stone_layers");
+        return GTLibWorldGenerator.readJson(WorldGenStoneLayer.class, vein, WorldGenStoneLayer::fromJson, "stone_layers");
     }
 }

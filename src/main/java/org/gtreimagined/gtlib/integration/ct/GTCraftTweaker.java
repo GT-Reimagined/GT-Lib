@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.integration.ct;
 import com.blamejared.crafttweaker.api.annotation.BracketResolver;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.Element;
 import org.gtreimagined.gtlib.material.Material;
@@ -23,16 +23,16 @@ public class GTCraftTweaker {
 
     @ZenCodeType.Method
     public static Object get(String clazz, String domain, String name) {
-        return AntimatterAPI.get(clazz, domain, name);
+        return GTAPI.get(clazz, domain, name);
     }
     @ZenCodeType.Method
     public static Object get(String clazz, String name) {
-        return AntimatterAPI.get(clazz, name);
+        return GTAPI.get(clazz, name);
     }
 
     @ZenCodeType.Method
     public static <T> void all(String clazz, @ZenCodeType.OptionalString String domain, Consumer<T> consumer) {
-        AntimatterAPI.all(clazz, domain, consumer);
+        GTAPI.all(clazz, domain, consumer);
     }
 
     @ZenCodeType.Method
@@ -50,19 +50,19 @@ public class GTCraftTweaker {
 
     @ZenCodeType.Method
     public static Material getMat(String name) {
-        return AntimatterAPI.get(Material.class, name);
+        return GTAPI.get(Material.class, name);
     }
 
     @ZenCodeType.Method
     public static Material createMaterial(String id, int rgb, String textureSet, String textureSetDomain) {
-        TextureSet set = Objects.requireNonNull(AntimatterAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via CT event is null");
-        return AntimatterAPI.register(Material.class, new Material(Ref.MOD_CT, id, rgb, set));
+        TextureSet set = Objects.requireNonNull(GTAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via CT event is null");
+        return GTAPI.register(Material.class, new Material(Ref.MOD_CT, id, rgb, set));
     }
 
     @ZenCodeType.Method
     public static Material createMaterial(String id, int rgb, String textureSet, String textureSetDomain, String element) {
-        TextureSet set = Objects.requireNonNull(AntimatterAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via CT event is null");
-        return AntimatterAPI.register(Material.class, new Material(Ref.MOD_KJS, id, rgb, set, Element.getFromElementId(element)));
+        TextureSet set = Objects.requireNonNull(GTAPI.get(TextureSet.class, textureSet, textureSetDomain), "Specified texture set in Material created via CT event is null");
+        return GTAPI.register(Material.class, new Material(Ref.MOD_KJS, id, rgb, set, Element.getFromElementId(element)));
     }
 
     @ZenCodeType.StaticExpansionMethod
@@ -70,9 +70,9 @@ public class GTCraftTweaker {
     public static Object get(String tokens) {
         String[] toks = tokens.split(":");
         if (toks.length == 3) {
-            return AntimatterAPI.get(toks[0], toks[1], toks[2]);
+            return GTAPI.get(toks[0], toks[1], toks[2]);
         } else if (toks.length == 2) {
-            return AntimatterAPI.get(toks[0], toks[1]);
+            return GTAPI.get(toks[0], toks[1]);
         }
         return null;
     }

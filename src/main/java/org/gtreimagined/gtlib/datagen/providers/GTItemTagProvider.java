@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
 import org.gtreimagined.gtlib.block.BlockStone;
@@ -72,7 +72,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
         this.copy(blockTag, blockToItemTag(blockTag));
         this.copy(frameTag, blockToItemTag(frameTag));
         if (domain.equals(Ref.ID)) {
-            AntimatterAPI.all(BlockOre.class, o -> {
+            GTAPI.all(BlockOre.class, o -> {
                 //if (o.getOreType() == ORE_SMALL) return;
                 this.tag(getForgelikeItemTag(String.join("", getConventionalStoneType(o.getStoneType()), "_", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o.asItem());
                 this.tag(getForgelikeItemTag(String.join("", getConventionalMaterialType(o.getOreType()), "/", o.getMaterial().getId()))).add(o.asItem());
@@ -80,7 +80,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                 this.tag(getForgelikeItemTag(getConventionalStoneType(o.getStoneType()) + "_" + getConventionalMaterialType(o.getOreType()))).add(o.asItem());
             });
 
-            AntimatterAPI.all(BlockStone.class, s -> {
+            GTAPI.all(BlockStone.class, s -> {
                 String id = "blocks/".concat(s.getId());
                 if (s.getSuffix().isEmpty()) {
                     this.tag(TagUtils.getForgelikeItemTag("stone")).add(s.asItem());
@@ -91,27 +91,27 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                 }
                 this.copy(getBlockTag(new ResourceLocation(Ref.ID, id)), getItemTag(new ResourceLocation(Ref.ID, id)));
             });
-            AntimatterAPI.all(StoneType.class, s -> {
+            GTAPI.all(StoneType.class, s -> {
                 if (s instanceof CobbleStoneType c){
                     this.tag(ItemTags.STONE_TOOL_MATERIALS).add(c.getBlock("cobble").asItem());
                     this.tag(ItemTags.STONE_CRAFTING_MATERIALS).add(c.getBlock("cobble").asItem());
                 }
             });
-            AntimatterAPI.all(BlockOreStone.class, domain, s -> {
+            GTAPI.all(BlockOreStone.class, domain, s -> {
              String id = "ore_stones/" + s.getMaterial().getId();
              this.copy(getBlockTag(new ResourceLocation(domain, id)), getItemTag(new ResourceLocation(domain, id)));
             });
-            AntimatterAPI.all(BlockStorage.class, storage -> {
+            GTAPI.all(BlockStorage.class, storage -> {
                 MaterialType<?> type = storage.getType();
                 String name = String.join("", getConventionalMaterialType(type), "/", storage.getMaterial().getId());
                 this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
             });
-            AntimatterAPI.all(BlockFrame.class, storage -> {
+            GTAPI.all(BlockFrame.class, storage -> {
                 MaterialType<?> type = storage.getType();
                 String name = String.join("", getConventionalMaterialType(type), "/", storage.getMaterial().getId());
                 this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
             });
-            AntimatterAPI.all(MaterialItem.class, item -> {
+            GTAPI.all(MaterialItem.class, item -> {
                 TagKey<Item> type = item.getType().getTag();
                 GTTagBuilder<Item> provider = this.tag(type);
                 provider.add(item).replace(replace);
@@ -121,7 +121,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                     this.tag(GTLibTags.PLATE_PLUNGER).add(item);
                 }
             });
-            AntimatterAPI.all(MaterialType.class, t -> {
+            GTAPI.all(MaterialType.class, t -> {
                 t.getReplacements().forEach((m, i) -> {
                     this.tag(t.getMaterialTag((Material) m)).add(((Supplier<Item>)i).get()).replace(replace);
                     this.tag(t.getTag()).add(((Supplier<Item>)i).get()).replace(replace);
@@ -136,7 +136,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                 }
             });
             processSubtags();
-            AntimatterAPI.all(IGTTool.class, tool -> {
+            GTAPI.all(IGTTool.class, tool -> {
                 this.tag(tool.getAntimatterToolType().getTag()).add(tool.getItem()).replace(replace);
                 this.tag(tool.getAntimatterToolType().getForgeTag()).add(tool.getItem()).replace(replace);
             });
@@ -144,7 +144,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
 
 
         this.copy(TagUtils.getBlockTag(new ResourceLocation(Ref.ID, "item_pipe")), TagUtils.getItemTag(new ResourceLocation(Ref.ID, "item_pipe")));
-        this.tag(ItemFluidCell.getTag()).add(AntimatterAPI.all(ItemFluidCell.class, domain).toArray(new Item[0]));
+        this.tag(ItemFluidCell.getTag()).add(GTAPI.all(ItemFluidCell.class, domain).toArray(new Item[0]));
     }
 
     protected void processSubtags() {
@@ -152,12 +152,12 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
             Set<Material> mats = WIRE.allSub(SubTag.COPPER_WIRE);
             if (mats.size() > 0) {
                 this.tag(TagUtils.getItemTag(new ResourceLocation(Ref.ID, SubTag.COPPER_WIRE.getId() + "_" + value.getId()))).add(mats.stream().map(t ->
-                        AntimatterAPI.get(Wire.class, "wire_" + t.getId())).filter(Objects::nonNull).map(t -> t.getBlockItem(value)).toArray(Item[]::new));
+                        GTAPI.get(Wire.class, "wire_" + t.getId())).filter(Objects::nonNull).map(t -> t.getBlockItem(value)).toArray(Item[]::new));
             }
             mats = CABLE.allSub(SubTag.COPPER_CABLE);
             if (mats.size() > 0) {
                 this.tag(TagUtils.getItemTag(new ResourceLocation(Ref.ID, SubTag.COPPER_CABLE.getId() + "_" + value.getId()))).add(mats.stream().map(t ->
-                        AntimatterAPI.get(Cable.class, "cable_" + t.getId())).filter(Objects::nonNull).map(t -> t.getBlockItem(value)).toArray(Item[]::new));
+                        GTAPI.get(Cable.class, "cable_" + t.getId())).filter(Objects::nonNull).map(t -> t.getBlockItem(value)).toArray(Item[]::new));
             }
         }
     }

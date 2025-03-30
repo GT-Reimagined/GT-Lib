@@ -2,8 +2,8 @@ package org.gtreimagined.gtlib.machine;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
-import org.gtreimagined.gtlib.AntimatterAPI;
-import org.gtreimagined.gtlib.AntimatterRemapping;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTRemapping;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -311,10 +311,10 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         String domain = covers.getString(dir.get3DDataValue() + "d");
                         String id = covers.getString(dir.get3DDataValue() + "i");
                         ResourceLocation location = new ResourceLocation(domain, id);
-                        if (AntimatterRemapping.getCoverRemappingMap().containsKey(location)) location = AntimatterRemapping.getCoverRemappingMap().get(location);
-                        CoverFactory factory = AntimatterAPI.get(CoverFactory.class, location);
+                        if (GTRemapping.getCoverRemappingMap().containsKey(location)) location = GTRemapping.getCoverRemappingMap().get(location);
+                        CoverFactory factory = GTAPI.get(CoverFactory.class, location);
                         Tier tier = covers.contains(dir.get3DDataValue() + "t")
-                                ? AntimatterAPI.get(Tier.class, covers.getString(dir.get3DDataValue() + "t"))
+                                ? GTAPI.get(Tier.class, covers.getString(dir.get3DDataValue() + "t"))
                                 : null;
                         if (factory != null) {
                             ItemStack item = factory.getItem(tier);

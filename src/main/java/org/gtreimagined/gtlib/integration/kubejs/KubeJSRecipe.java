@@ -13,7 +13,7 @@ import dev.latvian.mods.kubejs.recipe.RecipeJS;
 import dev.latvian.mods.kubejs.util.ListJS;
 import dev.latvian.mods.kubejs.util.MapJS;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.integration.rei.REIUtils;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
@@ -42,7 +42,7 @@ public class KubeJSRecipe extends RecipeJS {
     @Override
     public void create(ListJS listJS) {
         this.map = (String) listJS.get(0);
-        RecipeMap<?> rMap = AntimatterAPI.get(RecipeMap.class, this.map);
+        RecipeMap<?> rMap = GTAPI.get(RecipeMap.class, this.map);
         if (rMap == null){
             throw new IllegalArgumentException("Unknown recipe map");
         }

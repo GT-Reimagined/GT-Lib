@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.worldgen.vanillaore;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -118,13 +118,13 @@ public class WorldGenVanillaOre extends WorldGenBase<WorldGenVanillaOre> {
                 }
             });
         }
-        MaterialType<?> materialType = json.has("materialType") ? AntimatterAPI.get(MaterialType.class, json.get("materialType").getAsString()) : GTMaterialTypes.ORE;
+        MaterialType<?> materialType = json.has("materialType") ? GTAPI.get(MaterialType.class, json.get("materialType").getAsString()) : GTMaterialTypes.ORE;
         return new WorldGenVanillaOre(
                 id,
                 Material.get(json.get("primary").getAsString()),
                 json.has("secondary") ? Material.get(json.get("secondary").getAsString()) : Material.NULL,
                 materialType,
-                json.has("secondaryType") ? AntimatterAPI.get(MaterialType.class, json.get("secondaryType").getAsString()) : materialType,
+                json.has("secondaryType") ? GTAPI.get(MaterialType.class, json.get("secondaryType").getAsString()) : materialType,
                 json.has("secondaryChance") ? json.get("secondaryChance").getAsFloat() : 0.0f,
                 json.get("discardOnExposureChance").getAsFloat(),
                 json.has("minY") ? json.get("minY").getAsInt() : Integer.MIN_VALUE,

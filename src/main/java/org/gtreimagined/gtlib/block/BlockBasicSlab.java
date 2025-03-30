@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.block;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
@@ -24,7 +24,7 @@ public class BlockBasicSlab extends SlabBlock implements IGTObject, ITextureProv
         super(properties);
         this.domain = domain;
         this.id = id;
-        AntimatterAPI.register(getClass(), this);
+        GTAPI.register(getClass(), this);
     }
 
     public BlockBasicSlab(String domain, String id) {

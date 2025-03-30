@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.tool.armor;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.material.Material;
@@ -38,7 +38,7 @@ public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeather
         this.domain = domain;
         this.material = materialIn;
         this.type = type;
-        AntimatterAPI.register(IGTArmor.class, this);
+        GTAPI.register(IGTArmor.class, this);
         if (type.getSlot() == EquipmentSlot.HEAD && FMLEnvironment.dist.isClient()) {
             RenderHelper.registerProbePropertyOverrides(this);
         }

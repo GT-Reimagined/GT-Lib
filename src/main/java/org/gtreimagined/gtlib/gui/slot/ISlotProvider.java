@@ -4,7 +4,7 @@ package org.gtreimagined.gtlib.gui.slot;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -84,7 +84,7 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     }
 
     default T add(String key, SlotData<?> slot) {
-        Tier tier = AntimatterAPI.get(Tier.class, key);
+        Tier tier = GTAPI.get(Tier.class, key);
         //if (tier != null && tier.getVoltage() > h.getVoltage()) highestTier = tier;
         Map<String, Object2IntOpenHashMap<SlotType<?>>> count = getCountLookup();
         Map<String, List<SlotData<?>>> slotLookup = getSlotLookup();

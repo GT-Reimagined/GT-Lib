@@ -1,10 +1,10 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
-import org.gtreimagined.gtlib.AntimatterConfig;
+import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.util.TagUtils;
-import org.gtreimagined.gtlib.worldgen.AntimatterConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.AntimatterWorldGenerator;
+import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
+import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import org.gtreimagined.gtlib.worldgen.smallore.WorldGenSmallOre;
 import net.minecraft.core.BlockPos;
@@ -40,7 +40,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return AntimatterConfig.SMALL_ORES.get() && getRegistry().size() > 0;
+        return GTLibConfig.SMALL_ORES.get() && getRegistry().size() > 0;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, AntimatterConfiguredFeatures.SMALL_ORES);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.SMALL_ORES);
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> placer) {
@@ -65,7 +65,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
         final int chunkCornerZ = chunkZ * 16;
         final int worldMinY = world.dimensionType().minY();
         final int worldMaxY = world.dimensionType().minY() + world.dimensionType().height();
-        List<WorldGenSmallOre> smallOres = AntimatterWorldGenerator.all(WorldGenSmallOre.class, world.getLevel().dimension());
+        List<WorldGenSmallOre> smallOres = GTLibWorldGenerator.all(WorldGenSmallOre.class, world.getLevel().dimension());
         int spawned = 0;
         for (WorldGenSmallOre smallOre : smallOres) {
             if (!smallOre.material.has(ORE_SMALL)) continue;

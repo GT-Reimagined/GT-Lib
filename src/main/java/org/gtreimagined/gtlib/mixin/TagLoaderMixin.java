@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
-import org.gtreimagined.gtlib.Antimatter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.Holder;
@@ -45,7 +45,7 @@ public abstract class TagLoaderMixin {
                     }
                 });
             } catch (Exception e) {
-                Antimatter.LOGGER.error(e.getMessage(), e);
+                GTLib.LOGGER.error(e.getMessage(), e);
             }
         }
         if (directory.equals("tags/blocks")) {
@@ -60,7 +60,7 @@ public abstract class TagLoaderMixin {
                     }
                 });
             } catch (Exception e) {
-                Antimatter.LOGGER.error(e.getMessage(), e);
+                GTLib.LOGGER.error(e.getMessage(), e);
             }
         }
         if (directory.equals("tags/fluids")) {
@@ -75,7 +75,7 @@ public abstract class TagLoaderMixin {
                     }
                 });
             } catch (Exception e) {
-                Antimatter.LOGGER.error(e.getMessage(), e);
+                GTLib.LOGGER.error(e.getMessage(), e);
             }
         }
     }

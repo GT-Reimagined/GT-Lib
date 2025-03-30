@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.registration;
 
-import org.gtreimagined.gtlib.AntimatterAPI;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
 import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
 
@@ -10,7 +10,7 @@ import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
 public abstract class ModRegistrar implements IGTObject {
 
     public ModRegistrar() {
-        AntimatterAPI.register(ModRegistrar.class, this);
+        GTAPI.register(ModRegistrar.class, this);
     }
 
     /**

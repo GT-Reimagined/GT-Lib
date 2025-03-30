@@ -37,12 +37,12 @@ public class Ref {
     /**
      * Sound Events
      **/
-    public static final SoundEvent DRILL = AntimatterAPI.register(SoundEvent.class, "drill", ID,  new SoundEvent(new ResourceLocation(ID, "drill")));
-    public static final SoundEvent WRENCH = AntimatterAPI.register(SoundEvent.class, "wrench", ID,  new SoundEvent(new ResourceLocation(ID, "wrench")));
-    public static final SoundEvent WIRE_CUTTERS = AntimatterAPI.register(SoundEvent.class, "wire-cutters", ID,  new SoundEvent(new ResourceLocation(ID, "wire-cutters")));
-    public static final SoundEvent JOHN_CENA = AntimatterAPI.register(SoundEvent.class, "john-cena", ID,  new SoundEvent(new ResourceLocation(ID, "john-cena")));
-    public static final SoundEvent INTERRUPT = AntimatterAPI.register(SoundEvent.class, "interrupt", ID,  new SoundEvent(new ResourceLocation(ID, "interrupt")));
-    public static final SoundEvent MACHINE_EXPLODE = AntimatterAPI.register(SoundEvent.class, "machine-explode", ID,  new SoundEvent(new ResourceLocation(ID, "machine-explode")));
+    public static final SoundEvent DRILL = GTAPI.register(SoundEvent.class, "drill", ID,  new SoundEvent(new ResourceLocation(ID, "drill")));
+    public static final SoundEvent WRENCH = GTAPI.register(SoundEvent.class, "wrench", ID,  new SoundEvent(new ResourceLocation(ID, "wrench")));
+    public static final SoundEvent WIRE_CUTTERS = GTAPI.register(SoundEvent.class, "wire-cutters", ID,  new SoundEvent(new ResourceLocation(ID, "wire-cutters")));
+    public static final SoundEvent JOHN_CENA = GTAPI.register(SoundEvent.class, "john-cena", ID,  new SoundEvent(new ResourceLocation(ID, "john-cena")));
+    public static final SoundEvent INTERRUPT = GTAPI.register(SoundEvent.class, "interrupt", ID,  new SoundEvent(new ResourceLocation(ID, "interrupt")));
+    public static final SoundEvent MACHINE_EXPLODE = GTAPI.register(SoundEvent.class, "machine-explode", ID,  new SoundEvent(new ResourceLocation(ID, "machine-explode")));
 
     /**
      * Global Data
