@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib;
 
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.ClientData;
@@ -75,6 +77,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.gtreimagined.gtlib.worldgen.vein.VeinLayerData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -129,7 +132,12 @@ public class GTLib extends GTMod {
 
         eventBus.addListener(this::addCraftingLoaders);
         eventBus.addListener(this::providers);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerReloadListeners);
         ARRP.EVENT_BUS.register(ARRPEvents.class);
+    }
+
+    public void onServerReloadListeners(AddReloadListenerEvent event){
+        event.addListener(new VeinLayerData());
     }
 
     public void addCraftingLoaders(GTCraftingEvent ev) {

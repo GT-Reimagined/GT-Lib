@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.material;
 
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +30,8 @@ import static org.gtreimagined.gtlib.material.TextureSet.NONE;
 public class Material implements ISharedGTObject {
 
     public static final Material NULL = GTAPI.register(Material.class, new Material(Ref.ID, "null", 0xffffff, NONE));
+    public static final Codec<Material> CODEC = Codec.STRING.xmap(Material::get, Material::getId);
+
     @Getter
     final Set<MaterialType<?>> types = new HashSet<>();
     /**
