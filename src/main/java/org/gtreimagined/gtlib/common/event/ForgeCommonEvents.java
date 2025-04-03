@@ -14,6 +14,8 @@ import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
 import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.item.IFluidItem;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
+import org.gtreimagined.gtlib.network.packets.ClientboundWorldgenSyncPacket;
 import org.gtreimagined.gtlib.ore.BlockOre;
 import org.gtreimagined.gtlib.pipe.BlockPipe;
 import org.gtreimagined.gtlib.pipe.TileTicker;
@@ -139,6 +141,13 @@ public class ForgeCommonEvents {
         PlayerTickCallback.PLAYER_TICK_CALLBACKS.forEach(c -> {
             c.onTick(event.phase == TickEvent.Phase.END, event.side == LogicalSide.SERVER, event.player);
         });
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
+        if (!event.getPlayer().getLevel().isClientSide()){
+            GTLibNetwork.NETWORK.sendToPlayer(new ClientboundWorldgenSyncPacket(), event.getPlayer());
+        }
     }
 
     @SubscribeEvent
