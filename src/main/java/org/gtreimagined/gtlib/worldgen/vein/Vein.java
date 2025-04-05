@@ -11,6 +11,7 @@ import org.gtreimagined.gtlib.material.Material;
 import java.util.List;
 
 public record Vein(int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions) {
+    public static final Vein NO_ORES_IN_VEIN = new Vein(0, 255, 0, 255, 16, Material.NULL, Material.NULL, Material.NULL, Material.NULL, List.of());
     public static final Codec<Vein> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("minY").forGetter(Vein::minY),
             Codec.INT.fieldOf("maxY").forGetter(Vein::maxY),

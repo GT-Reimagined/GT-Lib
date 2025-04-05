@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 public class VeinLayerData extends SimpleJsonResourceReloadListener {
     private static final BiMap<ResourceLocation, Vein> VEINS = HashBiMap.create();
+    static int TOTAL_WEIGHT = 0;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     public VeinLayerData() {
@@ -45,9 +46,10 @@ public class VeinLayerData extends SimpleJsonResourceReloadListener {
         updateVeins(layers);
     }
 
-    public static void updateVeins(Map<ResourceLocation, Vein> planets) {
+    public static void updateVeins(Map<ResourceLocation, Vein> veins) {
         clear();
-        VEINS.putAll(planets);
+        VEINS.putAll(veins);
+        TOTAL_WEIGHT = veins.values().stream().mapToInt(Vein::weight).sum();
     }
 
     private static void clear() {
@@ -60,6 +62,10 @@ public class VeinLayerData extends SimpleJsonResourceReloadListener {
 
     public static Map<ResourceLocation, Vein> getVeins(Level level){
         return VEINS.entrySet().stream().filter(v -> v.getValue().dimensions().contains(level.dimension())).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    }
+
+    public static int getTotalWeight(){
+        return TOTAL_WEIGHT;
     }
 
     public static ResourceLocation getIdFromVein(Vein vein) {
