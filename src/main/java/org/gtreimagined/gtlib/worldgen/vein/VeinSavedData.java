@@ -41,7 +41,9 @@ public class VeinSavedData extends SavedData {
                         materialMap.put(mat, longList);
                     }
                 });
-                ores.put(chunkPos, materialMap);
+                synchronized (ores) {
+                    ores.put(chunkPos, materialMap);
+                }
             }
         }
     }
@@ -58,20 +60,22 @@ public class VeinSavedData extends SavedData {
     @Override
     public CompoundTag save(CompoundTag compoundTag) {
         var oilList = new ListTag();
-        for (var entry : ores.entrySet()) {
-            var tag = new CompoundTag();
-            tag.putLong("p", entry.getKey().toLong());
-            ListTag listTag = new ListTag();
-            entry.getValue().forEach((m, l) -> {
-                ListTag positions = new ListTag();
-                l.forEach(p -> positions.add(LongTag.valueOf(p)));
-                CompoundTag data = new CompoundTag();
-                data.putString("material", m.getId());
-                data.put("positions", positions);
-                listTag.add(data);
-            });
-            tag.put("d", listTag);
-            oilList.add(tag);
+        synchronized (ores) {
+            for (var entry : ores.entrySet()) {
+                var tag = new CompoundTag();
+                tag.putLong("p", entry.getKey().toLong());
+                ListTag listTag = new ListTag();
+                entry.getValue().forEach((m, l) -> {
+                    ListTag positions = new ListTag();
+                    l.forEach(p -> positions.add(LongTag.valueOf(p)));
+                    CompoundTag data = new CompoundTag();
+                    data.putString("material", m.getId());
+                    data.put("positions", positions);
+                    listTag.add(data);
+                });
+                tag.put("d", listTag);
+                oilList.add(tag);
+            }
         }
         compoundTag.put("veinInfo", oilList);
         return compoundTag;
@@ -79,11 +83,13 @@ public class VeinSavedData extends SavedData {
 
     public Map<Material, LongList> geOresInChunk(int chunkX, int chunkZ){
         ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
-        if (!ores.containsKey(chunkPos)){
-            ores.put(chunkPos, new Object2ObjectOpenHashMap<>());
-            setDirty();
+        synchronized (ores) {
+            if (!ores.containsKey(chunkPos)){
+                ores.put(chunkPos, new Object2ObjectOpenHashMap<>());
+                setDirty();
+            }
+            return ores.get(chunkPos);
         }
-        return ores.get(chunkPos);
     }
 
     public Map<Material, LongList> getOresInChunkAtY(int chunkX, int chunkZ, int y){
