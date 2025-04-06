@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.JsonSerializer;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -36,7 +37,7 @@ import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.WorldGenSmallOre;
 import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
-import org.gtreimagined.gtlib.worldgen.vein.WorldGenVeinLayer;
+import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.models.JTextures;
@@ -252,14 +253,13 @@ public class GTLibDynamics {
                 GTLib.LOGGER.warn("Duplicate recipe loader: " + new ResourceLocation(a, b));
             }
         }));
-        List<WorldGenVeinLayer> veins = new ObjectArrayList<>();
+        List<Pair<ResourceLocation, Vein>> veins = new ObjectArrayList<>();
         List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
         List<WorldGenSmallOre> smallOres = new ObjectArrayList<>();
         List<WorldGenVanillaOre> vanillaOres = new ObjectArrayList<>();
         List<WorldGenBedrockVein> bedrockVeins = new ObjectArrayList<>();
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
-        WorldGenVeinLayer.resetTotalWeight();
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
             AMWorldEvent ev = new AMWorldEvent();
             ev.post(ScriptType.SERVER, "gtlib.worldgen");
@@ -272,7 +272,6 @@ public class GTLibDynamics {
             GTWorldGenEvent ev = new GTWorldGenEvent(GTLib.INSTANCE);
             MinecraftForge.EVENT_BUS.post(ev);
             veins.addAll(ev.VEINS);
-            veins.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenVeinLayer.class, WorldGenVeinLayer::fromJson, "vein_layers"));
             smallOres.addAll(ev.SMALL_ORES);
             smallOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenSmallOre.class, WorldGenSmallOre::fromJson, "small_ore"));
             stoneLayers.addAll(ev.STONE_LAYERS);
@@ -286,8 +285,8 @@ public class GTLibDynamics {
             });
         }
         GTLibWorldGenerator.clear();
-        for (WorldGenVeinLayer vein : veins) {
-            GTLibWorldGenerator.register(vein.toRegister, vein);
+        for (Pair<ResourceLocation, Vein> vein : veins) {
+            DynamicDataPack.addWorldgenObject(vein.key(), vein.value().toJson(), "3x3_veins");
         }
         for (WorldGenStoneLayer stoneLayer : stoneLayers) {
             GTLibWorldGenerator.register(stoneLayer.toRegister, stoneLayer);

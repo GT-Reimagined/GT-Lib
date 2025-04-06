@@ -1,7 +1,8 @@
 package org.gtreimagined.gtlib.worldgen.vein;
 
+import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WorldGenVeinLayerBuilder {
+public class VeinBuilder {
 
   @Nullable
-  private final String id;
+  private final ResourceLocation id;
   @Nullable
   private Integer weight;
   @Nullable
@@ -28,12 +29,12 @@ public class WorldGenVeinLayerBuilder {
   private Material primary, secondary, between, sporadic;
   private final ArrayList<ResourceKey<Level>> dimensions;
 
-  public WorldGenVeinLayerBuilder(String id) {
+  public VeinBuilder(ResourceLocation id) {
     this.id = id;
     this.dimensions = new ArrayList<>();
   }
 
-  public final WorldGenVeinLayer buildVein() {
+  public final Pair<ResourceLocation, Vein> buildVein() {
     if (this.id == null) {
       throw new RuntimeException("id is required");
     }
@@ -53,47 +54,31 @@ public class WorldGenVeinLayerBuilder {
         throw new RuntimeException("materials must not be null!");
     }
 
-    return this.buildVeinFromJson();
+    return Pair.of(id, new Vein(this.minY, this.maxY, this.weight, this.density, this.size, this.primary, this.secondary, this.between, this.sporadic, this.dimensions));
   }
 
-  private WorldGenVeinLayer buildVeinFromJson(){
-      WorldGenVeinLayer vein = new WorldGenVeinLayer(
-              this.id,
-              this.minY,
-              this.maxY,
-              this.weight,
-              this.density,
-              this.size,
-              this.primary,
-              this.secondary,
-              this.between,
-              this.sporadic,
-              this.dimensions);
-      GTLibWorldGenerator.writeJson(vein.toJson(), this.id, "vein_layers");
-      return GTLibWorldGenerator.readJson(WorldGenVeinLayer.class, vein, WorldGenVeinLayer::fromJson, "vein_layers");
-  }
-    public final WorldGenVeinLayerBuilder withWeight(int weight) {
+    public final VeinBuilder withWeight(int weight) {
         this.weight = weight;
         return this;
     }
 
-    public final WorldGenVeinLayerBuilder withDensity(int density) {
+    public final VeinBuilder withDensity(int density) {
         this.density = density;
         return this;
     }
 
-    public final WorldGenVeinLayerBuilder atHeight(int minY, int maxY) {
+    public final VeinBuilder atHeight(int minY, int maxY) {
         this.minY = minY;
         this.maxY = maxY;
         return this;
     }
 
-    public final WorldGenVeinLayerBuilder withSize(int size) {
+    public final VeinBuilder withSize(int size) {
         this.size = size;
         return this;
     }
 
-    public final WorldGenVeinLayerBuilder withMaterials(Material... materials) {
+    public final VeinBuilder withMaterials(Material... materials) {
         this.primary = materials.length > 0 ? materials[0] : null;
         this.secondary = materials.length > 1 ? materials[1] : primary;
         this.between = materials.length > 2 ? materials[2] : secondary;
@@ -101,25 +86,25 @@ public class WorldGenVeinLayerBuilder {
         return this;
     }
 
-    public final WorldGenVeinLayerBuilder inDimension(ResourceKey<Level> dimension) {
+    public final VeinBuilder inDimension(ResourceKey<Level> dimension) {
         this.dimensions.add(dimension);
         return this;
     }
 
-    public final WorldGenVeinLayerBuilder inDimensions(List<ResourceKey<Level>> dimension) {
+    public final VeinBuilder inDimensions(List<ResourceKey<Level>> dimension) {
       this.dimensions.addAll(dimension);
       return this;
     }
 
     @SafeVarargs
-    public final WorldGenVeinLayerBuilder inDimensions(ResourceKey<Level>... dimension) {
+    public final VeinBuilder inDimensions(ResourceKey<Level>... dimension) {
         this.dimensions.addAll(Arrays.asList(dimension));
         return this;
     }
 
     @SafeVarargs
-    public final WorldGenVeinLayerBuilder asOreVein(int minY, int maxY, int weight, int density, int size, Material primary,
-                                                    Material secondary, Material between, Material sporadic, ResourceKey<Level>... dimensions) {
+    public final VeinBuilder asOreVein(int minY, int maxY, int weight, int density, int size, Material primary,
+                                       Material secondary, Material between, Material sporadic, ResourceKey<Level>... dimensions) {
         return this.atHeight(minY, maxY).withWeight(weight).withDensity(density).withSize(size).withMaterials(primary, secondary, between, sporadic).inDimensions(dimensions);
     }
 

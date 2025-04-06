@@ -52,14 +52,23 @@ public class DynamicDataPack implements PackResources {
         DATA.clear();
     }
 
+    public static void addWorldgenObject(ResourceLocation key, JsonObject value, String subDirectory) {
+        Path parent = FMLPaths.CONFIGDIR.get().getParent()
+                .resolve("dumped/gtlib-dynamic-data/data");
+        if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
+            writeJson(key, "worldgen/" + subDirectory + "/", parent, value);
+        }
+        DATA.put(getWorldgenLoc(key, subDirectory), value);
+    }
+
     public static void addRecipe(FinishedRecipe recipe) {
         JsonObject recipeJson = recipe.serializeRecipe();
         Path parent = FMLPaths.CONFIGDIR.get().getParent()
-                .resolve("dumped/antimatter-dynamic-data/data");
+                .resolve("dumped/gtlib-dynamic-data/data");
         if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
             writeJson(recipe.getId(), "recipes", parent, recipeJson);
         }
-        DATA.put(getRecipeLog(recipe.getId()), recipeJson);
+        DATA.put(getRecipeLoc(recipe.getId()), recipeJson);
         if (recipe.serializeAdvancement() != null) {
             JsonObject advancement = recipe.serializeAdvancement();
             if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
@@ -147,8 +156,12 @@ public class DynamicDataPack implements PackResources {
         //NOOP
     }
 
-    public static ResourceLocation getRecipeLog(ResourceLocation recipeId) {
+    public static ResourceLocation getRecipeLoc(ResourceLocation recipeId) {
         return new ResourceLocation(recipeId.getNamespace(), String.join("", "recipes/", recipeId.getPath(), ".json"));
+    }
+
+    public static ResourceLocation getWorldgenLoc(ResourceLocation worldgenId, String subDirectory) {
+        return new ResourceLocation(worldgenId.getNamespace(), String.join("", "worldgen/", subDirectory, "/", worldgenId.getPath(), ".json"));
     }
 
     public static ResourceLocation getAdvancementLoc(ResourceLocation advancementId) {

@@ -13,12 +13,11 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.util.XSTR;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.VeinLayerResult;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
+import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import org.gtreimagined.gtlib.worldgen.vein.VeinLayerData;
-import org.gtreimagined.gtlib.worldgen.vein.WorldGenVeinLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.biome.Biome;
@@ -29,7 +28,6 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +41,7 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
 
 
     public FeatureVeinLayer() {
-        super(NoneFeatureConfiguration.CODEC, WorldGenVeinLayer.class);
+        super(NoneFeatureConfiguration.CODEC, WorldGenBase.class);
     }
 
     @Override

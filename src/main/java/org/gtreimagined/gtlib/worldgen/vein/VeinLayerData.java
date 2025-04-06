@@ -16,8 +16,11 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.network.PacketHelper;
+import org.gtreimagined.gtlib.network.packets.ClientboundWorldgenSyncPacket;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +47,9 @@ public class VeinLayerData extends SimpleJsonResourceReloadListener {
             layers.put(entry.getKey(), Vein.CODEC.parse(JsonOps.INSTANCE, vein).getOrThrow(false, GTLib.LOGGER::error));
         }
         updateVeins(layers);
+        if (ServerLifecycleHooks.getCurrentServer() != null) {
+            GTLibNetwork.NETWORK.sendToAllPlayers(new ClientboundWorldgenSyncPacket(), ServerLifecycleHooks.getCurrentServer());
+        }
     }
 
     public static void updateVeins(Map<ResourceLocation, Vein> veins) {

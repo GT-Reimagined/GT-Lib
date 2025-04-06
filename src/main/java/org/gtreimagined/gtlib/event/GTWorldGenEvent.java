@@ -1,7 +1,9 @@
 package org.gtreimagined.gtlib.event;
 
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
@@ -9,7 +11,7 @@ import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.WorldGenSmallOre;
 import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
-import org.gtreimagined.gtlib.worldgen.vein.WorldGenVeinLayer;
+import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
@@ -18,7 +20,7 @@ import java.util.Objects;
 
 public class GTWorldGenEvent extends GTEvent {
 
-    public final List<WorldGenVeinLayer> VEINS = new ObjectArrayList<>();
+    public final List<Pair<ResourceLocation, Vein>> VEINS = new ObjectArrayList<>();
     public final List<WorldGenStoneLayer> STONE_LAYERS = new ObjectArrayList<>();
 
     public final List<WorldGenSmallOre> SMALL_ORES = new ObjectArrayList<>();
@@ -31,9 +33,9 @@ public class GTWorldGenEvent extends GTEvent {
         super(registrar);
     }
 
-    public void vein(WorldGenVeinLayer veins) {
-        if (VEINS.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
-            GTLib.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.getId());
+    public void vein(Pair<ResourceLocation, Vein> veins) {
+        if (VEINS.stream().anyMatch(s -> s.key().equals(veins.key()))){
+            GTLib.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.key());
             return;
         }
         VEINS.add(veins);
