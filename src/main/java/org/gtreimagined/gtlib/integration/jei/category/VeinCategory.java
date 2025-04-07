@@ -18,7 +18,7 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
-import org.gtreimagined.gtlib.worldgen.vein.VeinLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -107,7 +107,7 @@ public class VeinCategory implements IRecipeCategory<Vein> {
     public void draw(Vein recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
         int x = JEI_OFFSET_X;
         int y = JEI_OFFSET_Y + 3;
-        String fullId = VeinLayerData.getIdFromVein(recipe).getPath();
+        String fullId = VeinData.getIdFromVein(recipe).getPath();
         renderString(stack, "Vein Name: " + Utils.lowerUnderscoreToUpperSpaced(fullId), Minecraft.getInstance().font, 0, 18, 0x000000, x, y, false);
         renderString(stack, "Primary: " + recipe.primary().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 38, 0x000000, x, y, false);
         renderString(stack, "Secondary: " + recipe.secondary().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 48, 0x000000, x, y, false);

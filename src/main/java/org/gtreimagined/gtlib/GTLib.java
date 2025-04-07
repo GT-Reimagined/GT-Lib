@@ -77,7 +77,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.gtreimagined.gtlib.worldgen.vein.VeinLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -137,7 +137,7 @@ public class GTLib extends GTMod {
     }
 
     public void onServerReloadListeners(AddReloadListenerEvent event){
-        event.addListener(new VeinLayerData());
+        event.addListener(new VeinData());
     }
 
     public void addCraftingLoaders(GTCraftingEvent ev) {

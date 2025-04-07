@@ -17,7 +17,7 @@ import org.gtreimagined.gtlib.worldgen.VeinLayerResult;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
-import org.gtreimagined.gtlib.worldgen.vein.VeinLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.biome.Biome;
@@ -93,7 +93,7 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
     // in the dimension. For example veins that range above and below the average height
     // will be less, and veins that are completely above the average height will be much less.
     public static void generate(WorldGenLevel world, int chunkX, int chunkZ, int oreSeedX, int oreSeedZ) {
-        Map<ResourceLocation, Vein> veins = VeinLayerData.getVeins(world.getLevel());
+        Map<ResourceLocation, Vein> veins = VeinData.getVeins(world.getLevel());
         if (veins.isEmpty())
             return;
 
@@ -111,13 +111,13 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
         // Search for a valid orevein for this dimension
         if (!VALID_VEINS.containsKey(oreVeinSeed)) {
             int veinCount = veins.size();
-            if (oreVeinPercentageRoll < GTLibConfig.ORE_VEIN_CHANCE.get() && VeinLayerData.getTotalWeight() > 0 && veinCount > 0) {
+            if (oreVeinPercentageRoll < GTLibConfig.ORE_VEIN_CHANCE.get() && VeinData.getTotalWeight() > 0 && veinCount > 0) {
                 int placementAttempts = 0;
                 boolean oreVeinFound = false;
                 int i;
 
                 for (i = 0; i < GTLibConfig.ORE_VEIN_FIND_ATTEMPTS.get() && !oreVeinFound && placementAttempts < GTLibConfig.ORE_VEIN_PLACE_ATTEMPTS.get(); i++) {
-                    int tRandomWeight = oreVeinRNG.nextInt(VeinLayerData.getTotalWeight());
+                    int tRandomWeight = oreVeinRNG.nextInt(VeinData.getTotalWeight());
                     for (var veinEntry : veins.entrySet()) {
                         Vein vein = veinEntry.getValue();
                         tRandomWeight -= vein.weight();
@@ -228,7 +228,7 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
         }
 
         if (Ref.debugOreVein)
-            GTLib.LOGGER.info("Trying Orevein:" + VeinLayerData.getIdFromVein(vein) + " Dimension=" + world.getLevel().dimension() + " posX=" + posX / 16 + " posZ=" + posZ / 16 + " oreseedX=" + seedX / 16 + " oreseedZ=" + seedZ / 16 + " cY=" + tMinY);
+            GTLib.LOGGER.info("Trying Orevein:" + VeinData.getIdFromVein(vein) + " Dimension=" + world.getLevel().dimension() + " posX=" + posX / 16 + " posZ=" + posZ / 16 + " oreseedX=" + seedX / 16 + " oreseedZ=" + seedZ / 16 + " cY=" + tMinY);
         if (!generateSquare(vein, world, rand, posX, posZ, seedX, seedZ, tMinY, wXVein, eXVein, nZVein, sZVein, wX, eX, nZ, sZ))
             //if (!generateByFunction(world, rand, tMinY, wXVein, eXVein, nZVein, sZVein, wX, eX, nZ, sZ))
             return NO_ORE_IN_BOTTOM_LAYER;  // Exit early, didn't place anything in the bottom layer

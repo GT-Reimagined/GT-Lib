@@ -6,7 +6,7 @@ import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
-import org.gtreimagined.gtlib.worldgen.vein.VeinLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 public class ClientboundWorldgenSyncPacket implements Packet<ClientboundWorldgenSyncPacket> {
     public static ClientHandler HANDLER = new ClientHandler();
@@ -24,12 +24,12 @@ public class ClientboundWorldgenSyncPacket implements Packet<ClientboundWorldgen
 
         @Override
         public void encode(ClientboundWorldgenSyncPacket clientboundWorldgenSyncPacket, FriendlyByteBuf friendlyByteBuf) {
-            VeinLayerData.encodeVeins(friendlyByteBuf);
+            VeinData.encodeVeins(friendlyByteBuf);
         }
 
         @Override
         public ClientboundWorldgenSyncPacket decode(FriendlyByteBuf friendlyByteBuf) {
-            VeinLayerData.updateVeins(VeinLayerData.decodeVeins(friendlyByteBuf));
+            VeinData.updateVeins(VeinData.decodeVeins(friendlyByteBuf));
             return new ClientboundWorldgenSyncPacket();
         }
 

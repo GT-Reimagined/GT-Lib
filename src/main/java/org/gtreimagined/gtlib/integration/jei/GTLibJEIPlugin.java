@@ -36,7 +36,7 @@ import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.Utils;
-import org.gtreimagined.gtlib.worldgen.vein.VeinLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
@@ -190,7 +190,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 }
             }
         });
-        registration.addRecipes(VeinCategory.VEIN_LAYERS, VeinLayerData.getVeins().values().stream().toList());
+        registration.addRecipes(VeinCategory.VEIN_LAYERS, VeinData.getVeins().values().stream().toList());
         MultiMachineInfoCategory.registerRecipes(registration);
     }
 

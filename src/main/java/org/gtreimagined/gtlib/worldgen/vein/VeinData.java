@@ -30,20 +30,20 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class VeinLayerData extends SimpleJsonResourceReloadListener {
+public class VeinData extends SimpleJsonResourceReloadListener {
     private static final BiMap<ResourceLocation, Vein> VEINS = HashBiMap.create();
     static int TOTAL_WEIGHT = 0;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    public VeinLayerData() {
-        super(GSON, "worldgen/3x3_veins");
+    public VeinData() {
+        super(GSON, "gt_worldgen/veins");
     }
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         Map<ResourceLocation, Vein> layers = new HashMap<>();
         for (var entry : map.entrySet()) {
-            JsonObject vein = GsonHelper.convertToJsonObject(entry.getValue(), "3x3_vein");
+            JsonObject vein = GsonHelper.convertToJsonObject(entry.getValue(), "vein");
             layers.put(entry.getKey(), Vein.CODEC.parse(JsonOps.INSTANCE, vein).getOrThrow(false, GTLib.LOGGER::error));
         }
         updateVeins(layers);
