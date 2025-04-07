@@ -47,9 +47,6 @@ public class VeinData extends SimpleJsonResourceReloadListener {
             layers.put(entry.getKey(), Vein.CODEC.parse(JsonOps.INSTANCE, vein).getOrThrow(false, GTLib.LOGGER::error));
         }
         updateVeins(layers);
-        if (ServerLifecycleHooks.getCurrentServer() != null) {
-            GTLibNetwork.NETWORK.sendToAllPlayers(new ClientboundWorldgenSyncPacket(), ServerLifecycleHooks.getCurrentServer());
-        }
     }
 
     public static void updateVeins(Map<ResourceLocation, Vein> veins) {

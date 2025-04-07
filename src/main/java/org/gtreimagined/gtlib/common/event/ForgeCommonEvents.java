@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.common.event;
 
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.GTRemapping;
@@ -144,9 +145,11 @@ public class ForgeCommonEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
-        if (!event.getPlayer().getLevel().isClientSide()){
+    public static void onDataPackSync(OnDatapackSyncEvent event){
+        if (event.getPlayer() != null){
             GTLibNetwork.NETWORK.sendToPlayer(new ClientboundWorldgenSyncPacket(), event.getPlayer());
+        } else if (ServerLifecycleHooks.getCurrentServer() != null) {
+            GTLibNetwork.NETWORK.sendToAllPlayers(new ClientboundWorldgenSyncPacket(), ServerLifecycleHooks.getCurrentServer());
         }
     }
 
