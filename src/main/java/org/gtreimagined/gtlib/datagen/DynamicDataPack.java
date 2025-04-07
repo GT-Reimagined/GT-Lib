@@ -12,6 +12,7 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -52,13 +53,13 @@ public class DynamicDataPack implements PackResources {
         DATA.clear();
     }
 
-    public static void addWorldgenObject(ResourceLocation key, JsonObject value, String subDirectory) {
+    public static void addWorldgenObject(IWorldgenObject object) {
         Path parent = FMLPaths.CONFIGDIR.get().getParent()
                 .resolve("dumped/gtlib-dynamic-data/data");
         if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
-            writeJson(key, "worldgen/" + subDirectory + "/", parent, value);
+            writeJson(object.getLoc(), "gt_worldgen/" + object.getSubDirectory() + "/", parent, object.toJson());
         }
-        DATA.put(getWorldgenLoc(key, subDirectory), value);
+        DATA.put(getWorldgenLoc(object.getLoc(), object.getSubDirectory()), object.toJson());
     }
 
     public static void addRecipe(FinishedRecipe recipe) {
@@ -161,7 +162,7 @@ public class DynamicDataPack implements PackResources {
     }
 
     public static ResourceLocation getWorldgenLoc(ResourceLocation worldgenId, String subDirectory) {
-        return new ResourceLocation(worldgenId.getNamespace(), String.join("", "worldgen/", subDirectory, "/", worldgenId.getPath(), ".json"));
+        return new ResourceLocation(worldgenId.getNamespace(), String.join("", "gt_worldgen/", subDirectory, "/", worldgenId.getPath(), ".json"));
     }
 
     public static ResourceLocation getAdvancementLoc(ResourceLocation advancementId) {

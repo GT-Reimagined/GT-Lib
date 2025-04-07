@@ -25,7 +25,7 @@ import java.util.Objects;
 
 public class AMWorldEvent extends EventJS {
 
-    public final List<Pair<ResourceLocation, Vein>> VEINS = new ObjectArrayList<>();
+    public final List<Vein> VEINS = new ObjectArrayList<>();
     public final List<WorldGenStoneLayer> STONE_LAYERS = new ObjectArrayList<>();
 
     public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();

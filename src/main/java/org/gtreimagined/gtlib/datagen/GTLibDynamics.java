@@ -253,7 +253,7 @@ public class GTLibDynamics {
                 GTLib.LOGGER.warn("Duplicate recipe loader: " + new ResourceLocation(a, b));
             }
         }));
-        List<Pair<ResourceLocation, Vein>> veins = new ObjectArrayList<>();
+        List<Vein> veins = new ObjectArrayList<>();
         List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
         List<WorldGenSmallOre> smallOres = new ObjectArrayList<>();
         List<WorldGenVanillaOre> vanillaOres = new ObjectArrayList<>();
@@ -285,8 +285,8 @@ public class GTLibDynamics {
             });
         }
         GTLibWorldGenerator.clear();
-        for (Pair<ResourceLocation, Vein> vein : veins) {
-            DynamicDataPack.addWorldgenObject(vein.key(), vein.value().toJson(), "3x3_veins");
+        for (Vein vein : veins) {
+            DynamicDataPack.addWorldgenObject(vein);
         }
         for (WorldGenStoneLayer stoneLayer : stoneLayers) {
             GTLibWorldGenerator.register(stoneLayer.toRegister, stoneLayer);

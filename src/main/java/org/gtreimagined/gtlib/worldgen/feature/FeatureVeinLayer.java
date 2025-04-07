@@ -228,7 +228,7 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
         }
 
         if (Ref.debugOreVein)
-            GTLib.LOGGER.info("Trying Orevein:" + VeinData.getIdFromVein(vein) + " Dimension=" + world.getLevel().dimension() + " posX=" + posX / 16 + " posZ=" + posZ / 16 + " oreseedX=" + seedX / 16 + " oreseedZ=" + seedZ / 16 + " cY=" + tMinY);
+            GTLib.LOGGER.info("Trying Orevein:" + vein.getLoc() + " Dimension=" + world.getLevel().dimension() + " posX=" + posX / 16 + " posZ=" + posZ / 16 + " oreseedX=" + seedX / 16 + " oreseedZ=" + seedZ / 16 + " cY=" + tMinY);
         if (!generateSquare(vein, world, rand, posX, posZ, seedX, seedZ, tMinY, wXVein, eXVein, nZVein, sZVein, wX, eX, nZ, sZ))
             //if (!generateByFunction(world, rand, tMinY, wXVein, eXVein, nZVein, sZVein, wX, eX, nZ, sZ))
             return NO_ORE_IN_BOTTOM_LAYER;  // Exit early, didn't place anything in the bottom layer

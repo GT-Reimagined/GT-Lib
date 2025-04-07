@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class GTWorldGenEvent extends GTEvent {
 
-    public final List<Pair<ResourceLocation, Vein>> VEINS = new ObjectArrayList<>();
+    public final List<Vein> VEINS = new ObjectArrayList<>();
     public final List<WorldGenStoneLayer> STONE_LAYERS = new ObjectArrayList<>();
 
     public final List<WorldGenSmallOre> SMALL_ORES = new ObjectArrayList<>();
@@ -33,9 +33,13 @@ public class GTWorldGenEvent extends GTEvent {
         super(registrar);
     }
 
-    public void vein(Pair<ResourceLocation, Vein> veins) {
-        if (VEINS.stream().anyMatch(s -> s.key().equals(veins.key()))){
-            GTLib.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.key());
+    public void vein(Vein veins) {
+        if (veins.location() == null){
+            GTLib.LOGGER.warn("Vein id is null, aborting.");
+            return;
+        }
+        if (VEINS.stream().anyMatch(s -> s.equals(veins))){
+            GTLib.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.location());
             return;
         }
         VEINS.add(veins);

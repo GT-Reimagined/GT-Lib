@@ -34,7 +34,7 @@ public class VeinBuilder {
     this.dimensions = new ArrayList<>();
   }
 
-  public final Pair<ResourceLocation, Vein> buildVein() {
+  public final Vein buildVein() {
     if (this.id == null) {
       throw new RuntimeException("id is required");
     }
@@ -54,7 +54,7 @@ public class VeinBuilder {
         throw new RuntimeException("materials must not be null!");
     }
 
-    return Pair.of(id, new Vein(this.minY, this.maxY, this.weight, this.density, this.size, this.primary, this.secondary, this.between, this.sporadic, this.dimensions));
+    return new Vein(id, this.minY, this.maxY, this.weight, this.density, this.size, this.primary, this.secondary, this.between, this.sporadic, this.dimensions);
   }
 
     public final VeinBuilder withWeight(int weight) {

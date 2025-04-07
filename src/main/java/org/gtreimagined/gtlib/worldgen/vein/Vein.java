@@ -10,11 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record Vein(int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions) {
-    public static final Vein NO_ORES_IN_VEIN = new Vein(-64, 320, 0, 255, 16, Material.NULL, Material.NULL, Material.NULL, Material.NULL, List.of());
+public record Vein(@Nullable ResourceLocation location, int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions) implements IWorldgenObject {
+    public static final Vein NO_ORES_IN_VEIN = new Vein(null,-64, 320, 0, 255, 16, Material.NULL, Material.NULL, Material.NULL, Material.NULL, List.of());
     public static final Codec<Vein> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("minY").forGetter(Vein::minY),
             Codec.INT.fieldOf("maxY").forGetter(Vein::maxY),
@@ -28,7 +30,22 @@ public record Vein(int minY, int maxY, int weight, int density, int size, Materi
             ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(Vein::dimensions)
     ).apply(instance, Vein::new));
 
+    public Vein(int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions){
+        this(null, minY, maxY, weight, density, size, primary, secondary, between, sporadic, dimensions);
+    }
+
+    @Override
     public JsonObject toJson() {
         return CODEC.encode(this, JsonOps.INSTANCE, new JsonObject()).getOrThrow(false, GTLib.LOGGER::error).getAsJsonObject();
+    }
+
+    @Override
+    public ResourceLocation getLoc() {
+        return location == null ? VeinData.getIdFromVein(this) : location;
+    }
+
+    @Override
+    public String getSubDirectory() {
+        return "veins";
     }
 }
