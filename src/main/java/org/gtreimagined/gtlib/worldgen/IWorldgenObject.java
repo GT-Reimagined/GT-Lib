@@ -1,16 +1,25 @@
 package org.gtreimagined.gtlib.worldgen;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceLocation;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTObject;
 
-public interface IWorldgenObject extends IGTObject {
+public interface IWorldgenObject<T extends IWorldgenObject<T>> extends IGTObject {
     @Override
     ResourceLocation getLoc();
 
     String getSubDirectory();
 
-    JsonObject toJson();
+    Codec<T> getCodec();
+
+    default JsonObject toJson() {
+        JsonObject json = getCodec().encode((T)this, JsonOps.INSTANCE, new JsonObject()).getOrThrow(false, GTLib.LOGGER::error).getAsJsonObject();
+        json.remove("id");
+        return json;
+    }
 
     @Override
     default String getId(){

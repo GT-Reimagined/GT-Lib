@@ -53,7 +53,7 @@ public class DynamicDataPack implements PackResources {
         DATA.clear();
     }
 
-    public static void addWorldgenObject(IWorldgenObject object) {
+    public static void addWorldgenObject(IWorldgenObject<?> object) {
         Path parent = FMLPaths.CONFIGDIR.get().getParent()
                 .resolve("dumped/gtlib-dynamic-data/data");
         if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){

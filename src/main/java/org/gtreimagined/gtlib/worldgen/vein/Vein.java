@@ -14,7 +14,7 @@ import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
 
 import java.util.List;
 
-public record Vein(ResourceLocation id, int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions) implements IWorldgenObject {
+public record Vein(ResourceLocation id, int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions) implements IWorldgenObject<Vein> {
     public static final Vein NO_ORES_IN_VEIN = new Vein(null,-64, 320, 0, 255, 16, Material.NULL, Material.NULL, Material.NULL, Material.NULL, List.of());
     public static final Codec<Vein> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(Vein::id),
@@ -30,11 +30,10 @@ public record Vein(ResourceLocation id, int minY, int maxY, int weight, int dens
             ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(Vein::dimensions)
     ).apply(instance, Vein::new));
 
+
     @Override
-    public JsonObject toJson() {
-        JsonObject json = CODEC.encode(this, JsonOps.INSTANCE, new JsonObject()).getOrThrow(false, GTLib.LOGGER::error).getAsJsonObject();
-        json.remove("id");
-        return json;
+    public Codec<Vein> getCodec() {
+        return CODEC;
     }
 
     @Override
