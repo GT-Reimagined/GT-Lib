@@ -1,9 +1,7 @@
 package org.gtreimagined.gtlib.event;
 
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
@@ -34,12 +32,12 @@ public class GTWorldGenEvent extends GTEvent {
     }
 
     public void vein(Vein veins) {
-        if (veins.location() == null){
+        if (veins.id() == null){
             GTLib.LOGGER.warn("Vein id is null, aborting.");
             return;
         }
         if (VEINS.stream().anyMatch(s -> s.equals(veins))){
-            GTLib.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.location());
+            GTLib.LOGGER.warn("Duplicate vein layer spawn, aborting. Id: " + veins.id());
             return;
         }
         VEINS.add(veins);

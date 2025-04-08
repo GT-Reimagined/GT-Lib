@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.teamresourceful.resourcefullib.common.lib.Constants;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -31,7 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class VeinData extends SimpleJsonResourceReloadListener {
-    private static final BiMap<ResourceLocation, Vein> VEINS = HashBiMap.create();
+    private static final Map<ResourceLocation, Vein> VEINS = new Object2ObjectOpenHashMap<>();
     static int TOTAL_WEIGHT = 0;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -44,6 +45,7 @@ public class VeinData extends SimpleJsonResourceReloadListener {
         Map<ResourceLocation, Vein> layers = new HashMap<>();
         for (var entry : map.entrySet()) {
             JsonObject vein = GsonHelper.convertToJsonObject(entry.getValue(), "vein");
+            vein.addProperty("id", entry.getKey().toString());
             layers.put(entry.getKey(), Vein.CODEC.parse(JsonOps.INSTANCE, vein).getOrThrow(false, GTLib.LOGGER::error));
         }
         updateVeins(layers);
@@ -69,10 +71,6 @@ public class VeinData extends SimpleJsonResourceReloadListener {
 
     public static int getTotalWeight(){
         return TOTAL_WEIGHT;
-    }
-
-    public static ResourceLocation getIdFromVein(Vein vein) {
-        return VEINS.inverse().get(vein);
     }
 
     public static void encodeVeins(FriendlyByteBuf buf) {

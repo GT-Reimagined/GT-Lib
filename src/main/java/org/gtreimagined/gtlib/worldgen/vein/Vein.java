@@ -11,13 +11,13 @@ import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record Vein(@Nullable ResourceLocation location, int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions) implements IWorldgenObject {
+public record Vein(ResourceLocation id, int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions) implements IWorldgenObject {
     public static final Vein NO_ORES_IN_VEIN = new Vein(null,-64, 320, 0, 255, 16, Material.NULL, Material.NULL, Material.NULL, Material.NULL, List.of());
     public static final Codec<Vein> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("id").forGetter(Vein::id),
             Codec.INT.fieldOf("minY").forGetter(Vein::minY),
             Codec.INT.fieldOf("maxY").forGetter(Vein::maxY),
             Codec.INT.fieldOf("weight").forGetter(Vein::weight),
@@ -30,18 +30,16 @@ public record Vein(@Nullable ResourceLocation location, int minY, int maxY, int 
             ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(Vein::dimensions)
     ).apply(instance, Vein::new));
 
-    public Vein(int minY, int maxY, int weight, int density, int size, Material primary, Material secondary, Material between, Material sporadic, List<ResourceKey<Level>> dimensions){
-        this(null, minY, maxY, weight, density, size, primary, secondary, between, sporadic, dimensions);
-    }
-
     @Override
     public JsonObject toJson() {
-        return CODEC.encode(this, JsonOps.INSTANCE, new JsonObject()).getOrThrow(false, GTLib.LOGGER::error).getAsJsonObject();
+        JsonObject json = CODEC.encode(this, JsonOps.INSTANCE, new JsonObject()).getOrThrow(false, GTLib.LOGGER::error).getAsJsonObject();
+        json.remove("id");
+        return json;
     }
 
     @Override
     public ResourceLocation getLoc() {
-        return location == null ? VeinData.getIdFromVein(this) : location;
+        return id;
     }
 
     @Override
