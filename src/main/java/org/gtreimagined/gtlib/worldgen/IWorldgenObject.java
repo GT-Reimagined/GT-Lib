@@ -3,7 +3,9 @@ package org.gtreimagined.gtlib.worldgen;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTObject;
 
@@ -29,5 +31,9 @@ public interface IWorldgenObject<T extends IWorldgenObject<T>> extends IGTObject
     @Override
     default String getDomain() {
        return getLoc().getNamespace();
+    }
+
+    default boolean isBiomeValid(Holder<Biome> biome){
+        return true;
     }
 }
