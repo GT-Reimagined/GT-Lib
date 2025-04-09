@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.JsonSerializer;
 import dev.latvian.mods.kubejs.script.ScriptType;
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -35,7 +34,7 @@ import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
-import org.gtreimagined.gtlib.worldgen.smallore.WorldGenSmallOre;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.devtech.arrp.api.RuntimeResourcePack;
@@ -255,7 +254,7 @@ public class GTLibDynamics {
         }));
         List<Vein> veins = new ObjectArrayList<>();
         List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
-        List<WorldGenSmallOre> smallOres = new ObjectArrayList<>();
+        List<SmallOre> smallOres = new ObjectArrayList<>();
         List<WorldGenVanillaOre> vanillaOres = new ObjectArrayList<>();
         List<WorldGenBedrockVein> bedrockVeins = new ObjectArrayList<>();
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
@@ -273,7 +272,7 @@ public class GTLibDynamics {
             MinecraftForge.EVENT_BUS.post(ev);
             veins.addAll(ev.VEINS);
             smallOres.addAll(ev.SMALL_ORES);
-            smallOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenSmallOre.class, WorldGenSmallOre::fromJson, "small_ore"));
+            smallOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(SmallOre.class, SmallOre::fromJson, "small_ore"));
             stoneLayers.addAll(ev.STONE_LAYERS);
             stoneLayers.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenStoneLayer.class, WorldGenStoneLayer::fromJson, "stone_layers"));
             vanillaOres.addAll(ev.VANILLA_ORES);
@@ -292,7 +291,7 @@ public class GTLibDynamics {
             GTLibWorldGenerator.register(stoneLayer.toRegister, stoneLayer);
         }
         WorldGenStoneLayer.setCollisionMap(collisionMap);
-        for (WorldGenSmallOre smallOre : smallOres){
+        for (SmallOre smallOre : smallOres){
             GTLibWorldGenerator.register(smallOre.toRegister, smallOre);
         }
         for (WorldGenVanillaOre vanillaOre : vanillaOres){

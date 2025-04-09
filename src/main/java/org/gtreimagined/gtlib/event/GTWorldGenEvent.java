@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
-import org.gtreimagined.gtlib.worldgen.smallore.WorldGenSmallOre;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +21,7 @@ public class GTWorldGenEvent extends GTEvent {
     public final List<Vein> VEINS = new ObjectArrayList<>();
     public final List<WorldGenStoneLayer> STONE_LAYERS = new ObjectArrayList<>();
 
-    public final List<WorldGenSmallOre> SMALL_ORES = new ObjectArrayList<>();
+    public final List<SmallOre> SMALL_ORES = new ObjectArrayList<>();
 
     public final List<WorldGenVanillaOre> VANILLA_ORES = new ObjectArrayList<>();
     public final List<WorldGenBedrockVein> BEDROCK_VEINS = new ObjectArrayList<>();
@@ -47,7 +47,7 @@ public class GTWorldGenEvent extends GTEvent {
         STONE_LAYERS.addAll(veins);
     }
 
-    public void smallOre(WorldGenSmallOre veins) {
+    public void smallOre(SmallOre veins) {
         if (SMALL_ORES.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
             GTLib.LOGGER.warn("Duplicate small ore spawn, aborting. Id: " + veins.getId());
             return;

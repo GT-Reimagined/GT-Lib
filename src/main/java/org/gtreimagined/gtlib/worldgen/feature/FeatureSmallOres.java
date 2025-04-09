@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
-import org.gtreimagined.gtlib.worldgen.smallore.WorldGenSmallOre;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -30,7 +30,7 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE_SMALL;
 
 public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
     public FeatureSmallOres() {
-        super(NoneFeatureConfiguration.CODEC, WorldGenSmallOre.class);
+        super(NoneFeatureConfiguration.CODEC, SmallOre.class);
     }
 
     @Override
@@ -65,9 +65,9 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
         final int chunkCornerZ = chunkZ * 16;
         final int worldMinY = world.dimensionType().minY();
         final int worldMaxY = world.dimensionType().minY() + world.dimensionType().height();
-        List<WorldGenSmallOre> smallOres = GTLibWorldGenerator.all(WorldGenSmallOre.class, world.getLevel().dimension());
+        List<SmallOre> smallOres = GTLibWorldGenerator.all(SmallOre.class, world.getLevel().dimension());
         int spawned = 0;
-        for (WorldGenSmallOre smallOre : smallOres) {
+        for (SmallOre smallOre : smallOres) {
             if (!smallOre.material.has(ORE_SMALL)) continue;
             int minY = Math.max(worldMinY, smallOre.minY);
             int maxY = Math.min(worldMaxY, smallOre.maxY);
@@ -84,7 +84,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
         return spawned > 0;
     }
 
-    private boolean setOreBlock(WorldGenLevel level, BlockPos pos, WorldGenSmallOre smallOre){
+    private boolean setOreBlock(WorldGenLevel level, BlockPos pos, SmallOre smallOre){
         Holder<Biome> biome = level.getBiome(pos);
         boolean failed = !smallOre.biomeBlacklist;
         if (!smallOre.biomes.isEmpty()){

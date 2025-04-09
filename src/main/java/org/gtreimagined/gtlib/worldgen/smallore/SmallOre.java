@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class WorldGenSmallOre extends WorldGenBase<WorldGenSmallOre> {
+public class SmallOre extends WorldGenBase<SmallOre> {
     public final Material material;
     public final int minY, maxY, amountPerChunk;
     public final List<ResourceLocation> dimensions;
@@ -24,8 +24,8 @@ public class WorldGenSmallOre extends WorldGenBase<WorldGenSmallOre> {
 
     public final boolean biomeBlacklist;
 
-    WorldGenSmallOre(String id, Material material, int minY, int maxY, int amountPerChunk, List<ResourceLocation> dimensions, List<String> biomes, boolean biomeBlacklist){
-        super(id, WorldGenSmallOre.class, dimensions.stream().map(r -> ResourceKey.create(Registry.DIMENSION_REGISTRY, r)).toList());
+    SmallOre(String id, Material material, int minY, int maxY, int amountPerChunk, List<ResourceLocation> dimensions, List<String> biomes, boolean biomeBlacklist){
+        super(id, SmallOre.class, dimensions.stream().map(r -> ResourceKey.create(Registry.DIMENSION_REGISTRY, r)).toList());
 
         this.material = material;
         this.minY = minY;
@@ -73,7 +73,7 @@ public class WorldGenSmallOre extends WorldGenBase<WorldGenSmallOre> {
         return json;
     }
 
-    public static WorldGenSmallOre fromJson(String id, JsonObject json){
+    public static SmallOre fromJson(String id, JsonObject json){
         List<String> biomes = new ArrayList<>();
         List<ResourceLocation> dims = new ArrayList<>();
         if (json.has("biomes")){
@@ -92,7 +92,7 @@ public class WorldGenSmallOre extends WorldGenBase<WorldGenSmallOre> {
                 }
             });
         }
-        return new WorldGenSmallOre(
+        return new SmallOre(
                 id,
                 Material.get(json.get("material").getAsString()),
                 json.get("amountPerChunk").getAsInt(),

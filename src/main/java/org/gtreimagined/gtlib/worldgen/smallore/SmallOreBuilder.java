@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WorldGenSmallOreBuilder {
+public class SmallOreBuilder {
     @Nullable
     private Material material;
     @Nullable
@@ -23,10 +23,10 @@ public class WorldGenSmallOreBuilder {
     List<String> biomes = new ArrayList<>();
     boolean dimensionBlacklist = false, biomeBlacklist = true;
 
-    public WorldGenSmallOreBuilder() {
+    public SmallOreBuilder() {
     }
 
-    final public WorldGenSmallOre buildMaterial() {
+    final public SmallOre buildMaterial() {
         if (this.amountPerChunk == null) {
             throw new RuntimeException("weight is required");
         }
@@ -36,7 +36,7 @@ public class WorldGenSmallOreBuilder {
         if (this.dimensions.isEmpty()) {
             this.dimensions.add(new ResourceLocation("overworld"));
         }
-        WorldGenSmallOre smallOre =  new WorldGenSmallOre(
+        SmallOre smallOre =  new SmallOre(
                 id != null ? id : material.getId(),
                 this.material,
                 this.minY != null ? this.minY : Integer.MIN_VALUE,
@@ -47,43 +47,43 @@ public class WorldGenSmallOreBuilder {
                 this.biomeBlacklist
         );
         GTLibWorldGenerator.writeJson(smallOre.toJson(), smallOre.getId(), "small_ore");
-        return GTLibWorldGenerator.readJson(WorldGenSmallOre.class, smallOre, WorldGenSmallOre::fromJson, "small_ore");
+        return GTLibWorldGenerator.readJson(SmallOre.class, smallOre, SmallOre::fromJson, "small_ore");
     }
 
 
 
-    final public WorldGenSmallOreBuilder withMaterial(Material material) {
+    final public SmallOreBuilder withMaterial(Material material) {
         this.material = material;
         return this;
     }
 
-    final public WorldGenSmallOreBuilder withAmountPerChunk(int amountPerChunk) {
+    final public SmallOreBuilder withAmountPerChunk(int amountPerChunk) {
         this.amountPerChunk = amountPerChunk;
         return this;
     }
 
-    final public WorldGenSmallOreBuilder atHeight(int minY, int maxY) {
+    final public SmallOreBuilder atHeight(int minY, int maxY) {
         this.minY = minY;
         this.maxY = maxY;
         return this;
     }
 
-    final public WorldGenSmallOreBuilder withCustomId(String id){
+    final public SmallOreBuilder withCustomId(String id){
         this.id = id;
         return this;
     }
 
-    final public WorldGenSmallOreBuilder withBiomes(String... biomes) {
+    final public SmallOreBuilder withBiomes(String... biomes) {
         Collections.addAll(this.biomes, biomes);
         return this;
     }
 
-    final public WorldGenSmallOreBuilder withDimensions(ResourceLocation... dimensions) {
+    final public SmallOreBuilder withDimensions(ResourceLocation... dimensions) {
         Collections.addAll(this.dimensions, dimensions);
         return this;
     }
 
-    final public WorldGenSmallOreBuilder setBiomeBlacklist(boolean blacklist) {
+    final public SmallOreBuilder setBiomeBlacklist(boolean blacklist) {
         this.biomeBlacklist = blacklist;
         return this;
     }
