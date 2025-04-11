@@ -35,6 +35,7 @@ import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.devtech.arrp.api.RuntimeResourcePack;
@@ -287,7 +288,7 @@ public class GTLibDynamics {
         for (WorldGenStoneLayer stoneLayer : stoneLayers) {
             GTLibWorldGenerator.register(stoneLayer.toRegister, stoneLayer);
         }
-        WorldGenStoneLayer.setCollisionMap(collisionMap);
+        StoneLayer.setCollisionMap(collisionMap);
         for (SmallOre smallOre : smallOres){
             DynamicDataPack.addWorldgenObject(smallOre);
         }

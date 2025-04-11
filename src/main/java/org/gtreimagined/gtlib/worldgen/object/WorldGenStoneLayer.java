@@ -27,8 +27,6 @@ import java.util.stream.IntStream;
 @Getter
 public class WorldGenStoneLayer extends WorldGenBase<WorldGenStoneLayer> {
 
-    private static Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
-
     @Nullable
     private StoneType stoneType;
     private BlockState stoneState;
@@ -47,25 +45,8 @@ public class WorldGenStoneLayer extends WorldGenBase<WorldGenStoneLayer> {
     }
 
     protected WorldGenStoneLayer addOres(StoneLayerOre... ores) {
-        if (stoneState.getBlock() instanceof BlockStone) {
-            Arrays.stream(ores).forEach(o -> o.setStatesByStoneType(((BlockStone) stoneState.getBlock()).getType()));
-        }
         this.ores = ores;
         return this;
-    }
-
-    public static void setCollisionMap(Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap) {
-        COLLISION_MAP = collisionMap;
-    }
-
-    public static List<StoneLayerOre> getCollision(StoneType middle, BlockState top, BlockState bottom) {
-        if (middle == null) return Collections.emptyList();
-        List<StoneLayerOre> list = COLLISION_MAP.get(Objects.hash(top, bottom));
-        if (list == null) return Collections.emptyList();
-        for (StoneLayerOre ore : list) {
-            ore.setStatesByStoneType(middle);
-        }
-        return list;
     }
 
     static List<WorldGenStoneLayer> getFlat(String id, int weight, int minY, int maxY, @Nullable StoneType stoneType, @Nullable BlockState stoneState, StoneLayerOre[] ores, List<ResourceKey<Level>> dimensions) {
@@ -100,11 +81,6 @@ public class WorldGenStoneLayer extends WorldGenBase<WorldGenStoneLayer> {
         }
         json.addProperty("stoneState", RegistryUtils.getIdFromBlock(stoneState.getBlock()).toString());
         JsonArray array = new JsonArray();
-        if (ores != null){
-            for (StoneLayerOre ore : ores) {
-                array.add(ore.toJson());
-            }
-        }
         if (!array.isEmpty()) {
             json.add("ores", array);
         }
@@ -119,14 +95,6 @@ public class WorldGenStoneLayer extends WorldGenBase<WorldGenStoneLayer> {
     public static WorldGenStoneLayer fromJson(String id, JsonObject json){
         List<StoneLayerOre> ores = new ArrayList<>();
         List<ResourceKey<Level>> dims = new ArrayList<>();
-        if (json.has("ores")){
-            JsonArray array = json.getAsJsonArray("ores");
-            array.forEach(j -> {
-                if (j instanceof JsonObject object){
-                    ores.add(StoneLayerOre.fromJson(object));
-                }
-            });
-        }
         if (json.has("dims")){
             JsonArray array = json.getAsJsonArray("dims");
             array.forEach(j -> {

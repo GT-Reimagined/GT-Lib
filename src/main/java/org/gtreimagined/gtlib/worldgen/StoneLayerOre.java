@@ -2,6 +2,8 @@ package org.gtreimagined.gtlib.worldgen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -24,46 +26,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
-@Accessors(chain = true)
-public class StoneLayerOre {
-
-    @Getter
-    private final Material material;
-    @Getter
-    private StoneType stoneType;
-    @Getter
-    private BlockState oreState, oreSmallState;
-    @Getter
-    private final long chance;
-    @Getter
-    private final int minY;
-    @Getter
-    private final int maxY;
-    private final List<String> filteredBiomes = new ArrayList<>();
-    @Getter
-    @Setter
-    private boolean filteredBiomesBlacklist = false;
+public record StoneLayerOre(Material material, long chance, int minY, int maxY, List<String> biomes, boolean biomeBlacklist) {
+    public static final Codec<StoneLayerOre> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Material.CODEC.fieldOf("material").forGetter(StoneLayerOre::material),
+            Codec.LONG.fieldOf("chance").forGetter(StoneLayerOre::chance),
+            Codec.INT.fieldOf("minY").forGetter(StoneLayerOre::minY),
+            Codec.INT.fieldOf("maxY").forGetter(StoneLayerOre::maxY),
+            Codec.STRING.listOf().optionalFieldOf("biomes", List.of()).forGetter(StoneLayerOre::biomes),
+            Codec.BOOL.optionalFieldOf("biomeBlacklist", true).forGetter(StoneLayerOre::biomeBlacklist)
+    ).apply(instance, StoneLayerOre::new));
 
     public StoneLayerOre(Material material, long chance, int minY, int maxY) {
-        this.material = material;
-        this.chance = bind(1, Ref.U, chance);
-        this.minY = minY;
-        this.maxY = maxY;
-    }
-
-    public StoneLayerOre setStatesByStoneType(StoneType stoneType) {
-        this.oreState = GTMaterialTypes.ORE.get().get(material, stoneType).asState();
-        this.oreSmallState = GTMaterialTypes.ORE_SMALL.get().get(material, stoneType).asState();
-        this.stoneType = stoneType;
-        return this;
+        this(material, bind(1, Ref.U, chance), minY, maxY, List.of(), true);
     }
 
     private StoneLayerOre addFilteredBiome(String biomeID){
-        if (!filteredBiomes.contains(biomeID)) {
-            filteredBiomes.add(biomeID);
+        List<String> biomes = new ArrayList<>(this.biomes);
+        if (!biomes.contains(biomeID)) {
+            biomes.add(biomeID);
         }
-        return this;
+        return new StoneLayerOre(material, chance, minY, maxY, biomes, !this.biomes.isEmpty() && biomeBlacklist);
+    }
+
+    public StoneLayerOre setBiomeBlacklist(boolean blacklist){
+        return new StoneLayerOre(material, chance, minY, maxY, biomes, blacklist);
     }
 
     public StoneLayerOre addFilteredBiome(ResourceKey<Biome> biome){
@@ -76,75 +64,20 @@ public class StoneLayerOre {
 
     public boolean canPlace(BlockPos pos, Random rand, LevelAccessor world) {
         Holder<Biome> biome = world.getBiome(pos);
-        boolean failed = !filteredBiomesBlacklist;
-        if (!filteredBiomes.isEmpty()){
-            for (String filteredBiome : filteredBiomes) {
-                BiPredicate<String, Holder<Biome>> predicate = (s, biomeHolder) -> {
-                    if (s.startsWith("#")){
-                        TagKey<Biome> compare = TagUtils.getBiomeTag(new ResourceLocation(filteredBiome.replace("#", "")));
-                        return biomeHolder.is(compare);
-                    } else {
-                        ResourceKey<Biome> compare = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(filteredBiome));
-                        return biomeHolder.is(compare);
-                    }
-                };
-                if (predicate.test(filteredBiome, biome)){
-                    failed = filteredBiomesBlacklist;
-                    break;
-                }
-            }
-            if (failed) return false;
-        }
-        return pos.getY() >= minY && pos.getY() <= maxY && rand.nextLong(Ref.U) < chance;
+        boolean biomeValid = isBiomeValid(biome);
+        return biomeValid && pos.getY() >= minY && pos.getY() <= maxY && rand.nextLong(Ref.U) < chance;
     }
 
     public static long bind(long min, long max, long boundValue) {
         return min > max ? Math.max(max, Math.min(min, boundValue)) : Math.max(min, Math.min(max, boundValue));
     }
 
-    public JsonObject toJson(){
-        JsonObject json = new JsonObject();
-        json.addProperty("chance", chance);
-        json.addProperty("material", material.getId());
-        json.addProperty("filteredBiomesBlacklist", filteredBiomesBlacklist);
-        if (minY > Integer.MIN_VALUE) {
-            json.addProperty("minY", minY);
-        }
-        if (maxY < Integer.MAX_VALUE) {
-            json.addProperty("maxY", maxY);
-        }
-        if (stoneType != null){
-            json.addProperty("stoneType", stoneType.getId());
-        }
-        if (!filteredBiomes.isEmpty()){
-            JsonArray array = new JsonArray();
-            filteredBiomes.forEach(array::add);
-            json.add("filteredBiomes", array);
-        }
-        return json;
-    }
-
-    public static StoneLayerOre fromJson(JsonObject json){
-        StoneType stoneType = null;
-        if (json.has("stoneType")){
-            stoneType = StoneType.get(json.get("stoneType").getAsString());
-            if (stoneType == null) throw new IllegalStateException("stone type: " + json.get("stoneType").getAsString() + " does not exist!");
-        }
-        StoneLayerOre  stoneLayerOre = new StoneLayerOre(
-                Material.get(json.get("material").getAsString()),
-                json.get("chance").getAsLong(),
-                json.has("minY") ? json.get("minY").getAsInt() : Integer.MIN_VALUE,
-                json.has("maxY") ? json.get("maxY").getAsInt() : Integer.MAX_VALUE);
-        if (stoneType != null){
-            stoneLayerOre.setStatesByStoneType(stoneType);
-        }
-        if (json.has("filteredBiomesBlacklist")){
-            stoneLayerOre.setFilteredBiomesBlacklist(json.get("filteredBiomesBlacklist").getAsBoolean());
-        }
-        if (json.has("filteredBiomes")){
-            JsonArray array = json.getAsJsonArray("filteredBiomes");
-            array.forEach(j -> stoneLayerOre.addFilteredBiome(j.getAsString()));
-        }
-        return stoneLayerOre;
+    public boolean isBiomeValid(Holder<Biome> biome) {
+        if (biomes.isEmpty()) return biomeBlacklist;
+        Predicate<String> predicate = s -> {
+            if (s.contains("#")) return biome.is(TagUtils.getBiomeTag(new ResourceLocation(s.replace("#", ""))));
+            return biome.is(ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(s)));
+        };
+        return biomeBlacklist ? biomes.stream().anyMatch(predicate) : biomes.stream().noneMatch(predicate);
     }
 }
