@@ -36,11 +36,11 @@ import static org.gtreimagined.gtlib.worldgen.VeinLayerResult.ORE_PLACED;
 import static org.gtreimagined.gtlib.worldgen.WorldGenHelper.setOre;
 import static org.gtreimagined.gtlib.worldgen.vein.Vein.NO_ORES_IN_VEIN;
 
-public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
+public class FeatureVein extends GTFeature<NoneFeatureConfiguration> {
     public static Long2ObjectOpenHashMap<Vein> VALID_VEINS = new Long2ObjectOpenHashMap<>();
 
 
-    public FeatureVeinLayer() {
+    public FeatureVein() {
         super(NoneFeatureConfiguration.CODEC, WorldGenBase.class);
     }
 
