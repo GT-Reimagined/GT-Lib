@@ -45,4 +45,9 @@ public record Vein(ResourceLocation id, int minY, int maxY, int weight, int dens
     public String getSubDirectory() {
         return "veins";
     }
+
+    @Override
+    public List<ResourceKey<Level>> getDimensions() {
+        return dimensions;
+    }
 }

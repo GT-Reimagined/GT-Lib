@@ -64,4 +64,9 @@ public record VanillaVein(ResourceLocation id, OreObject primary, OreObject seco
     public Codec<VanillaVein> getCodec() {
         return CODEC;
     }
+
+    @Override
+    public List<ResourceKey<Level>> getDimensions() {
+        return dimensions;
+    }
 }

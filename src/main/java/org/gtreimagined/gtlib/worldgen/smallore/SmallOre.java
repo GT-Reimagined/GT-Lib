@@ -56,4 +56,9 @@ public record SmallOre(ResourceLocation id, Material material, int minY, int max
     public Codec<SmallOre> getCodec() {
         return CODEC;
     }
+
+    @Override
+    public List<ResourceKey<Level>> getDimensions() {
+        return dimensions;
+    }
 }

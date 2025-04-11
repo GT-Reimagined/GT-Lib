@@ -63,4 +63,8 @@ public record BedrockVein(ResourceLocation id, int probability, Material materia
         return CODEC;
     }
 
+    @Override
+    public List<ResourceKey<Level>> getDimensions() {
+        return dimensions;
+    }
 }
