@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
+import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.mixin.BiomeGenerationBuilderAccessor;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
@@ -101,18 +102,18 @@ public class GTLibWorldGenerator {
     }
 
     public static void register(Class<?> c, WorldGenBase<?> base) {
-        GTFeature<?> feature = GTAPI.get(GTFeature.class, c.getName());
+        GTFeature<?> feature = GTAPI.get(GTFeature.class, c.getName(), Ref.ID);
         if (feature != null)
             base.getDimensions().forEach(d -> feature.getRegistry().computeIfAbsent(d, k -> new LinkedList<>()).add(base));
     }
 
     public static <T> List<T> all(Class<T> c, ResourceKey<Level> dim) {
-        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName());
+        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName(), Ref.ID);
         return feat != null ? feat.getRegistry().computeIfAbsent(dim.location(), k -> new LinkedList<>()).stream().map(c::cast).collect(Collectors.toList()) : Collections.emptyList();
     }
 
     public static <T> List<T> all(Class<T> c) {
-        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName());
+        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName(), Ref.ID);
         return feat != null ? feat.getRegistry().values().stream().flatMap(Collection::stream).map(c::cast).distinct().toList() : Collections.emptyList();
     }
 

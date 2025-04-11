@@ -272,7 +272,6 @@ public class GTLibDynamics {
             MinecraftForge.EVENT_BUS.post(ev);
             veins.addAll(ev.VEINS);
             smallOres.addAll(ev.SMALL_ORES);
-            smallOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(SmallOre.class, SmallOre::fromJson, "small_ore"));
             stoneLayers.addAll(ev.STONE_LAYERS);
             stoneLayers.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenStoneLayer.class, WorldGenStoneLayer::fromJson, "stone_layers"));
             vanillaOres.addAll(ev.VANILLA_ORES);
@@ -292,7 +291,7 @@ public class GTLibDynamics {
         }
         WorldGenStoneLayer.setCollisionMap(collisionMap);
         for (SmallOre smallOre : smallOres){
-            GTLibWorldGenerator.register(smallOre.toRegister, smallOre);
+            DynamicDataPack.addWorldgenObject(smallOre);
         }
         for (WorldGenVanillaOre vanillaOre : vanillaOres){
             GTLibWorldGenerator.register(vanillaOre.toRegister, vanillaOre);
