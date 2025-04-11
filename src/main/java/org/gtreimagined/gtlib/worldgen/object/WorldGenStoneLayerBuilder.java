@@ -70,7 +70,6 @@ public class WorldGenStoneLayerBuilder {
         if (stoneType == null){
             throw new IllegalStateException("Stone type must not be null before adding ores!");
         }
-        Arrays.stream(ores).forEach(o -> o.setStatesByStoneType(stoneType));
         this.ores = ores;
         return this;
     }
