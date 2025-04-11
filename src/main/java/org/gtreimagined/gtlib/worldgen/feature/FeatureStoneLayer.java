@@ -41,12 +41,12 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public String getId() {
-        return "feature_stone_layer";
+        return "stone_layers";
     }
 
     @Override
     public boolean enabled() {
-        return GTLibConfig.STONE_LAYERS.get() && getRegistry().size() > 0;
+        return GTLibConfig.STONE_LAYERS.get() && !getRegistry().isEmpty();
     }
 
     @Override
