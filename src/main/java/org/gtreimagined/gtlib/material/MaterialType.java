@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.material;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import lombok.Getter;
@@ -36,6 +37,8 @@ import static org.gtreimagined.gtlib.util.Utils.getLocalizedMaterialType;
 import static org.gtreimagined.gtlib.util.Utils.getLocalizedType;
 
 public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistryEntryProvider {
+
+    public static final Codec<MaterialType<?>> CODEC = Codec.STRING.xmap((String t) -> GTAPI.get(MaterialType.class, t), MaterialType::getId);
 
     protected final String id;
     @Getter

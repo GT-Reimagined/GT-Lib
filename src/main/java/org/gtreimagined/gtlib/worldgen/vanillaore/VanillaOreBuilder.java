@@ -1,17 +1,20 @@
 package org.gtreimagined.gtlib.worldgen.vanillaore;
 
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.resources.ResourceLocation;
+import org.gtreimagined.gtlib.worldgen.OreObject;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WorldGenVanillaOreBuilder {
+public class VanillaOreBuilder {
     @Nullable
     private Material material;
     @Nullable
@@ -36,31 +39,30 @@ public class WorldGenVanillaOreBuilder {
     private Float secondaryChance;
     @Nullable
     private Float discardOnExposureChance;
-    @Nullable String id;
-    List<ResourceLocation> dimensions = new ArrayList<>();
+    ResourceLocation id;
+    List<ResourceKey<Level>> dimensions = new ArrayList<>();
     List<String> biomes = new ArrayList<>();
     boolean biomeBlacklist = true, triangle = false, spawnOnOceanFloor = false;
 
-    public WorldGenVanillaOreBuilder() {
+    public VanillaOreBuilder(@NotNull ResourceLocation id) {
+        this.id = id;
     }
 
-    final public WorldGenVanillaOre buildMaterial() {
+    final public VanillaOre buildMaterial() {
+        if (this.id == null) {
+            throw new RuntimeException("id required");
+        }
         if (this.size == null) {
             throw new RuntimeException("size is required");
         }
         if (this.material == null) {
             throw new RuntimeException("material is required");
         }
-        if (this.dimensions.isEmpty()) {
-            this.dimensions.add(new ResourceLocation("overworld"));
-        }
         MaterialTypeBlock<?> materialTypeBlock = this.materialType == null ? GTMaterialTypes.ORE : materialType;
-        WorldGenVanillaOre vanillaOre =  new WorldGenVanillaOre(
-                id != null ? id : material.getId(),
-                this.material,
-                this.secondary == null ? Material.NULL : this.secondary,
-                materialTypeBlock,
-                this.secondaryType == null ? materialTypeBlock : this.secondaryType,
+        return new VanillaOre(
+                id,
+                new OreObject(this.material, materialTypeBlock),
+                new OreObject(this.secondary == null ? Material.NULL : this.secondary, this.secondaryType == null ? materialTypeBlock : this.secondaryType),
                 this.secondaryChance == null ? 0.0f : this.secondaryChance,
                 this.discardOnExposureChance == null ? 0.0f : this.discardOnExposureChance,
                 this.minY != null ? this.minY : Integer.MIN_VALUE,
@@ -75,89 +77,93 @@ public class WorldGenVanillaOreBuilder {
                 this.biomes,
                 this.biomeBlacklist
         );
-        GTLibWorldGenerator.writeJson(vanillaOre.toJson(), vanillaOre.getId(), "vanilla_ore");
-        return GTLibWorldGenerator.readJson(WorldGenVanillaOre.class, vanillaOre, WorldGenVanillaOre::fromJson, "vanilla_ore");
     }
 
-    final public WorldGenVanillaOreBuilder withMaterial(Material material) {
+    final public VanillaOreBuilder withMaterial(Material material) {
         this.material = material;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withSecondaryMaterial(Material secondary, float secondaryChance){
+    final public VanillaOreBuilder withSecondaryMaterial(Material secondary, float secondaryChance){
         this.secondary = secondary;
         this.secondaryChance = secondaryChance;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withSecondaryType(MaterialTypeBlock<?> materialType){
+    final public VanillaOreBuilder withSecondaryType(MaterialTypeBlock<?> materialType){
         this.secondaryType = materialType;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withMaterialType(MaterialTypeBlock<?> materialType){
+    final public VanillaOreBuilder withMaterialType(MaterialTypeBlock<?> materialType){
         this.materialType = materialType;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withWeight(int weight) {
+    final public VanillaOreBuilder withWeight(int weight) {
         this.weight = weight;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withSize(int size){
+    final public VanillaOreBuilder withSize(int size){
         this.size = size;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withDiscardOnExposureChance(float discardOnExposureChance){
+    final public VanillaOreBuilder withDiscardOnExposureChance(float discardOnExposureChance){
         this.discardOnExposureChance = discardOnExposureChance;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder atHeight(int minY, int maxY) {
+    final public VanillaOreBuilder atHeight(int minY, int maxY) {
         this.minY = minY;
         this.maxY = maxY;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withProbability(int probability){
+    final public VanillaOreBuilder withProbability(int probability){
         this.probability = probability;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withCustomId(String id){
-        this.id = id;
-        return this;
-    }
-
-    final public WorldGenVanillaOreBuilder withBiomes(String... biomes) {
+    final public VanillaOreBuilder withBiomes(String... biomes) {
         Collections.addAll(this.biomes, biomes);
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder withDimensions(ResourceLocation... dimensions) {
+    public final VanillaOreBuilder inDimension(ResourceKey<Level> dimension) {
+        this.dimensions.add(dimension);
+        return this;
+    }
+
+    public final VanillaOreBuilder inDimensions(List<ResourceKey<Level>> dimension) {
+        this.dimensions.addAll(dimension);
+        return this;
+    }
+
+    @SafeVarargs
+    final public VanillaOreBuilder inDimensions(ResourceKey<Level>... dimensions) {
         Collections.addAll(this.dimensions, dimensions);
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder setBiomeBlacklist(boolean blacklist) {
+    final public VanillaOreBuilder setBiomeBlacklist(boolean blacklist) {
         this.biomeBlacklist = blacklist;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder setHasTriangleHeight(boolean triangle){
+    final public VanillaOreBuilder setHasTriangleHeight(boolean triangle){
         this.triangle = triangle;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder setHasTriangleHeight(boolean triangle, int plateau){
+    final public VanillaOreBuilder setHasTriangleHeight(boolean triangle, int plateau){
         this.triangle = triangle;
         this.plateau = plateau;
         return this;
     }
 
-    final public WorldGenVanillaOreBuilder setSpawnOnOceanFloor(boolean spawnOnOceanFloor){
+    final public VanillaOreBuilder setSpawnOnOceanFloor(boolean spawnOnOceanFloor){
         this.spawnOnOceanFloor = spawnOnOceanFloor;
         return this;
     }

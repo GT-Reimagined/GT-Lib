@@ -35,7 +35,7 @@ import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
-import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
+import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaOre;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.loot.JCondition;
@@ -255,7 +255,7 @@ public class GTLibDynamics {
         List<Vein> veins = new ObjectArrayList<>();
         List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
         List<SmallOre> smallOres = new ObjectArrayList<>();
-        List<WorldGenVanillaOre> vanillaOres = new ObjectArrayList<>();
+        List<VanillaOre> vanillaOres = new ObjectArrayList<>();
         List<BedrockVein> bedrockVeins = new ObjectArrayList<>();
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
@@ -275,7 +275,6 @@ public class GTLibDynamics {
             stoneLayers.addAll(ev.STONE_LAYERS);
             stoneLayers.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenStoneLayer.class, WorldGenStoneLayer::fromJson, "stone_layers"));
             vanillaOres.addAll(ev.VANILLA_ORES);
-            vanillaOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenVanillaOre.class, WorldGenVanillaOre::fromJson, "vanilla_ore"));
             bedrockVeins.addAll(ev.BEDROCK_VEINS);
             ev.COLLISION_MAP.forEach((i, l) -> {
                 collisionMap.computeIfAbsent(i, i2 -> new ArrayList<>()).addAll(l);
@@ -292,8 +291,8 @@ public class GTLibDynamics {
         for (SmallOre smallOre : smallOres){
             DynamicDataPack.addWorldgenObject(smallOre);
         }
-        for (WorldGenVanillaOre vanillaOre : vanillaOres){
-            GTLibWorldGenerator.register(vanillaOre.toRegister, vanillaOre);
+        for (VanillaOre vanillaOre : vanillaOres){
+            DynamicDataPack.addWorldgenObject(vanillaOre);
         }
         for (BedrockVein vein : bedrockVeins){
             DynamicDataPack.addWorldgenObject(vein);
