@@ -79,6 +79,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVeinData;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVeinData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
@@ -144,6 +145,7 @@ public class GTLib extends GTMod {
         event.addListener(VeinData.INSTANCE);
         event.addListener(SmallOreData.INSTANCE);
         event.addListener(BedrockVeinData.INSTANCE);
+        event.addListener(StoneLayerData.INSTANCE);
     }
 
     public void addCraftingLoaders(GTCraftingEvent ev) {
