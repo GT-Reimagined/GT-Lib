@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
-import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
+import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
@@ -24,7 +24,7 @@ public class GTWorldGenEvent extends GTEvent {
     public final List<SmallOre> SMALL_ORES = new ObjectArrayList<>();
 
     public final List<WorldGenVanillaOre> VANILLA_ORES = new ObjectArrayList<>();
-    public final List<WorldGenBedrockVein> BEDROCK_VEINS = new ObjectArrayList<>();
+    public final List<BedrockVein> BEDROCK_VEINS = new ObjectArrayList<>();
     public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
 
     public GTWorldGenEvent(IGTRegistrar registrar) {
@@ -63,7 +63,7 @@ public class GTWorldGenEvent extends GTEvent {
         VANILLA_ORES.add(veins);
     }
 
-    public void bedrockOre(WorldGenBedrockVein veins) {
+    public void bedrockOre(BedrockVein veins) {
         if (BEDROCK_VEINS.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
             GTLib.LOGGER.warn("Duplicate bedrock vein, aborting. Id: " + veins.getId());
             return;

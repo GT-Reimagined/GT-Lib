@@ -32,7 +32,7 @@ import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.registration.ModRegistrar;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
-import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
+import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import org.gtreimagined.gtlib.worldgen.vanillaore.WorldGenVanillaOre;
@@ -256,7 +256,7 @@ public class GTLibDynamics {
         List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
         List<SmallOre> smallOres = new ObjectArrayList<>();
         List<WorldGenVanillaOre> vanillaOres = new ObjectArrayList<>();
-        List<WorldGenBedrockVein> bedrockVeins = new ObjectArrayList<>();
+        List<BedrockVein> bedrockVeins = new ObjectArrayList<>();
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
@@ -277,7 +277,6 @@ public class GTLibDynamics {
             vanillaOres.addAll(ev.VANILLA_ORES);
             vanillaOres.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenVanillaOre.class, WorldGenVanillaOre::fromJson, "vanilla_ore"));
             bedrockVeins.addAll(ev.BEDROCK_VEINS);
-            bedrockVeins.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenBedrockVein.class, WorldGenBedrockVein::fromJson, "bedrock_veins"));
             ev.COLLISION_MAP.forEach((i, l) -> {
                 collisionMap.computeIfAbsent(i, i2 -> new ArrayList<>()).addAll(l);
             });
@@ -296,8 +295,8 @@ public class GTLibDynamics {
         for (WorldGenVanillaOre vanillaOre : vanillaOres){
             GTLibWorldGenerator.register(vanillaOre.toRegister, vanillaOre);
         }
-        for (WorldGenBedrockVein vein : bedrockVeins){
-            GTLibWorldGenerator.register(vein.toRegister, vein);
+        for (BedrockVein vein : bedrockVeins){
+            DynamicDataPack.addWorldgenObject(vein);
         }
         if (GTLibConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.get()) {
             GTLibConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.set(false);

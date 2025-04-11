@@ -8,7 +8,7 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
-import org.gtreimagined.gtlib.worldgen.bedrockore.WorldGenBedrockVein;
+import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
@@ -33,7 +33,7 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
 public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
 
     public FeatureBedrockOre() {
-        super(NoneFeatureConfiguration.CODEC, WorldGenBedrockVein.class);
+        super(NoneFeatureConfiguration.CODEC, BedrockVein.class);
     }
 
     @Override
@@ -62,9 +62,9 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
         BlockPos pos = ctxt.origin();
         Random rand = ctxt.random();
 
-        List<WorldGenBedrockVein> veins = GTLibWorldGenerator.all(WorldGenBedrockVein.class, world.getLevel().dimension());
+        List<BedrockVein> veins = GTLibWorldGenerator.all(BedrockVein.class, world.getLevel().dimension());
         if (veins.isEmpty()) return false;
-        for (WorldGenBedrockVein vein : veins) {
+        for (BedrockVein vein : veins) {
             if(generateBedrockVein(vein, world, pos.getX(), pos.getZ(), pos.getX() + 16, pos.getZ() + 16, rand)){
                 return true;
             }
@@ -72,13 +72,13 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
         return false;
     }
 
-    public static boolean generateBedrockVein(WorldGenBedrockVein vein, LevelAccessor level, int minX, int minZ, int maxX, int maxZ, Random random) {
-        if (random.nextInt(vein.probability) != 0) return false;
-        if (!generateVein(vein.material, level, minX, minZ, random)) return false;
+    public static boolean generateBedrockVein(BedrockVein vein, LevelAccessor level, int minX, int minZ, int maxX, int maxZ, Random random) {
+        if (random.nextInt(vein.probability()) != 0) return false;
+        if (!generateVein(vein.material(), level, minX, minZ, random)) return false;
 
 
-        if ((vein.indicatorRocks || vein.indicatorFlowers)) {
-            boolean tFlowers = vein.indicatorFlowers && vein.flower != Blocks.AIR, tRocks = vein.indicatorRocks && vein.material.has(BEARING_ROCK);
+        if ((vein.indicatorRocks() || vein.indicatorFlowers())) {
+            boolean tFlowers = vein.indicatorFlowers() && vein.flower() != Blocks.AIR, tRocks = vein.indicatorRocks() && vein.material().has(BEARING_ROCK);
 
 
             // Generate first an 8x8 of 4, then a 16x16 of 8, and at the end a 32x32 of 16 Rocks/Flowers. That way the Pattern gets denser in the middle, and Chunk Boundary Issues of GalactiCraft wont be as terrible.
@@ -89,11 +89,11 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
                         int y = Math.min(level.getHeight(Heightmap.Types.OCEAN_FLOOR, tX, tZ), level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, tX, tZ));
                         BlockPos offset = new BlockPos(tX, y, tZ);
                         BlockState below = level.getBlockState(new BlockPos(tX, y - 1, tZ));
-                        if (tFlowers && (!tRocks || random.nextInt(4) > 0) && vein.flower.canSurvive(vein.flower.defaultBlockState(), level, offset)){
-                            level.setBlock(offset, vein.flower.defaultBlockState(), 0);
+                        if (tFlowers && (!tRocks || random.nextInt(4) > 0) && vein.flower().canSurvive(vein.flower().defaultBlockState(), level, offset)){
+                            level.setBlock(offset, vein.flower().defaultBlockState(), 0);
                         } else if (tRocks){
                             if (!below.isAir() && below != WorldGenHelper.WATER_STATE && GTLibConfig.STONE_LAYER_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()) {
-                                WorldGenHelper.setRock(level, offset, vein.material, Blocks.BEDROCK.defaultBlockState(), 1);
+                                WorldGenHelper.setRock(level, offset, vein.material(), Blocks.BEDROCK.defaultBlockState(), 1);
                             }
                         }
                     }
