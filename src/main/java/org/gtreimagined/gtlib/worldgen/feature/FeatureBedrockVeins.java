@@ -6,7 +6,6 @@ import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import net.minecraft.core.BlockPos;
@@ -27,14 +26,13 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVeinData;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
 
-public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
+public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
 
-    public FeatureBedrockOre() {
+    public FeatureBedrockVeins() {
         super(NoneFeatureConfiguration.CODEC, BedrockVein.class);
     }
 

@@ -11,7 +11,7 @@ import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.feature.GTFeature;
-import org.gtreimagined.gtlib.worldgen.feature.FeatureBedrockOre;
+import org.gtreimagined.gtlib.worldgen.feature.FeatureBedrockVeins;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureOre;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureSmallOres;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureStoneLayer;
@@ -61,7 +61,7 @@ public class GTLibWorldGenerator {
     static final GTFeature<NoneFeatureConfiguration> VEIN_LAYER = new FeatureVein();
     static final GTFeature<NoneFeatureConfiguration> ORE = new FeatureOre();
     static final GTFeature<NoneFeatureConfiguration> STONE_LAYER = new FeatureStoneLayer();
-    static final GTFeature<NoneFeatureConfiguration> BEDROCK_VEINS = new FeatureBedrockOre();
+    static final GTFeature<NoneFeatureConfiguration> BEDROCK_VEINS = new FeatureBedrockVeins();
 
     public static void clear() {
         GTAPI.all(GTFeature.class, t -> t.getRegistry().clear());
