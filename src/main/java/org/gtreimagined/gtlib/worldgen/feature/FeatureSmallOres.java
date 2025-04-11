@@ -6,6 +6,7 @@ import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
+import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -68,43 +69,19 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
         List<SmallOre> smallOres = GTLibWorldGenerator.all(SmallOre.class, world.getLevel().dimension());
         int spawned = 0;
         for (SmallOre smallOre : smallOres) {
-            if (!smallOre.material.has(ORE_SMALL)) continue;
-            int minY = Math.max(worldMinY, smallOre.minY);
-            int maxY = Math.min(worldMaxY, smallOre.maxY);
+            if (!smallOre.material().has(ORE_SMALL)) continue;
+            int minY = Math.max(worldMinY, smallOre.minY());
+            int maxY = Math.min(worldMaxY, smallOre.maxY());
             int i = 0;
-            for (int j = Math.max(1, smallOre.amountPerChunk / 2 + random.nextInt(smallOre.amountPerChunk) / 2); i < j; i++) {
+            for (int j = Math.max(1, smallOre.amountPerChunk() / 2 + random.nextInt(smallOre.amountPerChunk()) / 2); i < j; i++) {
                 BlockPos pos = new BlockPos(chunkCornerX + random.nextInt(16), minY + random.nextInt(Math.max(1, maxY - minY)), chunkCornerZ + random.nextInt(16));
-                if (!smallOre.getValidBiomes().test(world.getBiome(pos))) continue;
-                boolean spawn = setOreBlock(world, pos, smallOre);
+                if (!smallOre.isBiomeValid(world.getBiome(pos))) continue;
+                boolean spawn = WorldGenHelper.setOre(world, pos, smallOre.material(), GTMaterialTypes.ORE_SMALL);
                 if (spawn) spawned++;
             }
         }
 
 
         return spawned > 0;
-    }
-
-    private boolean setOreBlock(WorldGenLevel level, BlockPos pos, SmallOre smallOre){
-        Holder<Biome> biome = level.getBiome(pos);
-        boolean failed = !smallOre.biomeBlacklist;
-        if (!smallOre.biomes.isEmpty()){
-            for (String filteredBiome : smallOre.biomes) {
-                BiPredicate<String, Holder<Biome>> predicate = (s, biomeHolder) -> {
-                    if (s.startsWith("#")){
-                        TagKey<Biome> compare = TagUtils.getBiomeTag(new ResourceLocation(filteredBiome.replace("#", "")));
-                        return biomeHolder.is(compare);
-                    } else {
-                        ResourceKey<Biome> compare = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(filteredBiome));
-                        return biomeHolder.is(compare);
-                    }
-                };
-                if (predicate.test(filteredBiome, biome)){
-                    failed = smallOre.biomeBlacklist;
-                    break;
-                }
-            }
-            if (failed) return false;
-        }
-        return WorldGenHelper.setOre(level, pos, smallOre.material, GTMaterialTypes.ORE_SMALL);
     }
 }

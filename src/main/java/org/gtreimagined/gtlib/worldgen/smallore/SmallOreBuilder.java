@@ -1,8 +1,11 @@
 package org.gtreimagined.gtlib.worldgen.smallore;
 
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.resources.ResourceLocation;
+import org.gtreimagined.gtlib.worldgen.vein.VeinBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -18,26 +21,27 @@ public class SmallOreBuilder {
     private Integer maxY;
     @Nullable
     private Integer minY;
-    @Nullable String id;
-    List<ResourceLocation> dimensions = new ArrayList<>();
+    ResourceLocation id;
+    List<ResourceKey<Level>> dimensions = new ArrayList<>();
     List<String> biomes = new ArrayList<>();
     boolean dimensionBlacklist = false, biomeBlacklist = true;
 
-    public SmallOreBuilder() {
+    public SmallOreBuilder(@NotNull ResourceLocation id) {
+        this.id = id;
     }
 
     final public SmallOre buildMaterial() {
+        if (id == null){
+            throw  new RuntimeException("id is required");
+        }
         if (this.amountPerChunk == null) {
             throw new RuntimeException("weight is required");
         }
         if (this.material == null) {
             throw new RuntimeException("material is required");
         }
-        if (this.dimensions.isEmpty()) {
-            this.dimensions.add(new ResourceLocation("overworld"));
-        }
-        SmallOre smallOre =  new SmallOre(
-                id != null ? id : material.getId(),
+        return new SmallOre(
+                id,
                 this.material,
                 this.minY != null ? this.minY : Integer.MIN_VALUE,
                 this.maxY != null ? this.maxY : Integer.MAX_VALUE,
@@ -46,10 +50,7 @@ public class SmallOreBuilder {
                 this.biomes,
                 this.biomeBlacklist
         );
-        GTLibWorldGenerator.writeJson(smallOre.toJson(), smallOre.getId(), "small_ore");
-        return GTLibWorldGenerator.readJson(SmallOre.class, smallOre, SmallOre::fromJson, "small_ore");
     }
-
 
 
     final public SmallOreBuilder withMaterial(Material material) {
@@ -68,17 +69,23 @@ public class SmallOreBuilder {
         return this;
     }
 
-    final public SmallOreBuilder withCustomId(String id){
-        this.id = id;
-        return this;
-    }
-
     final public SmallOreBuilder withBiomes(String... biomes) {
         Collections.addAll(this.biomes, biomes);
         return this;
     }
 
-    final public SmallOreBuilder withDimensions(ResourceLocation... dimensions) {
+    public final SmallOreBuilder inDimension(ResourceKey<Level> dimension) {
+        this.dimensions.add(dimension);
+        return this;
+    }
+
+    public final SmallOreBuilder inDimensions(List<ResourceKey<Level>> dimension) {
+        this.dimensions.addAll(dimension);
+        return this;
+    }
+
+    @SafeVarargs
+    final public SmallOreBuilder inDimensions(ResourceKey<Level>... dimensions) {
         Collections.addAll(this.dimensions, dimensions);
         return this;
     }
