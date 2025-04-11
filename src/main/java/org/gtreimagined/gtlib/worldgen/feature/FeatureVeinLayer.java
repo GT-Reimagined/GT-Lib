@@ -93,7 +93,7 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
     // in the dimension. For example veins that range above and below the average height
     // will be less, and veins that are completely above the average height will be much less.
     public static void generate(WorldGenLevel world, int chunkX, int chunkZ, int oreSeedX, int oreSeedZ) {
-        Map<ResourceLocation, Vein> veins = VeinData.getVeins(world.getLevel());
+        Map<ResourceLocation, Vein> veins = VeinData.INSTANCE.getVeins(world.getLevel());
         if (veins.isEmpty())
             return;
 

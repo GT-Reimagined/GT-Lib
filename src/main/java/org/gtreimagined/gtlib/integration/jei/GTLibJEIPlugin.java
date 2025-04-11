@@ -190,7 +190,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 }
             }
         });
-        registration.addRecipes(VeinCategory.VEIN_LAYERS, VeinData.getVeins().values().stream().toList());
+        registration.addRecipes(VeinCategory.VEIN_LAYERS, VeinData.INSTANCE.getVeins().values().stream().toList());
         MultiMachineInfoCategory.registerRecipes(registration);
     }
 

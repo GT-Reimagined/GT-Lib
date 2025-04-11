@@ -24,12 +24,12 @@ public class ClientboundWorldgenSyncPacket implements Packet<ClientboundWorldgen
 
         @Override
         public void encode(ClientboundWorldgenSyncPacket clientboundWorldgenSyncPacket, FriendlyByteBuf friendlyByteBuf) {
-            VeinData.encodeVeins(friendlyByteBuf);
+            VeinData.INSTANCE.encodeVeins(friendlyByteBuf);
         }
 
         @Override
         public ClientboundWorldgenSyncPacket decode(FriendlyByteBuf friendlyByteBuf) {
-            VeinData.updateVeins(VeinData.decodeVeins(friendlyByteBuf));
+            VeinData.INSTANCE.updateVeins(VeinData.INSTANCE.decodeVeins(friendlyByteBuf));
             return new ClientboundWorldgenSyncPacket();
         }
 
