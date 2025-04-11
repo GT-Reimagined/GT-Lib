@@ -25,8 +25,10 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVeinData;
 
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
@@ -46,7 +48,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return getRegistry().size() > 0;
+        return !VanillaVeinData.INSTANCE.getVeins().isEmpty();
     }
 
     @Override
@@ -71,7 +73,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
         final int chunkCornerZ = chunkZ * 16;
         final int worldMinY = world.dimensionType().minY();
         final int worldMaxY = world.dimensionType().minY() + world.dimensionType().height();
-        List<VanillaVein> vanillaVeins = GTLibWorldGenerator.all(VanillaVein.class, world.getLevel().dimension());
+        Collection<VanillaVein> vanillaVeins = VanillaVeinData.INSTANCE.getVeins(world.getLevel()).values();
         int spawned = 0;
         for (VanillaVein vanillaVein : vanillaVeins) {
             if (!vanillaVein.primary().material().has(vanillaVein.primary().type()) || (vanillaVein.secondary().material() != Material.NULL && !vanillaVein.secondary().material().has(vanillaVein.secondary().type()))) continue;

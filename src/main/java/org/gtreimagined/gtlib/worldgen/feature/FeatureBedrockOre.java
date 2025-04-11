@@ -24,7 +24,9 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVeinData;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -43,7 +45,7 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return GTLibConfig.BEDROCK_VEINS.get() && !getRegistry().isEmpty();
+        return GTLibConfig.BEDROCK_VEINS.get() && !BedrockVeinData.INSTANCE.getVeins().isEmpty();
     }
 
     @Override
@@ -62,7 +64,7 @@ public class FeatureBedrockOre extends GTFeature<NoneFeatureConfiguration> {
         BlockPos pos = ctxt.origin();
         Random rand = ctxt.random();
 
-        List<BedrockVein> veins = GTLibWorldGenerator.all(BedrockVein.class, world.getLevel().dimension());
+        Collection<BedrockVein> veins = BedrockVeinData.INSTANCE.getVeins(world.getLevel()).values();
         if (veins.isEmpty()) return false;
         for (BedrockVein vein : veins) {
             if(generateBedrockVein(vein, world, pos.getX(), pos.getZ(), pos.getX() + 16, pos.getZ() + 16, rand)){

@@ -77,6 +77,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVeinData;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVeinData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 import javax.imageio.ImageIO;
@@ -137,7 +140,10 @@ public class GTLib extends GTMod {
     }
 
     public void onServerReloadListeners(AddReloadListenerEvent event){
-        event.addListener(new VeinData());
+        event.addListener(VanillaVeinData.INSTANCE);
+        event.addListener(VeinData.INSTANCE);
+        event.addListener(SmallOreData.INSTANCE);
+        event.addListener(BedrockVeinData.INSTANCE);
     }
 
     public void addCraftingLoaders(GTCraftingEvent ev) {

@@ -46,12 +46,12 @@ public class FeatureVeinLayer extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public String getId() {
-        return "feature_vein_layer";
+        return "veins";
     }
 
     @Override
     public boolean enabled() {
-        return GTLibConfig.ORE_VEINS.get() && getRegistry().size() > 0;
+        return GTLibConfig.ORE_VEINS.get() && !VeinData.INSTANCE.getVeins().isEmpty();
     }
 
     @Override

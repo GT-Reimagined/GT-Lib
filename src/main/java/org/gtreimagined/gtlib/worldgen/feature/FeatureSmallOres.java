@@ -22,7 +22,9 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiPredicate;
@@ -41,7 +43,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return GTLibConfig.SMALL_ORES.get() && getRegistry().size() > 0;
+        return GTLibConfig.SMALL_ORES.get() && !SmallOreData.INSTANCE.getVeins().isEmpty();
     }
 
     @Override
@@ -66,7 +68,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
         final int chunkCornerZ = chunkZ * 16;
         final int worldMinY = world.dimensionType().minY();
         final int worldMaxY = world.dimensionType().minY() + world.dimensionType().height();
-        List<SmallOre> smallOres = GTLibWorldGenerator.all(SmallOre.class, world.getLevel().dimension());
+        Collection<SmallOre> smallOres = SmallOreData.INSTANCE.getVeins(world.getLevel()).values();
         int spawned = 0;
         for (SmallOre smallOre : smallOres) {
             if (!smallOre.material().has(ORE_SMALL)) continue;
