@@ -28,8 +28,8 @@ public record SmallOre(ResourceLocation id, Material material, int minY, int max
             Codec.INT.fieldOf("maxY").forGetter(SmallOre::maxY),
             Codec.INT.fieldOf("amountPerChunk").forGetter(SmallOre::amountPerChunk),
             ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(SmallOre::dimensions),
-            Codec.STRING.listOf().fieldOf("biomes").forGetter(SmallOre::biomes),
-            Codec.BOOL.fieldOf("biomeBlacklist").forGetter(SmallOre::biomeBlacklist)
+            Codec.STRING.listOf().optionalFieldOf("biomes", List.of()).forGetter(SmallOre::biomes),
+            Codec.BOOL.optionalFieldOf("biomeBlacklist", true).forGetter(SmallOre::biomeBlacklist)
     ).apply(instance, SmallOre::new));
 
     @Override

@@ -35,8 +35,8 @@ public record VanillaVein(ResourceLocation id, OreObject primary, OreObject seco
                 Codec.INT.fieldOf("plateau").forGetter(VanillaVein::plateau),
                 Codec.BOOL.fieldOf("spawnOnOceanFloor").forGetter(VanillaVein::spawnOnOceanFloor),
                 ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(VanillaVein::dimensions),
-                Codec.STRING.listOf().fieldOf("biomes").forGetter(VanillaVein::biomes),
-                Codec.BOOL.fieldOf("biomeBlacklist").forGetter(VanillaVein::biomeBlacklist)
+                Codec.STRING.listOf().optionalFieldOf("biomes", List.of()).forGetter(VanillaVein::biomes),
+                Codec.BOOL.optionalFieldOf("biomeBlacklist", true).forGetter(VanillaVein::biomeBlacklist)
         ).apply(instance, VanillaVein::new);
     });
 

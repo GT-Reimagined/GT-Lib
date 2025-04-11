@@ -4,7 +4,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.material.Material;
 import net.minecraft.resources.ResourceLocation;
-import org.gtreimagined.gtlib.worldgen.vein.VeinBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +23,7 @@ public class SmallOreBuilder {
     ResourceLocation id;
     List<ResourceKey<Level>> dimensions = new ArrayList<>();
     List<String> biomes = new ArrayList<>();
-    boolean dimensionBlacklist = false, biomeBlacklist = true;
+    boolean biomeBlacklist = true;
 
     public SmallOreBuilder(@NotNull ResourceLocation id) {
         this.id = id;
