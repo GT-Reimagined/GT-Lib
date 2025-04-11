@@ -480,6 +480,6 @@ public class FeatureVein extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VEIN_LAYER);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VEINS.get());
     }
 }

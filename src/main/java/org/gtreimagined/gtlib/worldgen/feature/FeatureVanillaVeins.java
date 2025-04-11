@@ -6,7 +6,6 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein;
 import net.minecraft.core.BlockPos;
@@ -29,7 +28,6 @@ import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVeinData;
 
 import java.util.BitSet;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -59,7 +57,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VANILLA_ORES);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VANILLA_VEINS.get());
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> placer) {

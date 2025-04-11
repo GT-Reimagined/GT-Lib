@@ -54,7 +54,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.SMALL_ORES);
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.SMALL_ORES.get());
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> placer) {
