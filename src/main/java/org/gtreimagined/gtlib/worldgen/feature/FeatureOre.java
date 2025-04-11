@@ -40,7 +40,7 @@ public class FeatureOre extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public String getId() {
-        return "feature_ore";
+        return "ore";
     }
 
 
