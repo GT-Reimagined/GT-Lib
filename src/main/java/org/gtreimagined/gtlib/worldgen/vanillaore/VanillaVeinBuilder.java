@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class VanillaOreBuilder {
+public class VanillaVeinBuilder {
     @Nullable
     private Material material;
     @Nullable
@@ -44,11 +44,11 @@ public class VanillaOreBuilder {
     List<String> biomes = new ArrayList<>();
     boolean biomeBlacklist = true, triangle = false, spawnOnOceanFloor = false;
 
-    public VanillaOreBuilder(@NotNull ResourceLocation id) {
+    public VanillaVeinBuilder(@NotNull ResourceLocation id) {
         this.id = id;
     }
 
-    final public VanillaOre buildMaterial() {
+    final public VanillaVein buildMaterial() {
         if (this.id == null) {
             throw new RuntimeException("id required");
         }
@@ -59,7 +59,7 @@ public class VanillaOreBuilder {
             throw new RuntimeException("material is required");
         }
         MaterialTypeBlock<?> materialTypeBlock = this.materialType == null ? GTMaterialTypes.ORE : materialType;
-        return new VanillaOre(
+        return new VanillaVein(
                 id,
                 new OreObject(this.material, materialTypeBlock),
                 new OreObject(this.secondary == null ? Material.NULL : this.secondary, this.secondaryType == null ? materialTypeBlock : this.secondaryType),
@@ -79,91 +79,91 @@ public class VanillaOreBuilder {
         );
     }
 
-    final public VanillaOreBuilder withMaterial(Material material) {
+    final public VanillaVeinBuilder withMaterial(Material material) {
         this.material = material;
         return this;
     }
 
-    final public VanillaOreBuilder withSecondaryMaterial(Material secondary, float secondaryChance){
+    final public VanillaVeinBuilder withSecondaryMaterial(Material secondary, float secondaryChance){
         this.secondary = secondary;
         this.secondaryChance = secondaryChance;
         return this;
     }
 
-    final public VanillaOreBuilder withSecondaryType(MaterialTypeBlock<?> materialType){
+    final public VanillaVeinBuilder withSecondaryType(MaterialTypeBlock<?> materialType){
         this.secondaryType = materialType;
         return this;
     }
 
-    final public VanillaOreBuilder withMaterialType(MaterialTypeBlock<?> materialType){
+    final public VanillaVeinBuilder withMaterialType(MaterialTypeBlock<?> materialType){
         this.materialType = materialType;
         return this;
     }
 
-    final public VanillaOreBuilder withWeight(int weight) {
+    final public VanillaVeinBuilder withWeight(int weight) {
         this.weight = weight;
         return this;
     }
 
-    final public VanillaOreBuilder withSize(int size){
+    final public VanillaVeinBuilder withSize(int size){
         this.size = size;
         return this;
     }
 
-    final public VanillaOreBuilder withDiscardOnExposureChance(float discardOnExposureChance){
+    final public VanillaVeinBuilder withDiscardOnExposureChance(float discardOnExposureChance){
         this.discardOnExposureChance = discardOnExposureChance;
         return this;
     }
 
-    final public VanillaOreBuilder atHeight(int minY, int maxY) {
+    final public VanillaVeinBuilder atHeight(int minY, int maxY) {
         this.minY = minY;
         this.maxY = maxY;
         return this;
     }
 
-    final public VanillaOreBuilder withProbability(int probability){
+    final public VanillaVeinBuilder withProbability(int probability){
         this.probability = probability;
         return this;
     }
 
-    final public VanillaOreBuilder withBiomes(String... biomes) {
+    final public VanillaVeinBuilder withBiomes(String... biomes) {
         Collections.addAll(this.biomes, biomes);
         return this;
     }
 
-    public final VanillaOreBuilder inDimension(ResourceKey<Level> dimension) {
+    public final VanillaVeinBuilder inDimension(ResourceKey<Level> dimension) {
         this.dimensions.add(dimension);
         return this;
     }
 
-    public final VanillaOreBuilder inDimensions(List<ResourceKey<Level>> dimension) {
+    public final VanillaVeinBuilder inDimensions(List<ResourceKey<Level>> dimension) {
         this.dimensions.addAll(dimension);
         return this;
     }
 
     @SafeVarargs
-    final public VanillaOreBuilder inDimensions(ResourceKey<Level>... dimensions) {
+    final public VanillaVeinBuilder inDimensions(ResourceKey<Level>... dimensions) {
         Collections.addAll(this.dimensions, dimensions);
         return this;
     }
 
-    final public VanillaOreBuilder setBiomeBlacklist(boolean blacklist) {
+    final public VanillaVeinBuilder setBiomeBlacklist(boolean blacklist) {
         this.biomeBlacklist = blacklist;
         return this;
     }
 
-    final public VanillaOreBuilder setHasTriangleHeight(boolean triangle){
+    final public VanillaVeinBuilder setHasTriangleHeight(boolean triangle){
         this.triangle = triangle;
         return this;
     }
 
-    final public VanillaOreBuilder setHasTriangleHeight(boolean triangle, int plateau){
+    final public VanillaVeinBuilder setHasTriangleHeight(boolean triangle, int plateau){
         this.triangle = triangle;
         this.plateau = plateau;
         return this;
     }
 
-    final public VanillaOreBuilder setSpawnOnOceanFloor(boolean spawnOnOceanFloor){
+    final public VanillaVeinBuilder setSpawnOnOceanFloor(boolean spawnOnOceanFloor){
         this.spawnOnOceanFloor = spawnOnOceanFloor;
         return this;
     }

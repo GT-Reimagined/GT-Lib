@@ -15,7 +15,7 @@ import org.gtreimagined.gtlib.worldgen.feature.FeatureBedrockOre;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureOre;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureSmallOres;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureStoneLayer;
-import org.gtreimagined.gtlib.worldgen.feature.FeatureVanillaOres;
+import org.gtreimagined.gtlib.worldgen.feature.FeatureVanillaVeins;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureVeinLayer;
 import org.gtreimagined.gtlib.worldgen.feature.IGTFeature;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
@@ -56,7 +56,7 @@ import static org.gtreimagined.gtlib.Ref.GSON;
 public class GTLibWorldGenerator {
     static final GTFeature<NoneFeatureConfiguration> SMALL_ORE = new FeatureSmallOres();
 
-    static final GTFeature<NoneFeatureConfiguration> VANILLA_ORE = new FeatureVanillaOres();
+    static final GTFeature<NoneFeatureConfiguration> VANILLA_ORE = new FeatureVanillaVeins();
 
     static final GTFeature<NoneFeatureConfiguration> VEIN_LAYER = new FeatureVeinLayer();
     static final GTFeature<NoneFeatureConfiguration> ORE = new FeatureOre();

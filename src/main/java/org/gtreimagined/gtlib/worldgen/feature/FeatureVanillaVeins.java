@@ -5,18 +5,13 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
-import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaOre;
+import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
@@ -34,20 +29,19 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import java.util.BitSet;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.GTLib.LOGGER;
 import static org.gtreimagined.gtlib.worldgen.WorldGenHelper.ORE_PREDICATE;
 
-public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
-    public FeatureVanillaOres() {
-        super(NoneFeatureConfiguration.CODEC, VanillaOre.class);
+public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
+    public FeatureVanillaVeins() {
+        super(NoneFeatureConfiguration.CODEC, VanillaVein.class);
     }
 
     @Override
     public String getId() {
-        return "vanilla_ores";
+        return "vanilla_veins";
     }
 
     @Override
@@ -77,20 +71,20 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
         final int chunkCornerZ = chunkZ * 16;
         final int worldMinY = world.dimensionType().minY();
         final int worldMaxY = world.dimensionType().minY() + world.dimensionType().height();
-        List<VanillaOre> vanillaOres = GTLibWorldGenerator.all(VanillaOre.class, world.getLevel().dimension());
+        List<VanillaVein> vanillaVeins = GTLibWorldGenerator.all(VanillaVein.class, world.getLevel().dimension());
         int spawned = 0;
-        for (VanillaOre vanillaOre : vanillaOres) {
-            if (!vanillaOre.primary().material().has(vanillaOre.primary().type()) || (vanillaOre.secondary().material() != Material.NULL && !vanillaOre.secondary().material().has(vanillaOre.secondary().type()))) continue;
-            if (vanillaOre.probability() > 1 && random.nextInt(vanillaOre.probability()) != 0) continue;
-            int minY = Math.max(worldMinY, vanillaOre.minY());
-            int maxY = Math.min(worldMaxY, vanillaOre.maxY());
+        for (VanillaVein vanillaVein : vanillaVeins) {
+            if (!vanillaVein.primary().material().has(vanillaVein.primary().type()) || (vanillaVein.secondary().material() != Material.NULL && !vanillaVein.secondary().material().has(vanillaVein.secondary().type()))) continue;
+            if (vanillaVein.probability() > 1 && random.nextInt(vanillaVein.probability()) != 0) continue;
+            int minY = Math.max(worldMinY, vanillaVein.minY());
+            int maxY = Math.min(worldMaxY, vanillaVein.maxY());
             int i = 0;
-            int amountPerChunk = vanillaOre.weight();
+            int amountPerChunk = vanillaVein.weight();
             for (int j = amountPerChunk; i < j; i++) {
-                int y = vanillaOre.triangle() ? sample(random, minY, maxY) : minY + random.nextInt(Math.max(1, maxY - minY));
+                int y = vanillaVein.triangle() ? sample(random, minY, maxY) : minY + random.nextInt(Math.max(1, maxY - minY));
                 BlockPos spawnPos = new BlockPos(chunkCornerX + random.nextInt(16), y, chunkCornerZ + random.nextInt(16));
-                if (!vanillaOre.isBiomeValid(world.getBiome(spawnPos))) continue;
-                boolean spawn = vanillaOre.size() > 1 ? place(world, random, spawnPos, vanillaOre) : setOreBlock(world, spawnPos, vanillaOre);
+                if (!vanillaVein.isBiomeValid(world.getBiome(spawnPos))) continue;
+                boolean spawn = vanillaVein.size() > 1 ? place(world, random, spawnPos, vanillaVein) : setOreBlock(world, spawnPos, vanillaVein);
                 if (spawn) spawned++;
             }
         }
@@ -99,7 +93,7 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
         return spawned > 0;
     }
 
-    public boolean place(WorldGenLevel worldgenlevel, Random random, BlockPos blockpos, VanillaOre config) {
+    public boolean place(WorldGenLevel worldgenlevel, Random random, BlockPos blockpos, VanillaVein config) {
 
         float f = random.nextFloat() * (float)Math.PI;
         float f1 = (float)config.size() / 8.0F;
@@ -133,7 +127,7 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
         return false;
     }
 
-    protected boolean doPlace(WorldGenLevel pLevel, Random pRandom, VanillaOre config, double pMinX, double pMaxX, double pMinZ, double pMaxZ, double pMinY, double pMaxY, int pX, int pY, int pZ, int pWidth, int pHeight) {
+    protected boolean doPlace(WorldGenLevel pLevel, Random pRandom, VanillaVein config, double pMinX, double pMaxX, double pMinZ, double pMaxZ, double pMinY, double pMaxY, int pX, int pY, int pZ, int pWidth, int pHeight) {
         int i = 0;
         BitSet bitset = new BitSet(pWidth * pHeight * pWidth);
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
@@ -260,12 +254,12 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
         }
     }
 
-    private boolean setOreBlock(WorldGenLevel level, BlockPos pos, VanillaOre vanillaOre){
-        Material material = vanillaOre.primary().material();
-        MaterialType<?> type = vanillaOre.primary().type();
-        if (vanillaOre.secondaryChance() > 0.0f && vanillaOre.secondary().material() != Material.NULL && level.getRandom().nextFloat() < vanillaOre.secondaryChance()){
-            material = vanillaOre.secondary().material();
-            if (vanillaOre.secondary().type() != vanillaOre.primary().type()) type = vanillaOre.secondary().type();
+    private boolean setOreBlock(WorldGenLevel level, BlockPos pos, VanillaVein vanillaVein){
+        Material material = vanillaVein.primary().material();
+        MaterialType<?> type = vanillaVein.primary().type();
+        if (vanillaVein.secondaryChance() > 0.0f && vanillaVein.secondary().material() != Material.NULL && level.getRandom().nextFloat() < vanillaVein.secondaryChance()){
+            material = vanillaVein.secondary().material();
+            if (vanillaVein.secondary().type() != vanillaVein.primary().type()) type = vanillaVein.secondary().type();
         }
         return WorldGenHelper.setOre(level, pos, material, type);
     }
@@ -283,7 +277,7 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
         return oreState;
     }
 
-    public boolean placeOre(int x, int y, int z, LevelChunkSection chunkSection, Function<BlockPos, BlockState> adjacentStateAccessor, Random random, VanillaOre config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable){
+    public boolean placeOre(int x, int y, int z, LevelChunkSection chunkSection, Function<BlockPos, BlockState> adjacentStateAccessor, Random random, VanillaVein config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable){
         BlockState blockState = chunkSection.getBlockState(x, y, z);
         BlockState oreToPlace = getOre(blockState, material, type);
         if (oreToPlace != null && canPlaceOre(blockState, adjacentStateAccessor, random, config, material, type, mutable)) {
@@ -293,7 +287,7 @@ public class FeatureVanillaOres extends GTFeature<NoneFeatureConfiguration> {
         return false;
     }
 
-    public static boolean canPlaceOre(BlockState state, Function<BlockPos, BlockState> adjacentStateAccessor, Random random, VanillaOre config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable) {
+    public static boolean canPlaceOre(BlockState state, Function<BlockPos, BlockState> adjacentStateAccessor, Random random, VanillaVein config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable) {
         if (getOre(state, material, type) == null) {
             return false;
         } else if (shouldSkipAirCheck(random, config.discardOnExposureChance())) {

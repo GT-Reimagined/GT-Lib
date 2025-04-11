@@ -8,7 +8,7 @@ import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
-import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaOre;
+import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -23,7 +23,7 @@ public class GTWorldGenEvent extends GTEvent {
 
     public final List<SmallOre> SMALL_ORES = new ObjectArrayList<>();
 
-    public final List<VanillaOre> VANILLA_ORES = new ObjectArrayList<>();
+    public final List<VanillaVein> VANILLA_ORES = new ObjectArrayList<>();
     public final List<BedrockVein> BEDROCK_VEINS = new ObjectArrayList<>();
     public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
 
@@ -55,7 +55,7 @@ public class GTWorldGenEvent extends GTEvent {
         SMALL_ORES.add(veins);
     }
 
-    public void vanillaOre(VanillaOre veins) {
+    public void vanillaOre(VanillaVein veins) {
         if (VANILLA_ORES.stream().anyMatch(s -> s.getId().equals(veins.getId()))){
             GTLib.LOGGER.warn("Duplicate vanilla ore vein, aborting. Id: " + veins.getId());
             return;
