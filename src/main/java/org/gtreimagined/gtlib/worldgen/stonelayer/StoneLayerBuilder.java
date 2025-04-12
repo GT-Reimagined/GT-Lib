@@ -1,72 +1,75 @@
-package org.gtreimagined.gtlib.worldgen.object;
+package org.gtreimagined.gtlib.worldgen.stonelayer;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
-import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class WorldGenStoneLayerBuilder {
+public class StoneLayerBuilder {
     @Nullable
-    private final String id;
+    private final ResourceLocation id;
     @Nullable
     private StoneType stoneType;
     @Nullable
-    private BlockState stoneState;
+    private Block stoneState;
     @Nullable
     private Integer weight;
     @Nullable
     private Integer minY;
     @Nullable
     private Integer maxY;
+    @Nullable
+    private Block replacementBlock;
 
     private final ArrayList<ResourceKey<Level>> dimensions;
     private StoneLayerOre[] ores = new StoneLayerOre[0];
 
-    public WorldGenStoneLayerBuilder(String id) {
+    public StoneLayerBuilder(ResourceLocation id) {
         this.id = id;
         this.dimensions = new ArrayList<>();
     }
 
-    public final WorldGenStoneLayerBuilder withWeight(int weight) {
+    public final StoneLayerBuilder withWeight(int weight) {
         this.weight = weight;
         return this;
     }
 
-    public final WorldGenStoneLayerBuilder withStone(StoneType type) {
+    public final StoneLayerBuilder withStone(StoneType type) {
         this.stoneType = type;
-        this.stoneState = type.getState();
+        this.stoneState = type.getState().getBlock();
         return this;
     }
 
-    public final WorldGenStoneLayerBuilder withStone(BlockState state) {
-        this.stoneState = state;
+    public final StoneLayerBuilder withStone(BlockState state) {
+        this.stoneState = state.getBlock();
         return this;
     }
 
-    public final WorldGenStoneLayerBuilder atHeight(int minY, int maxY) {
+    public final StoneLayerBuilder atHeight(int minY, int maxY, Block replacementBlock) {
         this.minY = minY;
         this.maxY = maxY;
+        this.replacementBlock = replacementBlock;
         return this;
     }
 
-    public final WorldGenStoneLayerBuilder inDimension(ResourceKey<Level> dimension) {
+    public final StoneLayerBuilder inDimension(ResourceKey<Level> dimension) {
         this.dimensions.add(dimension);
         return this;
     }
 
-    public final WorldGenStoneLayerBuilder inDimensions(List<ResourceKey<Level>> dimensions) {
+    public final StoneLayerBuilder inDimensions(List<ResourceKey<Level>> dimensions) {
         this.dimensions.addAll(dimensions);
         return this;
     }
 
-    public WorldGenStoneLayerBuilder addOres(StoneLayerOre... ores) {
+    public StoneLayerBuilder addOres(StoneLayerOre... ores) {
         if (stoneType == null){
             throw new IllegalStateException("Stone type must not be null before adding ores!");
         }
@@ -74,7 +77,7 @@ public class WorldGenStoneLayerBuilder {
         return this;
     }
 
-    public final List<WorldGenStoneLayer> buildVein() {
+    public final StoneLayer buildVein() {
         if (this.id == null) {
             throw new RuntimeException("id is required");
         }
@@ -88,20 +91,14 @@ public class WorldGenStoneLayerBuilder {
             this.dimensions.add(Level.OVERWORLD);
         }
 
-        return WorldGenStoneLayer.getFlat(this.buildVeinFromJson());
-    }
-
-    private WorldGenStoneLayer buildVeinFromJson(){
-        WorldGenStoneLayer vein = new WorldGenStoneLayer(
+        return new StoneLayer(
                 this.id,
-                this.stoneType,
                 this.stoneState,
                 this.weight,
                 this.minY == null ? Integer.MIN_VALUE : this.minY,
                 this.maxY == null ? Integer.MAX_VALUE : this.maxY,
-                this.dimensions);
-        vein.addOres(this.ores);
-        GTLibWorldGenerator.writeJson(vein.toJson(), this.id, "stone_layers");
-        return GTLibWorldGenerator.readJson(WorldGenStoneLayer.class, vein, WorldGenStoneLayer::fromJson, "stone_layers");
+                this.replacementBlock == null ? Blocks.AIR : replacementBlock,
+                this.dimensions,
+                List.of(ores));
     }
 }

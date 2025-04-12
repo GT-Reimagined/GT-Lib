@@ -1,16 +1,15 @@
 package org.gtreimagined.gtlib.integration.kubejs;
 
 import dev.latvian.mods.kubejs.event.EventJS;
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
-import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
-import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayerBuilder;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerBuilder;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import org.gtreimagined.gtlib.worldgen.vein.VeinBuilder;
 import net.minecraft.core.Registry;
@@ -26,7 +25,7 @@ import java.util.Objects;
 public class AMWorldEvent extends EventJS {
 
     public final List<Vein> VEINS = new ObjectArrayList<>();
-    public final List<WorldGenStoneLayer> STONE_LAYERS = new ObjectArrayList<>();
+    public final List<StoneLayer> STONE_LAYERS = new ObjectArrayList<>();
 
     public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
     public boolean disableBuiltin = false;
@@ -53,14 +52,14 @@ public class AMWorldEvent extends EventJS {
 
 
 
-    public final void stoneLayer(String id, String stoneType, int weight, int minHeight, int maxHeight, String... dimensionKeys){
+    public final void stoneLayer(String id, String stoneType, int weight, String... dimensionKeys){
         if (dimensionKeys == null || dimensionKeys.length == 0) {
             dimensionKeys = new String[]{"overworld"};
         }
         List<ResourceKey<Level>> dimension = Arrays.stream(dimensionKeys).map((dimensionKey) -> ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimensionKey))).toList();
         StoneType type = Objects.requireNonNull(GTAPI.get(StoneType.class, stoneType));
 
-        STONE_LAYERS.addAll(new WorldGenStoneLayerBuilder(id).withStone(type).withWeight(weight).atHeight(minHeight, maxHeight).inDimensions(dimension).buildVein());
+        STONE_LAYERS.add(new StoneLayerBuilder(new ResourceLocation(Ref.MOD_KJS, id)).withStone(type).withWeight(weight).inDimensions(dimension).buildVein());
         /*VEINS.addAll(new WorldGenVeinBuilder(id)
                 .asStoneVein(weight, minHeight, maxHeight, type, dimension)
                 .withSize(minSize,  maxSize, heightScale)

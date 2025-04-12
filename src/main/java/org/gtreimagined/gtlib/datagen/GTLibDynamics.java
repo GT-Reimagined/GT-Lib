@@ -31,9 +31,8 @@ import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
 import org.gtreimagined.gtlib.registration.ModRegistrar;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
-import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
-import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein;
@@ -254,7 +253,7 @@ public class GTLibDynamics {
             }
         }));
         List<Vein> veins = new ObjectArrayList<>();
-        List<WorldGenStoneLayer> stoneLayers = new ObjectArrayList<>();
+        List<StoneLayer> stoneLayers = new ObjectArrayList<>();
         List<SmallOre> smallOres = new ObjectArrayList<>();
         List<VanillaVein> vanillaVeins = new ObjectArrayList<>();
         List<BedrockVein> bedrockVeins = new ObjectArrayList<>();
@@ -274,7 +273,6 @@ public class GTLibDynamics {
             veins.addAll(ev.VEINS);
             smallOres.addAll(ev.SMALL_ORES);
             stoneLayers.addAll(ev.STONE_LAYERS);
-            stoneLayers.addAll(GTLibWorldGenerator.readCustomJsonObjects(WorldGenStoneLayer.class, WorldGenStoneLayer::fromJson, "stone_layers"));
             vanillaVeins.addAll(ev.VANILLA_ORES);
             bedrockVeins.addAll(ev.BEDROCK_VEINS);
             ev.COLLISION_MAP.forEach((i, l) -> {
@@ -285,8 +283,8 @@ public class GTLibDynamics {
         for (Vein vein : veins) {
             DynamicDataPack.addWorldgenObject(vein);
         }
-        for (WorldGenStoneLayer stoneLayer : stoneLayers) {
-            GTLibWorldGenerator.register(stoneLayer.toRegister, stoneLayer);
+        for (StoneLayer stoneLayer : stoneLayers) {
+            DynamicDataPack.addWorldgenObject(stoneLayer);
         }
         StoneLayer.setCollisionMap(collisionMap);
         for (SmallOre smallOre : smallOres){

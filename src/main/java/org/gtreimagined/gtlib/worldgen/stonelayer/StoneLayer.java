@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
-import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;

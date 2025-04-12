@@ -8,11 +8,9 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.BlockOreStone;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.NoiseGenerator;
-import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
-import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.WorldGenLevel;
@@ -27,6 +25,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
 
 import java.util.List;
 import java.util.Random;
@@ -37,7 +36,7 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.ROCK;
 public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
     public FeatureStoneLayer() {
-        super(NoneFeatureConfiguration.CODEC, WorldGenStoneLayer.class);
+        super(NoneFeatureConfiguration.CODEC, StoneLayer.class);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
     @Override
     public boolean enabled() {
-        return GTLibConfig.STONE_LAYERS.get() && !getRegistry().isEmpty();
+        return GTLibConfig.STONE_LAYERS.get() && !StoneLayerData.INSTANCE.getVeins().isEmpty();
     }
 
     @Override
@@ -64,9 +63,9 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
         WorldGenLevel world = ctxt.level();
         BlockPos pos = ctxt.origin();
         Random rand = ctxt.random();
-        List<WorldGenStoneLayer> stones = GTLibWorldGenerator.all(WorldGenStoneLayer.class, world.getLevel().dimension());
+        List<StoneLayer> stones = StoneLayerData.INSTANCE.getFlat(world.getLevel());
         if (stones.isEmpty()) return false;
-        WorldGenStoneLayer[] layers = new WorldGenStoneLayer[7];
+        StoneLayer[] layers = new StoneLayer[7];
         NoiseGenerator noise = new NoiseGenerator(world);
         int stonesSize = stones.size(), stonesMax = stonesSize - 1;
         BlockState existing;
@@ -99,25 +98,25 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
                     //If we haven't placed an ore, and not trying to set the same state as existing, also doesn't work if the veins is either stone or deepslate, lets it fall back to vanilla for those
                     if (!isAir) {
-                        if (layers[3].getStoneState().getBlock() == Blocks.STONE || layers[3].getStoneState().getBlock() == Blocks.DEEPSLATE){
+                        if (layers[3].block() == Blocks.STONE || layers[3].block() == Blocks.DEEPSLATE){
                             if (existing.getBlock() == Blocks.STONE){
                                 topStoneType = VanillaStoneTypes.STONE;
                             } else if (existing.getBlock() == Blocks.DEEPSLATE){
                                 topStoneType = VanillaStoneTypes.DEEPSLATE;
                             }
                             setStone = true;
-                        } else if (existing != layers[3].getStoneState()) {
-                            if (WorldGenHelper.setStone(world, offset, existing, layers[3].getStoneState())) {
+                        } else if (existing.getBlock() != layers[3].block()) {
+                            if (WorldGenHelper.setStone(world, offset, existing, layers[3].block().defaultBlockState())) {
                                 setStone = true;
-                                if (layers[3].getStoneState().getBlock() instanceof BlockOreStone stone) {
+                                if (layers[3].block() instanceof BlockOreStone stone) {
                                     if (ROCK.get().get(stone.getMaterial()).asBlock() instanceof BlockSurfaceRock surfaceRock) {
                                         rockType = surfaceRock.getStoneType();
                                         topStoneType = rockType;
                                     }
                                 } else {
-                                    lastMaterial = layers[3].getStoneType() != null ? layers[3].getStoneType().getMaterial() : null;
-                                    if (layers[3].getStoneType() != null){
-                                        topStoneType = layers[3].getStoneType();
+                                    lastMaterial = layers[3].type() != null ? layers[3].type().getMaterial() : null;
+                                    if (layers[3].type() != null){
+                                        topStoneType = layers[3].type();
                                     }
                                 }
 
@@ -127,16 +126,16 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
 
                     if (setStone && !isAir && GTLibConfig.STONE_LAYER_ORES.get()) {
                         if (layers[1] == layers[5]) {
-                            for (StoneLayerOre ore : layers[3].getOres()) {
+                            for (StoneLayerOre ore : layers[3].ores()) {
                                 if (ore.canPlace(offset, rand, world) && WorldGenHelper.addOre(world, offset, ore.material(), layers[0] == layers[6])) {
                                     lastMaterial = ore.material();
                                     break;
                                 }
                             }
                         } else {
-                            StoneType type = layers[3].getStoneType() != null ? layers[3].getStoneType() : rockType;
+                            StoneType type = layers[3].type() != null ? layers[3].type() : rockType;
                             if (type != null && type.doesGenerateOre()) {
-                                for (StoneLayerOre ore : StoneLayer.getCollision(type, layers[5].getStoneState(), layers[1].getStoneState())) {
+                                for (StoneLayerOre ore : StoneLayer.getCollision(type, layers[5].block().defaultBlockState(), layers[1].block().defaultBlockState())) {
                                     if (ore.canPlace(offset, rand, world) && WorldGenHelper.addOre(world, offset, ore.material(), true)) {
                                         lastMaterial = ore.material();
                                         break;

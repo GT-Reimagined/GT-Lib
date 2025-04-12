@@ -4,10 +4,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
-import org.gtreimagined.gtlib.worldgen.StoneLayerOre;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
-import org.gtreimagined.gtlib.worldgen.object.WorldGenStoneLayer;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public class GTWorldGenEvent extends GTEvent {
 
     public final List<Vein> VEINS = new ObjectArrayList<>();
-    public final List<WorldGenStoneLayer> STONE_LAYERS = new ObjectArrayList<>();
+    public final List<StoneLayer> STONE_LAYERS = new ObjectArrayList<>();
 
     public final List<SmallOre> SMALL_ORES = new ObjectArrayList<>();
 
@@ -43,8 +43,8 @@ public class GTWorldGenEvent extends GTEvent {
         VEINS.add(veins);
     }
 
-    public void stoneLayer(List<WorldGenStoneLayer> veins) {
-        STONE_LAYERS.addAll(veins);
+    public void stoneLayer(StoneLayer veins) {
+        STONE_LAYERS.add(veins);
     }
 
     public void smallOre(SmallOre veins) {

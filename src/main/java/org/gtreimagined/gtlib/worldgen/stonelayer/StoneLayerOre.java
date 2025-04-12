@@ -1,16 +1,9 @@
-package org.gtreimagined.gtlib.worldgen;
+package org.gtreimagined.gtlib.worldgen.stonelayer;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.TagUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -20,12 +13,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public record StoneLayerOre(Material material, long chance, int minY, int maxY, List<String> biomes, boolean biomeBlacklist) {
