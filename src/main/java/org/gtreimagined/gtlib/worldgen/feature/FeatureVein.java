@@ -15,7 +15,6 @@ import org.gtreimagined.gtlib.util.XSTR;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.VeinLayerResult;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
-import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.resources.ResourceLocation;
@@ -41,7 +40,7 @@ public class FeatureVein extends GTFeature<NoneFeatureConfiguration> {
 
 
     public FeatureVein() {
-        super(NoneFeatureConfiguration.CODEC, WorldGenBase.class);
+        super(NoneFeatureConfiguration.CODEC, Vein.class);
     }
 
     @Override

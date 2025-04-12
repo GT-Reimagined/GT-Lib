@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
-import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.mixin.BiomeGenerationBuilderAccessor;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
@@ -18,10 +17,7 @@ import org.gtreimagined.gtlib.worldgen.feature.FeatureStoneLayer;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureVanillaVeins;
 import org.gtreimagined.gtlib.worldgen.feature.FeatureVein;
 import org.gtreimagined.gtlib.worldgen.feature.IGTFeature;
-import org.gtreimagined.gtlib.worldgen.object.WorldGenBase;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
@@ -43,13 +39,10 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 import static org.gtreimagined.gtlib.Ref.GSON;
 
@@ -63,10 +56,6 @@ public class GTLibWorldGenerator {
     static final GTFeature<NoneFeatureConfiguration> STONE_LAYER = new FeatureStoneLayer();
     static final GTFeature<NoneFeatureConfiguration> BEDROCK_VEINS = new FeatureBedrockVeins();
 
-    public static void clear() {
-        GTAPI.all(GTFeature.class, t -> t.getRegistry().clear());
-    }
-
     public static void preinit() {
 
     }
@@ -76,7 +65,6 @@ public class GTLibWorldGenerator {
             WorldGenHelper.init();
             try {
                 GTAPI.all(GTFeature.class).stream().filter(GTFeature::enabled).forEach(f -> {
-                    f.onDataOverride(new JsonObject());
                     f.init();
                 });
             } catch (Exception ex) {
@@ -99,22 +87,6 @@ public class GTLibWorldGenerator {
         //if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
         //    AntimatterKubeJS.loadWorldgenScripts();
         //}
-    }
-
-    public static void register(Class<?> c, WorldGenBase<?> base) {
-        GTFeature<?> feature = GTAPI.get(GTFeature.class, c.getName(), Ref.ID);
-        if (feature != null)
-            base.getDimensions().forEach(d -> feature.getRegistry().computeIfAbsent(d, k -> new LinkedList<>()).add(base));
-    }
-
-    public static <T> List<T> all(Class<T> c, ResourceKey<Level> dim) {
-        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName(), Ref.ID);
-        return feat != null ? feat.getRegistry().computeIfAbsent(dim.location(), k -> new LinkedList<>()).stream().map(c::cast).collect(Collectors.toList()) : Collections.emptyList();
-    }
-
-    public static <T> List<T> all(Class<T> c) {
-        GTFeature<?> feat = GTAPI.get(GTFeature.class, c.getName(), Ref.ID);
-        return feat != null ? feat.getRegistry().values().stream().flatMap(Collection::stream).map(c::cast).distinct().toList() : Collections.emptyList();
     }
 
     private static void removeStoneFeatures(BiomeGenerationSettings.Builder builder) {

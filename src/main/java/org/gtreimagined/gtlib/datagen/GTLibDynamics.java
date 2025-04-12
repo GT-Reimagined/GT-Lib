@@ -279,7 +279,6 @@ public class GTLibDynamics {
                 collisionMap.computeIfAbsent(i, i2 -> new ArrayList<>()).addAll(l);
             });
         }
-        GTLibWorldGenerator.clear();
         for (Vein vein : veins) {
             DynamicDataPack.addWorldgenObject(vein);
         }
