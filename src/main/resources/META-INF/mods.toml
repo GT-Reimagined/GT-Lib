@@ -36,15 +36,6 @@ versionRange="[9.7,)"
 ordering="AFTER"
 side="BOTH"
 [[mods]]
-modId="antimatter"
-version="${version}"
-displayName="AntimatterStub"
-displayURL="https://github.com/GT-Reimagined/GT-Lib"
-#logoFile="examplemod.png"
-credits="mitchej123, e99999, qubka, Vliro, repolainen, Muramasa, Rongmario for original AntimatterAPI"
-authors="Trinsdar"
-description='''Temporary stub for old id'''
-[[mods]]
 modId="antimatter_shared"
 version="${version}"
 displayName="Antimatter Shared Data"
