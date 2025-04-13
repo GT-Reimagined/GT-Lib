@@ -7,6 +7,7 @@ import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.data.ForgeTags;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.datagen.builder.GTTagBuilder;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
@@ -98,12 +99,12 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                 }
             });
             GTAPI.all(BlockOreStone.class, domain, s -> {
-             String id = "ore_stones/" + s.getMaterial().getId();
-             this.copy(getBlockTag(new ResourceLocation(domain, id)), getItemTag(new ResourceLocation(domain, id)));
+                String id = "ore_stones/" + s.getMaterial().getId();
+                this.copy(getBlockTag(new ResourceLocation(domain, id)), getItemTag(new ResourceLocation(domain, id)));
             });
             GTAPI.all(BlockStorage.class, storage -> {
                 MaterialType<?> type = storage.getType();
-                String name = String.join("", getConventionalMaterialType(type), "/", storage.getMaterial().getId());
+                String name = String.join("", getConventionalMaterialType(type), "/", (type == RAW_ORE_BLOCK ? "raw_" : ""), storage.getMaterial().getId());
                 this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
             });
             GTAPI.all(BlockFrame.class, storage -> {
