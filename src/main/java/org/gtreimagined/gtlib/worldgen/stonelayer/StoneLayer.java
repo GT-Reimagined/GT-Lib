@@ -19,22 +19,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record StoneLayer(ResourceLocation id, @Nullable StoneType type, Block block, int weight, int minY, int maxY,
-                         @Nullable StoneType replacementStoneType, Block replacementBlock, List<ResourceKey<Level>> dimensions, List<StoneLayerOre> ores) implements IWorldgenObject<StoneLayer> {
+public record StoneLayer(ResourceLocation id, @Nullable StoneType type, Block block, int weight, StoneLayerRestrictions restrictions,
+                         List<ResourceKey<Level>> dimensions, List<StoneLayerOre> ores) implements IWorldgenObject<StoneLayer> {
     private static Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
     public static final Codec<StoneLayer> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(StoneLayer::id),
             Registry.BLOCK.byNameCodec().fieldOf("block").forGetter(StoneLayer::block),
             Codec.INT.fieldOf("weight").forGetter(StoneLayer::weight),
-            Codec.INT.optionalFieldOf("minY", Integer.MIN_VALUE).forGetter(StoneLayer::minY),
-            Codec.INT.optionalFieldOf("maxY", Integer.MAX_VALUE).forGetter(StoneLayer::maxY),
-            Registry.BLOCK.byNameCodec().optionalFieldOf("replacementBlock", Blocks.AIR).forGetter(StoneLayer::replacementBlock),
+            StoneLayerRestrictions.CODEC.optionalFieldOf("restrictions", StoneLayerRestrictions.EMPTY).forGetter(StoneLayer::restrictions),
             ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(StoneLayer::dimensions),
             StoneLayerOre.CODEC.listOf().optionalFieldOf("ores", List.of()).forGetter(StoneLayer::ores)
     ).apply(instance, StoneLayer::new));
 
-    public StoneLayer(ResourceLocation id, Block block, int weight, int minY, int maxY, Block replacementBlock, List<ResourceKey<Level>> dimensions, List<StoneLayerOre> ores){
-        this(id, block instanceof BlockStone stone ? stone.getType() : null, block, weight, minY, maxY, replacementBlock instanceof BlockStone stone ? stone.getType() : null, replacementBlock, dimensions, ores);
+    public StoneLayer(ResourceLocation id, Block block, int weight, StoneLayerRestrictions restrictions, List<ResourceKey<Level>> dimensions, List<StoneLayerOre> ores){
+        this(id, StoneType.fromBlock(block), block, weight, restrictions, dimensions, ores);
     }
 
     @Override

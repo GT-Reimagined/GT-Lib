@@ -26,7 +26,9 @@ public class StoneLayerBuilder {
     @Nullable
     private Integer maxY;
     @Nullable
-    private Block replacementBlock;
+    private Block topReplacementBlock;
+    @Nullable
+    private Block bottomReplacementBlock;
 
     private final ArrayList<ResourceKey<Level>> dimensions;
     private StoneLayerOre[] ores = new StoneLayerOre[0];
@@ -52,10 +54,15 @@ public class StoneLayerBuilder {
         return this;
     }
 
-    public final StoneLayerBuilder atHeight(int minY, int maxY, Block replacementBlock) {
+    public final StoneLayerBuilder minY(int minY, Block replacementBlock) {
         this.minY = minY;
+        this.bottomReplacementBlock = replacementBlock;
+        return this;
+    }
+
+    public final StoneLayerBuilder maxY(int maxY, Block replacementBlock) {
         this.maxY = maxY;
-        this.replacementBlock = replacementBlock;
+        this.topReplacementBlock = replacementBlock;
         return this;
     }
 
@@ -95,9 +102,12 @@ public class StoneLayerBuilder {
                 this.id,
                 this.stoneState,
                 this.weight,
-                this.minY == null ? Integer.MIN_VALUE : this.minY,
-                this.maxY == null ? Integer.MAX_VALUE : this.maxY,
-                this.replacementBlock == null ? Blocks.AIR : replacementBlock,
+                new StoneLayerRestrictions(
+                        this.minY != null ? this.minY : Integer.MIN_VALUE,
+                        this.maxY != null ? this.maxY : Integer.MAX_VALUE,
+                        this.topReplacementBlock != null ? topReplacementBlock : Blocks.AIR,
+                        this.bottomReplacementBlock != null ? this.bottomReplacementBlock : Blocks.AIR
+                ),
                 this.dimensions,
                 List.of(ores));
     }

@@ -194,4 +194,8 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
     public static StoneType get(String id) {
         return GTAPI.get(StoneType.class, id);
     }
+
+    public static StoneType fromBlock(Block block) {
+        return GTAPI.all(StoneType.class).stream().filter(s -> s.getState().getBlock() == block).findFirst().orElse(null);
+    }
 }

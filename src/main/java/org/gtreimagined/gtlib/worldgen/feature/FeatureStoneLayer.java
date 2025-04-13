@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
@@ -87,6 +89,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                 StoneType topStoneType = null;
                 boolean placedRock = false;
                 maxHeight = world.getHeightmapPos(Heightmap.Types.OCEAN_FLOOR_WG, pos.offset(i, 0, j)).getY() + 1; //+1 for placing rocks on top of the max height
+                int minHeight = world.getMinBuildHeight();
                 for (int tY = -63; tY < maxHeight; tY++) {
                     int offsetY = tY + 64;
                     lastMaterial = null;
@@ -96,27 +99,36 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                     StoneType rockType = null;
                     boolean setStone = false;
 
-                    //If we haven't placed an ore, and not trying to set the same state as existing, also doesn't work if the veins is either stone or deepslate, lets it fall back to vanilla for those
+                    //If we haven't placed an ore, and not trying to set the same state as existing.
                     if (!isAir) {
-                        if (layers[3].block() == Blocks.STONE || layers[3].block() == Blocks.DEEPSLATE){
-                            if (existing.getBlock() == Blocks.STONE){
-                                topStoneType = VanillaStoneTypes.STONE;
-                            } else if (existing.getBlock() == Blocks.DEEPSLATE){
-                                topStoneType = VanillaStoneTypes.DEEPSLATE;
+                        if (existing.getBlock() != layers[3].block()) {
+                            int y = offset.getY();
+                            var restrictions = layers[3].restrictions();
+                            Block toPlace = layers[3].block();
+                            StoneType type = layers[3].type();
+                            if (y >= restrictions.maxY() && restrictions.maxY() < maxHeight && restrictions.topReplacement() != Blocks.AIR) {
+                                if (!placeReplacement(y, restrictions.maxY(), restrictions.maxY() + 8, rand)){
+                                    toPlace = restrictions.topReplacement();
+                                    type = restrictions.topReplacementStone();
+                                }
                             }
-                            setStone = true;
-                        } else if (existing.getBlock() != layers[3].block()) {
-                            if (WorldGenHelper.setStone(world, offset, existing, layers[3].block().defaultBlockState())) {
+                            if (restrictions.minY() > minHeight && y <= restrictions.minY() + 8 && restrictions.bottomReplacement() != Blocks.AIR) {
+                                if (placeReplacement(y, restrictions.minY(), restrictions.minY() + 8, rand)){
+                                    toPlace = restrictions.bottomReplacement();
+                                    type = restrictions.bottomReplacementStone();
+                                }
+                            }
+                            if (WorldGenHelper.setStone(world, offset, existing, toPlace.defaultBlockState())) {
                                 setStone = true;
-                                if (layers[3].block() instanceof BlockOreStone stone) {
+                                if (toPlace instanceof BlockOreStone stone) {
                                     if (ROCK.get().get(stone.getMaterial()).asBlock() instanceof BlockSurfaceRock surfaceRock) {
                                         rockType = surfaceRock.getStoneType();
                                         topStoneType = rockType;
                                     }
                                 } else {
-                                    lastMaterial = layers[3].type() != null ? layers[3].type().getMaterial() : null;
-                                    if (layers[3].type() != null){
-                                        topStoneType = layers[3].type();
+                                    lastMaterial = type != null ? type.getMaterial() : null;
+                                    if (type != null){
+                                        topStoneType = type;
                                     }
                                 }
 
@@ -124,7 +136,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                         }
                     }
 
-                    if (setStone && !isAir && GTLibConfig.STONE_LAYER_ORES.get()) {
+                    if (setStone && GTLibConfig.STONE_LAYER_ORES.get()) {
                         if (layers[1] == layers[5]) {
                             for (StoneLayerOre ore : layers[3].ores()) {
                                 if (ore.canPlace(offset, rand, world) && WorldGenHelper.addOre(world, offset, ore.material(), layers[0] == layers[6])) {
@@ -179,5 +191,17 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
             }
         }
         return true;
+    }
+
+    public boolean placeReplacement(int y, int bottom, int top, Random random) {
+        if (y <= bottom) {
+            return true;
+        } else if (y >= top) {
+            return false;
+        } else {
+            double d0 = Mth.map((double) y, (double) bottom, (double) top, (double) 1.0F, (double) 0.0F);
+            return (double) random.nextFloat() < d0;
+
+        }
     }
 }
