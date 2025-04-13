@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
-    GTArmorType getAntimatterArmorType();
+    GTArmorType getGTArmorType();
 
     Material getMat();
 
@@ -49,7 +49,7 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
     }
 
     default void onGenericAddInformation(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
-        if (getAntimatterArmorType().getTooltip().size() != 0) tooltip.addAll(getAntimatterArmorType().getTooltip());
+        if (getGTArmorType().getTooltip().size() != 0) tooltip.addAll(getGTArmorType().getTooltip());
     }
 
     @Override
@@ -60,13 +60,13 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
     @Override
     default Texture[] getTextures() {
         List<Texture> textures = new ObjectArrayList<>();
-        int layers = getAntimatterArmorType().getOverlayLayers();
-        textures.add(new Texture(Ref.ID, "item/tool/".concat(getAntimatterArmorType().getId())));
+        int layers = getGTArmorType().getOverlayLayers();
+        textures.add(new Texture(Ref.ID, "item/tool/".concat(getGTArmorType().getId())));
         if (layers == 1)
-            textures.add(new Texture(Ref.ID, "item/tool/overlay/".concat(getAntimatterArmorType().getId())));
+            textures.add(new Texture(Ref.ID, "item/tool/overlay/".concat(getGTArmorType().getId())));
         if (layers > 1) {
             for (int i = 1; i <= layers; i++) {
-                textures.add(new Texture(Ref.ID, String.join("", "item/tool/overlay/", getAntimatterArmorType().getId(), "_", Integer.toString(i))));
+                textures.add(new Texture(Ref.ID, String.join("", "item/tool/overlay/", getGTArmorType().getId(), "_", Integer.toString(i))));
             }
         }
         return textures.toArray(new Texture[textures.size()]);
@@ -74,14 +74,14 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
 
     @Override
     default void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
-        if (this.getAntimatterArmorType().getSlot() == EquipmentSlot.HEAD) {
+        if (this.getGTArmorType().getSlot() == EquipmentSlot.HEAD) {
             String id = this.getId();
             GTItemModelBuilder builder = prov.getBuilder(id + "_probe");
             builder.parent(new ResourceLocation("minecraft", "item/handheld"));
             Texture[] textures = getTextures();
             for (int i = 0; i < textures.length + 1; i++) {
                 if (i == textures.length) {
-                    builder.texture("layer" + i, new Texture(Ref.ID, "item/tool/overlay/".concat(getAntimatterArmorType().getId()).concat("_probe")));
+                    builder.texture("layer" + i, new Texture(Ref.ID, "item/tool/overlay/".concat(getGTArmorType().getId()).concat("_probe")));
                     continue;
                 }
                 builder.texture("layer" + i, textures[i]);

@@ -52,7 +52,7 @@ public class BehaviourVanillaShovel implements IItemUse<IBasicGTTool> {
         } else if (state != null) {
             changedState = getToolModifiedState(state, c, "shovel_flatten");
             if (changedState != null) {
-                SoundEvent soundEvent = instance.getAntimatterToolType().getUseSound() == null ? SoundEvents.SHOVEL_FLATTEN : instance.getAntimatterToolType().getUseSound();
+                SoundEvent soundEvent = instance.getGTToolType().getUseSound() == null ? SoundEvents.SHOVEL_FLATTEN : instance.getGTToolType().getUseSound();
                 c.getLevel().playSound(c.getPlayer(), c.getClickedPos(), soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         }

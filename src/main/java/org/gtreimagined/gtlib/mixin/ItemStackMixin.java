@@ -30,7 +30,7 @@ public abstract class ItemStackMixin {
         }
         if (invoker.getItem() instanceof IGTArmor) {
             IGTArmor armor = (IGTArmor) invoker.getItem();
-            if (armor.getAntimatterArmorType().getSlot() == EquipmentSlot.HEAD && GTAPI.isModLoaded(Ref.MOD_TOP)) {
+            if (armor.getGTArmorType().getSlot() == EquipmentSlot.HEAD && GTAPI.isModLoaded(Ref.MOD_TOP)) {
                 if (invoker.getTag() != null && invoker.getTag().contains("theoneprobe") && invoker.getTag().getBoolean("theoneprobe")) {
                     if (entity instanceof Player) {
                         ItemStack probe = new ItemStack(RegistryUtils.getItemFromID(new ResourceLocation(Ref.MOD_TOP, "probe")));

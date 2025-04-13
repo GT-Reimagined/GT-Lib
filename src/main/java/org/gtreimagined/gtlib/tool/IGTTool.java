@@ -47,11 +47,11 @@ import static org.gtreimagined.gtlib.material.Material.NULL;
 
 public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDurability {
 
-    GTItemTier getAntimatterItemTier();
+    GTItemTier getGTItemTier();
 
     @Override
     default Tier getItemTier(){
-        return getAntimatterItemTier();
+        return getGTItemTier();
     }
 
     @Override
@@ -60,12 +60,12 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     }
 
     default Material getPrimaryMaterial(ItemStack stack) {
-        if (getAntimatterToolType().isSimple()) return getAntimatterItemTier().getPrimary();
+        if (getGTToolType().isSimple()) return getGTItemTier().getPrimary();
         return Material.get(getOrCreateDataTag(stack).getString(Ref.KEY_TOOL_DATA_PRIMARY_MATERIAL));
     }
 
     default Material getSecondaryMaterial(ItemStack stack) {
-        if (getAntimatterToolType().isSimple()) return getAntimatterItemTier().getSecondary();
+        if (getGTToolType().isSimple()) return getGTItemTier().getSecondary();
         return Material.get(getOrCreateDataTag(stack).getString(Ref.KEY_TOOL_DATA_SECONDARY_MATERIAL));
     }
 
@@ -113,7 +113,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
 
     @Override
     default boolean canCreate(TesseractItemContext context) {
-        return getAntimatterToolType().isPowered();
+        return getGTToolType().isPowered();
     }
 
     ItemStack asItemStack(Material primary, Material secondary);
@@ -128,12 +128,12 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     @Override
     default CompoundTag getOrCreateDataTag(ItemStack stack) {
         CompoundTag dataTag = stack.getTagElement(Ref.TAG_TOOL_DATA);
-        return dataTag != null ? dataTag : validateTag(stack, getAntimatterItemTier().getPrimary(), getAntimatterItemTier().getSecondary(), 0, 10000);
+        return dataTag != null ? dataTag : validateTag(stack, getGTItemTier().getPrimary(), getGTItemTier().getSecondary(), 0, 10000);
     }
 
     @Override
     default Tier getTier(ItemStack stack) {
-        if (getAntimatterToolType().isSimple()) return getAntimatterItemTier();
+        if (getGTToolType().isSimple()) return getGTItemTier();
         CompoundTag dataTag = getOrCreateDataTag(stack);
         Optional<GTItemTier> tier = GTItemTier.get(dataTag.getInt(Ref.KEY_TOOL_DATA_TIER));
         return tier.orElseGet(() -> resolveTierTag(dataTag));
@@ -142,7 +142,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     default ItemStack resolveStack(Material primary, Material secondary, long startingEnergy, long maxEnergy) {
         Item item = getItem();
         ItemStack stack = new ItemStack(item);
-        if (!getAntimatterToolType().isSimple() || getAntimatterToolType().isPowered()) validateTag(stack, primary, secondary, startingEnergy, maxEnergy);
+        if (!getGTToolType().isSimple() || getGTToolType().isPowered()) validateTag(stack, primary, secondary, startingEnergy, maxEnergy);
         if (!primary.has(MaterialTags.TOOLS)){
             return stack;
         }
@@ -159,11 +159,11 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
 
     default CompoundTag validateTag(ItemStack stack, Material primary, Material secondary, long startingEnergy, long maxEnergy) {
         CompoundTag dataTag = stack.getOrCreateTagElement(Ref.TAG_TOOL_DATA);
-        if (!getAntimatterToolType().isSimple()){
+        if (!getGTToolType().isSimple()){
             dataTag.putString(Ref.KEY_TOOL_DATA_PRIMARY_MATERIAL, primary.getId());
             dataTag.putString(Ref.KEY_TOOL_DATA_SECONDARY_MATERIAL, secondary.getId());
         }
-        if (!getAntimatterToolType().isPowered()) return dataTag;
+        if (!getGTToolType().isPowered()) return dataTag;
         validateEnergyTag(stack, startingEnergy, maxEnergy);
         return dataTag;
     }
@@ -186,7 +186,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
 
     default void onGenericFillItemGroup(CreativeModeTab group, NonNullList<ItemStack> list, long maxEnergy) {
         if (group != Ref.TAB_TOOLS) return;
-        if (getAntimatterToolType().isPowered()) {
+        if (getGTToolType().isPowered()) {
             ItemStack stack = asItemStack(NULL, NULL);
             IEnergyHandlerItem h = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).resolve().orElse(null);
             if (h != null){
@@ -196,14 +196,14 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
                 stack.setTag(h.getContainer().getTag());
                 list.add(stack);
             }
-        } else list.add(asItemStack(getAntimatterItemTier().getPrimary(), getAntimatterItemTier().getSecondary()));
+        } else list.add(asItemStack(getGTItemTier().getPrimary(), getGTItemTier().getSecondary()));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     default void onGenericAddInformation(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         Material primary = getPrimaryMaterial(stack);
         Material secondary = getSecondaryMaterial(stack);
-        if (!getAntimatterToolType().isSimple())
+        if (!getGTToolType().isSimple())
             tooltip.add(Utils.translatable("gtlib.tooltip.material_primary", primary.getDisplayName().getString()));
         if (secondary != NULL)
             tooltip.add(Utils.translatable("gtlib.tooltip.material_secondary", secondary.getDisplayName().getString()));
@@ -211,14 +211,14 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
         if (color != null){
             tooltip.add(Utils.translatable("gtlib.tooltip.dye_color", color.getName()));
         }
-        if (flag.isAdvanced() && getAntimatterToolType().isPowered())
+        if (flag.isAdvanced() && getGTToolType().isPowered())
             tooltip.add(Utils.translatable("gtlib.tooltip.energy").append(": " + getCurrentEnergy(stack) + " / " + getMaxEnergy(stack)));
         tooltip.add(Utils.translatable("gtlib.tooltip.durability", Utils.literal((stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GREEN)));
         IBasicGTTool.super.onGenericAddInformation(stack, tooltip, flag);
     }
 
     default void refillTool(ItemStack stack, Player player){
-        if (this.getAntimatterToolType().isPowered()) {
+        if (this.getGTToolType().isPowered()) {
             Streams.concat(player.getInventory().items.stream(), player.getInventory().offhand.stream(), CuriosHelper.getCuriosItems(player, "belt", "back")).forEach(s -> {
                 if (this.getCurrentEnergy(stack) < getMaxEnergy(stack)){
                     if (s.getItem() instanceof ItemBattery battery && battery.getTier().getIntegerId() >= this.getEnergyTier()){
@@ -241,8 +241,8 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
 
     default ItemStack getGenericContainerItem(final ItemStack oldStack) {
         ItemStack stack = oldStack.copy();
-        int amount = damage(stack, getAntimatterToolType().getCraftingDurability());
-        if (!getAntimatterToolType().isPowered()) { // Powered items can't enchant with Unbreaking
+        int amount = damage(stack, getGTToolType().getCraftingDurability());
+        if (!getGTToolType().isPowered()) { // Powered items can't enchant with Unbreaking
             int level = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, stack), j = 0;
             for (int k = 0; level > 0 && k < amount; k++) {
                 if (DigDurabilityEnchantment.shouldIgnoreDurabilityDrop(stack, level, Ref.RNG)) j++;
@@ -256,10 +256,10 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
             empty = l >= stack.getMaxDamage();
         }
         if (empty) {
-            if (!getAntimatterToolType().getBrokenItems().containsKey(this.getId())) {
+            if (!getGTToolType().getBrokenItems().containsKey(this.getId())) {
                 return ItemStack.EMPTY;
             }
-            ItemStack item = getAntimatterToolType().getBrokenItems().get(this.getId()).apply(oldStack);
+            ItemStack item = getGTToolType().getBrokenItems().get(this.getId()).apply(oldStack);
             return item;
         }
         return stack;
@@ -270,7 +270,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     }
 
     default int damage(ItemStack stack, int amount) {
-        if (!getAntimatterToolType().isPowered()) return amount;
+        if (!getGTToolType().isPowered()) return amount;
         IEnergyHandlerItem h = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).resolve().orElse(null);
         if (!(h instanceof ItemEnergyHandler)) {
             return amount;
@@ -302,7 +302,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
 
     default void onItemBreak(ItemStack stack, Player entity) {
         String name = this.getId();
-        GTToolType type = getAntimatterToolType();
+        GTToolType type = getGTToolType();
         if (!type.getBrokenItems().containsKey(name)) {
             return;
         }
@@ -320,13 +320,13 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     @Override
     default Texture[] getTextures() {
         List<Texture> textures = new ObjectArrayList<>();
-        int layers = getAntimatterToolType().getOverlayLayers();
-        textures.add(new Texture(getTextureDomain(), "item/tool/".concat(getAntimatterToolType().getId())));
+        int layers = getGTToolType().getOverlayLayers();
+        textures.add(new Texture(getTextureDomain(), "item/tool/".concat(getGTToolType().getId())));
         if (layers == 1)
-            textures.add(new Texture(getTextureDomain(), "item/tool/overlay/".concat(getAntimatterToolType().getId())));
+            textures.add(new Texture(getTextureDomain(), "item/tool/overlay/".concat(getGTToolType().getId())));
         if (layers > 1) {
             for (int i = 1; i <= layers; i++) {
-                textures.add(new Texture(getTextureDomain(), String.join("", "item/tool/overlay/", getAntimatterToolType().getId(), "_", Integer.toString(i))));
+                textures.add(new Texture(getTextureDomain(), String.join("", "item/tool/overlay/", getGTToolType().getId(), "_", Integer.toString(i))));
             }
         }
         return textures.toArray(new Texture[textures.size()]);

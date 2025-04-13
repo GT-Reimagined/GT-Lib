@@ -53,7 +53,7 @@ public class RecipeBuilders {
         public ItemStack build(CraftingContainer inv, MaterialRecipe.Result mats) {
             int dye = ((DyeColor) mats.mats.get("secondary")).getMaterialColor().col;
             IGTTool type = GTAPI.get(IGTTool.class, id, Ref.SHARED_ID);
-            ItemStack stack = type.asItemStack(type.getAntimatterItemTier().getPrimary(), NULL);
+            ItemStack stack = type.asItemStack(type.getGTItemTier().getPrimary(), NULL);
             stack.getOrCreateTagElement(Ref.TAG_TOOL_DATA).putInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR, dye);
             return stack;
         }

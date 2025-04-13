@@ -44,7 +44,7 @@ public class ClientEventsForge {
             ItemStack stack = player.getMainHandItem();
             if (!(stack.getItem() instanceof IGTTool)) return;
             IGTTool item = (IGTTool) stack.getItem();
-            if (item.getAntimatterToolType().getUseAction() != UseAnim.NONE && player.swinging) {
+            if (item.getGTToolType().getUseAction() != UseAnim.NONE && player.swinging) {
                 item.getItem().onUsingTick(stack, player, stack.getCount());
                 //player.swingProgress = player.prevSwingProgress;
             }

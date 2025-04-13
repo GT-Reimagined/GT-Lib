@@ -271,7 +271,7 @@ public class Utils {
     public static void damageStack(ItemStack stack, LivingEntity player) {
         int durability = 1;
         if (stack.getItem() instanceof IGTTool) {
-            durability = ((IGTTool) stack.getItem()).getAntimatterToolType().getUseDurability();
+            durability = ((IGTTool) stack.getItem()).getGTToolType().getUseDurability();
         }
         damageStack(durability, stack, player);
     }
@@ -280,7 +280,7 @@ public class Utils {
     public static void damageStack(ItemStack stack, InteractionHand hand, LivingEntity player) {
         int durability = 1;
         if (stack.getItem() instanceof IGTTool) {
-            durability = ((IGTTool) stack.getItem()).getAntimatterToolType().getUseDurability();
+            durability = ((IGTTool) stack.getItem()).getGTToolType().getUseDurability();
         }
         stack.hurtAndBreak(durability, player, p -> {
             p.broadcastBreakEvent(hand);

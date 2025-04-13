@@ -85,7 +85,7 @@ public class ForgeCommonEvents {
         if (!GTLibConfig.PLAY_CRAFTING_SOUNDS.get()) return;
         for (int i = 0; i < inv.getContainerSize(); i++) {
             if (inv.getItem(i).getItem() instanceof IGTTool tool) {
-                SoundEvent type = tool.getAntimatterToolType().getUseSound();
+                SoundEvent type = tool.getGTToolType().getUseSound();
                 if (type != null) {
                     player.playSound(type, 0.75F, 0.75F);
                 }

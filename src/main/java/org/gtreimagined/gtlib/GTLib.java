@@ -242,7 +242,7 @@ public class GTLib extends GTMod {
                     if (stacks.isEmpty()) return;
                     l.addAll(stacks);
                 });
-                GTAPI.all(IGTTool.class).stream().filter(t -> t.getAntimatterToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
+                GTAPI.all(IGTTool.class).stream().filter(t -> t.getGTToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
                 GTAPI.all(GTFluid.class).forEach(t -> l.add(t.getFluidBlock()));
                 GTAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
             });

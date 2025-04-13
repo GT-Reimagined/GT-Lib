@@ -53,7 +53,7 @@ public class BehaviourTreeFelling implements IBlockDestroyed<IBasicGTTool> {
         if (entity instanceof Player player && !world.isClientSide) {
             if (instance.genericIsCorrectToolForDrops(stack, state) && !player.isCrouching()) { // Only when player isn't shifting/crouching this ability activates
                 if (state.is(BlockTags.LOGS)) {
-                    Utils.treeLogging(instance.getAntimatterToolType(), stack, pos, player, world);
+                    Utils.treeLogging(instance.getGTToolType(), stack, pos, player, world);
                 }
             }
         }

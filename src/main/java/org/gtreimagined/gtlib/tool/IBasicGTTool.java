@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Set;
 
 public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
-    GTToolType getAntimatterToolType();
+    GTToolType getGTToolType();
 
     Tier getItemTier();
 
@@ -58,11 +58,11 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     }
 
     default Object2ObjectMap<String, IBehaviour<IBasicGTTool>> getBehaviours(){
-        return getAntimatterToolType().getBehaviours();
+        return getGTToolType().getBehaviours();
     }
 
     default Set<TagKey<Block>> getActualTags() {
-        return getAntimatterToolType().getToolTypes();
+        return getGTToolType().getToolTypes();
     }
 
     default CompoundTag getDataTag(ItemStack stack) {
@@ -78,7 +78,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     }
 
     default boolean genericIsCorrectToolForDrops(ItemStack stack, BlockState state) {
-        GTToolType type = this.getAntimatterToolType();
+        GTToolType type = this.getGTToolType();
         boolean containsEffectiveBlock = false;
         if (type.getEffectiveMaterials().contains(state.getMaterial())) {
             containsEffectiveBlock = true;
@@ -92,7 +92,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
                 break;
             }
         }
-        for (TagKey<Block> toolType : getAntimatterToolType().getToolTypes()) {
+        for (TagKey<Block> toolType : getGTToolType().getToolTypes()) {
             if (state.is(toolType)){
                 containsEffectiveBlock = true;
                 break;
@@ -102,11 +102,11 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     }
 
     default float getDefaultMiningSpeed(ItemStack stack){
-        return getTier(stack).getSpeed() * getAntimatterToolType().getMiningSpeedMultiplier();
+        return getTier(stack).getSpeed() * getGTToolType().getMiningSpeedMultiplier();
     }
 
     default void onGenericAddInformation(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
-        if (getAntimatterToolType().getTooltip().size() != 0) tooltip.addAll(getAntimatterToolType().getTooltip());
+        if (getGTToolType().getTooltip().size() != 0) tooltip.addAll(getGTToolType().getTooltip());
         tooltip.add(Utils.translatable("gtlib.tooltip.mining_level", getTier(stack).getLevel()).withStyle(ChatFormatting.YELLOW));
         tooltip.add(Utils.translatable("gtlib.tooltip.tool_speed", Utils.literal("" + getDefaultMiningSpeed(stack)).withStyle(ChatFormatting.LIGHT_PURPLE)));
         for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours().entrySet()) {
@@ -117,9 +117,9 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     }
 
     default boolean onGenericHitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker, float volume, float pitch) {
-        if (getAntimatterToolType().getUseSound() != null)
-            target.getCommandSenderWorld().playSound(null, target.getX(), target.getY(), target.getZ(), getAntimatterToolType().getUseSound(), SoundSource.HOSTILE, volume, pitch);
-        Utils.damageStack(getAntimatterToolType().getAttackDurability(), stack, attacker);
+        if (getGTToolType().getUseSound() != null)
+            target.getCommandSenderWorld().playSound(null, target.getX(), target.getY(), target.getZ(), getGTToolType().getUseSound(), SoundSource.HOSTILE, volume, pitch);
+        Utils.damageStack(getGTToolType().getAttackDurability(), stack, attacker);
         if (attacker instanceof Player player) refillTool(stack, player);
         return true;
     }
@@ -127,11 +127,11 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     @SuppressWarnings({"unchecked", "rawtypes"})
     default boolean onGenericBlockDestroyed(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         if (entity instanceof Player player) {
-            if (getAntimatterToolType().getUseSound() != null)
-                player.playNotifySound(getAntimatterToolType().getUseSound(), SoundSource.BLOCKS, 0.84F, 0.75F);
+            if (getGTToolType().getUseSound() != null)
+                player.playNotifySound(getGTToolType().getUseSound(), SoundSource.BLOCKS, 0.84F, 0.75F);
             boolean isToolEffective = genericIsCorrectToolForDrops(stack, state);
             if (state.getDestroySpeed(world, pos) != 0.0F) {
-                int damage = isToolEffective ? getAntimatterToolType().getUseDurability() : getAntimatterToolType().getUseDurability() + 1;
+                int damage = isToolEffective ? getGTToolType().getUseDurability() : getGTToolType().getUseDurability() + 1;
                 Utils.damageStack(damage, stack, entity);
             }
         }

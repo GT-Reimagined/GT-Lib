@@ -55,7 +55,7 @@ public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeather
     }
 
     @Override
-    public GTArmorType getAntimatterArmorType() {
+    public GTArmorType getGTArmorType() {
         return type;
     }
 

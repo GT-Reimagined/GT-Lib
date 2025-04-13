@@ -19,7 +19,7 @@ public class BehaviourPoweredDebug implements IItemUse<IBasicGTTool> {
 
     @Override
     public InteractionResult onItemUse(IBasicGTTool instance, UseOnContext c) {
-        if (instance.getAntimatterToolType().isPowered() && c.getLevel().getBlockState(c.getClickedPos()) == Blocks.REDSTONE_BLOCK.defaultBlockState() && c.getPlayer() != null && c.getPlayer().isCreative()) {
+        if (instance.getGTToolType().isPowered() && c.getLevel().getBlockState(c.getClickedPos()) == Blocks.REDSTONE_BLOCK.defaultBlockState() && c.getPlayer() != null && c.getPlayer().isCreative()) {
             ItemStack stack = c.getPlayer().getItemInHand(c.getHand());
             stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).ifPresent(i -> {
                 if (i.getCapacity() - i.getEnergy() <= 50000)

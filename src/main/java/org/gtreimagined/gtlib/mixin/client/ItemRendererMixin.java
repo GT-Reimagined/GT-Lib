@@ -20,7 +20,7 @@ public abstract class ItemRendererMixin {
 
     @Inject(method = "renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
     private void injectRenderGuiItemDecorations(Font fr, ItemStack stack, int xPosition, int yPosition, String text, CallbackInfo ci){
-        if (stack.getItem() instanceof IGTTool tool && tool.getAntimatterToolType().isPowered() && tool.isPoweredBarVisible(stack)) {
+        if (stack.getItem() instanceof IGTTool tool && tool.getGTToolType().isPowered() && tool.isPoweredBarVisible(stack)) {
             RenderSystem.disableDepthTest();
             RenderSystem.disableTexture();
             RenderSystem.disableBlend();

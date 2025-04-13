@@ -22,7 +22,7 @@ public class BehaviourWrenchSwitching implements IItemRightClick<IBasicGTTool> {
     public InteractionResultHolder<ItemStack> onRightClick(IBasicGTTool instance, Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if (player.isShiftKeyDown() && !level.isClientSide && instance instanceof IGTTool antimatterTool){
-            GTToolType toolType = instance.getAntimatterToolType() == WRENCH ? WRENCH_ALT : WRENCH;
+            GTToolType toolType = instance.getGTToolType() == WRENCH ? WRENCH_ALT : WRENCH;
             Item newWrench = toolType.getToolStack(antimatterTool.getPrimaryMaterial(stack)).getItem();
             ItemStack newStack = new ItemStack(newWrench);
             newStack.setTag(stack.getTag());

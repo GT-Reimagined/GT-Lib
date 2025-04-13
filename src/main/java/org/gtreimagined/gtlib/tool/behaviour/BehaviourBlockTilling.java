@@ -43,7 +43,7 @@ public class BehaviourBlockTilling implements IItemUse<IBasicGTTool> {
             if (blockstate == null) return InteractionResult.PASS;
             if ( MinecraftForge.EVENT_BUS.post(new UseHoeEvent(c))) return InteractionResult.PASS;
             Utils.damageStack(c.getItemInHand(), c.getPlayer());
-            SoundEvent soundEvent = instance.getAntimatterToolType().getUseSound() == null ? SoundEvents.HOE_TILL : instance.getAntimatterToolType().getUseSound();
+            SoundEvent soundEvent = instance.getGTToolType().getUseSound() == null ? SoundEvents.HOE_TILL : instance.getGTToolType().getUseSound();
             c.getLevel().playSound(c.getPlayer(), c.getClickedPos(), soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
             if (!c.getLevel().isClientSide) c.getLevel().setBlock(c.getClickedPos(), blockstate, 11);
             return InteractionResult.SUCCESS;

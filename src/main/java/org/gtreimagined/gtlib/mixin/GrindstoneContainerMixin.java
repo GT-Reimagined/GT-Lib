@@ -52,7 +52,7 @@ public abstract class GrindstoneContainerMixin extends AbstractContainerMenu {
                     int i1 = k + l + a.getMaxDamage() * 5 / 100;
                     int i = Math.max(a.getMaxDamage() - i1, 0);
                     ItemStack copy = this.mergeEnchants(a, b);
-                    if (tool.getAntimatterToolType().isPowered()) {
+                    if (tool.getGTToolType().isPowered()) {
                         this.resultSlots.setItem(0, ItemStack.EMPTY);
                         this.broadcastChanges();
                         ci.cancel();

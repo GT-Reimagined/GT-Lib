@@ -30,7 +30,7 @@ public abstract class LeavesBlockMixin extends Block {
         ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
         if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IGTTool) {
             IGTTool tool = (IGTTool) stack.getItem();
-            if (tool.getAntimatterToolType() == GTTools.BRANCH_CUTTER) {
+            if (tool.getGTToolType() == GTTools.BRANCH_CUTTER) {
                 ResourceLocation resourcelocation = this.getLootTable();
                 if (resourcelocation == BuiltInLootTables.EMPTY) {
                     return Collections.emptyList();

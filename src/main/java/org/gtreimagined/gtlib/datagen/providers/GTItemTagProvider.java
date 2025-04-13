@@ -7,7 +7,6 @@ import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.data.ForgeTags;
-import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.datagen.builder.GTTagBuilder;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
@@ -138,8 +137,8 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
             });
             processSubtags();
             GTAPI.all(IGTTool.class, tool -> {
-                this.tag(tool.getAntimatterToolType().getTag()).add(tool.getItem()).replace(replace);
-                this.tag(tool.getAntimatterToolType().getForgeTag()).add(tool.getItem()).replace(replace);
+                this.tag(tool.getGTToolType().getTag()).add(tool.getItem()).replace(replace);
+                this.tag(tool.getGTToolType().getForgeTag()).add(tool.getItem()).replace(replace);
             });
         }
 

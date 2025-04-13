@@ -27,7 +27,7 @@ public class IceBlockMixin extends HalfTransparentBlock {
     @Inject(method = "playerDestroy", at = @At(value = "HEAD"), cancellable = true)
     private void stopSpawnWater(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack, CallbackInfo info) {
         if (!stack.isEmpty() && stack.getItem() instanceof IGTTool) {
-            GTToolType type = ((IGTTool) stack.getItem()).getAntimatterToolType();
+            GTToolType type = ((IGTTool) stack.getItem()).getGTToolType();
             if (type == SAW) {
                 super.playerDestroy(worldIn, player, pos, state, te, stack);
                 info.cancel();

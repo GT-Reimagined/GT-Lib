@@ -93,12 +93,12 @@ public class MaterialSword extends SwordItem implements IGTTool {
 
     @NotNull
     @Override
-    public GTToolType getAntimatterToolType() {
+    public GTToolType getGTToolType() {
         return type;
     }
 
     @Override
-    public GTItemTier getAntimatterItemTier() {
+    public GTItemTier getGTItemTier() {
         return itemTier;
     }
 
@@ -167,7 +167,7 @@ public class MaterialSword extends SwordItem implements IGTTool {
         if (type.isPowered() && getCurrentEnergy(stack)  == 0){
             destroySpeed = 0.0f;
         }
-        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getAntimatterToolType().getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getGTToolType().getBehaviours().entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IDestroySpeed destroySpeed1)) continue;
             float i = destroySpeed1.getDestroySpeed(this, destroySpeed, stack, state);

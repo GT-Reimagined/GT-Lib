@@ -159,12 +159,12 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
 
         if (domain.equals(Ref.ID)) {
             GTAPI.all(IGTTool.class, t -> {
-                String customName = t.getAntimatterToolType().getCustomName().isEmpty() ? Utils.getLocalizedType(t.getAntimatterToolType()) : t.getAntimatterToolType().getCustomName();
-                if (t.getAntimatterToolType().isPowered()) {
-                    String defaultName = Utils.getLocalizedType(t.getAntimatterToolType());
+                String customName = t.getGTToolType().getCustomName().isEmpty() ? Utils.getLocalizedType(t.getGTToolType()) : t.getGTToolType().getCustomName();
+                if (t.getGTToolType().isPowered()) {
+                    String defaultName = Utils.getLocalizedType(t.getGTToolType());
                     add(t.getItem().getDescriptionId(), Utils.lowerUnderscoreToUpperSpacedRotated(t.getId()).replace(defaultName, customName));
                 } else {
-                    if (t.getAntimatterToolType().isSimple()){
+                    if (t.getGTToolType().isSimple()){
                         add(t.getItem().getDescriptionId(), Utils.getLocalizedType(t.getPrimaryMaterial(t.getItem().getDefaultInstance())) + " " + customName);
                     } else {
                         add(t.getItem().getDescriptionId(), customName);
@@ -289,7 +289,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                 add(item, type.getLang().apply(item.getMaterial()));
             });
             GTAPI.all(IGTArmor.class, t -> {
-                add(t.getItem().getDescriptionId(), Utils.getLocalizedType(t.getMat()) + " " + Utils.getLocalizedType(t.getAntimatterArmorType()));
+                add(t.getItem().getDescriptionId(), Utils.getLocalizedType(t.getMat()) + " " + Utils.getLocalizedType(t.getGTArmorType()));
             });
             customTranslations();
             pipeTranslations();
