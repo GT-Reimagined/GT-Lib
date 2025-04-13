@@ -73,12 +73,12 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     }
 
     public T asMetal(IMaterialTag... tags) {
-        flags(METAL);
+        flags(METAL, MOLTEN);
         return asSolid(tags);
     }
 
     public T asMetal(int meltingPoint, IMaterialTag... tags) {
-        flags(METAL);
+        flags(METAL, MOLTEN);
         return asSolid(meltingPoint, tags);
     }
 
