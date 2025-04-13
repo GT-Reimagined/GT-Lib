@@ -29,8 +29,6 @@ import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.recipe.map.RecipeBuilder;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
-import org.gtreimagined.gtlib.registration.ModRegistrar;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
@@ -167,13 +165,6 @@ public class GTLibDynamics {
     public static void onRecipeManagerBuild(Consumer<FinishedRecipe> objectIn) {
         GTLib.LOGGER.info("GTLib recipe manager running..");
         collectRecipes(new GTRecipeProvider(Ref.ID, "provider"), objectIn);
-        GTAPI.all(ModRegistrar.class, t -> {
-            for (String mod : t.modIds()) {
-                if (!GTAPI.isModLoaded(mod))
-                    return;
-            }
-            t.craftingRecipes(new GTRecipeProvider(Ref.ID, "Custom recipes"));
-        });
         GTLib.LOGGER.info("GTLib recipe manager done..");
     }
 
@@ -305,14 +296,6 @@ public class GTLibDynamics {
             l.init();
             RecipeBuilder.setCurrentModId(Ref.SHARED_ID);
         });
-        GTAPI.all(ModRegistrar.class, t -> {
-            for (String mod : t.modIds()) {
-                if (!GTAPI.isModLoaded(mod))
-                    return;
-            }
-            // t.antimatterRecipes(GTAPI.getRecipeRegistrate(Ref.ID));
-        });
-
         GTLib.LOGGER.info("Amount of GTLib Recipe Loaders registered: " + loaders.size());
     }
 
