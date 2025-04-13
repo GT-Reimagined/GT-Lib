@@ -69,6 +69,9 @@ public class SmallOreBuilder {
     }
 
     final public SmallOreBuilder withBiomes(String... biomes) {
+        if (this.biomes.isEmpty() && biomes.length > 0){
+            this.biomeBlacklist = false;
+        }
         Collections.addAll(this.biomes, biomes);
         return this;
     }
