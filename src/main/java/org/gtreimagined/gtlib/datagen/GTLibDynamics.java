@@ -286,11 +286,6 @@ public class GTLibDynamics {
         for (BedrockVein vein : bedrockVeins){
             DynamicDataPack.addWorldgenObject(vein);
         }
-        if (GTLibConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.get()) {
-            GTLibConfig.REGENERATE_DEFAULT_WORLDGEN_JSONS.set(false);
-            GTLibConfig.CONFIG_COMMON.save();
-            GTLibConfig.CONFIG_COMMON.reload();
-        }
         loaders.forEach((r, l) -> {
             RecipeBuilder.setCurrentModId(r.getNamespace());
             l.init();
