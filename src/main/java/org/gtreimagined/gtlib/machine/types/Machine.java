@@ -28,7 +28,7 @@ import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
 import org.gtreimagined.gtlib.gui.widget.BackgroundWidget;
-import org.gtreimagined.gtlib.integration.jeirei.AntimatterJEIREIPlugin;
+import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.IMachineColorHandlerBlock;
 import org.gtreimagined.gtlib.machine.IMachineColorHandlerItem;
@@ -382,7 +382,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 if (s.isEmpty()){
                     for (int i = 0; i < tiers.size(); i++) {
                         Tier tier = tiers.get(i);
-                        if (i == 0 && r.getGui() == null && !AntimatterJEIREIPlugin.containsCategory(r)){
+                        if (i == 0 && r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)){
                             GTAPI.registerJEICategory(r, this.guiData, this, tier, false);
                         } else {
                             GTAPI.registerJEICategoryWorkstation(r, this, tier);
@@ -392,7 +392,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 }
                 Tier t = GTAPI.get(Tier.class, s);
                 //If the recipe map has another GUI present don't register it.
-                if (r.getGui() == null && !AntimatterJEIREIPlugin.containsCategory(r)) {
+                if (r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)) {
                     GTAPI.registerJEICategory(r, this.guiData, this, t, false);
                 } else {
                     GTAPI.registerJEICategoryWorkstation(r, this, t);

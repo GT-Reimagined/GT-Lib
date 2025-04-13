@@ -48,7 +48,7 @@ public class ScreenMachine<T extends BlockEntityMachine<T>, U extends ContainerM
             container.getTile().fluidHandler.ifPresent(t -> {
                 FluidStack stack = fl.dir == FluidHandler.FluidDirection.INPUT ? t.getInputTanks().getFluidInTank(fl.getSlotIndex()) : t.getOutputTanks().getFluidInTank(fl.getSlotIndex());
                 if (!stack.isEmpty()) {
-                    AntimatterJEIREIPlugin.uses(stack,input.getTranslationKey().equals("key.keyboard.u"));
+                    GTLibXEIPlugin.uses(stack,input.getTranslationKey().equals("key.keyboard.u"));
                 }
             });
         }

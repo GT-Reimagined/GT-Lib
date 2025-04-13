@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.capability.Dispatch;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.widget.InfoRenderWidget;
-import org.gtreimagined.gtlib.integration.jeirei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import org.gtreimagined.gtlib.pipe.BlockCable;
 import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.pipe.types.PipeType;

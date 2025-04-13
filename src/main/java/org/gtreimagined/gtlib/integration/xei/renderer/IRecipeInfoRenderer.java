@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.jeirei.renderer;
+package org.gtreimagined.gtlib.integration.xei.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.gtreimagined.gtlib.recipe.IRecipe;

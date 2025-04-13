@@ -21,7 +21,7 @@ import org.gtreimagined.gtlib.gui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.integration.jeirei.renderer.IRecipeInfoRenderer;
+import org.gtreimagined.gtlib.integration.xei.renderer.IRecipeInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;

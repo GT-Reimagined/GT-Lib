@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.gui.widget.ProgressWidget;
-import org.gtreimagined.gtlib.integration.jeirei.AntimatterJEIREIPlugin;
+import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.machine.ITooltipArgs;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -71,7 +71,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     public final void setStructurePattern(Pattern... patterns) {
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
-            AntimatterJEIREIPlugin.registerPatternForJei(this, Arrays.stream(patterns).collect(Collectors.toList()));
+            GTLibXEIPlugin.registerPatternForJei(this, Arrays.stream(patterns).collect(Collectors.toList()));
         }
     }
 
@@ -82,7 +82,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     public final void setStructurePattern(Tier tier,  Pattern... patterns) {
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
-            AntimatterJEIREIPlugin.registerPatternForJei(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
+            GTLibXEIPlugin.registerPatternForJei(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
         }
     }
 

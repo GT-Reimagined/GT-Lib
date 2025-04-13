@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.cover.CoverOutput;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.integration.jeirei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.machine.types.TankMachine;
 import org.gtreimagined.gtlib.util.FluidUtils;

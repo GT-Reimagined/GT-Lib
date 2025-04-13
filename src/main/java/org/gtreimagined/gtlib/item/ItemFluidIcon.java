@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
-import org.gtreimagined.gtlib.integration.jeirei.AntimatterJEIREIPlugin;
+import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -66,7 +66,7 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
             str.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(fluid.getFluid())).withStyle(ChatFormatting.RED));
             String liquid = !FluidUtils.isFluidGaseous(fluid.getFluid()) ? "liquid" : "gas";
             str.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
-            AntimatterJEIREIPlugin.addModDescriptor(str, fluid);
+            GTLibXEIPlugin.addModDescriptor(str, fluid);
             tooltip.addAll(str);
         });
     }

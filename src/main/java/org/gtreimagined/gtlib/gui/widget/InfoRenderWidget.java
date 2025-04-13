@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
-import org.gtreimagined.gtlib.integration.jeirei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import net.minecraft.client.Minecraft;
 import tesseract.TesseractGraphWrappers;
 import tesseract.api.ITickingController;

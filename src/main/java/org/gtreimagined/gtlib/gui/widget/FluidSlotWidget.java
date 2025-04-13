@@ -10,7 +10,7 @@ import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.Widget;
 import org.gtreimagined.gtlib.gui.event.SlotClickEvent;
-import org.gtreimagined.gtlib.integration.jeirei.AntimatterJEIREIPlugin;
+import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
 import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.Utils;
@@ -88,7 +88,7 @@ public class FluidSlotWidget extends Widget {
         str.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(this.stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidUtils.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";
         str.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
-        AntimatterJEIREIPlugin.addModDescriptor(str, this.stack);
+        GTLibXEIPlugin.addModDescriptor(str, this.stack);
         drawHoverText(str, (int) mouseX, (int) mouseY, Minecraft.getInstance().font, stack);
     }
 
@@ -99,7 +99,7 @@ public class FluidSlotWidget extends Widget {
         InputConstants.Key input = InputConstants.getKey(keyCode, scanCode);
         if (!(input.getName().equals("key.keyboard.u") || input.getName().equals("key.keyboard.r")))
             return false;
-        AntimatterJEIREIPlugin.uses(stack, input.getName().equals("key.keyboard.u"));
+        GTLibXEIPlugin.uses(stack, input.getName().equals("key.keyboard.u"));
         return true;
     }
 

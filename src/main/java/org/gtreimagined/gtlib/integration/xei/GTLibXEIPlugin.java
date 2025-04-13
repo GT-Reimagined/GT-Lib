@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.jeirei;
+package org.gtreimagined.gtlib.integration.xei;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 import static org.gtreimagined.gtlib.gui.SlotType.*;
 import static org.gtreimagined.gtlib.machine.MachineFlag.RECIPE;
 
-public class AntimatterJEIREIPlugin{
+public class GTLibXEIPlugin {
     private static final List<Consumer<List<ItemLike>>> ITEMS_TO_HIDE = new ArrayList<>();
     private static final List<Consumer<List<Fluid>>> FLUIDS_TO_HIDE = new ArrayList<>();
     @Getter
