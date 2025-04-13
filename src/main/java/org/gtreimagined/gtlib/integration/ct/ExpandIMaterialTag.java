@@ -5,6 +5,6 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import org.gtreimagined.gtlib.material.IMaterialTag;
 
 @ZenRegister
-@NativeTypeRegistration(value = IMaterialTag.class, zenCodeName = "mods.antimatter.IMaterialTag")
+@NativeTypeRegistration(value = IMaterialTag.class, zenCodeName = "mods.gtlib.IMaterialTag")
 public class ExpandIMaterialTag {
 }

@@ -7,7 +7,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@ZenCodeType.Name("mods.antimatter.Machines")
+@ZenCodeType.Name("mods.gtlib.Machines")
 public class RecipeManager implements IRecipeManager<Recipe> {
 
     @Override

@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.material.Material;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
-@NativeTypeRegistration(value = Material.class, zenCodeName = "mods.antimatter.Material")
+@NativeTypeRegistration(value = Material.class, zenCodeName = "mods.gtlib.Material")
 public class ExpandMaterial {
     @ZenCodeType.Method
     @ZenCodeType.Getter("domain")

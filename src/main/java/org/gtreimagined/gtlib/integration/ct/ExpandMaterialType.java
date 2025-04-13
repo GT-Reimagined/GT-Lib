@@ -5,6 +5,6 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistratio
 import org.gtreimagined.gtlib.material.MaterialType;
 
 @ZenRegister
-@NativeTypeRegistration(value = MaterialType.class, zenCodeName = "mods.antimatter.MaterialType")
+@NativeTypeRegistration(value = MaterialType.class, zenCodeName = "mods.gtlib.MaterialType")
 public class ExpandMaterialType {
 }
