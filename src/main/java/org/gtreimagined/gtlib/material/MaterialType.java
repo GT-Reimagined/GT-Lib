@@ -56,7 +56,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     @Getter
     protected final BiMap<Material, Supplier<Item>> replacements = HashBiMap.create();
     protected final Set<IMaterialTag> dependents = new ObjectLinkedOpenHashSet<>();
-    //since we have two instances stored in antimatter.
+    //since we have two instances stored in gt lib.
     protected boolean hasRegistered;
     protected boolean ignoreTextureSets = false;
 

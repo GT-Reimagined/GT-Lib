@@ -57,14 +57,14 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
         this.replace = replace;
     }
 
-    private void antimatterTags() {
+    private void gtLibTags() {
         this.tag(TagUtils.getForgelikeItemTag("pistons")).add(Items.PISTON, Items.STICKY_PISTON);
         this.tag(ForgeTags.GEMS_QUARTZ_ALL).addTag(GEM.getMaterialTag(Quartz));
         this.tag(TagUtils.getForgelikeItemTag("stone")).add(Items.BASALT);
     }
 
     protected void processTags(String domain) {
-        if (domain.equals(Ref.ID)) antimatterTags();
+        if (domain.equals(Ref.ID)) gtLibTags();
         TagKey<Block> blockTag = BLOCK.getTag(), frameTag = FRAME.getTag();
         this.copy(TagUtils.getForgelikeBlockTag("ores"), TagUtils.getForgelikeItemTag("ores"));
         this.copy(TagUtils.getForgelikeBlockTag("stone"), TagUtils.getForgelikeItemTag("stone"));

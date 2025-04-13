@@ -140,7 +140,7 @@ public class GTLibConfig {
             BASIC_MACHINE_MODELS = general.addBool("basic_machine_models", false, "Enable flat machine related models (5U Style) - Default: false");
             SHOW_ALL_MATERIAL_ITEMS = general.addBool("show_all_material_items", false, "Show all items in JEI, even ones that are unobtainable - Default: false");
             SHOW_ALL_FLUID_CELLS = general.addBool("show_all_fluid_cells", false, "Show all fluid cells in JEI - Default: false");
-            ADD_REI_GROUPS = general.addBool("add_rei_groups", false, "Add collapsable groups for various antimatter material items to rei - Default: false");
+            ADD_REI_GROUPS = general.addBool("add_rei_groups", false, "Add collapsable groups for various gt material items to rei - Default: false");
             GROUP_ORES_ONLY = general.addBool("group_ores_only", true, "Only adds collapsable groups for ores and rocks, requires ADD_REI_GROUPS to be true - Default: true");
             SHOW_ALL_ORES = general.addBool("show_all_ores", false, "Show all ore variants in jei/rei, not just stone variants - Default: false");
             SHOW_ROCKS = general.addBool("show_rocks", false, "Show all block versions of rocks in jei/rei - Default: false");

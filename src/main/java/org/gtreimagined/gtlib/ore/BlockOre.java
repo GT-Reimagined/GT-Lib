@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.ore;
 
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -61,7 +62,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (stoneType.getId().equals("stone")) items.add(new ItemStack(this)); //todo move stonetype to antimatter
+        if (stoneType == VanillaStoneTypes.STONE) items.add(new ItemStack(this));
     }
 
     //    @Override

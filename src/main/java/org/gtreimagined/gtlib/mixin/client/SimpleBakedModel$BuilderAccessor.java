@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(SimpleBakedModel.Builder.class)
 public interface SimpleBakedModel$BuilderAccessor {
     @Invoker("<init>")
-    static SimpleBakedModel.Builder antimatter$create(boolean hasAmbientOcclusion, boolean usesBlockLight, boolean isGui3d, ItemTransforms transforms, ItemOverrides overrides) {
+    static SimpleBakedModel.Builder gtlib$create(boolean hasAmbientOcclusion, boolean usesBlockLight, boolean isGui3d, ItemTransforms transforms, ItemOverrides overrides) {
         throw new RuntimeException("mixin failed!");
     }
 }

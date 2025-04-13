@@ -72,8 +72,8 @@ public class ForgeCommonEvents {
     @SubscribeEvent
     public static void onContainerOpen(PlayerContainerEvent.Open ev) {
         if (ev.getPlayer() instanceof ServerPlayer serverPlayer) {
-            if (ev.getContainer() instanceof IGTContainer antimatterContainer) {
-                antimatterContainer.listeners().add(serverPlayer);
+            if (ev.getContainer() instanceof IGTContainer gtContainer) {
+                gtContainer.listeners().add(serverPlayer);
             }
         }
     }

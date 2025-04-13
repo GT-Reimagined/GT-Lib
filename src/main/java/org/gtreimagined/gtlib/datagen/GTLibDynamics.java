@@ -150,7 +150,7 @@ public class GTLibDynamics {
     }
 
     /**
-     * Collects all antimatter registered recipes, pushing them to @rec.
+     * Collects all gt lib registered recipes, pushing them to @rec.
      *
      * @param rec consumer for IFinishedRecipe.
      */

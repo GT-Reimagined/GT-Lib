@@ -83,7 +83,7 @@ public class ModelUtils {
 
 
     public static SimpleBakedModel.Builder createSimpleModelBuilder(boolean smoothLighting, boolean sideLit, boolean isShadedInGui, ItemTransforms transforms, ItemOverrides overrides){
-        return SimpleBakedModel$BuilderAccessor.antimatter$create(smoothLighting, sideLit, isShadedInGui, transforms, overrides);
+        return SimpleBakedModel$BuilderAccessor.gtlib$create(smoothLighting, sideLit, isShadedInGui, transforms, overrides);
     }
 
     public static Function<ResourceLocation, UnbakedModel> getDefaultModelGetter(){
@@ -108,8 +108,8 @@ public class ModelUtils {
     }
 
     public static List<BakedQuad> getQuadsFromBaked(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos){
-        if (model instanceof IGTBakedModel antimatterBaked){
-            return antimatterBaked.getQuads(state, side, rand, level, pos);
+        if (model instanceof IGTBakedModel gtBaked){
+            return gtBaked.getQuads(state, side, rand, level, pos);
         } else {
             IModelData data = model.getModelData(level, pos, state, EmptyModelData.INSTANCE);
             return model.getQuads(state, side, rand, data);

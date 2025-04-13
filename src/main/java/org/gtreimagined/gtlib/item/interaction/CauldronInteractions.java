@@ -8,7 +8,7 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 
 /**
- * All antimatter cauldron interactions.
+ * All gt lib cauldron interactions.
  */
 public class CauldronInteractions {
 

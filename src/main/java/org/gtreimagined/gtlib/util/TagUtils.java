@@ -116,7 +116,7 @@ public class TagUtils {
 
     /**
      * NamedToContent
-     * In order to use a named tag in recipes outside antimatter(e.g. for furnace recipes)
+     * In order to use a named tag in recipes outside gt lib(e.g. for furnace recipes)
      * you have to convert the tag into a safe one, this method returns a safe tag.
      *
      * @param tag
@@ -130,7 +130,7 @@ public class TagUtils {
 
     /**
      * NamedToContent
-     * In order to use a named tag in recipes outside antimatter(e.g. for furnace recipes)
+     * In order to use a named tag in recipes outside gt lib(e.g. for furnace recipes)
      * you have to convert the tag into a safe one, this method returns a safe tag.
      *
      * @param tag
