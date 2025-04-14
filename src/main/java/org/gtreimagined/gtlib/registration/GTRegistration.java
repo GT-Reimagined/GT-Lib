@@ -8,7 +8,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.event.MaterialEvent;
 import org.gtreimagined.gtlib.fluid.GTFluid;
-import org.gtreimagined.gtlib.integration.kubejs.AntimatterKubeJS;
+import org.gtreimagined.gtlib.integration.kubejs.GTLibKubeJS;
 import org.gtreimagined.gtlib.recipe.condition.ConfigCondition;
 import org.gtreimagined.gtlib.recipe.condition.TomlConfigCondition;
 import org.gtreimagined.gtlib.tool.GTToolType;
@@ -74,7 +74,7 @@ public final class GTRegistration {
                 MaterialDataInit.onMaterialEvent(event);
                 list.forEach(r -> r.onMaterialEvent(event));
                 if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
-                    AntimatterKubeJS.loadMaterialEvent(event);
+                    GTLibKubeJS.loadMaterialEvent(event);
                 }
                 Data.postInit();
             }

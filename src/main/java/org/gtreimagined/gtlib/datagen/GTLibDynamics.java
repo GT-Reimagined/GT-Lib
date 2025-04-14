@@ -20,7 +20,7 @@ import org.gtreimagined.gtlib.event.GTCraftingEvent;
 import org.gtreimagined.gtlib.event.GTLoaderEvent;
 import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.event.GTWorldGenEvent;
-import org.gtreimagined.gtlib.integration.kubejs.AMWorldEvent;
+import org.gtreimagined.gtlib.integration.kubejs.GTWorldEvent;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
 import org.gtreimagined.gtlib.integration.kubejs.RecipeLoaderEventKubeJS;
 import org.gtreimagined.gtlib.recipe.IRecipe;
@@ -251,7 +251,7 @@ public class GTLibDynamics {
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
-            AMWorldEvent ev = new AMWorldEvent();
+            GTWorldEvent ev = new GTWorldEvent();
             ev.post(ScriptType.SERVER, "gtlib.worldgen");
             veins.addAll(ev.VEINS);
             stoneLayers.addAll(ev.STONE_LAYERS);

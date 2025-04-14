@@ -47,7 +47,7 @@ public class KubeJSRegistrar extends GTMod {
     @Override
     public void onRegistrationEvent(RegistrationEvent event, Dist side) {
         if (event == RegistrationEvent.DATA_INIT){
-            AntimatterKubeJS.loadStartup();
+            GTLibKubeJS.loadStartup();
         }
     }
 

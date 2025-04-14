@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class AMWorldEvent extends EventJS {
+public class GTWorldEvent extends EventJS {
 
     public final List<Vein> VEINS = new ObjectArrayList<>();
     public final List<StoneLayer> STONE_LAYERS = new ObjectArrayList<>();

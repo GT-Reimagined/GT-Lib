@@ -8,9 +8,9 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.resources.ResourceLocation;
 
-public class AMMaterialEvent extends EventJS {
+public class GTMaterialEvent extends EventJS {
     final MaterialEvent event;
-    public AMMaterialEvent(MaterialEvent event){
+    public GTMaterialEvent(MaterialEvent event){
         this.event = event;
     }
 

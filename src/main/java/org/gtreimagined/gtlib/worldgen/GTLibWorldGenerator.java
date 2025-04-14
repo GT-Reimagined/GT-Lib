@@ -85,7 +85,7 @@ public class GTLibWorldGenerator {
         GTLib.LOGGER.info("GTLib WorldGen Initialization Stage...");
         GTAPI.onRegistration(RegistrationEvent.WORLDGEN_INIT);
         //if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
-        //    AntimatterKubeJS.loadWorldgenScripts();
+        //    GTLibKubeJS.loadWorldgenScripts();
         //}
     }
 

@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.SoundType;
 import java.util.Map;
 import java.util.Objects;
 
-public class AMCreationEvent extends EventJS {
+public class GTCreationEvent extends EventJS {
     public static final Map<String, SoundType> SOUND_TYPE_REGISTRY = new Object2ObjectOpenHashMap<>();
     public StoneType createStoneType(String id, String material, String texture, SoundType soundType, boolean generateBlock) {
         return GTAPI.register(StoneType.class, new StoneType(Ref.MOD_KJS, id, Material.get(material), new Texture(texture), soundType, generateBlock));

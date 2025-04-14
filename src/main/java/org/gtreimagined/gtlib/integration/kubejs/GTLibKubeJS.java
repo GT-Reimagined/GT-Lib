@@ -8,7 +8,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.event.MaterialEvent;
 import net.minecraft.resources.ResourceLocation;
 
-public class AntimatterKubeJS extends KubeJSPlugin {
+public class GTLibKubeJS extends KubeJSPlugin {
 
     @Override
     public void addBindings(BindingsEvent event) {
@@ -21,11 +21,11 @@ public class AntimatterKubeJS extends KubeJSPlugin {
     }
 
     public static void loadStartup(){
-        AMCreationEvent.init();
-        new AMCreationEvent().post(ScriptType.STARTUP, "gtlib.creation");
+        GTCreationEvent.init();
+        new GTCreationEvent().post(ScriptType.STARTUP, "gtlib.creation");
     }
 
     public static void loadMaterialEvent(MaterialEvent event){
-        new AMMaterialEvent(event).post(ScriptType.STARTUP, "gtlib.material_event");
+        new GTMaterialEvent(event).post(ScriptType.STARTUP, "gtlib.material_event");
     }
 }
