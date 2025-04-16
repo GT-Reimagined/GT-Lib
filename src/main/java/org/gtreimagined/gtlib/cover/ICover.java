@@ -201,7 +201,11 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
 
     default ItemStack getDroppedStack() {
         ItemStack stack =  getItem();
-        serializeStack(stack.getTag());
+        CompoundTag nbt = stack.getTag() == null ? new CompoundTag() : stack.getTag();
+        serializeStack(nbt);
+        if (!nbt.isEmpty()){
+            stack.setTag(nbt);
+        }
         return stack;
     }
 
