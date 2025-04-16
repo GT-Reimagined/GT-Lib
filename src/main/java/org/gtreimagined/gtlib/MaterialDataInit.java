@@ -41,7 +41,7 @@ public class MaterialDataInit {
 
         event.setMaterial(GTLibMaterials.Glowstone).asDust();
         event.setMaterial(GTLibMaterials.Sugar).asDust();
-        event.setMaterial(GTLibMaterials.Wood).asDust(PLATE, MaterialTags.RUBBERTOOLS, MaterialTags.WOOD)
+        event.setMaterial(GTLibMaterials.Wood).asDust(PLATE, MaterialTags.RUBBERTOOLS, MaterialTags.WOOD, MaterialTags.MINED_WITH_AXE)
                 .tool().toolDamage(WOOD.getAttackDamageBonus()).toolSpeed(WOOD.getSpeed()).toolDurability(192).toolQuality(WOOD.getLevel()).allowedToolTypes(List.of(GTTools.SOFT_HAMMER)).build();
         event.setMaterial(GTLibMaterials.Blaze).asDust().addHandleStat(-10, -0.5F, of(Enchantments.FIRE_ASPECT, 1));
 

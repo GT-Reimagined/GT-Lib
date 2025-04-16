@@ -22,6 +22,7 @@ public class MaterialTags {
 
     public static final MaterialTag RUBBERTOOLS = new MaterialTag("rubber_tools");
     public static final MaterialTag WOOD = new MaterialTag("wood");
+    public static final MaterialTag MINED_WITH_AXE = new MaterialTag("mined_with_axe");
     public static final MaterialTag HAS_CUSTOM_SMELTING = new MaterialTag("has_custom_smelting");
     public static final MaterialTag TRANSPARENT = new MaterialTag("transparent");
     public static final MaterialTag METAL = new MaterialTag("metal");

@@ -106,20 +106,17 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
             GTAPI.all(BlockStorage.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
                 String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
-                if (block.getMaterial() == GTLibMaterials.Wood){
+                if (block.getMaterial().has(MaterialTags.MINED_WITH_AXE)){
                     this.tag(GTTools.AXE.getToolType()).add(block);
-                } else if (block.getType() == GTMaterialTypes.FRAME){
-                    this.tag(GTTools.WRENCH.getToolType()).add(block).replace(replace);
                 } else {
                     this.tag(GTTools.PICKAXE.getToolType()).add(block);
                 }
                 this.tag(getForgelikeBlockTag(name)).add(block);
-                // if (block.getType() == FRAME) add climbable tag in 1.16
             });
             GTAPI.all(BlockFrame.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
                 String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
-                if (block.getMaterial() == GTLibMaterials.Wood){
+                if (block.getMaterial().has(MaterialTags.MINED_WITH_AXE)){
                     this.tag(GTTools.AXE.getToolType()).add(block);
                 } else {
                     this.tag(GTTools.WRENCH.getToolType()).add(block).replace(replace);
@@ -132,7 +129,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
             });
             GTAPI.all(BlockPipe.class, pipe -> {
                 this.tag(pipe.getToolType().getToolType()).add(pipe);
-                if (pipe.getType().getMaterial() == GTLibMaterials.Wood){
+                if (pipe.getType().getMaterial().has(MaterialTags.MINED_WITH_AXE)){
                     this.tag(GTTools.AXE.getToolType()).add(pipe);
                 }
             });
