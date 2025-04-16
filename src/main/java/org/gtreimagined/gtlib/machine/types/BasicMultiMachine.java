@@ -13,6 +13,7 @@ import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.structure.Pattern;
 import org.gtreimagined.gtlib.structure.PatternBuilder;
+import org.gtreimagined.gtlib.structure.PonderUtils;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -72,6 +73,9 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
             GTLibXEIPlugin.registerPatternForJei(this, Arrays.stream(patterns).collect(Collectors.toList()));
+            this.tiers.forEach(t -> {
+                PonderUtils.registerMultiblock(this, t, Arrays.asList(patterns));
+            });
         }
     }
 
@@ -83,6 +87,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
             GTLibXEIPlugin.registerPatternForJei(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
+            PonderUtils.registerMultiblock(this, tier, Arrays.asList(patterns));
         }
     }
 

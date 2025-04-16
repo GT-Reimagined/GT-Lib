@@ -1,14 +1,12 @@
-package org.gtreimagined.gtlib.integration.create.client;
+package org.gtreimagined.gtlib.structure;
 
-import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry;
-import com.simibubi.create.foundation.ponder.Selection;
+import net.createmod.ponder.foundation.PonderRegistry;
+import net.createmod.ponder.foundation.PonderStoryBoardEntry;
+import net.createmod.ponder.foundation.Selection;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.BasicMultiMachine;
-import org.gtreimagined.gtlib.structure.BlockInfo;
-import org.gtreimagined.gtlib.structure.Pattern;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PonderIntegration {
+public class PonderUtils {
 
     public static void registerMultiblock(BasicMultiMachine<?> machine, Tier t, List<Pattern> patterns){
         for (int i = 0; i < patterns.size(); i++) {

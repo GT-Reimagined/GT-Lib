@@ -9,7 +9,7 @@ import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
-import org.gtreimagined.gtlib.integration.create.client.PonderIntegration;
+import org.gtreimagined.gtlib.structure.PonderUtils;
 import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.rei.REIUtils;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -106,9 +106,6 @@ public class GTLibXEIPlugin {
     }
     public static void registerPatternForJei(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
         STRUCTURES.put(machine.getBlockState(tier), patternList);
-        if (GTAPI.isModLoaded(Ref.MOD_CREATE) && FMLEnvironment.dist.isClient()){
-            PonderIntegration.registerMultiblock(machine, tier, patternList);
-        }
     }
 
     public static String intToSuperScript(long i){
