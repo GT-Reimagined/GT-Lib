@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ZenRegister
-@Name("mods.gtlib.GTRecipeBuilder")
+@Name("mods.gtlib.RecipeBuilder")
 public class CTRecipeBuilder {
     RecipeBuilder recipeBuilder;
     RecipeManager manager;
