@@ -27,6 +27,7 @@ import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.integration.jei.category.MultiMachineInfoCategory;
 import org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory;
+import org.gtreimagined.gtlib.integration.jei.category.SmallOreCategory;
 import org.gtreimagined.gtlib.integration.jei.category.VeinCategory;
 import org.gtreimagined.gtlib.integration.jei.extension.JEIMaterialRecipeExtension;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
@@ -36,6 +37,7 @@ import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.Utils;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -157,6 +159,7 @@ public class GTLibJEIPlugin implements IModPlugin {
         // multi machine
         registry.addRecipeCategories(new MultiMachineInfoCategory());
         registry.addRecipeCategories(new VeinCategory());
+        registry.addRecipeCategories(new SmallOreCategory());
     }
 
     @Override
@@ -191,6 +194,7 @@ public class GTLibJEIPlugin implements IModPlugin {
             }
         });
         registration.addRecipes(VeinCategory.VEINS, VeinData.INSTANCE.getVeins().values().stream().toList());
+        registration.addRecipes(SmallOreCategory.SMALL_ORES, SmallOreData.INSTANCE.getVeins().values().stream().toList());
         MultiMachineInfoCategory.registerRecipes(registration);
     }
 

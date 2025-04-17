@@ -360,6 +360,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("gtlib.behaviour.3x3", "3x3 Mining");
         add("gtlib.behaviour.1x0x2", "1x2 Mining");
         add("jei.category.gtlib.veins", "Vein Stats");
+        add("jei.category.gtlib.small_ores", "Small Ore Stats");
     }
 
     private final void pipeTranslations() {
