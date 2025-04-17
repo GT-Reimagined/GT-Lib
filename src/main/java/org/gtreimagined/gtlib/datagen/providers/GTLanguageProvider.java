@@ -359,7 +359,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("gtlib.tooltip.io_widget.item", "Item Auto-Output");
         add("gtlib.behaviour.3x3", "3x3 Mining");
         add("gtlib.behaviour.1x0x2", "1x2 Mining");
-        add("jei.category.gtlib.vein_layers", "Vein Layer Stats");
+        add("jei.category.gtlib.veins", "Vein Stats");
     }
 
     private final void pipeTranslations() {

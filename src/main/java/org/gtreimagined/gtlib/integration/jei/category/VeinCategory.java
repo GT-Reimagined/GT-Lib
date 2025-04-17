@@ -18,7 +18,6 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
-import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -37,14 +36,14 @@ import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.
 public class VeinCategory implements IRecipeCategory<Vein> {
     IDrawable icon = RecipeMapCategory.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
     IDrawable background = RecipeMapCategory.guiHelper.drawableBuilder(new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"), 3, 3, 170, 60).addPadding(0, 60, 0,0).build();
-    public static final RecipeType<Vein> VEIN_LAYERS = new RecipeType<>(new ResourceLocation(Ref.ID, "vein_layers"), Vein.class);
+    public static final RecipeType<Vein> VEINS = new RecipeType<>(new ResourceLocation(Ref.ID, "veins"), Vein.class);
     public VeinCategory() {
 
     }
 
     @Override
     public Component getTitle() {
-        return Utils.translatable("jei.category.gtlib.vein_layers");
+        return Utils.translatable("jei.category.gtlib.veins");
     }
 
     @Override
@@ -59,12 +58,12 @@ public class VeinCategory implements IRecipeCategory<Vein> {
 
     @Override
     public RecipeType<Vein> getRecipeType() {
-       return VEIN_LAYERS;
+       return VEINS;
     }
 
     @Override
     public ResourceLocation getUid() {
-        return new ResourceLocation(Ref.ID, "vein_layers");
+        return new ResourceLocation(Ref.ID, "veins");
     }
 
     @Override
@@ -113,7 +112,7 @@ public class VeinCategory implements IRecipeCategory<Vein> {
         renderString(stack, "Secondary: " + recipe.secondary().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 48, 0x000000, x, y, false);
         renderString(stack, "Between: " + recipe.between().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 58, 0x000000, x, y, false);
         renderString(stack, "Sporadic: " + recipe.sporadic().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 68, 0x000000, x, y, false);
-        renderString(stack, "Height: " + recipe.minY() + " - " + recipe.maxY(), Minecraft.getInstance().font, 0, 78, 0x000000, x, y, false);
+        renderString(stack, "MinY: " + recipe.minY() + " MaxY: " + recipe.maxY(), Minecraft.getInstance().font, 0, 78, 0x000000, x, y, false);
         renderString(stack, "Weight: " + recipe.weight(), Minecraft.getInstance().font, 100, 78, 0x000000, x, y, false);
         renderString(stack, "Generated world:", Minecraft.getInstance().font, 0, 88, 0x000000, x, y, false);
 
