@@ -35,7 +35,7 @@ public class CTRecipeBuilder {
             throw new IllegalArgumentException("Invalid recipe map: " + mapId);
         }
         if (!recipeMap.getRecipeType().equals(manager.getRecipeType())) {
-            throw new IllegalArgumentException("Recipe map: " + mapId + " does not use this recipe type!");
+            throw new IllegalArgumentException("Recipe map: " + mapId + " does not use this recipe type! Recipe type: "+ manager.getBracketResourceLocation());
         }
         recipeBuilder = recipeMap.RB();
         this.manager = manager;
