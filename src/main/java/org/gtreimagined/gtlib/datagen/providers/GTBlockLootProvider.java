@@ -171,37 +171,12 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
             tables.put(block, b -> MaterialTags.CUSTOM_ORE_DROPS.getBuilderFunction(block.getMaterial()).apply(block));
             return;
         }
+        if (block.getOreType() == ORE_SMALL) return;
         tables.put(block, addToFortuneWithoutCustomDrops(block));
     }
 
     public static Function<Block, LootTable.Builder> addToFortuneWithoutCustomDrops(BlockOre block) {
-        if (block.getOreType() == ORE_SMALL) {
-            if (!block.getMaterial().has(GEM) && !(block.getMaterial().has(CRUSHED))) {
-                if (block.getMaterial().has(DUST)){
-                    return b -> BlockLoot.createSingleItemTable(DUST.get(block.getMaterial()));
-                }
-                return BlockLoot::createSingleItemTable;
-            }
-            Item item = block.getMaterial().has(GEM) ? GEM.get(block.getMaterial()) : null;
-            int multiplier = MaterialTags.ORE_MULTI.getInt(block.getMaterial());
-            LootPool.Builder builder;
-            if (item != null) {
-                builder = LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(applyExplosionDecay(item, LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(ConstantValue.exactly(multiplier))).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))).setWeight(30));
-            } else {
-                builder = LootPool.lootPool();
-            }
-            if (block.getMaterial().has(CRUSHED)) {
-                Item crushed = CRUSHED.get(block.getMaterial());
-                //builder.addLootPool(withSurvivesExplosion(crushed, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(crushed))));
-                builder.add(applyExplosionDecay(crushed, LootItem.lootTableItem(crushed).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f * multiplier, 2.0f * multiplier))).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE)).setWeight(40)));
-            }
-            if (block.getMaterial().has(DUST_IMPURE)) {
-                Item dirty = DUST_IMPURE.get(block.getMaterial());
-                //builder.addLootPool(withSurvivesExplosion(dirty, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(dirty))));
-                builder.add(applyExplosionDecay(dirty, LootItem.lootTableItem(dirty).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f * multiplier, 2.0f * multiplier))).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))).setWeight(60));
-            }
-            return b -> LootTable.lootTable().withPool(builder);
-        } else if (block.getOreType() == ORE) {
+        if (block.getOreType() == ORE) {
             Item drop;
             if (block.getMaterial().has(CRUSHED) || block.getMaterial().has(DUST)){
                 drop = block.getMaterial().has(CRUSHED) ? CRUSHED.get(block.getMaterial()) : DUST.get(block.getMaterial());

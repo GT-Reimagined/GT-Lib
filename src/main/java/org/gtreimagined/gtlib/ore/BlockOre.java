@@ -1,11 +1,17 @@
 package org.gtreimagined.gtlib.ore;
 
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
+import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
@@ -33,9 +39,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.system.CallbackI.P;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 
 public class BlockOre extends BlockMaterialStone implements ITextureProvider, IModelProvider, ISharedGTObject, Fallable {
 
@@ -65,28 +75,60 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         if (stoneType == VanillaStoneTypes.STONE) items.add(new ItemStack(this));
     }
 
-    //    @Override
-//    public net.minecraft.block.material.Material getMaterial(BlockState state) {
-//        Tag<Block> tool = getHarvestTool(state);
-//        if (tool != null && tool.equals("shovel")) return net.minecraft.block.material.Material.SAND;
-//        return net.minecraft.block.material.Material.ROCK;
-//    }
+    @Override
+    public List<ItemStack> getDrops(BlockState state, Builder builder) {
+        if (this.oreType != GTMaterialTypes.ORE_SMALL) {
+            return super.getDrops(state, builder);
+        }
+        List<ItemStack> drops = new ArrayList<>();
+        ItemStack tool = builder.getParameter(LootContextParams.TOOL);
+        Random random = builder.getLevel().getRandom();
+        boolean silkTouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) == 1;
+        int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool);
+        List<ItemStack> selector = new ArrayList<>();
+        ItemStack tStack = getGem(GEM_EXQUISITE, 4);
+        if (!tStack.isEmpty()) {
+            for (int i = 0, j = (silkTouch ? 3:1); i < j; i++) selector.add(tStack);
+        }
+        tStack = getGem(GEM_FLAWLESS, 2);
+        if (!tStack.isEmpty()) {
+            for (int i = 0, j = (silkTouch ? 6:2); i < j; i++) selector.add(tStack);
+        }
+        if (material.has(GEM)){
+            for (int i = 0, j = (silkTouch? 6:12); i < j; i++) selector.add(GEM.get(material, 1));
+        }
+        if (material.has(GEM_FLAWED)){
+            for (int i = 0, j = (silkTouch? 10:5); i < j; i++) selector.add(GEM_FLAWED.get(material, 2));
+        }
+        if (material.has(GEM_CHIPPED)){
+            for (int i = 0, j = (silkTouch? 10:5); i < j; i++) selector.add(GEM_CHIPPED.get(material, 4));
+        }
+        if (material.has(CRUSHED)){
+            int j = (material.has(GEM_FLAWED) || material.has(GEM_CHIPPED)) && silkTouch ? 5 : 10;
+            for (int i = 0; i < j; i++) selector.add(CRUSHED.get(material, 1));
+        }
+        if (material.has(DUST_IMPURE)){
+            for (int i = 0; i < 10; i++) selector.add(DUST_IMPURE.get(material, 1));
+        }
+        if (!selector.isEmpty()) {
+            for (int i = 0, j = Math.max(1, MaterialTags.ORE_MULTI.get(material) + (fortune > 0 ? random.nextInt((1+fortune)*MaterialTags.ORE_MULTI.get(material)):0)/2); i < j; i++) {
+                drops.add(selector.get(random.nextInt(selector.size())).copy());
+            }
+        }
+        if (random.nextInt(3 + fortune) > 1){
+            if (stoneType.getMaterial().has(DUST)){
+                drops.add(DUST.get(stoneType.getMaterial(), 1));
+            }
+        }
+        return drops;
+    }
 
-    //    //TODO
-//    @Override
-//    public float getBlockHardness(BlockState blockState, World worldIn, BlockPos pos) {
-//        return stoneSet[blockState.getValue(STONE_TYPE)].getBaseState().getBlockHardness(worldIn, pos) + getHarvestLevel(blockState) - (type == OreType.SMALL ? 0.2F : 0);
-//    }
-//
-//
-//    //TODO
-   /* @Override
-    public int getHarvestLevel(BlockState state) {
-        int stoneLvl = stoneType.getHarvestLevel();
-        return Math.max(stoneLvl, material.getMiningLevel() > -1 ? material.getMiningLevel() : 0);
-    }*/
-//
-//    @Override
+    private ItemStack getGem(MaterialTypeItem<?> betterGem, int replacementAmount){
+        if (material.has(betterGem)) return betterGem.get(material, 1);
+        return material.has(GEM) ? GEM.get(material, replacementAmount) : ItemStack.EMPTY;
+    }
+
+    //    @Override
 //    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, BlockState state, int fortune) {
 //        drops.clear();
 //        if (type == OreType.SMALL) {
@@ -217,8 +259,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         return properties;
     }
 
-    //TODO figure out fabric alternative
-    //@Override
+    @Override
     public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch) {
         if (silktouch == 0 && material.has(MaterialTags.EXP_RANGE)) {
             List<ItemStack> self = getDrops(state, ((ServerLevel) world), pos, world.getBlockEntity(pos));
