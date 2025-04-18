@@ -46,6 +46,7 @@ public class StoneRecipes {
                 of('T', Items.REDSTONE_TORCH, 'Q', ForgeTags.GEMS_QUARTZ_ALL, 'S', TagUtils.getForgelikeItemTag("stone")), " T ", "TQT", "SSS");
         provider.addItemRecipe(output, "stones", Items.SAND, of('S', DUST.getMaterialTag(Sand)), "SS", "SS");
         provider.addItemRecipe(output, "stones", Items.RED_SAND, of('S', DUST.getMaterialTag(RedSand)), "SS", "SS");
+        provider.addStackRecipe(output, "stones", new ItemStack(Items.POLISHED_BASALT, 2), of('S', Items.BASALT), "S", "S");
         if (GTAPI.isModLoaded(Ref.MOD_AE)){
             provider.removeRecipe(new ResourceLocation(Ref.MOD_AE, "misc/vanilla_comparator"));
         }
