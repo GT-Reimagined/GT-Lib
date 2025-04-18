@@ -97,9 +97,11 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     @Override
     public void onRemove() {
         super.onRemove();
-        // Remove handlers from the structure cache.
-        allHandlers.forEach(StructureHandle::deregister);
-        invalidateStructure();
+        if (getLevel() != null && !getLevel().isClientSide()) {
+            // Remove handlers from the structure cache.
+            allHandlers.forEach(StructureHandle::deregister);
+            invalidateStructure();
+        }
     }
 
     @Override
