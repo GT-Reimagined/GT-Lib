@@ -110,6 +110,9 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         if (material.has(DUST_IMPURE)){
             for (int i = 0; i < 10; i++) selector.add(DUST_IMPURE.get(material, 1));
         }
+        if (!material.has(GEM) && !material.has(CRUSHED) && !material.has(DUST_IMPURE)) {
+            selector.add(DUST.get(material, 1));
+        }
         if (!selector.isEmpty()) {
             for (int i = 0, j = Math.max(1, MaterialTags.ORE_MULTI.get(material) + (fortune > 0 ? random.nextInt((1+fortune)*MaterialTags.ORE_MULTI.get(material)):0)/2); i < j; i++) {
                 drops.add(selector.get(random.nextInt(selector.size())).copy());
