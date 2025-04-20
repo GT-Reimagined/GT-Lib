@@ -9,11 +9,10 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
@@ -24,10 +23,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE;
 import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.JEI_OFFSET_X;
@@ -81,25 +76,7 @@ public class VeinCategory implements IRecipeCategory<Vein> {
                             .map(s -> ORE.get().get(material, s).asBlock())
                             .map(ItemStack::new).toList());
         }
-        int i = 0;
-        List<Block> markers = new ArrayList<>();
-        for (ResourceLocation dimension : recipe.dimensions().stream().map(ResourceKey::location).toList()) {
-            int y = i / 9;
-            int x = i % 9;
-            Block dimensionMarker = GTAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
-            ItemStack world;
-            if (dimensionMarker != null){
-                if (markers.contains(dimensionMarker)) {
-                    continue;
-                }
-                markers.add(dimensionMarker);
-                world = new ItemStack(dimensionMarker);
-            } else {
-                world = new ItemStack(Items.BARRIER).setHoverName(Utils.literal(dimension.toString()));
-            }
-            builder.addSlot(RecipeIngredientRole.INPUT, 1 + (x * 18), 102 + (y * 18)).addIngredients(VanillaTypes.ITEM_STACK, List.of(world));
-            i++;
-        }
+        GTLibJEIPlugin.addDimensionSlots(builder, recipe.dimensions());
     }
 
     @Override

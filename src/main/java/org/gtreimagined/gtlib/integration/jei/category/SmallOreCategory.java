@@ -12,15 +12,13 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
@@ -28,7 +26,7 @@ import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE_SMALL;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.JEI_OFFSET_X;
 import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.JEI_OFFSET_Y;
 
@@ -78,25 +76,46 @@ public class SmallOreCategory implements IRecipeCategory<SmallOre> {
                         .map(s -> ORE_SMALL.get().get(recipe.material(), s).asBlock())
                         .map(ItemStack::new).toList());
 
-        int i = 0;
-        List<Block> markers = new ArrayList<>();
-        for (ResourceLocation dimension : recipe.dimensions().stream().map(ResourceKey::location).toList()) {
-            int y = i / 9;
-            int x = i % 9;
-            Block dimensionMarker = GTAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
-            ItemStack world;
-            if (dimensionMarker != null){
-                if (markers.contains(dimensionMarker)) {
-                    continue;
-                }
-                markers.add(dimensionMarker);
-                world = new ItemStack(dimensionMarker);
-            } else {
-                world = new ItemStack(Items.BARRIER).setHoverName(Utils.literal(dimension.toString()));
+        List<List<ItemStack>> drops = new ArrayList<>();
+        List<ItemStack> stoneDusts = new ArrayList<>();
+        GTAPI.all(StoneType.class).stream().filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK).forEach(s -> {
+            if (s.getMaterial().has(DUST)){
+                stoneDusts.add(DUST.get(s.getMaterial(), 1));
             }
-            builder.addSlot(RecipeIngredientRole.INPUT, 1 + (x * 18), 102 + (y * 18)).addIngredients(VanillaTypes.ITEM_STACK, List.of(world));
-            i++;
+        });
+        if (!stoneDusts.isEmpty()) {
+            drops.add(stoneDusts);
         }
+        if (recipe.material().has(GEM_EXQUISITE)){
+            drops.add(List.of(GEM_EXQUISITE.get(recipe.material(), 1)));
+        }
+        if (recipe.material().has(GEM_FLAWLESS)){
+            drops.add(List.of(GEM_FLAWLESS.get(recipe.material(), 1)));
+        }
+        if (recipe.material().has(GEM)){
+            drops.add(List.of(GEM.get(recipe.material(), 1)));
+        }
+        if (recipe.material().has(GEM_FLAWED)){
+            drops.add(List.of(GEM_FLAWED.get(recipe.material(), 1)));
+        }
+        if (recipe.material().has(GEM_CHIPPED)){
+            drops.add(List.of(GEM_CHIPPED.get(recipe.material(), 1)));
+        }
+        if (recipe.material().has(CRUSHED)){
+            drops.add(List.of(CRUSHED.get(recipe.material(), 1)));
+        }
+        if (recipe.material().has(DUST_IMPURE)){
+            drops.add(List.of(DUST_IMPURE.get(recipe.material(), 1)));
+        }
+        if (recipe.material().has(DUST) && !recipe.material().has(CRUSHED) && !recipe.material().has(DUST_IMPURE) && !recipe.material().has(GEM)){
+            drops.add(List.of(DUST.get(recipe.material(), 1)));
+        }
+        for (int i = 0; i < 8 && i < drops.size(); i++) {
+            int x = i % 4;
+            int y = i / 4;
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 42 + (x * 18), 55 + (y * 18)).addIngredients(VanillaTypes.ITEM_STACK, drops.get(i));
+        }
+        GTLibJEIPlugin.addDimensionSlots(builder, recipe.dimensions());
     }
 
     @Override

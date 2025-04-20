@@ -8,6 +8,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -22,9 +23,13 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.integration.jei.category.MultiMachineInfoCategory;
 import org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.jei.category.SmallOreCategory;
@@ -274,6 +279,28 @@ public class GTLibJEIPlugin implements IModPlugin {
                 registration.addRecipeCatalyst(new ItemStack(i), RecipeType.create(r.getNamespace(), r.getPath(), Recipe.class));
             });
         });
+    }
+
+    public static void addDimensionSlots(IRecipeLayoutBuilder builder, List<ResourceKey<Level>> dimensions) {
+        int i = 0;
+        List<Block> markers = new ArrayList<>();
+        for (ResourceLocation dimension : dimensions.stream().map(ResourceKey::location).toList()) {
+            int y = i / 9;
+            int x = i % 9;
+            Block dimensionMarker = GTAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
+            ItemStack world;
+            if (dimensionMarker != null){
+                if (markers.contains(dimensionMarker)) {
+                    continue;
+                }
+                markers.add(dimensionMarker);
+                world = new ItemStack(dimensionMarker);
+            } else {
+                world = new ItemStack(Items.BARRIER).setHoverName(Utils.literal(dimension.toString()));
+            }
+            builder.addSlot(RecipeIngredientRole.INPUT, 1 + (x * 18), 102 + (y * 18)).addIngredients(VanillaTypes.ITEM_STACK, List.of(world));
+            i++;
+        }
     }
 
     public static void uses(FluidStack val, boolean USE) {
