@@ -36,7 +36,7 @@ public class MaterialRecipes {
                 provider.shapeless(consumer,"nugget_" + m.getId() + "_from_ingot", "ingots", GTMaterialTypes.NUGGET.get(m, 9), GTMaterialTypes.INGOT.getMaterialTag(m));
             }
             if (m.has(GTMaterialTypes.CHUNK)){
-                provider.addItemRecipe(consumer, Ref.ID, "", "ingots", INGOT.get(m), ImmutableMap.of('I', CHUNK.getMaterialTag(m)), "II", "II");
+                provider.addItemRecipe(consumer, Ref.ID, m.getId() + "_ingot_from_chunk", "ingots", INGOT.get(m), ImmutableMap.of('I', CHUNK.getMaterialTag(m)), "II", "II");
             }
         });
         GTMaterialTypes.RAW_ORE.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
