@@ -77,7 +77,7 @@ public class GTLibConfig {
     public static ConfigHandler CONFIG_CLIENT;
 
     public static void createConfig(){
-        Config config = new Config("gtlib/common");
+        Config config = new Config("gtlib-common");
         ConfigSection world = config.add("world");
         VANILLA_ORE_GEN = world.addBool("disable_vanilla_ore_gen", true, "Disable Vanilla ore generation (Iron Ore, Diamond Ore etc) - Default: true")
                 .setRequiredReload(ReloadMode.WORLD);
@@ -135,7 +135,7 @@ public class GTLibConfig {
         CONFIG_COMMON = CarbonConfig.CONFIGS.createConfig(config);
         CONFIG_COMMON.register();
         if (FMLEnvironment.dist.isClient()){
-            Config client = new Config("gtlib/client");
+            Config client = new Config("gtlib-client");
             ConfigSection general = client.add("general");
             BASIC_MACHINE_MODELS = general.addBool("basic_machine_models", false, "Enable flat machine related models (5U Style) - Default: false");
             SHOW_ALL_MATERIAL_ITEMS = general.addBool("show_all_material_items", false, "Show all items in JEI, even ones that are unobtainable - Default: false");
