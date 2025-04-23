@@ -20,7 +20,6 @@ public class GTLibMaterials {
     public static Material Sand = GTAPI.register(Material.class, new Material(Ref.ID, "sand", 0xfafac8, NONE));
     public static Material RedSand = GTAPI.register(Material.class, new Material(Ref.ID, "red_sand", 0xff8438, NONE));
     public static Material Blackstone = GTAPI.register(Material.class, new Material(Ref.ID, "blackstone", 0x2c272d, NONE));
-    public static Material Basalt = GTAPI.register(Material.class, new Material(Ref.ID, "basalt", 0x1e1414, ROUGH));
     public static Material Endstone = GTAPI.register(Material.class, new Material(Ref.ID, "endstone", 0xd9de9e, NONE));
     public static Material Netherrack = GTAPI.register(Material.class, new Material(Ref.ID, "netherrack", 0xc80000, NONE));
     public static Material Bedrock = GTAPI.register(Material.class, new Material(Ref.ID, "bedrock", 0x404040, NONE));

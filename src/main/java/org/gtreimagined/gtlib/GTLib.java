@@ -262,19 +262,10 @@ public class GTLib extends GTMod {
         } else if (event == RegistrationEvent.CLIENT_DATA_INIT){
             GTLibModelManager.init();
             ClientData.init();
-            if (GTLibConfig.OVERRIDE_BASALT_TEXTURE.get()){
-                try {
-                    GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_top"), readImage("block/stone/basalt/stone"));
-                    GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/basalt_side"), readImage("block/stone/basalt/stone"));
-                    GTLibDynamics.DYNAMIC_RESOURCE_PACK.addTexture(new ResourceLocation("block/smooth_basalt"), readImage("block/stone/basalt/smooth"));
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-    private static BufferedImage readImage(String imagePath) throws IOException {
+    public static BufferedImage readImage(String imagePath) throws IOException {
         InputStream in = GTLib.class.getResourceAsStream("/assets/" + Ref.ID + "/textures/" + imagePath + ".png");
         return ImageIO.read(in);
     }

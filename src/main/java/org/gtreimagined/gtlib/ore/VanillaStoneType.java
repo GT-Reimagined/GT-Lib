@@ -27,36 +27,6 @@ public class VanillaStoneType extends CobbleStoneType{
     @Override
     public void onRegistryBuild(IForgeRegistry<?> registry) {
         if (registry == ForgeRegistries.BLOCKS) {
-            if (this.getId().equals("basalt")){
-                for (int i = 0; i < SUFFIXES.length; i++) {
-                    Block stone;
-                    ITextureProvider stoneTextureProvider;
-                    if (i == 7) {
-                        stone = this.getState().getBlock();
-                        stoneTextureProvider = this::getTextures;
-                    } else if (i == 6){
-                        stone = RegistryUtils.getBlockFromId("minecraft", "smooth_" + this.getId());
-                        stoneTextureProvider = () -> new Texture[]{new Texture("block/smooth_" + getId())};
-                    }else {
-                        BlockStone stone1 = new BlockStone(this, SUFFIXES[i]);
-                        stone = stone1;
-                        stoneTextureProvider = stone1;
-                    }
-                    String id = i == 7 ? getId() : getId() + "_" + SUFFIXES[i];
-                    String suffix = i == 7 ? "" : SUFFIXES[i];
-                    CoverFactory.builder(CoverStone::new).setIsValid(be -> true).item((coverFactory, tier) ->
-                            new ItemStoneCover(Ref.SHARED_ID, getId(), suffix, stoneTextureProvider)).addTextures(stoneTextureProvider.getTextures()).build(Ref.SHARED_ID, id + "_cover");
-                    blocks.put(SUFFIXES[i], stone);
-                    if (i < 2){
-                        continue;
-                    }
-                    int i2 = i - 2;
-                    blocks.put(SLAB_SUFFIXES[i2], new BlockStoneSlab(this, SUFFIXES[i]));
-                    blocks.put(STAIR_SUFFIXES[i2], new BlockStoneStair(this, SUFFIXES[i], stone));
-                    blocks.put(WALL_SUFFIXES[i2], new BlockStoneWall(this, SUFFIXES[i]));
-                }
-                return;
-            }
             for (int i = 0; i < SUFFIXES.length; i++) {
                 int i2 = i - 2;
                 Block stone, stair = null, slab = null, wall = null;

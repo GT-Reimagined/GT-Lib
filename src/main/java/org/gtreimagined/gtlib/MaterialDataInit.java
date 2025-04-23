@@ -28,7 +28,6 @@ public class MaterialDataInit {
         event.setMaterial(GTLibMaterials.RedSand).asDust();
         event.setMaterial(GTLibMaterials.Blackstone).asDust(GTMaterialTypes.ROCK);
 
-        event.setMaterial(GTLibMaterials.Basalt).asDust(GTMaterialTypes.ROCK);
         event.setMaterial(GTLibMaterials.Endstone).asDust();
         event.setMaterial(GTLibMaterials.Netherrack).asDust();
         event.setMaterial(GTLibMaterials.Prismarine).asDust();

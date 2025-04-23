@@ -46,16 +46,6 @@ public class BlockStoneSlab extends BlockBasicSlab implements ISharedGTObject {
         Texture topTexture, bottomTexture, sideTexture;
         topTexture = bottomTexture = sideTexture = getTextures()[0];
         ResourceLocation both = prov.existing(this.getDomain(), "block/" + this.getId().replace("_slab", ""));
-        if (type == VanillaStoneTypes.BASALT && (suffix.isEmpty() || suffix.equals("smooth"))){
-            if (suffix.isEmpty()) {
-                both = prov.existing("minecraft", "block/basalt");
-                topTexture = bottomTexture = new Texture("block/basalt_top");
-                sideTexture = new Texture("block/basalt_side");
-            } else {
-                both = prov.existing("minecraft", "block/smooth_basalt");
-                topTexture = bottomTexture = sideTexture = new Texture("block/smooth_basalt");
-            }
-        }
         GTBlockModelBuilder top = prov.models().getBuilder(getId() + "_top").parent(prov.existing("minecraft", "block/slab_top")).texture("bottom", bottomTexture).texture("top", topTexture).texture("side", sideTexture);
         GTBlockModelBuilder bottom = prov.models().getBuilder(getId()).parent(prov.existing("minecraft", "block/slab")).texture("bottom", bottomTexture).texture("top", topTexture).texture("side", sideTexture);
         ResourceLocation finalBoth = both;

@@ -59,14 +59,6 @@ public class BlockStoneStair extends StairBlock implements ISharedGTObject, ITex
     public void onBlockModelBuild(Block block, GTBlockStateProvider prov) {
         Texture bottom, top, side;
         bottom = top = side = getTextures()[0];
-        if (type == VanillaStoneTypes.BASALT && (suffix.isEmpty() || suffix.equals("smooth"))){
-            if (suffix.isEmpty()) {
-                top = bottom = new Texture("block/basalt_top");
-                side = new Texture("block/basalt_side");
-            } else {
-                top = bottom = side = new Texture("block/smooth_basalt");
-            }
-        }
         GTBlockModelBuilder outer = prov.models().getBuilder(getId() + "_outer").parent(prov.existing("minecraft", "block/outer_stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
         GTBlockModelBuilder inner = prov.models().getBuilder(getId() + "_inner").parent(prov.existing("minecraft", "block/inner_stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
         GTBlockModelBuilder regular = prov.models().getBuilder(getId()).parent(prov.existing("minecraft", "block/stairs")).texture("bottom", bottom).texture("top", top).texture("side", side);
