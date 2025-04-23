@@ -19,19 +19,17 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.ImmutableMap.of;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.CHUNK;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.INGOT;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
 
 public class MaterialRecipes {
     public static void init(Consumer<FinishedRecipe> consumer, GTRecipeProvider provider) {
-        final CriterionTriggerInstance in = provider.hasSafeItem(GTTools.WRENCH.getTag());
         GTMaterialTypes.DUST.all().forEach(m -> {
             provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_SMALL.getMaterialTag(m)), "DD", "DD");
             provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_TINY.getMaterialTag(m)), "DDD", "DDD", "DDD");
         });
         GTMaterialTypes.INGOT.all().forEach(m -> {
-            if (m.has(GTMaterialTypes.NUGGET) && m != GTLibMaterials.Iron && m != GTLibMaterials.Gold){
+            if (m.has(GTMaterialTypes.NUGGET) && !INGOT.hasReplacement(m) && !NUGGET.hasReplacement(m)){
                 provider.addItemRecipe(consumer, Ref.ID, m.getId() + "_ingot", "ingots", GTMaterialTypes.INGOT.get(m), ImmutableMap.of('I', GTMaterialTypes.NUGGET.getMaterialTag(m)), "III", "III", "III");
                 provider.shapeless(consumer,"nugget_" + m.getId() + "_from_ingot", "ingots", GTMaterialTypes.NUGGET.get(m, 9), GTMaterialTypes.INGOT.getMaterialTag(m));
             }
@@ -40,10 +38,14 @@ public class MaterialRecipes {
             }
         });
         GTMaterialTypes.RAW_ORE.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
-            if (m != GTLibMaterials.Iron && m != GTLibMaterials.Copper && m != GTLibMaterials.Gold) {
+            if (!INGOT.hasReplacement(m) && !RAW_ORE.hasReplacement(m)) {
                 addSmeltingRecipe(consumer, provider, GTMaterialTypes.RAW_ORE, GTMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
             }
-            addSmeltingRecipe(consumer, provider, GTMaterialTypes.ORE, GTMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
+        });
+        GTMaterialTypes.ORE.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
+            if (!ORE.hasReplacement(m) && !INGOT.hasReplacement(m)) {
+                addSmeltingRecipe(consumer, provider, GTMaterialTypes.ORE, GTMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
+            }
         });
         GTMaterialTypes.CRUSHED.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
             if (m != SMELT_INTO.getMapping(m) || !m.has(GTMaterialTypes.NUGGET)) return;

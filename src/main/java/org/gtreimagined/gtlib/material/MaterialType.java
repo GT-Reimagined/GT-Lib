@@ -107,6 +107,10 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
         GTAPI.addReplacement(getMaterialTag(mat), replacement);
     }
 
+    public boolean hasReplacement(Material mat) {
+        return replacements.containsKey(mat);
+    }
+
     public Material getMaterialFromStack(ItemStack stack) {
         if (stack.getItem() instanceof MaterialItem item) {
             if (item.getType() == this) return item.getMaterial();
