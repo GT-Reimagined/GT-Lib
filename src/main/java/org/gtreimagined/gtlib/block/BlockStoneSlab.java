@@ -25,7 +25,7 @@ public class BlockStoneSlab extends BlockBasicSlab implements ISharedGTObject {
     }
 
     private static Properties getProps(StoneType type) {
-        Properties props = Properties.of(type.getBlockMaterial()).sound(type.getSoundType()).strength(type.getHardness(), type.getResistence());
+        Properties props = Properties.of(type.getBlockMaterial()).sound(type.getSoundType()).strength(type.getHardness(), type.getResistence()).isValidSpawn(BlockStone::notValidSpawn);
         if (type.doesRequireTool()) {
             props.requiresCorrectToolForDrops();
         }

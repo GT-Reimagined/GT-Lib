@@ -1,5 +1,9 @@
 package org.gtreimagined.gtlib.block;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
@@ -17,7 +21,7 @@ public class BlockStone extends BlockBasic implements ISharedGTObject {
     }
 
     public BlockStone(StoneType type, String suffix) {
-        super(type.getDomain(), type.getId() + "_" + suffix, getProps(type).isValidSpawn((blockState, blockGetter, blockPos, object) -> false));
+        super(type.getDomain(), type.getId() + "_" + suffix, getProps(type).isValidSpawn(BlockStone::notValidSpawn));
         this.type = type;
         this.suffix = suffix;
     }
@@ -28,6 +32,10 @@ public class BlockStone extends BlockBasic implements ISharedGTObject {
             props.requiresCorrectToolForDrops();
         }
         return props;
+    }
+
+    static boolean notValidSpawn(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, EntityType<?> object) {
+        return false;
     }
 
     public StoneType getType() {
