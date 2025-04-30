@@ -211,6 +211,14 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
                         if (!player.addItem(DUST.get(material, 1))) {
                             player.drop(DUST.get(material, 1), false);
                         }
+                        Material oreByProduct = !material.getByProducts().isEmpty() ? material.getByProducts().get(0) : material;
+                        Material oreByProduct2 = material.getByProducts().size() > 1 ? material.getByProducts().get(1) : oreByProduct;
+                        Material byProduct = type == DUST_IMPURE ? oreByProduct : oreByProduct2;
+                        if (byProduct.has(DUST) && world.random.nextInt(100) < 50){
+                            if (!player.addItem(DUST_TINY.get(oreByProduct, 1))) {
+                                player.drop(DUST_TINY.get(oreByProduct, 1), false);
+                            }
+                        }
                         LayeredCauldronBlock.lowerFillLevel(state, world, pos);
                         world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                         return InteractionResult.SUCCESS;
@@ -221,7 +229,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
                         if (!player.addItem(CRUSHED_PURIFIED.get(material, 1))) {
                             player.drop(CRUSHED_PURIFIED.get(material, 1), false);
                         }
-                        Material oreByProduct = material.getByProducts().size() >= 1 ? material.getByProducts().get(0) : material;
+                        Material oreByProduct = !material.getByProducts().isEmpty() ? material.getByProducts().get(0) : material;
                         if (oreByProduct.has(DUST) && world.random.nextInt(100) < 50){
                             if (!player.addItem(DUST_TINY.get(oreByProduct, 1))) {
                                 player.drop(DUST_TINY.get(oreByProduct, 1), false);
