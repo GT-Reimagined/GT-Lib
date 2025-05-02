@@ -29,7 +29,7 @@ public class MaterialRecipes {
             provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_TINY.getMaterialTag(m)), "DDD", "DDD", "DDD");
         });
         GTMaterialTypes.INGOT.all().forEach(m -> {
-            if (m.has(GTMaterialTypes.NUGGET) && !INGOT.hasReplacement(m) && !NUGGET.hasReplacement(m)){
+            if (m.has(GTMaterialTypes.NUGGET) && (!INGOT.hasReplacement(m) || !NUGGET.hasReplacement(m))){
                 provider.addItemRecipe(consumer, Ref.ID, m.getId() + "_ingot", "ingots", GTMaterialTypes.INGOT.get(m), ImmutableMap.of('I', GTMaterialTypes.NUGGET.getMaterialTag(m)), "III", "III", "III");
                 provider.shapeless(consumer,"nugget_" + m.getId() + "_from_ingot", "ingots", GTMaterialTypes.NUGGET.get(m, 9), GTMaterialTypes.INGOT.getMaterialTag(m));
             }
