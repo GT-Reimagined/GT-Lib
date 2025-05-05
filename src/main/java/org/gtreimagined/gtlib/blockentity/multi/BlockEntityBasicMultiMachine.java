@@ -120,6 +120,8 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
             this.extendedFacing = extendedFacing;
             invalidateCaps();
             if (isServerSide()) {
+                invalidateStructure();
+                checkStructure();
                 StructureLibAPI.sendAlignment(
                         this,
                         getBlockPos(), 1.0, (ServerLevel) level);
@@ -134,6 +136,8 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
         if (facingSet){
             extendedFacing = ExtendedFacing.of(side, extendedFacing.getRotation(), extendedFacing.getFlip());
             if (isServerSide()) {
+                invalidateStructure();
+                checkStructure();
                 StructureLibAPI.sendAlignment(
                         this,
                         getBlockPos(), 1.0, (ServerLevel) level);
