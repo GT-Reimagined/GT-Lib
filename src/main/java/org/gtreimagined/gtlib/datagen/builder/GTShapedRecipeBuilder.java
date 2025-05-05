@@ -156,7 +156,7 @@ public class GTShapedRecipeBuilder {
     public void build(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
         this.validate(id);
         this.advBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.result.get(0), this.group == null ? "" : this.group, this.pattern, this.key, this.advBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.get(0).getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.mirrored));
+        consumer.accept(new Result(id, this.result.get(0), this.group == null ? "" : this.group, this.pattern, this.key, this.advBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.get(0).getItem().getItemCategory().getRecipeFolderName().replace(":", "/") + "/" + id.getPath()), this.mirrored));
     }
 
     public void buildTool(Consumer<FinishedRecipe> consumer, String builder){
