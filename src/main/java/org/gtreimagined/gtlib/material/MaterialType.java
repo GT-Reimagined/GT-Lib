@@ -159,9 +159,6 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     @SuppressWarnings("unchecked")
     public TagKey<Item> getMaterialTag(Material m) {
-        if (!m.has(this)) {
-            GTLib.LOGGER.warn("Material " + m + " doesn't have " + this.id);
-        }
         return (TagKey<Item>) tagFromString(String.join("", Utils.getConventionalMaterialType(this), "/", (getId().equals("raw_ore_block") ? "raw_" : ""), m.getId()));
     }
 

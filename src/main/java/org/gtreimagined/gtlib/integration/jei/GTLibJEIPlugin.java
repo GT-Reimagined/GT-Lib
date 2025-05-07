@@ -175,7 +175,6 @@ public class GTLibJEIPlugin implements IModPlugin {
             if (tuple.map.getSubCategories().isEmpty()) {
                 registration.addRecipes(RECIPE_TYPES.get(id.toString()), getRecipes(tuple.map));
             } else {
-                GTLib.LOGGER.info(tuple.map.getId());
                 List<IRecipe> recipes = getRecipes(tuple.map);
                 List<IRecipe> mainRecipes = new ArrayList<>();
                 Map<String, List<IRecipe>> recipeMap = new HashMap<>();
