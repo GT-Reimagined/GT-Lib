@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class GTToolType implements IGTObject {
@@ -115,6 +116,9 @@ public class GTToolType implements IGTObject {
     private MaterialTypeItem<?> materialTypeItem;
     @Getter
     @Setter
+    private Predicate<Material> materialTypeItemPredicate;
+    @Getter
+    @Setter
     private String customName = "";
 
     /**
@@ -161,6 +165,7 @@ public class GTToolType implements IGTObject {
         } else {
             this.toolType = TagUtils.getBlockTag(new ResourceLocation(Ref.ID, "mineable/".concat(id)));
         }
+        this.materialTypeItemPredicate = m -> true;
         this.toolTypes.add(this.toolType);
         setBrokenItems(ImmutableMap.of(id, (i) -> ItemStack.EMPTY));
     }

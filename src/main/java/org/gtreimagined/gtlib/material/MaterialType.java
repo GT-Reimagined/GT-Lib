@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import lombok.Getter;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -158,6 +159,9 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     @SuppressWarnings("unchecked")
     public TagKey<Item> getMaterialTag(Material m) {
+        if (!m.has(this)) {
+            GTLib.LOGGER.warn("Material " + m + " doesn't have " + this.id);
+        }
         return (TagKey<Item>) tagFromString(String.join("", Utils.getConventionalMaterialType(this), "/", (getId().equals("raw_ore_block") ? "raw_" : ""), m.getId()));
     }
 

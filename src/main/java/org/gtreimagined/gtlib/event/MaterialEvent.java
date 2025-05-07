@@ -381,7 +381,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         MaterialTags.TOOLS.add(this.material, builder);
         MaterialTags.MINING_LEVEL.add(this.material, builder.toolQuality() - 1);
         for (GTToolType type : toolTypesList){
-            if (type.getMaterialTypeItem() != null && !material.has(FLINT) && material != NULL && !material.has(RUBBERTOOLS) && !material.has(WOOD)){
+            if (type.getMaterialTypeItem() != null && material != NULL && type.getMaterialTypeItemPredicate().test(material)){
                 flags(type.getMaterialTypeItem());
             }
         }
