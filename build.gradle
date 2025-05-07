@@ -104,8 +104,10 @@ dependencies {
             prefer(project.carbon_config_forge_version)
         }
     }
-    modImplementation("dev.latvian.mods:kubejs-forge:${project.kubejs_version}")
-    modImplementation("dev.latvian.mods:rhino-forge:${project.rhino_version}")
+    modImplementation("curse.maven:kubejs-238086:4377177")
+    modImplementation("curse.maven:rhino-416294:4069880")
+    //modImplementation("dev.latvian.mods:kubejs-forge:${project.kubejs_version}")
+    //modImplementation("dev.latvian.mods:rhino-forge:${project.rhino_version}")
     modImplementation("dev.architectury:architectury-forge:${project.architectury_version}")
     modImplementation("curse.maven:the-one-probe-245211:${project.top_forge_file}")
     modImplementation("curse.maven:curios-309927:4985315")
