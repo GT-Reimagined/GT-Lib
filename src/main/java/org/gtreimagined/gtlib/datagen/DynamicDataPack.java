@@ -56,7 +56,7 @@ public class DynamicDataPack implements PackResources {
     public static void addWorldgenObject(IWorldgenObject<?> object) {
         Path parent = FMLPaths.CONFIGDIR.get().getParent()
                 .resolve("dumped/gtlib-dynamic-data/data");
-        if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
+        if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()){
             writeJson(object.getLoc(), "gt_worldgen/" + object.getSubDirectory() + "/", parent, object.toJson());
         }
         DATA.put(getWorldgenLoc(object.getLoc(), object.getSubDirectory()), object.toJson());
@@ -66,13 +66,13 @@ public class DynamicDataPack implements PackResources {
         JsonObject recipeJson = recipe.serializeRecipe();
         Path parent = FMLPaths.CONFIGDIR.get().getParent()
                 .resolve("dumped/gtlib-dynamic-data/data");
-        if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
+        if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()){
             writeJson(recipe.getId(), "recipes", parent, recipeJson);
         }
         DATA.put(getRecipeLoc(recipe.getId()), recipeJson);
         if (recipe.serializeAdvancement() != null) {
             JsonObject advancement = recipe.serializeAdvancement();
-            if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get()){
+            if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()){
                 writeJson(recipe.getAdvancementId(), "advancements", parent, advancement);
             }
             DATA.put(getAdvancementLoc(Objects.requireNonNull(recipe.getAdvancementId())), advancement);

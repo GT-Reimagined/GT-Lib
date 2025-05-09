@@ -40,7 +40,7 @@ public class GTLibConfig {
     public static ConfigEntry.BoolValue PLAY_CRAFTING_SOUNDS;
     public static ConfigEntry.BoolValue LOSSY_PART_CRAFTING;
     public static ConfigEntry.BoolValue MACHINES_EXPLODE;
-    public static ConfigEntry.BoolValue EXPORT_DEFAULT_RECIPES;
+    public static ConfigEntry.BoolValue EXPORT_DEFAULT_DATA_AND_ASSETS;
     public static ConfigEntry.BoolValue RAIN_EXPLODES_MACHINES;
 
     /**
@@ -121,7 +121,7 @@ public class GTLibConfig {
                 .setMin(Double.MIN_VALUE).setMax(1.0);
         EU_TO_FE_RATIO = gameplay.addDouble("eu_to_fe_ratio", 4.0, "EU to FE ratio used by some addons - Default: (1.0 EU = 4.0 FE)").setMin(Double.MIN_VALUE);
         MACHINES_EXPLODE = gameplay.addBool("machines_explode", true, "Enable machines exploding on overvoltage - Default: true");
-        EXPORT_DEFAULT_RECIPES = gameplay.addBool("export_default_recipes", false, "Exports default crafting and machine recipes to exported in the root minecraft folder. - Default: false");
+        EXPORT_DEFAULT_DATA_AND_ASSETS = gameplay.addBool("export_default_data_and_assets", false, "Exports default data and asset jsons of gt lib and addons to the dumped folder. - Default: false");
         RAIN_EXPLODES_MACHINES = gameplay.addBool("rain_explodes_machines", true, "Enable machines exploding when it's raining - Default: true");
         PLAY_CRAFTING_SOUNDS = gameplay.addBool("play_crafting_sounds", true, "Hear various crafting sounds when you craft with any of GTLib's tools that has a custom SoundType. Default: true");
 

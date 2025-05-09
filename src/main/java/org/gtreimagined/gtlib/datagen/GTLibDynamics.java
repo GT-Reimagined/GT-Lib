@@ -129,7 +129,7 @@ public class GTLibDynamics {
         GTTagProvider.afterCompletion();
         GTBlockLootProvider.afterCompletion();
         GTLib.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
-        if (GTLibConfig.EXPORT_DEFAULT_RECIPES.get() || !FMLEnvironment.production) {
+        if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()) {
             RUNTIME_DATA_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
     }
@@ -144,7 +144,7 @@ public class GTLibDynamics {
         providers.forEach(IGTLibProvider::onCompletion);
         GTLanguageProvider.postCompletion();
         GTLib.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
-        if (!FMLEnvironment.production) {
+        if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()) {
             DYNAMIC_RESOURCE_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
         }
     }
