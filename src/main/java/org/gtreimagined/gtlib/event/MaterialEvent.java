@@ -304,6 +304,14 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         return (T) this;
     }
 
+    public T setMeltInto(Material m) {
+        MaterialTags.MELT_INTO.add(this.material, m);
+        if (this.material != m){
+            remove(GTMaterialTypes.LIQUID, MOLTEN);
+        }
+        return (T) this;
+    }
+
     public T addByProduct(Material... mats) {
         MaterialTags.BYPRODUCTS.add(this.material, new ObjectArrayList<>());
         MaterialTags.BYPRODUCTS.getList(this.material).addAll(Arrays.asList(mats));

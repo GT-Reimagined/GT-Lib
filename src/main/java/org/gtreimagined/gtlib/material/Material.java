@@ -83,6 +83,7 @@ public class Material implements ISharedGTObject {
         MaterialTags.DIRECT_SMELT_INTO.add(this, this);
         MaterialTags.ARC_SMELT_INTO.add(this, this);
         MaterialTags.MACERATE_INTO.add(this, this);
+        MaterialTags.MELT_INTO.add(this, this);
         MaterialTags.PROCESS_INTO.add(this, Pair.of(new ObjectArrayList<>(), -1));
         MaterialTags.BYPRODUCTS.add(this, new ObjectArrayList<>());
     }
