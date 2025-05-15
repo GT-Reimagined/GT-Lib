@@ -126,11 +126,6 @@ public class Element implements IGTObject {
     public static Element Lv = new Element(116, 177, 0, 1,1,"livermorium", "Lv",-1,null,null, null,  false);
     public static Element Ts = new Element(117, 175, 0, 1,1,"tennessine", "Ts",-1,null,null, null,  false);
     public static Element Og = new Element(118, 176, 0, 1,1,"oganesson", "Og",-1,null,null, null,  false);
-    public static Element Ma = new Element(0, 0, 100, 1,1,"Magic", "Ma",-1,null,null, null,  false);
-    public static Element Nt = new Element(0, 100000, 0, 1,1,"Neutronium", "Nt",-1,null,null, null,  false);
-    //bullshit elements from stargate
-    public static Element Naq = new Element(174, 352, 0, 1, 1, "Naquadah", "Naq", -1, null, null, null, false);
-    public static Element Ke = new Element(126, 192, 0, 1, 1, "Trinium", "Ke", -1, null, null, null, false);
 
     //Isotopes
     public static Element D = new Element(1, 1, 0,1,90,"deuterium", "D",-1,null,null,null,true);
