@@ -105,7 +105,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
 
     protected void addTranslations() {
         if (locale.startsWith("en")) english(providerDomain, locale);
-        if (providerDomain.equals(Ref.ID)) processAntimatterTranslations();
+        if (providerDomain.equals(Ref.ID)) processGTLibTranslations();
     }
 
     private String tryComponent(String lang, IGTObject object, Supplier<String> otherwise) {
@@ -374,7 +374,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("gtlib.pipe.item.output_side.disabled", "Emitting to selected Side disabled");
     }
 
-    private void processAntimatterTranslations() {
+    private void processGTLibTranslations() {
         add(Ref.TAB_BLOCKS, "GT Blocks");
         add(Ref.TAB_ITEMS, "GT Items");
         add(Ref.TAB_MACHINES, "GT Machines");
