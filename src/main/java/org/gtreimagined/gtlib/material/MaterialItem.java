@@ -99,8 +99,9 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
         }
         if (!mat.getChemicalFormula().isEmpty()) {
             if (Screen.hasShiftDown()) {
-                tooltip.add(Utils.translatable("gtlib.tooltip.chemical_formula").append(": ").append(Utils.literal(mat.getChemicalFormula()).withStyle(ChatFormatting.DARK_AQUA)));
-                tooltip.add(Utils.translatable("gtlib.tooltip.mass").append(": ").append(Utils.literal(mat.getMass() + "").withStyle(ChatFormatting.DARK_AQUA)));
+                tooltip.add(Utils.translatable("gtlib.tooltip.chemical_formula", Utils.literal(mat.getChemicalFormula()).withStyle(ChatFormatting.DARK_AQUA)));
+                tooltip.add(Utils.translatable("gtlib.tooltip.mass", Utils.literal(mat.getMass() + "").withStyle(ChatFormatting.DARK_AQUA)));
+                tooltip.add(Utils.translatable("gtlib.tooltip.atomic_number", Utils.literal(mat.getProtons() + "").withStyle(ChatFormatting.DARK_AQUA)));
             } else {
                 tooltip.add(Utils.translatable("gtlib.tooltip.formula").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
             }

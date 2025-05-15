@@ -309,8 +309,9 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("machine.generator.efficiency", "Efficiency: %s");
         add("generic.amp", "Amperage");
         add("gtlib.tooltip.formula", "Hold Shift to show formula.");
-        add("gtlib.tooltip.chemical_formula", "Formula");
-        add("gtlib.tooltip.mass", "Mass");
+        add("gtlib.tooltip.chemical_formula", "Formula: %s");
+        add("gtlib.tooltip.mass", "Mass: %s");
+        add("gtlib.tooltip.atomic_number", "Atomic Number: %s");
         add("gtlib.tooltip.more", "Hold Shift to show more information.");
         add("gtlib.tooltip.stacks", "Stacks");
         add("gtlib.tooltip.fluid.amount", "Amount: %s");
