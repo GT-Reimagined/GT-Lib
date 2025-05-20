@@ -185,7 +185,8 @@ public class FeatureVein extends GTFeature<NoneFeatureConfiguration> {
 
     static VeinLayerResult generateChunkified(Vein vein, WorldGenLevel world, XSTR rand, int posX, int posZ, int seedX, int seedZ) {
         if (vein.equals(NO_ORES_IN_VEIN)) return NO_ORES_VEIN;
-        int tMinY = vein.minY() + rand.nextInt(vein.maxY() - vein.minY() - 5);
+        int bound = vein.maxY() - vein.minY() - 5;
+        int tMinY = vein.minY() + bound > 0 ? rand.nextInt(bound) : 0;
 
         //If the selected tMinY is more than the max height if the current position, escape
 //        if (tMinY > world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, posX, posZ)) {
