@@ -90,7 +90,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
         boolean empty = getTile().getMachineType().getOutputCover() == ICover.emptyFactory;
         if (dir == null && empty) return false;
         if (side == dir) return false;
-        if (getTileFacing() == side && !getTile().getMachineType().allowsFrontCovers()) return false;
+        if (getTileFacing() == side && (!getTile().getMachineType().allowsFrontCovers() || !getTile().getMachineType().allowsOutputCoversOnFacing())) return false;
         boolean ok = dir != null ? moveCover(entity, dir, side) : set(side, getTile().getMachineType().getOutputCover().get().get(this, null, side, getTile().getMachineType().getOutputCover()), true);
         if (ok) {
             getTile().invalidateCaps();

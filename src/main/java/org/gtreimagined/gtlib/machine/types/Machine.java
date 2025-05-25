@@ -164,6 +164,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * Behaviours
      **/
     protected boolean allowFrontCovers = false;
+    protected boolean allowOutputCoversOnFacing = false;
     @Getter
     protected boolean verticalFacingAllowed = false;
     @Getter
@@ -259,6 +260,11 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
+    public T outputCoversOnFacing(boolean allow) {
+        allowOutputCoversOnFacing = allow;
+        return (T) this;
+    }
+
     public T setSound(SoundEvent loc, float volume) {
         this.soundVolume = volume;
         this.machineNoise = loc;
@@ -285,6 +291,10 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
 
     public boolean allowsFrontCovers() {
         return allowFrontCovers;
+    }
+
+    public boolean allowsOutputCoversOnFacing() {
+        return allowOutputCoversOnFacing;
     }
 
     public boolean allowsFrontIO() {
