@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.blockentity.pipe;
 
+import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.IPreTickTile;
@@ -245,8 +246,8 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
         // Check if we are empty.
         if (aTank.isEmpty()) return;
         // Compile all possible Targets into one List.
-        List<IFluidHandler> tTanks = new ArrayList<>();
-        List<IFluidHandler> tPipes = new ArrayList<>();
+        List<Pair<Direction, IFluidHandler>> tTanks = new ArrayList<>();
+        List<Pair<Direction, IFluidHandler>> tPipes = new ArrayList<>();
         // Amount to check for Distribution
         int tAmount = aTank.getFluid().getAmount();
         // Count all Targets. Also includes THIS for even distribution, thats why it starts at 1.
@@ -267,10 +268,10 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
             int insert = fluidHandlers[tSide.get3DDataValue()].fill(Utils.ca(Integer.MAX_VALUE, aTank.getFluid()), SIMULATE);
             if (insert > 0) {
                 if (fluidHandlers[tSide.get3DDataValue()] instanceof PipeFluidHandlerSidedWrapper){
-                    tPipes.add(level.random.nextInt(tPipes.size()+1), fluidHandlers[tSide.get3DDataValue()]);
+                    tPipes.add(level.random.nextInt(tPipes.size()+1), Pair.of(tSide, fluidHandlers[tSide.get3DDataValue()]));
                 } else {
                     // Add to a random Position in the List.
-                    tTanks.add(level.random.nextInt(tTanks.size()+1), fluidHandlers[tSide.get3DDataValue()]);
+                    tTanks.add(level.random.nextInt(tTanks.size()+1), Pair.of(tSide, fluidHandlers[tSide.get3DDataValue()]));
                 }
                 // One more Target.
                 tTargetCount++;
@@ -283,18 +284,36 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
         // Amount to distribute normally.
         tAmount = CodeUtils.bindInt(CodeUtils.divup(tAmount, tTargetCount));
         // Distribute to Pipes first.
-        for (IFluidHandler tPipe : tPipes) transferredAmount += aTank.drain(Utils.ca(tPipe.fill(Utils.ca(tAmount, aTank.getFluid()), EXECUTE), aTank.getFluid()), EXECUTE).getAmount();
+        distributeToTanks(aTank, tPipes, tAmount);
         // Check if we are empty.
         if (aTank.isEmpty()) return;
         // Distribute to Tanks afterwards.
-        for (IFluidHandler tTank : tTanks) transferredAmount += aTank.drain(Utils.ca(tTank.fill(Utils.ca(tAmount, aTank.getFluid()), EXECUTE), aTank.getFluid()), EXECUTE).getAmount();
+        distributeToTanks(aTank, tTanks, tAmount);
         // Check if we are empty.
         if (aTank.isEmpty()) return;
         // No Targets? Nothing to do then.
         if (tPipes.isEmpty()) return;
         // And then if there still is pressure, distribute to Pipes again.
         tAmount = (aTank.getFluid().getAmount() - aTank.getCapacity()/2) / tPipes.size();
-        if (tAmount > 0) for (IFluidHandler tPipe : tPipes) transferredAmount += aTank.drain(Utils.ca(tPipe.fill(Utils.ca(tAmount, aTank.getFluid()), EXECUTE), aTank.getFluid()), EXECUTE).getAmount();
+        if (tAmount > 0) {
+            distributeToTanks(aTank, tPipes, tAmount);
+        }
+    }
+
+    public void distributeToTanks(FluidTank aTank, List<Pair<Direction, IFluidHandler>> tTanks, int tAmount) {
+        for (Pair<Direction, IFluidHandler> tPipe : tTanks) {
+            FluidStack resource = aTank.getFluid();
+            int oldAmount = resource.getAmount();
+            ICover cover = coverHandler.map(c -> c.get(tPipe.key())).orElse(ICover.empty);
+            if (!cover.isEmpty() && cover.onTransfer(resource, false, false)){
+                int amountDrained = oldAmount - resource.getAmount();
+                if (amountDrained > 0){
+                    transferredAmount += aTank.drain(amountDrained, EXECUTE).getAmount();
+                }
+                continue;
+            }
+            transferredAmount += aTank.drain(Utils.ca(tPipe.value().fill(Utils.ca(tAmount, aTank.getFluid()), EXECUTE), aTank.getFluid()), EXECUTE).getAmount();
+        }
     }
 
     public static void burn(Level aWorld, int aX, int aY, int aZ) {
