@@ -302,7 +302,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
 
     public void distributeToTanks(FluidTank aTank, List<Pair<Direction, IFluidHandler>> tTanks, int tAmount) {
         for (Pair<Direction, IFluidHandler> tPipe : tTanks) {
-            FluidStack resource = aTank.getFluid();
+            FluidStack resource = aTank.getFluid().copy();
             int oldAmount = resource.getAmount();
             ICover cover = coverHandler.map(c -> c.get(tPipe.key())).orElse(ICover.empty);
             if (!cover.isEmpty() && cover.onTransfer(resource, false, false)){
