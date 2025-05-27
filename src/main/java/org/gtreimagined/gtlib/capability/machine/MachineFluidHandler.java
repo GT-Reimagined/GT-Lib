@@ -124,7 +124,12 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
             if (event == SlotType.CELL_IN || event == SlotType.CELL_OUT) {
                 if (data[0] instanceof Integer) tryFillCell((Integer) data[0], -1);
             } else if (event == SlotType.FL_IN || event == SlotType.FL_OUT) {
-                if (data[0] instanceof Integer) tryFillCell((Integer) data[0], -1);
+                if (data[0] instanceof Integer integer) tryFillCell(integer, -1);
+                else {
+                    for (int i = 0; i < tile.itemHandler.map(MachineItemHandler::getCellCount).orElse(0); i++) {
+                        fillCell(i, -1);
+                    }
+                }
                 if (this.tile.getMachineType().renderContainerLiquids()) {
                     tile.sidedSync(true);
                 }
