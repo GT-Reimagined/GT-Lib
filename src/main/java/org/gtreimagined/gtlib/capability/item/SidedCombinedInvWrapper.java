@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -39,6 +40,18 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
             ItemStack copy = stack.copy();
             if (coverHandler.onTransfer(copy, side, true, simulate)) {
                 return copy;
+            }
+        }
+        int index = getIndexForSlot(slot);
+        IItemHandler handler = getHandlerFromIndex(index);
+        int slot2 = getSlotFromIndex(slot, index);
+        if (handler instanceof TrackedItemHandler<?> trackedItemHandler){
+            if (trackedItemHandler.hasSlotDiversity()){
+                for (int i = 0; i < trackedItemHandler.getSize(); i++){
+                    if (i == slot2) continue;
+                    if (trackedItemHandler.getStackInSlot(i).isEmpty()) continue;
+                    if (Utils.equals(trackedItemHandler.getStackInSlot(i), stack)) return stack;
+                }
             }
         }
         return super.insertItem(slot, stack, simulate);
