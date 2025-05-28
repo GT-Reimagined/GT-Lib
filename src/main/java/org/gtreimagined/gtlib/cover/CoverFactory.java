@@ -40,7 +40,7 @@ public class CoverFactory implements IGTObject {
     @Getter
     private MenuHandler<?> menuHandler = Data.COVER_MENU_HANDLER;
     @Getter
-    private Predicate<BlockEntity> isValid = b -> !(b instanceof BlockEntityCable<?>);
+    private Predicate<BlockEntity> isValid = b -> true;
 
     protected boolean gui = false;
 
