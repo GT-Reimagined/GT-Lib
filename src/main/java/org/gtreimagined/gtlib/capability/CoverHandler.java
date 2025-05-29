@@ -208,10 +208,6 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
         return true;
     }
 
-    protected boolean canRemoveCover(ICover cover) {
-        return true;
-    }
-
     @Override
     public boolean hasCover(CoverFactory coverFactory) {
         return this.reverseLookup.containsKey(coverFactory);

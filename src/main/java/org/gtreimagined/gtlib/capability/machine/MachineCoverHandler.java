@@ -97,10 +97,6 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
         }
     }
 
-    protected boolean isCoverDefault(ICover cover){
-        return false;
-    }
-
     public boolean setOutputFacing(Player entity, Direction side) {
         Direction dir = getOutputFacing();
         CoverFactory factory = getTile().getMachineType().getOutputCover();
@@ -136,11 +132,6 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
             }
         }
         return ok;
-    }
-
-    @Override
-    protected boolean canRemoveCover(ICover cover) {
-        return true;
     }
 
     @Override
