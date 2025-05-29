@@ -217,7 +217,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
                 covers.put(Ref.DIRS[i], ICover.empty);
             }
             if (nbt.contains("outputCover") && !foundOut) {
-                ICover outputCover = CoverFactory.readCover(this, Direction.from3DDataValue(i), nbt, false);
+                ICover outputCover = CoverFactory.readCover(this, Direction.from3DDataValue(i), nbt.getCompound("outputCover"), false);
                 if (outputCover != null && !outputCover.isEmpty()){
                     this.outputCover = outputCover;
                     foundOut = true;
