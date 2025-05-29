@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.capability.machine;
 
 import lombok.Getter;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
@@ -111,6 +112,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
         ICover copy = factory.get().get(this, outputCover.getTier(), side, factory);
         copy.deserialize(outputCover.serialize());
         outputCover = copy;
+        entity.getLevel().playSound(null, getTile().getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
         sync();
         if (getTile().getLevel() != null) {
             if (!getTile().getLevel().isClientSide) {
