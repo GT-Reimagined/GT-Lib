@@ -107,7 +107,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
         boolean empty = factory == ICover.emptyFactory;
         if (dir == null && empty) return false;
         if (side == dir) return false;
-        if (getTileFacing() == side && (!getTile().getMachineType().allowsFrontCovers() || !getTile().getMachineType().allowsOutputCoversOnFacing())) return false;
+        if (getTileFacing() == side && !getTile().getMachineType().allowsOutputCoversOnFacing()) return false;
 
         ICover copy = factory.get().get(this, outputCover.getTier(), side, factory);
         copy.deserialize(outputCover.serialize());
