@@ -302,45 +302,8 @@ public class Utils {
         return ca(stack.getAmount() * amount, stack);
     }
 
-    public static boolean hasNoConsumeTag(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(Ref.KEY_STACK_NO_CONSUME);
-    }
-
     public static boolean hasNoConsumeTag(FluidStack stack) {
         return stack.getTag() != null && stack.getTag().contains(Ref.KEY_STACK_NO_CONSUME);
-    }
-
-    public static boolean hasIgnoreNbtTag(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(Ref.KEY_STACK_IGNORE_NBT);
-    }
-
-
-    public static boolean getNoConsumeTag(ItemStack stack) {
-        return stack.getTag().getBoolean(Ref.KEY_STACK_NO_CONSUME);
-    }
-
-    public static boolean getNoConsumeTag(FluidStack stack) {
-        return stack.getTag().getBoolean(Ref.KEY_STACK_NO_CONSUME);
-    }
-
-    public static ItemStack addNoConsumeTag(ItemStack stack) {
-        validateNBT(stack).getTag().putBoolean(Ref.KEY_STACK_NO_CONSUME, true);
-        return stack;
-    }
-
-    public static FluidStack addNoConsumeTag(FluidStack stack) {
-        validateNBT(stack).getTag().putBoolean(Ref.KEY_STACK_NO_CONSUME, true);
-        return stack;
-    }
-
-    public static ItemStack validateNBT(ItemStack stack) {
-        if (!stack.hasTag()) stack.setTag(new CompoundTag());
-        return stack;
-    }
-
-    public static FluidStack validateNBT(FluidStack stack) {
-        if (stack.getTag() == null) stack.setTag(new CompoundTag());
-        return stack;
     }
 
     public static boolean areItemsValid(ItemStack... items) {
@@ -576,12 +539,6 @@ public class Utils {
         return successful;
     }
 
-    private static final Consumer<?> SINK = a -> {};
-    @SuppressWarnings("unchecked")
-    public static <T> Consumer<T> sink() {
-        return (Consumer<T>) SINK;
-    }
-
     public static boolean transferFluids(IFluidHandler from, IFluidHandler to, int cap) {
         return transferFluids(from, to, cap, fluidStack -> true);
     }
@@ -660,19 +617,6 @@ public class Utils {
         return new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, ANY, ANY, ANY, predicates);
     }
 
-//    @Nullable
-//    public static Fluid getFluidById(int id) {
-//        for (Map.Entry<Fluid, Integer> entry : FluidRegistry.getRegisteredFluidIDs().entrySet()) {
-//            if (entry.getValue() == id) return entry.getKey();
-//        }
-//        return null;
-//    }
-//
-//    public static int getIdByFluid(Fluid fluid) {
-//
-//        return FluidRegistry.getRegisteredFluidIDs().get(fluid);
-//    }
-
     public static MutableComponent translatable(String key, Object... objects){
         return new TranslatableComponent(key, objects);
     }
@@ -683,60 +627,6 @@ public class Utils {
 
     public static String getModName(String modid){
         return ModList.get().getModContainerById(modid).map(m -> m.getModInfo().getDisplayName()).orElse(modid);
-    }
-
-    /**
-     * https://stackoverflow.com/a/1308407
-     **/
-    public static long getNumberOfDigits(long n, boolean in10s) {
-        if (n < 10000L) {
-            if (n < 100L) {
-                if (n < 10L) return 1;
-                else return in10s ? 10 : 2;
-            } else {
-                if (n < 1000L) return in10s ? 100 : 3;
-                else return in10s ? 1000 : 4;
-            }
-        } else {
-            if (n < 1000000000000L) {
-                if (n < 100000000L) {
-                    if (n < 1000000L) {
-                        if (n < 100000L) return in10s ? 10000 : 5;
-                        else return in10s ? 100000 : 6;
-                    } else {
-                        if (n < 10000000L) return in10s ? 1000000 : 7;
-                        else return in10s ? 10000000 : 8;
-                    }
-                } else {
-                    if (n < 10000000000L) {
-                        if (n < 1000000000L) return in10s ? 100000000 : 9;
-                        else return in10s ? 1000000000 : 10;
-                    } else {
-                        if (n < 100000000000L) return in10s ? 10000000000L : 11;
-                        else return in10s ? 100000000000L : 12;
-                    }
-                }
-            } else {
-                if (n < 10000000000000000L) {
-                    if (n < 100000000000000L) {
-                        if (n < 10000000000000L) return in10s ? 1000000000000L : 13;
-                        else return in10s ? 10000000000000L : 14;
-                    } else {
-                        if (n < 1000000000000000L) return in10s ? 100000000000000L : 15;
-                        else return in10s ? 1000000000000000L : 16;
-                    }
-                } else {
-                    if (n < 1000000000000000000L) {
-                        if (n < 100000000000000000L) return in10s ? 10000000000000000L : 17;
-                        else return in10s ? 100000000000000000L : 18;
-                    } else return in10s ? 1000000000000000000L : 19;
-                }
-            }
-        }
-    }
-
-    public static String formatNumber(long number) {
-        return DECIMAL_FORMAT.format(number);
     }
 
     public static int getVoltageTier(long voltage) {
@@ -757,17 +647,6 @@ public class Utils {
     public static BlockEntity getTile(@Nullable BlockGetter reader, BlockPos pos) {
         if (reader == null) return null;
         return reader.getBlockEntity(pos);
-        //TODO validate and redo
-//        if (pos == null || blockAccess == null) return null;
-//        if (blockAccess instanceof ChunkRenderCache) {
-//            return ((ChunkRenderCache) blockAccess).getTileEntity(pos, Chunk.CreateEntityType.CHECK);
-//        } else {
-//            return blockAccess.getTileEntity(pos);
-//        }
-    }
-
-    public static boolean isForeignTile(@Nullable BlockEntity target) {
-        return target != null && !(target instanceof BlockEntityBase);
     }
 
     @Nullable
@@ -1103,8 +982,6 @@ public class Utils {
         return destroyed;
     }
 
-    private static boolean LOCK;
-
     /**
      * Performs tree logging. If Configs.GAMEPLAY.TREE_DETECTION is true, it will do a more complex search for branches, if set to false, it will do a normal vertical loop only
      *
@@ -1292,23 +1169,6 @@ public class Utils {
         return new String(chars);
     }
 
-    public static String parseString(Object o, String original) {
-        return o instanceof String ? String.valueOf(o) : original;
-    }
-
-    public static int parseInt(Object o, int original) {
-        if (o instanceof Integer) return (Integer) o;
-        else if (o instanceof Double) return ((Double) o).intValue();
-        else if (o instanceof String) {
-            try {
-                return Integer.parseInt((String) o);
-            } catch (NumberFormatException e) {
-                return original;
-            }
-        }
-        return original;
-    }
-
     public static String getConventionalStoneType(StoneType type) {
         String string = type.getId();
         // breaks generation in stones with underscores cause the stones are generated without the 2 below lines in the name
@@ -1421,24 +1281,6 @@ public class Utils {
      */
     public static IRecipe getEmptyRecipe() {
         return new Recipe(Collections.emptyList(), new ItemStack[0], Collections.emptyList(), new FluidStack[0], 1, 1, 0, 1);
-    }
-
-    public static IRecipe getEmptyPoweredRecipe(int duration, long euT, int amps) {
-        return new Recipe(Collections.emptyList(), new ItemStack[0], Collections.emptyList(), new FluidStack[0], duration, euT, 0, amps);
-    }
-
-    /**
-     * Returns a fluid powered recipe, that is, essentially a recipe for generators.
-     *
-     * @param input    fluid inputs.
-     * @param output   fluid outputs (e.g. water)
-     * @param duration how long to generate power for
-     * @param euT      eu/T generated.
-     * @param amps     amps outputted.
-     * @return recipe.
-     */
-    public static IRecipe getFluidPoweredRecipe(List<FluidIngredient> input, FluidStack[] output, int duration, long euT, int amps) {
-        return new Recipe(Collections.emptyList(), new ItemStack[0], input, output, duration, euT, 0, amps);
     }
 
     /**

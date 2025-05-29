@@ -70,8 +70,6 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject
     }
 
     public ItemStack get(int count) {
-        //TODO replace consumeTag with flag system
-        if (count == 0) return Utils.addNoConsumeTag(new ItemStack(this, 1));
         return new ItemStack(this, count);
     }
 
