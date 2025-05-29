@@ -8,6 +8,7 @@ import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.widget.TankIconWidget;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.registration.IColorHandler;
+import org.gtreimagined.gtlib.util.Dir;
 
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 
@@ -23,8 +24,8 @@ public class HatchMachine extends Machine<HatchMachine> {
         addFlags(HATCH, COVERABLE);
         setGUI(Data.BASIC_MENU_HANDLER);
         setVerticalFacingAllowed(true);
-        covers(ICover.emptyFactory, ICover.emptyFactory, cover, ICover.emptyFactory, ICover.emptyFactory, ICover.emptyFactory);
         setOutputCover(cover);
+        setOutputDir(Dir.FORWARD);
         frontCovers();
         allowFrontIO();
         blockColorHandler((state, world, pos, machine, i) -> {

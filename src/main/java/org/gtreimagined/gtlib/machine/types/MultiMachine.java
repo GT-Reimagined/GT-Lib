@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.machine.types;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.cover.CoverFactory;
+import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
 
 public class MultiMachine extends BasicMultiMachine<MultiMachine> {
@@ -11,7 +12,7 @@ public class MultiMachine extends BasicMultiMachine<MultiMachine> {
         super(domain, name);
         setTile(BlockEntityMultiMachine::new);
         setGUI(Data.MULTI_MENU_HANDLER);
-        covers((CoverFactory[]) null);
+        setOutputCover(ICover.emptyFactory);
     }
 
     @Override

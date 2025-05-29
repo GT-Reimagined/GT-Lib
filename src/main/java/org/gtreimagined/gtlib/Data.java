@@ -113,7 +113,7 @@ public class Data {
     };
 
     public static final BasicMachine CREATIVE_GENERATOR = new BasicMachine(Ref.ID, "creative_generator").addFlags(EU, GUI).setTiers(MAX).setVerticalFacingAllowed(true).allowFrontIO().setTile(BlockEntityInfiniteStorage::new)
-            .noCovers();
+            .noOutputCover();
 
     public static void init(Dist side) {
         CREATIVE_GENERATOR.getGui().setBackgroundTexture("creative_generator");
