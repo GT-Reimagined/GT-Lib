@@ -104,7 +104,7 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
     }
 
     public MachineProperties getMachineProperty(BlockEntityMachine<?> machine) {
-        ICover[] covers = machine.coverHandler.map(CoverHandler::getAll).orElse(new ICover[]{ICover.empty, ICover.empty, ICover.empty, ICover.empty, ICover.empty, ICover.empty});
+        ICover[] covers = machine.coverHandler.map(CoverHandler::getAllRendered).orElse(new ICover[]{ICover.empty, ICover.empty, ICover.empty, ICover.empty, ICover.empty, ICover.empty});
         Machine<?> m = machine.getMachineType();
         Function<Direction, Texture> mText = a -> {
             Texture[] tex = machine.getMachineType().getBaseTexture(machine.getMachineTier(), machine.getMachineState().getTextureState());

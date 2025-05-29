@@ -469,7 +469,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public void onGuiEvent(IGuiEvent event, Player player) {
         if (event.getFactory() == ITEM_EJECT || event.getFactory() == FLUID_EJECT) {
             coverHandler.ifPresent(ch -> {
-                ch.get(ch.getOutputFacing()).onGuiEvent(event, player);
+                ch.getOutputCover().onGuiEvent(event, player);
             });
         }
         if (event.getFactory() == SlotClickEvent.SLOT_CLICKED) {

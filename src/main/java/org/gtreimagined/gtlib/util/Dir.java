@@ -12,22 +12,23 @@ public enum Dir {
     BACK();
 
     public Direction getRotatedFacing(Direction side) {
-        switch (this) {
-            case UP:
-                return Direction.UP;
-            case DOWN:
-                return Direction.DOWN;
-            case LEFT:
-                return side.getCounterClockWise();
-            case RIGHT:
-                return side.getClockWise();
-            case FORWARD:
-                return side;
-            case BACK:
-                return side.getOpposite();
-            default:
-                return side;
-        }
+        return switch (this) {
+            case UP -> switch (side) {
+                case UP -> Direction.NORTH;
+                case DOWN -> Direction.SOUTH;
+                default -> Direction.UP;
+            };
+            case DOWN -> switch (side) {
+                case UP -> Direction.SOUTH;
+                case DOWN -> Direction.NORTH;
+                default -> Direction.DOWN;
+            };
+            case LEFT -> side.getCounterClockWise();
+            case RIGHT -> side.getClockWise();
+            case FORWARD -> side;
+            case BACK -> side.getOpposite();
+            default -> side;
+        };
     }
 
     public Direction getRotatedFacing(Direction side, Direction hSide) {

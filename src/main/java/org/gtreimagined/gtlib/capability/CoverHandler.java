@@ -136,6 +136,10 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
         return ret;
     }
 
+    public ICover[] getAllRendered(){
+        return getAll();
+    }
+
     @Override
     public T getTile() {
         if (tile == null)

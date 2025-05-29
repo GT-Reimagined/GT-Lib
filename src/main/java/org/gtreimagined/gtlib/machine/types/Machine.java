@@ -45,6 +45,7 @@ import org.gtreimagined.gtlib.texture.IOverlayModeler;
 import org.gtreimagined.gtlib.texture.IOverlayTexturer;
 import org.gtreimagined.gtlib.texture.ITextureHandler;
 import org.gtreimagined.gtlib.texture.Texture;
+import org.gtreimagined.gtlib.util.Dir;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -192,6 +193,12 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      **/
     @Getter
     protected CoverFactory outputCover = COVEROUTPUT;
+    @Getter
+    protected Dir outputDir = Dir.BACK;
+    //@Getter
+    //protected CoverFactory secondaryOutputCover = ICover.emptyFactory;
+    //@Getter
+    //protected Dir secondaryOutputDir = Dir.FORWARD;
 
     /**
      * Slots
@@ -286,6 +293,11 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      */
     public T setOutputCover(CoverFactory cover) {
         this.outputCover = cover;
+        return (T) this;
+    }
+
+    public T setOutputDir(Dir dir) {
+        this.outputDir = dir;
         return (T) this;
     }
 
