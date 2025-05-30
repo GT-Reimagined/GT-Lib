@@ -177,6 +177,21 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
     }
 
     @Override
+    public <U> boolean blocksCapability(Class<U> capability, Direction side) {
+        return super.blocksCapability(capability, side) || outputCover.blocksCapability(capability, side);
+    }
+
+    @Override
+    public <U> boolean blocksInput(Class<U> capability, Direction side) {
+        return super.blocksInput(capability, side) || outputCover.blocksInput(capability, side);
+    }
+
+    @Override
+    public <U> boolean blocksOutput(Class<U> capability, Direction side) {
+        return super.blocksOutput(capability, side) || outputCover.blocksOutput(capability, side);
+    }
+
+    @Override
     public CompoundTag serialize(CompoundTag nbt) {
         CompoundTag tag = super.serialize(nbt);
         if (!outputCover.isEmpty()){

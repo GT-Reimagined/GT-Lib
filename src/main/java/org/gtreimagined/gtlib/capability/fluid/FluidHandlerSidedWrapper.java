@@ -41,7 +41,7 @@ public class FluidHandlerSidedWrapper implements IFluidNode {
     @Override
     public int fill(FluidStack resource, FluidAction action) {
         if (coverHandler != null) {
-            if (coverHandler.get(side).blocksInput(IFluidHandler.class, side)) {
+            if (coverHandler.blocksInput(IFluidHandler.class, side)) {
                 return 0;
             }
             int oldAmount = resource.getAmount();
@@ -57,7 +57,7 @@ public class FluidHandlerSidedWrapper implements IFluidNode {
     @NotNull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        if (coverHandler != null && (coverHandler.get(side).blocksOutput(IFluidHandler.class, side) || coverHandler.onTransfer(resource, side, false, action.simulate()))) {
+        if (coverHandler != null && (coverHandler.blocksOutput(IFluidHandler.class, side) || coverHandler.onTransfer(resource, side, false, action.simulate()))) {
             return FluidStack.EMPTY;
         }
         if (!fluidHandler.canOutput(side)) return FluidStack.EMPTY;

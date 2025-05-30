@@ -20,7 +20,7 @@ public class PipeFluidHandlerSidedWrapper extends FluidHandlerSidedWrapper{
     public int fill(FluidStack resource, FluidAction action) {
         if (side == null) return 0;
         if (coverHandler != null) {
-            if (coverHandler.get(side).blocksInput(IFluidHandler.class, side)) {
+            if (coverHandler.blocksInput(IFluidHandler.class, side)) {
                 return 0;
             }
             int oldAmount = resource.getAmount();
@@ -42,7 +42,7 @@ public class PipeFluidHandlerSidedWrapper extends FluidHandlerSidedWrapper{
     @Override
     public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
         if (side == null) return FluidStack.EMPTY;
-        if (coverHandler != null && (coverHandler.get(side).blocksOutput(IFluidHandler.class, side) || coverHandler.onTransfer(resource, side, false, action.simulate()))) {
+        if (coverHandler != null && (coverHandler.blocksOutput(IFluidHandler.class, side) || coverHandler.onTransfer(resource, side, false, action.simulate()))) {
             return FluidStack.EMPTY;
         }
         return super.drain(resource, action);
