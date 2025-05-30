@@ -193,10 +193,10 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     protected CoverFactory outputCover = COVEROUTPUT;
     @Getter
     protected Dir outputDir = Dir.BACK;
-    //@Getter
-    //protected CoverFactory secondaryOutputCover = ICover.emptyFactory;
-    //@Getter
-    //protected Dir secondaryOutputDir = Dir.FORWARD;
+    @Getter
+    protected CoverFactory secondaryOutputCover = ICover.emptyFactory;
+    @Getter
+    protected Dir secondaryOutputDir = Dir.FORWARD;
 
     /**
      * Slots
@@ -296,6 +296,16 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
 
     public T setOutputDir(Dir dir) {
         this.outputDir = dir;
+        return (T) this;
+    }
+
+    public T setSecondaryOutputCover(CoverFactory cover) {
+        this.secondaryOutputCover = cover;
+        return (T) this;
+    }
+
+    public T setSecondaryOutputDir(Dir dir) {
+        this.secondaryOutputDir = dir;
         return (T) this;
     }
 

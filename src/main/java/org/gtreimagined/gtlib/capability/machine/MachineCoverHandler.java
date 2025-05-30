@@ -31,8 +31,8 @@ import java.util.Arrays;
 public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverHandler<T> implements IMachineHandler, Dispatch.Sided<ICoverHandler<?>> {
     @Getter
     ICover outputCover = ICover.empty;
-    //@Getter
-    //ICover secondaryOutputCover = ICover.empty;
+    @Getter
+    ICover secondaryOutputCover = ICover.empty;
 
     public MachineCoverHandler(T tile) {
         super(tile, tile.getValidCovers());
@@ -40,10 +40,18 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
             Direction rotated = tile.getMachineType().getOutputDir().getRotatedFacing(getTileFacing());
             outputCover = tile.getMachineType().getOutputCover().get().get(this, null, rotated, tile.getMachineType().getOutputCover());
         }
+        if (tile.getMachineType().getSecondaryOutputDir() != null && tile.getMachineType().getSecondaryOutputCover() != ICover.emptyFactory) {
+            Direction rotated = tile.getMachineType().getSecondaryOutputDir().getRotatedFacing(getTileFacing());
+            secondaryOutputCover = tile.getMachineType().getSecondaryOutputCover().get().get(this, null, rotated, tile.getMachineType().getSecondaryOutputCover());
+        }
     }
 
     public Direction getOutputFacing() {
         return outputCover.side();
+    }
+
+    public Direction getSecondaryOutputFacing() {
+        return secondaryOutputCover.side();
     }
 
     @Override
@@ -53,6 +61,8 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
             ret[dir.get3DDataValue()] = get(dir);
             if (ret[dir.get3DDataValue()].isEmpty() && outputCover.side() == dir && !outputCover.isEmpty()) {
                 ret[dir.get3DDataValue()] = outputCover;
+            } else if (ret[dir.get3DDataValue()].isEmpty() && secondaryOutputCover.side() == dir && !secondaryOutputCover.isEmpty()) {
+                ret[dir.get3DDataValue()] = secondaryOutputCover;
             }
         }
         return ret;
@@ -71,6 +81,10 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
                     ICover cover = CoverFactory.readCoverRotated(this, Direction.from3DDataValue(i), rotated, nbt);
                     if (cover.getFactory() == getTile().getMachineType().getOutputCover()){
                         outputCover = cover;
+                        cover = ICover.empty;
+                    }
+                    if (cover.getFactory() == getTile().getMachineType().getSecondaryOutputCover()){
+                        secondaryOutputCover = cover;
                         cover = ICover.empty;
                     }
                     buildLookup(covers.get(rotated).getFactory(), cover.getFactory(), rotated);
