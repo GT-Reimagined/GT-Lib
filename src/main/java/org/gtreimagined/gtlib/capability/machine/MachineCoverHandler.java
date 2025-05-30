@@ -147,6 +147,18 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
     }
 
     @Override
+    public void onBlockUpdate(Direction side) {
+        super.onBlockUpdate(side);
+        if (side == outputCover.side()) outputCover.onBlockUpdate();
+    }
+
+    @Override
+    public void onBlockUpdateAllSides() {
+        super.onBlockUpdateAllSides();
+        outputCover.onBlockUpdateAllSides();
+    }
+
+    @Override
     public void onRemove() {
         super.onRemove();
         outputCover.onRemove();

@@ -162,6 +162,14 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
         covers.forEach((s,c) -> c.onFirstTick());
     }
 
+    public void onBlockUpdate(Direction side) {
+        get(side).onBlockUpdate();
+    }
+
+    public void onBlockUpdateAllSides(){
+        getCovers().forEach((d, c) -> c.onBlockUpdateAllSides());
+    }
+
     @Override
     public void onRemove() {
         covers.forEach((s, c) -> c.onRemove());
