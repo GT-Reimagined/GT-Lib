@@ -172,7 +172,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
     @Override
     public InteractionResult onInteract(@NotNull Player player, @NotNull InteractionHand hand, @NotNull Direction side, @Nullable GTToolType type) {
         InteractionResult interactionResult = super.onInteract(player, hand, side, type);
-        if (interactionResult == InteractionResult.PASS) interactionResult = outputCover.onInteract(player, hand, side, type);
+        if (interactionResult == InteractionResult.PASS && side == outputCover.side()) interactionResult = outputCover.onInteract(player, hand, side, type);
         return interactionResult;
     }
 
@@ -190,17 +190,17 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
 
     @Override
     public <U> boolean blocksCapability(Class<U> capability, Direction side) {
-        return super.blocksCapability(capability, side) || outputCover.blocksCapability(capability, side);
+        return super.blocksCapability(capability, side) || (side == outputCover.side() && outputCover.blocksCapability(capability, side));
     }
 
     @Override
     public <U> boolean blocksInput(Class<U> capability, Direction side) {
-        return super.blocksInput(capability, side) || outputCover.blocksInput(capability, side);
+        return super.blocksInput(capability, side) || (side == outputCover.side() && outputCover.blocksInput(capability, side));
     }
 
     @Override
     public <U> boolean blocksOutput(Class<U> capability, Direction side) {
-        return super.blocksOutput(capability, side) || outputCover.blocksOutput(capability, side);
+        return super.blocksOutput(capability, side) || (side == outputCover.side() && outputCover.blocksOutput(capability, side));
     }
 
     @Override
