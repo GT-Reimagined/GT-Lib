@@ -53,9 +53,10 @@ public class BehaviourExtendedHighlight implements IItemHighlight<IBasicGTTool> 
         }
         if (tile instanceof BlockEntityMachine<?> machine) {
             Direction direction = machine.getOutputFacing();
+            Direction secondary = machine.getSecondaryOutputFacing();
             if ((Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCrouching()) || machine.getMachineType().getOutputCover() == ICover.emptyFactory)
                 direction = machine.getFacing();
-            return direction != null && direction == dir;
+            return (direction != null && direction == dir) || (secondary != null && secondary == dir);
         }
         if (tile instanceof HopperBlockEntity hopperBlockEntity){
             if (dir != Direction.UP){

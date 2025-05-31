@@ -5,6 +5,7 @@ import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.cover.CoverFactory;
+import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.widget.ProgressWidget;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
@@ -38,7 +39,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
         addFlags(MULTI, COVERABLE);
         setClientTicking();
         setGUI(Data.BASIC_MENU_HANDLER);
-        covers((CoverFactory[]) null);
+        setOutputCover(ICover.emptyFactory);
         addTooltipInfo((machine, stack, world, tooltip, flag) -> {
             if (machine.getType().getStructure(machine.getTier()) != null) {
                 tooltip.add(Utils.translatable("machine.structure.form"));

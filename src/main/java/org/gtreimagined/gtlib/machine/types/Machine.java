@@ -45,6 +45,7 @@ import org.gtreimagined.gtlib.texture.IOverlayModeler;
 import org.gtreimagined.gtlib.texture.IOverlayTexturer;
 import org.gtreimagined.gtlib.texture.ITextureHandler;
 import org.gtreimagined.gtlib.texture.Texture;
+import org.gtreimagined.gtlib.util.Dir;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -112,9 +113,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     protected IShapeGetter shapeGetter;
     protected String domain, id;
     @Getter
-    protected List<Tier> tiers = new ObjectArrayList<>();
-    //Assuming facing = north.
-    protected CoverFactory[] DEFAULT_COVERS = new CoverFactory[]{ICover.emptyFactory, ICover.emptyFactory, ICover.emptyFactory, COVEROUTPUT, ICover.emptyFactory, ICover.emptyFactory};
+    protected List<Tier> tiers;
 
     /**
      * Recipe Members
@@ -192,6 +191,12 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      **/
     @Getter
     protected CoverFactory outputCover = COVEROUTPUT;
+    @Getter
+    protected Dir outputDir = Dir.BACK;
+    @Getter
+    protected CoverFactory secondaryOutputCover = ICover.emptyFactory;
+    @Getter
+    protected Dir secondaryOutputDir = Dir.FORWARD;
 
     /**
      * Slots
@@ -289,6 +294,26 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
+    public T setOutputDir(Dir dir) {
+        this.outputDir = dir;
+        return (T) this;
+    }
+
+    public T setSecondaryOutputCover(CoverFactory cover) {
+        this.secondaryOutputCover = cover;
+        return (T) this;
+    }
+
+    public T setSecondaryOutputDir(Dir dir) {
+        this.secondaryOutputDir = dir;
+        return (T) this;
+    }
+
+    public T noOutputCover(){
+        setOutputCover(ICover.emptyFactory);
+        return (T) this;
+    }
+
     public boolean allowsFrontCovers() {
         return allowFrontCovers;
     }
@@ -311,37 +336,10 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    /**
-     * Allows you to configure default covers.
-     *
-     * @param covers if null, disable covers. (Icover[] null, not 1 null cover)
-     *               1 cover sets 1 cover + output
-     *               6 covers configures all covers.
-     *               sides are bottom, top, front, back, right, left
-     * @return this
-     */
-    public T covers(CoverFactory... covers) {
-        if (covers == null) {
-            setOutputCover(ICover.emptyFactory);
-            this.DEFAULT_COVERS = new CoverFactory[]{ICover.emptyFactory, ICover.emptyFactory, ICover.emptyFactory, ICover.emptyFactory, ICover.emptyFactory, ICover.emptyFactory};
-            return (T) this;
-        }
-        if (covers.length == 1) {
-            setOutputCover(covers[0]);
-            this.DEFAULT_COVERS = new CoverFactory[]{ICover.emptyFactory, ICover.emptyFactory, ICover.emptyFactory, covers[0], ICover.emptyFactory, ICover.emptyFactory};
-        } else {
-            this.DEFAULT_COVERS = covers;
-        }
-        return (T) this;
-    }
-
+    @Deprecated(forRemoval = true)
     public T noCovers() {
-        covers((CoverFactory[]) null);
+        noOutputCover();
         return (T) this;
-    }
-
-    public CoverFactory defaultCover(Direction dir) {
-        return DEFAULT_COVERS[dir.get3DDataValue()];
     }
 
     public int amps() {

@@ -122,6 +122,7 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
         return null;
     }
 
+    @NotNull
     @Override
     public ICover get(Direction side) {
         return covers.getOrDefault(side, ICover.empty); // Should never return null, as COVER_NONE is inserted for every
@@ -134,6 +135,10 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
             ret[dir.get3DDataValue()] = get(dir);
         }
         return ret;
+    }
+
+    public ICover[] getAllRendered(){
+        return getAll();
     }
 
     @Override
@@ -155,6 +160,14 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
     @Override
     public void onFirstTick() {
         covers.forEach((s,c) -> c.onFirstTick());
+    }
+
+    public void onBlockUpdate(Direction side) {
+        get(side).onBlockUpdate();
+    }
+
+    public void onBlockUpdateAllSides(){
+        getCovers().forEach((d, c) -> c.onBlockUpdateAllSides());
     }
 
     @Override
@@ -184,8 +197,6 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
     @Override
     public boolean removeCover(Player player, Direction side, boolean onlyRemove) {
         ICover oldCover = get(side);
-        if (!onlyRemove && !canRemoveCover(oldCover))
-            return false;
         if (get(side).isEmpty() || !set(side, ICover.empty, !onlyRemove))
             return false;
         if (!onlyRemove  && player != null && !player.isCreative()) {
@@ -201,10 +212,6 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
                 player.getLevel().playSound(null, tile.getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
             }
         }
-        return true;
-    }
-
-    protected boolean canRemoveCover(ICover cover) {
         return true;
     }
 
@@ -288,9 +295,17 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
      */
     public <U> boolean blocksCapability(Class<U> capability, Direction side) {
         ICover stack = get(side);
-        if (stack == null)
-            return false;
         return stack.blocksCapability(capability, side);
+    }
+
+    public <U> boolean blocksInput(Class<U> cap, @Nullable Direction side) {
+        ICover stack = get(side);
+        return stack.blocksInput(cap, side);
+    }
+
+    public <U> boolean blocksOutput(Class<U> cap, @Nullable Direction side) {
+        ICover stack = get(side);
+        return stack.blocksOutput(cap, side);
     }
 
     /**

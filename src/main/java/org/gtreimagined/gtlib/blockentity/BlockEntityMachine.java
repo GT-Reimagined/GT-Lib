@@ -273,9 +273,9 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         super.onBlockUpdate(neighbor);
         Direction facing = Utils.getOffsetFacing(this.getBlockPos(), neighbor);
         if (facing != null) {
-            coverHandler.ifPresent(h -> h.get(facing).onBlockUpdate());
+            coverHandler.ifPresent(h -> h.onBlockUpdate(facing));
         }
-        coverHandler.ifPresent(h -> h.getCovers().forEach((d, c) -> c.onBlockUpdateAllSides()));
+        coverHandler.ifPresent(CoverHandler::onBlockUpdateAllSides);
     }
 
 
@@ -469,7 +469,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public void onGuiEvent(IGuiEvent event, Player player) {
         if (event.getFactory() == ITEM_EJECT || event.getFactory() == FLUID_EJECT) {
             coverHandler.ifPresent(ch -> {
-                ch.get(ch.getOutputFacing()).onGuiEvent(event, player);
+                ch.getOutputCover().onGuiEvent(event, player);
             });
         }
         if (event.getFactory() == SlotClickEvent.SLOT_CLICKED) {
@@ -506,6 +506,14 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     public boolean setOutputFacing(Player player, Direction side) {
         return coverHandler.map(h -> h.setOutputFacing(player, side)).orElse(false);
+    }
+
+    public Direction getSecondaryOutputFacing() {
+        return coverHandler.map(MachineCoverHandler::getSecondaryOutputFacing).orElse(this.getFacing().getOpposite());
+    }
+
+    public boolean setSecondaryOutputFacing(Player player, Direction side) {
+        return coverHandler.map(h -> h.setSecondaryOutputFacing(player, side)).orElse(false);
     }
 
     public MachineState getDefaultMachineState() {

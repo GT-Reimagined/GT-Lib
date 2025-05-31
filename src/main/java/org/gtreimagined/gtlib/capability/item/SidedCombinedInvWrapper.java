@@ -34,7 +34,7 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
     public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
         if (!inputFunction.test(side)) return stack;
         if (coverHandler != null) {
-            if (coverHandler.get(side).blocksInput(IItemHandler.class, side)) {
+            if (coverHandler.blocksInput(IItemHandler.class, side)) {
                 return stack;
             }
             ItemStack copy = stack.copy();
@@ -61,7 +61,7 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         if (!outputFunction.test(side)) return ItemStack.EMPTY;
-        if (coverHandler != null && (coverHandler.get(side).blocksOutput(IItemHandler.class, side) || coverHandler.onTransfer(getStackInSlot(slot), side, false, simulate)))
+        if (coverHandler != null && (coverHandler.blocksOutput(IItemHandler.class, side) || coverHandler.onTransfer(getStackInSlot(slot), side, false, simulate)))
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
@@ -78,21 +78,21 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
 
     @Override
     public boolean canOutput() {
-        return coverHandler == null || !coverHandler.get(side).blocksOutput(IItemHandler.class, side);
+        return coverHandler == null || !coverHandler.blocksOutput(IItemHandler.class, side);
     }
 
     @Override
     public boolean canInput() {
-        return coverHandler == null || !coverHandler.get(side).blocksInput(IItemHandler.class, side);
+        return coverHandler == null || !coverHandler.blocksInput(IItemHandler.class, side);
     }
 
     @Override
     public boolean canInput(Direction direction) {
-        return coverHandler == null || !coverHandler.get(direction).blocksInput(IItemHandler.class, direction);
+        return coverHandler == null || !coverHandler.blocksInput(IItemHandler.class, direction);
     }
 
     @Override
     public boolean canOutput(Direction direction) {
-        return coverHandler == null || !coverHandler.get(direction).blocksOutput(IItemHandler.class, direction);
+        return coverHandler == null || !coverHandler.blocksOutput(IItemHandler.class, direction);
     }
 }
