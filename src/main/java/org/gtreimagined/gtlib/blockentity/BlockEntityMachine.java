@@ -508,6 +508,14 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         return coverHandler.map(h -> h.setOutputFacing(player, side)).orElse(false);
     }
 
+    public Direction getSecondaryOutputFacing() {
+        return coverHandler.map(MachineCoverHandler::getSecondaryOutputFacing).orElse(this.getFacing().getOpposite());
+    }
+
+    public boolean setSecondaryOutputFacing(Player player, Direction side) {
+        return coverHandler.map(h -> h.setSecondaryOutputFacing(player, side)).orElse(false);
+    }
+
     public MachineState getDefaultMachineState() {
         return MachineState.IDLE;
     }

@@ -176,6 +176,11 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                             Utils.damageStack(stack, hand, player);
                             return InteractionResult.SUCCESS;
                         }
+                    } else if (type == GTTools.WRENCH_ALT) {
+                        if (tile.setSecondaryOutputFacing(player, Utils.getInteractSide(hit))){
+                            Utils.damageStack(stack, hand, player);
+                            return InteractionResult.SUCCESS;
+                        }
                     } else if (type == GTTools.SOFT_HAMMER) {
                         boolean wasDisabled = tile.toggleMachine();
                         if (wasDisabled) {
