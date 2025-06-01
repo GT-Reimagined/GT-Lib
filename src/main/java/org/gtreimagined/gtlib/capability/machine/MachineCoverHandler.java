@@ -239,8 +239,10 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
     @Override
     public InteractionResult onInteract(@NotNull Player player, @NotNull InteractionHand hand, @NotNull Direction side, @Nullable GTToolType type) {
         InteractionResult interactionResult = super.onInteract(player, hand, side, type);
-        if (interactionResult == InteractionResult.PASS && side == outputCover.side()) interactionResult = outputCover.onInteract(player, hand, side, type);
-        if (interactionResult == InteractionResult.PASS && side == secondaryOutputCover.side()) interactionResult = outputCover.onInteract(player, hand, side, type);
+        if (interactionResult == InteractionResult.PASS) {
+            if (side == outputCover.side()) interactionResult = outputCover.onInteract(player, hand, side, type);
+            else if (side == secondaryOutputCover.side()) interactionResult = secondaryOutputCover.onInteract(player, hand, side, type);
+        }
         return interactionResult;
     }
 
