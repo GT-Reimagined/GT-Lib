@@ -2,6 +2,8 @@ package org.gtreimagined.gtlib.blockentity;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
+import net.minecraft.util.RandomSource;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.GTLibProperties;
@@ -81,10 +83,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -95,7 +94,6 @@ import tesseract.api.heat.IHeatHandler;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -673,16 +671,16 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     protected <U> LazyOptional<U> getCap(@NotNull Capability<U> cap, @Nullable Direction side) {
         int index = side == null ? 6 : side.get3DDataValue();
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && fluidHandler.isPresent()) {
+        if (cap == ForgeCapabilities.FLUID_HANDLER && fluidHandler.isPresent()) {
             return fluidHandler.side(side).cast();
         }
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && itemHandler.isPresent()) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER && itemHandler.isPresent()) {
             return itemHandler.side(side).cast();
         }
         if (cap == TesseractCaps.ENERGY_HANDLER_CAPABILITY && energyHandler.isPresent()) {
             return energyHandler.side(side).cast();
         }
-        if (cap == CapabilityEnergy.ENERGY && feHandler.isPresent()){
+        if (cap == ForgeCapabilities.ENERGY && feHandler.isPresent()){
             return feHandler.side(side).cast();
         }
         return super.getCapability(cap, side);
@@ -692,7 +690,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         return getMachineType().allowsFrontIO();
     }
 
-    public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
 
     }
 

@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.client.baked;
 
 import com.google.common.collect.Sets;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.client.ModelUtils;
@@ -59,7 +60,7 @@ public class ProxyBakedModel extends GTBakedModel<ProxyBakedModel> {
     }
 
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, BlockPos pos)
+    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, BlockPos pos)
     {
         BlockEntity tile = level.getBlockEntity(pos);
         if (!(tile instanceof BlockEntityFakeBlock fake) || fake.getState() == null) {

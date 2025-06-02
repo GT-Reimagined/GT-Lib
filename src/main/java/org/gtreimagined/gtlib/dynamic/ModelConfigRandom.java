@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.dynamic;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -24,7 +25,7 @@ public class ModelConfigRandom extends ModelConfig {
     }
 
     @Override
-    public List<BakedQuad> getQuads(List<BakedQuad> quads, Int2ObjectOpenHashMap<BakedModel[]> bakedConfigs, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos) {
+    public List<BakedQuad> getQuads(List<BakedQuad> quads, Int2ObjectOpenHashMap<BakedModel[]> bakedConfigs, BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos) {
         //setModelIndex(config[rand.nextInt(config.length)]);
         BakedModel[] baked = bakedConfigs.get(getModelIndex());
         if (baked != null) {

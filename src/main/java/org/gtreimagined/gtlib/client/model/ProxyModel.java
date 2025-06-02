@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.client.model;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.baked.ProxyBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -13,7 +14,6 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,12 +27,12 @@ public class ProxyModel implements IGTModel<ProxyModel> {
     }
 
     @Override
-    public BakedModel bakeModel(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         return new ProxyBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())));
     }
 
     @Override
-    public Collection<Material> getTextures(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
+    public Collection<Material> getMaterials(IGeometryBakingContext configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
         return Collections.emptyList();
     }
 }

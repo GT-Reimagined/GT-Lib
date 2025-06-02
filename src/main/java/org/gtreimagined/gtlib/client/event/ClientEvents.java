@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.block.IInfoProvider;
@@ -33,7 +34,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -165,7 +165,7 @@ public class ClientEvents {
             int j = -1;
             for (int i = 0; i < tooltips.size(); i++) {
                 Component component = tooltips.get(i);
-                if (component instanceof TranslatableComponent translatable){
+                if (component.getContents() instanceof TranslatableContents translatable){
                     if (translatable.getKey().equals("item.durability")){
                         j = i;
                         break;

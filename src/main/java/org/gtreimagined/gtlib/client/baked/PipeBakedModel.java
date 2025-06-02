@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.client.baked;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.capability.pipe.PipeCoverHandler;
@@ -33,7 +34,7 @@ public class PipeBakedModel extends DynamicBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, Random rand, BlockAndTintGetter level, BlockPos pos) {
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, BlockAndTintGetter level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof BlockEntityPipe<?> pipe)) return super.getBlockQuads(state, side, rand, level, pos);
         if (side != null && pipe.getPipeSize().ordinal() < 6) return Collections.emptyList();

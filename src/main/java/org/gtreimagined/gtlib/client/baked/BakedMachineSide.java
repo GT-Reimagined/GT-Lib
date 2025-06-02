@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.client.baked;
 
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -21,7 +22,7 @@ public class BakedMachineSide extends GroupedBakedModel{
     }
 
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, BlockPos pos) {
+    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, BlockPos pos) {
         return ModelUtils.getQuadsFromBaked(this.models.get(""), state, side, rand, level, pos);
     }
 

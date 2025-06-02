@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.client.baked;
 
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -29,7 +30,7 @@ public class GroupedBakedModel extends GTBakedModel<GroupedBakedModel> {
     }
 
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, BlockPos pos) {
+    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, BlockPos pos) {
         int offset = side == null ? 6 : side.get3DDataValue();
         BakedQuad[] arr = CACHE[offset];
         if (arr == null) {

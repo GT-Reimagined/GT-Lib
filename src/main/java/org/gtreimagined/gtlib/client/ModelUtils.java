@@ -4,6 +4,9 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.util.RandomSource;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.common.util.TransformationHelper;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.baked.CoverBakedModel;
 import org.gtreimagined.gtlib.client.baked.IGTBakedModel;
@@ -36,11 +39,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.model.ForgeModelBakery;
-import net.minecraftforge.client.model.QuadTransformer;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.common.model.TransformationHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +50,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ModelUtils {
+    private static ModelBakery MODEL_BAKERY;
     //Assumes from North.
     public static Transformation transform(Direction side) {
         switch (side) {
@@ -104,19 +103,23 @@ public class ModelUtils {
     }
 
     public static ModelBakery getModelBakery(){
-        return ForgeModelBakery.instance();
+        return MODEL_BAKERY;
     }
 
-    public static List<BakedQuad> getQuadsFromBaked(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos){
+    public static void setModelBakery(ModelBakery modelBakery){
+        MODEL_BAKERY = modelBakery;
+    }
+
+    public static List<BakedQuad> getQuadsFromBaked(BakedModel model, BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos){
         if (model instanceof IGTBakedModel gtBaked){
             return gtBaked.getQuads(state, side, rand, level, pos);
         } else {
-            IModelData data = model.getModelData(level, pos, state, EmptyModelData.INSTANCE);
-            return model.getQuads(state, side, rand, data);
+            ModelData data = model.getModelData(level, pos, state, ModelData.EMPTY);
+            return model.getQuads(state, side, rand, data, null);
         }
     }
 
-    public static List<BakedQuad> getQuadsFromBakedCover(BakedModel model, BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos, Predicate<Map.Entry<String, BakedModel>> coverPredicate){
+    public static List<BakedQuad> getQuadsFromBakedCover(BakedModel model, BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos, Predicate<Map.Entry<String, BakedModel>> coverPredicate){
         if (model instanceof CoverBakedModel coverBakedModel){
             return coverBakedModel.getBlockQuads(state, side, rand, level, pos, coverPredicate);
         }
@@ -130,7 +133,7 @@ public class ModelUtils {
     }
 
     public static BakedModel getBakedFromModel(BlockModel model, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
-        List<BakedQuad> generalQuads = model.bake(bakery, model, getter, transform, loc, true).getQuads(null, null, Ref.RNG, EmptyModelData.INSTANCE);
+        List<BakedQuad> generalQuads = model.bake(bakery, model, getter, transform, loc, true).getQuads(null, null, Ref.RNG, ModelData.EMPTY, null);
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(model, ItemOverrides.EMPTY, true).particle(getter.apply(model.getMaterial("particle")));
         generalQuads.forEach(builder::addUnculledFace);
         return builder.build();
@@ -138,8 +141,8 @@ public class ModelUtils {
 
     public static BakedModel getSimpleBakedModel(BakedModel baked) {
         Map<Direction, List<BakedQuad>> faceQuads = new Object2ObjectOpenHashMap<>();
-        Arrays.stream(Ref.DIRS).forEach(d -> faceQuads.put(d, baked.getQuads(null, d, Ref.RNG, EmptyModelData.INSTANCE)));
-        return new SimpleBakedModel(baked.getQuads(null, null, Ref.RNG, EmptyModelData.INSTANCE), faceQuads, baked.useAmbientOcclusion(), baked.usesBlockLight(), baked.isGui3d(), baked.getParticleIcon(), baked.getTransforms(), baked.getOverrides());
+        Arrays.stream(Ref.DIRS).forEach(d -> faceQuads.put(d, baked.getQuads(null, d, Ref.RNG, ModelData.EMPTY, null)));
+        return new SimpleBakedModel(baked.getQuads(null, null, Ref.RNG, ModelData.EMPTY, null), faceQuads, baked.useAmbientOcclusion(), baked.usesBlockLight(), baked.isGui3d(), baked.getParticleIcon(), baked.getTransforms(), baked.getOverrides());
     }
 
     public static BakedModel getBaked(ResourceLocation loc) {

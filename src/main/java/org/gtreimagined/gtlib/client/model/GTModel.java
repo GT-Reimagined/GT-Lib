@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.client.model;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.client.SimpleModelState;
@@ -14,7 +15,6 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.IModelConfiguration;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -36,12 +36,12 @@ public class GTModel<T extends GTModel<T>> implements IGTModel<T> {
     }
 
     @Override
-    public BakedModel bakeModel(IModelConfiguration configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         return model != null ? model.bake(bakery, getter, getModelTransform(transform, rotations), loc) : ModelUtils.getMissingModel().bake(bakery, getter, transform, loc);
     }
 
     @Override
-    public Collection<Material> getTextures(IModelConfiguration configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
+    public Collection<Material> getMaterials(IGeometryBakingContext configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
         return model != null ? model.getMaterials(getter, errors) : Collections.emptyList();
     }
 

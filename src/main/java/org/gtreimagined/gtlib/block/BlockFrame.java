@@ -8,10 +8,8 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -170,7 +168,7 @@ public class BlockFrame extends BlockStorage implements IItemBlockProvider, Simp
                         Player player = ctx.getPlayer();
                         int j = ctx.getLevel().getMaxBuildHeight();
                         if (player instanceof ServerPlayer serverPlayer && mutableBlockPos.getY() >= j) {
-                            serverPlayer.sendMessage((Utils.translatable("build.tooHigh", j - 1)).withStyle(ChatFormatting.RED), ChatType.GAME_INFO, Util.NIL_UUID);
+                            serverPlayer.sendSystemMessage((Utils.translatable("build.tooHigh", j - 1)).withStyle(ChatFormatting.RED), true);
                         }
                         break;
                     }

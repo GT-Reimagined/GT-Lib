@@ -5,6 +5,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.GTLibProperties.MachineProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -44,7 +45,7 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
     }    
 
 
-    protected List<BakedQuad> getCoverQuads(BlockState state, Direction side, Random rand, MachineProperties data, BlockEntityMachine<?> machine, BlockAndTintGetter level, BlockPos pos) {
+    protected List<BakedQuad> getCoverQuads(BlockState state, Direction side, RandomSource rand, MachineProperties data, BlockEntityMachine<?> machine, BlockAndTintGetter level, BlockPos pos) {
    
         ICover cover = data.covers[side.get3DDataValue()];
         if (cover.isEmpty()) return Collections.emptyList();
@@ -61,7 +62,7 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
         return list;
     }
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, Random rand, BlockAndTintGetter level, @NotNull BlockPos pos) {
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, BlockAndTintGetter level, @NotNull BlockPos pos) {
         if (side == null) {
             return Collections.emptyList();
         }

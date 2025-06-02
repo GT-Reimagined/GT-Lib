@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.dynamic;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.client.baked.GTBakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -32,7 +33,7 @@ public class DynamicBakedModel extends GTBakedModel<DynamicBakedModel> {
     }
 
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos) {
+    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, @NotNull BlockPos pos) {
         if (!hasConfig || !(state.getBlock() instanceof BlockDynamic dynamic)) return Collections.emptyList();//bakedDefault.getQuads(state, side, rand, data);
         List<BakedQuad> quads = new LinkedList<>();
         ModelConfig config = dynamic.getConfig(state, level, mutablePos, pos);

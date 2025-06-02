@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.client.baked;
 
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.util.Utils;
@@ -27,11 +28,11 @@ public class CoverBakedModel extends GroupedBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, @org.jetbrains.annotations.Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, BlockPos pos) {
+    public List<BakedQuad> getBlockQuads(BlockState state, @org.jetbrains.annotations.Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, BlockPos pos) {
         return getBlockQuads(state, side, rand, level, pos, null);
     }
 
-    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull BlockAndTintGetter level, BlockPos pos, Predicate<Map.Entry<String, BakedModel>> predicate) {
+    public List<BakedQuad> getBlockQuads(BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull BlockAndTintGetter level, BlockPos pos, Predicate<Map.Entry<String, BakedModel>> predicate) {
         if (predicate == null) return Collections.emptyList();
         List<BakedQuad> quads = new ArrayList<>();
         for (Map.Entry<String, BakedModel> t : this.models.entrySet()) {

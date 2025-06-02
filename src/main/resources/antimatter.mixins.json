@@ -13,6 +13,7 @@
     "client.ItemRendererMixin",
     "client.ItemTransformDeserializerAccessor",
     "client.LevelRendererAccessor",
+    "client.ModelBakeryMixin",
     "client.MultiPlayerGameModeAccessor",
     "client.SimpleBakedModel$BuilderAccessor",
     "client.TESRMixin",

@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.client.event;
 
+import net.minecraftforge.event.level.LevelEvent;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.SoundHelper;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -9,12 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.DrawSelectionEvent.HighlightBlock;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -71,7 +69,7 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void worldUnload(WorldEvent.Unload ev) {
-        SoundHelper.worldUnload(ev.getWorld());
+    public static void worldUnload(LevelEvent.Unload ev) {
+        SoundHelper.worldUnload(ev.getLevel());
     }
 }

@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.client.model;
 
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -7,12 +8,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
-import net.minecraftforge.client.model.IModelConfiguration;
 
 public interface IModelBuilder<T extends IModelBuilder<T>> {
-    static IModelBuilder<?> of(IModelConfiguration owner, ItemOverrides overrides, TextureAtlasSprite particle)
+    static IModelBuilder<?> of(IGeometryBakingContext owner, ItemOverrides overrides, TextureAtlasSprite particle)
     {
-        return new IModelBuilder.Simple(ModelUtils.createSimpleModelBuilder(owner.useSmoothLighting(), owner.isSideLit(), owner.isShadedInGui(), owner.getCameraTransforms(), overrides).particle(particle));
+        return new IModelBuilder.Simple(ModelUtils.createSimpleModelBuilder(owner.useAmbientOcclusion(), owner.useBlockLight(), owner.isGui3d(), owner.getTransforms(), overrides).particle(particle));
     }
 
     T addFaceQuad(Direction facing, BakedQuad quad);
