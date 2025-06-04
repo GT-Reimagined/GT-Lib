@@ -36,6 +36,7 @@ public abstract class BlockEntityBase<T extends BlockEntityBase<T>> extends Bloc
             BlockEntity entity;
             if (!blockEntityCache.asMap().containsKey(side)){
                 entity = findBlockEntity(side);
+                if (entity == null) return null;
             } else {
                 entity = null;
             }
