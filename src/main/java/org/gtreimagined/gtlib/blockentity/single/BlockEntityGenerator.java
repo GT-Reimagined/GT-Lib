@@ -14,7 +14,7 @@ public class BlockEntityGenerator<T extends BlockEntityGenerator<T>> extends Blo
 
     public BlockEntityGenerator(Machine<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        energyHandler.set(() -> new MachineEnergyHandler<T>((T) this, type.amps(), type.has(GENERATOR)) {
+        energyHandler.set(() -> new MachineEnergyHandler<T>((T) this, type.getAmps(), type.has(GENERATOR)) {
 
             @Override
             public boolean canOutput(Direction direction) {

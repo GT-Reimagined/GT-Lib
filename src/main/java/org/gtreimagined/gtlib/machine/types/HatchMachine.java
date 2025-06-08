@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityHatch;
 import org.gtreimagined.gtlib.cover.CoverFactory;
-import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.widget.TankIconWidget;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.registration.IColorHandler;
@@ -26,9 +25,9 @@ public class HatchMachine extends Machine<HatchMachine> {
         setVerticalFacingAllowed(true);
         setOutputCover(cover);
         setOutputDir(Dir.FORWARD);
-        frontCovers();
-        allowFrontIO();
-        blockColorHandler((state, world, pos, machine, i) -> {
+        setAllowsFrontCovers();
+        setAllowsFrontIO();
+        setBlockColorHandler((state, world, pos, machine, i) -> {
             if (machine instanceof BlockEntityHatch<?> hatch && hatch.getTextureBlock() instanceof IColorHandler colorHandler && i == 0) {
                 return colorHandler.getBlockColor(hatch.getTextureBlock().defaultBlockState(), world, pos, i);
             }

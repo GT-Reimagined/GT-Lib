@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
-import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.widget.ProgressWidget;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
@@ -45,7 +44,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
                 tooltip.add(Utils.translatable("machine.structure.form"));
             }
         });
-        this.baseTexture((type, tier, state) -> type.getTiers().size() > 1 ? new Texture[]{new Texture(domain, "block/machine/base/" + type.getId() + "_" + tier.getId())} : new Texture[]{new Texture(domain, "block/machine/base/" + type.getId())});
+        this.setBaseTexture((type, tier, state) -> type.getTiers().size() > 1 ? new Texture[]{new Texture(domain, "block/machine/base/" + type.getId() + "_" + tier.getId())} : new Texture[]{new Texture(domain, "block/machine/base/" + type.getId())});
      }
 
     @Override

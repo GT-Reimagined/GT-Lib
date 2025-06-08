@@ -164,7 +164,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             fluidHandler.set(() -> new MachineFluidHandler<>((T) this));
         }
         if (type.has(EU)) {
-            energyHandler.set(() -> new MachineEnergyHandler<>((T) this, type.amps(), type.has(GENERATOR)));
+            energyHandler.set(() -> new MachineEnergyHandler<>((T) this, type.getAmps(), type.has(GENERATOR)));
         }
         if (type.has(FE)){
             feHandler.set(() -> new MachineFEHandler<>((T)this, (int) (this.getMachineTier().getVoltage() * 100), type.has(MachineFlag.GENERATOR)));
@@ -226,10 +226,10 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         for (SlotData<?> slot : this.getMachineType().getSlots(this.getMachineTier())) {
             instance.addWidget(SlotWidget.build(slot));
         }
-        for (SlotData<?> slot : this.getMachineType().getGui().getSlots().getSlots(SlotType.FL_IN, getMachineTier())) {
+        for (SlotData<?> slot : this.getMachineType().getGuiData().getSlots().getSlots(SlotType.FL_IN, getMachineTier())) {
             instance.addWidget(FluidSlotWidget.build(index++, slot));
         }
-        for (SlotData<?> slot : this.getMachineType().getGui().getSlots().getSlots(SlotType.FL_OUT, getMachineTier())) {
+        for (SlotData<?> slot : this.getMachineType().getGuiData().getSlots().getSlots(SlotType.FL_OUT, getMachineTier())) {
             instance.addWidget(FluidSlotWidget.build(index++, slot));
         }
         this.getMachineType().getCallbacks().forEach(t -> t.accept(instance));
@@ -237,12 +237,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @Override
     public ResourceLocation getGuiTexture() {
-        return getMachineType().getGui().getTexture(this.getMachineTier(), "machine");
+        return getMachineType().getGuiData().getTexture(this.getMachineTier(), "machine");
     }
 
     @Override
     public GuiData getGui() {
-        return getMachineType().getGui();
+        return getMachineType().getGuiData();
     }
 
     /**
@@ -631,7 +631,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, @NotNull Inventory inv, @NotNull Player player) {
-        return getMachineType().has(GUI) ? getMachineType().getGui().getMenuHandler().menu(this, inv, windowId) : null;
+        return getMachineType().has(GUI) ? getMachineType().getGuiData().getMenuHandler().menu(this, inv, windowId) : null;
     }
 
     public boolean canPlayerOpenGui(Player playerEntity) {

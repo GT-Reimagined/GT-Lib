@@ -112,11 +112,11 @@ public class Data {
         }
     };
 
-    public static final BasicMachine CREATIVE_GENERATOR = new BasicMachine(Ref.ID, "creative_generator").addFlags(EU, GUI).setTiers(MAX).setVerticalFacingAllowed(true).allowFrontIO().setTile(BlockEntityInfiniteStorage::new)
-            .noOutputCover();
+    public static final BasicMachine CREATIVE_GENERATOR = new BasicMachine(Ref.ID, "creative_generator").addFlags(EU, GUI).setTiers(MAX).setVerticalFacingAllowed(true).setAllowsFrontIO().setTile(BlockEntityInfiniteStorage::new)
+            .setNoOutputCover();
 
     public static void init(Dist side) {
-        CREATIVE_GENERATOR.getGui().setBackgroundTexture("creative_generator");
+        CREATIVE_GENERATOR.getGuiData().setBackgroundTexture("creative_generator");
         if (side.isClient()){
             CREATIVE_GENERATOR.addGuiCallback(t -> {
                 t.addButton(10, 18, APAD_LEFT, false)

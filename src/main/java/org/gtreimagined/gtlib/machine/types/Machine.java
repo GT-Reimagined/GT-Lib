@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
@@ -98,6 +99,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     /**
      * Basic Members
      **/
+    @Getter
     protected BlockEntityType<? extends BlockEntityMachine<?>> tileType;
     protected BlockEntityBase.BlockEntitySupplier<BlockEntityMachine<?>, T> tileFunc = BlockEntityMachine::new;
     protected BiFunction<Machine<T>, Tier, BlockMachine> blockFunc = BlockMachine::new;
@@ -111,6 +113,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     protected List<ITooltipInfo> tooltipFunctions = new ArrayList<>();
     @Getter
     protected IShapeGetter shapeGetter;
+    @Getter
     protected String domain, id;
     @Getter
     protected List<Tier> tiers;
@@ -123,6 +126,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     /**
      * GUI Members
      **/
+    @Getter
     protected GuiData guiData;
     @Getter
     protected CreativeModeTab group = Ref.TAB_MACHINES;
@@ -157,20 +161,27 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      **/
     protected ToIntFunction<Tier> efficiency = t -> 100 - (5 * (4 - t.getIntegerId()));
     //How many amps this machine requires.
+    @Getter
     protected int amps = 1;
 
     /**
      * Behaviours
      **/
-    protected boolean allowFrontCovers = false;
-    protected boolean allowOutputCoversOnFacing = false;
+    @Accessors(fluent = true)
+    @Getter
+    protected boolean allowsFrontCovers = false;
+    @Accessors(fluent = true)
+    @Getter
+    protected boolean allowsOutputCoversOnFacing = false;
     @Getter
     protected boolean verticalFacingAllowed = false;
     @Getter
     protected boolean noFacing = false;
     @Getter
     protected boolean noTextureRotation = false;
-    protected boolean frontIO = false;
+    @Accessors(fluent = true)
+    @Getter
+    protected boolean allowsFrontIO = false;
     @Getter
     protected boolean clientTicking = false;
     @Getter
@@ -201,7 +212,9 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     /**
      * Slots
      **/
+    @Getter
     private final Map<String, Object2IntOpenHashMap<SlotType<?>>> countLookup = new Object2ObjectOpenHashMap<>();
+    @Getter
     private final Map<String, List<SlotData<?>>> slotLookup = new Object2ObjectOpenHashMap<>();
 
     private final List<Consumer<GuiInstance>> guiCallbacks = new ObjectArrayList<>(1);
@@ -245,12 +258,12 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * @param amps amperage
      * @return this.
      */
-    public T amps(int amps) {
+    public T setAmps(int amps) {
         this.amps = amps;
         return (T) this;
     }
 
-    public T efficiency(ToIntFunction<Tier> function){
+    public T setEfficiency(ToIntFunction<Tier> function){
         this.efficiency = function;
         return (T) this;
     }
@@ -260,13 +273,13 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      *
      * @return this.
      */
-    public T frontCovers() {
-        allowFrontCovers = true;
+    public T setAllowsFrontCovers() {
+        allowsFrontCovers = true;
         return (T) this;
     }
 
-    public T outputCoversOnFacing(boolean allow) {
-        allowOutputCoversOnFacing = allow;
+    public T setAllowsOutputCoversOnFacing(boolean allow) {
+        allowsOutputCoversOnFacing = allow;
         return (T) this;
     }
 
@@ -309,41 +322,14 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    public T noOutputCover(){
+    public T setNoOutputCover(){
         setOutputCover(ICover.emptyFactory);
         return (T) this;
     }
 
-    public boolean allowsFrontCovers() {
-        return allowFrontCovers;
-    }
-
-    public boolean allowsOutputCoversOnFacing() {
-        return allowOutputCoversOnFacing;
-    }
-
-    public boolean allowsFrontIO() {
-        return frontIO;
-    }
-
-    public T allowFrontIO() {
-        this.frontIO = true;
+    public T setAllowsFrontIO() {
+        this.allowsFrontIO = true;
         return (T) this;
-    }
-
-    public T disableFrontIO() {
-        this.frontIO = false;
-        return (T) this;
-    }
-
-    @Deprecated(forRemoval = true)
-    public T noCovers() {
-        noOutputCover();
-        return (T) this;
-    }
-
-    public int amps() {
-        return amps;
     }
 
     public Direction handlePlacementFacing(BlockPlaceContext ctxt, Property<?> which, Direction dir) {
@@ -438,7 +424,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    public T baseTexture(Texture tex) {
+    public T setBaseTexture(Texture tex) {
         this.baseTexture = (m, tier, state) -> new Texture[]{tex};
         return (T) this;
     }
@@ -450,7 +436,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * @param texturer the texture handler
      * @return this
      */
-    public T overlayTexture(IOverlayTexturer texturer) {
+    public T setOverlayTextures(IOverlayTexturer texturer) {
         this.overlayTextures = texturer;
         return (T) this;
     }
@@ -462,32 +448,32 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * @param handler the texture handler
      * @return this
      */
-    public T baseTexture(ITextureHandler handler) {
+    public T setBaseTexture(ITextureHandler handler) {
         this.baseTexture = handler;
         return (T) this;
     }
 
-    public T itemModelParent(ResourceLocation parent){
+    public T setItemModelParent(ResourceLocation parent){
         this.itemModelParent = parent;
         return (T) this;
     }
 
-    public T blockColorHandler(IMachineColorHandlerBlock handlerBlock){
+    public T setBlockColorHandler(IMachineColorHandlerBlock handlerBlock){
         this.blockColorHandler = handlerBlock;
         return (T) this;
     }
 
-    public T itemColorHandler(IMachineColorHandlerItem handlerItem){
+    public T setItemColorHandler(IMachineColorHandlerItem handlerItem){
         this.itemColorHandler = handlerItem;
         return (T) this;
     }
 
-    public T modelLoader(ResourceLocation modelLoader){
+    public T setModelLoader(ResourceLocation modelLoader){
         this.modelLoader = modelLoader;
         return (T) this;
     }
 
-    public T itemGroup(CreativeModeTab group) {
+    public T setItemGroup(CreativeModeTab group) {
         this.group = group;
         return (T) this;
     }
@@ -530,12 +516,12 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    public T customShape(VoxelShape shape){
+    public T setCustomShape(VoxelShape shape){
         this.shapeGetter = (state, world, pos, context) -> shape;
         return (T) this;
     }
 
-    public T customShape(IShapeGetter shapeGetter){
+    public T setCustomShape(IShapeGetter shapeGetter){
         this.shapeGetter = shapeGetter;
         return (T) this;
     }
@@ -548,8 +534,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     public T setNoFacing(boolean noFacing){
         this.noFacing = noFacing;
         if (noFacing){
-            allowFrontIO();
-            frontCovers();
+            setAllowsFrontIO();
+            setAllowsFrontCovers();
         }
         return (T) this;
     }
@@ -559,16 +545,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-
-    @Override
-    public String getDomain() {
-        return domain;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
 
     public String getIdFromTier(Tier tier){
         return id + (tier == NONE ? "" : "_" + tier.getId());
@@ -593,11 +569,11 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return efficiency.applyAsInt(tier);
     }
 
-    public T custom() {
-        return custom(IOverlayModeler.defaultOverride);
+    public T setCustomModel() {
+        return setCustomModel(IOverlayModeler.defaultOverride);
     }
 
-    public T custom(IOverlayModeler modeler) {
+    public T setCustomModel(IOverlayModeler modeler) {
         this.overlayModels = modeler;
         return (T)this;
     }
@@ -721,15 +697,15 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return renderTesr;
     }
 
-    public T tesr() {
+    public T setRenderAsTesr() {
         this.renderTesr = true;
         return (T) this;
     }
 
-    public T renderContainedLiquids(boolean renderContainedLiquidLevel) {
+    public T setRenderContainedLiquids(boolean renderContainedLiquidLevel) {
         this.renderContainedLiquids = true;
         this.renderContainedLiquidLevel = renderContainedLiquidLevel;
-        return tesr();
+        return setRenderAsTesr();
     }
 
     public boolean renderContainerLiquids() {
@@ -757,19 +733,11 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     /**
      * Getters
      **/
-    public BlockEntityType<?> getTileType() {
-        return tileType;
-    }
-
     public Tier getFirstTier() {
         return tiers.get(0);
     }
 
-    public GuiData getGui() {
-        return guiData;
-    }
-
-    public Structure getStructure(Tier tier) {
+    public Structure<?> getStructure(Tier tier) {
         return structures.get(tier);
     }
 
@@ -790,16 +758,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
 
         }
         return types;
-    }
-
-    @Override
-    public Map<String, Object2IntOpenHashMap<SlotType<?>>> getCountLookup() {
-        return countLookup;
-    }
-
-    @Override
-    public Map<String, List<SlotData<?>>> getSlotLookup() {
-        return slotLookup;
     }
 
     @Override

@@ -32,8 +32,8 @@ public class TankMachine extends Machine<TankMachine> {
         });
         addFlags(ITEM, FLUID, COVERABLE);
         setGUI(Data.BASIC_MENU_HANDLER);
-        frontCovers();
-        allowFrontIO();
+        setAllowsFrontCovers();
+        setAllowsFrontIO();
     }
 
     public Function<Tier, Integer> getCapacityPerTier() {
