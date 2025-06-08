@@ -56,7 +56,7 @@ public class FeatureOre extends GTFeature<NoneFeatureConfiguration> {
         List<Triple<BlockPos, Material, Boolean>> ores = ORES.remove(world.getChunk(pos).getPos());
         if (ores == null) return false;
         for (Triple<BlockPos, Material, Boolean> o : ores) {
-            WorldGenHelper.setOre(world, o.getLeft(), world.getBlockState(o.getLeft()), o.getMiddle(), o.getRight() ? GTMaterialTypes.ORE : GTMaterialTypes.ORE_SMALL);
+            WorldGenHelper.setOre(world, o.getLeft(), world.getBlockState(o.getLeft()), o.getMiddle(), o.getRight() ? GTMaterialTypes.ORE : GTMaterialTypes.SMALL_ORE);
         }
         return true;
     }

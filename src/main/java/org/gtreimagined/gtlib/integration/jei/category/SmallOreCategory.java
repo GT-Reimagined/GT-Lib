@@ -73,7 +73,7 @@ public class SmallOreCategory implements IRecipeCategory<SmallOre> {
         builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 1)
                 .addIngredients(VanillaTypes.ITEM_STACK, GTAPI.all(StoneType.class).stream()
                         .filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK)
-                        .map(s -> ORE_SMALL.get().get(recipe.material(), s).asBlock())
+                        .map(s -> SMALL_ORE.get().get(recipe.material(), s).asBlock())
                         .map(ItemStack::new).toList());
 
         List<List<ItemStack>> drops = new ArrayList<>();
@@ -86,28 +86,28 @@ public class SmallOreCategory implements IRecipeCategory<SmallOre> {
         if (!stoneDusts.isEmpty()) {
             drops.add(stoneDusts);
         }
-        if (recipe.material().has(GEM_EXQUISITE)){
-            drops.add(List.of(GEM_EXQUISITE.get(recipe.material(), 1)));
+        if (recipe.material().has(EXQUISITE_GEM)){
+            drops.add(List.of(EXQUISITE_GEM.get(recipe.material(), 1)));
         }
-        if (recipe.material().has(GEM_FLAWLESS)){
-            drops.add(List.of(GEM_FLAWLESS.get(recipe.material(), 1)));
+        if (recipe.material().has(FLAWLESS_GEM)){
+            drops.add(List.of(FLAWLESS_GEM.get(recipe.material(), 1)));
         }
         if (recipe.material().has(GEM)){
             drops.add(List.of(GEM.get(recipe.material(), 1)));
         }
-        if (recipe.material().has(GEM_FLAWED)){
-            drops.add(List.of(GEM_FLAWED.get(recipe.material(), 1)));
+        if (recipe.material().has(FLAWED_GEM)){
+            drops.add(List.of(FLAWED_GEM.get(recipe.material(), 1)));
         }
-        if (recipe.material().has(GEM_CHIPPED)){
-            drops.add(List.of(GEM_CHIPPED.get(recipe.material(), 1)));
+        if (recipe.material().has(CHIPPED_GEM)){
+            drops.add(List.of(CHIPPED_GEM.get(recipe.material(), 1)));
         }
-        if (recipe.material().has(CRUSHED)){
-            drops.add(List.of(CRUSHED.get(recipe.material(), 1)));
+        if (recipe.material().has(CRUSHED_ORE)){
+            drops.add(List.of(CRUSHED_ORE.get(recipe.material(), 1)));
         }
-        if (recipe.material().has(DUST_IMPURE)){
-            drops.add(List.of(DUST_IMPURE.get(recipe.material(), 1)));
+        if (recipe.material().has(IMPURE_DUST)){
+            drops.add(List.of(IMPURE_DUST.get(recipe.material(), 1)));
         }
-        if (recipe.material().has(DUST) && !recipe.material().has(CRUSHED) && !recipe.material().has(DUST_IMPURE) && !recipe.material().has(GEM)){
+        if (recipe.material().has(DUST) && !recipe.material().has(CRUSHED_ORE) && !recipe.material().has(IMPURE_DUST) && !recipe.material().has(GEM)){
             drops.add(List.of(DUST.get(recipe.material(), 1)));
         }
         for (int i = 0; i < 8 && i < drops.size(); i++) {

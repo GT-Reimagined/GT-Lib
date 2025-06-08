@@ -116,7 +116,7 @@ public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
                 for (int tZ = 5; tZ < 11; tZ++) {
                     switch (random.nextInt(6)) {
                         case 0 -> WorldGenHelper.setState(level, new BlockPos(minX + tX, level.getMinBuildHeight(), minZ + tZ), GTMaterialTypes.ORE.get().get(material, VanillaStoneTypes.BEDROCK).asState());
-                        case 1, 2 -> WorldGenHelper.setState(level, new BlockPos(minX + tX, level.getMinBuildHeight(), minZ + tZ), GTMaterialTypes.ORE_SMALL.get().get(material, VanillaStoneTypes.BEDROCK).asState());
+                        case 1, 2 -> WorldGenHelper.setState(level, new BlockPos(minX + tX, level.getMinBuildHeight(), minZ + tZ), GTMaterialTypes.SMALL_ORE.get().get(material, VanillaStoneTypes.BEDROCK).asState());
                     }
                 }
             }
@@ -133,7 +133,7 @@ public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
                 level.setBlock(new BlockPos(minX + tX, tY - yOffset, minZ + tZ), tStone.defaultBlockState(), 0);
                 switch (random.nextInt(6)) {
                     case 0 -> WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY - yOffset, minZ + tZ), material, GTMaterialTypes.ORE);
-                    case 1, 2 -> WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY - yOffset, minZ + tZ), material, GTMaterialTypes.ORE_SMALL);
+                    case 1, 2 -> WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY - yOffset, minZ + tZ), material, GTMaterialTypes.SMALL_ORE);
                 }
             }
 
@@ -161,10 +161,10 @@ public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
                     }
                     if (tY >= tW) break;
                     if (tX <= 0 || tX >= 15 || tZ <= 0 || tZ >= 15) {
-                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, GTMaterialTypes.ORE_SMALL);
+                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, GTMaterialTypes.SMALL_ORE);
                         break;
                     } else if (random.nextInt(3) != 0) {
-                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, GTMaterialTypes.ORE_SMALL);
+                        WorldGenHelper.setOre(level, new BlockPos(minX + tX, tY, minZ + tZ), material, GTMaterialTypes.SMALL_ORE);
                     }
                 }
             }

@@ -63,7 +63,7 @@ public class MaterialDataInit {
         event.setMaterial(GTLibMaterials.NetherizedDiamond).asGemBasic(false)
                 .tool().toolDamage(4).toolSpeed(12).toolDurability(NETHERITE.getUses()).toolQuality(NETHERITE.getLevel()).toolEnchantments(of(Enchantments.FIRE_ASPECT, 3, Enchantments.SHARPNESS, 4)).build()
                 .addArmor(new int[]{1, 1, 2, 1}, 3.0F, 0.1F, 37, of(Enchantments.ALL_DAMAGE_PROTECTION, 4));
-        event.setMaterial(GTLibMaterials.NetheriteScrap).asDust(GTMaterialTypes.CRUSHED, GTMaterialTypes.RAW_ORE);
+        event.setMaterial(GTLibMaterials.NetheriteScrap).asDust(GTMaterialTypes.CRUSHED_ORE, GTMaterialTypes.RAW_ORE);
 
         event.setMaterial(GTLibMaterials.Lava).asFluid(0, 1300);
         event.setMaterial(GTLibMaterials.Water).asFluid();

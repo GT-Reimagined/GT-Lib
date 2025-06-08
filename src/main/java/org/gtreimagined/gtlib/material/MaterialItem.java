@@ -206,7 +206,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
             int level = state.getValue(LayeredCauldronBlock.LEVEL);
             if (level > 0){
                 Material material = ((MaterialItem) stack.getItem()).getMaterial();
-                if (type == GTMaterialTypes.DUST_IMPURE || type == GTMaterialTypes.DUST_PURE) {
+                if (type == GTMaterialTypes.IMPURE_DUST || type == GTMaterialTypes.PURE_DUST) {
                     if (material.has(DUST)) {
                         stack.shrink(1);
                         if (!player.addItem(DUST.get(material, 1))) {
@@ -214,26 +214,26 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
                         }
                         Material oreByProduct = !material.getByProducts().isEmpty() ? material.getByProducts().get(0) : material;
                         Material oreByProduct2 = material.getByProducts().size() > 1 ? material.getByProducts().get(1) : oreByProduct;
-                        Material byProduct = type == DUST_IMPURE ? oreByProduct : oreByProduct2;
+                        Material byProduct = type == IMPURE_DUST ? oreByProduct : oreByProduct2;
                         if (byProduct.has(DUST) && world.random.nextInt(100) < 50){
-                            if (!player.addItem(DUST_TINY.get(oreByProduct, 1))) {
-                                player.drop(DUST_TINY.get(oreByProduct, 1), false);
+                            if (!player.addItem(TINY_DUST.get(oreByProduct, 1))) {
+                                player.drop(TINY_DUST.get(oreByProduct, 1), false);
                             }
                         }
                         LayeredCauldronBlock.lowerFillLevel(state, world, pos);
                         world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                         return InteractionResult.SUCCESS;
                     }
-                } else if (type == GTMaterialTypes.CRUSHED) {
-                    if (material.has(CRUSHED_PURIFIED)) {
+                } else if (type == GTMaterialTypes.CRUSHED_ORE) {
+                    if (material.has(PURIFIED_ORE)) {
                         stack.shrink(1);
-                        if (!player.addItem(CRUSHED_PURIFIED.get(material, 1))) {
-                            player.drop(CRUSHED_PURIFIED.get(material, 1), false);
+                        if (!player.addItem(PURIFIED_ORE.get(material, 1))) {
+                            player.drop(PURIFIED_ORE.get(material, 1), false);
                         }
                         Material oreByProduct = !material.getByProducts().isEmpty() ? material.getByProducts().get(0) : material;
                         if (oreByProduct.has(DUST) && world.random.nextInt(100) < 50){
-                            if (!player.addItem(DUST_TINY.get(oreByProduct, 1))) {
-                                player.drop(DUST_TINY.get(oreByProduct, 1), false);
+                            if (!player.addItem(TINY_DUST.get(oreByProduct, 1))) {
+                                player.drop(TINY_DUST.get(oreByProduct, 1), false);
                             }
                         }
                         LayeredCauldronBlock.lowerFillLevel(state, world, pos);

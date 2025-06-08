@@ -13,9 +13,9 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 public class CauldronInteractions {
 
     public static void init() {
-        DUST_IMPURE.all().stream().filter(t -> t.has(DUST)).map(t -> DUST_IMPURE.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
-        DUST_PURE.all().stream().filter(t -> t.has(DUST)).map(t -> DUST_PURE.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
-        CRUSHED.all().stream().filter(t -> t.has(CRUSHED_PURIFIED) && t.has(DUST)).map(t -> CRUSHED.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
+        IMPURE_DUST.all().stream().filter(t -> t.has(DUST)).map(t -> IMPURE_DUST.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
+        PURE_DUST.all().stream().filter(t -> t.has(DUST)).map(t -> PURE_DUST.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
+        CRUSHED_ORE.all().stream().filter(t -> t.has(PURIFIED_ORE) && t.has(DUST)).map(t -> CRUSHED_ORE.get(t)).forEach(stack -> CauldronInteraction.WATER.put(stack, MaterialItem::interactWithCauldron));
         GTAPI.all(ItemFluidCell.class, t -> CauldronInteraction.WATER.put(t, ItemFluidCell::interactWithCauldron));
     }
 }

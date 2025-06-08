@@ -39,7 +39,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.system.CallbackI.P;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +76,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
 
     @Override
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
-        if (this.oreType != GTMaterialTypes.ORE_SMALL) {
+        if (this.oreType != GTMaterialTypes.SMALL_ORE) {
             return super.getDrops(state, builder);
         }
         List<ItemStack> drops = new ArrayList<>();
@@ -86,31 +85,31 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         boolean silkTouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) == 1;
         int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool);
         List<ItemStack> selector = new ArrayList<>();
-        ItemStack tStack = getGem(GEM_EXQUISITE, 4);
+        ItemStack tStack = getGem(EXQUISITE_GEM, 4);
         if (!tStack.isEmpty()) {
             for (int i = 0, j = (silkTouch ? 3:1); i < j; i++) selector.add(tStack);
         }
-        tStack = getGem(GEM_FLAWLESS, 2);
+        tStack = getGem(FLAWLESS_GEM, 2);
         if (!tStack.isEmpty()) {
             for (int i = 0, j = (silkTouch ? 6:2); i < j; i++) selector.add(tStack);
         }
         if (material.has(GEM)){
             for (int i = 0, j = (silkTouch? 6:12); i < j; i++) selector.add(GEM.get(material, 1));
         }
-        if (material.has(GEM_FLAWED)){
-            for (int i = 0, j = (silkTouch? 10:5); i < j; i++) selector.add(GEM_FLAWED.get(material, 2));
+        if (material.has(FLAWED_GEM)){
+            for (int i = 0, j = (silkTouch? 10:5); i < j; i++) selector.add(FLAWED_GEM.get(material, 2));
         }
-        if (material.has(GEM_CHIPPED)){
-            for (int i = 0, j = (silkTouch? 10:5); i < j; i++) selector.add(GEM_CHIPPED.get(material, 4));
+        if (material.has(CHIPPED_GEM)){
+            for (int i = 0, j = (silkTouch? 10:5); i < j; i++) selector.add(CHIPPED_GEM.get(material, 4));
         }
-        if (material.has(CRUSHED)){
-            int j = (material.has(GEM_FLAWED) || material.has(GEM_CHIPPED)) && silkTouch ? 5 : 10;
-            for (int i = 0; i < j; i++) selector.add(CRUSHED.get(material, 1));
+        if (material.has(CRUSHED_ORE)){
+            int j = (material.has(FLAWED_GEM) || material.has(CHIPPED_GEM)) && silkTouch ? 5 : 10;
+            for (int i = 0; i < j; i++) selector.add(CRUSHED_ORE.get(material, 1));
         }
-        if (material.has(DUST_IMPURE)){
-            for (int i = 0; i < 10; i++) selector.add(DUST_IMPURE.get(material, 1));
+        if (material.has(IMPURE_DUST)){
+            for (int i = 0; i < 10; i++) selector.add(IMPURE_DUST.get(material, 1));
         }
-        if (!material.has(GEM) && !material.has(CRUSHED) && !material.has(DUST_IMPURE)) {
+        if (!material.has(GEM) && !material.has(CRUSHED_ORE) && !material.has(IMPURE_DUST)) {
             selector.add(DUST.get(material, 1));
         }
         if (!selector.isEmpty()) {

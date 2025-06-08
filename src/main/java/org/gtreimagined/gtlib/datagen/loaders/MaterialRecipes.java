@@ -2,9 +2,7 @@ package org.gtreimagined.gtlib.datagen.loaders;
 
 import com.google.common.collect.ImmutableMap;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
-import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.GTCookingRecipeBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
 import org.gtreimagined.gtlib.material.Material;
@@ -12,7 +10,6 @@ import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
-import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.ItemStack;
 
@@ -25,8 +22,8 @@ import static org.gtreimagined.gtlib.material.MaterialTags.*;
 public class MaterialRecipes {
     public static void init(Consumer<FinishedRecipe> consumer, GTRecipeProvider provider) {
         GTMaterialTypes.DUST.all().forEach(m -> {
-            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_SMALL.getMaterialTag(m)), "DD", "DD");
-            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.DUST_TINY.getMaterialTag(m)), "DDD", "DDD", "DDD");
+            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_small", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.SMALL_DUST.getMaterialTag(m)), "DD", "DD");
+            provider.addStackRecipe(consumer, Ref.ID, m.getId() + "_dust_tiny", "gtlib_dusts", GTMaterialTypes.DUST.get(m, 1), of('D', GTMaterialTypes.TINY_DUST.getMaterialTag(m)), "DDD", "DDD", "DDD");
         });
         GTMaterialTypes.INGOT.all().forEach(m -> {
             if (m.has(GTMaterialTypes.NUGGET) && (!INGOT.hasReplacement(m) || !NUGGET.hasReplacement(m))){
@@ -47,13 +44,13 @@ public class MaterialRecipes {
                 addSmeltingRecipe(consumer, provider, GTMaterialTypes.ORE, GTMaterialTypes.INGOT, 1, m, SMELT_INTO.getMapping(m));
             }
         });
-        GTMaterialTypes.CRUSHED.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
+        GTMaterialTypes.CRUSHED_ORE.all().stream().filter(m -> !m.has(HAS_CUSTOM_SMELTING) && SMELT_INTO.getMapping(m).has(GTMaterialTypes.INGOT)).forEach(m -> {
             if (m != SMELT_INTO.getMapping(m) || !m.has(GTMaterialTypes.NUGGET)) return;
-            addSmeltingRecipe(consumer, provider, GTMaterialTypes.CRUSHED, GTMaterialTypes.NUGGET, 12, m);
-            addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_IMPURE, INGOT, 1, m);
-            addSmeltingRecipe(consumer, provider, GTMaterialTypes.CRUSHED_PURIFIED, GTMaterialTypes.NUGGET, 11, m);
-            addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_PURE, INGOT, 1, m);
-            addSmeltingRecipe(consumer, provider, GTMaterialTypes.CRUSHED_REFINED, GTMaterialTypes.NUGGET, 10, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.CRUSHED_ORE, GTMaterialTypes.NUGGET, 12, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.IMPURE_DUST, INGOT, 1, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.PURIFIED_ORE, GTMaterialTypes.NUGGET, 11, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.PURE_DUST, INGOT, 1, m);
+            addSmeltingRecipe(consumer, provider, GTMaterialTypes.REFINED_ORE, GTMaterialTypes.NUGGET, 10, m);
         });
         GTMaterialTypes.DUST.all().forEach(m -> {
             if (m.has(MaterialTags.HAS_CUSTOM_SMELTING)) return;
@@ -61,10 +58,10 @@ public class MaterialRecipes {
                 addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST, GTMaterialTypes.INGOT, 1, m, DIRECT_SMELT_INTO.getMapping(m));
             }
             if (DIRECT_SMELT_INTO.getMapping(m).has(GTMaterialTypes.NUGGET)) {
-                addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_TINY, GTMaterialTypes.NUGGET, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
+                addSmeltingRecipe(consumer, provider, GTMaterialTypes.TINY_DUST, GTMaterialTypes.NUGGET, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
             }
             if (DIRECT_SMELT_INTO.getMapping(m).has(CHUNK)) {
-                addSmeltingRecipe(consumer, provider, GTMaterialTypes.DUST_SMALL, CHUNK, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
+                addSmeltingRecipe(consumer, provider, GTMaterialTypes.SMALL_DUST, CHUNK, 1, m, DIRECT_SMELT_INTO.getMapping(m));;
             }
         });
     }

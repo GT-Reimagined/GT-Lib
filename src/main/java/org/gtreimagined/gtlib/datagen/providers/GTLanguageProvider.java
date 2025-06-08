@@ -262,11 +262,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                     }
                 }
                 String[] split = getLocalizedMaterialType(t);
-                if (t == GTMaterialTypes.CRUSHED)
+                if (t == GTMaterialTypes.CRUSHED_ORE)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Crushed Ores"));
-                else if (t == GTMaterialTypes.CRUSHED_PURIFIED)
+                else if (t == GTMaterialTypes.PURIFIED_ORE)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Purified Ores"));
-                else if (t == GTMaterialTypes.CRUSHED_REFINED)
+                else if (t == GTMaterialTypes.REFINED_ORE)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Refined Ores"));
                 else if (t == GTMaterialTypes.RAW_ORE_BLOCK)
                     add(Ref.ID + ".rei.group." + t.getId(), "Raw Ore Blocks");

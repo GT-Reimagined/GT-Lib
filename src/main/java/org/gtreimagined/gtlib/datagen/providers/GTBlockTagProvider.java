@@ -10,7 +10,6 @@ import org.gtreimagined.gtlib.block.BlockStoneWall;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
-import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.fluid.GTFluid;
@@ -54,7 +53,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
                 else
                     this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(o).replace(replace);
                 int oreMiningLevel = o.getMaterial().has(MaterialTags.MINING_LEVEL) ? MaterialTags.MINING_LEVEL.getInt(o.getMaterial()) : 0;
-                if (o.getOreType() == GTMaterialTypes.ORE_SMALL && oreMiningLevel > 0){
+                if (o.getOreType() == GTMaterialTypes.SMALL_ORE && oreMiningLevel > 0){
                     oreMiningLevel--;
                 }
                 int stoneMiningLevel = o.getStoneType().getHarvestLevel();
