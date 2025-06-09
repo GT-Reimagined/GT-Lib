@@ -93,7 +93,7 @@ public class GTMaterialTypes {
     public static final MaterialTypeItem<?> SAW_BLADE = new MaterialTypeItem<>("saw_blade", 2, true, U * 2);
     public static MaterialTypeItem<?> DRILL_BIT = new MaterialTypeItem<>("drill_bit", 2, true, U * 4);
     public static MaterialTypeItem<?> CHAINSAW_BIT = new MaterialTypeItem<>("chainsaw_bit", 2, true, U * 2);
-    public static MaterialTypeItem<?> WRENCHBIT = new MaterialTypeItem<>("wrench_bit", 2, true, U * 4);
+    public static MaterialTypeItem<?> WRENCH_BIT = new MaterialTypeItem<>("wrench_bit", 2, true, U * 4);
     public static final MaterialTypeItem<?> SCREWDRIVER_TIP = new MaterialTypeItem<>("screwdriver_tip", 2, true, U);
     public static final MaterialTypeItem<?> SCYTHE_BLADE = new MaterialTypeItem<>("scythe_blade", 2, true, U * 3);
     public static MaterialTypeItem<?> BUZZSAW_BLADE = new MaterialTypeItem<>("buzzsaw_blade", 2, true, U * 4);
@@ -226,7 +226,7 @@ public class GTMaterialTypes {
         FINE_WIRE.setIgnoreTextureSets();
         DRILL_BIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         CHAINSAW_BIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
-        WRENCHBIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        WRENCH_BIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         BUZZSAW_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         PICKAXE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         SHOVEL_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
