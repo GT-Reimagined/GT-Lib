@@ -752,7 +752,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
         coverHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_COVER, e.serialize(new CompoundTag())));
-        if (this.getMachineType().renderContainerLiquids()) {
+        if (this.getMachineType().rendersContainedLiquids()) {
             fluidHandler.ifPresent(e -> tag.put(Ref.KEY_MACHINE_FLUIDS, e.serialize(new CompoundTag())));
         }
         tag.putInt(Ref.KEY_MACHINE_STATE, machineState.ordinal());

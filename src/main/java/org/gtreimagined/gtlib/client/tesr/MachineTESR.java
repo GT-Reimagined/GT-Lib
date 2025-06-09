@@ -48,7 +48,7 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
     //Renders this tile as a TESR.
     @Override
     public void render(@NotNull BlockEntityMachine<?> tile, float partialTicks, @NotNull PoseStack stack, @NotNull MultiBufferSource buffer, int light, int overlay) {
-        if (tile.getMachineType().renderContainerLiquids()) {
+        if (tile.getMachineType().rendersContainedLiquids()) {
             renderLiquids(tile, partialTicks, stack, buffer, light, overlay);
         }
     }
@@ -121,7 +121,7 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
                             if (fh.getInputTanks() == null) return 0f;
                             FluidTank tank = fh.getInputTanks().getTank(off);
                             if (tank == null) return 0f;
-                            if (tile.getMachineType().renderContainerLiquidLevel()) {
+                            if (tile.getMachineType().rendersContainedLiquidLevel()) {
                                 return (float)tank.getFluid().getAmount() / (float)tank.getCapacity();
                             } else {
                                 if (tank.getFluid().getAmount() > 0) return 1f;
@@ -131,7 +131,7 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
                         if (fh.getOutputTanks() == null) return 0f;
                         FluidTank tank = fh.getOutputTanks().getTank(off);
                         if (tank == null) return 0f;
-                        if (tile.getMachineType().renderContainerLiquidLevel()) {
+                        if (tile.getMachineType().rendersContainedLiquidLevel()) {
                             return (float)tank.getFluid().getAmount() / (float)tank.getCapacity();
                         } else {
                             if (tank.getFluid().getAmount() > 0) return 1f;

@@ -190,9 +190,16 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     /**
      * Rendering
      */
-    protected boolean renderTesr = false;
-    protected boolean renderContainedLiquids = false;
-    protected boolean renderContainedLiquidLevel = false;
+    @OnlyIn(Dist.CLIENT)
+    @Accessors(fluent = true)
+    @Getter
+    protected boolean renderAsTesr = false;
+    @Accessors(fluent = true)
+    @Getter
+    protected boolean rendersContainedLiquids = false;
+    @Accessors(fluent = true)
+    @Getter
+    protected boolean rendersContainedLiquidLevel = false;
     @Getter
     @Setter
     protected int overlayLayers = 1;
@@ -217,7 +224,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     private final Map<String, List<SlotData<?>>> slotLookup = new Object2ObjectOpenHashMap<>();
 
-    private final List<Consumer<GuiInstance>> guiCallbacks = new ObjectArrayList<>(1);
+    @Getter
+    private final List<Consumer<GuiInstance>> callbacks = new ObjectArrayList<>(1);
     private static final Map<String, Set<Machine<?>>> FLAG_MAP = new Object2ObjectOpenHashMap<>();
 
     public Machine(String domain, String id) {
@@ -251,6 +259,50 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     protected void setupGui() {
         addGuiCallback(t -> t.addWidget(BackgroundWidget.build(t.handler.getGuiTexture(), t.handler.guiSize(), t.handler.guiHeight(), t.handler.guiTextureSize(), t.handler.guiTextureHeight())));
     }
+
+    public Direction handlePlacementFacing(BlockPlaceContext ctxt, Property<?> which, Direction dir) {
+        return dir;
+    }
+
+    @Override
+    public void onRegistryBuild(IForgeRegistry<?> registry) {
+        if (registry != ForgeRegistries.BLOCKS) return;
+        tileType = new BlockEntityType<>(new BlockEntityBase.BlockEntityGetter<>(tileFunc, (T)this), tiers.stream().map(t -> getBlock(this, t)).collect(Collectors.toSet()), null);
+        GTAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
+    }
+
+    /**
+     * Registers the recipemap into JEI. This can be overriden in RecipeMap::setGuiData.
+     */
+    public void registerJei() {
+        if (this.guiData != null) {
+            tierRecipeMaps.forEach((s, r) -> {
+                if (s.isEmpty()){
+                    for (int i = 0; i < tiers.size(); i++) {
+                        Tier tier = tiers.get(i);
+                        if (i == 0 && r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)){
+                            GTAPI.registerJEICategory(r, this.guiData, this, tier, false);
+                        } else {
+                            GTAPI.registerJEICategoryWorkstation(r, this, tier);
+                        }
+                    }
+                    return;
+                }
+                Tier t = GTAPI.get(Tier.class, s);
+                //If the recipe map has another GUI present don't register it.
+                if (r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)) {
+                    GTAPI.registerJEICategory(r, this.guiData, this, t, false);
+                } else {
+                    GTAPI.registerJEICategoryWorkstation(r, this, t);
+                }
+            });
+
+        }
+    }
+
+    /**
+     * Setters
+     */
 
     /**
      * Sets the required amps for this machine.
@@ -294,7 +346,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-
     /**
      * Sets the output cover fort his machine, which is per default placed on the opposite side of the machine
      * upon placement.
@@ -330,70 +381,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     public T setAllowsFrontIO() {
         this.allowsFrontIO = true;
         return (T) this;
-    }
-
-    public Direction handlePlacementFacing(BlockPlaceContext ctxt, Property<?> which, Direction dir) {
-        return dir;
-    }
-
-    @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry != ForgeRegistries.BLOCKS) return;
-        tileType = new BlockEntityType<>(new BlockEntityBase.BlockEntityGetter<>(tileFunc, (T)this), tiers.stream().map(t -> getBlock(this, t)).collect(Collectors.toSet()), null);
-        GTAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
-    }
-
-    @Override
-    public List<Consumer<GuiInstance>> getCallbacks() {
-        return this.guiCallbacks;
-    }
-
-    protected Block getBlock(Machine<T> type, Tier tier) {
-        return blockFunc.apply(type, tier);
-    }
-
-    public BlockMachine getBlockState(Tier tier) {
-        if (tileType == null) return null;
-        return GTAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), this.getDomain());
-    }
-
-    /**
-     * Returns the item variant of this machine given the tier. Only use after registration or this is null!
-     *
-     * @param tier the tier to get.
-     * @return this as an item.
-     */
-    public Item getItem(Tier tier) {
-        return BlockItem.BY_BLOCK.get(GTAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), getDomain()));
-    }
-
-    /**
-     * Registers the recipemap into JEI. This can be overriden in RecipeMap::setGuiData.
-     */
-    public void registerJei() {
-        if (this.guiData != null) {
-            tierRecipeMaps.forEach((s, r) -> {
-                if (s.isEmpty()){
-                    for (int i = 0; i < tiers.size(); i++) {
-                        Tier tier = tiers.get(i);
-                        if (i == 0 && r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)){
-                            GTAPI.registerJEICategory(r, this.guiData, this, tier, false);
-                        } else {
-                            GTAPI.registerJEICategoryWorkstation(r, this, tier);
-                        }
-                    }
-                    return;
-                }
-                Tier t = GTAPI.get(Tier.class, s);
-                //If the recipe map has another GUI present don't register it.
-                if (r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)) {
-                    GTAPI.registerJEICategory(r, this.guiData, this, t, false);
-                } else {
-                    GTAPI.registerJEICategoryWorkstation(r, this, t);
-                }
-            });
-
-        }
     }
 
     public T addTier(Tier tier) {
@@ -545,16 +532,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-
-    public String getIdFromTier(Tier tier){
-        return id + (tier == NONE ? "" : "_" + tier.getId());
-    }
-
-    public Component getDisplayName(Tier tier) {
-        String keyAddition = tierSpecificLang ? "." + tier.getId() : "";
-        return Utils.translatable("machine." + id + keyAddition, Utils.literal(tier.getId().toUpperCase(Locale.ROOT)).withStyle(tier.getRarityFormatting()));
-    }
-
     public T setClientTicking() {
         this.clientTicking = true;
         return (T) this;
@@ -565,10 +542,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    public int getMachineEfficiency(Tier tier) {
-        return efficiency.applyAsInt(tier);
-    }
-
     public T setCustomModel() {
         return setCustomModel(IOverlayModeler.defaultOverride);
     }
@@ -576,49 +549,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     public T setCustomModel(IOverlayModeler modeler) {
         this.overlayModels = modeler;
         return (T)this;
-    }
-    public List<Texture> getTextures() {
-        List<Texture> textures = new ObjectArrayList<>();
-        for (Tier tier : getTiers()) {
-            //textures.addAll(Arrays.asList(baseHandler.getBase(this, tier)));
-            textures.addAll(Arrays.asList(getBaseTexture(tier, MachineState.IDLE)));
-            textures.addAll(Arrays.asList(getBaseTexture(tier, MachineState.ACTIVE)));
-            for (int i = 0; i < overlayLayers; i++) {
-                textures.addAll(Arrays.asList(getOverlayTextures(MachineState.IDLE, tier, i)));
-                textures.addAll(Arrays.asList(getOverlayTextures(MachineState.ACTIVE, tier, i)));
-            }
-        }
-        return textures;
-    }
-
-    public Texture[] getBaseTexture(Tier tier, MachineState state) {
-        return getDatedBaseHandler().getBase(this, tier, state);
-    }
-
-    public Texture getBaseTexture(Tier tier, Direction dir, MachineState state) {
-        Texture[] texes = getDatedBaseHandler().getBase(this, tier, state);
-        if (texes.length == 1) return texes[0];
-        return texes[dir.get3DDataValue()];
-    }
-
-
-    public Texture[] getOverlayTextures(MachineState state, Tier tier, int index) {
-        return getDatedOverlayHandler().getOverlays(this, state, tier, index);
-    }
-
-    public Texture[] getOverlayTextures(MachineState state, int index) {
-        return getDatedOverlayHandler().getOverlays(this, state, this.getFirstTier(), index);
-    }
-
-    public ResourceLocation getOverlayModel(MachineState state,Direction side) {
-        return overlayModels.getOverlayModel(this, state, side);
-    }
-
-    public IRecipeMap getRecipeMap(Tier tier) {
-        if (tierRecipeMaps.containsKey(tier.getId())){
-            return tierRecipeMaps.get(tier.getId());
-        }
-        return tierRecipeMaps.get("");
     }
 
     public T addFlags(String... flags) {
@@ -692,32 +622,15 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         structures.put(tier, func.apply(new StructureBuilder<>()));
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public boolean renderAsTesr() {
-        return renderTesr;
-    }
-
     public T setRenderAsTesr() {
-        this.renderTesr = true;
+        this.renderAsTesr = true;
         return (T) this;
     }
 
-    public T setRenderContainedLiquids(boolean renderContainedLiquidLevel) {
-        this.renderContainedLiquids = true;
-        this.renderContainedLiquidLevel = renderContainedLiquidLevel;
+    public T setRendersContainedLiquids(boolean renderContainedLiquidLevel) {
+        this.rendersContainedLiquids = true;
+        this.rendersContainedLiquidLevel = renderContainedLiquidLevel;
         return setRenderAsTesr();
-    }
-
-    public boolean renderContainerLiquids() {
-        return renderContainedLiquids;
-    }
-
-    public boolean renderContainerLiquidLevel(){
-        return renderContainedLiquidLevel;
-    }
-
-    public boolean hasTierSpecificLang(){
-        return tierSpecificLang;
     }
 
     /**
@@ -733,6 +646,86 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     /**
      * Getters
      **/
+
+    protected Block getBlock(Machine<T> type, Tier tier) {
+        return blockFunc.apply(type, tier);
+    }
+
+    public BlockMachine getBlockState(Tier tier) {
+        if (tileType == null) return null;
+        return GTAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), this.getDomain());
+    }
+
+    /**
+     * Returns the item variant of this machine given the tier. Only use after registration or this is null!
+     *
+     * @param tier the tier to get.
+     * @return this as an item.
+     */
+    public Item getItem(Tier tier) {
+        return BlockItem.BY_BLOCK.get(GTAPI.get(itemClassSupplier.get(), this.getIdFromTier(tier), getDomain()));
+    }
+
+    public String getIdFromTier(Tier tier){
+        return id + (tier == NONE ? "" : "_" + tier.getId());
+    }
+
+    public Component getDisplayName(Tier tier) {
+        String keyAddition = tierSpecificLang ? "." + tier.getId() : "";
+        return Utils.translatable("machine." + id + keyAddition, Utils.literal(tier.getId().toUpperCase(Locale.ROOT)).withStyle(tier.getRarityFormatting()));
+    }
+
+    public int getMachineEfficiency(Tier tier) {
+        return efficiency.applyAsInt(tier);
+    }
+
+    public List<Texture> getTextures() {
+        List<Texture> textures = new ObjectArrayList<>();
+        for (Tier tier : getTiers()) {
+            //textures.addAll(Arrays.asList(baseHandler.getBase(this, tier)));
+            textures.addAll(Arrays.asList(getBaseTexture(tier, MachineState.IDLE)));
+            textures.addAll(Arrays.asList(getBaseTexture(tier, MachineState.ACTIVE)));
+            for (int i = 0; i < overlayLayers; i++) {
+                textures.addAll(Arrays.asList(getOverlayTextures(MachineState.IDLE, tier, i)));
+                textures.addAll(Arrays.asList(getOverlayTextures(MachineState.ACTIVE, tier, i)));
+            }
+        }
+        return textures;
+    }
+
+    public Texture[] getBaseTexture(Tier tier, MachineState state) {
+        return getDatedBaseHandler().getBase(this, tier, state);
+    }
+
+    public Texture getBaseTexture(Tier tier, Direction dir, MachineState state) {
+        Texture[] texes = getDatedBaseHandler().getBase(this, tier, state);
+        if (texes.length == 1) return texes[0];
+        return texes[dir.get3DDataValue()];
+    }
+
+    public Texture[] getOverlayTextures(MachineState state, Tier tier, int index) {
+        return getDatedOverlayHandler().getOverlays(this, state, tier, index);
+    }
+
+    public Texture[] getOverlayTextures(MachineState state, int index) {
+        return getDatedOverlayHandler().getOverlays(this, state, this.getFirstTier(), index);
+    }
+
+    public ResourceLocation getOverlayModel(MachineState state,Direction side) {
+        return overlayModels.getOverlayModel(this, state, side);
+    }
+
+    public IRecipeMap getRecipeMap(Tier tier) {
+        if (tierRecipeMaps.containsKey(tier.getId())){
+            return tierRecipeMaps.get(tier.getId());
+        }
+        return tierRecipeMaps.get("");
+    }
+
+    public boolean hasTierSpecificLang(){
+        return tierSpecificLang;
+    }
+
     public Tier getFirstTier() {
         return tiers.get(0);
     }

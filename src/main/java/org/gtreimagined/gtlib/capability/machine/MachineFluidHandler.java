@@ -130,7 +130,7 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
                         fillCell(i, -1);
                     }
                 }
-                if (this.tile.getMachineType().renderContainerLiquids()) {
+                if (this.tile.getMachineType().rendersContainedLiquids()) {
                     tile.sidedSync(true);
                 }
             }
