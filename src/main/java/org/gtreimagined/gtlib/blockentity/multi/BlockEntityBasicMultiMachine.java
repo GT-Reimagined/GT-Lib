@@ -409,7 +409,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     @Override
     public void onLoad() {
         super.onLoad();
-        Structure struc = getMachineType().getStructure(getMachineTier());
+        Structure<T> struc = getMachineType().getStructure(getMachineTier());
         if (struc != null) {
             //StructureCache.add(level, worldPosition, struc.allPositions(this));
         }

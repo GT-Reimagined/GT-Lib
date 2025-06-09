@@ -730,7 +730,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return tiers.get(0);
     }
 
-    public Structure<?> getStructure(Tier tier) {
+    public <U extends BlockEntityBasicMultiMachine<U>> Structure<U> getStructure(Tier tier) {
         return structures.get(tier);
     }
 
