@@ -115,7 +115,7 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
         super.serverTick(level, pos, state);
-        this.setHolder(GTHolder.create(this, 0));
+        //this.setHolder(GTHolder.create(this, 0));
     }
 
     @Override
