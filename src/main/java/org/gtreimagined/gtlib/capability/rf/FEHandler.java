@@ -6,10 +6,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import tesseract.api.Serializable;
+import tesseract.api.fe.IExtendedEnergyStorage;
 import tesseract.api.fe.IFENode;
 
 
-public class FEHandler implements IFENode, Serializable {
+public class FEHandler implements IExtendedEnergyStorage, Serializable {
 
     protected final int capacity;
 

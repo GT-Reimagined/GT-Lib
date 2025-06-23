@@ -12,7 +12,7 @@ import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import tesseract.api.gt.IGTNode;
+import tesseract.api.gt.IEnergyHandler;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class BlockEntityBatteryBuffer<T extends BlockEntityBatteryBuffer<T>> ext
             @Override
             public long getInputAmperage() {
                 if (cachedItems != null && !cachedItems.isEmpty()){
-                    return cachedItems.stream().map(Pair::right).mapToLong(IGTNode::getInputAmperage).sum();
+                    return cachedItems.stream().map(Pair::right).mapToLong(IEnergyHandler::getInputAmperage).sum();
                 }
                 return 0;
             }
@@ -70,7 +70,7 @@ public class BlockEntityBatteryBuffer<T extends BlockEntityBatteryBuffer<T>> ext
             @Override
             public long getOutputAmperage() {
                 if (cachedItems != null && !cachedItems.isEmpty()){
-                    return cachedItems.stream().map(Pair::right).mapToLong(IGTNode::getOutputAmperage).sum();
+                    return cachedItems.stream().map(Pair::right).mapToLong(IEnergyHandler::getOutputAmperage).sum();
                 }
                 return super.getOutputAmperage();
             }

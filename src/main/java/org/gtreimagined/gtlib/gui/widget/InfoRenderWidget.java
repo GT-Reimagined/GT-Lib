@@ -9,9 +9,6 @@ import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
 import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import net.minecraft.client.Minecraft;
-import tesseract.TesseractGraphWrappers;
-import tesseract.api.ITickingController;
-import tesseract.api.gt.GTController;
 
 import static org.gtreimagined.gtlib.gui.ICanSyncData.SyncDirection.SERVER_TO_CLIENT;
 
@@ -83,7 +80,7 @@ public class InfoRenderWidget<T extends InfoRenderWidget<T>> extends Widget {
             super.init();
             BlockEntityPipe<?> pipe = (BlockEntityPipe<?>) gui.handler;
             final long pos = pipe.getBlockPos().asLong();
-            gui.syncLong(() -> {
+            /*gui.syncLong(() -> {
                 ITickingController controller = TesseractGraphWrappers.GT_ENERGY.getController(pipe.getLevel(), pipe.getBlockPos().asLong());
                 if (controller == null) return 0L;
                 GTController gt = (GTController) controller;
@@ -95,18 +92,18 @@ public class InfoRenderWidget<T extends InfoRenderWidget<T>> extends Widget {
                 GTController gt = (GTController) controller;
                 return gt.totalAmps();
             }, a -> this.ampAverage = a, SERVER_TO_CLIENT);
-            /*gui.syncInt(() -> {
+            *//*gui.syncInt(() -> {
                 ITickingController controller = Tesseract.GT_ENERGY.getController(pipe.getLevel(), pipe.getBlockPos().asLong());
                 if (controller == null) return 0;
                 GTController gt = (GTController) controller;
                 return gt.cableFrameAverage(pos);
-            }, a -> this.cableAverage = a, SERVER_TO_CLIENT);*/
+            }, a -> this.cableAverage = a, SERVER_TO_CLIENT);*//*
             gui.syncDouble(() -> {
                 ITickingController controller = TesseractGraphWrappers.GT_ENERGY.getController(pipe.getLevel(), pipe.getBlockPos().asLong());
                 if (controller == null) return 0.0;
                 GTController gt = (GTController) controller;
                 return gt.totalLoss();
-            }, a -> this.loss = a, SERVER_TO_CLIENT);
+            }, a -> this.loss = a, SERVER_TO_CLIENT);*/
         }
 
         public static WidgetSupplier build() {

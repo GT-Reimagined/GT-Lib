@@ -16,16 +16,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import tesseract.TesseractGraphWrappers;
 import tesseract.api.capability.TesseractGTCapability;
 import tesseract.api.forge.TesseractCaps;
+import tesseract.api.gt.GTFactoryGrid;
+import tesseract.api.gt.GTFactoryNetwork;
 import tesseract.api.gt.GTHolder;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.gt.IGTCable;
 
+import java.util.Collection;
+
 public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> implements IGTCable, Dispatch.Sided<IEnergyHandler>, IInfoRenderer<InfoRenderWidget.TesseractGTWidget> {
 
     private long holder;
+    private GTFactoryNetwork network;
 
     public BlockEntityCable(T type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -40,12 +44,13 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
 
     @Override
     protected void register() {
-        TesseractGraphWrappers.GT_ENERGY.registerConnector(getLevel(), getBlockPos().asLong(), this, isConnector());
+        GTFactoryGrid.INSTANCE.addElement(this);
     }
 
     @Override
     protected boolean deregister() {
-        return TesseractGraphWrappers.GT_ENERGY.remove(getLevel(), getBlockPos().asLong());
+        GTFactoryGrid.INSTANCE.removeElement(this);
+        return true;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     @Override
     public void onBlockUpdate(BlockPos neighbour) {
         super.onBlockUpdate(neighbour);
+        GTFactoryGrid.INSTANCE.addElement(this);
     }
 
     @Override
@@ -102,6 +108,11 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     }
 
     @Override
+    public BlockEntity getBlockEntity() {
+        return this;
+    }
+
+    @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
         super.serverTick(level, pos, state);
         this.setHolder(GTHolder.create(this, 0));
@@ -132,5 +143,27 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
         renderer.draw(stack, "Average inserted: " + ((double) (instance.voltAverage - instance.loss)) / 20, left, top + 24, 0xFAFAFF);
         renderer.draw(stack, "Loss average: " + (double) instance.loss / 20, left, top + 32, 0xFAFAFF);
         return 40;
+    }
+
+    @Override
+    public void getNeighbours(Collection<IGTCable> neighbours) {
+        for (Direction dir : Direction.values()) {
+            BlockEntityPipe<?> pipe = getPipe(dir);
+            if (pipe instanceof BlockEntityCable<?> cable) {
+                if (cable.connects(dir.getOpposite()) && connects(dir)){
+                    neighbours.add(cable);
+                }
+            }
+        }
+    }
+
+    @Override
+    public GTFactoryNetwork getNetwork() {
+        return network;
+    }
+
+    @Override
+    public void setNetwork(GTFactoryNetwork network) {
+        this.network = network;
     }
 }

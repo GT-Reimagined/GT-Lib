@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.context.TesseractItemContext;
 import tesseract.api.forge.TesseractCaps;
+import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.gt.IEnergyHandlerItem;
 import tesseract.api.gt.IEnergyItem;
-import tesseract.api.gt.IGTNode;
 
 import java.util.List;
 import java.util.Optional;
@@ -127,7 +127,7 @@ public class ItemBattery extends ItemBasic<ItemBattery> implements IEnergyItem {
             boolean red = worldIn == null || worldIn.getGameTime() % 20 < 10;
             tooltip.add(Utils.translatable("item.amps", amps).withStyle(red ? ChatFormatting.DARK_RED : ChatFormatting.WHITE));
         }
-        long energy = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(IGTNode::getEnergy).orElse(0L);
+        long energy = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(IEnergyHandler::getEnergy).orElse(0L);
         tooltip.add(Utils.translatable("item.charge").append(": ").append(Utils.literal(energy + "/" + cap).withStyle(energy == 0 ? ChatFormatting.RED : ChatFormatting.GREEN)).append(" (" + tier.getId().toUpperCase() + ")"));
         super.appendHoverText(stack, worldIn, tooltip, flag);
     }

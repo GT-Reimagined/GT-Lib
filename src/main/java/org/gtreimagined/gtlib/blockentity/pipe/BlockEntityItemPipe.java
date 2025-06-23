@@ -73,6 +73,11 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     }
 
     @Override
+    public BlockEntity getBlockEntity() {
+        return this;
+    }
+
+    @Override
     public int getCapacity() {
         return getPipeType().getCapacity(getPipeSize());
     }

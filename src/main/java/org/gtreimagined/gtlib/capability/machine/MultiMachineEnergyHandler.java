@@ -3,7 +3,6 @@ package org.gtreimagined.gtlib.capability.machine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.machine.Tier;
 import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.gt.IGTNode;
 
 import java.util.Arrays;
 
@@ -33,7 +32,7 @@ public class MultiMachineEnergyHandler<T extends BlockEntityMultiMachine<T>> ext
             this.voltageIn = handler.getInputVoltage();
             this.voltageOut = handler.getOutputVoltage();
         }
-        this.cachedCapacity = super.getCapacity() + Arrays.stream(inputs).mapToLong(IGTNode::getCapacity).sum() + Arrays.stream(outputs).mapToLong(IGTNode::getCapacity).sum();
+        this.cachedCapacity = super.getCapacity() + Arrays.stream(inputs).mapToLong(IEnergyHandler::getCapacity).sum() + Arrays.stream(outputs).mapToLong(IEnergyHandler::getCapacity).sum();
     }
 
     private void cacheInputs() {
@@ -88,7 +87,7 @@ public class MultiMachineEnergyHandler<T extends BlockEntityMultiMachine<T>> ext
 
     @Override
     public long getEnergy() {
-        return super.getEnergy() + (inputs == null ? 0 : Arrays.stream(inputs).mapToLong(IGTNode::getEnergy).sum()) + (outputs == null ? 0 : Arrays.stream(outputs).mapToLong(IGTNode::getEnergy).sum());
+        return super.getEnergy() + (inputs == null ? 0 : Arrays.stream(inputs).mapToLong(IEnergyHandler::getEnergy).sum()) + (outputs == null ? 0 : Arrays.stream(outputs).mapToLong(IEnergyHandler::getEnergy).sum());
     }
 
     @Override

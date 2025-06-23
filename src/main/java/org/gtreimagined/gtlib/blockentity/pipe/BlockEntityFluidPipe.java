@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.blockentity.pipe;
 
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.IPreTickTile;
 import org.gtreimagined.gtlib.capability.Dispatch;
@@ -86,6 +87,11 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
         return true;
     }
 
+
+    @Override
+    public BlockEntity getBlockEntity() {
+        return this;
+    }
 
     @Override
     public void load(CompoundTag tag) {
