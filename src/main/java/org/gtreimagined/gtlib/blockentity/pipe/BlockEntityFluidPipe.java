@@ -66,10 +66,12 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
     @Override
     public void onLoad() {
         super.onLoad();
-        if (even(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ())) {
-            TileTicker.SERVER_TICK_PRE.add(this);
-        } else {
-            TileTicker.SERVER_TICK_PR2.add(this);
+        if (isServerSide()){
+            if (even(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ())) {
+                TileTicker.SERVER_TICK_PRE.add(this);
+            } else {
+                TileTicker.SERVER_TICK_PR2.add(this);
+            }
         }
     }
 

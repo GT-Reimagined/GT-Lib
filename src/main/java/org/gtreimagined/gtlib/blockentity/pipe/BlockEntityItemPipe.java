@@ -280,7 +280,9 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     @Override
     public void onLoad() {
         super.onLoad();
-        TileTicker.SERVER_TICK_PRE.add(this);
+        if (this.isServerSide()) {
+            TileTicker.SERVER_TICK_PRE.add(this);
+        }
     }
 
     @Override
