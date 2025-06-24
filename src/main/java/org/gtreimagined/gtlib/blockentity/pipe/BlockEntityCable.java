@@ -149,7 +149,7 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     public void getNeighbours(Collection<IGTCable> neighbours) {
         for (Direction dir : Direction.values()) {
             BlockEntityPipe<?> pipe = getPipe(dir);
-            if (pipe instanceof BlockEntityCable<?> cable) {
+            if (pipe instanceof IGTCable cable) {
                 if (cable.connects(dir.getOpposite()) && connects(dir)){
                     neighbours.add(cable);
                 }
