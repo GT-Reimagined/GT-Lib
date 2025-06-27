@@ -5,15 +5,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.gtreimagined.gtlib.pipe.types.HeatPipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import tesseract.api.heat.HeatFactoryGrid;
-import tesseract.api.heat.HeatFactoryNetwork;
-import tesseract.api.heat.IHeatHandler;
-import tesseract.api.heat.IHeatPipe;
+import tesseract.api.hu.HUGrid;
+import tesseract.api.hu.HUNetwork;
+import tesseract.api.hu.IHeatHandler;
+import tesseract.api.hu.IHUPipe;
 
 import java.util.Collection;
 
-public class BlockEntityHeatPipe<T extends HeatPipe<T>> extends BlockEntityPipe<T> implements IHeatPipe {
-    HeatFactoryNetwork network;
+public class BlockEntityHeatPipe<T extends HeatPipe<T>> extends BlockEntityPipe<T> implements IHUPipe {
+    HUNetwork network;
     public BlockEntityHeatPipe(T type, BlockPos pos, BlockState state) {
         super(type, pos, state);
 
@@ -26,12 +26,12 @@ public class BlockEntityHeatPipe<T extends HeatPipe<T>> extends BlockEntityPipe<
 
     @Override
     protected void register() {
-        HeatFactoryGrid.INSTANCE.addElement(this);
+        HUGrid.INSTANCE.addElement(this);
     }
 
     @Override
     protected boolean deregister() {
-        HeatFactoryGrid.INSTANCE.removeElement(this);
+        HUGrid.INSTANCE.removeElement(this);
         return true;
     }
 
@@ -46,7 +46,7 @@ public class BlockEntityHeatPipe<T extends HeatPipe<T>> extends BlockEntityPipe<
     }
 
     @Override
-    public void getNeighbours(Collection<IHeatPipe> neighbours) {
+    public void getNeighbours(Collection<IHUPipe> neighbours) {
         for (Direction dir : Direction.values()) {
             BlockEntityPipe<?> pipe = getPipe(dir);
             if (pipe instanceof BlockEntityHeatPipe<?> heatPipe) {
@@ -58,12 +58,12 @@ public class BlockEntityHeatPipe<T extends HeatPipe<T>> extends BlockEntityPipe<
     }
 
     @Override
-    public HeatFactoryNetwork getNetwork() {
+    public HUNetwork getNetwork() {
         return network;
     }
 
     @Override
-    public void setNetwork(HeatFactoryNetwork network) {
+    public void setNetwork(HUNetwork network) {
         this.network = network;
     }
 }

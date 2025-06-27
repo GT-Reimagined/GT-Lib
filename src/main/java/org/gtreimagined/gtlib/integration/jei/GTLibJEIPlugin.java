@@ -62,9 +62,8 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.gt.IEnergyItem;
-import tesseract.api.gt.IGTNode;
+import tesseract.api.eu.IEnergyHandler;
+import tesseract.api.eu.IEnergyItem;
 import tesseract.api.wrapper.ItemStackWrapper;
 
 import java.util.ArrayList;

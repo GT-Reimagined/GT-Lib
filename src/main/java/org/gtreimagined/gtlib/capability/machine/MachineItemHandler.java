@@ -36,7 +36,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import tesseract.api.Serializable;
 import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandlerItem;
+import tesseract.api.eu.IEnergyHandlerItem;
 
 import java.util.ArrayList;
 import java.util.Collections;

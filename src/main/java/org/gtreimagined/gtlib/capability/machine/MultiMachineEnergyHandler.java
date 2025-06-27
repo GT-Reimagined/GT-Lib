@@ -2,7 +2,7 @@ package org.gtreimagined.gtlib.capability.machine;
 
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.machine.Tier;
-import tesseract.api.gt.IEnergyHandler;
+import tesseract.api.eu.IEnergyHandler;
 
 import java.util.Arrays;
 

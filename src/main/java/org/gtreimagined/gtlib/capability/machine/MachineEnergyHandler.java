@@ -22,8 +22,8 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.gt.IEnergyHandlerItem;
+import tesseract.api.eu.IEnergyHandler;
+import tesseract.api.eu.IEnergyHandlerItem;
 
 import java.util.List;
 import java.util.Optional;
@@ -239,7 +239,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
 
     /*@Override
     public long availableAmpsOutput() {
-        return super.availableAmpsOutput() + this.cachedItems.stream().map(Pair::right).mapToLong(IGTNode::availableAmpsOutput).sum();
+        return super.availableAmpsOutput() + this.cachedItems.stream().map(Pair::right).mapToLong(IEUNode::availableAmpsOutput).sum();
     }*/
 
     /*@Override

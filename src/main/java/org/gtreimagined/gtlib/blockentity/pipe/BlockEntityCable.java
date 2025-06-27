@@ -16,20 +16,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import tesseract.api.capability.TesseractGTCapability;
+import tesseract.api.capability.TesseractEUCapability;
+import tesseract.api.eu.EUHolder;
+import tesseract.api.eu.IEUCable;
 import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.GTFactoryGrid;
-import tesseract.api.gt.GTFactoryNetwork;
-import tesseract.api.gt.GTHolder;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.gt.IGTCable;
+import tesseract.api.eu.EUGrid;
+import tesseract.api.eu.EUNetwork;
+import tesseract.api.eu.IEnergyHandler;
 
 import java.util.Collection;
 
-public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> implements IGTCable, Dispatch.Sided<IEnergyHandler>, IInfoRenderer<InfoRenderWidget.TesseractGTWidget> {
+public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> implements IEUCable, Dispatch.Sided<IEnergyHandler>, IInfoRenderer<InfoRenderWidget.TesseractGTWidget> {
 
     private long holder;
-    private GTFactoryNetwork network;
+    private EUNetwork network;
 
     public BlockEntityCable(T type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -38,18 +38,18 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
 
     @Override
     public void onLoad() {
-        this.holder = GTHolder.create(this, 0);
+        this.holder = EUHolder.create(this, 0);
         super.onLoad();
     }
 
     @Override
     protected void register() {
-        GTFactoryGrid.INSTANCE.addElement(this);
+        EUGrid.INSTANCE.addElement(this);
     }
 
     @Override
     protected boolean deregister() {
-        GTFactoryGrid.INSTANCE.removeElement(this);
+        EUGrid.INSTANCE.removeElement(this);
         return true;
     }
 
@@ -61,7 +61,7 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     @Override
     public void onBlockUpdate(BlockPos neighbour) {
         super.onBlockUpdate(neighbour);
-        GTFactoryGrid.INSTANCE.addElement(this);
+        EUGrid.INSTANCE.addElement(this);
     }
 
     @Override
@@ -115,12 +115,12 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
         super.serverTick(level, pos, state);
-        //this.setHolder(GTHolder.create(this, 0));
+        //this.setHolder(EUHolder.create(this, 0));
     }
 
     @Override
     public LazyOptional<IEnergyHandler> forSide(Direction side) {
-        return LazyOptional.of(() -> new TesseractGTCapability<>(this, side, !isConnector(), (stack, dir, input, simulate) ->
+        return LazyOptional.of(() -> new TesseractEUCapability<>(this, side, !isConnector(), (stack, dir, input, simulate) ->
         this.coverHandler.map(t -> t.onTransfer(stack, dir, input, simulate)).orElse(false)));
     }
 
@@ -146,10 +146,10 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     }
 
     @Override
-    public void getNeighbours(Collection<IGTCable> neighbours) {
+    public void getNeighbours(Collection<IEUCable> neighbours) {
         for (Direction dir : Direction.values()) {
             BlockEntity pipe = getCachedBlockEntity(dir);
-            if (pipe instanceof IGTCable cable) {
+            if (pipe instanceof IEUCable cable) {
                 if (cable.connects(dir.getOpposite()) && connects(dir)){
                     neighbours.add(cable);
                 }
@@ -158,12 +158,12 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     }
 
     @Override
-    public GTFactoryNetwork getNetwork() {
+    public EUNetwork getNetwork() {
         return network;
     }
 
     @Override
-    public void setNetwork(GTFactoryNetwork network) {
+    public void setNetwork(EUNetwork network) {
         this.network = network;
     }
 }

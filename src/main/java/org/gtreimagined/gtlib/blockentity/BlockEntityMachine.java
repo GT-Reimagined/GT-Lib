@@ -9,7 +9,6 @@ import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
-import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.CoverHandler;
 import org.gtreimagined.gtlib.capability.EnergyHandler;
@@ -92,14 +91,13 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tesseract.api.fe.IExtendedEnergyStorage;
-import tesseract.api.fe.IFENode;
 import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.GTFactoryGrid;
-import tesseract.api.gt.GTFactoryNetwork;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.gt.IGTCable;
-import tesseract.api.gt.IGTNode;
-import tesseract.api.heat.IHeatHandler;
+import tesseract.api.eu.EUGrid;
+import tesseract.api.eu.EUNetwork;
+import tesseract.api.eu.IEnergyHandler;
+import tesseract.api.eu.IEUCable;
+import tesseract.api.eu.IEUNode;
+import tesseract.api.hu.IHeatHandler;
 
 import java.util.Collection;
 import java.util.List;
@@ -113,7 +111,7 @@ import static org.gtreimagined.gtlib.gui.event.GuiEvents.ITEM_EJECT;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
-public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IGTNode {
+public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode {
 
     /**
      * Open container. Allows for better syncing
@@ -155,7 +153,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public Holder<IExtendedEnergyStorage, MachineFEHandler<T>> feHandler = new Holder<>(IExtendedEnergyStorage.class, dispatch);
     public Holder<MachineRecipeHandler<?>, MachineRecipeHandler<T>> recipeHandler = new Holder<>(MachineRecipeHandler.class, dispatch, null);
 
-    GTFactoryNetwork network;
+    EUNetwork network;
 
     /**
      * Client related fields.
@@ -209,7 +207,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         this.feHandler.ifPresent(MachineFEHandler::init);
         this.recipeHandler.ifPresent(MachineRecipeHandler::init);
         this.coverHandler.ifPresent(CoverHandler::onFirstTick);
-        GTFactoryGrid.INSTANCE.addElement(this);
+        EUGrid.INSTANCE.addElement(this);
     }
 
     @Override
@@ -288,7 +286,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             coverHandler.ifPresent(h -> h.onBlockUpdate(facing));
         }
         coverHandler.ifPresent(CoverHandler::onBlockUpdateAllSides);
-        GTFactoryGrid.INSTANCE.addElement(this);
+        EUGrid.INSTANCE.addElement(this);
     }
 
 
@@ -338,7 +336,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             recipeHandler.ifPresent(MachineRecipeHandler::onRemove);
 
             dispatch.invalidate();
-            GTFactoryGrid.INSTANCE.removeElement(this);
+            EUGrid.INSTANCE.removeElement(this);
         } else {
             if (level != null) SoundHelper.clear(level, worldPosition);
         }
@@ -863,7 +861,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @Override
-    public void getNeighbours(Collection<IGTCable> neighbours) {
+    public void getNeighbours(Collection<IEUCable> neighbours) {
         for (Direction dir : Direction.values()) {
             BlockEntity neigbor = getCachedBlockEntity(dir);
             if (neigbor instanceof BlockEntityCable<?> cable) {
@@ -875,12 +873,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @Override
-    public GTFactoryNetwork getNetwork() {
+    public EUNetwork getNetwork() {
         return network;
     }
 
     @Override
-    public void setNetwork(GTFactoryNetwork network) {
+    public void setNetwork(EUNetwork network) {
         this.network = network;
     }
 

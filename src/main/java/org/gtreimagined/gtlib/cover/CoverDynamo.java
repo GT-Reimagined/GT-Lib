@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.gt.IEnergyHandler;
+import tesseract.api.eu.IEnergyHandler;
 
 public class CoverDynamo extends BaseCover {
 

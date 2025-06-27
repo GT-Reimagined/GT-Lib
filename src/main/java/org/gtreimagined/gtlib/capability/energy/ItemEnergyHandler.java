@@ -5,7 +5,7 @@ import org.gtreimagined.gtlib.capability.EnergyHandler;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import tesseract.api.context.TesseractItemContext;
-import tesseract.api.gt.IEnergyHandlerItem;
+import tesseract.api.eu.IEnergyHandlerItem;
 
 /**
  * ItemEnergyHandler represents the GTLib Energy capability implementation for items.

@@ -7,15 +7,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import tesseract.api.context.TesseractItemContext;
-import tesseract.api.gt.GTState;
-import tesseract.api.gt.IEnergyHandlerItem;
+import tesseract.api.eu.EUState;
+import tesseract.api.eu.IEnergyHandlerItem;
 import tesseract.api.wrapper.ItemStackWrapper;
 
 public class EnergyStackWrapper implements IEnergyHandlerItem {
     private final ItemStack stack;
     private final IEnergyStorage storage;
 
-    private final GTState state = new GTState(this);
+    private final EUState state = new EUState(this);
 
     public EnergyStackWrapper(ItemStack stack, IEnergyStorage storage) {
         this.stack = stack;
@@ -91,7 +91,7 @@ public class EnergyStackWrapper implements IEnergyHandlerItem {
     }
 
     @Override
-    public GTState getState() {
+    public EUState getState() {
         return state;
     }
 

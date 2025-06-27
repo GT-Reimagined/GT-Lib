@@ -26,7 +26,7 @@ public class FEHandler implements IExtendedEnergyStorage, Serializable {
     }
 
     /**
-     * Tesseract IGTNode Implementations
+     * Tesseract IEUNode Implementations
      **/
 
     public void setMaxOutput(int maxOutput) {
