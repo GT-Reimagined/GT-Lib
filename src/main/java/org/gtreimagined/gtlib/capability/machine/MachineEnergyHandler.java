@@ -230,9 +230,27 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
             if (canOutput(dir)) {
                 BlockEntity tile = this.tile.getCachedBlockEntity(dir);
                 if (tile == null) continue;
-                Optional<IEnergyHandler> handle = tile.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY, dir.getOpposite()).resolve();
-                if (handle.map(h -> !h.canInput(dir.getOpposite())).orElse(true)) continue;
-                handle.ifPresent(eh -> Utils.transferEnergy(this, eh));
+                if (tile instanceof IEUCable && (!(tile instanceof IEUNode node) || !node.isActuallyNode())){
+                    if (this.tile.getNetwork() == null) continue;
+                    if (!this.tile.connects(dir)) continue;
+                    for (long amp = 0; amp < this.availableAmpsOutput(); amp++) {
+                        long extracted = this.extractEu(this.getOutputVoltage(), true);
+                        if (extracted > 0){
+                            EUTransaction transaction = new EUTransaction(extracted, t -> {});
+                            this.tile.getNetwork().insert(transaction, this.tile);
+                            long insertEu = extracted - transaction.eu;
+                            if (insertEu > 0){
+                                this.extractEu(insertEu, false);
+                                transaction.commit();
+                            }
+                        }
+                    }
+                } else {
+                    Optional<IEnergyHandler> handle = tile.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY, dir.getOpposite()).resolve();
+                    if (handle.map(h -> !h.canInput(dir.getOpposite())).orElse(true)) continue;
+                    handle.ifPresent(eh -> Utils.transferEnergy(this, eh));
+                }
+
             }
         }
     }
