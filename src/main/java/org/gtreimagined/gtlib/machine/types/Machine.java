@@ -190,7 +190,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     /**
      * Rendering
      */
-    @OnlyIn(Dist.CLIENT)
     @Accessors(fluent = true)
     @Getter
     protected boolean renderAsTesr = false;
