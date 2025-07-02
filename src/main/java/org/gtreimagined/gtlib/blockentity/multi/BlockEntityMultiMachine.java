@@ -20,7 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.state.BlockState;
-import tesseract.api.hu.IHeatHandler;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
 import java.util.Collections;
 import java.util.List;

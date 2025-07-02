@@ -12,7 +12,7 @@ import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 
 import java.util.List;
 

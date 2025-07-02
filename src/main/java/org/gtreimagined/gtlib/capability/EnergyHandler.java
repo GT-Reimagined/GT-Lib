@@ -4,8 +4,8 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import tesseract.api.eu.EUState;
-import tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.eu.EUState;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 
 
 public class EnergyHandler implements IEnergyHandler {

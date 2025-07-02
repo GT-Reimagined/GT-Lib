@@ -6,7 +6,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Blocks;
-import tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 
 public class BehaviourPoweredDebug implements IItemUse<IBasicGTTool> {
 

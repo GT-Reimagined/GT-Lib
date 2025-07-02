@@ -18,11 +18,11 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.context.TesseractItemContext;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.eu.IEnergyHandler;
-import tesseract.api.eu.IEnergyHandlerItem;
-import tesseract.api.eu.IEnergyItem;
+import org.gtreimagined.tesseract.api.context.TesseractItemContext;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
+import org.gtreimagined.tesseract.api.eu.IEnergyItem;
 
 import java.util.List;
 import java.util.Optional;

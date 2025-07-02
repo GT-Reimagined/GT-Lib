@@ -6,8 +6,8 @@ import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import tesseract.TesseractCapUtils;
-import tesseract.api.hu.IHeatHandler;
+import org.gtreimagined.tesseract.TesseractCapUtils;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
 import java.util.Collection;
 import java.util.Optional;

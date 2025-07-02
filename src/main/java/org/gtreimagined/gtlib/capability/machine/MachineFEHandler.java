@@ -16,9 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import org.lwjgl.system.CallbackI.I;
-import tesseract.api.fe.IExtendedEnergyStorage;
-import tesseract.api.fe.IFENode;
+import org.gtreimagined.tesseract.api.fe.IExtendedEnergyStorage;
 
 import java.util.List;
 import java.util.Optional;

@@ -25,7 +25,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import tesseract.graph.Connectivity;
+import org.gtreimagined.tesseract.api.Connectivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -16,13 +16,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import tesseract.api.capability.TesseractEUCapability;
-import tesseract.api.eu.EUHolder;
-import tesseract.api.eu.IEUCable;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.eu.EUGrid;
-import tesseract.api.eu.EUNetwork;
-import tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.capability.TesseractEUCapability;
+import org.gtreimagined.tesseract.api.eu.EUHolder;
+import org.gtreimagined.tesseract.api.eu.IEUCable;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.EUGrid;
+import org.gtreimagined.tesseract.api.eu.EUNetwork;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 
 import java.util.Collection;
 

@@ -84,8 +84,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.eu.IEnergyHandler;
-import tesseract.api.hu.IHeatHandler;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
 import java.awt.Color;
 import java.text.DecimalFormat;

@@ -5,10 +5,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.gtreimagined.gtlib.pipe.types.HeatPipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import tesseract.api.hu.HUGrid;
-import tesseract.api.hu.HUNetwork;
-import tesseract.api.hu.IHeatHandler;
-import tesseract.api.hu.IHUPipe;
+import org.gtreimagined.tesseract.api.hu.HUGrid;
+import org.gtreimagined.tesseract.api.hu.HUNetwork;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
+import org.gtreimagined.tesseract.api.hu.IHUPipe;
 
 import java.util.Collection;
 

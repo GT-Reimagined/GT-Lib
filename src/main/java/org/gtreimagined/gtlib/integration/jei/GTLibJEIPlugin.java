@@ -61,10 +61,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.eu.IEnergyHandler;
-import tesseract.api.eu.IEnergyItem;
-import tesseract.api.wrapper.ItemStackWrapper;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.eu.IEnergyItem;
+import org.gtreimagined.tesseract.api.wrapper.ItemStackWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -5,9 +5,8 @@ import org.gtreimagined.gtlib.Ref;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import tesseract.api.Serializable;
-import tesseract.api.fe.IExtendedEnergyStorage;
-import tesseract.api.fe.IFENode;
+import org.gtreimagined.tesseract.api.Serializable;
+import org.gtreimagined.tesseract.api.fe.IExtendedEnergyStorage;
 
 
 public class FEHandler implements IExtendedEnergyStorage, Serializable {

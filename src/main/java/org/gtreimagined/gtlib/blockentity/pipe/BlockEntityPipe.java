@@ -43,8 +43,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.IConnectable;
-import tesseract.graph.Connectivity;
+import org.gtreimagined.tesseract.api.IConnectable;
+import org.gtreimagined.tesseract.api.Connectivity;
 
 import java.util.List;
 import java.util.Optional;

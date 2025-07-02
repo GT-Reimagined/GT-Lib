@@ -21,9 +21,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.eu.IEnergyHandler;
-import tesseract.api.eu.IEnergyHandlerItem;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.EUTransaction;
+import org.gtreimagined.tesseract.api.eu.IEUCable;
+import org.gtreimagined.tesseract.api.eu.IEUNode;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
 
 import java.util.List;
 import java.util.Optional;

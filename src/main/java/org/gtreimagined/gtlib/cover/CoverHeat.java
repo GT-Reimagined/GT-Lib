@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.machine.Tier;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.hu.IHeatHandler;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
 public class CoverHeat extends BaseCover{
     public CoverHeat(ICoverHandler<?> source, @Nullable Tier tier, Direction side, CoverFactory factory) {

@@ -6,10 +6,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
-import tesseract.api.context.TesseractItemContext;
-import tesseract.api.eu.EUState;
-import tesseract.api.eu.IEnergyHandlerItem;
-import tesseract.api.wrapper.ItemStackWrapper;
+import org.gtreimagined.tesseract.api.context.TesseractItemContext;
+import org.gtreimagined.tesseract.api.eu.EUState;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
+import org.gtreimagined.tesseract.api.wrapper.ItemStackWrapper;
 
 public class EnergyStackWrapper implements IEnergyHandlerItem {
     private final ItemStack stack;
