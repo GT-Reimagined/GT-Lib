@@ -4,8 +4,8 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.Ref;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import tesseract.api.gt.GTConsumer;
-import tesseract.api.gt.IEnergyHandler;
+import org.gtreimagined.tesseract.api.eu.EUState;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 
 
 public class EnergyHandler implements IEnergyHandler {
@@ -16,7 +16,7 @@ public class EnergyHandler implements IEnergyHandler {
     protected long voltageIn, voltageOut, amperageIn, amperageOut;
 
     @Getter
-    protected GTConsumer.State state = new GTConsumer.State(this);
+    protected EUState state = new EUState(this);
 
     public EnergyHandler(long energy, long capacity, long voltageIn, long voltageOut, int amperageIn, int amperageOut) {
         this.energy = energy;
@@ -28,7 +28,7 @@ public class EnergyHandler implements IEnergyHandler {
     }
 
     /**
-     * Tesseract IGTNode Implementations
+     * Tesseract IEUNode Implementations
      **/
 
     protected boolean checkVoltage(long voltage) {

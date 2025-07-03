@@ -16,9 +16,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.jade.VanillaPlugin;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.heat.IHeatHandler;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
 public class EUProvider implements IComponentProvider, IServerDataProvider<BlockEntity> {
     public static EUProvider INSTANCE = new EUProvider();

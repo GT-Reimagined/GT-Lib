@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.jade.addon.harvest.HarvestToolProvider;
 import snownee.jade.addon.harvest.SimpleToolHandler;
-import tesseract.Tesseract;
+import org.gtreimagined.tesseract.Tesseract;
 
 import static org.gtreimagined.gtlib.data.GTTools.WIRE_CUTTER;
 import static org.gtreimagined.gtlib.data.GTTools.WRENCH;

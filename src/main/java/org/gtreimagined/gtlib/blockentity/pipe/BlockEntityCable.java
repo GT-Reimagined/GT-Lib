@@ -16,16 +16,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import tesseract.TesseractGraphWrappers;
-import tesseract.api.capability.TesseractGTCapability;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.GTHolder;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.gt.IGTCable;
+import org.gtreimagined.tesseract.api.capability.TesseractEUCapability;
+import org.gtreimagined.tesseract.api.eu.EUHolder;
+import org.gtreimagined.tesseract.api.eu.IEUCable;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.EUGrid;
+import org.gtreimagined.tesseract.api.eu.EUNetwork;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 
-public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> implements IGTCable, Dispatch.Sided<IEnergyHandler>, IInfoRenderer<InfoRenderWidget.TesseractGTWidget> {
+import java.util.Collection;
+
+public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> implements IEUCable, Dispatch.Sided<IEnergyHandler>, IInfoRenderer<InfoRenderWidget.TesseractGTWidget> {
 
     private long holder;
+    private EUNetwork network;
 
     public BlockEntityCable(T type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -34,18 +38,19 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
 
     @Override
     public void onLoad() {
-        this.holder = GTHolder.create(this, 0);
+        this.holder = EUHolder.create(this, 0);
         super.onLoad();
     }
 
     @Override
     protected void register() {
-        TesseractGraphWrappers.GT_ENERGY.registerConnector(getLevel(), getBlockPos().asLong(), this, isConnector());
+        EUGrid.INSTANCE.addElement(this);
     }
 
     @Override
     protected boolean deregister() {
-        return TesseractGraphWrappers.GT_ENERGY.remove(getLevel(), getBlockPos().asLong());
+        EUGrid.INSTANCE.removeElement(this);
+        return true;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     @Override
     public void onBlockUpdate(BlockPos neighbour) {
         super.onBlockUpdate(neighbour);
+        EUGrid.INSTANCE.addElement(this);
     }
 
     @Override
@@ -102,14 +108,19 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     }
 
     @Override
+    public BlockEntity getBlockEntity() {
+        return this;
+    }
+
+    @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
         super.serverTick(level, pos, state);
-        this.setHolder(GTHolder.create(this, 0));
+        //this.setHolder(EUHolder.create(this, 0));
     }
 
     @Override
     public LazyOptional<IEnergyHandler> forSide(Direction side) {
-        return LazyOptional.of(() -> new TesseractGTCapability<>(this, side, !isConnector(), (stack, dir, input, simulate) ->
+        return LazyOptional.of(() -> new TesseractEUCapability<>(this, side, !isConnector(), (stack, dir, input, simulate) ->
         this.coverHandler.map(t -> t.onTransfer(stack, dir, input, simulate)).orElse(false)));
     }
 
@@ -132,5 +143,27 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
         renderer.draw(stack, "Average inserted: " + ((double) (instance.voltAverage - instance.loss)) / 20, left, top + 24, 0xFAFAFF);
         renderer.draw(stack, "Loss average: " + (double) instance.loss / 20, left, top + 32, 0xFAFAFF);
         return 40;
+    }
+
+    @Override
+    public void getNeighbours(Collection<IEUCable> neighbours) {
+        for (Direction dir : Direction.values()) {
+            BlockEntity pipe = getCachedBlockEntity(dir);
+            if (pipe instanceof IEUCable cable) {
+                if (cable.connects(dir.getOpposite()) && connects(dir)){
+                    neighbours.add(cable);
+                }
+            }
+        }
+    }
+
+    @Override
+    public EUNetwork getNetwork() {
+        return network;
+    }
+
+    @Override
+    public void setNetwork(EUNetwork network) {
+        this.network = network;
     }
 }

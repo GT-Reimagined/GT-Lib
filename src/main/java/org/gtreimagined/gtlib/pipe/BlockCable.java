@@ -24,9 +24,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import tesseract.TesseractGraphWrappers;
-import tesseract.api.ITickingController;
-import tesseract.api.gt.GTController;
 
 import java.util.List;
 
@@ -90,11 +87,9 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
         if (worldIn.isClientSide) return;
         if (this.insulated) return;
         if (entityIn instanceof LivingEntity entity) {
-            if (worldIn.getBlockEntity(pos) instanceof BlockEntityCable cable) {
-                if (TesseractGraphWrappers.GT_ENERGY.getController(worldIn, pos.asLong()) instanceof GTController c) {
-                    if (c.cableIsActive.contains(pos.asLong())) {
-                        entity.hurt(DamageSource.GENERIC, this.getType().getTier().getIntegerId());
-                    }
+            if (worldIn.getBlockEntity(pos) instanceof BlockEntityCable<?> cable) {
+                if (cable.getNetwork().cableIsActive.containsKey(worldIn.dimension().location()) && cable.getNetwork().cableIsActive.get(worldIn.dimension().location()).contains(pos.asLong())){
+                    entity.hurt(DamageSource.GENERIC, this.getType().getTier().getIntegerId());
                 }
             }
         }
@@ -102,9 +97,6 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
 
     @Override
     public List<String> getInfo(List<String> info, Level world, BlockState state, BlockPos pos, boolean simple) {
-        if (world.isClientSide || simple) return info;
-        ITickingController<?, ?, ?> controller = TesseractGraphWrappers.GT_ENERGY.getController(world, pos.asLong());
-        if (controller != null) controller.getInfo(pos.asLong(), info);
         return info;
     }
 

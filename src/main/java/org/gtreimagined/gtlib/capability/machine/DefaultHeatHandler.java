@@ -13,8 +13,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
-import tesseract.TesseractCapUtils;
-import tesseract.api.heat.IHeatHandler;
+import org.gtreimagined.tesseract.TesseractCapUtils;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
 import java.util.Optional;
 

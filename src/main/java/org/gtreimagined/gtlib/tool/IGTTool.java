@@ -33,10 +33,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.context.TesseractItemContext;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandlerItem;
-import tesseract.api.gt.IEnergyItem;
+import org.gtreimagined.tesseract.api.context.TesseractItemContext;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
+import org.gtreimagined.tesseract.api.eu.IEnergyItem;
 
 import java.util.Arrays;
 import java.util.List;

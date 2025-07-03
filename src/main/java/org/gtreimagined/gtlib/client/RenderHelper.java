@@ -49,8 +49,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.graph.Connectivity;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.Connectivity;
 
 import java.util.List;
 import java.util.function.BiFunction;

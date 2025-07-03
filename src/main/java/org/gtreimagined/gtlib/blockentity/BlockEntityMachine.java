@@ -2,11 +2,13 @@ package org.gtreimagined.gtlib.blockentity;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
+import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
 import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.CoverHandler;
 import org.gtreimagined.gtlib.capability.EnergyHandler;
@@ -88,11 +90,16 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.fe.IFENode;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.heat.IHeatHandler;
+import org.gtreimagined.tesseract.api.fe.IExtendedEnergyStorage;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.EUGrid;
+import org.gtreimagined.tesseract.api.eu.EUNetwork;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.eu.IEUCable;
+import org.gtreimagined.tesseract.api.eu.IEUNode;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -104,7 +111,7 @@ import static org.gtreimagined.gtlib.gui.event.GuiEvents.ITEM_EJECT;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
-public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T> {
+public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode {
 
     /**
      * Open container. Allows for better syncing
@@ -143,8 +150,10 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     public Holder<ICoverHandler<?>, MachineCoverHandler<T>> coverHandler = new Holder<>(ICoverHandler.class, dispatch, null);
     public Holder<IEnergyHandler, MachineEnergyHandler<T>> energyHandler = new Holder<>(IEnergyHandler.class, dispatch);
     public Holder<IHeatHandler, DefaultHeatHandler> heatHandler = new Holder<>(IHeatHandler.class, dispatch);
-    public Holder<IFENode, MachineFEHandler<T>> feHandler = new Holder<>(IFENode.class, dispatch);
+    public Holder<IExtendedEnergyStorage, MachineFEHandler<T>> feHandler = new Holder<>(IExtendedEnergyStorage.class, dispatch);
     public Holder<MachineRecipeHandler<?>, MachineRecipeHandler<T>> recipeHandler = new Holder<>(MachineRecipeHandler.class, dispatch, null);
+
+    EUNetwork network;
 
     /**
      * Client related fields.
@@ -198,6 +207,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         this.feHandler.ifPresent(MachineFEHandler::init);
         this.recipeHandler.ifPresent(MachineRecipeHandler::init);
         this.coverHandler.ifPresent(CoverHandler::onFirstTick);
+        EUGrid.INSTANCE.addElement(this);
     }
 
     @Override
@@ -276,6 +286,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             coverHandler.ifPresent(h -> h.onBlockUpdate(facing));
         }
         coverHandler.ifPresent(CoverHandler::onBlockUpdateAllSides);
+        EUGrid.INSTANCE.addElement(this);
     }
 
 
@@ -325,6 +336,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             recipeHandler.ifPresent(MachineRecipeHandler::onRemove);
 
             dispatch.invalidate();
+            EUGrid.INSTANCE.removeElement(this);
         } else {
             if (level != null) SoundHelper.clear(level, worldPosition);
         }
@@ -815,6 +827,59 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Override
     public Optional<ICoverHandler<T>> getCoverHandler() {
         return coverHandler.map(c -> c);
+    }
+
+    @Override
+    public boolean isOutput(Direction direction) {
+        return energyHandler.map(e -> e.canOutput(direction)).orElse(false);
+    }
+
+    @Override
+    public boolean insulated() {
+        return true;
+    }
+
+    @Override
+    public boolean connects(Direction direction) {
+        BlockEntity neighbor = getCachedBlockEntity(direction);
+        return neighbor instanceof BlockEntityCable<?> cable && cable.connects(direction.getOpposite());
+    }
+
+    @Override
+    public boolean validate(Direction dir) {
+        return connects(dir);
+    }
+
+    @Override
+    public BlockEntity getBlockEntity() {
+        return this;
+    }
+
+    @Override
+    public boolean isActuallyNode() {
+        return true;
+    }
+
+    @Override
+    public void getNeighbours(Collection<IEUCable> neighbours) {
+        for (Direction dir : Direction.values()) {
+            BlockEntity neigbor = getCachedBlockEntity(dir);
+            if (neigbor instanceof BlockEntityCable<?> cable) {
+                if (cable.connects(dir.getOpposite())){
+                    neighbours.add(cable);
+                }
+            }
+        }
+    }
+
+    @Override
+    public EUNetwork getNetwork() {
+        return network;
+    }
+
+    @Override
+    public void setNetwork(EUNetwork network) {
+        this.network = network;
     }
 
     /**

@@ -25,7 +25,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import tesseract.graph.Connectivity;
+import org.gtreimagined.tesseract.api.Connectivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +70,11 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     protected boolean deregister() {
         return true;
         //return TesseractGraphWrappers.ITEM.remove(getLevel(), getBlockPos().asLong());
+    }
+
+    @Override
+    public BlockEntity getBlockEntity() {
+        return this;
     }
 
     @Override
@@ -275,7 +280,9 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
     @Override
     public void onLoad() {
         super.onLoad();
-        TileTicker.SERVER_TICK_PRE.add(this);
+        if (this.isServerSide()) {
+            TileTicker.SERVER_TICK_PRE.add(this);
+        }
     }
 
     @Override

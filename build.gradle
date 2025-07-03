@@ -83,6 +83,7 @@ mixin {
 dependencies {
     implementation(project(":tesseract-forge"))
     compileOnly(project(":tesseract-common"))
+    compileOnly(project(":tesseract-graph"))
     jarJar("org.gt-reimagined:tesseract-forge:${project.tesseract_version}-${project.minecraft_version}")
 
     //MIXIN

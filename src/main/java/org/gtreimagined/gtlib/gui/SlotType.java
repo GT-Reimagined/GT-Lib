@@ -23,7 +23,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
-import tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 
 import java.util.Map;
 import java.util.function.BiPredicate;

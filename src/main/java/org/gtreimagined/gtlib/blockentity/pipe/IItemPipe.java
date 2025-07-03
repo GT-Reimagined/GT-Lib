@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.blockentity.pipe;
 
-import tesseract.api.IConnectable;
+import org.gtreimagined.tesseract.api.IConnectable;
 
 /**
  * A item pipe is the unit of interaction with item inventories.
