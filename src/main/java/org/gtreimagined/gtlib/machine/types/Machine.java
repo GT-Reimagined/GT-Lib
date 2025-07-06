@@ -183,6 +183,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     protected boolean allowsFrontIO = false;
     @Getter
+    protected boolean noOverclockCost = false;
+    @Getter
     protected boolean clientTicking = false;
     @Getter
     protected boolean ambientTicking = false;
@@ -528,6 +530,11 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
 
     public T setNoTextureRotation(boolean noTextureRotation){
         this.noTextureRotation = noTextureRotation;
+        return (T) this;
+    }
+
+    public T setNoOverclockCost(boolean noOverclockCost){
+        this.noOverclockCost = true;
         return (T) this;
     }
 

@@ -307,6 +307,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("machine.tank.capacity", "Stores %sMb of fluid");
         add("machine.structure.form", "Right click structure to form it after placing blocks");
         add("machine.generator.efficiency", "Efficiency: %s");
+        add("machine.overclock.no_cost", "Can be overclocked without additional Energy Loss");
         add("generic.amp", "Amperage");
         add("gtlib.tooltip.formula", "Hold Shift to show formula.");
         add("gtlib.tooltip.chemical_formula", "Formula: %s");
