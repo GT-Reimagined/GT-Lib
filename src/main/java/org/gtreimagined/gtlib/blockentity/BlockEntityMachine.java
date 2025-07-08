@@ -286,7 +286,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             coverHandler.ifPresent(h -> h.onBlockUpdate(facing));
         }
         coverHandler.ifPresent(CoverHandler::onBlockUpdateAllSides);
-        EUGrid.INSTANCE.addElement(this);
     }
 
 
@@ -457,6 +456,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             }
             getLevel().setBlockAndUpdate(getBlockPos(), state);
             invalidateCaps();
+            EUGrid.INSTANCE.addElement(this);
 
             return true;
         }

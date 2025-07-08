@@ -59,12 +59,6 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
     }
 
     @Override
-    public void onBlockUpdate(BlockPos neighbour) {
-        super.onBlockUpdate(neighbour);
-        EUGrid.INSTANCE.addElement(this);
-    }
-
-    @Override
     public long getVoltage() {
         return ((Cable<?>) getPipeType()).getTier().getVoltage();
     }
