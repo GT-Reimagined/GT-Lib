@@ -238,10 +238,10 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
             return;
         }*/
 
-        this.refreshConnection();
         if (pipe != null) {
             pipe.setConnection(side.getOpposite());
         }
+        this.refreshConnection();
     }
 
     public void clearConnection(Direction side) {
@@ -250,11 +250,11 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
         connection = Connectivity.clear(connection, side.get3DDataValue());
         virtualConnection = Connectivity.clear(virtualConnection, side.get3DDataValue());
         dispatch.invalidate(side);
-        this.refreshConnection();
         BlockEntityPipe<?> pipe = getPipe(side);
         if (pipe != null) {
             pipe.clearConnection(side.getOpposite());
         }
+        this.refreshConnection();
     }
 
     public void checkConnections(){
