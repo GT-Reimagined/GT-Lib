@@ -137,33 +137,10 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 return;
             }
         }
-        if (activeRecipe == null){
-            if (tile.getMachineState() == NO_POWER) tile.setMachineState(IDLE);
-            return;
-        }
-        if (activeRecipe != null && tile.getMachineState() == IDLE){
-            tile.setMachineState(NO_POWER);
-        }
-
         tickingRecipe = true;
-        MachineState state;
-        switch (tile.getMachineState()) {
-            case ACTIVE:
-                state = tickRecipe();
-                if (state != ACTIVE) {
-                    tile.setMachineState(state);
-                }
-                break;
-            case NO_POWER:
-                state = tickRecipe();
-                if (state != ACTIVE && state != OUTPUT_FULL) {
-                    tile.setMachineState(tile.getDefaultMachineState());
-                } else {
-                    tile.setMachineState(state);
-                }
-                break;
-            default:
-                break;
+        MachineState state = tickRecipe();
+        if (tile.getMachineState() != state){
+            tile.setMachineState(state);
         }
         tickingRecipe = false;
     }
@@ -297,7 +274,19 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }
 
         tile.onRecipePreTick();
-        if (!consumeResourceForRecipe(false)) {
+        if (!consumePower(true)){
+            tickTimer += WAIT_TIME_POWER_LOSS;
+            consumePower(false);
+            if (tile.getMachineState() == ACTIVE && !tile.isMuffled()) tile.getLevel().playSound(null, tile.getBlockPos(), Ref.INTERRUPT, SoundSource.BLOCKS, 1.0f, 1.0f);
+            return POWER_LOSS;
+        }
+        if (consumedResources) this.consumePower(false);
+        if (currentProgress == 0 && !consumedResources && shouldConsumeResources()) {
+            if (this.consumeInputs()){
+                this.consumePower(false);
+            }
+        }
+        /*if (!consumeResourceForRecipe(false)) {
             if ((currentProgress == 0 && tile.getMachineState() == tile.getDefaultMachineState())) {
                 //Cannot start a recipe :(
                 return tile.getDefaultMachineState();
@@ -307,18 +296,13 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             }
             if (!generator){
                 tickTimer += WAIT_TIME_POWER_LOSS;
-                if (tile.getMachineState() == ACTIVE && !tile.isMuffled()) tile.getLevel().playSound(null, tile.getBlockPos(), Ref.INTERRUPT, SoundSource.BLOCKS, 1.0f, 1.0f);
                 return POWER_LOSS;
             } else {
                 tickTimer += 10;
                 return IDLE;
             }
-        }
-        if (currentProgress == 0 && !consumedResources && shouldConsumeResources()) {
-            if (!this.consumeInputs()) { //No fucking clue why this is an empty loop - Trinsdar
+        }*/
 
-            }
-        }
         this.currentProgress++;
         if (Machine.isAprilFools()){
             if (tile.getLevel().random.nextInt(10000) == 0){
@@ -339,6 +323,30 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected void recipeFailure() {
         currentProgress = 0;
+    }
+
+    public boolean consumePower(boolean simulate){
+        if (processingBlocked) return false;
+        if (generator) return true;
+        if (activeRecipe.getPower() > 0){
+            if (tile.energyHandler.isPresent()){
+                return tile.energyHandler.map(e -> e.extractEu(getPower(), simulate) >= getPower()).orElse(false);
+            } else if (tile.feHandler.isPresent()){
+                return tile.feHandler.map(e -> e.extractEnergy((int) getPower(), simulate) >= getPower()).orElse(false);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean generatePower(){
+        if (activeRecipe == null) return false;
+        if (!generator) return false;
+        if (activeRecipe.getPower() <= 0) return false;
+        if (tile.energyHandler.isPresent()) return tile.energyHandler.map(e -> e.insertInternal(activeRecipe.getPower(), false) == getPower()).orElse(false);
+        else if (tile.feHandler.isPresent()) return tile.feHandler.map(e -> e.receiveEnergy((int) activeRecipe.getPower(), false) == getPower()).orElse(false);
+        else return false;
     }
 
     public boolean consumeResourceForRecipe(boolean simulate) {
