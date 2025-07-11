@@ -261,8 +261,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected MachineState tickRecipe() {
         if (this.activeRecipe == null) {
-            System.out.println("Check Recipe when active recipe is null");
-            return tile.getMachineState();
+            return tile.getDefaultMachineState();
         }
         if (this.currentProgress >= this.maxProgress) {
             if (!canOutput()) {
