@@ -339,15 +339,6 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return true;
     }
 
-    public boolean generatePower(){
-        if (activeRecipe == null) return false;
-        if (!generator) return false;
-        if (activeRecipe.getPower() <= 0) return false;
-        if (tile.energyHandler.isPresent()) return tile.energyHandler.map(e -> e.insertInternal(activeRecipe.getPower(), false) == getPower()).orElse(false);
-        else if (tile.feHandler.isPresent()) return tile.feHandler.map(e -> e.receiveEnergy((int) activeRecipe.getPower(), false) == getPower()).orElse(false);
-        else return false;
-    }
-
     public boolean consumeResourceForRecipe(boolean simulate) {
         if (processingBlocked) return false;
         if (activeRecipe.getPower() > 0) {
