@@ -31,8 +31,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.gtreimagined.gtlib.machine.MachineState.*;
 
@@ -423,6 +425,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     public boolean consumeInputs() {
+        if (generator) return consumeGeneratorInputs(false);
         boolean flag = true;
         if (!tile.hadFirstTick()) return true;
         if (activeRecipe.hasInputItems()) {
@@ -439,6 +442,36 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }
         if (flag) consumedResources = true;
         return flag;
+    }
+
+    public boolean consumeGeneratorInputs(boolean simulate){
+        if (activeRecipe == null) return false;
+        if (activeRecipe.hasInputItems()) {
+            AtomicReference<List<ItemStack>> itemInputs = new AtomicReference<>(new ArrayList<>());
+            return tile.itemHandler.map(h -> {
+                itemInputs.set(h.consumeInputs(activeRecipe, simulate));
+                return !itemInputs.get().isEmpty();
+            }).orElse(true);
+        }
+        if (!activeRecipe.hasInputFluids()) return false;
+        int toConsume = consumedFluidPerOperation(activeRecipe);
+        long toInsert = calculateGeneratorProduction(activeRecipe);
+        MachineEnergyHandler<?> handler = tile.energyHandler.orElse(null);
+        if (handler == null) return false;
+        FluidStack mFluid = tile.fluidHandler.map(f -> f.getInputTanks().getTank(0).getFluid()).orElse(FluidStack.EMPTY);
+        if (mFluid.isEmpty()) return false;
+        int fluidAmount = mFluid.getAmount();
+        if (toInsert > 0 && toConsume > 0 && fluidAmount >= toConsume) {
+            int tFluidAmountToUse = (int) Math.min(fluidAmount / toConsume, (handler.getCapacity() - handler.getEnergy()) / toInsert);
+            if (tFluidAmountToUse > 0 && handler.insertInternal(tFluidAmountToUse * toInsert, true) == tFluidAmountToUse * toInsert) {
+                if (tile.getLevel().getGameTime() % 10 == 0 && !simulate){
+                    handler.insertInternal(tFluidAmountToUse * toInsert, false);
+                    tile.fluidHandler.ifPresent(f -> f.drainInput(Utils.ca(tFluidAmountToUse * toConsume, mFluid), FluidAction.EXECUTE));
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean canOutput() {
