@@ -121,6 +121,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     public void onServerUpdate() {
+        if (tile.getMachineState() == INVALID_STRUCTURE || tile.getMachineState() == DISABLED) return;
         //First, a few timer related tasks that ensure the machine can recover from certain situations.
         if (tickingRecipe) return;
         if (tickTimer > 0) {
@@ -258,7 +259,6 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     protected MachineState tickRecipe() {
-        if (tile.getMachineState() == INVALID_STRUCTURE) return INVALID_STRUCTURE;
         if (this.activeRecipe == null) {
             return tile.getDefaultMachineState();
         }
