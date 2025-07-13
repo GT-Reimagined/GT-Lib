@@ -60,7 +60,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     protected int currentProgress,
             maxProgress;
     @Getter
-    protected int totalPowerToGenerate, powerGenerated;
+    protected long totalPowerToGenerate, powerGenerated;
 
     @Getter
     @Setter
@@ -204,7 +204,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     protected void calculateDurations() {
         maxProgress = activeRecipe.getDuration();
         if (generator){
-            totalPowerToGenerate = (int) activeRecipe.getTotalPower();
+            totalPowerToGenerate = activeRecipe.getTotalPower();
         }
         if (!generator && !tile.has(MachineFlag.FE)) {
             overclock = getOverclock();
@@ -322,7 +322,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             long generated = generatePower(true);
             if (generated > 0){
                 this.generatePower(false);
-                this.powerGenerated += (int) generated;
+                this.powerGenerated += generated;
             } else {
                 tile.onRecipePostTick();
                 return tile.getDefaultMachineState();
@@ -359,7 +359,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         if (activeRecipe.getPower() <= 0) return 0;
         long generated = 0;
         if (tile.energyHandler.isPresent() && tile.has(EU)) generated = tile.energyHandler.map(e -> e.insertInternal(totalPowerToGenerate - powerGenerated, simulate)).orElse(0L);
-        else if (tile.feHandler.isPresent() && tile.has(FE)) generated = tile.feHandler.map(e -> e.receiveEnergy(totalPowerToGenerate - powerGenerated, simulate)).orElse(0);
+        else if (tile.feHandler.isPresent() && tile.has(FE)) generated = tile.feHandler.map(e -> e.receiveEnergy((int)(totalPowerToGenerate - powerGenerated), simulate)).orElse(0);
         return generated;
     }
 
@@ -626,7 +626,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         nbt.putInt("T", tickTimer);
         nbt.put("F", fluid);
         nbt.putInt("P", currentProgress);
-        nbt.putInt("PG", powerGenerated);
+        nbt.putLong("PG", powerGenerated);
         nbt.putBoolean("C", consumedResources);
         nbt.putBoolean("PB", processingBlocked);
         if (activeRecipe != null){
@@ -645,7 +645,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         nbt.getList("F", 10).forEach(t -> fluidInputs.add(FluidUtils.fromTag((CompoundTag) t)));
         this.processingBlocked = nbt.getBoolean("PB");
         this.currentProgress = nbt.getInt("P");
-        this.powerGenerated = nbt.getInt("PG");
+        this.powerGenerated = nbt.getLong("PG");
         this.tickTimer = nbt.getInt("T");
         this.consumedResources = nbt.getBoolean("C");
         if (getRecipeMap() != null) {
