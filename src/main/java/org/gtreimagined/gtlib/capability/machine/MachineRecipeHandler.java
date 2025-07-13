@@ -266,6 +266,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     protected MachineState tickRecipe() {
+        if (tile.getMachineState() == INVALID_STRUCTURE) return INVALID_STRUCTURE;
         if (this.activeRecipe == null) {
             return tile.getDefaultMachineState();
         }
