@@ -368,29 +368,6 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return generated;
     }
 
-    public boolean consumeResourceForRecipe(boolean simulate) {
-        if (processingBlocked) return false;
-        if (activeRecipe.getPower() > 0) {
-            if (tile.energyHandler.isPresent()) {
-                if (!generator) {
-                    return tile.energyHandler.map(e -> e.extractEu(getPower(), simulate) >= getPower()).orElse(false);
-                } else {
-                    return consumeGeneratorResources(simulate);
-                }
-            } else if (tile.feHandler.isPresent()){
-                if (!generator) {
-                    long power = getPower();
-                    return tile.feHandler.map(e -> e.extractEnergy((int) power, simulate) >= power).orElse(false);
-                } else {
-                    return consumeFEGeneratorResources(simulate);
-                }
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
     protected boolean validateRecipe(IRecipe r) {
         long voltage = tile.getMachineType().getAmps() * tile.getMaxInputVoltage();
         boolean ok = this.generator || !tile.has(EU) || voltage >= r.getPower() / r.getAmps();
@@ -473,12 +450,28 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     public boolean consumeGeneratorInputs(boolean simulate){
         if (activeRecipe == null) return false;
-        if (activeRecipe.hasInputItems()) {
+        if (activeRecipe.hasInputItems() || tile.has(FE)) {
             AtomicReference<List<ItemStack>> itemInputs = new AtomicReference<>(new ArrayList<>());
-            boolean flag = tile.itemHandler.map(h -> {
-                itemInputs.set(h.consumeInputs(activeRecipe, simulate));
-                return !itemInputs.get().isEmpty();
-            }).orElse(true);
+            boolean flag = true;
+            if (activeRecipe.hasInputItems()) {
+                flag &= tile.itemHandler.map(h -> {
+                    itemInputs.set(h.consumeInputs(activeRecipe, simulate));
+                    return !itemInputs.get().isEmpty();
+                }).orElse(true);
+            }
+            if (activeRecipe.hasInputFluids() && tile.has(FE)){
+                int toConsume = calculateGeneratorConsumption(activeRecipe);
+                flag &= tile.fluidHandler.map(h -> {
+                    FluidIngredient in = activeRecipe.getInputFluids().get(0);
+                    int amount = in.drainedAmount(toConsume, h, true, true);
+                    if (amount == toConsume) {
+                        if (!simulate)
+                            in.drain(amount, h, true, false);
+                        return true;
+                    }
+                    return false;
+                }).orElse(false);
+            }
             if (flag) consumedResources = true;
             return flag;
         }
@@ -512,59 +505,6 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected boolean canRecipeContinue() {
         return canOutput() && (!activeRecipe.hasInputItems() || tile.itemHandler.map(i -> i.consumeInputs(this.activeRecipe, true).size() > 0).orElse(false)) && (!activeRecipe.hasInputFluids() || tile.fluidHandler.map(t -> t.consumeAndReturnInputs(activeRecipe.getInputFluids(), true).size() > 0).orElse(false));
-    }
-
-    protected boolean consumeFEGeneratorResources(boolean simulate){
-        if (!activeRecipe.hasInputFluids()) {
-            throw new RuntimeException("Missing fuel in active generator recipe!");
-        }
-        int toConsume = calculateGeneratorConsumption(activeRecipe);
-        if (toConsume == 0 || tile.fluidHandler.map(h -> {
-            FluidIngredient in = activeRecipe.getInputFluids().get(0);
-            int amount = in.drainedAmount(toConsume, h, true, true);
-            if (amount == toConsume) {
-                if (!simulate)
-                    in.drain(amount, h, true, false);
-                return true;
-            }
-            return false;
-        }).orElse(false)) {
-            //insert power!
-            if (!simulate) {
-                tile.feHandler.ifPresent(r -> {
-                    r.setEnergy((int) (r.getEnergyStored() + activeRecipe.getPower()));
-                });
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /*
-      Helper to consume resources for a generator.
-     */
-    protected boolean consumeGeneratorResources(boolean simulate) {
-        if (!activeRecipe.hasInputFluids()) {
-            throw new RuntimeException("Missing fuel in active generator recipe!");
-        }
-        int toConsume = consumedFluidPerOperation(activeRecipe);
-        long toInsert = calculateGeneratorProduction(activeRecipe);
-        MachineEnergyHandler<?> handler = tile.energyHandler.orElse(null);
-        if (handler == null) return false;
-        FluidStack mFluid = tile.fluidHandler.map(f -> f.getInputTanks().getTank(0).getFluid()).orElse(FluidStack.EMPTY);
-        if (mFluid.isEmpty()) return false;
-        int fluidAmount = mFluid.getAmount();
-        if (toInsert > 0 && toConsume > 0 && fluidAmount >= toConsume) {
-            int tFluidAmountToUse = (int) Math.min(fluidAmount / toConsume, (handler.getCapacity() - handler.getEnergy()) / toInsert);
-            if (tFluidAmountToUse > 0 && handler.insertInternal(tFluidAmountToUse * toInsert, true) == tFluidAmountToUse * toInsert) {
-                if (tile.getLevel().getGameTime() % 10 == 0 && !simulate){
-                    handler.insertInternal(tFluidAmountToUse * toInsert, false);
-                    tile.fluidHandler.ifPresent(f -> f.drainInput(Utils.ca(tFluidAmountToUse * toConsume, mFluid), FluidAction.EXECUTE));
-                }
-                return true;
-            }
-        }
-        return false;
     }
 
     protected long calculateGeneratorProduction(IRecipe r){
