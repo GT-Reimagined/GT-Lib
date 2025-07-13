@@ -44,6 +44,7 @@ import static org.gtreimagined.gtlib.machine.MachineState.*;
 public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IMachineHandler, Dispatch.Sided<MachineRecipeHandler<?>> {
 
     protected final T tile;
+    @Getter
     protected final boolean generator;
     @Getter
     protected IRecipe lastRecipe = null;
