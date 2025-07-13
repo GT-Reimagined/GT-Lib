@@ -281,8 +281,10 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
         tile.onRecipePreTick();
         if (!consumePower(true)){
-            tickTimer += WAIT_TIME_POWER_LOSS;
             consumePower(false);
+            if (currentProgress == 0 && tile.getMachineState() == tile.getDefaultMachineState()) return tile.getDefaultMachineState();
+            tickTimer += WAIT_TIME_POWER_LOSS;
+            recipeFailure();
             if (tile.getMachineState() == ACTIVE && !tile.isMuffled()) tile.getLevel().playSound(null, tile.getBlockPos(), Ref.INTERRUPT, SoundSource.BLOCKS, 1.0f, 1.0f);
             return POWER_LOSS;
         }
