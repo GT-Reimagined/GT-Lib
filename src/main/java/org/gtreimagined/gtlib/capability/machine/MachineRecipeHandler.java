@@ -275,7 +275,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         tile.onRecipePreTick();
         if (!consumePower(true)){
             consumePower(false);
-            if (currentProgress == 0 && tile.getMachineState() == tile.getDefaultMachineState()) return tile.getDefaultMachineState();
+            if (currentProgress == 0 && (tile.getMachineState() == tile.getDefaultMachineState() || tile.getMachineState() == NO_POWER)) return NO_POWER;
             tickTimer += WAIT_TIME_POWER_LOSS;
             recipeFailure();
             if (tile.getMachineState() == ACTIVE && !tile.isMuffled()) tile.getLevel().playSound(null, tile.getBlockPos(), Ref.INTERRUPT, SoundSource.BLOCKS, 1.0f, 1.0f);
@@ -533,9 +533,8 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     public void onMultiBlockStateChange(boolean isValid, boolean hardcore) {
         if (isValid) {
             if (tile.hadFirstTick()) {
-                if (hasRecipe())
-                    tile.setMachineState(MachineState.NO_POWER);
-                else {
+
+                if (!hasRecipe()) {
                     checkRecipe();
                 }
             }
