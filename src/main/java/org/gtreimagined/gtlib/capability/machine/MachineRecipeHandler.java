@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.gtreimagined.gtlib.machine.MachineFlag.EU;
+import static org.gtreimagined.gtlib.machine.MachineFlag.FE;
 import static org.gtreimagined.gtlib.machine.MachineState.*;
 
 //TODO: This needs some look into, a bit of spaghetti code sadly.
@@ -57,6 +59,8 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     @Getter
     protected int currentProgress,
             maxProgress;
+    @Getter
+    protected int totalPowerToGenerate, powerGenerated;
 
     @Getter
     @Setter
@@ -206,6 +210,9 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected void calculateDurations() {
         maxProgress = activeRecipe.getDuration();
+        if (generator){
+            totalPowerToGenerate = (int) activeRecipe.getTotalPower();
+        }
         if (!generator && !tile.has(MachineFlag.FE)) {
             overclock = getOverclock();
             this.maxProgress = Math.max(1, maxProgress >> overclock);
@@ -218,6 +225,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         tickTimer = 0;
         if (reset) {
             currentProgress = 0;
+            powerGenerated = 0;
         }
         lastRecipe = activeRecipe;
     }
@@ -246,10 +254,6 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         addOutputs();
         this.itemInputs = new ObjectArrayList<>();
         this.fluidInputs = new ObjectArrayList<>();
-        if (this.generator) {
-            currentProgress = 0;
-            return ACTIVE;
-        }
         if (!canRecipeContinue()) {
             this.resetRecipe();
             checkRecipe();
@@ -265,6 +269,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         if (this.activeRecipe == null) {
             return tile.getDefaultMachineState();
         }
+        if (generator) return tickGeneratorRecipe();
         if (this.currentProgress >= this.maxProgress) {
             if (!canOutput()) {
                 tickTimer += WAIT_TIME_OUTPUT_FULL;
@@ -282,30 +287,11 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             return POWER_LOSS;
         }
         if (consumedResources) this.consumePower(false);
-        if (currentProgress == 0 && !consumedResources && shouldConsumeResources()) {
+        if (currentProgress == 0 && !consumedResources) {
             if (this.consumeInputs()){
                 this.consumePower(false);
             }
         }
-        if (generator && (!activeRecipe.hasInputFluids() || tile.has(MachineFlag.FE))){
-            this.generatePower();
-        }
-        /*if (!consumeResourceForRecipe(false)) {
-            if ((currentProgress == 0 && tile.getMachineState() == tile.getDefaultMachineState())) {
-                //Cannot start a recipe :(
-                return tile.getDefaultMachineState();
-            } else {
-                //TODO: Hard-mode here?
-                recipeFailure();
-            }
-            if (!generator){
-                tickTimer += WAIT_TIME_POWER_LOSS;
-                return POWER_LOSS;
-            } else {
-                tickTimer += 10;
-                return IDLE;
-            }
-        }*/
 
         this.currentProgress++;
         if (Machine.isAprilFools()){
@@ -321,6 +307,35 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return ACTIVE;
     }
 
+    protected MachineState tickGeneratorRecipe(){
+        tile.onRecipePreTick();
+        if (this.powerGenerated == totalPowerToGenerate) {
+            if (!canOutput()) {
+                tickTimer += WAIT_TIME_OUTPUT_FULL;
+                return OUTPUT_FULL;
+            }
+            MachineState state = recipeFinish();
+            if (state != ACTIVE) return state;
+        }
+        if (this.powerGenerated == 0 && !consumedResources) {
+            if (!consumeInputs()) {
+                tile.onRecipePostTick();
+                return tile.getDefaultMachineState();
+            }
+        }
+        if (!activeRecipe.hasInputFluids() || tile.has(MachineFlag.FE)){
+            long generated = generatePower(true);
+            if (generated > 0){
+                this.generatePower(false);
+                this.powerGenerated += (int) generated;
+            } else {
+                tile.onRecipePostTick();
+                return tile.getDefaultMachineState();
+            }
+        }
+        return ACTIVE;
+    }
+
     protected boolean shouldConsumeResources() {
         return !generator;
     }
@@ -332,10 +347,10 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     public boolean consumePower(boolean simulate){
         if (processingBlocked) return false;
         if (generator) return true;
-        if (activeRecipe.getPower() > 0){
-            if (tile.energyHandler.isPresent()){
+        if (getPower() > 0){
+            if (tile.energyHandler.isPresent() && tile.has(EU)){
                 return tile.energyHandler.map(e -> e.extractEu(getPower(), simulate) >= getPower()).orElse(false);
-            } else if (tile.feHandler.isPresent()){
+            } else if (tile.feHandler.isPresent() && tile.has(FE)){
                 return tile.feHandler.map(e -> e.extractEnergy((int) getPower(), simulate) >= getPower()).orElse(false);
             } else {
                 return false;
@@ -344,13 +359,13 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return true;
     }
 
-    public boolean generatePower(){
-        if (activeRecipe == null) return false;
-        if (!generator) return false;
-        if (activeRecipe.getPower() <= 0) return false;
-        if (tile.energyHandler.isPresent()) return tile.energyHandler.map(e -> e.insertInternal(activeRecipe.getPower(), false) == getPower()).orElse(false);
-        else if (tile.feHandler.isPresent()) return tile.feHandler.map(e -> e.receiveEnergy((int) activeRecipe.getPower(), false) == getPower()).orElse(false);
-        else return false;
+    public long generatePower(boolean simulate){
+        if (!generator) return 0;
+        if (activeRecipe.getPower() <= 0) return 0;
+        long generated = 0;
+        if (tile.energyHandler.isPresent() && tile.has(EU)) generated = tile.energyHandler.map(e -> e.insertInternal(totalPowerToGenerate - powerGenerated, simulate)).orElse(0L);
+        else if (tile.feHandler.isPresent() && tile.has(FE)) generated = tile.feHandler.map(e -> e.receiveEnergy(totalPowerToGenerate - powerGenerated, simulate)).orElse(0);
+        return generated;
     }
 
     public boolean consumeResourceForRecipe(boolean simulate) {
@@ -378,7 +393,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected boolean validateRecipe(IRecipe r) {
         long voltage = tile.getMachineType().getAmps() * tile.getMaxInputVoltage();
-        boolean ok = this.generator || !tile.has(MachineFlag.EU) || voltage >= r.getPower() / r.getAmps();
+        boolean ok = this.generator || !tile.has(EU) || voltage >= r.getPower() / r.getAmps();
         List<ItemStack> consumed = this.tile.itemHandler.map(t -> t.consumeInputs(r, true)).orElse(Collections.emptyList());
         for (IRecipeValidator validator : r.getValidators()) {
             if (!validator.validate(r, tile)) {
@@ -413,7 +428,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                     return;
                 }
                 calculateDurations();
-                if (!consumeResourceForRecipe(true) || !canRecipeContinue() || (generator && (!activeRecipe.hasInputFluids() || activeRecipe.getInputFluids().size() != 1))) {
+                if (!consumePower(true) || !canRecipeContinue()) {
                     activeRecipe = null;
                     tile.setMachineState(tile.getDefaultMachineState());
                     //wait half a second after trying again.
@@ -437,7 +452,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     public boolean consumeInputs() {
-        if (generator) return consumeGeneratorInputs(false);
+        if (generator && tile.has(EU)) return consumeGeneratorInputs(false);
         boolean flag = true;
         if (!tile.hadFirstTick()) return true;
         if (activeRecipe.hasInputItems()) {
@@ -460,10 +475,12 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         if (activeRecipe == null) return false;
         if (activeRecipe.hasInputItems()) {
             AtomicReference<List<ItemStack>> itemInputs = new AtomicReference<>(new ArrayList<>());
-            return tile.itemHandler.map(h -> {
+            boolean flag = tile.itemHandler.map(h -> {
                 itemInputs.set(h.consumeInputs(activeRecipe, simulate));
                 return !itemInputs.get().isEmpty();
             }).orElse(true);
+            if (flag) consumedResources = true;
+            return flag;
         }
         if (!activeRecipe.hasInputFluids()) return false;
         int toConsume = consumedFluidPerOperation(activeRecipe);
@@ -563,11 +580,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     protected int calculateGeneratorConsumption(IRecipe r) {
-        int amount = r.getInputFluids().get(0).getAmount();
-        if (currentProgress > 0) {
-            return 0;
-        }
-        return amount;
+        return r.getInputFluids().get(0).getAmount();
     }
 
     public void resetRecipe() {
@@ -576,6 +589,8 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         this.currentProgress = 0;
         this.overclock = 0;
         this.maxProgress = 0;
+        powerGenerated = 0;
+        totalPowerToGenerate = 0;
         this.itemInputs = Collections.emptyList();
         this.fluidInputs = Collections.emptyList();
     }
@@ -611,7 +626,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             if (tile.getMachineState() == POWER_LOSS) {
                 return;
             }
-            if (activeRecipe != null && !consumeResourceForRecipe(true)) {
+            if (activeRecipe != null && !consumePower(true)) {
                 return;
             }
             if (event == SlotType.ENERGY) {
@@ -626,32 +641,33 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 return;
             }
             if (tile.getMachineState().allowRecipeCheck()) {
-                if (activeRecipe != null) {
-                    tile.setMachineState(NO_POWER);
-                } else if (tile.getMachineState() != POWER_LOSS && tickTimer == 0) {
-                    checkRecipe();
-                } else if (event == SlotType.IT_IN || event == SlotType.FL_IN) {
-                    checkRecipe();
+                if (activeRecipe == null) {
+                    if (tile.getMachineState() != POWER_LOSS && tickTimer == 0) {
+                        checkRecipe();
+                    } else if (event == SlotType.IT_IN || event == SlotType.FL_IN) {
+                        checkRecipe();
+                    }
                 }
             }
         } else if (event instanceof MachineEvent) {
             switch ((MachineEvent) event) {
-                case ENERGY_INPUTTED, HEAT_INPUTTED:
+                case ENERGY_INPUTTED, HEAT_INPUTTED -> {
                     if (event == MachineEvent.HEAT_INPUTTED && !tile.has(MachineFlag.HEAT)) break;
-                    if (tile.getMachineState() == tile.getDefaultMachineState() && activeRecipe != null) {
-                        tile.setMachineState(NO_POWER);
+                    if (activeRecipe != null) {
+                        break;
                     }
                     if (tile.getMachineState().allowRecipeCheck() && tile.getMachineState() != POWER_LOSS && tickTimer == 0) {
                         checkRecipe();
                     }
-                    break;
-                case ENERGY_DRAINED, HEAT_DRAINED:
+                }
+                case ENERGY_DRAINED, HEAT_DRAINED -> {
                     if (event == MachineEvent.HEAT_DRAINED && !tile.has(MachineFlag.HEAT)) break;
                     if (generator && tile.getMachineState() == tile.getDefaultMachineState()) {
-                        if (activeRecipe != null) tile.setMachineState(NO_POWER);
-                        else checkRecipe();
+                        if (activeRecipe == null) {
+                            checkRecipe();
+                        }
                     }
-                    break;
+                }
             }
         }
     }
@@ -676,6 +692,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         nbt.putInt("T", tickTimer);
         nbt.put("F", fluid);
         nbt.putInt("P", currentProgress);
+        nbt.putInt("PG", powerGenerated);
         nbt.putBoolean("C", consumedResources);
         nbt.putBoolean("PB", processingBlocked);
         if (activeRecipe != null){
@@ -694,6 +711,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         nbt.getList("F", 10).forEach(t -> fluidInputs.add(FluidUtils.fromTag((CompoundTag) t)));
         this.processingBlocked = nbt.getBoolean("PB");
         this.currentProgress = nbt.getInt("P");
+        this.powerGenerated = nbt.getInt("PG");
         this.tickTimer = nbt.getInt("T");
         this.consumedResources = nbt.getBoolean("C");
         if (getRecipeMap() != null) {
