@@ -124,18 +124,10 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         //First, a few timer related tasks that ensure the machine can recover from certain situations.
         if (tickingRecipe) return;
         if (tickTimer > 0) {
-            if (tile.getMachineState() == IDLE) {
-                tickTimer = 0;
-            } else {
-                tickTimer--;
-                if (tickTimer > 0) {
-                    return;
-                }
+            tickTimer--;
+            if (tickTimer > 0) {
+                return;
             }
-        }
-        if (tile.getMachineState() == POWER_LOSS && activeRecipe != null) {
-            tile.setMachineState(NO_POWER);
-            tickTimer = 0;
         }
         if (tile.getMachineState() == OUTPUT_FULL) {
             if (canOutput()) {
