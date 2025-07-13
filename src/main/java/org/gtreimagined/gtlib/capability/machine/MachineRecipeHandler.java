@@ -287,6 +287,9 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 this.consumePower(false);
             }
         }
+        if (generator && (!activeRecipe.hasInputFluids() || tile.has(MachineFlag.FE))){
+            this.generatePower();
+        }
         /*if (!consumeResourceForRecipe(false)) {
             if ((currentProgress == 0 && tile.getMachineState() == tile.getDefaultMachineState())) {
                 //Cannot start a recipe :(
