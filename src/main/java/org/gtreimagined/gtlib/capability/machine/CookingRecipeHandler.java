@@ -64,7 +64,7 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     }*/
 
     @Override
-    public boolean consumeResourceForRecipe(boolean simulate) {
+    public boolean consumePower(boolean simulate) {
         if (simulate) return consume(true);
         if (burnDuration == 0) {
             if (!consume(false)) return false;
