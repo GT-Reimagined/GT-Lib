@@ -21,6 +21,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.lwjgl.system.CallbackI.P;
 
+import static org.gtreimagined.gtlib.machine.MachineFlag.EU;
+import static org.gtreimagined.gtlib.machine.MachineFlag.FE;
+
 public class MachineProvider implements IComponentProvider, IServerDataProvider<BlockEntity> {
     public static MachineProvider INSTANCE = new MachineProvider();
     @Override
@@ -46,7 +49,7 @@ public class MachineProvider implements IComponentProvider, IServerDataProvider<
                         String curText, maxText;
                         if (isGenerator){
                            curText = ChatFormatting.WHITE + String.valueOf(cur) + ChatFormatting.GRAY;
-                           maxText = max + " Generated";
+                           maxText = max + (machine.has(EU) ? " EU" : machine.has(FE) ? " FE" : "") + " Generated";
                         } else {
                             curText = ChatFormatting.WHITE + String.valueOf(max >= 20 ? Math.round(cur / 20.0) : cur) + ChatFormatting.GRAY;
                             maxText = (max >= 20 ? Math.round(max / 20.0) : max) + " " + (max >= 20 ? "s" : "t");
