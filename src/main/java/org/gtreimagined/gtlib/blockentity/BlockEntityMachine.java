@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
@@ -31,6 +32,7 @@ import org.gtreimagined.gtlib.client.tesr.Caches;
 import org.gtreimagined.gtlib.client.tesr.MachineTESR;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
+import org.gtreimagined.gtlib.cover.ICover.DynamicKey;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
@@ -575,6 +577,10 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     public void setMachineState(MachineState newState) {
+        if (newState == MachineState.OUTPUT_FULL){
+            GTLib.LOGGER.info("Setting output full machine state, stack trace following.");
+            Thread.dumpStack();
+        }
         if (this.machineState != newState) {
             MachineState old = this.machineState;
             this.machineState = newState;

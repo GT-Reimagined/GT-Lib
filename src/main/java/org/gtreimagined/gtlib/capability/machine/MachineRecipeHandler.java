@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.capability.machine;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.Dispatch;
@@ -121,6 +122,8 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         this.currentProgress = 0;
     }
 
+    boolean loggedBug = false;
+
     public void onServerUpdate() {
         if (tile.getMachineState() == INVALID_STRUCTURE || tile.getMachineState() == DISABLED) return;
         //First, a few timer related tasks that ensure the machine can recover from certain situations.
@@ -132,6 +135,13 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             }
         }
         if (tile.getMachineState() == OUTPUT_FULL) {
+            if (activeRecipe == null){
+                if (!loggedBug){
+                    loggedBug = true;
+                    GTLib.LOGGER.info("recipe null when finishing recipe, should not be possible!");
+                }
+                return;
+            }
             if (canOutput()) {
                 tile.setMachineState(recipeFinish());
                 return;
