@@ -2,6 +2,11 @@ package org.gtreimagined.gtlib.block;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TorchBlock;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
@@ -96,13 +101,13 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean moving) {
-        super.neighborChanged(state, world, pos, block, fromPos, moving);
-        if (fromPos.above().equals(pos) && !world.getBlockState(fromPos).canOcclude()) {
-            if (!world.isClientSide) {
-                Utils.breakBlock(world, null, ItemStack.EMPTY, pos, 0);
-            }
-        }
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
+        return facing == Direction.DOWN && !this.canSurvive(state, level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return canSupportCenter(level, pos.below(), Direction.UP);
     }
 
     @Override
