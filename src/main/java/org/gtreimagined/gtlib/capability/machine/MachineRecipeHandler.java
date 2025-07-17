@@ -215,7 +215,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     protected void calculateDurations() {
         maxProgress = activeRecipe.getDuration();
         if (generator){
-            totalPowerToGenerate = activeRecipe.getTotalPower();
+            totalPowerToGenerate = (activeRecipe.getTotalPower() * getEfficiency()) / 100;
         }
         if (!generator && !tile.has(MachineFlag.FE)) {
             overclock = getOverclock();
