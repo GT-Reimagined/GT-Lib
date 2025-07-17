@@ -270,6 +270,13 @@ public class RecipeIngredient extends Ingredient {
         }
         return new RecipeIngredient(new MultiValue(Arrays.stream(tagIn).map(t -> new RecipeValue(t, count))));
     }
+    @SafeVarargs
+    public static Ingredient ofIngredient(int count, TagKey<Item>... tagIn) {
+        for (TagKey<Item> itemTagKey : tagIn) {
+            ensureRegisteredTag(itemTagKey.location());
+        }
+        return new Ingredient(Arrays.stream(tagIn).map(t -> new RecipeValue(t, count)));
+    }
 
     public static RecipeIngredient ofObject(Object object, int amount){
         if (object instanceof TagKey tag){
