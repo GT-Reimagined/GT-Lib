@@ -209,7 +209,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         this.feHandler.ifPresent(MachineFEHandler::init);
         this.recipeHandler.ifPresent(MachineRecipeHandler::init);
         this.coverHandler.ifPresent(CoverHandler::onFirstTick);
-        EUGrid.INSTANCE.addElement(this);
+        if (has(EU)) EUGrid.INSTANCE.addElement(this);
     }
 
     @Override
@@ -337,7 +337,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             recipeHandler.ifPresent(MachineRecipeHandler::onRemove);
 
             dispatch.invalidate();
-            EUGrid.INSTANCE.removeElement(this);
+            if (has(EU)) EUGrid.INSTANCE.removeElement(this);
         } else {
             if (level != null) SoundHelper.clear(level, worldPosition);
         }
@@ -458,7 +458,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             }
             getLevel().setBlockAndUpdate(getBlockPos(), state);
             invalidateCaps();
-            EUGrid.INSTANCE.addElement(this);
+            if (has(EU)) EUGrid.INSTANCE.addElement(this);
 
             return true;
         }
