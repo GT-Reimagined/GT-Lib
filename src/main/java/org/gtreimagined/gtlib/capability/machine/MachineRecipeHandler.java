@@ -135,14 +135,8 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             }
         }
         if (tile.getMachineState() == OUTPUT_FULL) {
-            if (activeRecipe == null){
-                if (!loggedBug){
-                    loggedBug = true;
-                    GTLib.LOGGER.info("recipe null when finishing recipe, should not be possible!");
-                }
-                return;
-            }
             if (canOutput()) {
+
                 tile.setMachineState(recipeFinish());
                 return;
             }
@@ -254,6 +248,14 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     }
 
     protected MachineState recipeFinish() {
+        if (activeRecipe == null){
+            if (!loggedBug){
+                loggedBug = true;
+                GTLib.LOGGER.info("recipe null when finishing recipe, should not be possible!");
+                GTLib.LOGGER.info(tile.getMachineType().getLoc().toString());
+            }
+            return tile.getMachineState();
+        }
         tickTimer = 0;
         addOutputs();
         this.itemInputs = new ObjectArrayList<>();
