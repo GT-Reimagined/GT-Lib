@@ -122,8 +122,6 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         this.currentProgress = 0;
     }
 
-    boolean loggedBug = false;
-
     public void onServerUpdate() {
         if (tile.getMachineState() == INVALID_STRUCTURE || tile.getMachineState() == DISABLED) return;
         //First, a few timer related tasks that ensure the machine can recover from certain situations.
@@ -136,7 +134,6 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }
         if (tile.getMachineState() == OUTPUT_FULL) {
             if (canOutput()) {
-
                 tile.setMachineState(recipeFinish());
                 return;
             }
@@ -249,8 +246,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     protected MachineState recipeFinish() {
         if (activeRecipe == null){
-            if (!loggedBug){
-                loggedBug = true;
+            if (tile.getLevel().getGameTime() % 10 == 0){
                 GTLib.LOGGER.info("recipe null when finishing recipe, should not be possible!");
                 GTLib.LOGGER.info(tile.getMachineType().getLoc().toString());
             }
