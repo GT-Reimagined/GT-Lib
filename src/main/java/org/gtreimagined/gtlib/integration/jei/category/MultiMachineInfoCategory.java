@@ -2,10 +2,13 @@ package org.gtreimagined.gtlib.integration.jei.category;
 
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeRegistration;
 import org.gtreimagined.gtlib.Data;
@@ -24,12 +27,12 @@ public class MultiMachineInfoCategory implements IRecipeCategory<MultiMachineInf
     private static IGuiHelper guiHelper;
     private final IDrawable background;
     private final IDrawable icon;
-    private static final ResourceLocation UID = new ResourceLocation(Ref.SHARED_ID, "multi_machine_info");
     private static final Set<MultiMachineInfoPage> MULTI_MACHINES_PAGES = Sets.newHashSet();
+    private static final RecipeType<MultiMachineInfoPage> RECIPE_TYPE = RecipeType.create(Ref.SHARED_ID, "multi_machine_info", MultiMachineInfoPage.class);
 
     public MultiMachineInfoCategory() {
         this.background = guiHelper.createBlankDrawable(176, 150);
-        this.icon = guiHelper.createDrawableIngredient(new ItemStack(Data.DEBUG_SCANNER, 1));
+        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Data.DEBUG_SCANNER, 1));
     }
 
     public static void setGuiHelper(IGuiHelper guiHelper) {
@@ -41,29 +44,17 @@ public class MultiMachineInfoCategory implements IRecipeCategory<MultiMachineInf
     }
 
     public static void registerRecipes(IRecipeRegistration registry) {
-        registry.addRecipes(MULTI_MACHINES_PAGES, UID);
+        registry.addRecipes(RECIPE_TYPE, MULTI_MACHINES_PAGES.stream().toList());
     }
 
-    @Override
+    /*@Override
     public boolean handleClick(@NotNull MultiMachineInfoPage recipe, double mouseX, double mouseY, int mouseButton) {
         return recipe.handleClick(mouseX, mouseY, mouseButton);
-    }
+    }*/
 
     @Override
-    public void draw(@NotNull MultiMachineInfoPage recipe, @NotNull PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(@NotNull MultiMachineInfoPage recipe, IRecipeSlotsView view, @NotNull PoseStack matrixStack, double mouseX, double mouseY) {
         recipe.drawInfo(matrixStack, (int)mouseX, (int)mouseY);
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getUid() {
-        return UID;
-    }
-
-    @NotNull
-    @Override
-    public Class<? extends MultiMachineInfoPage> getRecipeClass() {
-        return MultiMachineInfoPage.class;
     }
 
     @NotNull
@@ -85,19 +76,23 @@ public class MultiMachineInfoCategory implements IRecipeCategory<MultiMachineInf
     }
 
     @Override
+    public RecipeType<MultiMachineInfoPage> getRecipeType() {
+        return RECIPE_TYPE;
+    }
+
+    /*@Override
     public void setIngredients(@NotNull MultiMachineInfoPage recipe, @NotNull IIngredients ingredients) {
         recipe.setIngredients(ingredients);
-    }
+    }*/
     
-    @NotNull
+    /*@NotNull
     @Override
     public List<Component> getTooltipStrings(@NotNull MultiMachineInfoPage recipe, double mouseX, double mouseY) {
         return recipe.getTooltipStrings(mouseX, mouseY);
-    }
+    }*/
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayout recipeLayout, @NotNull MultiMachineInfoPage recipe, @NotNull IIngredients ingredients) {
+    public void setRecipe(IRecipeLayoutBuilder recipeLayout, MultiMachineInfoPage recipe, IFocusGroup iFocusGroup) {
         recipe.setRecipeLayout(recipeLayout, guiHelper);
     }
-
 }

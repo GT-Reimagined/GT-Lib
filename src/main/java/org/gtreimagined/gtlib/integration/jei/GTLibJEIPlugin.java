@@ -99,14 +99,14 @@ public class GTLibJEIPlugin implements IModPlugin {
         List<ItemLike> list = new ArrayList<>();
         GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));
         if (!list.isEmpty()) {
-            runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, list.stream().map(i -> i.asItem().getDefaultInstance()).toList());
+            runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, list.stream().map(i -> i.asItem().getDefaultInstance()).toList());
         }
         List<Fluid> fluidList = new ArrayList<>();
         GTLibXEIPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
         // wish there was a better way to do this
         if (!fluidList.isEmpty()){
             runtime.getIngredientManager().removeIngredientsAtRuntime(ForgeTypes.FLUID_STACK,  fluidList.stream().map(f -> new FluidStack(f, 1)).toList());
-            runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, fluidList.stream().map(i -> i.getBucket().getDefaultInstance()).toList());
+            runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, fluidList.stream().map(i -> i.getBucket().getDefaultInstance()).toList());
         }
         //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, GTAPI.all(BlockSurfaceRock.class).stream().map(b -> new ItemStack(b, 1)).filter(t -> !t.isEmpty()).collect(Collectors.toList()));
         //runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM, GTAPI.all(BlockOre.class).stream().filter(b -> b.getStoneType() != Data.STONE).map(b -> new ItemStack(b, 1)).collect(Collectors.toList()));
@@ -234,7 +234,12 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     public static void showCategories(ResourceLocation... categories) {
         if (runtime != null) {
-            runtime.getRecipesGui().showCategories(ImmutableList.copyOf(categories));
+            List<RecipeType<?>> list = new ArrayList<>();
+            for (ResourceLocation r : ImmutableList.copyOf(categories)) {
+                RecipeType<IRecipe> iRecipeRecipeType = RECIPE_TYPES.get(r.toString());
+                list.add(iRecipeRecipeType);
+            }
+            runtime.getRecipesGui().showTypes(list);
         }
     }
 
@@ -265,9 +270,9 @@ public class GTLibJEIPlugin implements IModPlugin {
             tuple.workstations.forEach(s -> {
                 ItemLike item = RegistryUtils.getItemFromID(s);
                 if (item == Items.AIR) return;
-                registration.addRecipeCatalyst(new ItemStack(item), tuple.map.getLoc());
+                registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(tuple.map.getLoc().toString()));
                 if (!tuple.map.getSubCategories().isEmpty()){
-                    tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), new ResourceLocation(Ref.SHARED_ID, s1)));
+                    tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(new ResourceLocation(Ref.SHARED_ID, s1).toString())));
                 }
             });
         });
@@ -333,11 +338,6 @@ public class GTLibJEIPlugin implements IModPlugin {
             @Override
             public <T> Optional<IFocus<T>> checkedCast(IIngredientType<T> ingredientType) {
                 return Optional.empty();
-            }
-
-            @Override
-            public Mode getMode() {
-                return USE ? Mode.INPUT : Mode.OUTPUT;
             }
 
         });

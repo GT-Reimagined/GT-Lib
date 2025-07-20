@@ -131,11 +131,6 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
     }
 
     @Override
-    public ResourceLocation getUid() {
-        return loc;
-    }
-
-    @Override
     public Component getTitle() {
         return Utils.literal(title);
     }
@@ -304,11 +299,6 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             }
         }
     }*/
-
-    @Override
-    public Class getRecipeClass() {
-        return IRecipe.class;
-    }
 
     @Override
     public void draw(IRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {

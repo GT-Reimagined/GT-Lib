@@ -57,16 +57,6 @@ public class VeinCategory implements IRecipeCategory<Vein> {
     }
 
     @Override
-    public ResourceLocation getUid() {
-        return new ResourceLocation(Ref.ID, "veins");
-    }
-
-    @Override
-    public Class<? extends Vein> getRecipeClass() {
-        return Vein.class;
-    }
-
-    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, Vein recipe, IFocusGroup focuses) {
         for (int i = 0; i < 4; i++) {
             Material material = i == 0 ? recipe.primary() : i == 1 ? recipe.secondary() : i == 2 ? recipe.between() : recipe.sporadic();

@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.integration.jei;
 
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
+import net.minecraft.world.inventory.MenuType;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.container.ContainerBasicMachine;
@@ -12,17 +13,25 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("removal")
 public class MachineTransferHandler implements IRecipeTransferInfo<ContainerBasicMachine, IRecipe> {
     final ResourceLocation id;
+    RecipeType<IRecipe> recipeType;
     public MachineTransferHandler(ResourceLocation id){
         this.id = id;
+        recipeType = new RecipeType<>(id, IRecipe.class);
     }
 
     @Override
     public Class<ContainerBasicMachine> getContainerClass() {
         return ContainerBasicMachine.class;
+    }
+
+    @Override
+    public Optional<MenuType<ContainerBasicMachine>> getMenuType() {
+        return Optional.empty();
     }
 
     @Override
@@ -57,16 +66,6 @@ public class MachineTransferHandler implements IRecipeTransferInfo<ContainerBasi
 
     @Override
     public RecipeType<IRecipe> getRecipeType() {
-        return new RecipeType<>(getRecipeCategoryUid(), getRecipeClass());
-    }
-
-    @Override
-    public Class<IRecipe> getRecipeClass() {
-        return IRecipe.class;
-    }
-
-    @Override
-    public ResourceLocation getRecipeCategoryUid() {
-        return id;
+        return recipeType;
     }
 }

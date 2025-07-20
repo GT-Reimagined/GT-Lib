@@ -59,16 +59,6 @@ public class SmallOreCategory implements IRecipeCategory<SmallOre> {
     }
 
     @Override
-    public ResourceLocation getUid() {
-        return new ResourceLocation(Ref.ID, "small_ores");
-    }
-
-    @Override
-    public Class<? extends SmallOre> getRecipeClass() {
-        return SmallOre.class;
-    }
-
-    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SmallOre recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 1)
                 .addIngredients(VanillaTypes.ITEM_STACK, GTAPI.all(StoneType.class).stream()

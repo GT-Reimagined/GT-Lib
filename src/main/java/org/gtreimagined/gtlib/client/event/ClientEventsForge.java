@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.client.event;
 
+import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.SoundHelper;
@@ -20,16 +21,16 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEventsForge {
 
     @SubscribeEvent
-    public static void onBlockHighlight(HighlightBlock event) {
-        if (ClientEvents.onBlockHighlight(event.getLevelRenderer(), event.getCamera(), event.getTarget(), event.getPartialTicks(), event.getPoseStack(), event.getMultiBufferSource()))
+    public static void onBlockHighlight(RenderHighlightEvent.Block event) {
+        if (ClientEvents.onBlockHighlight(event.getLevelRenderer(), event.getCamera(), event.getTarget(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource()))
             event.setCanceled(true);
     }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     protected static void onTooltipAdd(final ItemTooltipEvent ev) {
-        MaterialType.addTooltip(ev.getItemStack(), ev.getToolTip(), ev.getPlayer(), ev.getFlags());
-        ClientEvents.onItemTooltip(ev.getItemStack(), ev.getToolTip(), ev.getPlayer(), ev.getFlags());
+        MaterialType.addTooltip(ev.getItemStack(), ev.getToolTip(), ev.getEntity(), ev.getFlags());
+        ClientEvents.onItemTooltip(ev.getItemStack(), ev.getToolTip(), ev.getEntity(), ev.getFlags());
     }
 
     //TODO why is this client only?
@@ -49,22 +50,22 @@ public class ClientEventsForge {
         }
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void onRenderDebugInfo(RenderGameOverlayEvent.Text e) {
         ClientEvents.onRenderDebugInfo(e.getLeft());
-    }
+    }*/
 
     @SubscribeEvent
-    public static void onGuiMouseScrollPre(ScreenEvent.MouseScrollEvent.Pre e) {
+    public static void onGuiMouseScrollPre(ScreenEvent.MouseScrolled e) {
         ClientEvents.onGuiMouseScrollPre(e.getScrollDelta());
     }
     @SubscribeEvent
-    public static void onGuiMouseClickPre(ScreenEvent.MouseClickedEvent.Pre e) {
+    public static void onGuiMouseClickPre(ScreenEvent.MouseButtonPressed e) {
         ClientEvents.onGuiMouseClickPre(e.getButton());
     }
 
     @SubscribeEvent
-    public static void onGuiMouseReleasedPre(ScreenEvent.MouseReleasedEvent.Pre e) {
+    public static void onGuiMouseReleasedPre(ScreenEvent.MouseButtonReleased e) {
         ClientEvents.onGuiMouseReleasedPre(e.getButton());
     }
 
