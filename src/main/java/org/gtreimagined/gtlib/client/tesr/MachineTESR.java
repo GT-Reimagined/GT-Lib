@@ -29,7 +29,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
@@ -77,9 +76,22 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
         List<BakedQuad> out = VertexTransformer.processMany(quads, FluidUtils.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidUtils.getStillTexture(fluid)));
         boolean hot = FluidUtils.getFluidTemperature(fluid) >= FluidUtils.getFluidTemperature(Fluids.LAVA);
         for (BakedQuad bakedQuad : out) {
-            LightUtil.setLightData(bakedQuad, hot ? 1 << 7 : light);
+            setLightData(bakedQuad, hot ? 1 << 7 : light);
         }
         return new ListBakedModel(out);
+    }
+
+    public static int getLightOffset(int v) {
+        return v * 8 + 6;
+    }
+
+    public static void setLightData(BakedQuad q, int light) {
+        int[] data = q.getVertices();
+
+        for(int i = 0; i < 4; ++i) {
+            data[getLightOffset(i)] = light;
+        }
+
     }
 
     public static List<Caches.LiquidCache> buildLiquids(BlockEntityMachine<?> tile) {

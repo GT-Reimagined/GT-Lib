@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.data.CachedOutput;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.util.Utils;
@@ -54,7 +55,7 @@ public class GTAdvancementProvider implements DataProvider, IGTLibProvider {
     }
 
     @Override
-    public void run(@NotNull HashCache cache) {
+    public void run(@NotNull CachedOutput cache) {
         /*Path folder = this.gen.getOutputFolder();
         Set<ResourceLocation> locs = new ObjectOpenHashSet<>();
         Consumer<Advancement> consumer = a -> {

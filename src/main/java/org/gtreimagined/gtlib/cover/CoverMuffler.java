@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.cover;
 
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityHatch;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.capability.ComponentHandler;
@@ -61,7 +62,7 @@ public class CoverMuffler extends BaseCover {
         if (world.isClientSide) {
             BlockEntityMultiMachine<?> tile = StructureCache.getAnyMulti(world, pos, BlockEntityMultiMachine.class);
             if (tile == null || tile.getMachineState() != MachineState.ACTIVE) return;
-            Random rand = world.random;
+            RandomSource rand = world.random;
             Direction dir = this.side;
             double d0 = (double) pos.getX() + 0.5D + (dir.getAxis() == Direction.Axis.X ? 0f : (rand.nextDouble() - 0.5f) / 2);
             double d1 = (double) pos.getY() + 0.5D + (dir.getAxis() == Direction.Axis.Y ? 0f : (rand.nextDouble() - 0.5f) / 2);
