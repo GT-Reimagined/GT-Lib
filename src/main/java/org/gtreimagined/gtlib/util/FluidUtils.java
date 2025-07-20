@@ -1,5 +1,9 @@
 package org.gtreimagined.gtlib.util;
 
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.SoundActions;
+import net.minecraftforge.common.Tags.Fluids;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.capability.fluid.CauldronWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +21,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
@@ -29,35 +32,35 @@ import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXE
 
 public class FluidUtils {
     public static ResourceLocation getStillTexture(Fluid fluid){
-        return fluid.getAttributes().getStillTexture();
+        return IClientFluidTypeExtensions.of(fluid).getStillTexture();
     }
 
     public static ResourceLocation getFlowingTexture(Fluid fluid){
-        return fluid.getAttributes().getFlowingTexture();
+        return IClientFluidTypeExtensions.of(fluid).getFlowingTexture();
     }
 
     public static int getFluidTemperature(Fluid fluid){
-        return fluid.getAttributes().getTemperature();
+        return fluid.getFluidType().getTemperature();
     }
 
     public static int getFluidDensity(Fluid fluid){
-        return fluid.getAttributes().getDensity();
+        return fluid.getFluidType().getDensity();
     }
 
     public static boolean isFluidGaseous(Fluid fluid){
-        return fluid.getAttributes().isGaseous();
+        return fluid.is(Fluids.GASEOUS);
     }
 
     public static int getFluidColor(Fluid fluid){
-        return fluid.getAttributes().getColor();
+        return IClientFluidTypeExtensions.of(fluid).getTintColor();
     }
 
     public static SoundEvent getFillSound(Fluid fluid){
-        return fluid.getAttributes().getFillSound();
+        return fluid.getFluidType().getSound(SoundActions.BUCKET_FILL);
     }
 
     public static SoundEvent getEmptySound(Fluid fluid){
-        return fluid.getAttributes().getEmptySound();
+        return fluid.getFluidType().getSound(SoundActions.BUCKET_EMPTY);
     }
 
     public static Component getFluidDisplayName(FluidStack fluid){
@@ -72,7 +75,7 @@ public class FluidUtils {
             }
             return LazyOptional.empty();
         }
-        return be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+        return be.getCapability(ForgeCapabilities.FLUID_HANDLER, side);
     }
 
     public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, Direction side){
@@ -88,10 +91,10 @@ public class FluidUtils {
     }
 
     public static boolean fillItemFromContainer(int maxFill, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
-        IFluidHandlerItem itemHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().orElse(null);
+        IFluidHandlerItem itemHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().orElse(null);
         if (itemHandler == null) return false;
         final int actualMax = maxFill == -1 ? itemHandler.getTankCapacity(0) : maxFill;
-        ItemStack checkContainer = stack.copy().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).map(t -> {
+        ItemStack checkContainer = stack.copy().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).map(t -> {
             t.fill(FluidUtil.tryFluidTransfer(t, handler, actualMax, false), EXECUTE);
             return t.getContainer();
         }).orElse(ItemStack.EMPTY);
@@ -105,10 +108,10 @@ public class FluidUtils {
     }
 
     public static boolean emptyItemIntoContainer(int maxDrain, ItemStack stack, IFluidHandler handler, Predicate<ItemStack> tester, Consumer<ItemStack> consumer){
-        IFluidHandlerItem itemHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().orElse(null);
+        IFluidHandlerItem itemHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().orElse(null);
         if (itemHandler == null) return false;
         final int actualMax = maxDrain == -1 ? itemHandler.getTankCapacity(0) : maxDrain;
-        ItemStack checkContainer = stack.copy().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).map(t -> {
+        ItemStack checkContainer = stack.copy().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).map(t -> {
             t.drain(actualMax, EXECUTE);
             return t.getContainer();
         }).orElse(ItemStack.EMPTY);
