@@ -1,6 +1,9 @@
 package org.gtreimagined.gtlib.client.scene;
 
 import com.mojang.math.Vector3f;
+import net.minecraft.world.level.gameevent.GameEvent.Context;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.gtreimagined.gtlib.mixin.client.DimensionTypeAccessor;
 import org.gtreimagined.gtlib.structure.BlockInfo;
 import net.minecraft.core.BlockPos;
@@ -68,7 +71,8 @@ public class TrackedDummyWorld extends Level {
     }
 
     public TrackedDummyWorld(Level world){
-        super(null, null, Holder.direct(DIMENSION_TYPE), null,true, false, 0);
+        super(null, null,
+                ServerLifecycleHooks.getCurrentServer().overworld().dimensionTypeRegistration(), null,true, false, 0, 1);
         proxyWorld = world;
     }
 
@@ -117,6 +121,16 @@ public class TrackedDummyWorld extends Level {
     @Override
     public FluidState getFluidState(BlockPos pos) {
         return null;
+    }
+
+    @Override
+    public void playSeededSound(@Nullable Player player, double v, double v1, double v2, SoundEvent soundEvent, SoundSource soundSource, float v3, float v4, long l) {
+
+    }
+
+    @Override
+    public void playSeededSound(@Nullable Player player, Entity entity, SoundEvent soundEvent, SoundSource soundSource, float v, float v1, long l) {
+
     }
 
     public Vector3f getSize() {
@@ -259,6 +273,11 @@ public class TrackedDummyWorld extends Level {
 
     @Override
     public void levelEvent(Player playerEntity, int i, BlockPos blockPos, int i1) {
+
+    }
+
+    @Override
+    public void gameEvent(GameEvent gameEvent, Vec3 vec3, Context context) {
 
     }
 
