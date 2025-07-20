@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
@@ -53,7 +54,7 @@ public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> imp
         GTAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onItemModelBuild(b, this));
         GTAPI.all(GTFluid.class, domain).forEach(f -> {
             modelAndTexture(f.getContainerItem(), "forge", "item/bucket").bucketProperties(f.getFluid());
-            modelAndTexture(f.getFluidBlock(), GTBlockModelBuilder.getSimple()).tex(a -> a.put("all", f.getAttributes().getFlowingTexture().toString()));
+            modelAndTexture(f.getFluidBlock(), GTBlockModelBuilder.getSimple()).tex(a -> a.put("all", IClientFluidTypeExtensions.of(f.getFluidType()).getFlowingTexture().toString()));
         });
     }
 

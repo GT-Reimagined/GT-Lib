@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.registration;
 
 import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler.For;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries.Keys;
 import net.minecraftforge.registries.RegisterEvent;
 import org.gtreimagined.gtlib.GTAPI;
@@ -102,6 +103,10 @@ public final class GTRegistration {
         } else if (e.getRegistryKey() == Keys.FLUIDS) {
             GTAPI.all(Fluid.class, domain, (f, d, i) -> {
                 ForgeRegistries.FLUIDS.register(new ResourceLocation(d, i), f);
+            });
+        } else if (e.getRegistryKey() == Keys.FLUID_TYPES) {
+            GTAPI.all(FluidType.class, domain, (f, d, i) -> {
+                ForgeRegistries.FLUID_TYPES.get().register(new ResourceLocation(d, i), f);
             });
         } else if (e.getRegistryKey() == Keys.MENU_TYPES) {
             GTAPI.all(MenuType.class, domain, (h, d, i) -> {

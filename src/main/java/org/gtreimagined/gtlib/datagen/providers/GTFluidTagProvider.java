@@ -1,8 +1,10 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
+import net.minecraftforge.common.Tags;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibTags;
+import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.fluid.GTMaterialFluid;
@@ -28,8 +30,11 @@ public class GTFluidTagProvider extends GTTagProvider<Fluid> implements IGTLibPr
             tag(getForgelikeFluidTag(f.getId()))
                     .add(f.getFluid())
                     .replace(replace);
-            if (f instanceof GTMaterialFluid) {
-                Material m = ((GTMaterialFluid) f).getMaterial();
+            if (f instanceof GTMaterialFluid mf) {
+                Material m = mf.getMaterial();
+                if (mf.getType() == GTMaterialTypes.GAS){
+                    tag(Tags.Fluids.GASEOUS).add(f.getFluid());
+                }
                 tag(getForgelikeFluidTag(m.getId()))
                         .add(f.getFluid())
                         .replace(replace);

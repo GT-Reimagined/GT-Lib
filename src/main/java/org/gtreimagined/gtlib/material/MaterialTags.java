@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.material;
 
 import com.google.common.collect.ImmutableMap;
+import net.minecraftforge.fluids.FluidType;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.material.data.ArmorData;
 import org.gtreimagined.gtlib.material.data.HandleData;
@@ -17,6 +18,7 @@ import net.minecraft.util.valueproviders.UniformInt;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MaterialTags {
 
@@ -69,6 +71,7 @@ public class MaterialTags {
     public static final NumberMaterialTag ORE_MULTI = new NumberMaterialTag("ore_multi");
     public static final NumberMaterialTag SMELTING_MULTI = new NumberMaterialTag("smelting_multi");
     public static final NumberMaterialTag BY_PRODUCT_MULTI = new NumberMaterialTag("by_product_multi");
+    public static final TypeMaterialTag<Consumer<FluidType.Properties>> FLUID_TYPE_PROPERTIES = new TypeMaterialTag<>("fluid_type_properties");
 
 
     public static final TypeMaterialTag<Pair<List<MaterialStack>, Integer>> PROCESS_INTO = new TypeMaterialTag<>("process_into");

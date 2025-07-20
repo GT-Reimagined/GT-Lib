@@ -3,6 +3,9 @@ package org.gtreimagined.gtlib.fluid;
 import lombok.Getter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.SoundActions;
+import net.minecraftforge.fluids.FluidType;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -19,12 +22,13 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Flowing;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Properties;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Source;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.function.Consumer;
 
 /**
  * GTFluid is an object that includes all essential information of what a normal fluid would compose of in Minecraft
@@ -54,34 +58,42 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     @Getter
     protected Block.Properties blockProperties;
     @Getter
-    protected FluidAttributes attributes;
+    protected FluidType fluidType;
+    @Getter
+    protected IClientFluidTypeExtensions extension;
     @Getter
     protected LiquidBlock fluidBlock;
     @Getter
     protected Item containerItem = Items.AIR;
 
-    public GTFluid(String domain, String id, FluidAttributes.Builder builder, Block.Properties blockProperties) {
+    public GTFluid(String domain, String id, FluidType.Properties builder, Block.Properties blockProperties, IClientFluidTypeExtensions typeExtensions) {
         this.domain = domain;
         this.id = id;
-        this.fluidProperties = new Properties(this::getFluid, this::getFlowingFluid, builder).bucket(this::getContainerItem).block(this::getFluidBlock);
+        this.fluidProperties = new Properties(this::getFluidType, this::getFluid, this::getFlowingFluid).bucket(this::getContainerItem).block(this::getFluidBlock);
         this.blockProperties = blockProperties;
-        this.attributes = builder.translationKey(Util.makeDescriptionId("fluid_type", this.getLoc())).build(this.source);
+        this.extension = typeExtensions;
+        this.fluidType = new FluidType(builder){
+            @Override
+            public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+                consumer.accept(extension);
+            }
+        };
     }
 
     public GTFluid(String domain, String id) {
-        this(domain, id, getDefaultAttributesBuilder(), getDefaultBlockProperties());
+        this(domain, id, getDefaultFluidTypeProperties(false), getDefaultBlockProperties(), getDefaultFluidTypeClientExtension(false));
     }
 
-    public GTFluid(String domain, String id, FluidAttributes.Builder builder) {
-        this(domain, id, builder, getDefaultBlockProperties());
+    public GTFluid(String domain, String id, FluidType.Properties builder) {
+        this(domain, id, builder, getDefaultBlockProperties(), getDefaultFluidTypeClientExtension(false));
     }
 
     public GTFluid(String domain, String id, ResourceLocation stillLoc, ResourceLocation flowLoc) {
-        this(domain, id, FluidAttributes.builder(stillLoc, flowLoc), getDefaultBlockProperties());
+        this(domain, id, getDefaultFluidTypeProperties(false), getDefaultBlockProperties(), GTClientFluidTypeExtension.builder().stillTexture(stillLoc).flowingTexture(flowLoc).build());
     }
 
     public GTFluid(String domain, String id, Block.Properties properties) {
-        this(domain, id, getDefaultAttributesBuilder(), properties);
+        this(domain, id, getDefaultFluidTypeProperties(false), properties, getDefaultFluidTypeClientExtension(false));
     }
 
     @Override
@@ -97,6 +109,8 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
             GTAPI.register(Fluid.class, getId(), getDomain(), source);
             GTAPI.register(Fluid.class, "flowing_" + getId(), getDomain(), flowing);
             GTAPI.register(FlowingFluid.class, "flowing_".concat(getId()), getDomain(), flowing);
+        } else if (registry == ForgeRegistries.Keys.FLUID_TYPES){
+            GTAPI.register(FluidType.class, getId(), getDomain(), fluidType);
         }
     }
 
@@ -134,17 +148,22 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     protected static Block.Properties getDefaultBlockProperties() {
-        return Block.Properties.of(Material.WATER).strength(100.0F).noDrops();
+        return Block.Properties.of(Material.WATER).strength(100.0F).noLootTable();
     }
 
-    protected static FluidAttributes.Builder getDefaultAttributesBuilder() {
-        return getDefaultAttributesBuilder(false);
-    }
-
-    protected static FluidAttributes.Builder getDefaultAttributesBuilder(boolean hot) {
-        if (hot) {
-            return FluidAttributes.builder(LIQUID_HOT_STILL_TEXTURE, LIQUID_HOT_FLOW_TEXTURE).overlay(OVERLAY_TEXTURE).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
+    protected static FluidType.Properties getDefaultFluidTypeProperties(boolean hot){
+        if (hot){
+            return FluidType.Properties.create().sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA);
         }
-        return FluidAttributes.builder(LIQUID_STILL_TEXTURE, LIQUID_FLOW_TEXTURE).overlay(OVERLAY_TEXTURE).sound(SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_EMPTY);
+        return FluidType.Properties.create().sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
+                .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL);
+    }
+
+    protected static GTClientFluidTypeExtension getDefaultFluidTypeClientExtension(boolean hot){
+        if (hot){
+            return GTClientFluidTypeExtension.builder().stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).build();
+        }
+        return GTClientFluidTypeExtension.builder().stillTexture(LIQUID_STILL_TEXTURE).flowingTexture(LIQUID_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).build();
     }
 }
