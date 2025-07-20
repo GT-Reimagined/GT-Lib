@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.fluid;
 
 import lombok.Getter;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -83,16 +85,17 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry == ForgeRegistries.ITEMS) {
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (registry == ForgeRegistries.Keys.ITEMS) {
             GTAPI.register(Item.class, getId() + "_bucket", getDomain(), containerItem = new BucketItem(this::getFluid, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET).tab(CreativeModeTab.TAB_MISC)));
-        } else if (registry == ForgeRegistries.BLOCKS) {
+        } else if (registry == ForgeRegistries.Keys.BLOCKS) {
             this.source = new Source(this.fluidProperties);
             this.flowing = new Flowing(this.fluidProperties);
             this.fluidBlock = new LiquidBlock(this::getFluid, blockProperties);
             GTAPI.register(Block.class, "block_fluid_".concat(getId()), getDomain(), fluidBlock);
-        } else if (registry == ForgeRegistries.FLUIDS) {
+        } else if (registry == ForgeRegistries.Keys.FLUIDS) {
             GTAPI.register(Fluid.class, getId(), getDomain(), source);
+            GTAPI.register(Fluid.class, "flowing_" + getId(), getDomain(), flowing);
             GTAPI.register(FlowingFluid.class, "flowing_".concat(getId()), getDomain(), flowing);
         }
     }

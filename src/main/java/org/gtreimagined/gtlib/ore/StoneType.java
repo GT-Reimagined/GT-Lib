@@ -2,6 +2,8 @@ package org.gtreimagined.gtlib.ore;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.material.Material;
@@ -124,8 +126,8 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (generateBlock && registry == ForgeRegistries.BLOCKS) setState(new BlockStone(this));
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (generateBlock && registry == ForgeRegistries.Keys.BLOCKS) setState(new BlockStone(this));
     }
 
     @Override

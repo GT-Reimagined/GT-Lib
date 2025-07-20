@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.ore;
 
 import lombok.Getter;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStoneSlab;
@@ -35,8 +37,8 @@ public class CobbleStoneType extends StoneType {
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry == ForgeRegistries.BLOCKS) {
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (registry == ForgeRegistries.Keys.BLOCKS) {
             if (generateBlock) {
                 for (int i = 0; i < SUFFIXES.length; i++) {
                     BlockStone stone;

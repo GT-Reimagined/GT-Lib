@@ -2,6 +2,8 @@ package org.gtreimagined.gtlib.pipe.types;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
@@ -43,8 +45,8 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry != ForgeRegistries.BLOCKS)
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (registry != ForgeRegistries.Keys.BLOCKS)
             return;
         Set<Block> blocks = getBlocks();
         registeredBlocks = blocks.stream().map(t -> new Pair<>(((BlockPipe<?>) t).getSize(),t))

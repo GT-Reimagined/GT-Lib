@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.ore;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStoneSlab;
@@ -25,8 +27,8 @@ public class VanillaStoneType extends CobbleStoneType{
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry == ForgeRegistries.BLOCKS) {
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (registry == ForgeRegistries.Keys.BLOCKS) {
             for (int i = 0; i < SUFFIXES.length; i++) {
                 int i2 = i - 2;
                 Block stone, stair = null, slab = null, wall = null;

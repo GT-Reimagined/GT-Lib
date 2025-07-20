@@ -7,6 +7,8 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import lombok.Getter;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
@@ -277,7 +279,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
 
     }
 

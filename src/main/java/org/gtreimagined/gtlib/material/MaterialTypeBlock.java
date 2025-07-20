@@ -3,6 +3,8 @@ package org.gtreimagined.gtlib.material;
 import com.google.common.collect.HashBiMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import lombok.Getter;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
@@ -79,7 +81,7 @@ public class MaterialTypeBlock<T> extends MaterialType<T> {
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
         super.onRegistryBuild(registry);
         if (doRegister()) {
             for (Material material : this.materials) {

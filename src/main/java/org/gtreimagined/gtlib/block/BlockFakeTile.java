@@ -1,5 +1,8 @@
 package org.gtreimagined.gtlib.block;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraftforge.registries.ForgeRegistries.Keys;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
@@ -35,10 +38,10 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry == ForgeRegistries.BLOCKS){
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (registry == ForgeRegistries.Keys.BLOCKS){
             TILE_SET.add(this);
-        } else if (registry == ForgeRegistries.BLOCK_ENTITIES) {
+        } else if (registry == Keys.BLOCK_ENTITY_TYPES) {
             if (TYPE == null){
                 TYPE = new BlockEntityType<>(BlockEntityFakeBlock::new, TILE_SET, null);
                 //((IForgeRegistry<BlockEntityType<?>>)registry).register(TYPE);

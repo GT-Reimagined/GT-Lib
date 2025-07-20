@@ -8,6 +8,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
@@ -351,8 +353,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry != ForgeRegistries.BLOCKS) return;
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (registry != ForgeRegistries.Keys.BLOCKS) return;
         tileType = new BlockEntityType<>(new BlockEntityBase.BlockEntityGetter<>(tileFunc, (T)this), tiers.stream().map(t -> getBlock(this, t)).collect(Collectors.toSet()), null);
         GTAPI.register(BlockEntityType.class, getId(), getDomain(), getTileType());
     }

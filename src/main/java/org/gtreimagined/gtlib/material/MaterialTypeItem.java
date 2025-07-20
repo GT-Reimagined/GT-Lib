@@ -1,5 +1,9 @@
 package org.gtreimagined.gtlib.material;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries.Keys;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.util.Utils;
@@ -63,8 +67,9 @@ public class MaterialTypeItem<T> extends MaterialType<T> {
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
         super.onRegistryBuild(registry);
+        if (registry != Keys.ITEMS) return;
         if (doRegister()) {
             for (Material material : this.materials) {
                 if (!material.enabled) continue;

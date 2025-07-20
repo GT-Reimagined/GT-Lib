@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.pipe.types;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityItemPipe;
 import org.gtreimagined.gtlib.material.Material;
@@ -51,8 +53,8 @@ public class ItemPipe<T extends ItemPipe<T>> extends PipeType<T> {
     }
 
     @Override
-    public void onRegistryBuild(IForgeRegistry<?> registry) {
-        if (registry != ForgeRegistries.BLOCKS)
+    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
+        if (registry != ForgeRegistries.Keys.BLOCKS)
             return;
         Set<Block> blocks = getBlocks();
         Set<Block> restrictedBlocks = getRestrictedBlocks();

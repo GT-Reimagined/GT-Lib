@@ -1,5 +1,9 @@
 package org.gtreimagined.gtlib.registration;
 
+import com.blamejared.crafttweaker.api.recipe.handler.IRecipeHandler.For;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.registries.ForgeRegistries.Keys;
+import net.minecraftforge.registries.RegisterEvent;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Data;
@@ -26,7 +30,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
@@ -41,11 +44,11 @@ import java.util.List;
 public final class GTRegistration {
 
     @SubscribeEvent
-    public static void onRegister(final RegistryEvent.Register<?> e) {
+    public static void onRegister(final RegisterEvent e) {
         final String domain = ModLoadingContext.get().getActiveNamespace();
         List<IGTRegistrar> list2 = GTAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).toList();
         if (list2.size() < 4) {
-            GTLib.LOGGER.info("Mod ID: " + domain + " & event: " + e.getRegistry().getRegistryName());
+            GTLib.LOGGER.info("Mod ID: " + domain + " & event: " + e.getRegistryKey().location());
         }
         onRegister(domain, e);
         onRegister(Ref.SHARED_ID, e);
@@ -56,7 +59,7 @@ public final class GTRegistration {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void onRegister(final String domain, final RegistryEvent.Register<?> e) {
+    public static void onRegister(final String domain, final RegisterEvent e) {
         ModContainer previous = ModLoadingContext.get().getActiveContainer();
         ModContainer newContainer = ModList.get().getModContainerById(domain).orElse(null);
         if (newContainer == null) return;
@@ -65,11 +68,8 @@ public final class GTRegistration {
         }
         if (domain.equals(Ref.ID)) {
             List<IGTRegistrar> list = GTAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
-            if (e.getRegistry() == ForgeRegistries.BLOCKS) {
+            if (e.getRegistryKey() == Keys.BLOCKS) {
                 GTAPI.onRegistration(RegistrationEvent.DATA_INIT);
-                GTAPI.all(SoundEvent.class, t -> {
-                    if (t.getRegistryName() == null) t.setRegistryName(t.getLocation());
-                });
                 MaterialEvent event = new MaterialEvent();
                 MaterialDataInit.onMaterialEvent(event);
                 list.forEach(r -> r.onMaterialEvent(event));
@@ -78,49 +78,40 @@ public final class GTRegistration {
                 }
                 Data.postInit();
             }
-            GTAPI.all(IRegistryEntryProvider.class, domain, p -> p.onRegistryBuild(e.getRegistry()));
-            GTAPI.all(IRegistryEntryProvider.class, Ref.SHARED_ID, p -> p.onRegistryBuild(e.getRegistry()));
-            list.forEach(r -> GTAPI.all(IRegistryEntryProvider.class, r.getDomain(), p -> p.onRegistryBuild(e.getRegistry())));
+            GTAPI.all(IRegistryEntryProvider.class, domain, p -> p.onRegistryBuild(e.getRegistryKey()));
+            GTAPI.all(IRegistryEntryProvider.class, Ref.SHARED_ID, p -> p.onRegistryBuild(e.getRegistryKey()));
+            list.forEach(r -> GTAPI.all(IRegistryEntryProvider.class, r.getDomain(), p -> p.onRegistryBuild(e.getRegistryKey())));
         }
-        if (e.getRegistry() == ForgeRegistries.BLOCKS) {
+        if (e.getRegistryKey() == Keys.BLOCKS) {
             GTAPI.all(Block.class, domain, (b, d, i) -> {
-                if (b.getRegistryName() == null)
-                    b.setRegistryName(d, i);
                 if (!(b instanceof IItemBlockProvider pb) || pb.generateItemBlock()) {
                     GTAPI.register(Item.class, i, d, b instanceof IItemBlockProvider pb ? pb.getItemBlock() : new GTItemBlock(b));
                 }
-                ((IForgeRegistry) e.getRegistry()).register(b);
+                ForgeRegistries.BLOCKS.register(new ResourceLocation(d, i), b);
             });
 
-        } else if (e.getRegistry() == ForgeRegistries.ITEMS) {
-            GTAPI.all(Item.class, domain, (i, d, id) -> {
-                if (i.getRegistryName() == null)
-                    i.setRegistryName(d, id);
-                ((IForgeRegistry) e.getRegistry()).register(i);
+        } else if (e.getRegistryKey() == Keys.ITEMS) {
+            GTAPI.all(Item.class, domain, (it, d, i) -> {
+                ForgeRegistries.ITEMS.register(new ResourceLocation(d, i), it);
             });
-            registerTools(domain, e.getRegistry());
-        } else if (e.getRegistry() == ForgeRegistries.BLOCK_ENTITIES) {
+            registerTools(domain);
+        } else if (e.getRegistryKey() == Keys.BLOCK_ENTITY_TYPES) {
             GTAPI.all(BlockEntityType.class, domain, (t, d, i) -> {
-                if (t.getRegistryName() == null) t.setRegistryName(d, i);
-                ((IForgeRegistry) e.getRegistry()).register(t);
+                ForgeRegistries.BLOCK_ENTITY_TYPES.register(new ResourceLocation(d, i), t);
             });
-        } else if (e.getRegistry() == ForgeRegistries.FLUIDS) {
-            GTAPI.all(GTFluid.class, domain, f -> {
-                if (f.getFluid().getRegistryName() == null) f.getFluid().setRegistryName(domain, f.getId());
-                if (f.getFlowingFluid().getRegistryName() == null) f.getFlowingFluid().setRegistryName(domain, "flowing_".concat(f.getId()));
-                ((IForgeRegistry) e.getRegistry()).registerAll(f.getFluid(), f.getFlowingFluid());
+        } else if (e.getRegistryKey() == Keys.FLUIDS) {
+            GTAPI.all(Fluid.class, domain, (f, d, i) -> {
+                ForgeRegistries.FLUIDS.register(new ResourceLocation(d, i), f);
             });
-        } else if (e.getRegistry() == ForgeRegistries.CONTAINERS) {
+        } else if (e.getRegistryKey() == Keys.MENU_TYPES) {
             GTAPI.all(MenuType.class, domain, (h, d, i) -> {
-                if (h.getRegistryName() == null) h.setRegistryName(d, i);
-                ((IForgeRegistry) e.getRegistry()).register(h);
+                ForgeRegistries.MENU_TYPES.register(new ResourceLocation(d, i), h);
             });
-        } else if (e.getRegistry() == ForgeRegistries.SOUND_EVENTS) {
+        } else if (e.getRegistryKey() == Keys.SOUND_EVENTS) {
             GTAPI.all(SoundEvent.class, domain, (t, d, i) -> {
-                if (t.getRegistryName() == null) t.setRegistryName(d, i);
-                ((IForgeRegistry) e.getRegistry()).register(t);
+                ForgeRegistries.SOUND_EVENTS.register(new ResourceLocation(d, i), t);
             });
-        } else if (e.getRegistry() == ForgeRegistries.RECIPE_SERIALIZERS) {
+        } else if (e.getRegistryKey() == Keys.RECIPE_SERIALIZERS) {
             //TODO better solution for this
             GTAPI.all(IIngredientSerializer.class, domain, (s, d, i) -> {
                 CraftingHelper.register(new ResourceLocation(d, i), s);
@@ -130,20 +121,15 @@ public final class GTRegistration {
                 CraftingHelper.register(TomlConfigCondition.Serializer.INSTANCE);
             }
             GTAPI.all(RecipeSerializer.class, domain, (r, d, i) -> {
-                if (r.getRegistryName() == null){
-                    r.setRegistryName(new ResourceLocation(d, i));
-                }
-                ((IForgeRegistry) e.getRegistry()).register(r);
+                ForgeRegistries.RECIPE_SERIALIZERS.register(new ResourceLocation(d, i), r);
             });
-        } else if (e.getRegistry() == ForgeRegistries.FEATURES) {
+        } else if (e.getRegistryKey() == Keys.FEATURES) {
             GTAPI.all(IGTFeature.class, domain,(t, d, i) -> {
-                if (t.asFeature().getRegistryName() == null) t.asFeature().setRegistryName(d, i);
-                ((IForgeRegistry) e.getRegistry()).register(t.asFeature());
+                ForgeRegistries.FEATURES.register(new ResourceLocation(d, i), t.asFeature());
             });
-        } else if (e.getRegistry() == ForgeRegistries.ENCHANTMENTS){
+        } else if (e.getRegistryKey() == Keys.ENCHANTMENTS){
             GTAPI.all(Enchantment.class, domain, (en, d, i) -> {
-                if (en.getRegistryName() == null) en.setRegistryName(d, i);
-                ((IForgeRegistry) e.getRegistry()).register(en);
+                ForgeRegistries.ENCHANTMENTS.register(new ResourceLocation(d, i), en);
             });
         }
         if (!domain.equals(Ref.ID)){
@@ -152,19 +138,17 @@ public final class GTRegistration {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void registerTools(String domain, IForgeRegistry registry) {
+    public static void registerTools(String domain) {
         GTAPI.all(GTToolType.class, domain, t -> {
             List<IGTTool> tools = t.isPowered() ? t.instantiatePoweredTools(domain) : t.instantiateTools(domain);
             for (IGTTool i : tools) {
-                if (i.getItem().getRegistryName() == null) i.getItem().setRegistryName(domain, i.getId());
-                registry.register(i.getItem());
+                ForgeRegistries.ITEMS.register(new ResourceLocation(domain, i.getId()), i.getItem());
             }
         });
         GTAPI.all(GTArmorType.class, domain, t -> {
             List<IGTArmor> i = t.instantiateTools();
             i.forEach(a -> {
-                if (a.getItem().getRegistryName() == null) a.getItem().setRegistryName(domain, a.getId());
-                registry.register(a.getItem());
+                ForgeRegistries.ITEMS.register(new ResourceLocation(domain, a.getId()), a.getItem());
             });
 
         });
