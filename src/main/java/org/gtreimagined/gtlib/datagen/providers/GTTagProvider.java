@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.tags.TagBuilder;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.datagen.builder.GTTagBuilder;
@@ -12,7 +13,6 @@ import net.devtech.arrp.json.tags.JTag;
 import net.minecraft.core.Registry;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 
 import java.io.IOException;
@@ -77,7 +77,7 @@ public abstract class GTTagProvider<T> implements IGTLibProvider {
     }
 
     protected GTTagBuilder<T> getOrCreateRawBuilder(TagKey<T> tag) {
-        return this.builders.computeIfAbsent(tag.location(), (location) -> new GTTagBuilder<>(new Tag.Builder(), registry, providerDomain));
+        return this.builders.computeIfAbsent(tag.location(), (location) -> new GTTagBuilder<>(new TagBuilder(), registry, providerDomain));
     }
 
     // Must append 's' in the identifier

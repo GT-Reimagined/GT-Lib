@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
+import net.minecraft.tags.TagEntry;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -165,7 +166,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
     protected void copy(TagKey<Block> blockTag, TagKey<Item> itemTag) {
         GTTagBuilder<Item> builder = this.getOrCreateRawBuilder(itemTag);
         GTTagBuilder<Block> builder2 = this.blockTags.apply(blockTag);
-        Stream<Tag.BuilderEntry> stream = builder2.builder.getEntries();
+        Stream<TagEntry> stream = builder2.builder.build().stream();
         Objects.requireNonNull(builder);
         stream.forEach(builder::add);
     }
