@@ -133,15 +133,6 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
         }
     }
 
-    @Override
-    public void run(HashCache cache) throws IOException {
-        /*loot();
-        for (Map.Entry<Block, Function<Block, LootTable.Builder>> e : tables.entrySet()) {
-            Path path = getPath(generator.getOutputFolder(), e.getKey().getRegistryName());
-            IDataProvider.save(GSON, cache, LootTableManager.toJson(e.getValue().apply(e.getKey()).setParameterSet(LootParameterSets.BLOCK).build()), path);
-        }*/
-    }
-
     protected void overrideBlock(Block block, Function<Block, LootTable.Builder> builderFunction){
         GLOBAL_TABLES.put(block, builderFunction);
     }

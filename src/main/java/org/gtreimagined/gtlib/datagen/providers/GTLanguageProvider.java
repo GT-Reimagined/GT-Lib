@@ -99,10 +99,6 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
 
     }
 
-    @Override
-    public void run(HashCache cache) throws IOException {
-    }
-
     protected void addTranslations() {
         if (locale.startsWith("en")) english(providerDomain, locale);
         if (providerDomain.equals(Ref.ID)) processGTLibTranslations();

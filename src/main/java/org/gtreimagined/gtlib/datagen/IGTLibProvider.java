@@ -1,6 +1,9 @@
 package org.gtreimagined.gtlib.datagen;
 
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.HashCache;
+
+import java.io.IOException;
 
 public interface IGTLibProvider extends DataProvider {
 
@@ -13,5 +16,10 @@ public interface IGTLibProvider extends DataProvider {
 
     default void onCompletion() {
 
+    }
+
+    @Override
+    default void run(HashCache hashCache) throws IOException {
+        //NOOP
     }
 }

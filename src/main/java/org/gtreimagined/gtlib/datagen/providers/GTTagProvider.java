@@ -58,11 +58,6 @@ public abstract class GTTagProvider<T> implements IGTLibProvider {
     protected abstract void processTags(String domain);
 
     @Override
-    public void run(HashCache cache) throws IOException {
-
-    }
-
-    @Override
     public boolean async() {
         return false;
     }
