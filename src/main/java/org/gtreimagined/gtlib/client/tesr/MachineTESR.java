@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.client.tesr;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -71,7 +72,7 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
 
     }
 
-    private static BakedModel renderInner(BlockState state, Random rand, int light, BakedModel inner, Fluid fluid, BlockAndTintGetter level, BlockPos pos) {
+    private static BakedModel renderInner(BlockState state, RandomSource rand, int light, BakedModel inner, Fluid fluid, BlockAndTintGetter level, BlockPos pos) {
         List<BakedQuad> quads = ModelUtils.getQuadsFromBaked(inner, state, null, rand, level, pos);
         List<BakedQuad> out = VertexTransformer.processMany(quads, FluidUtils.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidUtils.getStillTexture(fluid)));
         boolean hot = FluidUtils.getFluidTemperature(fluid) >= FluidUtils.getFluidTemperature(Fluids.LAVA);

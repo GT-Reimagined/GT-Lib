@@ -5,6 +5,7 @@ import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.util.RandomSource;
+import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.util.TransformationHelper;
 import org.gtreimagined.gtlib.Ref;
@@ -176,7 +177,7 @@ public class ModelUtils {
     }
 
     public static List<BakedQuad> trans(List<BakedQuad> quads, Transformation transform) {
-        return new QuadTransformer(transform.blockCenterToCorner()).processMany(quads);
+        return QuadTransformers.applying(transform.blockCenterToCorner()).process(quads);
     }
 
     public static void setRenderLayer(Block block, RenderType renderType){
