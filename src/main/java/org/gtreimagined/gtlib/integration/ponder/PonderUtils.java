@@ -1,8 +1,8 @@
-package org.gtreimagined.gtlib.structure;
+package org.gtreimagined.gtlib.integration.ponder;
 
-import net.createmod.ponder.foundation.PonderRegistry;
+import net.createmod.ponder.api.registration.StoryBoardEntry;
+import net.createmod.ponder.api.scene.Selection;
 import net.createmod.ponder.foundation.PonderStoryBoardEntry;
-import net.createmod.ponder.foundation.Selection;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -19,6 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.gtreimagined.gtlib.structure.BlockInfo;
+import org.gtreimagined.gtlib.structure.Pattern;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PonderUtils {
+
+    public static final List<StoryBoardEntry> SCENES = new ArrayList<>();
 
     public static void registerMultiblock(BasicMultiMachine<?> machine, Tier t, List<Pattern> patterns){
         for (int i = 0; i < patterns.size(); i++) {
@@ -94,7 +98,7 @@ public class PonderUtils {
                     scene.scaleSceneView(pattern.getScale());
                     scene.idle(5);
                     for (int y = 1; y < blocks.length + 1; y++) {
-                        Selection selection = util.select.fromTo(0, y, 0, pattern.getBlockInfos()[0].length - 1, y, pattern.getBlockInfos()[0][0].length - 1);
+                        Selection selection = util.select().fromTo(0, y, 0, pattern.getBlockInfos()[0].length - 1, y, pattern.getBlockInfos()[0][0].length - 1);
                         if (y == blocks.length){
                             controllerPositions.forEach(pos -> {
                                 /*scene.world.modifyTileEntity(pos, BlockEntityBasicMultiMachine.class, b -> {
@@ -102,13 +106,13 @@ public class PonderUtils {
                                 });*/
                             });
                         }
-                        scene.world.showSection(selection, Direction.UP);
+                        scene.world().showSection(selection, Direction.UP);
                         if (pattern.getPonderTooltipMap().containsKey(y - 1)){
                             scene.idle(5);
                             int finalY = y;
                             pattern.getPonderTooltipMap().get(y - 1).forEach(tip -> {
-                                Vec3 centerTop = util.vector.topOf(util.grid.at(tip.x(), finalY, tip.z()));
-                                scene.overlay.showText(40).attachKeyFrame().text(tip.tooltip()).pointAt(centerTop);
+                                Vec3 centerTop = util.vector().topOf(util.grid().at(tip.x(), finalY, tip.z()));
+                                scene.overlay().showText(40).attachKeyFrame().text(tip.tooltip()).pointAt(centerTop);
                                 scene.idle(40);
                             });
                         }
@@ -116,7 +120,7 @@ public class PonderUtils {
                     }
                     scene.markAsFinished();
                 }, machine.getDomain(), new ResourceLocation(machine.getDomain(), machine.getBlockState(t).getId() + "/" +  i), machine.getBlockState(t).getLoc());
-                PonderRegistry.addStoryBoard(storyBoardentry);
+                SCENES.add(storyBoardentry);
             }
 
         }
