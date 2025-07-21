@@ -20,6 +20,7 @@ import org.gtreimagined.gtlib.event.GTCraftingEvent;
 import org.gtreimagined.gtlib.event.GTLoaderEvent;
 import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.event.GTWorldGenEvent;
+import org.gtreimagined.gtlib.integration.kubejs.GTLibKubeJS;
 import org.gtreimagined.gtlib.integration.kubejs.GTWorldEvent;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
 import org.gtreimagined.gtlib.integration.kubejs.RecipeLoaderEventKubeJS;
@@ -252,7 +253,7 @@ public class GTLibDynamics {
         boolean runRegular = true;
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
             GTWorldEvent ev = new GTWorldEvent();
-            ev.post(ScriptType.SERVER, "gtlib.worldgen");
+            GTLibKubeJS.WORLDGEN.post(ev);
             veins.addAll(ev.VEINS);
             stoneLayers.addAll(ev.STONE_LAYERS);
             collisionMap.putAll(ev.COLLISION_MAP);

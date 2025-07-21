@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.integration.kubejs;
 
 import dev.latvian.mods.kubejs.KubeJSPlugin;
+import dev.latvian.mods.kubejs.event.EventGroup;
+import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.recipe.RegisterRecipeHandlersEvent;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
@@ -10,8 +12,14 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GTLibKubeJS extends KubeJSPlugin {
 
+    private static final EventGroup GT_LIB = EventGroup.of(Ref.ID);
+    public static final EventHandler CREATION = GT_LIB.startup("creation", () -> GTCreationEvent.class);
+    public static final EventHandler MATERIAL = GT_LIB.startup("material", () -> GTMaterialEvent.class);
+    public static final EventHandler WORLDGEN = GT_LIB.server("worldgen", () -> GTWorldEvent.class);
+    public static final EventHandler RECIPE_LOADER = GT_LIB.server("recipes", () -> RecipeLoaderEventKubeJS.class);
+
     @Override
-    public void addBindings(BindingsEvent event) {
+    public void registerBindings(BindingsEvent event) {
         event.add(Ref.ID, new KubeJSBindings());
     }
 
@@ -22,10 +30,10 @@ public class GTLibKubeJS extends KubeJSPlugin {
 
     public static void loadStartup(){
         GTCreationEvent.init();
-        new GTCreationEvent().post(ScriptType.STARTUP, "gtlib.creation");
+        CREATION.post(new GTCreationEvent());
     }
 
     public static void loadMaterialEvent(MaterialEvent event){
-        new GTMaterialEvent(event).post(ScriptType.STARTUP, "gtlib.material_event");
+        MATERIAL.post(new GTMaterialEvent(event));
     }
 }
