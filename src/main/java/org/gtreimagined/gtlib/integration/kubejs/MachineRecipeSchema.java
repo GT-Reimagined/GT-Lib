@@ -14,7 +14,7 @@ import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 
-public class MachineRecipeSchema {
+public interface MachineRecipeSchema {
     StringComponent MAP_COMPONENT = new StringComponent("Unknown recipe map", s -> {
         RecipeMap<?> rMap = GTAPI.get(RecipeMap.class, s);
         return rMap != null;

@@ -38,7 +38,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.LoadingModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -296,8 +295,7 @@ public final class GTAPI {
 
     private static <T> Stream<T> allInternal(Class<T> c, @NotNull String domain) {
         return allInternal(c)
-                .filter(o -> o instanceof IGTObject && ((IGTObject) o).getDomain().equals(domain)
-                        || isRegistryEntry(o, domain));
+                .filter(o -> o instanceof IGTObject && ((IGTObject) o).getDomain().equals(domain));
     }
 
     public static <T> void all(Class<T> c, TriConsumer<T, String, String> consumer){
@@ -454,11 +452,6 @@ public final class GTAPI {
                 registerInternal(IGTRegistrar.class, registrar.getId(), registrar.getDomain(), registrar);
             }
         }
-    }
-
-    public static boolean isRegistryEntry(Object object, String domain){
-        return object instanceof IForgeRegistryEntry<?> r && r.getRegistryName() != null
-                && r.getRegistryName().getNamespace().equals(domain);
     }
 
     public static Optional<IGTRegistrar> getRegistrar(String id) {

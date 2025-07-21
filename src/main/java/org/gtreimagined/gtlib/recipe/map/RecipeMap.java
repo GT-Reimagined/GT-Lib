@@ -5,6 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
+import net.minecraftforge.common.crafting.PartialNBTIngredient;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiData;
@@ -36,7 +38,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.crafting.CompoundIngredient;
-import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -629,7 +630,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
     public static boolean isIngredientSpecial(Ingredient i) {
         Class<? extends Ingredient> clazz = i.getClass();
         if (clazz == RecipeIngredient.class) return false;
-        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && clazz != NBTIngredient.class
+        return /* i.getMatchingStacks().length == 0 && */(clazz != Ingredient.class && clazz != PartialNBTIngredient.class && clazz != StrictNBTIngredient.class
         && clazz != CompoundIngredient.class);
     }
 
