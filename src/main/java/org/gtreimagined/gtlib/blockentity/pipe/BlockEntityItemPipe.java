@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.blockentity.pipe;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.blockentity.IPreTickTile;
 import org.gtreimagined.gtlib.capability.Dispatch;
 import org.gtreimagined.gtlib.capability.item.ROCombinedInvWrapper;
@@ -94,7 +95,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
         BlockEntity tile = getCachedBlockEntity(dir);
         if (tile == null)
             return false;
-        return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).isPresent();
+        return tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir.getOpposite()).isPresent();
     }
 
     @Override
@@ -178,7 +179,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
             BlockEntity tDelegator = getCachedBlockEntity(side);
             if (!(tDelegator instanceof BlockEntityPipe<?>) && tDelegator != null) {
                 if (!(tDelegator instanceof HopperBlockEntity || tDelegator instanceof DispenserBlockEntity)) {
-                    IItemHandler itemHandler = tDelegator.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).resolve().orElse(null);
+                    IItemHandler itemHandler = tDelegator.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).resolve().orElse(null);
                     if (itemHandler != null){
                         // special cases for the win...
                         ICover cover = coverHandler.map(c -> c.get(side)).orElse(ICover.empty);

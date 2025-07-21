@@ -21,7 +21,7 @@ public class DynamicModelLoader extends GTModelLoader<DynamicModel> {
 
         @NotNull
         @Override
-        public DynamicModel read(JsonDeserializationContext context, JsonObject json) {
+        public DynamicModel read(JsonObject json, JsonDeserializationContext context) {
             try {
                 Int2ObjectOpenHashMap<IGTModel[]> configs = new Int2ObjectOpenHashMap<>();
                 for (JsonElement e : json.getAsJsonArray("config")) {

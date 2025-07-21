@@ -26,7 +26,7 @@ public class BlockBenchLoader extends GTModelLoader<GTGroupedModel> {
 
     @NotNull
     @Override
-    public GTGroupedModel read(JsonDeserializationContext context, JsonObject json) {
+    public GTGroupedModel read(JsonObject json, JsonDeserializationContext context) {
         try {
             ResourceLocation particle = json.has("particle") ? new ResourceLocation(json.get("particle").getAsString()) : MissingTextureAtlasSprite.getLocation();
             Map<Integer, String> offsets = new Object2ObjectOpenHashMap<>();

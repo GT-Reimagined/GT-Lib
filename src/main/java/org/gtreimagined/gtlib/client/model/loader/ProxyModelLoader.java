@@ -13,7 +13,7 @@ public class ProxyModelLoader extends GTModelLoader<ProxyModel> {
 
     @NotNull
     @Override
-    public ProxyModel read(JsonDeserializationContext context, JsonObject json) {
+    public ProxyModel read(JsonObject json, JsonDeserializationContext context) {
         return new ProxyModel();
     }
 }

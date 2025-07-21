@@ -233,7 +233,7 @@ public class MaterialSword extends SwordItem implements IGTTool {
     }
 
     @Override
-    public int getItemEnchantability(ItemStack stack) {
+    public int getEnchantmentValue(ItemStack stack) {
         return getTier(stack).getEnchantmentValue();
     }
 
@@ -253,12 +253,12 @@ public class MaterialSword extends SwordItem implements IGTTool {
     }
 
     @Override
-    public boolean hasContainerItem(ItemStack stack) {
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
         return type.hasContainer();
     }
 
     @Override
-    public ItemStack getContainerItem(ItemStack oldStack) {
+    public ItemStack getCraftingRemainingItem(ItemStack oldStack) {
         return getGenericContainerItem(oldStack);
     }
 

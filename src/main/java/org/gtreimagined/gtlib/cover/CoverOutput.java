@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.cover;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -125,9 +126,9 @@ public class CoverOutput extends BaseCover {
             return;
         if (processing > 0) return;
         processing++;
-        adjTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.side.getOpposite())
+        adjTile.getCapability(ForgeCapabilities.ITEM_HANDLER, this.side.getOpposite())
                 .ifPresent(adjHandler -> {
-                    handler.getTile().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.side).ifPresent(h -> Utils.transferItems(h, adjHandler, false, i -> {
+                    handler.getTile().getCapability(ForgeCapabilities.ITEM_HANDLER, this.side).ifPresent(h -> Utils.transferItems(h, adjHandler, false, i -> {
                         return !(this.handler.getTile() instanceof BlockEntityMachine<?> machine) || machine.itemHandler.map(f -> f.canItemBeAutoOutput(i)).orElse(true);
                     }));
                 });
@@ -144,8 +145,8 @@ public class CoverOutput extends BaseCover {
         if (adjTile == null) return;
         if (processing > 0) return;
         processing++;
-        adjTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, this.side.getOpposite()).ifPresent(adjHandler -> {
-            handler.getTile().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, this.side).ifPresent(h -> {
+        adjTile.getCapability(ForgeCapabilities.FLUID_HANDLER, this.side.getOpposite()).ifPresent(adjHandler -> {
+            handler.getTile().getCapability(ForgeCapabilities.FLUID_HANDLER, this.side).ifPresent(h -> {
                 tryFluidTransfer(adjHandler, h, Integer.MAX_VALUE, true);
             });
         });

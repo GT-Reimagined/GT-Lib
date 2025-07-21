@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class GTClientFluidTypeExtension implements IClientFluidTypeExtensions {
     ResourceLocation stillTexture;
     ResourceLocation flowingTexture;
+    @Builder.Default
     int tintColor = -1;
     ResourceLocation overlayTexture;
 

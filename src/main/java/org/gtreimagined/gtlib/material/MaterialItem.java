@@ -79,7 +79,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (allowdedIn(group) && getType().isVisible()) items.add(new ItemStack(this));
+        if (allowedIn(group) && getType().isVisible()) items.add(new ItemStack(this));
     }
 
     @SuppressWarnings("NoTranslation")

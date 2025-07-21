@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui.slot;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.SlotType;
@@ -19,7 +20,7 @@ public class SlotFluidDisplaySettable extends SlotFake {
 
     @Override
     public ItemStack clickSlot(int clickedButton, ClickType clickType, Player playerEntity, AbstractContainerMenu container) {
-        if (container.getCarried().isEmpty() || container.getCarried().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).map(f -> !f.getFluidInTank(0).isEmpty()).orElse(false)){
+        if (container.getCarried().isEmpty() || container.getCarried().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).map(f -> !f.getFluidInTank(0).isEmpty()).orElse(false)){
             return super.clickSlot(clickedButton, clickType, playerEntity, container);
         }
         return ItemStack.EMPTY;
@@ -30,7 +31,7 @@ public class SlotFluidDisplaySettable extends SlotFake {
         if (!stack.isEmpty()){
             ItemStack[] stacks = new ItemStack[1];
             stacks[0] = ItemStack.EMPTY;
-            stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> {
+            stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(f -> {
                 FluidStack fluidStack = f.getFluidInTank(0);
                 if (!fluidStack.isEmpty()){
                     stacks[0] = Data.FLUID_ICON.fill(fluidStack.getFluid());

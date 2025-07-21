@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
@@ -101,7 +102,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (worldIn == null) return;
-        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
+        stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(x -> {
             FluidStack fluid = x.getFluidInTank(0);
             if (!fluid.isEmpty()) {
                 MutableComponent fluidname = (MutableComponent) FluidUtils.getFluidDisplayName(fluid);
@@ -128,12 +129,12 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
     }
 
     @Override
-    public boolean hasContainerItem(ItemStack stack) {
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
         return hasFluid(stack);
     }
 
     @Override
-    public ItemStack getContainerItem(ItemStack itemStack) {
+    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         return new ItemStack(this);
     }
 
@@ -148,8 +149,8 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
 //      if (world.isRemote) return EnumActionResult.PASS;
         /*TileEntity tile = Utils.getTile(ctxt.getWorld(), ctxt.getPos());
         if (tile != null) {
-            tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> {
-                ctxt.getPlayer().getHeldItem(ctxt.getHand()).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(cellHandler -> {
+            tile.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(fluidHandler -> {
+                ctxt.getPlayer().getHeldItem(ctxt.getHand()).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(cellHandler -> {
                     int countFilled = fluidHandler.fill(cellHandler.getFluidInTank(0), SIMULATE);
                     if (countFilled == 1000) {
                         fluidHandler.fill(cellHandler.getFluidInTank(0), EXECUTE);
@@ -333,7 +334,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
                     LayeredCauldronBlock.lowerFillLevel(state, world, pos);
                 }
                 world.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                ItemStack newStack = cell.getContainerItem(cell.fill(Fluids.WATER, 1000));
+                ItemStack newStack = cell.getCraftingRemainingItem(cell.fill(Fluids.WATER, 1000));
                 if (stack.getCount() > 1) {
                     stack.shrink(1);
                     addItem(player, newStack);

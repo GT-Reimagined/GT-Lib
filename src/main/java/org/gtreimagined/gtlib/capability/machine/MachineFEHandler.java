@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.capability.machine;
 
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.Dispatch;
@@ -41,7 +42,7 @@ public class MachineFEHandler<T extends BlockEntityMachine<T>> extends FEHandler
             if (canExtract(dir)) {
                 BlockEntity tile = this.tile.getCachedBlockEntity(dir);
                 if (tile == null) continue;
-                Optional<IEnergyStorage> handle = tile.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).resolve();
+                Optional<IEnergyStorage> handle = tile.getCapability(ForgeCapabilities.ENERGY, dir.getOpposite()).resolve();
                 handle.ifPresent(eh -> Utils.transferEnergy(this, eh));
             }
         }

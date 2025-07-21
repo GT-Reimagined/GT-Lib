@@ -251,7 +251,7 @@ public class MaterialTool extends DiggerItem implements IGTTool {
     }
 
     @Override
-    public int getItemEnchantability(ItemStack stack) {
+    public int getEnchantmentValue(ItemStack stack) {
         return getTier(stack).getEnchantmentValue();
     }
 

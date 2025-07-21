@@ -67,8 +67,8 @@ public class ClientHandler implements IProxyHandler {
         GTAPI.runLaterClient(() -> {
             Set<ResourceLocation> registered = new ObjectOpenHashSet<>();
             GTAPI.all(MenuHandler.class, h -> {
-                if (!registered.contains(ForgeRegistries.CONTAINERS.getKey(h.getContainerType()))) {
-                    registered.add(ForgeRegistries.CONTAINERS.getKey(h.getContainerType()));
+                if (!registered.contains(ForgeRegistries.MENU_TYPES.getKey(h.getContainerType()))) {
+                    registered.add(ForgeRegistries.MENU_TYPES.getKey(h.getContainerType()));
                     MenuScreens.register(h.getContainerType(), GTAPI.get(MenuScreens.ScreenConstructor.class, h.screenID(), h.screenDomain()));
                 }
             });

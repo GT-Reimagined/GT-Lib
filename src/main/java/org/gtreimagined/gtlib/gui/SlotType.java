@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui;
 
 import lombok.Getter;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -39,14 +40,14 @@ public class SlotType<T extends Slot> implements IGTObject, IMachineEvent {
     public static SlotType<SlotFakeFluid> FL_IN = new SlotType<>("fluid_in", (type, gui, inv, i, d) -> new SlotFakeFluid(type, gui, MachineFluidHandler.FluidDirection.INPUT, i, d.getX(), d.getY()), (t, i) -> false, false, false, new ResourceLocation(Ref.ID, "fluid_in"));
     //Cheat using same ID to get working counter.
     public static SlotType<SlotFakeFluid> FL_OUT = new SlotType<>("fluid_out", (type, gui, inv, i, d) -> new SlotFakeFluid(type, gui, MachineFluidHandler.FluidDirection.OUTPUT, i, d.getX(), d.getY()), (t, i) -> false, false, false, new ResourceLocation(Ref.ID, "fluid_out"));
-    public static SlotType<SlotCell> CELL_IN = new SlotType<>("cell_in", (type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> i.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent(), true, false, new ResourceLocation(Ref.ID, "cell_in"));
-    public static SlotType<SlotCell> CELL_OUT = new SlotType<>("cell_out", (type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> i.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent(), false, true, new ResourceLocation(Ref.ID, "cell_out"));
+    public static SlotType<SlotCell> CELL_IN = new SlotType<>("cell_in", (type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent(), true, false, new ResourceLocation(Ref.ID, "cell_in"));
+    public static SlotType<SlotCell> CELL_OUT = new SlotType<>("cell_out", (type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent(), false, true, new ResourceLocation(Ref.ID, "cell_out"));
     public static SlotType<SlotEnergy> ENERGY = new SlotType<>("energy", (type, gui, inv, i, d) -> new SlotEnergy(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> {
         if (t instanceof BlockEntityMachine<?> machine) {
             return machine.energyHandler.map(eh -> {
                 return i.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(inner -> {
                     return ((inner.getInputVoltage() | inner.getOutputVoltage()) == (eh.getInputVoltage() | eh.getOutputVoltage()));
-                }).orElse(i.getCapability(CapabilityEnergy.ENERGY).isPresent());
+                }).orElse(i.getCapability(ForgeCapabilities.ENERGY).isPresent());
             }).orElse(false);
         }
         return true;

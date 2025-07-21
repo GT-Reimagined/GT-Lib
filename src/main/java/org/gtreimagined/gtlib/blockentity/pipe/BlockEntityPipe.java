@@ -49,8 +49,9 @@ import tesseract.graph.Connectivity;
 import java.util.List;
 import java.util.Optional;
 
-import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
-import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
+import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
+
 
 public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntityTickable<BlockEntityPipe<T>> implements IMachineHandler, MenuProvider, IGuiHandler, IConnectable, ICoverHandlerProvider<BlockEntityPipe<?>> {
 
@@ -497,8 +498,8 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     public <U> LazyOptional<U> getCapability(@NotNull Capability<U> cap, @Nullable Direction side) {
         if (side != null && !connects(side)) return LazyOptional.empty();
         if (!pipeCapHolder.isPresent()) return LazyOptional.empty();
-        if (side == null && cap != ITEM_HANDLER_CAPABILITY && cap != FLUID_HANDLER_CAPABILITY) return LazyOptional.empty();
-        /*if (cap == CapabilityEnergy.ENERGY && getCapClass() == IFENode.class) {
+        if (side == null && cap != ITEM_HANDLER && cap != FLUID_HANDLER) return LazyOptional.empty();
+        /*if (cap == ForgeCapabilities.ENERGY && getCapClass() == IFENode.class) {
             if (pipeCaps[side.get3DDataValue()] == null || !pipeCaps[side.get3DDataValue()].isPresent()){
                 pipeCaps[side.get3DDataValue()] = fromEnergyHolder(pipeCapHolder, side).cast();
             }

@@ -21,7 +21,7 @@ public abstract class DefaultCraftingDisplayMixin<C extends Recipe<?>> extends B
         super(inputs, outputs);
     }
 
-    @Inject(method = "<init>(Ljava/util/List;Ljava/util/List;Ljava/util/Optional;Ljava/util/Optional;)V", at = @At("TAIL"))
+    @Inject(method = "<init>(Ljava/util/List;Ljava/util/List;Ljava/util/Optional;Ljava/util/Optional;)V", at = @At("TAIL"), remap = false)
     private void injectInit(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, Optional<C> recipe, CallbackInfo ci){
         if (recipe.map((r) -> r instanceof MaterialRecipe).orElse(false)) {
             this.inputs = new ArrayList<>(this.inputs);

@@ -24,7 +24,7 @@ public class MachineModelLoader extends GTModelLoader<MachineModel> {
 
     @NotNull
     @Override
-    public MachineModel read(JsonDeserializationContext context, JsonObject json) {
+    public MachineModel read(JsonObject json, JsonDeserializationContext context) {
         ResourceLocation particle = json.has("particle") ? new ResourceLocation(json.get("particle").getAsString()) : MissingTextureAtlasSprite.getLocation();
         Map<MachineState, UnbakedModel[]> m = new HashMap<>();
         GTAPI.all(MachineState.class, t -> {
@@ -47,8 +47,8 @@ public class MachineModelLoader extends GTModelLoader<MachineModel> {
 
         @NotNull
         @Override
-        public GTGroupedModel read(JsonDeserializationContext context, JsonObject json) {
-            GTGroupedModel model = super.read(context, json);
+        public GTGroupedModel read(JsonObject json, JsonDeserializationContext context) {
+            GTGroupedModel model = super.read(json, context);
             return new GTGroupedModel.MachineSideModel(model);
         }
     }
@@ -60,8 +60,8 @@ public class MachineModelLoader extends GTModelLoader<MachineModel> {
 
         @NotNull
         @Override
-        public GTGroupedModel read(JsonDeserializationContext context, JsonObject json) {
-            GTGroupedModel model = super.read(context, json);
+        public GTGroupedModel read(JsonObject json, JsonDeserializationContext context) {
+            GTGroupedModel model = super.read(json, context);
             return new GTGroupedModel.CoverModel(model);
         }
     }

@@ -18,7 +18,7 @@ public class DefaultModelLoader extends GTModelLoader {
     @SuppressWarnings("unchecked")
     @NotNull
     @Override
-    public GTModel read(JsonDeserializationContext context, JsonObject json) {
+    public GTModel read(JsonObject json, JsonDeserializationContext context) {
         try {
             UnbakedModel baseModel = (json.has("model") && json.get("model").isJsonObject()) ? context.deserialize(json.get("model"), BlockModel.class) : ModelUtils.getMissingModel();
             return new GTModel(baseModel, buildRotations(json));

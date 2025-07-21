@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui.event;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
@@ -57,7 +58,7 @@ public class SlotClickEvent implements IGuiEvent {
             return machine.fluidHandler.map(f -> type == SlotType.FL_IN && f.getInputTanks() != null ? f.getInputTanks().getTank(index) : type == SlotType.FL_OUT && f.getOutputTanks() != null ? f.getOutputTanks().getTank(f.offsetTank(index)) : f.getGuiHandler()).orElse(null);
         }
         if (handler instanceof BlockEntity be) {
-            return be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().orElse(null);
+            return be.getCapability(ForgeCapabilities.FLUID_HANDLER).resolve().orElse(null);
         }
         return null;
     }

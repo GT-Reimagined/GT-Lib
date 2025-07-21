@@ -9,7 +9,6 @@ import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
-import org.gtreimagined.gtlib.structure.PonderUtils;
 import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.rei.REIUtils;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -25,7 +24,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.Arrays;

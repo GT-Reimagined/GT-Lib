@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
@@ -58,7 +59,7 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.remove(0);
-        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(x -> {
+        stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(x -> {
             FluidStack fluid = x.getFluidInTank(0);
             if (fluid.isEmpty()) return;
             List<Component> str = new ArrayList<>();
@@ -83,12 +84,12 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
     }
 
     @Override
-    public boolean hasContainerItem(ItemStack stack) {
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
         return hasFluid(stack);
     }
 
     @Override
-    public ItemStack getContainerItem(ItemStack itemStack) {
+    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         return new ItemStack(this);
     }
 

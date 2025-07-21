@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
 import lombok.Getter;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -232,7 +233,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public Optional<IEnergyHandlerItem> getWrappedEnergyHandlerItem(ItemStack stack){
         IEnergyHandlerItem energyHandler = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).map(e -> e).orElse(null);
         if (energyHandler == null){
-            IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY).map(e -> e).orElse(null);
+            IEnergyStorage storage = stack.getCapability(ForgeCapabilities.ENERGY).map(e -> e).orElse(null);
             if (storage instanceof IEnergyHandlerItem e){
                 energyHandler = e;
             } else if (storage != null){
@@ -248,7 +249,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             IItemHandler chargeables = getChargeHandler();
             for (int i = 0; i < chargeables.getSlots(); i++) {
                 ItemStack item = chargeables.getStackInSlot(i);
-                var cap = item.getCapability(CapabilityEnergy.ENERGY);
+                var cap = item.getCapability(ForgeCapabilities.ENERGY);
                 if (!item.isEmpty() && cap.isPresent()) {
                     list.add(cap.resolve().get());
                 }

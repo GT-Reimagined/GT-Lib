@@ -84,7 +84,7 @@ public class VanillaProxy implements ISimpleModel<VanillaProxy>
 
         @NotNull
         @Override
-        public VanillaProxy read(JsonDeserializationContext deserializationContext, JsonObject modelContents)
+        public VanillaProxy read(JsonObject modelContents, JsonDeserializationContext deserializationContext)
         {
             List<BlockElement> list = this.getModelElements(deserializationContext, modelContents);
             return new VanillaProxy(list);
