@@ -1,26 +1,30 @@
 package org.gtreimagined.gtlib.integration.jade;
 
-import mcp.mobius.waila.api.BlockAccessor;
-import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IServerDataProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
-import mcp.mobius.waila.api.ui.IElementHelper;
-import mcp.mobius.waila.api.ui.IProgressStyle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import snownee.jade.VanillaPlugin;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.util.Utils;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.IServerDataProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.BoxStyle;
+import snownee.jade.api.ui.IDisplayHelper;
+import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.IProgressStyle;
 import tesseract.api.forge.TesseractCaps;
 import tesseract.api.gt.IEnergyHandler;
 import tesseract.api.heat.IHeatHandler;
 
-public class EUProvider implements IComponentProvider, IServerDataProvider<BlockEntity> {
+public class EUProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
+    private static final ResourceLocation ID = new ResourceLocation(Ref.ID, "eu_hu");
     public static EUProvider INSTANCE = new EUProvider();
 
     @Override
@@ -28,7 +32,7 @@ public class EUProvider implements IComponentProvider, IServerDataProvider<Block
         BlockEntity blockEntity = accessor.getBlockEntity();
         if (blockEntity == null) return;
         if (Minecraft.getInstance().player == null) return;
-        if (config.get(JadePlugin.EU)){
+        {
             IEnergyHandler storage = blockEntity.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY).orElse(null);
             if (storage != null && (!accessor.isServerConnected() || accessor.getServerData().contains("jadeEU"))) {
                 IElementHelper helper = tooltip.getElementHelper();
@@ -42,12 +46,12 @@ public class EUProvider implements IComponentProvider, IServerDataProvider<Block
                 }
                 String curText = ChatFormatting.WHITE + humanReadableNumber(cur, "EU", Minecraft.getInstance().player.isCrouching()) + ChatFormatting.GRAY;
                 String maxText = humanReadableNumber(max, "EU", Minecraft.getInstance().player.isCrouching());
-                MutableComponent text = new TranslatableComponent("jade.fe", curText, maxText).withStyle(ChatFormatting.WHITE);
+                MutableComponent text = Utils.translatable("jade.fe", curText, maxText).withStyle(ChatFormatting.WHITE);
                 IProgressStyle progressStyle = helper.progressStyle().color(0xFF00FFFF, 0xFF009999);
-                tooltip.add(helper.progress((float) cur / max, text, progressStyle, helper.borderStyle()).tag(JadePlugin.EU));
+                tooltip.add(helper.progress((float) cur / max, text, progressStyle, BoxStyle.DEFAULT, true));
             }
         }
-        if (config.get(JadePlugin.HU)){
+        {
             IHeatHandler storage = blockEntity.getCapability(TesseractCaps.HEAT_CAPABILITY).orElse(null);
             if (storage != null && (!accessor.isServerConnected() || accessor.getServerData().contains("jadeHU"))) {
                 IElementHelper helper = tooltip.getElementHelper();
@@ -61,15 +65,15 @@ public class EUProvider implements IComponentProvider, IServerDataProvider<Block
                 }
                 String curText = ChatFormatting.WHITE + humanReadableNumber(cur, "HU", Minecraft.getInstance().player.isCrouching()) + ChatFormatting.GRAY;
                 String maxText = humanReadableNumber(max, "HU", Minecraft.getInstance().player.isCrouching());
-                MutableComponent text = new TranslatableComponent("jade.fe", curText, maxText).withStyle(ChatFormatting.WHITE);
+                MutableComponent text = Utils.translatable("jade.fe", curText, maxText).withStyle(ChatFormatting.WHITE);
                 IProgressStyle progressStyle = helper.progressStyle().color(0xFFFF0000, 0xFF660000);
-                tooltip.add(helper.progress((float) cur / max, text, progressStyle, helper.borderStyle()).tag(JadePlugin.HU));
+                tooltip.add(helper.progress((float) cur / max, text, progressStyle, BoxStyle.DEFAULT, true));
             }
         }
     }
 
     private String humanReadableNumber(double number, String unit, boolean shift) {
-        return shift ? number + unit : VanillaPlugin.getDisplayHelper().humanReadableNumber(number, unit, false);
+        return shift ? number + unit : IDisplayHelper.get().humanReadableNumber(number, unit, false);
     }
 
     @Override
@@ -84,5 +88,10 @@ public class EUProvider implements IComponentProvider, IServerDataProvider<Block
             compoundTag.putLong("jadeHU", heatHandler.getHeat());
             compoundTag.putLong("jadeMaxHU", heatHandler.getHeatCap());
         }
+    }
+
+    @Override
+    public ResourceLocation getUid() {
+        return ID;
     }
 }

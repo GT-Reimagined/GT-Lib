@@ -1,12 +1,7 @@
 package org.gtreimagined.gtlib.integration.jade;
 
-import mcp.mobius.waila.api.BlockAccessor;
-import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IServerDataProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
-import mcp.mobius.waila.api.ui.IElementHelper;
-import mcp.mobius.waila.api.ui.IProgressStyle;
+import net.minecraft.resources.ResourceLocation;
+import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
@@ -15,41 +10,47 @@ import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.IServerDataProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.BoxStyle;
+import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.IProgressStyle;
 
-public class MachineProvider implements IComponentProvider, IServerDataProvider<BlockEntity> {
+public class MachineProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
+    private static final ResourceLocation ID = new ResourceLocation(Ref.ID, "machine");
     public static MachineProvider INSTANCE = new MachineProvider();
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
         if (accessor.getBlockEntity() instanceof BlockEntityMachine<?> machine) {
-            if (config.get(JadePlugin.PROGRESS)){
-                MachineRecipeHandler<?> recipeHandler = machine.recipeHandler.orElse(null);
-                if (recipeHandler != null && (!accessor.isServerConnected() || accessor.getServerData().contains("jadeProgress"))) {
-                    IElementHelper helper = tooltip.getElementHelper();
-                    int cur, max;
-                    boolean active;
-                    if (accessor.isServerConnected()) {
-                        cur = accessor.getServerData().getInt("jadeProgress");
-                        max = accessor.getServerData().getInt("jadeMaxProgress");
-                        active = accessor.getServerData().getBoolean("jadeActive");
-                    } else {
-                        cur = recipeHandler.getCurrentProgress();
-                        max = recipeHandler.getMaxProgress();
-                        active = machine.getMachineState() == MachineState.ACTIVE;
-                    }
-                    if (max > 0 && active){
-                        String curText = ChatFormatting.WHITE + String.valueOf(max >= 20 ? Math.round(cur / 20.0) : cur) + ChatFormatting.GRAY;
-                        String maxText = (max >= 20 ? Math.round(max / 20.0) : max) + " " + (max >= 20 ? "s" : "t");
-                        MutableComponent text = new TranslatableComponent("jade.fe", curText, maxText).withStyle(ChatFormatting.WHITE);
-                        IProgressStyle progressStyle = helper.progressStyle().color(0xFF4CBB17, 0xFF4CBB17);
-                        tooltip.add(helper.progress((float) cur / max, text, progressStyle, helper.borderStyle()).tag(JadePlugin.PROGRESS));
-                    }
+            MachineRecipeHandler<?> recipeHandler = machine.recipeHandler.orElse(null);
+            if (recipeHandler != null && (!accessor.isServerConnected() || accessor.getServerData().contains("jadeProgress"))) {
+                IElementHelper helper = tooltip.getElementHelper();
+                int cur, max;
+                boolean active;
+                if (accessor.isServerConnected()) {
+                    cur = accessor.getServerData().getInt("jadeProgress");
+                    max = accessor.getServerData().getInt("jadeMaxProgress");
+                    active = accessor.getServerData().getBoolean("jadeActive");
+                } else {
+                    cur = recipeHandler.getCurrentProgress();
+                    max = recipeHandler.getMaxProgress();
+                    active = machine.getMachineState() == MachineState.ACTIVE;
+                }
+                if (max > 0 && active){
+                    String curText = ChatFormatting.WHITE + String.valueOf(max >= 20 ? Math.round(cur / 20.0) : cur) + ChatFormatting.GRAY;
+                    String maxText = (max >= 20 ? Math.round(max / 20.0) : max) + " " + (max >= 20 ? "s" : "t");
+                    MutableComponent text = Utils.translatable("jade.fe", curText, maxText).withStyle(ChatFormatting.WHITE);
+                    IProgressStyle progressStyle = helper.progressStyle().color(0xFF4CBB17, 0xFF4CBB17);
+                    tooltip.add(helper.progress((float) cur / max, text, progressStyle, BoxStyle.DEFAULT, true));
                 }
             }
-            if (machine instanceof BlockEntityBasicMultiMachine<?> multiMachine && config.get(JadePlugin.STRUCTURE)){
+            if (machine instanceof BlockEntityBasicMultiMachine<?> multiMachine){
                 if (!accessor.isServerConnected() || accessor.getServerData().contains("jadeStructureValid")){
                     boolean validStructure;
                     if (accessor.isServerConnected()) {
@@ -58,9 +59,9 @@ public class MachineProvider implements IComponentProvider, IServerDataProvider<
                         validStructure = multiMachine.isStructureValid();
                     }
                     if (validStructure) {
-                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("gtlib.tooltip.valid_structure").withStyle(ChatFormatting.GREEN)).tag(JadePlugin.STRUCTURE));
+                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("gtlib.tooltip.valid_structure").withStyle(ChatFormatting.GREEN)));
                     } else {
-                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("gtlib.tooltip.invalid_structure").withStyle(ChatFormatting.RED)).tag(JadePlugin.STRUCTURE));
+                        tooltip.add(tooltip.getElementHelper().text(Utils.translatable("gtlib.tooltip.invalid_structure").withStyle(ChatFormatting.RED)));
                     }
                 }
 
@@ -80,5 +81,10 @@ public class MachineProvider implements IComponentProvider, IServerDataProvider<
                 compoundTag.putBoolean("jadeStructureValid", multiMachine.isStructureValid());
             }
         }
+    }
+
+    @Override
+    public ResourceLocation getUid() {
+        return ID;
     }
 }
