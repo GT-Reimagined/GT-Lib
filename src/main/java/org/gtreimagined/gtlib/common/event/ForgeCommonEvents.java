@@ -1,6 +1,11 @@
 package org.gtreimagined.gtlib.common.event;
 
 import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries.Keys;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.GTRemapping;
@@ -47,14 +52,10 @@ import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -71,7 +72,7 @@ public class ForgeCommonEvents {
 
     @SubscribeEvent
     public static void onContainerOpen(PlayerContainerEvent.Open ev) {
-        if (ev.getPlayer() instanceof ServerPlayer serverPlayer) {
+        if (ev.getEntity() instanceof ServerPlayer serverPlayer) {
             if (ev.getContainer() instanceof IGTContainer gtContainer) {
                 gtContainer.listeners().add(serverPlayer);
             }
@@ -81,7 +82,7 @@ public class ForgeCommonEvents {
     @SubscribeEvent
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent e) {
         Container inv = e.getInventory();
-        Player player = e.getPlayer();
+        Player player = e.getEntity();
         if (!GTLibConfig.PLAY_CRAFTING_SOUNDS.get()) return;
         for (int i = 0; i < inv.getContainerSize(); i++) {
             if (inv.getItem(i).getItem() instanceof IGTTool tool) {
@@ -102,7 +103,7 @@ public class ForgeCommonEvents {
     public static void onBlockPlace(BlockEvent.EntityPlaceEvent event){
         if (event.getPlacedAgainst().getBlock() instanceof BlockPipe && !(event.getPlacedBlock().getBlock() instanceof BlockPipe)){
             if (event.getEntity() instanceof Player && !event.getEntity().isCrouching()){
-                BlockEntity blockEntity = event.getWorld().getBlockEntity(event.getPos().relative(event.getEntity().getDirection()));
+                BlockEntity blockEntity = event.getLevel().getBlockEntity(event.getPos().relative(event.getEntity().getDirection()));
                 if (blockEntity instanceof BlockEntityPipe<?> pipe && event.getPlacedBlock().getBlock() instanceof EntityBlock){
                     pipe.setConnection(event.getEntity().getDirection().getOpposite());
                 }
@@ -161,144 +162,27 @@ public class ForgeCommonEvents {
     }
 
     @SubscribeEvent
-    public static void remapMissingEnchantments(final RegistryEvent.MissingMappings<Enchantment> event){
-        event.getMappings("antimatter").forEach(m -> {
-            if (m.key.getPath().equals("energy_efficiency")){
-                m.remap(Data.ENERGY_EFFICIENCY);
-            }
-            if (m.key.getPath().equals("implosion")){
-                m.remap(Data.IMPLOSION);
-            }
-        });
-    }
-
-    @SubscribeEvent
-    public static void remapMissingBlocks(final RegistryEvent.MissingMappings<Block> event) {
+    public static void remapMissingBlocksAndItems(final MissingMappingsEvent event) {
         for (String modid : GTRemapping.getRemappingMap().keySet()) {
-            for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings(modid)) {
+            for (MissingMappingsEvent.Mapping<Block> mapping : event.getMappings(Keys.BLOCKS, modid)) {
                 var map = GTRemapping.getRemappingMap().get(modid);
-                if (map.containsKey(mapping.key.getPath())){
-                    Block replacement = GTAPI.get(Block.class, map.get(mapping.key.getPath()));
+                if (map.containsKey(mapping.getKey().getPath())){
+                    Block replacement = GTAPI.get(Block.class, map.get(mapping.getKey().getPath()));
+                    if (replacement != null){
+                        mapping.remap(replacement);
+                    }
+                }
+            }
+            for (MissingMappingsEvent.Mapping<Item> mapping : event.getMappings(Keys.ITEMS, modid)) {
+                var map = GTRemapping.getRemappingMap().get(modid);
+                if (map.containsKey(mapping.getKey().getPath())){
+                    Item replacement = GTAPI.get(Item.class, map.get(mapping.getKey().getPath()));
                     if (replacement != null){
                         mapping.remap(replacement);
                     }
                 }
             }
         }
-        event.getMappings(Ref.MOD_KJS).forEach(map -> {
-            String domain = map.key.getNamespace();
-            String id = map.key.getPath();
-            if (id.startsWith("block_")) {
-                Material mat = Material.get(id.replace("block_", ""));
-                if (mat != NULL) {
-                    map.remap(GTMaterialTypes.BLOCK.get().get(mat).asBlock());
-                    return;
-                }
-            }
-            if (id.startsWith("ore_")) {
-                Block replacement = GTAPI.get(BlockOre.class, id);
-                if (replacement != null) {
-                    map.remap(replacement);
-                    return;
-                }
-            }
-            Block replacement = GTAPI.get(Block.class, id, Ref.SHARED_ID);
-            if (replacement != null) {
-                map.remap(replacement);
-            }
-        });
-        event.getMappings(Ref.SHARED_ID).forEach(map -> {
-            String id = map.key.getPath();
-            if (id.equals("basalt")){
-                map.remap(Blocks.BASALT);
-                return;
-            }
-            String replacement = "";
-            if (id.startsWith("fluid_")){
-                replacement = id.replace("fluid_", "fluid_pipe_");
-            } else if (id.startsWith("item_")){
-                replacement = id.replace("item_", "item_pipe_");
-            } else if (id.contains("vanilla_basalt")){
-                replacement = id.replace("vanilla_basalt", "basalt");
-            } else if (id.contains("sad_red")){
-                replacement = id.replace("sand_red", "red_sand");
-            }
-            if (id.contains("__")){
-                replacement = replacement.isEmpty() ? id.replace("__", "_") : replacement.replace("__", "_");
-            }
-            if (!replacement.isEmpty()) {
-                Block replacementBlock = GTAPI.get(Block.class, replacement, Ref.SHARED_ID);
-                if (replacementBlock != null){
-                    map.remap(replacementBlock);
-                }
-            }
-        });
-    }
-
-    @SubscribeEvent
-    public static void remapMissingItems(final RegistryEvent.MissingMappings<Item> event) {
-        for (String modid : GTRemapping.getRemappingMap().keySet()) {
-            for (RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings(modid)) {
-                var map = GTRemapping.getRemappingMap().get(modid);
-                if (map.containsKey(mapping.key.getPath())){
-                    Item replacement = GTAPI.get(Item.class, map.get(mapping.key.getPath()));
-                    if (replacement != null){
-                        mapping.remap(replacement);
-                    }
-                }
-            }
-        }
-        event.getMappings(Ref.ID).forEach(map -> {
-            Item replacement = GTAPI.get(Item.class, map.key.getPath(), Ref.SHARED_ID);
-            if (replacement != null) {
-                map.remap(replacement);
-            }
-        });
-
-        event.getMappings(Ref.SHARED_ID).forEach(map -> {
-            String id = map.key.getPath();
-            if (id.equals("basalt")){
-                map.remap(Items.BASALT);
-                return;
-            }
-            if (id.equals("dust_gravel")){
-                map.remap(DUST.get(Stone));
-                return;
-            }
-            if (id.startsWith("rock_")){
-                Item replacement = GTAPI.get(Item.class, id.replace("rock_", "bearing_rock_"), Ref.SHARED_ID);
-                if (replacement != null) {
-                    map.remap(replacement);
-                    return;
-                }
-            }
-            if (id.contains("crushed_centrifuged")){
-                Item replacement = GTAPI.get(Item.class, id.replace("centrifuged", "refined"), Ref.SHARED_ID);
-                if (replacement != null) {
-                    map.remap(replacement);
-                    return;
-                }
-            }
-            String replacement = "";
-            if (id.startsWith("fluid_")){
-                replacement = id.replace("fluid_", "fluid_pipe_");
-            } else if (id.startsWith("item_")){
-                replacement = id.replace("item_", "item_pipe_");
-            } else if (id.contains("vanilla_basalt")){
-                replacement = id.replace("vanilla_basalt", "basalt");
-            } else if (id.contains("sand_red")){
-                replacement = id.replace("sand_red", "red_sand");
-            }
-            if (id.contains("__")){
-                replacement = replacement.isEmpty() ? id.replace("__", "_") : replacement.replace("__", "_");
-            }
-            if (!replacement.isEmpty()) {
-                Item replacementBlock = GTAPI.get(Item.class, replacement, Ref.SHARED_ID);
-                if (replacementBlock != null){
-                    map.remap(replacementBlock);
-                }
-            }
-        });
     }
 
     /**
@@ -326,13 +210,8 @@ public class ForgeCommonEvents {
     }
 
     @SubscribeEvent
-    public static void biomeLoadEvent(BiomeLoadingEvent event){
-        GTLibWorldGenerator.reloadEvent(event.getName(),  event.getClimate(), event.getCategory(), event.getEffects(), event.getGeneration(), event.getSpawns());
-    }
-
-    @SubscribeEvent
-    public static void onWorldUnload(WorldEvent.Unload event){
-        StructureCache.onWorldUnload(event.getWorld());
+    public static void onWorldUnload(LevelEvent.Unload event){
+        StructureCache.onWorldUnload(event.getLevel());
     }
 
 }

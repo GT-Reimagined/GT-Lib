@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -56,12 +57,12 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
 
 
     @Override
-    public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
+    public void build(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
         gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VANILLA_VEINS);
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> placer) {
-        Random random = placer.random();
+        RandomSource random = placer.random();
         BlockPos blockpos = placer.origin();
         WorldGenLevel world = placer.level();
 
@@ -93,7 +94,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
         return spawned > 0;
     }
 
-    public boolean place(WorldGenLevel worldgenlevel, Random random, BlockPos blockpos, VanillaVein config) {
+    public boolean place(WorldGenLevel worldgenlevel, RandomSource random, BlockPos blockpos, VanillaVein config) {
 
         float f = random.nextFloat() * (float)Math.PI;
         float f1 = (float)config.size() / 8.0F;
@@ -127,7 +128,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
         return false;
     }
 
-    protected boolean doPlace(WorldGenLevel pLevel, Random pRandom, VanillaVein config, double pMinX, double pMaxX, double pMinZ, double pMaxZ, double pMinY, double pMaxY, int pX, int pY, int pZ, int pWidth, int pHeight) {
+    protected boolean doPlace(WorldGenLevel pLevel, RandomSource pRandom, VanillaVein config, double pMinX, double pMaxX, double pMinZ, double pMaxZ, double pMinY, double pMaxY, int pX, int pY, int pZ, int pWidth, int pHeight) {
         int i = 0;
         BitSet bitset = new BitSet(pWidth * pHeight * pWidth);
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
@@ -238,7 +239,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
         return i > 0;
     }
 
-    private int sample(Random random, int minY, int maxY) {
+    private int sample(RandomSource random, int minY, int maxY) {
         if (minY > maxY) {
             LOGGER.warn("Empty height range: {}", this);
             return minY;
@@ -277,7 +278,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
         return oreState;
     }
 
-    public boolean placeOre(int x, int y, int z, LevelChunkSection chunkSection, Function<BlockPos, BlockState> adjacentStateAccessor, Random random, VanillaVein config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable){
+    public boolean placeOre(int x, int y, int z, LevelChunkSection chunkSection, Function<BlockPos, BlockState> adjacentStateAccessor, RandomSource random, VanillaVein config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable){
         BlockState blockState = chunkSection.getBlockState(x, y, z);
         BlockState oreToPlace = getOre(blockState, material, type);
         if (oreToPlace != null && canPlaceOre(blockState, adjacentStateAccessor, random, config, material, type, mutable)) {
@@ -287,7 +288,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
         return false;
     }
 
-    public static boolean canPlaceOre(BlockState state, Function<BlockPos, BlockState> adjacentStateAccessor, Random random, VanillaVein config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable) {
+    public static boolean canPlaceOre(BlockState state, Function<BlockPos, BlockState> adjacentStateAccessor, RandomSource random, VanillaVein config, Material material, MaterialType<?> type, BlockPos.MutableBlockPos mutable) {
         if (getOre(state, material, type) == null) {
             return false;
         } else if (shouldSkipAirCheck(random, config.discardOnExposureChance())) {
@@ -297,7 +298,7 @@ public class FeatureVanillaVeins extends GTFeature<NoneFeatureConfiguration> {
         }
     }
 
-    protected static boolean shouldSkipAirCheck(Random pRandom, float pChance) {
+    protected static boolean shouldSkipAirCheck(RandomSource pRandom, float pChance) {
         if (pChance <= 0.0F) {
             return true;
         } else if (pChance >= 1.0F) {

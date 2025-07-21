@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import org.gtreimagined.gtlib.GTLibConfig;
@@ -57,7 +58,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
     }
 
     @Override
-    public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
+    public void build(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
         gen.addFeature(Decoration.RAW_GENERATION, GTLibConfiguredFeatures.STONE_LAYERS);
     }
 
@@ -65,7 +66,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctxt) {
         WorldGenLevel world = ctxt.level();
         BlockPos pos = ctxt.origin();
-        Random rand = ctxt.random();
+        RandomSource rand = ctxt.random();
         List<StoneLayer> stones = StoneLayerData.INSTANCE.getFlat(world.getLevel());
         if (stones.isEmpty()) return false;
         StoneLayer[] layers = new StoneLayer[7];
@@ -194,7 +195,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
         return true;
     }
 
-    public boolean placeReplacement(int y, int bottom, int top, Random random) {
+    public boolean placeReplacement(int y, int bottom, int top, RandomSource random) {
         if (y <= bottom) {
             return true;
         } else if (y >= top) {

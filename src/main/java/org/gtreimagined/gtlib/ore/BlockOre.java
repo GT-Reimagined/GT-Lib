@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.ore;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
@@ -82,7 +83,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         }
         List<ItemStack> drops = new ArrayList<>();
         ItemStack tool = builder.getParameter(LootContextParams.TOOL);
-        Random random = builder.getLevel().getRandom();
+        RandomSource random = builder.getLevel().getRandom();
         boolean silkTouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) == 1;
         int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool);
         List<ItemStack> selector = new ArrayList<>();
@@ -204,7 +205,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
         if (this.stoneType.getGravity()) {
             if (worldIn.isEmptyBlock(pos.below()) || canFallThrough(worldIn.getBlockState(pos.below())) && pos.getY() >= worldIn.getMinBuildHeight()) {
                 FallingBlockEntity fallingBlockEntity = FallingBlockEntity.fall(worldIn, pos, state);
@@ -263,13 +264,15 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     }
 
     @Override
-    public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch) {
-        if (silktouch == 0 && material.has(MaterialTags.EXP_RANGE)) {
-            List<ItemStack> self = getDrops(state, ((ServerLevel) world), pos, world.getBlockEntity(pos));
-            if (self.stream().anyMatch(i -> i.getItem() == this.asItem())) {
-                return 0;
+    public int getExpDrop(BlockState state, LevelReader level, RandomSource randomSource, BlockPos pos, int fortuneLevel, int silkTouchLevel) {
+        if (silkTouchLevel == 0 && material.has(MaterialTags.EXP_RANGE)) {
+            if (level instanceof ServerLevel serverLevel) {
+                List<ItemStack> self = getDrops(state, serverLevel, pos, level.getBlockEntity(pos));
+                if (self.stream().anyMatch(i -> i.getItem() == this.asItem())) {
+                    return 0;
+                }
             }
-            return MaterialTags.EXP_RANGE.get(material).sample(((ServerLevel) world).getRandom());
+            return MaterialTags.EXP_RANGE.get(material).sample(randomSource);
         }
         return 0;
     }

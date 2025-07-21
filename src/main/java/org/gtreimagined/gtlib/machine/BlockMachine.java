@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.machine;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
 import org.gtreimagined.gtlib.Ref;
@@ -185,9 +186,9 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         boolean wasDisabled = tile.toggleMachine();
                         if (wasDisabled) {
                             if (tile.getMachineState() == MachineState.DISABLED) {
-                                player.sendMessage(Utils.literal("Disabled machine."), player.getUUID());
+                                player.displayClientMessage(Utils.literal("Disabled machine."), false);
                             } else {
-                                player.sendMessage(Utils.literal("Enabled machine."), player.getUUID());
+                                player.displayClientMessage(Utils.literal("Enabled machine."), false);
                             }
                             Utils.damageStack(stack, player);
                             return InteractionResult.SUCCESS;
@@ -240,7 +241,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         return InteractionResult.SUCCESS;
                     }
                     if (getType().has(MachineFlag.GUI) && tile.canPlayerOpenGui(player)) {
-                        NetworkHooks.openGui((ServerPlayer) player, tile, extra -> {
+                        NetworkHooks.openScreen((ServerPlayer) player, tile, extra -> {
                             extra.writeBlockPos(pos);
                         });
                         return InteractionResult.SUCCESS;
@@ -411,7 +412,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (!type.isAmbientTicking()) return;
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof BlockEntityMachine<?> machine){

@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
@@ -44,12 +45,12 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
 
 
     @Override
-    public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
+    public void build(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
         gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.SMALL_ORES);
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> placer) {
-        Random random = placer.random();
+        RandomSource random = placer.random();
         BlockPos blockpos = placer.origin();
         WorldGenLevel world = placer.level();
 

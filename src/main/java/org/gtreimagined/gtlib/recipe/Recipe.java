@@ -59,7 +59,7 @@ public class Recipe implements IRecipe {
         
     }
 
-    public static final RecipeType<Recipe> RECIPE_TYPE = RecipeType.register(Ref.ID + ":machine");
+    public static final RecipeType<Recipe> RECIPE_TYPE = RecipeType.simple(new ResourceLocation(Ref.ID, "machine"));
 
     public Recipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidStack[] fluidsOutput, int duration, long power, int special, int amps) {
         this.itemsInput = ImmutableList.copyOf(stacksInput);

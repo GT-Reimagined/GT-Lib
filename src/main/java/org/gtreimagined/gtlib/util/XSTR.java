@@ -29,6 +29,7 @@ import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.random.RandomGenerator;
 
 /**
  * XSTR - Xorshift ThermiteRandom
@@ -125,7 +126,7 @@ public class XSTR extends Random implements RandomSource {
 
     @Override
     public RandomSource fork() {
-        return this;
+        return clone();
     }
 
     @Override
@@ -152,14 +153,37 @@ public class XSTR extends Random implements RandomSource {
         return new XSTR(getSeed());
     }
 
-    /**
-     * Implementation of George Marsaglia's elegant Xorshift random generator
-     * 30% faster and better quality than the built-in java.util.random see also
-     * see http://www.javamex.com/tutorials/random_numbers/xorshift.shtml
-     *
-     * @param nbits
-     * @return
-     */
+    public static long boundedNextLong(RandomSource rng, long bound) {
+        // Specialize boundedNextLong for origin == 0, bound > 0
+        final long m = bound - 1;
+        long r = rng.nextLong();
+        if ((bound & m) == 0L) {
+            // The bound is a power of 2.
+            r &= m;
+        } else {
+            // Must reject over-represented candidates
+            /* This loop takes an unlovable form (but it works):
+               because the first candidate is already available,
+               we need a break-in-the-middle construction,
+               which is concisely but cryptically performed
+               within the while-condition of a body-less for loop. */
+            for (long u = r >>> 1;
+                 u + m - (r = u % bound) < 0L;
+                 u = rng.nextLong() >>> 1)
+                ;
+        }
+        return r;
+    }
+
+
+        /**
+         * Implementation of George Marsaglia's elegant Xorshift random generator
+         * 30% faster and better quality than the built-in java.util.random see also
+         * see http://www.javamex.com/tutorials/random_numbers/xorshift.shtml
+         *
+         * @param nbits
+         * @return
+         */
     public int next(int nbits) {
         long x = seed;
         x ^= (x << 21);

@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
@@ -52,7 +53,7 @@ public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
     }
 
     @Override
-    public void build(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
+    public void build(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
         gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.BEDROCK_VEINS);
     }
 
@@ -60,7 +61,7 @@ public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctxt) {
         WorldGenLevel world = ctxt.level();
         BlockPos pos = ctxt.origin();
-        Random rand = ctxt.random();
+        RandomSource rand = ctxt.random();
 
         Collection<BedrockVein> veins = BedrockVeinData.INSTANCE.getVeins(world.getLevel()).values();
         if (veins.isEmpty()) return false;
@@ -72,7 +73,7 @@ public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
         return false;
     }
 
-    public static boolean generateBedrockVein(BedrockVein vein, LevelAccessor level, int minX, int minZ, int maxX, int maxZ, Random random) {
+    public static boolean generateBedrockVein(BedrockVein vein, LevelAccessor level, int minX, int minZ, int maxX, int maxZ, RandomSource random) {
         if (random.nextInt(vein.probability()) != 0) return false;
         if (!generateVein(vein.material(), level, minX, minZ, random)) return false;
 
@@ -106,7 +107,7 @@ public class FeatureBedrockVeins extends GTFeature<NoneFeatureConfiguration> {
         return true;
     }
 
-    public static boolean generateVein(Material material, LevelAccessor level, int minX, int minZ, Random random) {
+    public static boolean generateVein(Material material, LevelAccessor level, int minX, int minZ, RandomSource random) {
         try {
             Block tStone = level.getBlockState(new BlockPos(minX+8, level.getMinBuildHeight(), minZ+8)).getBlock();
             // Requires existing Bedrock!

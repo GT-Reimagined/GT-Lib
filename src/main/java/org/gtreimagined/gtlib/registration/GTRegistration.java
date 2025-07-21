@@ -14,6 +14,7 @@ import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.event.MaterialEvent;
 import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.integration.kubejs.GTLibKubeJS;
+import org.gtreimagined.gtlib.recipe.Recipe;
 import org.gtreimagined.gtlib.recipe.condition.ConfigCondition;
 import org.gtreimagined.gtlib.recipe.condition.TomlConfigCondition;
 import org.gtreimagined.gtlib.tool.GTToolType;
@@ -136,6 +137,15 @@ public final class GTRegistration {
             GTAPI.all(Enchantment.class, domain, (en, d, i) -> {
                 ForgeRegistries.ENCHANTMENTS.register(new ResourceLocation(d, i), en);
             });
+        }
+        if (domain.equals(Ref.ID)){
+            if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIERS){
+                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "modifier"), new GTBiomeModifier());
+            } else if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS){
+                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "modifier"), GTBiomeModifier.CODEC);
+            } else if (e.getRegistryKey() == ForgeRegistries.Keys.RECIPE_TYPES){
+                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "machine"), Recipe.RECIPE_TYPE);
+            }
         }
         if (!domain.equals(Ref.ID)){
             ModLoadingContext.get().setActiveContainer(previous);

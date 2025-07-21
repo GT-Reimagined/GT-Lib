@@ -4,7 +4,6 @@ import com.mojang.math.Vector3f;
 import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
-import org.gtreimagined.gtlib.mixin.client.DimensionTypeAccessor;
 import org.gtreimagined.gtlib.structure.BlockInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +24,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -50,9 +48,9 @@ import java.util.function.Predicate;
  * @Description: TrackedDummyWorld. Used to build a Fake World.
  */
 public class TrackedDummyWorld extends Level {
-    private static final DimensionType DIMENSION_TYPE;
+    //private static final DimensionType DIMENSION_TYPE;
     static {
-        DIMENSION_TYPE = DimensionTypeAccessor.getDEFAULT_OVERWORLD();
+        //DIMENSION_TYPE = DimensionTypeAccessor.getDEFAULT_OVERWORLD();
     }
 
     private Predicate<BlockPos> renderFilter;

@@ -66,7 +66,7 @@ public class BehaviourAOEBreak implements IBlockDestroyed<IBasicGTTool>, IItemRi
             CompoundTag tag = instance.getOrCreateDataTag(stack);
             boolean enabled = tag.getBoolean(Ref.KEY_TOOL_BEHAVIOUR_AOE_BREAK);
             tag.putBoolean(Ref.KEY_TOOL_BEHAVIOUR_AOE_BREAK, !enabled);
-            player.sendMessage(Utils.literal("Mode set to " + !enabled), player.getUUID());
+            player.displayClientMessage(Utils.literal("Mode set to " + !enabled), false);
         }
         return InteractionResultHolder.pass(stack);
     }

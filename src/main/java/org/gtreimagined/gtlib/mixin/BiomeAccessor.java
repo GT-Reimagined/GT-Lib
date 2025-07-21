@@ -10,8 +10,4 @@ public interface BiomeAccessor {
     @Accessor
     Biome.ClimateSettings getClimateSettings();
 
-    @Accessor
-    Biome.BiomeCategory getBiomeCategory();
-
-
 }

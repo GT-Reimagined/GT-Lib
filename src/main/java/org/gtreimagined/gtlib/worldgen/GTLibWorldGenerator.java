@@ -167,13 +167,13 @@ public class GTLibWorldGenerator {
     }
 
 
-    public static void reloadEvent(ResourceLocation name, Biome.ClimateSettings climate, Biome.BiomeCategory category, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
+    public static void reloadEvent(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
 
         GTAPI.all(IGTFeature.class, t -> {
-            t.build(name, climate, category, effects, gen, spawns);
+            t.build(name, climate, effects, gen, spawns);
         });
         handleFeatureRemoval(gen);
-        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(name, climate, category, effects, gen, spawns));
+        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(name, climate, effects, gen, spawns));
     }
 
     private static void handleFeatureRemoval(BiomeGenerationSettings.Builder gen) {

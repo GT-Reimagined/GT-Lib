@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.worldgen.stonelayer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -13,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
+import org.gtreimagined.gtlib.util.XSTR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +55,10 @@ public record StoneLayerOre(Material material, long chance, int minY, int maxY, 
         return addFilteredBiome("#" + biomeTagKey.location());
     }
 
-    public boolean canPlace(BlockPos pos, Random rand, LevelAccessor world) {
+    public boolean canPlace(BlockPos pos, RandomSource rand, LevelAccessor world) {
         Holder<Biome> biome = world.getBiome(pos);
         boolean biomeValid = isBiomeValid(biome);
-        return biomeValid && pos.getY() >= minY && pos.getY() <= maxY && rand.nextLong(Ref.U) < chance;
+        return biomeValid && pos.getY() >= minY && pos.getY() <= maxY && XSTR.boundedNextLong(rand, Ref.U) < chance;
     }
 
     public static long bind(long min, long max, long boundValue) {
