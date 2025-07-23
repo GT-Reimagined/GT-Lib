@@ -299,7 +299,9 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         heatHandler.ifPresent(handler -> handler.update(getMachineState() == MachineState.ACTIVE));
         fluidHandler.ifPresent(MachineFluidHandler::onUpdate);
         coverHandler.ifPresent(MachineCoverHandler::onUpdate);
-        this.recipeHandler.ifPresent(MachineRecipeHandler::onServerUpdate);
+        if (this.getMachineState() != MachineState.DISABLED && this.getMachineState() != MachineState.INVALID_STRUCTURE) {
+            this.recipeHandler.ifPresent(MachineRecipeHandler::onServerUpdate);
+        }
 
         if (allowExplosionsInRain()) {
             double d = Ref.RNG.nextDouble();
