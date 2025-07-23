@@ -71,10 +71,11 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
         if (burnDuration == 0) {
             if (!consume(simulate)) return false;
         } else {
+            boolean hasFuel = burnDuration > 0;
             if (!simulate) {
                 burnDuration--;
             }
-            return burnDuration >= 0;
+            return hasFuel;
         }
         return burnDuration > 0;
     }
