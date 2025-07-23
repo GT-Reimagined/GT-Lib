@@ -59,6 +59,14 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     }*/
 
     @Override
+    public void onServerUpdate() {
+        if (activeRecipe == null && burnDuration > 0) {
+            burnDuration --;
+        }
+        super.onServerUpdate();
+    }
+
+    @Override
     public boolean consumePower(boolean simulate) {
         if (burnDuration == 0) {
             if (!consume(simulate)) return false;
