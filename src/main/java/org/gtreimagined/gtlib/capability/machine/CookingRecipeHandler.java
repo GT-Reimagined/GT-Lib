@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.capability.machine;
 
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
+import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.recipe.ingredient.impl.Ingredients;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -62,6 +63,8 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     public void onServerUpdate() {
         if (activeRecipe == null && burnDuration > 0) {
             burnDuration --;
+            if (burnDuration > 0) tile.setMachineState(MachineState.ACTIVE);
+            else tile.setMachineState(MachineState.IDLE);
         }
         super.onServerUpdate();
     }
