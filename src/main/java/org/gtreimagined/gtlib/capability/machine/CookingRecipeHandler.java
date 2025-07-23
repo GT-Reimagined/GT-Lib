@@ -23,16 +23,11 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     }
 
     private boolean consume(boolean simulate) {
-        List<ItemStack> stack;
-        if (simulate) {
-            stack = tile.itemHandler.map(t -> t.consumeInputs(BURNABLE.get(), true)).orElse(Collections.emptyList());
-            return !stack.isEmpty();
-        }
-        if (!(stack = tile.itemHandler.map(t -> t.consumeInputs(BURNABLE.get(), false)).orElse(Collections.emptyList())).isEmpty()) {
+        List<ItemStack> stack = tile.itemHandler.map(t -> t.consumeInputs(BURNABLE.get(), true)).orElse(Collections.emptyList());
+        if (!stack.isEmpty() && !simulate){
             burnDuration += ForgeHooks.getBurnTime(stack.get(0), null) * burnMultiplier;
-            return true;
         }
-        return false;
+        return !stack.isEmpty();
     }
 
     /*@Override
@@ -65,11 +60,12 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
 
     @Override
     public boolean consumePower(boolean simulate) {
-        if (simulate) return consume(true);
         if (burnDuration == 0) {
-            if (!consume(false)) return false;
+            if (!consume(simulate)) return false;
         } else {
-            burnDuration--;
+            if (!simulate) {
+                burnDuration--;
+            }
             return burnDuration >= 0;
         }
         return burnDuration > 0;
