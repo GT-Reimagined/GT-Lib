@@ -86,6 +86,11 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     }
 
     @Override
+    protected void playInterruptSound() {
+
+    }
+
+    @Override
     public CompoundTag serialize() {
         CompoundTag nbt = super.serialize();
         nbt.putInt("burn", burnDuration);

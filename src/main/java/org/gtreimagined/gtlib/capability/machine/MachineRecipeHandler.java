@@ -287,7 +287,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             if (currentProgress == 0 && (tile.getMachineState() == tile.getDefaultMachineState() || tile.getMachineState() == NO_POWER)) return NO_POWER;
             tickTimer += WAIT_TIME_POWER_LOSS;
             recipeFailure();
-            if (tile.getMachineState() == ACTIVE && !tile.isMuffled()) tile.getLevel().playSound(null, tile.getBlockPos(), Ref.INTERRUPT, SoundSource.BLOCKS, 1.0f, 1.0f);
+            playInterruptSound();
             return POWER_LOSS;
         }
         if (consumedResources) this.consumePower(false);
@@ -338,6 +338,10 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             }
         }
         return ACTIVE;
+    }
+
+    protected void playInterruptSound(){
+        if (tile.getMachineState() == ACTIVE && !tile.isMuffled()) tile.getLevel().playSound(null, tile.getBlockPos(), Ref.INTERRUPT, SoundSource.BLOCKS, 1.0f, 1.0f);
     }
 
     protected boolean shouldConsumeResources() {
