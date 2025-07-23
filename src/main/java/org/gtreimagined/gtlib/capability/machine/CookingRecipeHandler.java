@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends MachineRecipeHandler<T> {
 
-    protected int burnDuration = 0;
+    protected int burnDuration = 0, maxBurn;
     protected static final Supplier<List<Ingredient>> BURNABLE = () -> Collections.singletonList(Ingredients.BURNABLES);
     private final float burnMultiplier;
 
@@ -26,7 +26,8 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     private boolean consume(boolean simulate) {
         List<ItemStack> stack = tile.itemHandler.map(t -> t.consumeInputs(BURNABLE.get(), true)).orElse(Collections.emptyList());
         if (!stack.isEmpty() && !simulate){
-            burnDuration += ForgeHooks.getBurnTime(stack.get(0), null) * burnMultiplier;
+            maxBurn = (int) (ForgeHooks.getBurnTime(stack.get(0), null) * burnMultiplier);
+            burnDuration += maxBurn;
         }
         return !stack.isEmpty();
     }
@@ -64,7 +65,10 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
         if (activeRecipe == null && burnDuration > 0) {
             burnDuration --;
             if (burnDuration > 0) tile.setMachineState(MachineState.ACTIVE);
-            else tile.setMachineState(MachineState.IDLE);
+            else {
+                maxBurn = 0;
+                tile.setMachineState(MachineState.IDLE);
+            }
         }
         super.onServerUpdate();
     }
@@ -85,7 +89,7 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
 
     @Override
     protected void recipeFailure() {
-
+        maxBurn = 0;
     }
 
     @Override
