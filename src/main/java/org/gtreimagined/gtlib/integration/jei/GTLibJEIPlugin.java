@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.integration.jei;
 
 import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
@@ -33,9 +35,12 @@ import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.integration.jei.category.MultiMachineInfoCategory;
 import org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.jei.category.SmallOreCategory;
+import org.gtreimagined.gtlib.integration.jei.category.StoneVeinCategory;
 import org.gtreimagined.gtlib.integration.jei.category.VeinCategory;
 import org.gtreimagined.gtlib.integration.jei.extension.JEIMaterialRecipeExtension;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.xei.StoneVein;
+import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
@@ -43,6 +48,8 @@ import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -71,6 +78,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
@@ -165,6 +173,7 @@ public class GTLibJEIPlugin implements IModPlugin {
         registry.addRecipeCategories(new MultiMachineInfoCategory());
         registry.addRecipeCategories(new VeinCategory());
         registry.addRecipeCategories(new SmallOreCategory());
+        registry.addRecipeCategories(new StoneVeinCategory());
     }
 
     @Override
@@ -199,6 +208,20 @@ public class GTLibJEIPlugin implements IModPlugin {
         });
         registration.addRecipes(VeinCategory.VEINS, VeinData.INSTANCE.getVeins().values().stream().toList());
         registration.addRecipes(SmallOreCategory.SMALL_ORES, SmallOreData.INSTANCE.getVeins().values().stream().toList());
+        Object2IntMap<StoneType> veinTotalWeights = new Object2IntOpenHashMap<>();
+        for (var layer : StoneLayerData.INSTANCE.getVeins().entrySet()) {
+            if (layer.getValue().type() == null) continue;
+            int currentWeight = veinTotalWeights.getOrDefault(layer.getValue().type(), 0);
+            veinTotalWeights.put(layer.getValue().type(), currentWeight + layer.getValue().weight());
+        }
+        List<StoneVein> stoneVeins = new ArrayList<>();
+        StoneLayerData.INSTANCE.getVeins().forEach((r, v) -> {
+            if (!veinTotalWeights.containsKey(v.type())) return;
+            v.ores().forEach(o -> {
+                stoneVeins.add(new StoneVein(v, o, veinTotalWeights.getOrDefault(v.type(), 0)));
+            });
+        });
+        registration.addRecipes(StoneVeinCategory.STONE_VEINS, stoneVeins);
         MultiMachineInfoCategory.registerRecipes(registration);
     }
 
