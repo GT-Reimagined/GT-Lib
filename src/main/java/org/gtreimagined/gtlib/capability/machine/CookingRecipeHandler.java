@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.capability.machine;
 
+import lombok.Getter;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.recipe.ingredient.impl.Ingredients;
@@ -14,8 +15,8 @@ import java.util.function.Supplier;
 
 public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends MachineRecipeHandler<T> {
 
+    @Getter
     protected int burnDuration = 0, maxBurn;
-    protected static final Supplier<List<Ingredient>> BURNABLE = () -> Collections.singletonList(Ingredients.BURNABLES);
     private final float burnMultiplier;
 
     public CookingRecipeHandler(T tile, float burnMultiplier) {
@@ -24,7 +25,7 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     }
 
     private boolean consume(boolean simulate) {
-        List<ItemStack> stack = tile.itemHandler.map(t -> t.consumeInputs(BURNABLE.get(), true)).orElse(Collections.emptyList());
+        List<ItemStack> stack = tile.itemHandler.map(t -> t.consumeInputs(Collections.singletonList(this.getBurnable()), simulate)).orElse(Collections.emptyList());
         if (!stack.isEmpty() && !simulate){
             maxBurn = (int) (ForgeHooks.getBurnTime(stack.get(0), null) * burnMultiplier);
             burnDuration += maxBurn;
@@ -32,40 +33,18 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
         return !stack.isEmpty();
     }
 
-    /*@Override
-    public IIntArray getProgressData() {
-        IIntArray sup = super.getProgressData();
-        return new IIntArray() {
-            @Override
-            public int get(int index) {
-                if (index == sup.size()) {
-                    return CookingRecipeHandler.this.burnDuration;
-                }
-                return sup.get(index);
-            }
-
-            @Override
-            public void set(int index, int value) {
-                if (index == sup.size()) {
-                    CookingRecipeHandler.this.burnDuration = value;
-                    return;
-                }
-                sup.set(index, value);
-            }
-
-            @Override
-            public int size() {
-                return sup.size() + 1;
-            }
-        };
-    }*/
+    protected Ingredient getBurnable() {
+        return Ingredients.BURNABLES;
+    }
 
     @Override
     public void onServerUpdate() {
         if (activeRecipe == null && burnDuration > 0) {
             burnDuration --;
-            if (burnDuration > 0) tile.setMachineState(MachineState.ACTIVE);
-            else {
+            if (burnDuration > 0) {
+                tile.setMachineState(MachineState.ACTIVE);
+                return;
+            } else {
                 maxBurn = 0;
                 tile.setMachineState(MachineState.IDLE);
             }
@@ -84,7 +63,7 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
             }
             return hasFuel;
         }
-        return burnDuration > 0;
+        return burnDuration > 0 || simulate;
     }
 
     @Override
@@ -101,6 +80,7 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
     public CompoundTag serialize() {
         CompoundTag nbt = super.serialize();
         nbt.putInt("burn", burnDuration);
+        nbt.putInt("maxBurn", maxBurn);
         return nbt;
     }
 
@@ -112,12 +92,13 @@ public class CookingRecipeHandler<T extends BlockEntityMachine<T>> extends Machi
 
     @Override
     public boolean accepts(ItemStack stack) {
-        return super.accepts(stack) || Ingredients.BURNABLES.test(stack);
+        return super.accepts(stack) || getBurnable().test(stack);
     }
 
     @Override
     public void deserialize(CompoundTag nbt) {
         super.deserialize(nbt);
         this.burnDuration = nbt.getInt("burn");
+        this.maxBurn = nbt.getInt("maxBurn");
     }
 }
