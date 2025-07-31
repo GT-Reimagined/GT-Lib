@@ -52,11 +52,6 @@ public class GTRecipeProvider extends RecipeProvider {
         this.providerName = providerName;
     }
 
-    @Override
-    public void run(HashCache cache) {
-
-    }
-
     public void removeRecipe(ResourceLocation recipeId){
         RECIPES_TO_REMOVE.add(recipeId);
     }

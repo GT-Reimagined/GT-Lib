@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.blockentity;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;

@@ -57,16 +57,6 @@ public class StoneVeinCategory implements IRecipeCategory<StoneVein> {
     }
 
     @Override
-    public ResourceLocation getUid() {
-        return new ResourceLocation(Ref.ID, "stone_veins");
-    }
-
-    @Override
-    public Class<? extends StoneVein> getRecipeClass() {
-        return StoneVein.class;
-    }
-
-    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, StoneVein recipe, IFocusGroup focuses) {
 
         Material material = recipe.ore().material();//i == 0 ? recipe.primary() : i == 1 ? recipe.secondary() : i == 2 ? recipe.between() : recipe.sporadic();

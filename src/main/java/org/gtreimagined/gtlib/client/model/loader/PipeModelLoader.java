@@ -24,8 +24,8 @@ public class PipeModelLoader extends DynamicModelLoader{
 
         @NotNull
         @Override
-        public DynamicModel read(JsonDeserializationContext context, JsonObject json) {
-            return new DynamicModel(super.read(context, json)) {
+        public DynamicModel read(JsonObject json, JsonDeserializationContext context) {
+            return new DynamicModel(super.read(json, context)) {
                 @Override
                 public BakedModel bakeModel(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
                     return new PipeBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, particle)), getBakedConfigs(owner, bakery, getter, transform, overrides, loc));

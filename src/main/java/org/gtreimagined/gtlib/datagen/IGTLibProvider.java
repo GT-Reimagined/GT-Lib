@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.datagen;
 
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 
@@ -19,7 +20,7 @@ public interface IGTLibProvider extends DataProvider {
     }
 
     @Override
-    default void run(HashCache hashCache) throws IOException {
+    default void run(CachedOutput hashCache) throws IOException {
         //NOOP
     }
 }
