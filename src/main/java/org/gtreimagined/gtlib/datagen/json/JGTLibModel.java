@@ -47,7 +47,7 @@ public class JGTLibModel extends JRotationModel {
         return this;
     }
 
-    public static class JAntimatterModelSerializer implements JsonSerializer<JGTLibModel> {
+    public static class JGTLibModelSerializer implements JsonSerializer<JGTLibModel> {
 
         @Override
         public JsonElement serialize(JGTLibModel src, Type typeOfSrc, JsonSerializationContext context) {

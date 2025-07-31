@@ -8,13 +8,10 @@ import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
 import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.util.RegistryUtils;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-
-import java.io.IOException;
 
 public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> implements IGTLibProvider {
 
@@ -82,15 +79,15 @@ public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> imp
         return new ResourceLocation(domain, path);
     }
 
-    public GTItemModelBuilder getAntimatterBuilder(ItemLike item) {
+    public GTItemModelBuilder getGTBuilder(ItemLike item) {
         return getBuilder(RegistryUtils.getIdFromItem(item.asItem()).getPath());
     }
 
     public GTItemModelBuilder modelAndTexture(ItemLike item, String namespace, String path) {
-        return getAntimatterBuilder(item).parent(new ResourceLocation(namespace, path));
+        return getGTBuilder(item).parent(new ResourceLocation(namespace, path));
     }
 
     public GTItemModelBuilder modelAndTexture(ItemLike item, String resource) {
-        return getAntimatterBuilder(item).parent(new ResourceLocation(resource));
+        return getGTBuilder(item).parent(new ResourceLocation(resource));
     }
 }
