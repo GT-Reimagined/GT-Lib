@@ -1,0 +1,98 @@
+package org.gtreimagined.gtlib.capability.item;
+
+import org.gtreimagined.gtlib.capability.CoverHandler;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import org.gtreimagined.gtlib.util.Utils;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
+
+public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItemNode {
+    protected Direction side;
+    protected CoverHandler<?> coverHandler;
+    protected final Predicate<Direction> inputFunction;
+    protected final Predicate<Direction> outputFunction;
+
+    public SidedCombinedInvWrapper(Direction side, CoverHandler<?> coverHandler, Predicate<Direction> inputFunction, Predicate<Direction> outputFunction, IItemHandlerModifiable... itemHandler) {
+        super(itemHandler);
+        this.side = side;
+        this.coverHandler = coverHandler;
+        this.inputFunction = inputFunction;
+        this.outputFunction = outputFunction;
+    }
+
+    public SidedCombinedInvWrapper(Direction side, CoverHandler<?> coverHandler, IItemHandlerModifiable... itemHandler) {
+        this(side, coverHandler, d -> true, d -> true, itemHandler);
+    }
+
+    @NotNull
+    @Override
+    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        if (!inputFunction.test(side)) return stack;
+        if (coverHandler != null) {
+            if (coverHandler.blocksInput(IItemHandler.class, side)) {
+                return stack;
+            }
+            ItemStack copy = stack.copy();
+            if (coverHandler.onTransfer(copy, side, true, simulate)) {
+                return copy;
+            }
+        }
+        int index = getIndexForSlot(slot);
+        IItemHandler handler = getHandlerFromIndex(index);
+        int slot2 = getSlotFromIndex(slot, index);
+        if (handler instanceof TrackedItemHandler<?> trackedItemHandler){
+            if (trackedItemHandler.hasSlotDiversity()){
+                for (int i = 0; i < trackedItemHandler.getSize(); i++){
+                    if (i == slot2) continue;
+                    if (trackedItemHandler.getStackInSlot(i).isEmpty()) continue;
+                    if (Utils.equals(trackedItemHandler.getStackInSlot(i), stack)) return stack;
+                }
+            }
+        }
+        return super.insertItem(slot, stack, simulate);
+    }
+
+    @NotNull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (!outputFunction.test(side)) return ItemStack.EMPTY;
+        if (coverHandler != null && (coverHandler.blocksOutput(IItemHandler.class, side) || coverHandler.onTransfer(getStackInSlot(slot), side, false, simulate)))
+            return ItemStack.EMPTY;
+        return super.extractItem(slot, amount, simulate);
+    }
+
+    @Override
+    public int getPriority(Direction direction) {
+        return coverHandler == null ? 0 : coverHandler.get(direction).getPriority(IItemHandler.class);
+    }
+
+    @Override
+    public boolean isEmpty(int slot) {
+        return this.getStackInSlot(slot).isEmpty();
+    }
+
+    @Override
+    public boolean canOutput() {
+        return coverHandler == null || !coverHandler.blocksOutput(IItemHandler.class, side);
+    }
+
+    @Override
+    public boolean canInput() {
+        return coverHandler == null || !coverHandler.blocksInput(IItemHandler.class, side);
+    }
+
+    @Override
+    public boolean canInput(Direction direction) {
+        return coverHandler == null || !coverHandler.blocksInput(IItemHandler.class, direction);
+    }
+
+    @Override
+    public boolean canOutput(Direction direction) {
+        return coverHandler == null || !coverHandler.blocksOutput(IItemHandler.class, direction);
+    }
+}

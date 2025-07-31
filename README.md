@@ -1,15 +1,14 @@
-# ![GregTech logo](https://i.imgur.com/9jkn0cO.png) &mdash; AntimatterAPI &mdash; ![GregTech logo](https://i.imgur.com/9jkn0cO.png) 
+# ![GregTech logo](https://i.imgur.com/9jkn0cO.png) &mdash; GTLib &mdash; ![GregTech logo](https://i.imgur.com/9jkn0cO.png) 
 
-The building blocks of GregTech Intergalactical.
+The building blocks of GT5R and GT4R.
 
 ## Contribution
 
-Constribution is welcomed, join our [Discord](https://discord.gg/9kM4bRj) to get in touch!
+Constribution is welcomed, join our [Discord](https://discord.gg/sZFzQrBA33) to get in touch!
 
 To clone this repository, make sure you also clone the submodules:
 
 ```
-$ git clone --recurse-submodules https://github.com/GregTech-Intergalactical/AntimatterAPI.git
+$ git clone --recurse-submodules https://github.com/GT-Reimagined/GT-Lib.git
 ```
-
-*Note: we're currently working on code documentation, don't be afraid.*
+*Note there's no documentation yet, but there will be once it's finished, there are still many rewrites to do yet*

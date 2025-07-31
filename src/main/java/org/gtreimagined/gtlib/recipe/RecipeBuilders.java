@@ -1,0 +1,92 @@
+package org.gtreimagined.gtlib.recipe;
+
+import com.google.common.collect.ImmutableMap;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.recipe.ingredient.PropertyIngredient;
+import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
+import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.util.TagUtils;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.gtreimagined.gtlib.material.Material.NULL;
+
+public class RecipeBuilders {
+
+    public static void init() {
+
+    }
+
+    /**
+     * RECIPE BUILDERS
+     **/
+
+    public static final MaterialRecipe.Provider PROBE_BUILDER = MaterialRecipe.registerProvider("probe", Ref.ID, id -> new MaterialRecipe.ItemBuilder() {
+
+        @Override
+        public ItemStack build(CraftingContainer inv, MaterialRecipe.Result mats) {
+            Object h = mats.mats.get("helmet");
+            ItemStack helmet = ((ItemStack) h).copy();
+            CompoundTag nbt = helmet.getOrCreateTag();
+            if (nbt.contains("theoneprobe") && nbt.getBoolean("theoneprobe")) return ItemStack.EMPTY;
+            nbt.putBoolean("theoneprobe", true);
+            return helmet;
+        }
+
+        @Override
+        public Map<String, Object> getFromResult(@NotNull ItemStack stack) {
+            return ImmutableMap.of();
+        }
+    });
+
+    public static final MaterialRecipe.Provider CROWBAR_BUILDER = MaterialRecipe.registerProvider("crowbar", Ref.ID, id -> new MaterialRecipe.ItemBuilder() {
+        @Override
+        public ItemStack build(CraftingContainer inv, MaterialRecipe.Result mats) {
+            int dye = ((DyeColor) mats.mats.get("secondary")).getMaterialColor().col;
+            IGTTool type = GTAPI.get(IGTTool.class, id, Ref.SHARED_ID);
+            ItemStack stack = type.asItemStack(type.getGTItemTier().getPrimary(), NULL);
+            stack.getOrCreateTagElement(Ref.TAG_TOOL_DATA).putInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR, dye);
+            return stack;
+        }
+
+        @Override
+        public Map<String, Object> getFromResult(@NotNull ItemStack stack) {
+            CompoundTag nbt = stack.getTag().getCompound(Ref.TAG_TOOL_DATA);
+            int secondary = nbt.getInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR);
+            Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(t -> t.getMaterialColor().col == secondary).findFirst();
+            return ImmutableMap.of( "secondary", color.isEmpty() ? NULL : color.get());
+        }
+    });
+
+    static {
+        PropertyIngredient.addGetter(TagUtils.getForgelikeItemTag("dyes").location(), RecipeBuilders::getColor);
+    }
+
+    public static DyeColor getColor(ItemStack stack) {
+        if (stack.getItem() instanceof DyeItem) {
+            return ((DyeItem)stack.getItem()).getDyeColor();
+        } else {
+            for(int i = 0; i < 15; ++i) {
+                DyeColor color = DyeColor.byId(i);
+                String colorString = color.getName();
+                if (stack.is(TagUtils.getForgelikeItemTag("dyes/" + colorString))) {
+                    return color;
+                }
+                if (stack.is(TagUtils.getForgelikeItemTag(colorString + "_dyes"))){
+                    return color;
+                }
+            }
+
+            return null;
+        }
+    }
+}

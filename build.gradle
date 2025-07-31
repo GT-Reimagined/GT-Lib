@@ -2,16 +2,15 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 plugins {
     id "maven-publish"
     id "idea"
-    // Adds the Kotlin Gradle plugin
-    id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}" apply false
-    id 'org.jetbrains.kotlin.plugin.lombok' version '2.0.20' apply false
     id "io.freefair.lombok" version "8.10.2" apply false
-    id "fabric-loom" version "1.7-SNAPSHOT" apply false
-    id "net.neoforged.moddev.legacyforge" version "2.0.58-beta" apply false
+    id "net.neoforged.moddev.legacyforge" version "${mdg_version}" apply false
 }
+apply plugin: "net.neoforged.moddev.legacyforge"
 
 //Print out JVM information so that we know what version is running. Extreamly useful for people to know when helping you.
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+archivesBaseName = "${project.archive_base_name}"
 
 def isCI = System.getenv("GITHUB_ACTION")
 def gitHash() {
@@ -20,23 +19,17 @@ def gitHash() {
     return ""
 }
 
-subprojects {
+allprojects {
     apply plugin: "maven-publish"
     apply plugin: "java"
     apply plugin: "idea"
-    apply plugin: "org.jetbrains.kotlin.jvm"
-    apply plugin: "org.jetbrains.kotlin.plugin.lombok"
     apply plugin: "io.freefair.lombok"
-    group = rootProject.maven_group
-    version = "${project.mod_version}-${rootProject.minecraft_version}"
+    group = project.maven_group
+    version = "${project.mod_version}-${project.minecraft_version}"
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-    compileKotlin {
-        kotlinOptions.jvmTarget = "17"
-    }
 
-
-    apply from: 'https://raw.githubusercontent.com/GregTech-Intergalactical/GradleSripts/main/repositories.gradle'
+    apply from: 'https://raw.githubusercontent.com/GT-Reimagined/GradleScripts/main/repositories.gradle'
 
     java {
         withSourcesJar()
@@ -52,5 +45,127 @@ subprojects {
             version = version + "-" + gitHash()
         }
         println("In CI mode")
+    }
+}
+
+legacyForge {
+    version = "${project.minecraft_version}-${project.forge_version}"
+    parchment {
+        minecraftVersion = project.minecraft_version
+        mappingsVersion = project.mappings_version
+    }
+    runs {
+        client {
+            client()
+
+        }
+        data {
+            data()
+        }
+        server {
+            server()
+        }
+    }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, "gtlib.refmap.json"
+    config "gtlib.mixins.json"
+    config "gtlib.rei.mixins.json"
+}
+
+
+dependencies {
+    implementation(project(":tesseract-forge"))
+    compileOnly(project(":tesseract-common"))
+    compileOnly(project(":tesseract-graph"))
+    jarJar("org.gt-reimagined:tesseract-forge:${project.tesseract_version}-${project.minecraft_version}")
+
+    //MIXIN
+    annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
+    implementation("org.jetbrains:annotations:26.0.1")
+    modCompileOnly("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
+    modRuntimeOnly("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}")
+    modCompileOnly("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+    modImplementation("com.blamejared.crafttweaker:CraftTweaker-forge-${project.minecraft_version}:${project.crafttweaker_version}")
+    modImplementation(jarJar("dev.trinsdar:arrp-forge:${project.arrp_version}"))
+    modImplementation(jarJar("dev.trinsdar:terraform-utils-v1:${terraform_version}"))
+    modImplementation(jarJar("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
+    modImplementation(jarJar("com.teamresourceful.resourcefullib:resourcefullib-forge-${project.minecraft_version}:${project.resourcefullib_version}"))
+    modImplementation("maven.modrinth:carbon-config:${project.carbon_config_forge_version}")
+    jarJar("maven.modrinth:carbon-config:${project.carbon_config_forge_version}"){
+        version {
+            prefer(project.carbon_config_forge_version)
+        }
+    }
+    modImplementation("dev.latvian.mods:kubejs-forge:${project.kubejs_version}")
+    modImplementation("dev.latvian.mods:rhino-forge:${project.rhino_version}")
+    modImplementation("dev.architectury:architectury-forge:${project.architectury_version}")
+    modImplementation("curse.maven:the-one-probe-245211:${project.top_forge_file}")
+    modImplementation("curse.maven:curios-309927:${project.curios_file}")
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
+    //modCompileOnly("com.simibubi.create:create-${minecraft_version}:0.5.1.i-435:all")
+    modImplementation(jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
+    modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
+    modImplementation("curse.maven:jade-324717:${project.jade_version}")
+}
+
+
+processResources {
+    inputs.property "version", project.mod_version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.mod_version
+    }
+}
+
+jar{
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : "GT-Reimagined",
+                'Specification-Version'   : '1', // We are version 1 of ourselves
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.version,
+                'Implementation-Vendor'   : "GT-Reimagined",
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs" : "gtlib.mixins.json,gtlib.rei.mixins.json"
+        ])
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(org.gradle.api.publish.maven.MavenPublication) {
+            artifactId = "gt-lib"
+            from components.java
+        }
+    }
+    repositories {
+        def isJenkins = System.getenv("CI")
+        def isRELEASE = System.getenv("GITHUB_RELEASE")
+        if (isRELEASE){
+            maven {
+                name = "GTMaven"
+                url = "https://repo.repsy.io/mvn/trinsdar/gregtech-intergalactical/"
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
+            }
+        } else if (isJenkins) {
+            maven {
+                url System.getenv("local_maven_url")
+            }
+        } else {
+            mavenLocal()
+        }
     }
 }

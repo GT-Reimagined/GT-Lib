@@ -1,0 +1,49 @@
+package org.gtreimagined.gtlib.cover;
+
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
+import org.gtreimagined.gtlib.capability.ICoverHandler;
+import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.texture.Texture;
+import org.gtreimagined.gtlib.tool.GTToolType;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class CoverStone extends BaseCover {
+    public CoverStone(@NotNull ICoverHandler<?> source, @Nullable Tier tier, Direction side, CoverFactory factory) {
+        super(source, tier, side, factory);
+    }
+
+    @Override
+    public InteractionResult onInteract(Player player, InteractionHand hand, Direction side, @Nullable GTToolType type) {
+        return source().getTile() instanceof BlockEntityPipe<?> ? InteractionResult.PASS : InteractionResult.FAIL;
+    }
+
+    @Override
+    public boolean isNode() {
+        return false;
+    }
+
+    @Override
+    public <T> boolean blocksCapability(Class<T> cap, Direction side) {
+        return side != null && !(source().getTile() instanceof BlockEntityPipe<?>);
+    }
+
+    @Override
+    public Texture[] getTextures() {
+        return super.getTextures();
+    }
+
+    @Override
+    public ResourceLocation getModel(String type, Direction dir) {
+        if (type.equals("pipe")){
+            return new ResourceLocation(Ref.ID, "block/cover/cover_pipe_overlay_only");
+        }
+        return getBasicModel();
+    }
+}

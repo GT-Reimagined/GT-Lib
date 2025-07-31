@@ -1,0 +1,23 @@
+{
+  "wrench": {
+    "subtitle": "gtlib.subtitle.wrench",
+    "sounds": [ "gtlib:wrench" ]
+  },
+  "drill": {
+    "subtitle": "gtlib.subtitle.drill",
+    "sounds": [ "gtlib:drill" ]
+  },
+  "wire-cutters": {
+    "subtitle": "gtlib.subtitle.wire_cutters",
+    "sounds": [ "gtlib:wire-cutters" ]
+  },
+  "interrupt": {
+    "sounds": [ "gtlib:interrupt" ]
+  },
+  "john-cena": {
+    "sounds": [ "gtlib:john-cena" ]
+  },
+  "machine-explode": {
+    "sounds": [ "gtlib:machine-explode" ]
+  }
+}

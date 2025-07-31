@@ -1,0 +1,30 @@
+package org.gtreimagined.gtlib.material;
+
+import org.gtreimagined.gtlib.util.Utils;
+
+public class MaterialStack {
+
+    public Material m;
+    public int s;
+
+    public MaterialStack(Material material, int size) {
+        m = material;
+        s = size;
+    }
+
+    @Override
+    public String toString() {
+        String string = "";
+        if (m.getChemicalFormula() == null || m.getChemicalFormula().isEmpty()) {
+            string += m.getDisplayName() == null ? "|?|" : " |" + m.getDisplayName().getString() + "| ";
+        } else if (m.getProcessInto().size() > 1 && s > 1) {
+            string += '(' + m.getChemicalFormula() + ')';
+        } else {
+            string += m.getChemicalFormula();
+        }
+        if (s > 1) {
+            string += Utils.digitsToSubscript(Long.toString(s));
+        }
+        return string;
+    }
+}

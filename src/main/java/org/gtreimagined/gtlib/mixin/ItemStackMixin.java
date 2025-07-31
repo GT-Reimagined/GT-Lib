@@ -1,0 +1,45 @@
+package org.gtreimagined.gtlib.mixin;
+
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.tool.IGTArmor;
+import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.util.RegistryUtils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.Consumer;
+
+@Mixin(ItemStack.class)
+public abstract class ItemStackMixin {
+
+    @Inject(method = "hurtAndBreak", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
+    public <T extends LivingEntity> void inject(int amount, T entity, Consumer<T> consumer, CallbackInfo ci) {
+        ItemStack invoker = ((ItemStack) (Object) this);
+        if (invoker.getItem() instanceof IGTTool) {
+            if (entity instanceof Player) {
+                ((IGTTool) invoker.getItem()).onItemBreak(invoker, (Player) entity);
+            }
+        }
+        if (invoker.getItem() instanceof IGTArmor) {
+            IGTArmor armor = (IGTArmor) invoker.getItem();
+            if (armor.getGTArmorType().getSlot() == EquipmentSlot.HEAD && GTAPI.isModLoaded(Ref.MOD_TOP)) {
+                if (invoker.getTag() != null && invoker.getTag().contains("theoneprobe") && invoker.getTag().getBoolean("theoneprobe")) {
+                    if (entity instanceof Player) {
+                        ItemStack probe = new ItemStack(RegistryUtils.getItemFromID(new ResourceLocation(Ref.MOD_TOP, "probe")));
+                        if (!((Player) entity).addItem(probe)) {
+                            ((Player) entity).drop(probe, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

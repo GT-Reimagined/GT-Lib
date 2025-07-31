@@ -5,7 +5,7 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-name: AntimatterAPI Nightly
+name: GT-Lib Nightly
 on:
   push:
     branches:
@@ -15,14 +15,12 @@ on:
       - 'dev**'
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
-    - name: Checkout Antimatter
+    - name: Checkout GT-Lib
       uses: actions/checkout@v2
       with:
         submodules: recursive
@@ -44,23 +42,14 @@ jobs:
       run: ./gradlew build --stacktrace
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
-    - name: Upload Forge Artifact
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Antimatter-forge-nightly-${{ steps.vars.outputs.sha_short }}
-        path: forge/build/libs
+        name: GT-Lib-nightly-${{ steps.vars.outputs.sha_short }}
+        path: build/libs
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Upload Fabric Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: Antimatter-fabric-nightly-${{ steps.vars.outputs.sha_short }}
-        path: fabric/build/libs
-      env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Cleanup Gradle Cache
       # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
       # Restoring these files from a GitHub Actions cache might cause problems for future builds.

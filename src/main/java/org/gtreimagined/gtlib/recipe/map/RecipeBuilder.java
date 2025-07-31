@@ -1,0 +1,418 @@
+package org.gtreimagined.gtlib.recipe.map;
+
+import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.recipe.IRecipe;
+import org.gtreimagined.gtlib.recipe.Recipe;
+import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
+import org.gtreimagined.gtlib.util.RegistryUtils;
+import org.gtreimagined.gtlib.util.Utils;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class RecipeBuilder {
+
+    private static final Map<String, IRecipe> ID_MAP = new Object2ObjectArrayMap<>();
+
+    private static String CURRENT_MOD_ID = Ref.SHARED_ID;
+
+    protected RecipeMap<? extends RecipeBuilder> recipeMap;
+    protected List<ItemStack> itemsOutput = new ObjectArrayList<>();
+    protected List<Ingredient> ingredientInput = new ObjectArrayList<>();
+    protected List<FluidIngredient> fluidsInput = new ObjectArrayList<>();
+    protected List<FluidStack> fluidsOutput = new ObjectArrayList<>();
+    protected int[] inputChances, outputChances;
+    protected int duration, special;
+    protected long power;
+    protected int amps;
+    protected boolean hidden, fake;
+    protected Set<String> tags = new ObjectOpenHashSet<>();
+    protected ResourceLocation id;
+    protected boolean recipeMapOnly = false;
+
+    private Advancement.Builder advancementBuilder = null;
+
+    public IRecipe add(String modid, String id) {
+        id(modid, id);
+        //addToMap(r);
+        return build();
+    }
+
+    public IRecipe add(String id) {
+        return add(recipeMap.getDomain(), id);
+    }
+
+    public static void clearList(){
+        ID_MAP.clear();
+    }
+
+    public static Map<String, IRecipe> getIdMap() {
+        return ID_MAP;
+    }
+
+    public static void setCurrentModId(String id){
+        CURRENT_MOD_ID = id;
+    }
+
+    protected void addToMap(IRecipe r) {
+        recipeMap.add(r);
+    }
+
+    /**
+     * Builds a recipe without adding it to a map.
+     *
+     * @return the recipe.
+     */
+    public IRecipe build() {
+        if (itemsOutput != null && !itemsOutput.isEmpty() && !Utils.areItemsValid(itemsOutput.toArray(new ItemStack[0]))) {
+            String id = this.id == null ? "": " Recipe ID: " + this.id;
+            Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT ITEMS INVALID!" + id + " Recipe map ID:" + recipeMap.getId());
+            return Utils.getEmptyRecipe();
+        }
+        if (fluidsOutput != null && !fluidsOutput.isEmpty() && !Utils.areFluidsValid(fluidsOutput.toArray(new FluidStack[0]))) {
+            String id = this.id == null ? "": " Recipe ID: " + this.id;
+            Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT FLUIDS INVALID!" + id + " Recipe map ID:" + recipeMap.getId());
+            return Utils.getEmptyRecipe();
+        }
+        if (ingredientInput == null) ingredientInput = Collections.emptyList();
+        if (this.amps < 1) this.amps = 1;
+        IRecipe recipe = buildRecipe();
+        if (!recipeMapOnly){
+            ResourceLocation advancementID = advancementBuilder != null ? new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath()) : null;
+            if (advancementBuilder != null){
+                this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
+            }
+            GTLibDynamics.FINISHED_RECIPE_CONSUMER.accept(new Result(this.id, recipe, advancementID));
+        }
+        return recipe;
+    }
+
+    protected IRecipe buildRecipe(){
+        Recipe recipe = new Recipe(
+                ingredientInput,
+                itemsOutput != null ? itemsOutput.toArray(new ItemStack[0]) : null,
+                fluidsInput != null ? fluidsInput : Collections.emptyList(),
+                fluidsOutput != null ? fluidsOutput.toArray(new FluidStack[0]) : null,
+                duration, power, special, amps
+        );
+        if (outputChances != null) recipe.addOutputChances(outputChances);
+        if (inputChances != null) recipe.addInputChances(inputChances);
+        recipe.setHidden(hidden);
+        recipe.setFake(fake);
+        recipe.addTags(new ObjectOpenHashSet<>(tags));
+        recipe.setId(this.id);
+        recipe.setMapId(this.recipeMap.getId());
+        return recipe;
+    }
+
+    public void getID(){
+        if (id == null){
+            if (itemsOutput != null && !itemsOutput.isEmpty()){
+                String id = RegistryUtils.getIdFromItem(itemsOutput.get(0).getItem()).toString() + "_recipe";
+                checkID(id);
+            } else if (fluidsOutput != null && !fluidsOutput.isEmpty()){
+                String id = RegistryUtils.getIdFromFluid(fluidsOutput.get(0).getFluid()).toString() + "_recipe";
+                checkID(id);
+            } else if (!ingredientInput.isEmpty() && ingredientInput.get(0).getItems().length > 0){
+                ItemStack stack = ingredientInput.get(0).getItems()[0];
+                String id = RegistryUtils.getIdFromItem(stack.getItem()).toString() + "_recipe";
+                checkID(id);
+            } else if (!fluidsInput.isEmpty()){
+                FluidIngredient ing = fluidsInput.get(0);
+                String id;
+                if (ing.getTag() != null){
+                    id = ing.getTag().location().toString() + "_recipe";
+                } else {
+                    List<FluidStack> list = Arrays.asList(ing.getStacks());
+                    if (!list.isEmpty()){
+                        id = RegistryUtils.getIdFromFluid(list.get(0).getFluid()).toString() + "_recipe";
+                    } else {
+                        id = Ref.ID + ":unknown_in_" + recipeMap.getId();
+                    }
+                }
+                checkID(id);
+            }
+        }
+    }
+
+    private void checkID(String id) {
+        if (ID_MAP.containsKey(id)){
+            String newID;
+            int i = 1;
+            do {
+                newID = id + "_" + i;
+                i++;
+            } while (ID_MAP.containsKey(newID));
+            id = newID;
+        }
+        this.id = new ResourceLocation(id);
+    }
+
+    public IRecipe add(String id, long duration, long power, long special) {
+        return add(id, duration, power, special, 1);
+    }
+
+    public IRecipe add(String domain, String id, long duration, long power, long special, int amps) {
+        this.duration = (int) duration;
+        this.power = power;
+        this.special = (int) special;
+        this.amps = amps;
+        return add(domain, id);
+    }
+
+    public IRecipe add(String id, long duration, long power, long special, int amps) {
+        return add(CURRENT_MOD_ID, id, duration, power, special, amps);
+    }
+
+    public IRecipe add(String id, long duration, long power) {
+        return add(id, duration, power, this.special);
+    }
+
+    public IRecipe add(String id, long duration) {
+        return add(id, duration, 0, this.special);
+    }
+
+    public RecipeBuilder ii(ItemLike... stacks) {
+        ingredientInput.addAll(Arrays.stream(stacks).map(Ingredient::of).toList());
+        return this;
+    }
+
+    public RecipeBuilder ii(Ingredient... stacks) {
+        ingredientInput.addAll(Arrays.asList(stacks));
+        return this;
+    }
+
+    public RecipeBuilder ii(List<Ingredient> stacks) {
+        ingredientInput.addAll(stacks);
+        return this;
+    }
+
+    public RecipeBuilder io(ItemStack... stacks) {
+        itemsOutput.addAll(Arrays.asList(stacks));
+        return this;
+    }
+
+    public RecipeBuilder io(Item... stacks) {
+        itemsOutput.addAll(Arrays.stream(stacks).map(Item::getDefaultInstance).toList());
+        return this;
+    }
+
+    public RecipeBuilder io(List<ItemStack> stacks) {
+        itemsOutput.addAll(stacks);
+        return this;
+    }
+
+    public RecipeBuilder fi(FluidStack... stacks) {
+        fluidsInput.addAll(Arrays.stream(stacks).map(FluidIngredient::of).toList());
+        return this;
+    }
+
+    public RecipeBuilder fi(FluidIngredient... stacks) {
+        fluidsInput.addAll(Arrays.asList(stacks));
+        return this;
+    }
+
+
+    public RecipeBuilder fi(List<FluidStack> stacks) {
+        fluidsInput.addAll(stacks.stream().map(FluidIngredient::of).toList());
+        return this;
+    }
+
+    public RecipeBuilder fo(FluidStack... stacks) {
+        fluidsOutput.addAll(Arrays.asList(stacks));
+        return this;
+    }
+
+    public RecipeBuilder fo(List<FluidStack> stacks) {
+        fluidsOutput.addAll(stacks);
+        return this;
+    }
+
+    public RecipeBuilder id(ResourceLocation id){
+        this.id = id;
+        return this;
+    }
+
+    public RecipeBuilder id(String modid, String name){
+        return id(new ResourceLocation(modid, recipeMap.getId() + "/" + name));
+    }
+
+    public RecipeBuilder id(String name){
+        return id(recipeMap.getDomain(), name);
+    }
+
+
+    public RecipeBuilder outputChances(double... values) {
+        int[] newChances = new int[values.length];
+        for (int i = 0; i < values.length; i++){
+            double chance = values[i];
+            newChances[i] = (int) (chance * 10000);
+        }
+        return outputChances(newChances);
+    }
+
+    /**
+     * 1000 = 10%, 7500 = 75%, 10 = 0.1%, 75 = .75% etc
+     **/
+    public RecipeBuilder outputChances(int... values){
+        outputChances = values;
+        return this;
+    }
+
+    public RecipeBuilder inputChances(double... values) {
+        int[] newChances = new int[values.length];
+        for (int i = 0; i < values.length; i++){
+            double chance = values[i];
+            newChances[i] = (int) (chance * 10000);
+        }
+        return inputChances(newChances);
+    }
+
+    /**
+     * 1000 = 10%, 7500 = 75%, 10 = 0.1%, 75 = .75% etc
+     **/
+    public RecipeBuilder inputChances(int... values){
+        inputChances = values;
+        return this;
+    }
+
+
+
+    public RecipeBuilder hide() {
+        hidden = true;
+        return this;
+    }
+
+    public RecipeBuilder fake(){
+        fake = true;
+        return this;
+    }
+
+    public RecipeBuilder recipeMapOnly(){
+        recipeMapOnly = true;
+        return this;
+    }
+
+    public RecipeBuilder tags(String... tags) {
+        this.tags = new ObjectOpenHashSet<>(tags);
+        return this;
+    }
+
+    public RecipeBuilder addCriterion(String name, CriterionTriggerInstance criterionIn) {
+        if (this.advancementBuilder == null) advancementBuilder = Advancement.Builder.advancement();
+        this.advancementBuilder.addCriterion(name, criterionIn);
+        return this;
+    }
+
+    public RecipeBuilder clearItemInputs(){
+        ingredientInput = new ObjectArrayList<>();
+        inputChances = null;
+        return this;
+    }
+
+    public RecipeBuilder clearItemOutputs(){
+        itemsOutput = new ObjectArrayList<>();
+        outputChances = null;
+        return this;
+    }
+
+    public RecipeBuilder clearFluidInputs(){
+        fluidsInput = new ObjectArrayList<>();
+        return this;
+    }
+
+    public RecipeBuilder clearFluidOutputs(){
+        fluidsOutput = new ObjectArrayList<>();
+        return this;
+    }
+
+    public void clear() {
+        itemsOutput = new ObjectArrayList<>();
+        ingredientInput = new ObjectArrayList<>();
+        fluidsInput = new ObjectArrayList<>();
+        fluidsOutput = new ObjectArrayList<>();
+        outputChances = null;
+        inputChances = null;
+        duration = special = 0;
+        power = 0;
+        hidden = false;
+        fake = false;
+        recipeMapOnly = false;
+        tags.clear();
+    }
+
+    public RecipeMap<?> getMap() {
+        return recipeMap;
+    }
+
+    public void setMap(RecipeMap<?> recipeMap) {
+        this.recipeMap = recipeMap;
+    }
+
+    private class Result implements FinishedRecipe{
+        ResourceLocation id;
+        ResourceLocation advancementID = null;
+        IRecipe recipe;
+        public Result(ResourceLocation id, IRecipe recipe){
+            this.id = id;
+            this.recipe = recipe;
+        }
+
+        public Result(ResourceLocation id, IRecipe recipe, ResourceLocation advancementID){
+            this.id = id;
+            this.recipe = recipe;
+            this.advancementID = advancementID;
+        }
+        @Override
+        public void serializeRecipeData(JsonObject json) {
+            recipeMap.getRecipeSerializer().toJson(json, recipe);
+        }
+
+        @Override
+        public ResourceLocation getId() {
+            return id;
+        }
+
+        @Override
+        public RecipeSerializer<?> getType() {
+            return recipeMap.getRecipeSerializer();
+        }
+
+        @Nullable
+        @Override
+        public JsonObject serializeAdvancement() {
+            if (advancementBuilder != null){
+                return advancementBuilder.serializeToJson();
+            }
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public ResourceLocation getAdvancementId() {
+            return advancementID;
+        }
+    }
+}

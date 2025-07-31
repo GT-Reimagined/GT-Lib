@@ -1,0 +1,38 @@
+package org.gtreimagined.gtlib.integration.kubejs;
+
+import dev.latvian.mods.kubejs.fluid.InputFluid;
+import dev.latvian.mods.kubejs.fluid.OutputFluid;
+import dev.latvian.mods.kubejs.item.InputItem;
+import dev.latvian.mods.kubejs.item.OutputItem;
+import dev.latvian.mods.kubejs.recipe.RecipeKey;
+import dev.latvian.mods.kubejs.recipe.component.BooleanComponent;
+import dev.latvian.mods.kubejs.recipe.component.FluidComponents;
+import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
+import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
+import dev.latvian.mods.kubejs.recipe.component.StringComponent;
+import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.recipe.map.RecipeMap;
+
+public interface MachineRecipeSchema {
+    StringComponent MAP_COMPONENT = new StringComponent("Unknown recipe map", s -> {
+        RecipeMap<?> rMap = GTAPI.get(RecipeMap.class, s);
+        return rMap != null;
+    });
+    RecipeKey<String> MAP = MAP_COMPONENT.key("map");
+    RecipeKey<InputItem[]> INPUT_ITEMS = ItemComponents.INPUT_ARRAY.key("inputItems").optional(new InputItem[]{}).exclude();
+    RecipeKey<InputFluid[]> INPUT_FLUIDS = FluidComponents.INPUT_ARRAY.key("inputFluids").optional(new InputFluid[]{}).exclude();
+    RecipeKey<Integer> DURATION = NumberComponent.INT.key("duration").optional(1).exclude();
+    RecipeKey<Long> POWER = NumberComponent.LONG.key("eu").optional(0L).preferred("power").exclude();
+    RecipeKey<OutputItem[]> OUTPUT_ITEMS = ItemComponents.OUTPUT_ARRAY.key("outputItems").optional((OutputItem[]) null).exclude();
+    RecipeKey<OutputFluid[]> OUTPUT_FLUIDS = FluidComponents.OUTPUT_ARRAY.key("outputFluids").optional((OutputFluid[]) null).exclude();
+    RecipeKey<Integer> AMPS = NumberComponent.INT.key("amps").optional(1).exclude();
+    RecipeKey<Integer> SPECIAL = NumberComponent.INT.key("special").optional(0).exclude();
+    RecipeKey<Boolean> HIDDEN = BooleanComponent.BOOLEAN.key("hidden").optional(false).exclude();
+    RecipeKey<Boolean> FAKE = BooleanComponent.BOOLEAN.key("fake").optional(false).exclude();
+    RecipeKey<Integer[]> OUTPUT_CHANCES = NumberComponent.INT.asArray().key("outputChances").optional((Integer[]) null).exclude();
+    RecipeKey<Integer[]> INPUT_CHANCES = NumberComponent.INT.asArray().key("inputChances").optional((Integer[]) null).exclude();
+
+    RecipeSchema SCHEMA = new RecipeSchema(KubeJSRecipe.class, KubeJSRecipe::new,
+            MAP, INPUT_ITEMS, INPUT_FLUIDS, DURATION, POWER, OUTPUT_ITEMS, OUTPUT_FLUIDS, AMPS, SPECIAL, HIDDEN, FAKE, OUTPUT_CHANCES, INPUT_CHANCES);
+}

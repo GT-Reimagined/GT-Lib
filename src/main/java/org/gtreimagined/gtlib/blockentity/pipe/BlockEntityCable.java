@@ -1,0 +1,126 @@
+package org.gtreimagined.gtlib.blockentity.pipe;
+
+import org.gtreimagined.gtlib.pipe.BlockCable;
+import org.gtreimagined.gtlib.pipe.types.Cable;
+import org.gtreimagined.gtlib.pipe.types.PipeType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.gtreimagined.tesseract.api.eu.EUHolder;
+import org.gtreimagined.tesseract.api.eu.IEUCable;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.EUGrid;
+import org.gtreimagined.tesseract.api.eu.EUNetwork;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+
+import java.util.Collection;
+
+public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> implements IEUCable {
+
+    private long holder;
+    private EUNetwork network;
+
+    public BlockEntityCable(T type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
+
+    @Override
+    public void onLoad() {
+        this.holder = EUHolder.create(this, 0);
+        super.onLoad();
+    }
+
+    @Override
+    protected void register() {
+        EUGrid.INSTANCE.addElement(this);
+    }
+
+    @Override
+    protected boolean deregister() {
+        EUGrid.INSTANCE.removeElement(this);
+        return true;
+    }
+
+    @Override
+    public Class<?> getCapClass() {
+        return IEnergyHandler.class;
+    }
+
+    @Override
+    public long getVoltage() {
+        return ((Cable<?>) getPipeType()).getTier().getVoltage();
+    }
+
+    @Override
+    public boolean insulated() {
+        return ((BlockCable<?>) this.getBlockState().getBlock()).insulated;
+    }
+
+    @Override
+    public long getHolder() {
+        return holder;
+    }
+
+    @Override
+    public void setHolder(long holder) {
+        this.holder = holder;
+    }
+
+    @Override
+    public double getLoss() {
+        return ((Cable<?>) getPipeType()).getLoss();
+    }
+
+    @Override
+    public int getAmps() {
+        return ((Cable<?>) getPipeType()).getAmps(getPipeSize());
+    }
+
+    @Override
+    public boolean connects(Direction direction) {
+        return canConnect(direction.get3DDataValue());
+    }
+
+    @Override
+    public boolean validate(Direction dir) {
+        if (!super.validate(dir)) return false;
+        BlockEntity tile = this.getCachedBlockEntity(dir);
+        if (tile == null) return false;
+        return tile instanceof IEUCable || tile.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY, dir.getOpposite()).isPresent();
+    }
+
+    @Override
+    public BlockEntity getBlockEntity() {
+        return this;
+    }
+
+    @Override
+    protected void serverTick(Level level, BlockPos pos, BlockState state) {
+        super.serverTick(level, pos, state);
+        //this.setHolder(EUHolder.create(this, 0));
+    }
+
+    @Override
+    public void getNeighbours(Collection<IEUCable> neighbours) {
+        for (Direction dir : Direction.values()) {
+            BlockEntity pipe = getCachedBlockEntity(dir);
+            if (pipe instanceof IEUCable cable) {
+                if (cable.connects(dir.getOpposite()) && connects(dir)){
+                    neighbours.add(cable);
+                }
+            }
+        }
+    }
+
+    @Override
+    public EUNetwork getNetwork() {
+        return network;
+    }
+
+    @Override
+    public void setNetwork(EUNetwork network) {
+        this.network = network;
+    }
+}

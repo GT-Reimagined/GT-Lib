@@ -1,0 +1,93 @@
+package org.gtreimagined.gtlib.datagen.providers;
+
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
+import org.gtreimagined.gtlib.datagen.IGTLibProvider;
+import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
+import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
+import org.gtreimagined.gtlib.fluid.GTFluid;
+import org.gtreimagined.gtlib.util.RegistryUtils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+
+public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> implements IGTLibProvider {
+
+    protected final String providerName;
+
+    public GTItemModelProvider(String providerDomain, String providerName) {
+        super(providerDomain, ITEM_FOLDER, GTItemModelBuilder::new);
+        this.providerName = providerName;
+    }
+
+    @Override
+    public String getName() {
+        return providerName;
+    }
+
+    @Override
+    public void run() {
+        registerModels();
+    }
+
+    @Override
+    public void onCompletion() {
+        buildAll();
+    }
+
+    protected void registerModels() {
+        processItemModels(modid);
+    }
+
+    public void processItemModels(String domain) {
+        GTAPI.all(Item.class, domain).forEach(i -> GTLibModelManager.onItemModelBuild(i, this));
+        GTAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onItemModelBuild(b, this));
+        GTAPI.all(GTFluid.class, domain).forEach(f -> {
+            modelAndTexture(f.getContainerItem(), "forge", "item/bucket").bucketProperties(f.getFluid());
+            modelAndTexture(f.getFluidBlock(), GTBlockModelBuilder.getSimple()).tex(a -> a.put("all", IClientFluidTypeExtensions.of(f.getFluidType()).getFlowingTexture().toString()));
+        });
+    }
+
+    public GTItemModelBuilder getBuilder(ItemLike item) {
+        return getBuilder(RegistryUtils.getIdFromItem(item.asItem()).getPath());
+    }
+
+    public GTItemModelBuilder tex(ItemLike item, ResourceLocation... textures) {
+        return tex(item, "minecraft:item/generated", textures);
+    }
+
+    public GTItemModelBuilder tex(ItemLike item, String parent, ResourceLocation... textures) {
+        GTItemModelBuilder builder = getBuilder(item);
+        builder.parent(new ResourceLocation(parent));
+        for (int i = 0; i < textures.length; i++) {
+            builder.texture("layer" + i, textures[i]);
+        }
+        return builder;
+    }
+
+    public GTItemModelBuilder blockItem(Block block) {
+        return blockItem(block.asItem());
+    }
+
+    public GTItemModelBuilder blockItem(ItemLike item) {
+        return withParent(RegistryUtils.getIdFromItem(item.asItem()).getPath(), modLoc("block/" + RegistryUtils.getIdFromItem(item.asItem()).getPath()));
+    }
+
+    public ResourceLocation existing(String domain, String path) {
+        return new ResourceLocation(domain, path);
+    }
+
+    public GTItemModelBuilder getGTBuilder(ItemLike item) {
+        return getBuilder(RegistryUtils.getIdFromItem(item.asItem()).getPath());
+    }
+
+    public GTItemModelBuilder modelAndTexture(ItemLike item, String namespace, String path) {
+        return getGTBuilder(item).parent(new ResourceLocation(namespace, path));
+    }
+
+    public GTItemModelBuilder modelAndTexture(ItemLike item, String resource) {
+        return getGTBuilder(item).parent(new ResourceLocation(resource));
+    }
+}

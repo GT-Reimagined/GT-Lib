@@ -1,0 +1,7 @@
+{
+  "parent": "gtlib:item/default",
+  "textures": {
+    "base": "item/bucket",
+    "fluid": "gtlib:item/mask/bucket_fluid"
+  }
+}
