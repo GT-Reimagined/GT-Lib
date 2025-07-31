@@ -36,15 +36,15 @@ versionRange="[9.7,)"
 ordering="AFTER"
 side="BOTH"
 [[mods]]
-modId="antimatter_shared"
+modId="gt"
 version="${version}"
-displayName="Antimatter Shared Data"
+displayName="GT Shared Data"
 displayURL="https://github.com/GT-Reimagined/GT-Lib"
 #logoFile="examplemod.png"
 credits="mitchej123, e99999, qubka, Vliro, repolainen, Muramasa, Rongmario for original AntimatterAPI"
 authors="Trinsdar"
 description='''Modid used for data shared betwen gtlib addons'''
-[[dependencies.antimatter_shared]]
+[[dependencies.gt]]
     modId="gtlib"
     mandatory=true
     versionRange="[0.0.1,)"

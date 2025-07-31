@@ -23,7 +23,7 @@ public class Ref {
      **/
     public static final String ID = "gtlib";
     public static final String NAME = "GTLib";
-    public static final String SHARED_ID = "antimatter_shared";
+    public static final String SHARED_ID = "gt";
 
     /**
      * Creative Tabs
