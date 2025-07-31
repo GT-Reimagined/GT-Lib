@@ -92,11 +92,11 @@ public class WorldGenHelper {
         if (stone == null || !stone.doesGenerateOre() || stone == VanillaStoneTypes.BEDROCK)
             return false;
         BlockState oreState = type == GTMaterialTypes.ORE ? GTMaterialTypes.ORE.get().get(material, stone).asState()
-                : GTMaterialTypes.ORE_SMALL.get().get(material, stone).asState();
+                : GTMaterialTypes.SMALL_ORE.get().get(material, stone).asState();
         if (!ORE_PREDICATE.test(existing))
             return false;
         boolean setState = setState(world, pos, oreState);
-        if (setState && (type == GTMaterialTypes.ORE || type == GTMaterialTypes.ORE_SMALL)){
+        if (setState && (type == GTMaterialTypes.ORE || type == GTMaterialTypes.SMALL_ORE)){
             ServerLevel serverLevel = null;
             if (world instanceof ServerLevel serverLevel1) serverLevel = serverLevel1;
             if (world instanceof WorldGenRegion worldGenRegion) serverLevel = worldGenRegion.getLevel();

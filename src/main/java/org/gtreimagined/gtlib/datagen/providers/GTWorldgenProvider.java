@@ -41,11 +41,6 @@ public class GTWorldgenProvider implements IGTLibProvider {
     }
 
     @Override
-    public void run(HashCache cache) throws IOException {
-
-    }
-
-    @Override
     public String getName() {
         return null;
     }

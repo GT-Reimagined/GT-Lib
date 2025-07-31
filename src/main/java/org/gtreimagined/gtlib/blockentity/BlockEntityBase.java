@@ -35,20 +35,28 @@ public abstract class BlockEntityBase<T extends BlockEntityBase<T>> extends Bloc
         try {
             BlockEntity entity;
             if (!blockEntityCache.asMap().containsKey(side)){
-                entity = level.getBlockEntity(this.getBlockPos().relative(side));
-                if (entity instanceof IExtendingBlockEntity extendingBlockEntity) {
-                    entity = extendingBlockEntity.getExtendedBlockEntity(side);
-                }
+                entity = findBlockEntity(side);
                 if (entity == null) return null;
             } else {
                 entity = null;
             }
             BlockEntity finalEntity = entity;
-            return blockEntityCache.get(side, () -> finalEntity);
+            BlockEntity cached = blockEntityCache.get(side, () -> finalEntity);
+            if (cached.isRemoved()) blockEntityCache.invalidate(side);
+            return !cached.isRemoved() ? cached : getCachedBlockEntity(side);
         } catch (ExecutionException e) {
             GTLib.LOGGER.error(e);
             return null;
         }
+    }
+
+    protected BlockEntity findBlockEntity(Direction side) {
+        BlockEntity entity;
+        entity = level.getBlockEntity(this.getBlockPos().relative(side));
+        if (entity instanceof IExtendingBlockEntity extendingBlockEntity) {
+            entity = extendingBlockEntity.getExtendedBlockEntity(side);
+        }
+        return entity;
     }
 
     public void onBlockUpdate(BlockPos neighbor) {

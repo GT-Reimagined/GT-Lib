@@ -94,6 +94,12 @@ public class CTRecipeBuilder {
     }
 
     @Method
+    public CTRecipeBuilder tags(String... tags){
+        recipeBuilder.tags(tags);
+        return this;
+    }
+
+    @Method
     public void build(String id, long duration, long power, long special) {
         build(id, duration, power, special, 1);
     }

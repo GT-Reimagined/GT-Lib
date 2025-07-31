@@ -90,7 +90,7 @@ public class ClientHandler implements IProxyHandler {
                 ModelUtils.setRenderLayer(f.getFlowingFluid(), RenderType.translucent());
             });
         });
-        GTAPI.all(Machine.class).stream().filter(Machine::renderAsTesr).filter(Machine::renderContainerLiquids).map(Machine::getTileType).distinct().forEach(i -> BlockEntityRenderers.register(i, MachineTESR::new));
+        GTAPI.all(Machine.class).stream().filter(Machine::renderAsTesr).filter(Machine::rendersContainedLiquids).map(Machine::getTileType).distinct().forEach(i -> BlockEntityRenderers.register(i, MachineTESR::new));
     }
 
     public static void onItemColorHandler(ItemColors colors) {

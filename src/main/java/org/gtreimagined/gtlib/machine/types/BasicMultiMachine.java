@@ -44,7 +44,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
                 tooltip.add(Utils.translatable("machine.structure.form"));
             }
         });
-        this.baseTexture((type, tier, state) -> type.getTiers().size() > 1 ? new Texture[]{new Texture(domain, "block/machine/base/" + type.getId() + "_" + tier.getId())} : new Texture[]{new Texture(domain, "block/machine/base/" + type.getId())});
+        this.setBaseTexture((type, tier, state) -> type.getTiers().size() > 1 ? new Texture[]{new Texture(domain, "block/machine/base/" + type.getId() + "_" + tier.getId())} : new Texture[]{new Texture(domain, "block/machine/base/" + type.getId())});
      }
 
     @Override

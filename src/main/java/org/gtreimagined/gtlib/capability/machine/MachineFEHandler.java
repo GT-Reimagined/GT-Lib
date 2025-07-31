@@ -17,12 +17,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import tesseract.api.fe.IFENode;
+import org.gtreimagined.tesseract.api.fe.IExtendedEnergyStorage;
 
 import java.util.List;
 import java.util.Optional;
 
-public class MachineFEHandler<T extends BlockEntityMachine<T>> extends FEHandler implements IMachineHandler, Dispatch.Sided<IFENode> {
+public class MachineFEHandler<T extends BlockEntityMachine<T>> extends FEHandler implements IMachineHandler, Dispatch.Sided<IExtendedEnergyStorage> {
     protected final T tile;
     protected List<IEnergyStorage> cachedItems = new ObjectArrayList<>();
 
@@ -129,12 +129,12 @@ public class MachineFEHandler<T extends BlockEntityMachine<T>> extends FEHandler
     }
 
     @Override
-    public LazyOptional<? extends IFENode> forSide(Direction side) {
+    public LazyOptional<? extends IExtendedEnergyStorage> forSide(Direction side) {
         return LazyOptional.of(() -> this);
     }
 
     @Override
-    public LazyOptional<? extends IFENode> forNullSide() {
+    public LazyOptional<? extends IExtendedEnergyStorage> forNullSide() {
         return LazyOptional.of(() -> this);
     }
 

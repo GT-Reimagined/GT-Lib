@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class FluidHandlerSidedWrapper implements IFluidNode {
     protected IFluidNode fluidHandler;
     protected Direction side;
-    CoverHandler<?> coverHandler;
+    protected CoverHandler<?> coverHandler;
 
     public FluidHandlerSidedWrapper(IFluidNode fluidHandler, CoverHandler<?> coverHandler, Direction side) {
         this.fluidHandler = fluidHandler;

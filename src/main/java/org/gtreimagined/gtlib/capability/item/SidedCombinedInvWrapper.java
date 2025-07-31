@@ -14,8 +14,8 @@ import java.util.function.Predicate;
 public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItemNode {
     protected Direction side;
     protected CoverHandler<?> coverHandler;
-    private final Predicate<Direction> inputFunction;
-    private final Predicate<Direction> outputFunction;
+    protected final Predicate<Direction> inputFunction;
+    protected final Predicate<Direction> outputFunction;
 
     public SidedCombinedInvWrapper(Direction side, CoverHandler<?> coverHandler, Predicate<Direction> inputFunction, Predicate<Direction> outputFunction, IItemHandlerModifiable... itemHandler) {
         super(itemHandler);
@@ -73,7 +73,7 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
 
     @Override
     public boolean isEmpty(int slot) {
-        return super.getStackInSlot(slot).isEmpty();
+        return this.getStackInSlot(slot).isEmpty();
     }
 
     @Override

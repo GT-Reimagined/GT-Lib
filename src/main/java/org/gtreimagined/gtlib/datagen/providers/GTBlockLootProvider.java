@@ -89,8 +89,8 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
         if (providerDomain.equals(Ref.ID)) {
             GTAPI.all(BlockPipe.class, this::add);
             GTAPI.all(BlockStorage.class, block -> {
-                if (block.getType() == RAW_ORE_BLOCK && block.getMaterial().has(CRUSHED)){
-                    tables.put(block, b -> createOreDropWithHammer(block, block.asItem(), CRUSHED.get(block.getMaterial()), 9 * MaterialTags.ORE_MULTI.get(block.getMaterial())));
+                if (block.getType() == RAW_ORE_BLOCK && block.getMaterial().has(CRUSHED_ORE)){
+                    tables.put(block, b -> createOreDropWithHammer(block, block.asItem(), CRUSHED_ORE.get(block.getMaterial()), 9 * MaterialTags.ORE_MULTI.get(block.getMaterial())));
                 } else {
                     add(block);
                 }
@@ -133,15 +133,6 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
         }
     }
 
-    @Override
-    public void run(HashCache cache) throws IOException {
-        /*loot();
-        for (Map.Entry<Block, Function<Block, LootTable.Builder>> e : tables.entrySet()) {
-            Path path = getPath(generator.getOutputFolder(), e.getKey().getRegistryName());
-            IDataProvider.save(GSON, cache, LootTableManager.toJson(e.getValue().apply(e.getKey()).setParameterSet(LootParameterSets.BLOCK).build()), path);
-        }*/
-    }
-
     protected void overrideBlock(Block block, Function<Block, LootTable.Builder> builderFunction){
         GLOBAL_TABLES.put(block, builderFunction);
     }
@@ -157,9 +148,9 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
     }
 
     protected void overrideSmallOre(Material ore, Function<BlockOre, LootTable.Builder> builderFunction){
-        if (ore.has(ORE_SMALL)){
+        if (ore.has(SMALL_ORE)){
             GTAPI.all(StoneType.class).stream().filter(s -> s.doesGenerateOre() && s != VanillaStoneTypes.BEDROCK).forEach(s -> {
-                if (ORE_SMALL.get().get(ore, s).asBlock() instanceof BlockOre blockOre) {
+                if (SMALL_ORE.get().get(ore, s).asBlock() instanceof BlockOre blockOre) {
                     GLOBAL_TABLES.put(blockOre, b -> builderFunction.apply((BlockOre) b));
                 }
             });
@@ -171,15 +162,15 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
             tables.put(block, b -> MaterialTags.CUSTOM_ORE_DROPS.getBuilderFunction(block.getMaterial()).apply(block));
             return;
         }
-        if (block.getOreType() == ORE_SMALL) return;
+        if (block.getOreType() == SMALL_ORE) return;
         tables.put(block, addToFortuneWithoutCustomDrops(block));
     }
 
     public static Function<Block, LootTable.Builder> addToFortuneWithoutCustomDrops(BlockOre block) {
         if (block.getOreType() == ORE) {
             Item drop;
-            if (block.getMaterial().has(CRUSHED) || block.getMaterial().has(DUST)){
-                drop = block.getMaterial().has(CRUSHED) ? CRUSHED.get(block.getMaterial()) : DUST.get(block.getMaterial());
+            if (block.getMaterial().has(CRUSHED_ORE) || block.getMaterial().has(DUST)){
+                drop = block.getMaterial().has(CRUSHED_ORE) ? CRUSHED_ORE.get(block.getMaterial()) : DUST.get(block.getMaterial());
             } else {
                 drop = null;
             }

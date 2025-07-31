@@ -43,8 +43,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.IConnectable;
-import tesseract.graph.Connectivity;
+import org.gtreimagined.tesseract.api.IConnectable;
+import org.gtreimagined.tesseract.api.Connectivity;
 
 import java.util.List;
 import java.util.Optional;
@@ -239,10 +239,10 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
             return;
         }*/
 
-        this.refreshConnection();
         if (pipe != null) {
             pipe.setConnection(side.getOpposite());
         }
+        this.refreshConnection();
     }
 
     public void clearConnection(Direction side) {
@@ -251,11 +251,11 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
         connection = Connectivity.clear(connection, side.get3DDataValue());
         virtualConnection = Connectivity.clear(virtualConnection, side.get3DDataValue());
         dispatch.invalidate(side);
-        this.refreshConnection();
         BlockEntityPipe<?> pipe = getPipe(side);
         if (pipe != null) {
             pipe.clearConnection(side.getOpposite());
         }
+        this.refreshConnection();
     }
 
     public void checkConnections(){

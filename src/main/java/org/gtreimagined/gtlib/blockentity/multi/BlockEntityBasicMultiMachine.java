@@ -51,7 +51,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 
 import java.util.Collections;
 import java.util.List;
@@ -409,7 +409,7 @@ public class BlockEntityBasicMultiMachine<T extends BlockEntityBasicMultiMachine
     @Override
     public void onLoad() {
         super.onLoad();
-        Structure struc = getMachineType().getStructure(getMachineTier());
+        Structure<T> struc = getMachineType().getStructure(getMachineTier());
         if (struc != null) {
             //StructureCache.add(level, worldPosition, struc.allPositions(this));
         }

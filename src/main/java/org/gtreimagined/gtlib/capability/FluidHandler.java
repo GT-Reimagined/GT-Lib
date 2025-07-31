@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.Serializable;
+import org.gtreimagined.tesseract.api.Serializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -250,25 +250,25 @@ public class FeatureVein extends GTFeature<NoneFeatureConfiguration> {
             int tZ = rand.nextInt(16) + posZ;
             int tY = rand.nextInt(224) - 54; // Y height can vary from -54 to 170 for small ores.
             pos.set(tX, tY, tZ);
-            setOre(world, pos, world.getBlockState(pos), vein.primary(), GTMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), vein.primary(), GTMaterialTypes.SMALL_ORE);
 
             tX = rand.nextInt(16) + posX;
             tZ = rand.nextInt(16) + posZ;
             tY = rand.nextInt(224) - 54; // Y height can vary from -54 to 170 for small ores.
             pos.set(tX, tY, tZ);
-            setOre(world, pos, world.getBlockState(pos), vein.secondary(), GTMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), vein.secondary(), GTMaterialTypes.SMALL_ORE);
 
             tX = rand.nextInt(16) + posX;
             tZ = rand.nextInt(16) + posZ;
             tY = rand.nextInt(224) - 54; // Y height can vary from -54 to 170 for small ores.
             pos.set(tX, tY, tZ);
-            setOre(world, pos, world.getBlockState(pos), vein.between(), GTMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), vein.between(), GTMaterialTypes.SMALL_ORE);
 
             tX = rand.nextInt(16) + posX;
             tZ = rand.nextInt(16) + posZ;
             tY = rand.nextInt(254) - 54; // Y height can vary from -54 to 200 for small ores.
             pos.set(tX, tY, tZ);
-            setOre(world, pos, world.getBlockState(pos), vein.sporadic(), GTMaterialTypes.ORE_SMALL);
+            setOre(world, pos, world.getBlockState(pos), vein.sporadic(), GTMaterialTypes.SMALL_ORE);
         }
         if (GTLibConfig.ORE_VEIN_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()){
             for (int rockCount = 0; rockCount < nRocks; rockCount++) {

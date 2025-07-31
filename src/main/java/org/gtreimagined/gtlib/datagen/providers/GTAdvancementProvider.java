@@ -54,24 +54,6 @@ public class GTAdvancementProvider implements DataProvider, IGTLibProvider {
         advancements.forEach(a -> a.accept(consumer));
     }
 
-    @Override
-    public void run(@NotNull CachedOutput cache) {
-        /*Path folder = this.gen.getOutputFolder();
-        Set<ResourceLocation> locs = new ObjectOpenHashSet<>();
-        Consumer<Advancement> consumer = a -> {
-            if (!locs.add(a.getId())) throw new IllegalStateException("Duplicate advancement " + a.getId());
-            else {
-                Path path = getPath(folder, a);
-                try {
-                    IDataProvider.save(Ref.GSON, cache, a.copy().serialize(), path);
-                } catch (IOException e) {
-                    LOGGER.error("Couldn't save advancement {}", path, e);
-                }
-            }
-        };
-        advancements.forEach(a -> a.accept(consumer));*/
-    }
-
     private Path getPath(Path path, Advancement advancement) {
         return path.resolve(String.join("", "data/", providerDomain, "/advancements/", advancement.getId().getPath(), ".json"));
     }

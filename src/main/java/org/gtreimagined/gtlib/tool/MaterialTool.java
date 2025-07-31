@@ -44,9 +44,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.context.TesseractItemContext;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandlerItem;
+import org.gtreimagined.tesseract.api.context.TesseractItemContext;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
 
 import java.util.List;
 import java.util.Locale;

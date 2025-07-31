@@ -99,10 +99,6 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
 
     }
 
-    @Override
-    public void run(HashCache cache) throws IOException {
-    }
-
     protected void addTranslations() {
         if (locale.startsWith("en")) english(providerDomain, locale);
         if (providerDomain.equals(Ref.ID)) processGTLibTranslations();
@@ -262,11 +258,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                     }
                 }
                 String[] split = getLocalizedMaterialType(t);
-                if (t == GTMaterialTypes.CRUSHED)
+                if (t == GTMaterialTypes.CRUSHED_ORE)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Crushed Ores"));
-                else if (t == GTMaterialTypes.CRUSHED_PURIFIED)
+                else if (t == GTMaterialTypes.PURIFIED_ORE)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Purified Ores"));
-                else if (t == GTMaterialTypes.CRUSHED_REFINED)
+                else if (t == GTMaterialTypes.REFINED_ORE)
                     add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Refined Ores"));
                 else if (t == GTMaterialTypes.RAW_ORE_BLOCK)
                     add(Ref.ID + ".rei.group." + t.getId(), "Raw Ore Blocks");
@@ -307,6 +303,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("machine.tank.capacity", "Stores %sMb of fluid");
         add("machine.structure.form", "Right click structure to form it after placing blocks");
         add("machine.generator.efficiency", "Efficiency: %s");
+        add("machine.overclock.no_cost", "Can be overclocked without additional Energy Loss");
         add("generic.amp", "Amperage");
         add("gtlib.tooltip.formula", "Hold Shift to show formula.");
         add("gtlib.tooltip.chemical_formula", "Formula: %s");
@@ -362,6 +359,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("gtlib.behaviour.1x0x2", "1x2 Mining");
         add("jei.category.gtlib.veins", "Vein Stats");
         add("jei.category.gtlib.small_ores", "Small Ore Stats");
+        add("jei.category.gtlib.stone_veins", "Stone Layer Vein Stats");
     }
 
     private final void pipeTranslations() {

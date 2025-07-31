@@ -58,11 +58,6 @@ public abstract class GTTagProvider<T> implements IGTLibProvider {
     protected abstract void processTags(String domain);
 
     @Override
-    public void run(HashCache cache) throws IOException {
-
-    }
-
-    @Override
     public boolean async() {
         return false;
     }
@@ -90,12 +85,15 @@ public abstract class GTTagProvider<T> implements IGTLibProvider {
         if (obj.getAsJsonPrimitive("replace").getAsBoolean()) tag.replace();
         JsonArray array = obj.getAsJsonArray("values");
         array.forEach(e -> {
-            String s = e.getAsString();
-            if (s.contains("#")){
-                tag.tag(new ResourceLocation(s.replace("#", "")));
-            } else {
-                tag.add(new ResourceLocation(s));
+            if (e.isJsonPrimitive()){
+                String s = e.getAsString();
+                if (s.contains("#")){
+                    tag.tag(new ResourceLocation(s.replace("#", "")));
+                } else {
+                    tag.add(new ResourceLocation(s));
+                }
             }
+
         });
         return tag;
     }

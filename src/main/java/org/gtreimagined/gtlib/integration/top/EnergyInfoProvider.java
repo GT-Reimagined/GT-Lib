@@ -14,8 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandler;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 
 public class EnergyInfoProvider implements IProbeInfoProvider {
     @Override

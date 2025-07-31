@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.Serializable;
+import org.gtreimagined.tesseract.api.Serializable;
 
 public interface ICoverHandler<T extends BlockEntity> extends Serializable {
 

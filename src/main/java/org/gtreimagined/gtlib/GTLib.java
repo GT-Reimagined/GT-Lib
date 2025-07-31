@@ -217,8 +217,8 @@ public class GTLib extends GTMod {
                                     l.add(ore);
                                 }
                             });
-                            GTMaterialTypes.ORE_SMALL.all().forEach(m -> {
-                                Block ore = GTMaterialTypes.ORE_SMALL.get().get(m, s).asBlock();
+                            GTMaterialTypes.SMALL_ORE.all().forEach(m -> {
+                                Block ore = GTMaterialTypes.SMALL_ORE.get().get(m, s).asBlock();
                                 if (ore instanceof BlockOre){
                                     l.add(ore);
                                 }

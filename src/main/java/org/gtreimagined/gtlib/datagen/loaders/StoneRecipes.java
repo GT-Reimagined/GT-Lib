@@ -36,8 +36,8 @@ public class StoneRecipes {
                 ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone), 'Q', ForgeTags.GEMS_QUARTZ_ALL), "CCC", "RRQ", "CCC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.LEVER,
                 ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', ROD.getMaterialTag(Wood)), "R", "C");
-        provider.addItemRecipe(output, "minecraft", "", "redstone", Items.PISTON,
-                ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone), 'I', INGOT.getMaterialTag(Iron), 'W', ItemTags.PLANKS), "WWW", "CIC", "CRC");
+        //provider.addItemRecipe(output, "minecraft", "", "redstone", Items.PISTON,
+        //        ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone), 'I', INGOT.getMaterialTag(Iron), 'W', ItemTags.PLANKS), "WWW", "CIC", "CRC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.DISPENSER,
                 ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone), 'B', Items.BOW), "CCC", "CBC", "CRC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.REPEATER,

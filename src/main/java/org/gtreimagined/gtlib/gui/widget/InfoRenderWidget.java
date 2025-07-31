@@ -9,9 +9,6 @@ import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
 import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import net.minecraft.client.Minecraft;
-import tesseract.TesseractGraphWrappers;
-import tesseract.api.ITickingController;
-import tesseract.api.gt.GTController;
 
 import static org.gtreimagined.gtlib.gui.ICanSyncData.SyncDirection.SERVER_TO_CLIENT;
 
@@ -64,53 +61,6 @@ public class InfoRenderWidget<T extends InfoRenderWidget<T>> extends Widget {
 
         public static WidgetSupplier build() {
             return builder((a, b) -> new MultiRenderWidget(a, b, (IInfoRenderer) a.handler));
-        }
-    }
-
-    public static class TesseractGTWidget extends InfoRenderWidget<TesseractGTWidget> {
-
-        public long voltAverage = 0;
-        public long ampAverage = 0;
-        //public int cableAverage = 0;
-        public double loss = 0;
-
-        protected TesseractGTWidget(GuiInstance gui, IGuiElement parent, IInfoRenderer<TesseractGTWidget> renderer) {
-            super(gui, parent, renderer);
-        }
-
-        @Override
-        public void init() {
-            super.init();
-            BlockEntityPipe<?> pipe = (BlockEntityPipe<?>) gui.handler;
-            final long pos = pipe.getBlockPos().asLong();
-            gui.syncLong(() -> {
-                ITickingController controller = TesseractGraphWrappers.GT_ENERGY.getController(pipe.getLevel(), pipe.getBlockPos().asLong());
-                if (controller == null) return 0L;
-                GTController gt = (GTController) controller;
-                return gt.getTotalVoltage();
-            }, a -> this.voltAverage = a, SERVER_TO_CLIENT);
-            gui.syncLong(() -> {
-                ITickingController controller = TesseractGraphWrappers.GT_ENERGY.getController(pipe.getLevel(), pipe.getBlockPos().asLong());
-                if (controller == null) return 0L;
-                GTController gt = (GTController) controller;
-                return gt.totalAmps();
-            }, a -> this.ampAverage = a, SERVER_TO_CLIENT);
-            /*gui.syncInt(() -> {
-                ITickingController controller = Tesseract.GT_ENERGY.getController(pipe.getLevel(), pipe.getBlockPos().asLong());
-                if (controller == null) return 0;
-                GTController gt = (GTController) controller;
-                return gt.cableFrameAverage(pos);
-            }, a -> this.cableAverage = a, SERVER_TO_CLIENT);*/
-            gui.syncDouble(() -> {
-                ITickingController controller = TesseractGraphWrappers.GT_ENERGY.getController(pipe.getLevel(), pipe.getBlockPos().asLong());
-                if (controller == null) return 0.0;
-                GTController gt = (GTController) controller;
-                return gt.totalLoss();
-            }, a -> this.loss = a, SERVER_TO_CLIENT);
-        }
-
-        public static WidgetSupplier build() {
-            return builder((a, b) -> new TesseractGTWidget(a, b, (IInfoRenderer<TesseractGTWidget>) a.handler));
         }
     }
 }

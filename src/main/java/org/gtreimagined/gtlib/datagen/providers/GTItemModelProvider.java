@@ -26,11 +26,6 @@ public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> imp
     }
 
     @Override
-    public void run(HashCache cache) throws IOException {
-
-    }
-
-    @Override
     public String getName() {
         return providerName;
     }

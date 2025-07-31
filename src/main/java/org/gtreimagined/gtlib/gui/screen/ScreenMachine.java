@@ -28,7 +28,7 @@ public class ScreenMachine<T extends BlockEntityMachine<T>, U extends ContainerM
     }
 
     protected void drawTitle(PoseStack stack, int mouseX, int mouseY) {
-        if (container.getTile().getMachineType().getGui().isTitleDrawingAllowed()) {
+        if (container.getTile().getMachineType().getGuiData().isTitleDrawingAllowed()) {
             Minecraft.getInstance().font.draw(stack, name, getCenteredStringX(name), 4, 0x404040);
         }
     }

@@ -8,6 +8,7 @@ import mcjty.theoneprobe.api.ProbeMode;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
+import org.gtreimagined.gtlib.machine.MachineFlag;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.resources.ResourceLocation;
@@ -35,11 +36,13 @@ public class RecipeInfoProvider implements IProbeInfoProvider {
                     return;
                 }
 
-                int currentProgress = recipeHandler.getCurrentProgress();
-                int maxProgress = recipeHandler.getMaxProgress();
+                long currentProgress = recipeHandler.isGenerator() ? recipeHandler.getPowerGenerated() : recipeHandler.getCurrentProgress();
+                long maxProgress = recipeHandler.isGenerator() ? recipeHandler.getTotalPowerToGenerate() : recipeHandler.getMaxProgress();
                 String text;
 
-                if (maxProgress < 20) {
+                if (recipeHandler.isGenerator()) {
+                    text = " /" + maxProgress + " " + (machine.has(MachineFlag.EU) ? "EU" : machine.has(MachineFlag.FE) ? "FE" : "");
+                } else if (maxProgress < 20) {
                     text = " / " + maxProgress + " t";
                 } else {
                     // Display progress as seconds if it's greater 1 second
@@ -48,9 +51,9 @@ public class RecipeInfoProvider implements IProbeInfoProvider {
                     text = " / " + maxProgress + " s";
                 }
 
-                if(recipeHandler.getMaxProgress() > 0 && machine.getMachineState() == MachineState.ACTIVE) {
+                if(maxProgress > 0 && machine.getMachineState() == MachineState.ACTIVE) {
                     IProbeInfo horizontalPane = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
-                    horizontalPane.text("Progress: ");
+                    horizontalPane.text(recipeHandler.isGenerator() ? "Power Generated" : "Progress: ");
                     horizontalPane.progress(currentProgress, maxProgress, probeInfo.defaultProgressStyle()
                             .suffix(text)
                             .filledColor(0xFF4CBB17)

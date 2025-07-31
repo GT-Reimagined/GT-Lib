@@ -10,6 +10,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.util.Utils;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -19,9 +22,6 @@ import snownee.jade.api.ui.BoxStyle;
 import snownee.jade.api.ui.IDisplayHelper;
 import snownee.jade.api.ui.IElementHelper;
 import snownee.jade.api.ui.IProgressStyle;
-import tesseract.api.forge.TesseractCaps;
-import tesseract.api.gt.IEnergyHandler;
-import tesseract.api.heat.IHeatHandler;
 
 public class EUProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
     private static final ResourceLocation ID = new ResourceLocation(Ref.ID, "eu_hu");

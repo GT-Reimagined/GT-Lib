@@ -36,8 +36,8 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tesseract.api.context.TesseractItemContext;
-import tesseract.api.gt.IEnergyHandlerItem;
+import org.gtreimagined.tesseract.api.context.TesseractItemContext;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
 
 import java.util.List;
 import java.util.Locale;

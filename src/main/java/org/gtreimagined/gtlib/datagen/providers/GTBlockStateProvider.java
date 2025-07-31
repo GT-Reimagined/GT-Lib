@@ -70,11 +70,6 @@ public class GTBlockStateProvider implements IGTLibProvider {
         this.blockModelProvider = function.apply(modid, providerName);
     }
 
-    @Override
-    public void run(HashCache cache) throws IOException {
-
-    }
-
     @NotNull
     @Override
     public String getName() {

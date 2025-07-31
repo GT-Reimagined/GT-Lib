@@ -21,7 +21,7 @@ import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
 import java.util.Collection;
 import java.util.Random;
 
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE_SMALL;
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.SMALL_ORE;
 
 public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
     public FeatureSmallOres() {
@@ -63,14 +63,14 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
         Collection<SmallOre> smallOres = SmallOreData.INSTANCE.getVeins(world.getLevel()).values();
         int spawned = 0;
         for (SmallOre smallOre : smallOres) {
-            if (!smallOre.material().has(ORE_SMALL)) continue;
+            if (!smallOre.material().has(SMALL_ORE)) continue;
             int minY = Math.max(worldMinY, smallOre.minY());
             int maxY = Math.min(worldMaxY, smallOre.maxY());
             int i = 0;
             for (int j = Math.max(1, smallOre.amountPerChunk() / 2 + random.nextInt(smallOre.amountPerChunk()) / 2); i < j; i++) {
                 BlockPos pos = new BlockPos(chunkCornerX + random.nextInt(16), minY + random.nextInt(Math.max(1, maxY - minY)), chunkCornerZ + random.nextInt(16));
                 if (!smallOre.isBiomeValid(world.getBiome(pos))) continue;
-                boolean spawn = WorldGenHelper.setOre(world, pos, smallOre.material(), GTMaterialTypes.ORE_SMALL);
+                boolean spawn = WorldGenHelper.setOre(world, pos, smallOre.material(), GTMaterialTypes.SMALL_ORE);
                 if (spawn) spawned++;
             }
         }

@@ -61,7 +61,7 @@ public class ScannerItem extends ItemBasic<ScannerItem> {
             tooltip.add(Utils.literal("Stones: " + GTAPI.all(BlockStone.class).size()));
             tooltip.add(Utils.literal("Data:"));
             tooltip.add(Utils.literal("Ore Materials: " + GTMaterialTypes.ORE.all().size()));
-            tooltip.add(Utils.literal("Small Ore Materials: " + GTMaterialTypes.ORE_SMALL.all().size()));
+            tooltip.add(Utils.literal("Small Ore Materials: " + GTMaterialTypes.SMALL_ORE.all().size()));
         }
     }
 

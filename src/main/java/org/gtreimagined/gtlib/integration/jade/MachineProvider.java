@@ -22,6 +22,9 @@ import snownee.jade.api.ui.BoxStyle;
 import snownee.jade.api.ui.IElementHelper;
 import snownee.jade.api.ui.IProgressStyle;
 
+import static org.gtreimagined.gtlib.machine.MachineFlag.EU;
+import static org.gtreimagined.gtlib.machine.MachineFlag.FE;
+
 public class MachineProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
     private static final ResourceLocation ID = new ResourceLocation(Ref.ID, "machine");
     public static MachineProvider INSTANCE = new MachineProvider();
@@ -31,20 +34,27 @@ public class MachineProvider implements IBlockComponentProvider, IServerDataProv
             MachineRecipeHandler<?> recipeHandler = machine.recipeHandler.orElse(null);
             if (recipeHandler != null && (!accessor.isServerConnected() || accessor.getServerData().contains("jadeProgress"))) {
                 IElementHelper helper = tooltip.getElementHelper();
-                int cur, max;
+                long cur, max;
                 boolean active;
+                boolean isGenerator = recipeHandler.isGenerator();
                 if (accessor.isServerConnected()) {
-                    cur = accessor.getServerData().getInt("jadeProgress");
-                    max = accessor.getServerData().getInt("jadeMaxProgress");
+                    cur = accessor.getServerData().getLong("jadeProgress");
+                    max = accessor.getServerData().getLong("jadeMaxProgress");
                     active = accessor.getServerData().getBoolean("jadeActive");
                 } else {
-                    cur = recipeHandler.getCurrentProgress();
-                    max = recipeHandler.getMaxProgress();
+                    cur = isGenerator ? recipeHandler.getPowerGenerated() : recipeHandler.getCurrentProgress();
+                    max = isGenerator ? recipeHandler.getTotalPowerToGenerate() : recipeHandler.getMaxProgress();
                     active = machine.getMachineState() == MachineState.ACTIVE;
                 }
                 if (max > 0 && active){
-                    String curText = ChatFormatting.WHITE + String.valueOf(max >= 20 ? Math.round(cur / 20.0) : cur) + ChatFormatting.GRAY;
-                    String maxText = (max >= 20 ? Math.round(max / 20.0) : max) + " " + (max >= 20 ? "s" : "t");
+                    String curText, maxText;
+                    if (isGenerator){
+                       curText = ChatFormatting.WHITE + String.valueOf(cur) + ChatFormatting.GRAY;
+                       maxText = max + (machine.has(EU) ? " EU" : machine.has(FE) ? " FE" : "") + " Generated";
+                    } else {
+                        curText = ChatFormatting.WHITE + String.valueOf(max >= 20 ? Math.round(cur / 20.0) : cur) + ChatFormatting.GRAY;
+                        maxText = (max >= 20 ? Math.round(max / 20.0) : max) + " " + (max >= 20 ? "s" : "t");
+                    }
                     MutableComponent text = Utils.translatable("jade.fe", curText, maxText).withStyle(ChatFormatting.WHITE);
                     IProgressStyle progressStyle = helper.progressStyle().color(0xFF4CBB17, 0xFF4CBB17);
                     tooltip.add(helper.progress((float) cur / max, text, progressStyle, BoxStyle.DEFAULT, true));
@@ -73,8 +83,13 @@ public class MachineProvider implements IBlockComponentProvider, IServerDataProv
     public void appendServerData(CompoundTag compoundTag, ServerPlayer serverPlayer, Level level, BlockEntity blockEntity, boolean b) {
         if (blockEntity instanceof BlockEntityMachine<?> machine){
             machine.recipeHandler.ifPresent(r -> {
-                compoundTag.putInt("jadeProgress", r.getCurrentProgress());
-                compoundTag.putInt("jadeMaxProgress", r.getMaxProgress());
+                if (r.isGenerator()){
+                    compoundTag.putLong("jadeProgress", r.getPowerGenerated());
+                    compoundTag.putLong("jadeMaxProgress", r.getTotalPowerToGenerate());
+                } else {
+                    compoundTag.putLong("jadeProgress", r.getCurrentProgress());
+                    compoundTag.putLong("jadeMaxProgress", r.getMaxProgress());
+                }
                 compoundTag.putBoolean("jadeActive", machine.getMachineState() == MachineState.ACTIVE);
             });
             if (machine instanceof BlockEntityBasicMultiMachine<?> multiMachine){

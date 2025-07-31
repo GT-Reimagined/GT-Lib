@@ -303,6 +303,9 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                 tooltip.add(Utils.translatable("machine.power.capacity").append(": ").append(Utils.literal("" + (getTier().getVoltage() * (getType().has(GENERATOR) ? 40L : 64L)))).withStyle(ChatFormatting.BLUE));
             }
         }
+        if (this.type.isNoOverclockCost()){
+            tooltip.add(Utils.translatable("machine.overclock.no_cost").withStyle(ChatFormatting.YELLOW));
+        }
         this.type.getTooltipFunctions().forEach(t -> t.getTooltips(this, stack, world, tooltip, flag));
         if (stack.getTag() != null && stack.getTag().contains("covers")){
             CompoundTag covers = stack.getTag().getCompound("covers");

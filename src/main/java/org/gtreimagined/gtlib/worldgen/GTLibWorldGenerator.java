@@ -109,10 +109,10 @@ public class GTLibWorldGenerator {
     public static void removeDecoratedFeatureFromAllBiomes(BiomeGenerationSettings.Builder builder, @NotNull final GenerationStep.Decoration stage, @NotNull final Feature<?> featureToRemove, BlockState... states) {
         if (states.length == 0) Utils.onInvalidData("No BlockStates specified to be removed!");
         Set<BlockState> set = Set.of(states);
-        // GTAPI.runLaterCommon(() -> {
-        //  for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
-        ((BiomeGenerationBuilderAccessor)builder).getFeatures().get(stage.ordinal()).removeIf(f -> isDecoratedFeatureDisabled(f.value().feature().value(), featureToRemove, set));
-
+        var features = ((BiomeGenerationBuilderAccessor)builder).getFeatures();
+        if (features.size() > stage.ordinal()){
+            features.get(stage.ordinal()).removeIf(f -> isDecoratedFeatureDisabled(f.value().feature().value(), featureToRemove, set));
+        }
     }
 
     /**
