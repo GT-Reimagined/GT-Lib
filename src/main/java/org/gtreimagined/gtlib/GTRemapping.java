@@ -25,14 +25,6 @@ public class GTRemapping {
             if (BE_REMAPPING_MAP.containsKey(r)){
                 return BE_REMAPPING_MAP.get(r);
             }
-            if (r.getNamespace().equals(Ref.SHARED_ID)){
-                if (r.getPath().startsWith("fluid_")){
-                    return new ResourceLocation(r.getNamespace(), r.getPath().replace("fluid_", "fluid_pipe_"));
-                }
-                if (r.getPath().startsWith("item_")){
-                    return new ResourceLocation(r.getNamespace(), r.getPath().replace("item_", "item_pipe_"));
-                }
-            }
             return null;
         });
     }

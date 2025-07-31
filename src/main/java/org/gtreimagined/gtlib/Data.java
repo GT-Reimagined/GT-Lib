@@ -137,12 +137,6 @@ public class Data {
                         .addButton(152, 63, APAD_RIGHT, false);
             });
         }
-        GTRemapping.remapCover(new ResourceLocation("antimatter", "output"), new ResourceLocation(Ref.ID, "output"));
-        GTRemapping.remapCover(new ResourceLocation("antimatter", "input"), new ResourceLocation(Ref.ID, "input"));
-        GTRemapping.remapCover(new ResourceLocation("antimatter", "muffler"), new ResourceLocation(Ref.ID, "muffler"));
-        GTRemapping.remapCover(new ResourceLocation("antimatter", "dynamo"), new ResourceLocation(Ref.ID, "dynamo"));
-        GTRemapping.remapCover(new ResourceLocation("antimatter", "energy"), new ResourceLocation(Ref.ID, "energy"));
-        GTRemapping.remap(new ResourceLocation("antimatter", "fluid_icon"), new ResourceLocation(Ref.ID, "fluid_icon"));
     }
 
     public static void postInit() {
