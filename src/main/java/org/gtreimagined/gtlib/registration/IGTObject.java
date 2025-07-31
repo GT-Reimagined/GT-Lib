@@ -20,7 +20,7 @@ public interface IGTObject {
     }
 
     /**
-     * Translates this AntimatterObject. Return null if there is no implementable translation.
+     * Translates this GTObject. Return null if there is no implementable translation.
      * @param lang the language to provide for.
      * @return a component to render.
      */

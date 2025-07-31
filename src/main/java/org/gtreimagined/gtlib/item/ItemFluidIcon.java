@@ -99,7 +99,7 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
 
     @Override
     public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
-        prov.getAntimatterBuilder(item).bucketProperties(stack, true, false).parent(new ResourceLocation(Ref.ID + ":item/bucket")).tex((map) -> {
+        prov.getGTBuilder(item).bucketProperties(stack, true, false).parent(new ResourceLocation(Ref.ID + ":item/bucket")).tex((map) -> {
             map.put("base", getDomain() + ":block/empty");
             map.put("cover", getDomain() + ":block/empty");
             map.put("fluid", getDomain() + ":item/mask/icon_fluid");

@@ -12,6 +12,7 @@ import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.json.JGTLibModel;
+import org.gtreimagined.gtlib.datagen.json.JGTLibModel.JGTLibModelSerializer;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
@@ -72,7 +73,7 @@ public class GTLibDynamics {
             .disableHtmlEscaping()
             .registerTypeAdapter(Advancement.Builder.class, (JsonSerializer<Advancement.Builder>) (src, typeOfSrc, context) -> src.serializeToJson())
             .registerTypeAdapter(FinishedRecipe.class, (JsonSerializer<FinishedRecipe>) (src, typeOfSrc, context) -> src.serializeRecipe())
-            .registerTypeAdapter(JGTLibModel.class, new JGTLibModel.JAntimatterModelSerializer())
+            .registerTypeAdapter(JGTLibModel.class, new JGTLibModelSerializer())
             .registerTypeAdapter(JTextures.class, new JTextures.Serializer())
             .registerTypeAdapter(JCondition.class, new JCondition.Serializer())
             .create();
