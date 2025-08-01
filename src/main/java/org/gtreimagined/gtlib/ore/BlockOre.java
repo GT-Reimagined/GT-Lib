@@ -52,7 +52,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     private final MaterialType<?> oreType;
 
     public BlockOre(String domain, Material material, StoneType stoneType, MaterialType<?> oreType, Properties properties) {
-        super(domain, oreType.getId() + "_" + material.getId() + "_" + stoneType.getId(), material, stoneType, getOreProperties(properties, stoneType));
+        super(domain, stoneType.getId() + "_" + oreType.getIdGetter().apply(material), material, stoneType, getOreProperties(properties, stoneType));
         this.oreType = oreType;
     }
 

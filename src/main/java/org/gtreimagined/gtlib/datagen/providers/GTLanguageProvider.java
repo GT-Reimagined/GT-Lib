@@ -13,6 +13,7 @@ import org.gtreimagined.gtlib.block.BlockStoneWall;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.cover.CoverFactory;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
@@ -257,23 +258,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                         return;
                     }
                 }
-                String[] split = getLocalizedMaterialType(t);
-                if (t == GTMaterialTypes.CRUSHED_ORE)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Crushed Ores"));
-                else if (t == GTMaterialTypes.PURIFIED_ORE)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Purified Ores"));
-                else if (t == GTMaterialTypes.REFINED_ORE)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Refined Ores"));
-                else if (t == GTMaterialTypes.RAW_ORE_BLOCK)
-                    add(Ref.ID + ".rei.group." + t.getId(), "Raw Ore Blocks");
-                else if (t == GTMaterialTypes.ITEM_CASING)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Item Casings"));
-                else if (split.length > 1) {
-                    if (t.isSplitName())
-                        add(Ref.ID + ".rei.group." + t.getId(), String.join("", split[0], " ", split[1], "s"));
-                    else
-                        add(Ref.ID + ".rei.group." + t.getId(), String.join("", split[1], " ", split[0], "s"));
-                } else add(Ref.ID + ".rei.group." + t.getId(), split[0] + "s");
+                add(Ref.ID + ".rei.group." + t.getId(), ((String) t.getLang().apply(GTLibMaterials.Iron)).replace(" Iron", "") + "s");
             });
             GTAPI.all(StoneType.class, s -> {
                 if (s instanceof CobbleStoneType){

@@ -53,6 +53,8 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     protected final Set<Material> materials = new ObjectLinkedOpenHashSet<>(); //Linked to preserve insertion order for JEI
     protected final Map<MaterialType<?>, TagKey<?>> tagMap = new Object2ObjectOpenHashMap<>();
     @Getter
+    protected String tagPrefix;
+    @Getter
     protected Function<Material, String> lang, idGetter;
     protected T getter;
     private boolean hidden = false;
@@ -69,7 +71,8 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
         this.unitValue = unitValue;
         this.layers = layers;
         this.splitName = id.contains("_");
-        this.tagMap.put(this, tagFromString(Utils.getConventionalMaterialType(this)));
+        this.tagPrefix = Utils.getConventionalMaterialType(this);
+        this.tagMap.put(this, tagFromString(this.tagPrefix));
         this.lang = m -> {
             String[] split = getLocalizedMaterialType(this);
             if (split.length > 1) {
@@ -169,7 +172,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     @SuppressWarnings("unchecked")
     public TagKey<Item> getMaterialTag(Material m) {
-        return (TagKey<Item>) tagFromString(String.join("", Utils.getConventionalMaterialType(this), "/", (getId().equals("raw_ore_block") ? "raw_" : ""), m.getId()));
+        return (TagKey<Item>) tagFromString(String.join("", this.tagPrefix, "/", (getId().equals("raw_ore_block") ? "raw_" : ""), m.getId()));
     }
 
     public RecipeIngredient getMaterialIngredient(Material m, int count) {
@@ -184,7 +187,8 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     public MaterialType<T> unSplitName() {
         splitName = false;
-        this.tagMap.put(this, tagFromString(Utils.getConventionalMaterialType(this)));
+        this.tagPrefix = Utils.getConventionalMaterialType(this);
+        this.tagMap.put(this, tagFromString(tagPrefix));
         return this;
     }
 
@@ -199,6 +203,12 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     public MaterialType<T> setIdGetter(Function<Material, String> idGetter){
         this.idGetter = idGetter;
+        return this;
+    }
+
+    public MaterialType<T> setTagPrefix(String prefix){
+        this.tagPrefix = prefix;
+        tagMap.put(this, tagFromString(prefix));
         return this;
     }
 

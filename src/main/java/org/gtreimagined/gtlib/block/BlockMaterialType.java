@@ -22,7 +22,7 @@ public class BlockMaterialType extends BlockBasic implements IColorHandler, IMat
     protected String textureFolder = "";
 
     public BlockMaterialType(String domain, Material material, MaterialType<?> type, Properties properties) {
-        super(domain, type.getId() + "_" + material.getId(), properties);
+        super(domain, type.getIdGetter().apply(material), properties);
         this.material = material;
         this.type = type;
     }

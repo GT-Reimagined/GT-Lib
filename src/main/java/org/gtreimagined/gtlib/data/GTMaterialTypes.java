@@ -113,13 +113,13 @@ public class GTMaterialTypes {
     static {
         BEARING_ROCK.set((m, s) -> {
             if (m == null || s == null || !s.doesGenerateOre() || !BEARING_ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(BEARING_ROCK, m, s);
-            BlockSurfaceRock rock = GTAPI.get(BlockSurfaceRock.class, "surface_rock_" + m.getId() + "_" + s.getId());
+            BlockSurfaceRock rock = GTAPI.get(BlockSurfaceRock.class, s.getId() + "_" + m.getId() + "_surface_rock");
             return new MaterialTypeBlock.Container(rock != null ? rock.defaultBlockState() : Blocks.AIR.defaultBlockState());
         });
         ROCK.set((m) -> {
             StoneType s = GTAPI.get(StoneType.class, m.getId());
             if (s == null || !ROCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ROCK, m, s);
-            BlockSurfaceRock rock = GTAPI.get(BlockSurfaceRock.class, "surface_rock_" + s.getId());
+            BlockSurfaceRock rock = GTAPI.get(BlockSurfaceRock.class, s.getId() + "_surface_rock");
             return new MaterialTypeBlock.Container(rock != null ? rock.defaultBlockState() : Blocks.AIR.defaultBlockState());
         });
         ORE.set((m, s) -> {
@@ -130,7 +130,7 @@ public class GTMaterialTypes {
                 }
             }
             if (m == null || s == null || !s.doesGenerateOre() || !ORE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE, m, s);
-            BlockOre block = GTAPI.get(BlockOre.class, ORE.getId() + "_" + m.getId() + "_" + s.getId());
+            BlockOre block = GTAPI.get(BlockOre.class, s.getId() + "_" + ORE.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         SMALL_ORE.set((m, s) -> {
@@ -142,12 +142,12 @@ public class GTMaterialTypes {
             }
             if (m == null || s == null || !SMALL_ORE.allowGen(m))
                 return MaterialTypeBlock.getEmptyBlockAndLog(SMALL_ORE, m, s);
-            BlockOre block = GTAPI.get(BlockOre.class, SMALL_ORE.getId() + "_" + m.getId() + "_" + Utils.getConventionalStoneType(s));
+            BlockOre block = GTAPI.get(BlockOre.class, s.getId() + "_" + SMALL_ORE.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         ORE_STONE.set(m -> {
             if (m == null || !ORE_STONE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE_STONE, m);
-            BlockOreStone block = GTAPI.get(BlockOreStone.class, ORE_STONE.getId() + "_" + m.getId());
+            BlockOreStone block = GTAPI.get(BlockOreStone.class, ORE_STONE.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         BLOCK.set(m -> {
@@ -158,7 +158,7 @@ public class GTMaterialTypes {
                 }
             }
             if (m == null || !BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(BLOCK, m);
-            BlockStorage block = GTAPI.get(BlockStorage.class, BLOCK.getId() + "_" + m.getId());
+            BlockStorage block = GTAPI.get(BlockStorage.class, BLOCK.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         RAW_ORE_BLOCK.set(m -> {
@@ -169,12 +169,12 @@ public class GTMaterialTypes {
                 }
             }
             if (m == null || !RAW_ORE_BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(RAW_ORE_BLOCK, m);
-            BlockStorage block = GTAPI.get(BlockStorage.class, RAW_ORE_BLOCK.getId() + "_" + m.getId());
+            BlockStorage block = GTAPI.get(BlockStorage.class, RAW_ORE_BLOCK.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         FRAME.set(m -> {
             if (m == null || !FRAME.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(FRAME, m);
-            BlockFrame block = GTAPI.get(BlockFrame.class, FRAME.getId() + "_" + m.getId());
+            BlockFrame block = GTAPI.get(BlockFrame.class, FRAME.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
 
@@ -213,7 +213,7 @@ public class GTMaterialTypes {
         CRUSHED_ORE.setLang(m -> "Crushed " + n.apply(m) + m.getDisplayNameString() + " Ore");
         PURIFIED_ORE.setLang(m -> "Purified " + n.apply(m) + m.getDisplayNameString() + " Ore");
         REFINED_ORE.setLang(m -> "Refined " + n.apply(m) + m.getDisplayNameString() + " Ore");
-        RAW_ORE.unSplitName().setLang(m -> "Raw " + n.apply(m) + m.getDisplayNameString()).setIdGetter(m -> "raw_" + m.getId());
+        RAW_ORE.unSplitName().setLang(m -> "Raw " + n.apply(m) + m.getDisplayNameString()).setIdGetter(m -> "raw_" + m.getId()).setTagPrefix("raw_materials");
         INGOT.setLang(m -> m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Bar" : "Ingot"));
         NUGGET.setLang(m -> m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Chip" : "Nugget"));
         GEM.setLang(Material::getDisplayNameString);
@@ -225,7 +225,7 @@ public class GTMaterialTypes {
         PLATE.setLang(m -> m.getDisplayNameString() + " " + p.apply(m));
         DENSE_PLATE.setLang(m -> "Dense " + m.getDisplayNameString() + " " + p.apply(m));
         TINY_PLATE.setLang(m -> "Tiny " + m.getDisplayNameString() + " " + p.apply(m));
-        ITEM_CASING.setLang(m -> m.getDisplayNameString() + " Item Casings");
+        ITEM_CASING.unSplitName().setLang(m -> m.getDisplayNameString() + " Item Casings");
         FOIL.setLang(m -> (m.has(RUBBERTOOLS) ? "Thin " : "") + m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Sheet" : "Foil"));
         FINE_WIRE.setIgnoreTextureSets();
         DRILL_BIT.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
@@ -242,8 +242,8 @@ public class GTMaterialTypes {
         SAW_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         SCREWDRIVER_TIP.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         SCYTHE_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
-        RAW_ORE_BLOCK.unSplitName().setLang(m -> "Block of Raw " + n.apply(m) + m.getDisplayNameString());
-        BLOCK.setLang(m -> "Block of " + m.getDisplayNameString());
+        RAW_ORE_BLOCK.unSplitName().setLang(m -> "Block of Raw " + n.apply(m) + m.getDisplayNameString()).setIdGetter(m -> "raw_" + m.getId() + "_block").setTagPrefix("storage_blocks");
+        BLOCK.setLang(m -> "Block of " + m.getDisplayNameString()).setTagPrefix("storage_blocks");
     }
 
     private static void replacements(){

@@ -67,7 +67,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
     protected final ImmutableMap<String, Texture> textureMap;
 
     public BlockSurfaceRock(String domain, Material material, StoneType stoneType) {
-        super(domain, "surface_rock_" + (material == Material.NULL ? "" :material.getId() + "_" ) + stoneType.getId(), Properties.of(net.minecraft.world.level.material.Material.DECORATION).explosionResistance(1.0f).instabreak().sound(SoundType.STONE).noCollission().noOcclusion());
+        super(domain, stoneType.getId() + (material == Material.NULL ? "" : "_" + material.getId()) +  "_surface_rock", Properties.of(net.minecraft.world.level.material.Material.DECORATION).explosionResistance(1.0f).instabreak().sound(SoundType.STONE).noCollission().noOcclusion());
         this.material = material;
         this.stoneType = stoneType;
         registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false));

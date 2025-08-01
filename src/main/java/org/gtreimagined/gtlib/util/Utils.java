@@ -1173,23 +1173,12 @@ public class Utils {
     }
 
     public static String getConventionalMaterialType(MaterialType<?> type) {
-        if (type.getId().equals("raw_ore")){
-            //thank forge for this stupid tag
-            return "raw_materials";
-        }
-        if (type.getId().equals("raw_ore_block") || type.getId().equals("block")){
-            return "storage_blocks";
-        }
-        if (type.getId().equals("ore_stone")){
-            return "ore_stones";
-        }
         String id = type.getId();
         int index = id.indexOf("_");
         if (index != -1 && type.isSplitName()) {
-            id = String.join("", id.substring(index + 1), "_", id.substring(0, index), "s");
-            if (id.contains("crushed")) id = StringUtils.replace(id, "crushed", "ore");
+            id = String.join("", id.substring(0, index), "_", id.substring(index + 1), "s");
             return id;
-        } else if (id.equals("crushed")) return StringUtils.replace(id, "crushed", "crushed_ores");
+        }
         return id.charAt(id.length() - 1) == 's' ? id.concat("es") : id.concat("s");
     }
 
@@ -1209,7 +1198,7 @@ public class Utils {
         String id = type.getId();
         int index = id.indexOf("_");
         if (index != -1 && type.isSplitName()) {
-            String joined = String.join("", id.substring(index + 1), "_", id.substring(0, index));
+            String joined = String.join("", id.substring(0, index), "_", id.substring(index + 1));
             return lowerUnderscoreToUpperSpaced(joined).split(" ");
         }
         return new String[]{lowerUnderscoreToUpperSpaced(id).replace('_', ' ')};
