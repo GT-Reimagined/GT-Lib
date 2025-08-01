@@ -130,7 +130,7 @@ public class GTMaterialTypes {
                 }
             }
             if (m == null || s == null || !s.doesGenerateOre() || !ORE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE, m, s);
-            BlockOre block = GTAPI.get(BlockOre.class, s.getId() + "_" + ORE.getIdGetter().apply(m));
+            BlockOre block = GTAPI.get(BlockOre.class, BlockOre.getId(s, ORE, m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         SMALL_ORE.set((m, s) -> {
@@ -142,7 +142,7 @@ public class GTMaterialTypes {
             }
             if (m == null || s == null || !SMALL_ORE.allowGen(m))
                 return MaterialTypeBlock.getEmptyBlockAndLog(SMALL_ORE, m, s);
-            BlockOre block = GTAPI.get(BlockOre.class, s.getId() + "_" + SMALL_ORE.getIdGetter().apply(m));
+            BlockOre block = GTAPI.get(BlockOre.class, BlockOre.getId(s, SMALL_ORE, m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
         }).blockType();
         ORE_STONE.set(m -> {

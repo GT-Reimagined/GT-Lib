@@ -46,18 +46,31 @@ import java.util.List;
 import java.util.Random;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
+import static org.gtreimagined.gtlib.util.Utils.getLocalizedMaterialType;
 
 public class BlockOre extends BlockMaterialStone implements ITextureProvider, IModelProvider, ISharedGTObject, Fallable {
 
     private final MaterialType<?> oreType;
 
     public BlockOre(String domain, Material material, StoneType stoneType, MaterialType<?> oreType, Properties properties) {
-        super(domain, stoneType.getId() + "_" + oreType.getIdGetter().apply(material), material, stoneType, getOreProperties(properties, stoneType));
+        super(domain, getId(stoneType, oreType, material), material, stoneType, getOreProperties(properties, stoneType));
         this.oreType = oreType;
     }
 
     public BlockOre(String domain, Material material, StoneType stoneType, MaterialType<?> oreType) {
         this(domain, material, stoneType, oreType, getOreProperties(Properties.of(stoneType.getBlockMaterial()), stoneType));
+    }
+
+    public static String getId(StoneType stoneType, MaterialType<?> materialType, Material material){
+        String[] split = getLocalizedMaterialType(materialType);
+        for (int i = 0; i < split.length; i++) {
+            split[i] = split[i].toLowerCase().replace(" ", "_");
+        }
+        if (split.length > 1) {
+            return String.join("", split[0], "_", stoneType.getId(), "_", material.getId(), "_", split[1]);
+        } else {
+            return String.join("", stoneType.getId(), "_", material.getId(), "_", split[0]);
+        }
     }
 
     @NotNull
