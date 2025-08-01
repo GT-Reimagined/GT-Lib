@@ -15,6 +15,7 @@ import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.fluid.GTFluid;
@@ -185,10 +186,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
             GTAPI.all(Material.class).forEach(m -> add("material.".concat(m.getId()), getLocalizedType(m)));
             GTAPI.all(BlockOre.class, o -> {
                 String nativeSuffix = o.getMaterial().getElement() != null ? "Native " : "";
+                String stoneType = o.getStoneType() == VanillaStoneTypes.STONE ? "" : getLocalizeStoneType(o.getStoneType()) + " ";
                 if (o.getOreType() == GTMaterialTypes.ORE)
-                    add(o, String.join("", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
+                    add(o, String.join("", stoneType, nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
                 else
-                    add(o, String.join("", "Small ", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
+                    add(o, String.join("", "Small ", stoneType, nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
             });
 
             GTAPI.all(BlockOreStone.class, o -> {
