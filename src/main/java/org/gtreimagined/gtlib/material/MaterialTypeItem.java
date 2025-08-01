@@ -45,7 +45,7 @@ public class MaterialTypeItem<T> extends MaterialType<T> {
         if (replacement == null) {
             if (!allowItemGen(material))
                 Utils.onInvalidData(String.join("", "GET ERROR - DOES NOT GENERATE: T(", id, ") M(", material.getId(), ")"));
-            else return GTAPI.get(MaterialItem.class, id + "_" + material.getId());
+            else return GTAPI.get(MaterialItem.class, idGetter.apply(material));
         }
         return replacement;
     }

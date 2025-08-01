@@ -53,7 +53,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     protected final Set<Material> materials = new ObjectLinkedOpenHashSet<>(); //Linked to preserve insertion order for JEI
     protected final Map<MaterialType<?>, TagKey<?>> tagMap = new Object2ObjectOpenHashMap<>();
     @Getter
-    protected Function<Material, String> lang;
+    protected Function<Material, String> lang, idGetter;
     protected T getter;
     private boolean hidden = false;
     @Getter
@@ -76,6 +76,14 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
                 return String.join("", split[0], " ", getLocalizedType(m), " ", split[1]);
             } else {
                 return String.join("", getLocalizedType(m), " ", split[0]);
+            }
+        };
+        this.idGetter = m -> {
+            String[] split = getLocalizedMaterialType(this);
+            if (split.length > 1) {
+                return String.join("", split[0].toLowerCase().replace(" ", "_"), "_", m.getId(), "_", split[1].toLowerCase().replace(" ", "_"));
+            } else {
+                return String.join("", m.getId(), "_", split[0].toLowerCase().replace(" ", "_"));
             }
         };
         register(MaterialType.class, getId());
@@ -187,6 +195,11 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     public MaterialType<T> setLang(BiFunction<MaterialType<?>, Material, String> lang){
         return setLang(m -> lang.apply(this, m));
+    }
+
+    public MaterialType<T> setIdGetter(Function<Material, String> idGetter){
+        this.idGetter = idGetter;
+        return this;
     }
 
     @Override

@@ -197,10 +197,10 @@ public class GTMaterialTypes {
     public static void init() {
         replacements();
         dependents();
-        lang();
+        defaults();
     }
 
-    private static void lang(){
+    private static void defaults(){
         Function<Material, String> d = m -> m.has(RUBBERTOOLS) ? "Pulp" : "Dust";
         DUST.setLang(m -> m.getDisplayNameString() + " " + d.apply(m));
         TINY_DUST.setLang(m -> "Tiny " + m.getDisplayNameString() +  " " + d.apply(m)).setHidden();
@@ -213,7 +213,7 @@ public class GTMaterialTypes {
         CRUSHED_ORE.setLang(m -> "Crushed " + n.apply(m) + m.getDisplayNameString() + " Ore");
         PURIFIED_ORE.setLang(m -> "Purified " + n.apply(m) + m.getDisplayNameString() + " Ore");
         REFINED_ORE.setLang(m -> "Refined " + n.apply(m) + m.getDisplayNameString() + " Ore");
-        RAW_ORE.unSplitName().setLang(m -> "Raw " + n.apply(m) + m.getDisplayNameString());
+        RAW_ORE.unSplitName().setLang(m -> "Raw " + n.apply(m) + m.getDisplayNameString()).setIdGetter(m -> "raw_" + m.getId());
         INGOT.setLang(m -> m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Bar" : "Ingot"));
         NUGGET.setLang(m -> m.getDisplayNameString() + " " + (m.has(RUBBERTOOLS) ? "Chip" : "Nugget"));
         GEM.setLang(Material::getDisplayNameString);
