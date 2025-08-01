@@ -39,25 +39,25 @@ import static org.gtreimagined.gtlib.material.MaterialTags.RUBBERTOOLS;
 public class GTMaterialTypes {
     //Item Types
     public static MaterialTypeItem<?> DUST = new MaterialTypeItem<>("dust", 2, true, U);
-    public static MaterialTypeItem<?> SMALL_DUST = new MaterialTypeItem<>("dust_small", 2, true, Ref.U4);
-    public static MaterialTypeItem<?> TINY_DUST = new MaterialTypeItem<>("dust_tiny", 2, true, Ref.U9);
-    public static MaterialTypeItem<?> IMPURE_DUST = new MaterialTypeItem<>("dust_impure", 2, true, -1);
-    public static MaterialTypeItem<?> PURE_DUST = new MaterialTypeItem<>("dust_pure", 2, true, -1);
-    public static MaterialTypeItem<?> CRUSHED_ORE = new MaterialTypeItem<>("crushed", 2, true, -1);
-    public static MaterialTypeItem<?> PURIFIED_ORE = new MaterialTypeItem<>("crushed_purified", 2, true, -1);
-    public static MaterialTypeItem<?> REFINED_ORE = new MaterialTypeItem<>("crushed_refined", 2, true, -1);
-    public static MaterialTypeItem<?> CHIPPED_GEM = new MaterialTypeItem<>("gem_chipped", 2, true, U4);
-    public static MaterialTypeItem<?> FLAWED_GEM = new MaterialTypeItem<>("gem_flawed", 2, true, U2);
+    public static MaterialTypeItem<?> SMALL_DUST = new MaterialTypeItem<>("small_dust", 2, true, Ref.U4);
+    public static MaterialTypeItem<?> TINY_DUST = new MaterialTypeItem<>("tiny_dust", 2, true, Ref.U9);
+    public static MaterialTypeItem<?> IMPURE_DUST = new MaterialTypeItem<>("impure_dust", 2, true, -1);
+    public static MaterialTypeItem<?> PURE_DUST = new MaterialTypeItem<>("pure_dust", 2, true, -1);
+    public static MaterialTypeItem<?> CRUSHED_ORE = new MaterialTypeItem<>("crushed_ore", 2, true, -1);
+    public static MaterialTypeItem<?> PURIFIED_ORE = new MaterialTypeItem<>("purified_ore", 2, true, -1);
+    public static MaterialTypeItem<?> REFINED_ORE = new MaterialTypeItem<>("refined_ore", 2, true, -1);
+    public static MaterialTypeItem<?> CHIPPED_GEM = new MaterialTypeItem<>("chipped_gem", 2, true, U4);
+    public static MaterialTypeItem<?> FLAWED_GEM = new MaterialTypeItem<>("flawed_gem", 2, true, U2);
     public static MaterialTypeItem<?> GEM = new MaterialTypeItem<>("gem", 2, true, U);
-    public static MaterialTypeItem<?> FLAWLESS_GEM = new MaterialTypeItem<>("gem_flawless", 2, true, U * 2);
-    public static MaterialTypeItem<?> EXQUISITE_GEM = new MaterialTypeItem<>("gem_exquisite", 2, true, U * 4);
+    public static MaterialTypeItem<?> FLAWLESS_GEM = new MaterialTypeItem<>("flawless_gem", 2, true, U * 2);
+    public static MaterialTypeItem<?> EXQUISITE_GEM = new MaterialTypeItem<>("exquisite_gem", 2, true, U * 4);
     public static MaterialTypeItem<?> NUGGET = new MaterialTypeItem<>("nugget", 2, true, Ref.U9);
     public static MaterialTypeItem<?> CHUNK = new MaterialTypeItem<>("chunk", 2, true, U4);
     public static MaterialTypeItem<?> INGOT = new MaterialTypeItem<>("ingot", 2, true, U);
-    public static MaterialTypeItem<?> HOT_INGOT = new MaterialTypeItem<>("ingot_hot", 2, true, U);
-    public static MaterialTypeItem<?> TINY_PLATE = new MaterialTypeItem<>("plate_tiny", 2, true, U9);
+    public static MaterialTypeItem<?> HOT_INGOT = new MaterialTypeItem<>("hot_ingot", 2, true, U);
+    public static MaterialTypeItem<?> TINY_PLATE = new MaterialTypeItem<>("tiny_plate", 2, true, U9);
     public static MaterialTypeItem<?> PLATE = new MaterialTypeItem<>("plate", 2, true, U, (a, b, c) -> CoverFactory.builder((u, v, t, w) -> new CoverPlate(u, v, t, w, b, c)).item((u, v) -> new CoverMaterialItem(u.getDomain(), b, u, c)).build(Ref.ID, "plate_" + c.getId()));
-    public static MaterialTypeItem<?> DENSE_PLATE = new MaterialTypeItem<>("plate_dense", 2, true, U * 9);
+    public static MaterialTypeItem<?> DENSE_PLATE = new MaterialTypeItem<>("dense_plate", 2, true, U * 9);
     public static MaterialTypeItem<MaterialTypeBlock.IOreGetter> BEARING_ROCK = new MaterialTypeItem<>("bearing_rock", 2, false, Ref.U4, (domain, type, mat) -> {
         GTAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).forEach(s -> GTAPI.register(BlockSurfaceRock.class, new BlockSurfaceRock(domain, mat, s)));
         new MaterialItem(domain, type, mat);
@@ -70,19 +70,19 @@ public class GTMaterialTypes {
         new MaterialItem(domain, type, mat);
     });
     public static MaterialTypeItem<?> RAW_ORE = new MaterialTypeItem<>("raw_ore", 2, true, -1);
-    public static MaterialTypeItem<?> SMALL_GEAR = new MaterialTypeItem<>("gear_small", 2, true, U);
+    public static MaterialTypeItem<?> SMALL_GEAR = new MaterialTypeItem<>("small_gear", 2, true, U);
     public static MaterialTypeItem<?> GEAR = new MaterialTypeItem<>("gear", 2, true, U * 4);
     public static MaterialTypeItem<?> ROTOR = new MaterialTypeItem<>("rotor", 2, true, (U * 4) + Ref.U4);
     public static MaterialTypeItem<?> ROD = new MaterialTypeItem<>("rod", 2, true, U2);
-    public static MaterialTypeItem<?> LONG_ROD = new MaterialTypeItem<>("rod_long", 2, true, U);
+    public static MaterialTypeItem<?> LONG_ROD = new MaterialTypeItem<>("long_rod", 2, true, U);
     public static MaterialTypeItem<?> SPRING = new MaterialTypeItem<>("spring", 2, true, U);
     public static MaterialTypeItem<?> LENS = new MaterialTypeItem<>("lens", 2, true, U * 3 / 4);
     public static MaterialTypeItem<?> BOLT = new MaterialTypeItem<>("bolt", 2, true, U8);
     public static MaterialTypeItem<?> SCREW = new MaterialTypeItem<>("screw", 2, true, Ref.U8);
     public static MaterialTypeItem<?> RING = new MaterialTypeItem<>("ring", 2, true, Ref.U4);
     public static MaterialTypeItem<?> FOIL = new MaterialTypeItem<>("foil", 2, true, U4);
-    public static MaterialTypeItem<?> ITEM_CASING = new MaterialTypeItem<>("casing_item", 1, true, U2);
-    public static MaterialTypeItem<?> FINE_WIRE = new MaterialTypeItem<>("wire_fine", 2, true, U8);
+    public static MaterialTypeItem<?> ITEM_CASING = new MaterialTypeItem<>("item_casing", 1, true, U2);
+    public static MaterialTypeItem<?> FINE_WIRE = new MaterialTypeItem<>("fine_wire", 2, true, U8);
     public static final MaterialTypeItem<?> SWORD_BLADE = new MaterialTypeItem<>("sword_blade", 2, true, U * 2);
     public static final MaterialTypeItem<?> PICKAXE_HEAD = new MaterialTypeItem<>("pickaxe_head", 2, true, U * 3);
     public static final MaterialTypeItem<?> SHOVEL_HEAD = new MaterialTypeItem<>("shovel_head", 2, true, U);
@@ -99,8 +99,8 @@ public class GTMaterialTypes {
     public static MaterialTypeItem<?> BUZZSAW_BLADE = new MaterialTypeItem<>("buzzsaw_blade", 2, true, U * 4);
     //Block Types
     public static MaterialTypeBlock<MaterialTypeBlock.IOreGetter> ORE = new MaterialTypeBlock<>("ore", 1, true, -1, (domain, type, mat) -> GTAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).filter(s -> !GTAPI.hasReplacement(((MaterialTypeBlock<?>)type).getMaterialTag(mat, s))).forEach(s -> new BlockOre(domain, mat, s, type)));
-    public static MaterialTypeBlock<MaterialTypeBlock.IOreGetter> SMALL_ORE = new MaterialTypeBlock<>("ore_small", 1, false, -1, (domain, type, mat) -> GTAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).filter(s -> !GTAPI.hasReplacement(((MaterialTypeBlock<?>)type).getMaterialTag(mat, s))).forEach(s -> new BlockOre(domain, mat, s, type)));
-    public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> ORE_STONE = new MaterialTypeBlock<>("ore_stone", 1, true, -1,(domain, type, mat) -> new BlockOreStone(domain, mat));
+    public static MaterialTypeBlock<MaterialTypeBlock.IOreGetter> SMALL_ORE = new MaterialTypeBlock<>("small_ore", 1, false, -1, (domain, type, mat) -> GTAPI.all(StoneType.class).stream().filter(StoneType::doesGenerateOre).filter(s -> !GTAPI.hasReplacement(((MaterialTypeBlock<?>)type).getMaterialTag(mat, s))).forEach(s -> new BlockOre(domain, mat, s, type)));
+    public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> ORE_STONE = new MaterialTypeBlock<>("dense_ore", 1, true, -1,(domain, type, mat) -> new BlockOreStone(domain, mat));
     public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> BLOCK = new MaterialTypeBlock<>("block", 1, false, U * 9, BlockStorage::new);
     public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> RAW_ORE_BLOCK = new MaterialTypeBlock<>("raw_ore_block", 2, false, -1, BlockStorage::new);
     public static MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> FRAME = new MaterialTypeBlock<>("frame", 1, true, U * 2, BlockFrame::new);
@@ -197,6 +197,10 @@ public class GTMaterialTypes {
     public static void init() {
         replacements();
         dependents();
+        lang();
+    }
+
+    private static void lang(){
         Function<Material, String> d = m -> m.has(RUBBERTOOLS) ? "Pulp" : "Dust";
         DUST.setLang(m -> m.getDisplayNameString() + " " + d.apply(m));
         TINY_DUST.setLang(m -> "Tiny " + m.getDisplayNameString() +  " " + d.apply(m)).setHidden();
