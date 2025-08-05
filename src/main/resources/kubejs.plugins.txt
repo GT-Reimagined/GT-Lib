@@ -1,1 +1,1 @@
-muramasa.antimatter.integration.kubejs.AntimatterKubeJS
+org.gtreimagined.gtlib.integration.kubejs.GTLibKubeJS
