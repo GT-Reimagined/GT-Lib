@@ -567,7 +567,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
     public void onMachineEvent(IMachineEvent event, Object... data) {
         if (tickingRecipe) return;
         if (event instanceof SlotType<?>) {
-            if (tile.getMachineState() == ACTIVE)
+            if (tile.getMachineState() == ACTIVE && activeRecipe != null)
                 return;
             if (tile.getMachineState() == POWER_LOSS) {
                 return;
