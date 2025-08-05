@@ -347,6 +347,8 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("jei.category.gtlib.veins", "Vein Stats");
         add("jei.category.gtlib.small_ores", "Small Ore Stats");
         add("jei.category.gtlib.stone_veins", "Stone Layer Vein Stats");
+        add("config.jade.plugin_gtlib.eu_hu", "EU and HU Plugin for GT Lib");
+        add("config.jade.plugin_gtlib.machine", "Machine Plugin for GT Lib");
     }
 
     private final void pipeTranslations() {
