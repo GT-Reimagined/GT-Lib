@@ -69,7 +69,7 @@ public class MaterialTypeItem<T> extends MaterialType<T> {
     @Override
     public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
         super.onRegistryBuild(registry);
-        if (registry != Keys.ITEMS) return;
+        if (registry != Keys.BLOCKS) return;
         if (doRegister()) {
             for (Material material : this.materials) {
                 if (!material.enabled) continue;
