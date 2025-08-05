@@ -2,6 +2,8 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import net.minecraft.data.DataGenerator;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTTools;
@@ -45,9 +47,11 @@ public class GTRecipeProvider extends RecipeProvider {
     @Getter
     private static final Set<ResourceLocation> RECIPES_TO_REMOVE = new HashSet<>();
 
+    public static final DataGenerator EMPTY_GENERATOR = new DataGenerator(FMLPaths.GAMEDIR.get().resolve("null"), Collections.emptyList(), null, false);
+
     @SuppressWarnings("ConstantConditions")
     public GTRecipeProvider(String providerDomain, String providerName) {
-        super(null);
+        super(EMPTY_GENERATOR);
         this.providerDomain = providerDomain;
         this.providerName = providerName;
     }
