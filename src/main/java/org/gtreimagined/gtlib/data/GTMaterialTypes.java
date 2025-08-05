@@ -195,9 +195,9 @@ public class GTMaterialTypes {
     }
 
     public static void init() {
-        replacements();
         dependents();
         defaults();
+        replacements();
     }
 
     private static void defaults(){
