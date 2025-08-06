@@ -3,7 +3,6 @@ package org.gtreimagined.gtlib.datagen;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.JsonSerializer;
-import dev.latvian.mods.kubejs.script.ScriptType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -21,10 +20,7 @@ import org.gtreimagined.gtlib.event.GTCraftingEvent;
 import org.gtreimagined.gtlib.event.GTLoaderEvent;
 import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.event.GTWorldGenEvent;
-import org.gtreimagined.gtlib.integration.kubejs.GTLibKubeJS;
-import org.gtreimagined.gtlib.integration.kubejs.GTWorldEvent;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
-import org.gtreimagined.gtlib.integration.kubejs.RecipeLoaderEventKubeJS;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
@@ -231,9 +227,7 @@ public class GTLibDynamics {
         GTAPI.all(RecipeMap.class, RecipeMap::reset);
         final Set<ResourceLocation> filter;
         if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
-            if (serverEvent) KubeJSRegistrar.checkKubeJSServerScriptManager();
-            RecipeLoaderEventKubeJS ev = RecipeLoaderEventKubeJS.createAndPost(serverEvent);
-            filter = ev.forLoaders;
+           filter = KubeJSRegistrar.getFilter(serverEvent);
         } else {
             filter = Collections.emptySet();
         }
@@ -253,12 +247,7 @@ public class GTLibDynamics {
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
-            GTWorldEvent ev = new GTWorldEvent();
-            GTLibKubeJS.WORLDGEN.post(ev);
-            veins.addAll(ev.VEINS);
-            stoneLayers.addAll(ev.STONE_LAYERS);
-            collisionMap.putAll(ev.COLLISION_MAP);
-            runRegular = !ev.disableBuiltin;
+            runRegular = KubeJSRegistrar.postWorldgenEvent(veins, stoneLayers, collisionMap);
         }
         if (runRegular) {
             GTWorldGenEvent ev = new GTWorldGenEvent(GTLib.INSTANCE);

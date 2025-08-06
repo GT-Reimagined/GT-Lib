@@ -173,7 +173,9 @@ public class GTLib extends GTMod {
                 this.tag(TagUtils.getBiomeTag(new ResourceLocation("is_swamp"))).add(Biomes.SWAMP);
             }
         });
-        KubeJSRegistrar.providerEvent(ev);
+        if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
+            KubeJSRegistrar.providerEvent(ev);
+        }
     }
 
     @Override
