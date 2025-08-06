@@ -101,7 +101,7 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
-        if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI) || GTAPI.isModLoaded(Ref.MOD_EMI)) return;
         runtime = jeiRuntime;
         //Remove fluid "blocks".
         List<ItemLike> list = new ArrayList<>();

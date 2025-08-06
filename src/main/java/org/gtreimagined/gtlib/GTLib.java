@@ -227,15 +227,6 @@ public class GTLib extends GTMod {
                     });
 
                 }
-                if (!GTLibConfig.SHOW_ROCKS.get()){
-                    GTMaterialTypes.BEARING_ROCK.all().forEach(m -> {
-                        GTAPI.all(StoneType.class, s -> {
-                            if (s.doesGenerateOre()) {
-                                l.add(GTMaterialTypes.BEARING_ROCK.get().get(m, s).asBlock());
-                            }
-                        });
-                    });
-                }
                 GTAPI.all(MaterialTypeItem.class, t -> {
                     if (!t.hidden()) return;
                     List<ItemLike> stacks = (List<ItemLike>) t.all().stream().map(obj -> t.get((Material)obj)).collect(Collectors.toList());
