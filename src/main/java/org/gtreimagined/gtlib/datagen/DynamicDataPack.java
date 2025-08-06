@@ -143,11 +143,15 @@ public class DynamicDataPack implements PackResources {
     @Nullable
     @Override
     public <T> T getMetadataSection(MetadataSectionSerializer<T> metaReader) {
-        if(metaReader.getMetadataSectionName().equals("pack")) {
+        String metadataSection = metaReader.getMetadataSectionName();
+        if(metadataSection.equals("pack")) {
             JsonObject object = new JsonObject();
             object.addProperty("pack_format", 9);
             object.addProperty("description", "runtime data pack");
             return metaReader.fromJson(object);
+        }
+        if (metadataSection.equals("filter")){
+            return null;
         }
         return metaReader.fromJson(new JsonObject());
     }
