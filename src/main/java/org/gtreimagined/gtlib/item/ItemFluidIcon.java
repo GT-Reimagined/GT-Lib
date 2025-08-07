@@ -58,10 +58,10 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.remove(0);
         stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(x -> {
             FluidStack fluid = x.getFluidInTank(0);
             if (fluid.isEmpty()) return;
+            tooltip.remove(0);
             List<Component> str = new ArrayList<>();
             str.add(FluidUtils.getFluidDisplayName(fluid));
             str.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(fluid.getFluid())).withStyle(ChatFormatting.RED));
