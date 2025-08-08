@@ -11,6 +11,7 @@ import org.gtreimagined.gtlib.behaviour.IDestroySpeed;
 import org.gtreimagined.gtlib.capability.energy.ItemEnergyHandler;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Camera;
@@ -48,6 +49,7 @@ import org.gtreimagined.tesseract.api.context.TesseractItemContext;
 import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -256,13 +258,32 @@ public class MaterialTool extends DiggerItem implements IGTTool {
     }
 
     @Override
+    public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+        Map<Enchantment, Integer> enchants = getAllEnchantments(stack);
+        if (enchants.containsKey(enchantment)) {
+            return enchants.get(enchantment);
+        }
+        return 0;
+    }
+
+    @Override
+    public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
+        Map<Enchantment, Integer> mainEnchants = MaterialTags.TOOLS.get(getPrimaryMaterial(stack)).toolEnchantment();
+        Map<Enchantment, Integer> enchants = new HashMap<>();
+        if (!mainEnchants.isEmpty()) {
+            mainEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack)).forEach(e -> enchants.put(e.getKey(), e.getValue()));
+        }
+        return enchants;
+    }
+
+    @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return !type.isPowered() && getTier(toRepair).getRepairIngredient().test(repair);
     }
 
     @Override
     public boolean isEnchantable(ItemStack stack) {
-        return true;
+        return false;
     }
 
     @Override

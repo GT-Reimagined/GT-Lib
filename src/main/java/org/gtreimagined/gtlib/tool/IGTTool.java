@@ -146,14 +146,6 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
         if (!primary.has(MaterialTags.TOOLS)){
             return stack;
         }
-        Map<Enchantment, Integer> mainEnchants = MaterialTags.TOOLS.get(primary).toolEnchantment();
-        if (!mainEnchants.isEmpty()) {
-            mainEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack)).forEach(e -> stack.enchant(e.getKey(), e.getValue()));
-            //return stack;
-        }
-        /*if (!handleEnchants.isEmpty()) {
-            handleEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack) && !mainEnchants.containsKey(e.getKey())).forEach(e -> stack.enchant(e.getKey(), e.getValue()));
-        }*/
         return stack;
     }
 
