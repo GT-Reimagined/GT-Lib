@@ -102,7 +102,7 @@ dependencies {
     modImplementation("maven.modrinth:carbon-config:${project.carbon_config_version}")
     jarJar("maven.modrinth:carbon-config:${project.carbon_config_version}"){
         version {
-            prefer(project.carbon_config_forge_version)
+            prefer(project.carbon_config_version)
         }
     }
     modImplementation("curse.maven:kubejs-238086:4377177")
