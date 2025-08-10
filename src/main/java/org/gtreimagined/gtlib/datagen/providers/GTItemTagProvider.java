@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
 import net.minecraft.tags.TagEntry;
+import net.minecraftforge.common.Tags;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
