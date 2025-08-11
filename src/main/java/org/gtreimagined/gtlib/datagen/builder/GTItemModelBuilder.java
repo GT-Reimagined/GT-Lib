@@ -38,7 +38,7 @@ public class GTItemModelBuilder extends GTModelBuilder<GTItemModelBuilder> {
     }
 
     public GTItemModelBuilder bucketLoader() {
-        super.loader(new ResourceLocation("forge", "bucket"));
+        super.loader(new ResourceLocation("forge", "fluid_container"));
         return this;
     }
 

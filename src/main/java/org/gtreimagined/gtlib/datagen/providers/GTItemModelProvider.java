@@ -45,7 +45,7 @@ public class GTItemModelProvider extends GTModelProvider<GTItemModelBuilder> imp
         GTAPI.all(Item.class, domain).forEach(i -> GTLibModelManager.onItemModelBuild(i, this));
         GTAPI.all(Block.class, domain).forEach(b -> GTLibModelManager.onItemModelBuild(b, this));
         GTAPI.all(GTFluid.class, domain).forEach(f -> {
-            modelAndTexture(f.getContainerItem(), "forge", "item/fluid_container").bucketProperties(f.getFluid());
+            modelAndTexture(f.getContainerItem(), "forge", "item/bucket").bucketProperties(f.getFluid());
             modelAndTexture(f.getFluidBlock(), GTBlockModelBuilder.getSimple()).tex(a -> a.put("all", IClientFluidTypeExtensions.of(f.getFluidType()).getFlowingTexture().toString()));
         });
     }
