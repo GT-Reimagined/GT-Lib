@@ -37,19 +37,14 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
         return (Item) this;
     }
 
-    default ItemStack resolveStack() {
-        Item item = (Item) this;
-        ItemStack stack = new ItemStack(item);
-        Map<Enchantment, Integer> mainEnchants = MaterialTags.ARMOR.get(getMat()).toolEnchantment();
-        if (!mainEnchants.isEmpty()) {
-            mainEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack)).forEach(e -> stack.enchant(e.getKey(), e.getValue()));
-            return stack;
-        }
-        return stack;
-    }
-
     default void onGenericAddInformation(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         if (getGTArmorType().getTooltip().size() != 0) tooltip.addAll(getGTArmorType().getTooltip());
+    }
+
+    default void appendEnchantmentNames(List<Component> tooltipComponents, Map<Enchantment, Integer> enchantments) {
+        for (var enchantment : enchantments.entrySet()){
+            tooltipComponents.add(enchantment.getKey().getFullname(enchantment.getValue()));
+        }
     }
 
     @Override
