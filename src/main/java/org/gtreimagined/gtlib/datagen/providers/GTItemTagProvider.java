@@ -105,12 +105,12 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
             });
             GTAPI.all(BlockStorage.class, storage -> {
                 MaterialType<?> type = storage.getType();
-                String name = String.join("", getConventionalMaterialType(type), "/", (type == RAW_ORE_BLOCK ? "raw_" : ""), storage.getMaterial().getId());
+                String name = String.join("", type.getTagPrefix(), "/", (type == RAW_ORE_BLOCK ? "raw_" : ""), storage.getMaterial().getId());
                 this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
             });
             GTAPI.all(BlockFrame.class, storage -> {
                 MaterialType<?> type = storage.getType();
-                String name = String.join("", getConventionalMaterialType(type), "/", storage.getMaterial().getId());
+                String name = String.join("", type.getTagPrefix(), "/", storage.getMaterial().getId());
                 this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
             });
             GTAPI.all(MaterialItem.class, item -> {

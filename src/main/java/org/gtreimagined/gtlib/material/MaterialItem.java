@@ -249,7 +249,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     }
 
     public TagKey<Item> getTag() {
-        return TagUtils.getForgelikeItemTag(String.join("", Utils.getConventionalMaterialType(type), "/", material.getId()));
+        return type.getMaterialTag(this.material);
     }
 
     public static boolean hasType(ItemStack stack, MaterialType<?> type) {

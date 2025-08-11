@@ -27,6 +27,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
+import static org.gtreimagined.gtlib.data.GTMaterialTypes.RAW_ORE_BLOCK;
 import static org.gtreimagined.gtlib.util.TagUtils.getBlockTag;
 import static org.gtreimagined.gtlib.util.TagUtils.getForgelikeBlockTag;
 import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
@@ -104,7 +105,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
             });
             GTAPI.all(BlockStorage.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
-                String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
+                String name = String.join("", block.getType().getTagPrefix(), "/", (block.getType() == RAW_ORE_BLOCK ? "raw_" : ""), block.getMaterial().getId());
                 if (block.getMaterial().has(MaterialTags.MINED_WITH_AXE)){
                     this.tag(GTTools.AXE.getToolType()).add(block);
                 } else {
@@ -114,7 +115,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
             });
             GTAPI.all(BlockFrame.class, block -> {
                 this.tag(block.getType().getTag()).add(block).replace(replace);
-                String name = String.join("", block.getType().getTag().location().getPath(), "/", (block.getType().getId().equals("raw_ore_block") ? "raw_" : ""), block.getMaterial().getId());
+                String name = String.join("", block.getType().getTagPrefix(), "/", block.getMaterial().getId());
                 if (block.getMaterial().has(MaterialTags.MINED_WITH_AXE)){
                     this.tag(GTTools.AXE.getToolType()).add(block);
                 } else {
