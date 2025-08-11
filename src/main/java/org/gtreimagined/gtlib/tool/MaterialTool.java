@@ -4,6 +4,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
@@ -146,9 +150,10 @@ public class MaterialTool extends DiggerItem implements IGTTool {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         onGenericAddInformation(stack, tooltip, flag);
         super.appendHoverText(stack, world, tooltip, flag);
+        appendEnchantmentNames(tooltip, getAllEnchantments(stack));
     }
 
-    //TODO figure out why I wrote the below todo
+        //TODO figure out why I wrote the below todo
     //TODO figure this out
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
@@ -254,7 +259,7 @@ public class MaterialTool extends DiggerItem implements IGTTool {
 
     @Override
     public int getEnchantmentValue(ItemStack stack) {
-        return getTier(stack).getEnchantmentValue();
+        return 0;
     }
 
     @Override
@@ -283,6 +288,11 @@ public class MaterialTool extends DiggerItem implements IGTTool {
 
     @Override
     public boolean isEnchantable(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }
 

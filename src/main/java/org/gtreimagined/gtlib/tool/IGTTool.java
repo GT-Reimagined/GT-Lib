@@ -209,6 +209,12 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
         IBasicGTTool.super.onGenericAddInformation(stack, tooltip, flag);
     }
 
+    default void appendEnchantmentNames(List<Component> tooltipComponents, Map<Enchantment, Integer> enchantments) {
+        for (var enchantment : enchantments.entrySet()){
+            tooltipComponents.add(enchantment.getKey().getFullname(enchantment.getValue()));
+        }
+    }
+
     default void refillTool(ItemStack stack, Player player){
         if (this.getGTToolType().isPowered()) {
             Streams.concat(player.getInventory().items.stream(), player.getInventory().offhand.stream(), CuriosHelper.getCuriosItems(player, "belt", "back")).forEach(s -> {
