@@ -295,11 +295,13 @@ public class MaterialTool extends DiggerItem implements IGTTool {
         return (!type.isPowered() || (enchantment != Enchantments.UNBREAKING && enchantment != Enchantments.MENDING)) && enchantment.category.canEnchant(stack.getItem());
     }
 
-    public boolean hasContainerItem(ItemStack stack) {
+    @Override
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
         return type.hasContainer();
     }
 
-    public ItemStack getContainerItem(ItemStack oldStack) {
+    @Override
+    public ItemStack getCraftingRemainingItem(ItemStack oldStack) {
         return getGenericContainerItem(oldStack);
     }
 
