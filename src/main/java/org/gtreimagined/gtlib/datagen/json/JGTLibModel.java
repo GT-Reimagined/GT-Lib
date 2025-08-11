@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class JGTLibModel extends JRotationModel {
     List<JConfigEntry> config;
+    String renderType, renderTypeFast;
     Map<String, Object> properties = new Object2ObjectArrayMap<>();
 
     public static JGTLibModel model() {
@@ -32,6 +33,16 @@ public class JGTLibModel extends JRotationModel {
         JGTLibModel model = new JGTLibModel();
         model.elements = null;
         return model;
+    }
+
+    public JGTLibModel renderType(String renderType) {
+        this.renderType = renderType;
+        return this;
+    }
+
+    public JGTLibModel renderTypeFast(String renderTypeFast) {
+        this.renderTypeFast = renderTypeFast;
+        return this;
     }
 
     public JGTLibModel property(String id, Object object){
@@ -57,6 +68,12 @@ public class JGTLibModel extends JRotationModel {
             }
             if (src.ambientocclusion != null){
                 object.addProperty("ambientocclusion", src.ambientocclusion);
+            }
+            if (src.renderType != null) {
+                object.addProperty("render_type", src.renderType);
+            }
+            if (src.renderTypeFast != null) {
+                object.addProperty("render_type_fast", src.renderTypeFast);
             }
             if (src.display != null){
                 object.add("display", context.serialize(src.display));

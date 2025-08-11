@@ -265,19 +265,35 @@ public abstract class GTModelProvider<T extends GTModelBuilder<T>> {
     }
 
     public T doorBottomLeft(String name, ResourceLocation bottom, ResourceLocation top) {
-        return door(name, "door_bottom", bottom, top);
+        return this.door(name, "door_bottom_left", bottom, top);
+    }
+
+    public T doorBottomLeftOpen(String name, ResourceLocation bottom, ResourceLocation top) {
+        return this.door(name, "door_bottom_left_open", bottom, top);
     }
 
     public T doorBottomRight(String name, ResourceLocation bottom, ResourceLocation top) {
-        return door(name, "door_bottom_rh", bottom, top);
+        return this.door(name, "door_bottom_right", bottom, top);
+    }
+
+    public T doorBottomRightOpen(String name, ResourceLocation bottom, ResourceLocation top) {
+        return this.door(name, "door_bottom_right_open", bottom, top);
     }
 
     public T doorTopLeft(String name, ResourceLocation bottom, ResourceLocation top) {
-        return door(name, "door_top", bottom, top);
+        return this.door(name, "door_top_left", bottom, top);
+    }
+
+    public T doorTopLeftOpen(String name, ResourceLocation bottom, ResourceLocation top) {
+        return this.door(name, "door_top_left_open", bottom, top);
     }
 
     public T doorTopRight(String name, ResourceLocation bottom, ResourceLocation top) {
-        return door(name, "door_top_rh", bottom, top);
+        return this.door(name, "door_top_right", bottom, top);
+    }
+
+    public T doorTopRightOpen(String name, ResourceLocation bottom, ResourceLocation top) {
+        return this.door(name, "door_top_right_open", bottom, top);
     }
 
     public T trapdoorBottom(String name, ResourceLocation texture) {
@@ -314,6 +330,10 @@ public abstract class GTModelProvider<T extends GTModelBuilder<T>> {
 
     public T carpet(String name, ResourceLocation wool) {
         return singleTexture(name, BLOCK_FOLDER + "/carpet", "wool", wool);
+    }
+
+    public T leaves(String name, ResourceLocation texture) {
+        return this.singleTexture(name, "block/leaves", "all", texture).renderType("cutout_mipped", "solid");
     }
 
     /**
