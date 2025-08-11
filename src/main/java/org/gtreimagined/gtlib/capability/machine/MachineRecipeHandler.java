@@ -130,6 +130,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             if (tickTimer > 0) {
                 return;
             }
+            if (activeRecipe == null) checkRecipe();
         }
         if (tile.getMachineState() == OUTPUT_FULL) {
             if (canOutput()) {
