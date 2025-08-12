@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
+import net.minecraft.world.item.crafting.RecipeManager;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
@@ -15,6 +16,7 @@ import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.BasicMultiMachine;
 import org.gtreimagined.gtlib.machine.types.Machine;
+import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.structure.Pattern;
@@ -27,6 +29,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -76,6 +79,21 @@ public class GTLibXEIPlugin {
                 registerCategory(r, BACKUP_MAP_GUI, Tier.LV, null, false);
             }
         });
+    }
+
+    public static List<IRecipe> getRecipes(IRecipeMap recipeMap, RecipeManager manager){
+        if (manager == null) return Collections.emptyList();
+        List<IRecipe> recipes = new ArrayList<>(manager.getAllRecipesFor(recipeMap.getRecipeType()).stream().filter(r -> r.getMapId().equals(recipeMap.getId()) && !r.isHidden()).toList());
+        if (recipeMap.getProxy() != null && recipeMap instanceof RecipeMap<?> map) {
+            List<net.minecraft.world.item.crafting.Recipe<?>> proxyRecipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(recipeMap.getProxy().loc());
+            proxyRecipes.forEach(recipe -> {
+                IRecipe recipe1 = recipeMap.getProxy().handler().apply(recipe, map.RB());
+                if (recipe1 != null && !recipe1.isHidden()){
+                    recipes.add(recipe1);
+                }
+            });
+        }
+        return recipes;
     }
 
     public static void registerCategory(IRecipeMap map, GuiData gui, Tier tier, ResourceLocation model, boolean override) {

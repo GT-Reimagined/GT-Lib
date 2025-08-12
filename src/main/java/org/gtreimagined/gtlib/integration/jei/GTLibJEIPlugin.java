@@ -182,9 +182,9 @@ public class GTLibJEIPlugin implements IModPlugin {
         if (helpers == null) helpers = registration.getJeiHelpers();
         GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (tuple.map.getSubCategories().isEmpty()) {
-                registration.addRecipes(RECIPE_TYPES.get(id.toString()), getRecipes(tuple.map));
+                registration.addRecipes(RECIPE_TYPES.get(id.toString()), GTLibXEIPlugin.getRecipes(tuple.map, getRecipeManager()));
             } else {
-                List<IRecipe> recipes = getRecipes(tuple.map);
+                List<IRecipe> recipes = GTLibXEIPlugin.getRecipes(tuple.map, getRecipeManager());
                 List<IRecipe> mainRecipes = new ArrayList<>();
                 Map<String, List<IRecipe>> recipeMap = new HashMap<>();
                 for (IRecipe recipe : recipes) {
@@ -223,22 +223,6 @@ public class GTLibJEIPlugin implements IModPlugin {
         });
         registration.addRecipes(StoneVeinCategory.STONE_VEINS, stoneVeins);
         MultiMachineInfoCategory.registerRecipes(registration);
-    }
-
-    private List<IRecipe> getRecipes(IRecipeMap recipeMap){
-        RecipeManager manager = getRecipeManager();
-        if (manager == null) return Collections.emptyList();
-        List<IRecipe> recipes = new ArrayList<>(manager.getAllRecipesFor(recipeMap.getRecipeType()).stream().filter(r -> r.getMapId().equals(recipeMap.getId()) && !r.isHidden()).toList());
-        if (recipeMap.getProxy() != null && recipeMap instanceof RecipeMap<?> map) {
-            List<net.minecraft.world.item.crafting.Recipe<?>> proxyRecipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(recipeMap.getProxy().loc());
-            proxyRecipes.forEach(recipe -> {
-                IRecipe recipe1 = recipeMap.getProxy().handler().apply(recipe, map.RB());
-                if (recipe1 != null && !recipe1.isHidden()){
-                    recipes.add(recipe1);
-                }
-            });
-        }
-        return recipes;
     }
 
     private RecipeManager getRecipeManager(){

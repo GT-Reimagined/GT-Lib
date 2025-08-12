@@ -278,7 +278,9 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
             pipeTranslations();
             GTAPI.all(RecipeMap.class, t -> {
                 String id = "jei.category." + t.getId();
+                String emiID = "emi.category.gt." + t.getId();
                 add(id, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
+                add(emiID, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
             });
         }
     }
