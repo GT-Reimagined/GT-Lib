@@ -55,15 +55,14 @@ public class GTLibEmiPlugin implements EmiPlugin {
             GuiData gui = tuple.gui;
             int4 area = gui.getArea();
             EmiRecipeCategory mainCategory = new EmiRecipeCategory(tuple.map.getLoc(),
-                    createIcon(tuple.map.getIcon(), tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)),
-                    new EmiTexture(gui.getTexture(tuple.tier, "machine"), area.x, area.y, area.z, area.w));
+                    createIcon(tuple.map.getIcon(), tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)));
             emiRegistry.addCategory(mainCategory);
             Map<String, EmiRecipeCategory> subCategories = new HashMap<>();
             if (!tuple.map.getSubCategories().isEmpty()){
                 tuple.map.getSubCategories().forEach((s, subCategory) -> {
                     ResourceLocation subCategoryId = new ResourceLocation(Ref.SHARED_ID, s);
                     EmiRecipeCategory subEmiCategory = new EmiRecipeCategory(subCategoryId,
-                            createIcon(subCategory.icon().get(), null), mainCategory.simplified);
+                            createIcon(subCategory.icon().get(), null));
                     subCategories.put(s, subEmiCategory);
                     emiRegistry.addCategory(subEmiCategory);
                 });

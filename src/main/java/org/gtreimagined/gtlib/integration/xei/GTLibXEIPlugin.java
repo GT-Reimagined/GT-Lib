@@ -87,7 +87,7 @@ public class GTLibXEIPlugin {
         if (recipeMap.getProxy() != null && recipeMap instanceof RecipeMap<?> map) {
             List<net.minecraft.world.item.crafting.Recipe<?>> proxyRecipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(recipeMap.getProxy().loc());
             proxyRecipes.forEach(recipe -> {
-                IRecipe recipe1 = recipeMap.getProxy().handler().apply(recipe, map.RB());
+                IRecipe recipe1 = recipeMap.getProxy().handler().apply(recipe, map.RB().tags("emi_proxy"));
                 if (recipe1 != null && !recipe1.isHidden()){
                     recipes.add(recipe1);
                 }

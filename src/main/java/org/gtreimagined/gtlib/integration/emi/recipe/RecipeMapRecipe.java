@@ -5,6 +5,7 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.constants.VanillaTypes;
@@ -12,6 +13,8 @@ import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -43,6 +46,7 @@ public class RecipeMapRecipe implements EmiRecipe {
     Tier guiTier;
     int fluidInputOffset;
     int fluidOutputOffset;
+    ResourceLocation id;
 
     public RecipeMapRecipe(EmiRecipeCategory category, IRecipe recipe, GuiData gui, Tier guiTier){
         this.category = category;
@@ -63,6 +67,7 @@ public class RecipeMapRecipe implements EmiRecipe {
                 outputs.add(ForgeEmiStack.of(stack));
             }
         }
+        id = recipe.getTags().contains("emi_proxy") ? new ResourceLocation(recipe.getId().getNamespace(), "/" + recipe.getId().getPath()) : recipe.getId();
     }
     @Override
     public EmiRecipeCategory getCategory() {
@@ -71,7 +76,7 @@ public class RecipeMapRecipe implements EmiRecipe {
 
     @Override
     public @Nullable ResourceLocation getId() {
-        return recipe.getId();
+        return id;
     }
 
     @Override
@@ -96,7 +101,6 @@ public class RecipeMapRecipe implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgetHolder) {
-        List<ItemStack> outputs = recipe.hasOutputItems() ? Arrays.stream(recipe.getOutputItems(false)).toList() : Collections.emptyList();
         List<SlotData<?>> slots;
         int groupIndex = 0, slotCount;
         int offsetX = gui.getArea().x, offsetY = gui.getArea().y;
@@ -143,25 +147,28 @@ public class RecipeMapRecipe implements EmiRecipe {
                 }
             }
         }
-        /*if (recipe.hasOutputItems()) {
+        if (recipe.hasOutputItems()) {
             slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
-                slotCount = Math.min(slotCount, outputs.size());
+                int recipeSlotCount = Math.min(slotCount, fluidOutputOffset);
                 for (int s = 0; s < slotCount; s++) {
-                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
-                    slot.addIngredient(VanillaTypes.ITEM_STACK, outputs.get(s));
-                    final int ss = s;
-                    slot.addTooltipCallback((ing, list) -> {
-                        if (recipe.hasOutputChances()) {
-                            if (recipe.getOutputChances()[ss] < 10000) {
-                                list.add(Utils.literal("Output Chance: " + ((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE));
-                            }
-                        }
-                    });
+                    SlotWidget slot;
+                    if (s < recipeSlotCount){
+                        slot = widgetHolder.addSlot(outputs.get(s), slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
+                    } else {
+                        slot = widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
+                    }
+                    if (s < recipeSlotCount && recipe.hasOutputChances() && recipe.getOutputChances()[s] < 10000){
+                        final int ss = s;
+                        slot.appendTooltip(i -> {
+                            Component tooltip = Utils.literal("Output Chance: " + ((float) recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE);
+                            return ClientTooltipComponent.create(tooltip.getVisualOrderText());
+                        });
+                    }
                 }
             }
-        }*/
+        }
 
         /*if (recipe.hasInputFluids()) {
             slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
