@@ -24,6 +24,7 @@ import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.integration.emi.recipe.RecipeMapRecipe;
 import org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.map.SubCategory;
 import org.gtreimagined.gtlib.util.RegistryUtils;
@@ -54,6 +55,7 @@ public class GTLibEmiPlugin implements EmiPlugin {
         GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
             GuiData gui = tuple.gui;
             int4 area = gui.getArea();
+            Tier tier = tuple.map.getGuiTier() != null ? tuple.map.getGuiTier() : tuple.tier;
             EmiRecipeCategory mainCategory = new EmiRecipeCategory(tuple.map.getLoc(),
                     createIcon(tuple.map.getIcon(), tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)));
             emiRegistry.addCategory(mainCategory);
@@ -78,7 +80,7 @@ public class GTLibEmiPlugin implements EmiPlugin {
             if (tuple.map.getSubCategories().isEmpty()) {
                 List<IRecipe> recipes = GTLibXEIPlugin.getRecipes(tuple.map, emiRegistry.getRecipeManager());
                 recipes.forEach(r -> {
-                    emiRegistry.addRecipe(new RecipeMapRecipe(mainCategory, r, gui, tuple.tier));
+                    emiRegistry.addRecipe(new RecipeMapRecipe(mainCategory, r, gui, tier));
                 });
             } else {
                 List<IRecipe> recipes = GTLibXEIPlugin.getRecipes(tuple.map, emiRegistry.getRecipeManager());
@@ -98,12 +100,12 @@ public class GTLibEmiPlugin implements EmiPlugin {
                     }
                 }
                 mainRecipes.forEach(r -> {
-                    emiRegistry.addRecipe(new RecipeMapRecipe(mainCategory, r, gui, tuple.tier));
+                    emiRegistry.addRecipe(new RecipeMapRecipe(mainCategory, r, gui, tier));
                 });
                 for (var entry : recipeMap.entrySet()) {
                     EmiRecipeCategory recipeCategory = subCategories.get(entry.getKey());
                     entry.getValue().forEach(r -> {
-                        emiRegistry.addRecipe(new RecipeMapRecipe(recipeCategory, r, gui, tuple.tier));
+                        emiRegistry.addRecipe(new RecipeMapRecipe(recipeCategory, r, gui, tier));
                     });
                 }
             }
