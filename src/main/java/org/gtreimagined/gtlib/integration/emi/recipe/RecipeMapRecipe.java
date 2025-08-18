@@ -6,6 +6,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.SlotWidget;
+import dev.emi.emi.api.widget.TankWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.constants.VanillaTypes;
@@ -156,6 +157,25 @@ public class RecipeMapRecipe implements EmiRecipe {
                     }
                     if (recipe.hasOutputChances() && recipe.getOutputChances()[s] < 10000){
                         slot.appendTooltip(Utils.literal("Output Chance: " + ((float) recipe.getOutputChances()[s] / 100) + "%").withStyle(ChatFormatting.WHITE));
+                    }
+                }
+            }
+        }
+
+        if (recipe.hasInputFluids()){
+            slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
+            slotCount = slots.size();
+            if (slotCount > 0) {
+                for (int s = 0; s < slotCount; s++) {
+                    int offsetIndex = s + fluidInputOffset;
+                    TankWidget slot;
+                    widgetHolder.addTexture(slots.get(s).getTexture(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    if (offsetIndex < inputs.size()){
+
+                        //slot = widgetHolder.addTank(inputs.get(offsetIndex), slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1), 16, 16, recipe.getInputFluids().get(s).getAmount());
+                    } else {
+                        //widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
+                        continue;
                     }
                 }
             }
