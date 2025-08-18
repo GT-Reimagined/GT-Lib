@@ -111,38 +111,32 @@ public class RecipeMapRecipe implements EmiRecipe {
             if (slotCount > 0) {
                 int s = 0;
                 if (!inputs.isEmpty()) {
-                    slotCount = Math.min(slotCount, fluidInputOffset);
+                    int recipeSlotCount = Math.min(slotCount, fluidInputOffset);
                     for (; s < slotCount; s++) {
-                        widgetHolder.addSlot(inputs.get(s), slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
-                        /*List<ItemStack> input = inputs.get(s);
-                        if (input.isEmpty()) {
-                            List<ItemStack> st = new ObjectArrayList<>(1);
-                            st.add(new ItemStack(Data.DEBUG_SCANNER, 1).setHoverName(Utils.literal("Empty tag")));
-                            slot.addIngredients(VanillaTypes.ITEM_STACK, st);
+                        SlotWidget slot;
+                        if (s < recipeSlotCount){
+                            slot = widgetHolder.addSlot(inputs.get(s), slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
                         } else {
-                            slot.addIngredients(VanillaTypes.ITEM_STACK, input);
-                            final int ss = s;
-                            slot.addTooltipCallback((ing, list) -> {
-                                if (recipe.getInputItems().get(ss) instanceof RecipeIngredient ri) {
-                                    if (ri.ignoreConsume()) {
-                                        list.add(Utils.literal("Does not get consumed in the process.").withStyle(ChatFormatting.WHITE));
-                                    }
-                                    if (ri.ignoreNbt()) {
-                                        list.add(Utils.literal("Ignores NBT.").withStyle(ChatFormatting.WHITE));
-                                    }
-                                    Ingredient i = recipe.getInputItems().get(ss);
-                                    if (RecipeMap.isIngredientSpecial(i)) {
-                                        list.add(Utils.literal("Special ingredient. Class name: ").withStyle(ChatFormatting.GRAY).append(Utils.literal(i.getClass().getSimpleName()).withStyle(ChatFormatting.GOLD)));
-                                    }
-                                }
-                                if (recipe.hasInputChances()) {
-                                    if (recipe.getInputChances()[ss] < 10000) {
-                                        list.add(Utils.literal("Consumption Chance: " + ((float)recipe.getInputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE));
-                                    }
-                                }
-                            });
-                            inputItems++;
-                        }*/
+                            widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
+                            continue;
+                        }
+                        if (recipe.getInputItems().size() > s && recipe.getInputItems().get(s) instanceof RecipeIngredient ri) {
+                            if (ri.ignoreConsume()){
+                                slot.appendTooltip(Utils.literal("Does not get consumed in the process.").withStyle(ChatFormatting.WHITE));
+                            }
+                            if (ri.ignoreNbt()) {
+                                slot.appendTooltip(Utils.literal("Ignores NBT.").withStyle(ChatFormatting.WHITE));
+                            }
+                            if (RecipeMap.isIngredientSpecial(ri)) {
+                                slot.appendTooltip(Utils.literal("Special ingredient. Class name: ").withStyle(ChatFormatting.GRAY).append(Utils.literal(ri.getClass().getSimpleName()).withStyle(ChatFormatting.GOLD)));
+                            }
+
+                        }
+                        if (recipe.hasInputChances()) {
+                            if (recipe.getInputChances()[s] < 10000) {
+                                slot.appendTooltip(Utils.literal("Consumption Chance: " + ((float)recipe.getInputChances()[s] / 100) + "%").withStyle(ChatFormatting.WHITE));
+                            }
+                        }
                     }
                 }
             }
@@ -157,14 +151,11 @@ public class RecipeMapRecipe implements EmiRecipe {
                     if (s < recipeSlotCount){
                         slot = widgetHolder.addSlot(outputs.get(s), slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
                     } else {
-                        slot = widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
+                        widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
+                        continue;
                     }
-                    if (s < recipeSlotCount && recipe.hasOutputChances() && recipe.getOutputChances()[s] < 10000){
-                        final int ss = s;
-                        slot.appendTooltip(i -> {
-                            Component tooltip = Utils.literal("Output Chance: " + ((float) recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE);
-                            return ClientTooltipComponent.create(tooltip.getVisualOrderText());
-                        });
+                    if (recipe.hasOutputChances() && recipe.getOutputChances()[s] < 10000){
+                        slot.appendTooltip(Utils.literal("Output Chance: " + ((float) recipe.getOutputChances()[s] / 100) + "%").withStyle(ChatFormatting.WHITE));
                     }
                 }
             }
