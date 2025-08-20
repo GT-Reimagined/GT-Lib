@@ -25,6 +25,7 @@ import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.integration.emi.GTEMIFluidIngredient;
+import org.gtreimagined.gtlib.integration.emi.GTFluidEmiStack;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
@@ -65,7 +66,7 @@ public class RecipeMapRecipe implements EmiRecipe {
         fluidOutputOffset = outputs.size();
         if (recipe.hasOutputFluids()){
             for (FluidStack stack : recipe.getOutputFluids()){
-                outputs.add(ForgeEmiStack.of(stack));
+                outputs.add(new GTFluidEmiStack(stack.getFluid(), stack.getTag(), stack.getAmount()));
             }
         }
         id = recipe.getTags().contains("emi_proxy") ? new ResourceLocation(recipe.getId().getNamespace(), "/" + recipe.getId().getPath()) : recipe.getId();
