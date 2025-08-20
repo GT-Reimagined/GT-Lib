@@ -10,7 +10,6 @@ pipeline {
         stage('Update submodule') {
             steps {
                 echo 'Updating submodule'
-                sh 'rm -rf TesseractAPI'
                 sh 'git submodule update --init --recursive'
             }
         }
