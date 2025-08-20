@@ -85,19 +85,6 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
         return MaterialTags.MELTING_POINT.getInt(material);
     }
 
-   /* @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (tab instanceof GregTechItemGroup && ((GregTechItemGroup) tab).getName().equals("items")) {
-            if (Configs.JEI.SHOW_ALL_FLUID_CELLS) {
-                MaterialType.LIQUID.all().forEach(m -> items.add(fill(m.getLiquid())));
-                MaterialType.GAS.all().forEach(m -> items.add(fill(m.getGas())));
-                MaterialType.PLASMA.all().forEach(m -> items.add(fill(m.getPlasma())));
-            } else {
-                items.add(new ItemStack(this));
-            }
-        }
-    }*/
-
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (worldIn == null) return;
