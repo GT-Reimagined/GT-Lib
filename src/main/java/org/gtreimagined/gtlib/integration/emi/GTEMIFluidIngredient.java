@@ -4,9 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.emi.emi.api.forge.ForgeEmiStack;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
+import org.gtreimagined.gtlib.util.FluidUtils;
+import org.gtreimagined.gtlib.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +55,12 @@ public class GTEMIFluidIngredient implements EmiIngredient {
 
     @Override
     public float getChance() {
-        return 0;
+        return 1;
     }
 
     @Override
     public EmiIngredient setChance(float v) {
-        return null;
+        return this;
     }
 
     @Override
@@ -66,6 +70,28 @@ public class GTEMIFluidIngredient implements EmiIngredient {
 
     @Override
     public List<ClientTooltipComponent> getTooltip() {
-        return List.of();
+        List<ClientTooltipComponent> list = new ArrayList<>();
+
+        FluidStack stack = getCurrentStack();
+        if (stack.isEmpty()) {
+            list.add(ClientTooltipComponent.create(Utils.literal("Invalid FLuid Ingredient").withStyle(ChatFormatting.RED).getVisualOrderText()));
+            return list;
+        }
+        int mb = stack.getAmount();
+        list.add(ClientTooltipComponent.create(stack.getFluid().getFluidType().getDescription(stack).getVisualOrderText()));
+        list.add(ClientTooltipComponent.create(Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE).getVisualOrderText()));
+        list.add(ClientTooltipComponent.create(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED).getVisualOrderText()));
+        String liquid = !FluidUtils.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
+        list.add(ClientTooltipComponent.create(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN).getVisualOrderText()));
+
+        return list;
+    }
+
+    FluidStack getCurrentStack(){
+        if (fluids.isEmpty()) return FluidStack.EMPTY;
+        if (fluids.get(0).getKey() instanceof Fluid fluid){
+            return new FluidStack(fluid, (int) amount);
+        }
+        return FluidStack.EMPTY;
     }
 }
