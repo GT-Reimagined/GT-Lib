@@ -169,14 +169,9 @@ public class RecipeMapRecipe implements EmiRecipe {
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {
                     int offsetIndex = s + fluidInputOffset;
-                    SlotWidget slot;
                     widgetHolder.addTexture(slots.get(s).getTexture(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
                     if (offsetIndex < inputs.size()){
-
-                        slot = widgetHolder.addTank(inputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getInputFluids().get(s).getAmount()).drawBack(false);
-                    } else {
-                        //widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
-                        continue;
+                        widgetHolder.addTank(inputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getInputFluids().get(s).getAmount()).drawBack(false);
                     }
                 }
             }
@@ -188,55 +183,12 @@ public class RecipeMapRecipe implements EmiRecipe {
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {
                     int offsetIndex = s + fluidOutputOffset;
-                    SlotWidget slot;
                     widgetHolder.addTexture(slots.get(s).getTexture(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
                     if (offsetIndex < outputs.size()){
-
-                        slot = widgetHolder.addTank(outputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getOutputFluids()[s].getAmount()).drawBack(false).recipeContext(this);
-                    } else {
-                        //widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
-                        continue;
+                        widgetHolder.addTank(outputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getOutputFluids()[s].getAmount()).drawBack(false).recipeContext(this);
                     }
                 }
             }
         }
-
-        /*if (recipe.hasInputFluids()) {
-            slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
-            slotCount = slots.size();
-            if (slotCount > 0) {
-                List<FluidIngredient> fluids = recipe.getInputFluids();
-                slotCount = Math.min(slotCount, fluids.size());
-                for (int s = 0; s < slotCount; s++) {
-                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
-                    slot.addIngredients(ForgeTypes.FLUID_STACK, Arrays.asList(fluids.get(s).getStacks()));
-                    slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
-                    int finalS = s;
-                    slot.addTooltipCallback((ing, list) -> {
-                        FluidStack stack = fluids.get(finalS).getStacks()[0];
-                        createFluidTooltip(ing, list, stack);
-                    });
-                    inputFluids++;
-                }
-            }
-        }*/
-        /*if (recipe.hasOutputFluids()) {
-            slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
-            slotCount = slots.size();
-            if (slotCount > 0) {
-                FluidStack[] fluids = recipe.getOutputFluids();
-                slotCount = Math.min(slotCount, fluids.length);
-                for (int s = 0; s < slotCount; s++) {
-                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
-                    slot.setFluidRenderer(fluids[s].getAmount(), true, 16, 16);
-                    slot.addIngredients(ForgeTypes.FLUID_STACK, Collections.singletonList(fluids[s]));
-                    int finalS = s;
-                    slot.addTooltipCallback((ing, list) -> {
-                        FluidStack stack = fluids[finalS];
-                        createFluidTooltip(ing, list, stack);
-                    });
-                }
-            }
-        }*/
     }
 }
