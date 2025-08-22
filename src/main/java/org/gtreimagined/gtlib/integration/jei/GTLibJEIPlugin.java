@@ -11,6 +11,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -89,6 +90,7 @@ public class GTLibJEIPlugin implements IModPlugin {
     @Getter
     private static IJeiRuntime runtime;
     private static IJeiHelpers helpers;
+    public static IGuiHelper guiHelper;
 
     public GTLibJEIPlugin() {
         GTLib.LOGGER.info("Creating GTAPI's JEI Plugin");
@@ -101,8 +103,9 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
-        if (GTAPI.isModLoaded(Ref.MOD_REI) || GTAPI.isModLoaded(Ref.MOD_EMI)) return;
         runtime = jeiRuntime;
+        guiHelper = runtime.getJeiHelpers().getGuiHelper();
+        if (GTAPI.isModLoaded(Ref.MOD_REI) || GTAPI.isModLoaded(Ref.MOD_EMI)) return;
         //Remove fluid "blocks".
         List<ItemLike> list = new ArrayList<>();
         GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));
@@ -144,7 +147,6 @@ public class GTLibJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
-        RecipeMapCategory.setGuiHelper(registry.getJeiHelpers().getGuiHelper());
         MultiMachineInfoCategory.setGuiHelper(registry.getJeiHelpers().getGuiHelper());
         if (helpers == null) helpers = registry.getJeiHelpers();
         Set<ResourceLocation> registeredMachineCats = new ObjectOpenHashSet<>();
