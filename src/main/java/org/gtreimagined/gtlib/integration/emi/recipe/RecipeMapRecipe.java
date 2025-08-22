@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.gtlib.Data;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
@@ -30,6 +31,7 @@ import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
+import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +51,7 @@ public class RecipeMapRecipe implements EmiRecipe {
     int fluidInputOffset;
     int fluidOutputOffset;
     ResourceLocation id;
+    IRecipeMap map;
 
     public RecipeMapRecipe(EmiRecipeCategory category, IRecipe recipe, GuiData gui, Tier guiTier){
         this.category = category;
@@ -69,6 +72,7 @@ public class RecipeMapRecipe implements EmiRecipe {
                 outputs.add(new GTFluidEmiStack(stack.getFluid(), stack.getTag(), stack.getAmount()));
             }
         }
+        this.map = GTAPI.get(RecipeMap.class, recipe.getMapId());
         id = recipe.getTags().contains("emi_proxy") ? new ResourceLocation(recipe.getId().getNamespace(), "/" + recipe.getId().getPath()) : recipe.getId();
     }
     @Override
@@ -98,15 +102,14 @@ public class RecipeMapRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayHeight() {
-        return gui.getArea().w;
+        return gui.getArea().w + (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows()));
     }
 
     @Override
     public void addWidgets(WidgetHolder widgetHolder) {
         List<SlotData<?>> slots;
-        int groupIndex = 0, slotCount;
+        int slotCount;
         int offsetX = gui.getArea().x, offsetY = gui.getArea().y;
-        int inputItems = 0, inputFluids = 0;
         if (recipe.hasInputItems()) {
             slots = gui.getSlots().getSlots(SlotType.IT_IN, guiTier);
             slotCount = slots.size();
