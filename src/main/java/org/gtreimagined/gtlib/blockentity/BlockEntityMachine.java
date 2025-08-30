@@ -580,10 +580,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     public void setMachineState(MachineState newState) {
         if (this.machineState != newState) {
-            if (newState == MachineState.OUTPUT_FULL){
-                GTLib.LOGGER.info("Setting output full machine state, stack trace following.");
-                Thread.dumpStack();
-            }
             MachineState old = this.machineState;
             this.machineState = newState;
             if (level != null) {
