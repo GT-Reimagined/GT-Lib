@@ -1,6 +1,10 @@
 package org.gtreimagined.gtlib.pipe;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.data.GTTools;
@@ -115,5 +119,10 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
             tooltip.add(Utils.translatable("gtlib.pipe.cable.info").withStyle(ChatFormatting.DARK_AQUA));
             tooltip.add(Utils.literal("----------"));
         }
+    }
+
+    @Override
+    public @Nullable <TILE extends BlockEntity> BlockEntityTicker<TILE> getTicker(Level level, BlockState state, BlockEntityType<TILE> type) {
+        return BlockEntityTickable::commonTick;
     }
 }
