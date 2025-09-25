@@ -98,10 +98,8 @@ public class BlockEntityCable<T extends PipeType<T>> extends BlockEntityPipe<T> 
 
     @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
-        if (state.getValue(BlockCable.TICKING)) {
-            super.serverTick(level, pos, state);
-        }
-        this.setHolder(EUHolder.create(this, 0));
+        super.serverTick(level, pos, state);
+        //this.setHolder(EUHolder.create(this, 0));
     }
 
     @Override
