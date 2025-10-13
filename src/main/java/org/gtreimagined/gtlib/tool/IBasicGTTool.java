@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.gtreimagined.gtlib.data.GTTools.KNIFE;
+import static org.gtreimagined.gtlib.data.GTTools.SCYTHE;
 
 public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
     GTToolType getGTToolType();
@@ -134,7 +135,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
         if (entity instanceof Player player) {
             if (getGTToolType().getUseSound() != null)
                 player.playNotifySound(getGTToolType().getUseSound(), SoundSource.BLOCKS, 0.84F, 0.75F);
-            boolean isPlant = GTAPI.isModLoaded(Ref.MOD_TFC) && this.getGTToolType() == KNIFE && state.is(TagUtils.getBlockTag(new ResourceLocation(Ref.MOD_TFC, "plants")));
+            boolean isPlant = GTAPI.isModLoaded(Ref.MOD_TFC) && (this.getGTToolType() == KNIFE || this.getGTToolType() == SCYTHE) && state.is(TagUtils.getBlockTag(new ResourceLocation(Ref.MOD_TFC, "plants")));
             boolean isToolEffective = isPlant || genericIsCorrectToolForDrops(stack, state);
             if (state.getDestroySpeed(world, pos) != 0.0F || isPlant) {
                 int damage = isToolEffective ? getGTToolType().getUseDurability() : getGTToolType().getUseDurability() + 1;
