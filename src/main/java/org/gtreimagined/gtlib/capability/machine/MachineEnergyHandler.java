@@ -229,6 +229,9 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
     public void onUpdate() {
         super.onUpdate();
         cachedItems.forEach(t -> t.right().getState().onTick());
+        int ampsExtracted = 0;
+        long ampsAvailable = this.availableAmpsOutput();
+        outer:
         for (Direction dir : Ref.DIRS) {
             if (canOutput(dir)) {
                 BlockEntity tile = this.tile.getCachedBlockEntity(dir);
@@ -236,7 +239,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
                 if (tile instanceof IEUCable && (!(tile instanceof IEUNode node) || !node.isActuallyNode())){
                     if (this.tile.getNetwork() == null) continue;
                     if (!this.tile.connects(dir)) continue;
-                    for (long amp = 0; amp < this.availableAmpsOutput(); amp++) {
+                    for (long amp = 0; amp < ampsAvailable; amp++) {
                         long extracted = this.extractEu(this.getOutputVoltage(), true);
                         if (extracted > 0){
                             EUTransaction transaction = new EUTransaction(extracted, t -> {});
@@ -245,6 +248,8 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
                             if (insertEu > 0){
                                 this.extractEu(insertEu, false);
                                 transaction.commit();
+                                ampsExtracted++;
+                                if (ampsExtracted == ampsAvailable) break outer;
                             }
                         }
                     }

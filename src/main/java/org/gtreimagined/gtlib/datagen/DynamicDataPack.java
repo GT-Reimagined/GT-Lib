@@ -98,6 +98,12 @@ public class DynamicDataPack implements PackResources {
         }
     }
 
+    public static void addData(ResourceLocation loc, JsonObject obj) {
+        synchronized (DATA) {
+            DATA.put(loc, obj);
+        }
+    }
+
     @Override
     public InputStream getResource(PackType type, ResourceLocation location) throws IOException {
         if (type == PackType.SERVER_DATA) {

@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
@@ -47,6 +48,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     @Getter
     protected int layers;
     @Getter
+    @Setter
     protected long unitValue;
     @Getter
     protected boolean generating = true, blockType, visible, splitName;
