@@ -15,14 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
-    @Shadow
+    /*@Shadow
     protected abstract void fillRect(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha);
 
     @Inject(method = "renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
     private void injectRenderGuiItemDecorations(Font fr, ItemStack stack, int xPosition, int yPosition, String text, CallbackInfo ci){
         if (stack.getItem() instanceof IGTTool tool && tool.getGTToolType().isPowered() && tool.isPoweredBarVisible(stack)) {
             RenderSystem.disableDepthTest();
-            RenderSystem.disableTexture();
             RenderSystem.disableBlend();
             Tesselator tesselator = Tesselator.getInstance();
             BufferBuilder bufferbuilder = tesselator.getBuilder();
@@ -31,9 +30,8 @@ public abstract class ItemRendererMixin {
             this.fillRect(bufferbuilder, xPosition + 2, yPosition + 11, 13, 2, 0, 0, 0, 255);
             this.fillRect(bufferbuilder, xPosition + 2, yPosition + 11, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
             RenderSystem.enableBlend();
-            RenderSystem.enableTexture();
             RenderSystem.enableDepthTest();
         }
 
-    }
+    }*/
 }

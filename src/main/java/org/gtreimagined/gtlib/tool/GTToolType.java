@@ -53,8 +53,6 @@ public class GTToolType implements IGTObject {
     @Getter
     private final Set<TagKey<Block>> effectiveBlockTags = new ObjectOpenHashSet<>();
     @Getter
-    private final Set<net.minecraft.world.level.material.Material> effectiveMaterials = new ObjectOpenHashSet<>();
-    @Getter
     private final Object2ObjectMap<String, IBehaviour<IBasicGTTool>> behaviours = new Object2ObjectOpenHashMap<>();
     @Getter
     @Setter
@@ -234,7 +232,7 @@ public class GTToolType implements IGTObject {
 
     protected Item.Properties prepareInstantiation(String domain) {
         if (domain.isEmpty()) Utils.onInvalidData("An GTToolType was instantiated with an empty domain name!");
-        Item.Properties properties = new Item.Properties().tab(itemGroup);
+        Item.Properties properties = new Item.Properties();
         if (!repairable) properties.setNoRepair();
         return properties;
     }
@@ -304,12 +302,6 @@ public class GTToolType implements IGTObject {
         return this;
     }
 
-    public GTToolType addEffectiveMaterials(net.minecraft.world.level.material.Material... materials) {
-        if (materials.length == 0)
-            Utils.onInvalidData(StringUtils.capitalize(id) + " GTToolType was set to have no effective materials even when it was explicitly called!");
-        this.effectiveMaterials.addAll(Arrays.asList(materials));
-        return this;
-    }
     public GTToolType addBlacklistedEnchantments(Enchantment... enchantments){
         blacklistedEnchantments.addAll(Arrays.asList(enchantments));
         return this;

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ClientPackSource.class)
 public interface ClientPackSourceAccessor {
     @Accessor
-    static PackMetadataSection getBUILT_IN()  {
+    static PackMetadataSection getVERSION_METADATA_SECTION()  {
         throw new AssertionError();
     }
 }

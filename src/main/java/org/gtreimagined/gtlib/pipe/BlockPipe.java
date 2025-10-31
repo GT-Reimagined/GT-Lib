@@ -104,7 +104,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     public static final BooleanProperty TICKING = BooleanProperty.create("ticking");
 
     public BlockPipe(String prefix, T type, PipeSize size, int modelId) {
-        this(prefix, type, size, modelId, type.getMaterial() == GTLibMaterials.Wood ? Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of(Data.WRENCH_MATERIAL).strength(1.0f, 3.0f).requiresCorrectToolForDrops());
+        this(prefix, type, size, modelId, type.getMaterial() == GTLibMaterials.Wood ? Properties.of().sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of().strength(1.0f, 3.0f).requiresCorrectToolForDrops());
     }
 
     public BlockPipe(String prefix, T type, PipeSize size, int modelId, Properties properties) {

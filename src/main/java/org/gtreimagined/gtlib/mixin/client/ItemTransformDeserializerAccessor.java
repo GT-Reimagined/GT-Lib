@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.mixin.client;
 
-import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.block.model.ItemTransform;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

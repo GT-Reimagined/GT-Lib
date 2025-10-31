@@ -71,7 +71,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import static org.gtreimagined.gtlib.Data.WRENCH_MATERIAL;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 
 public class BlockMachine extends BlockBasic implements IItemBlockProvider, EntityBlock, IColorHandler {
@@ -82,7 +81,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     protected final StateDefinition<Block, BlockState> stateContainer;
 
     public BlockMachine(Machine<?> type, Tier tier) {
-        this(type, tier, Properties.of(WRENCH_MATERIAL).strength(1.0f, 10.0f).sound(SoundType.METAL).requiresCorrectToolForDrops());
+        this(type, tier, Properties.of().strength(1.0f, 10.0f).sound(SoundType.METAL).requiresCorrectToolForDrops());
     }
 
     public BlockMachine(Machine<?> type, Tier tier, Properties properties) {

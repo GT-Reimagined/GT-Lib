@@ -46,8 +46,6 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
     @Getter
     private TagKey<Block> toolType;
     @Getter
-    private net.minecraft.world.level.material.Material blockMaterial;
-    @Getter
     private boolean sandLike = false;
 
     public StoneType(String domain, String id, Material material, Texture texture, SoundType soundType, boolean generateBlock) {
@@ -64,7 +62,6 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
         this.resistence = 6.0F;
         this.toolType = BlockTags.MINEABLE_WITH_PICKAXE;
         this.fallingDustColor = -16777216;
-        this.blockMaterial = net.minecraft.world.level.material.Material.STONE;
     }
 
     public StoneType setHarvestLevel(int harvestLevel) {
@@ -100,7 +97,7 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     public StoneType setSandLike(boolean sandLike) {
-        if (sandLike) this.setHardnessAndResistance(0.5F).setRequiresTool(false).setType(BlockTags.MINEABLE_WITH_SHOVEL).setGravity(true).setBlockMaterial(net.minecraft.world.level.material.Material.SAND);
+        if (sandLike) this.setHardnessAndResistance(0.5F).setRequiresTool(false).setType(BlockTags.MINEABLE_WITH_SHOVEL).setGravity(true);
         this.sandLike = sandLike;
         return this;
     }
@@ -112,11 +109,6 @@ public class StoneType implements ISharedGTObject, IRegistryEntryProvider {
 
     public StoneType setType(TagKey<Block> type) {
         this.toolType = type;
-        return this;
-    }
-
-    public StoneType setBlockMaterial(net.minecraft.world.level.material.Material material) {
-        this.blockMaterial = material;
         return this;
     }
 
