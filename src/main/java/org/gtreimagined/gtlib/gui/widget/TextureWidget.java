@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
@@ -27,8 +27,8 @@ public class TextureWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
-        this.drawTexture(matrixStack, texture, realX(), realY(), 0, 0, getW(), getH(), textureX, textureY);
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        this.drawTexture(graphics, texture, realX(), realY(), 0, 0, getW(), getH(), textureX, textureY);
     }
 
     public static WidgetSupplier build(ResourceLocation texture, int2 pos, int2 size) {

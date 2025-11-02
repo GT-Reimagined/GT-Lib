@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.gui.widget;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -57,20 +58,20 @@ public class FluidSlotWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
-        renderFluid(matrixStack, this.stack, realX(), realY());
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        renderFluid(graphics, this.stack, realX(), realY());
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void renderFluid(PoseStack stack, FluidStack fluid, int x, int y) {
+    public void renderFluid(GuiGraphics graphics, FluidStack fluid, int x, int y) {
         if (fluid.isEmpty())
             return;
-        RenderHelper.drawFluid(stack, Minecraft.getInstance(), x, y, getW(), getH(), 16, fluid);
+        RenderHelper.drawFluid(graphics.pose(), Minecraft.getInstance(), x, y, getW(), getH(), 16, fluid);
     }
 
     @Override
-    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
-        super.mouseOver(stack, mouseX, mouseY, partialTicks);
+    public void mouseOver(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        super.mouseOver(graphics, mouseX, mouseY, partialTicks);
         if (this.stack.isEmpty())
             return;
         int x = realX();
@@ -78,7 +79,7 @@ public class FluidSlotWidget extends Widget {
         RenderSystem.disableDepthTest();
         RenderSystem.colorMask(true, true, true, false);
         int slotColor = -2130706433;
-        this.fillGradient(stack, x, y, 16, 16, slotColor, slotColor);
+        this.fillGradient(graphics, x, y, 16, 16, slotColor, slotColor);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.enableDepthTest();
         List<Component> str = new ArrayList<>();
@@ -89,7 +90,7 @@ public class FluidSlotWidget extends Widget {
         String liquid = !FluidUtils.isFluidGaseous(this.stack.getFluid()) ? "liquid" : "gas";
         str.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
         GTLibXEIPlugin.addModDescriptor(str, this.stack);
-        drawHoverText(str, (int) mouseX, (int) mouseY, Minecraft.getInstance().font, stack);
+        drawHoverText(graphics, str, (int) mouseX, (int) mouseY);
     }
 
     @Override

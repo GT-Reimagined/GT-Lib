@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.gui.container.ContainerMultiMachine;
 import net.minecraft.network.chat.Component;
@@ -13,8 +14,8 @@ public class ScreenMultiMachine<T extends BlockEntityBasicMultiMachine<T>, U ext
     }
 
     @Override
-    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        super.renderBg(stack, partialTicks, mouseX, mouseY);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        super.renderBg(graphics, partialTicks, mouseX, mouseY);
         // if (container.getTile().getMachineState().getOverlayId() == 2) {
         //     drawTexture(stack, gui, guiLeft + (xSize / 2) - 4, guiTop + 44, xSize, 54, 8, 9);
         //}

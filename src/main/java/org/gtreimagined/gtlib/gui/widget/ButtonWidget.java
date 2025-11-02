@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.ButtonOverlay;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
@@ -76,10 +77,10 @@ public class ButtonWidget extends Widget {
     }
 
     @Override
-    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
-        super.mouseOver(stack, mouseX, mouseY, partialTicks);
+    public void mouseOver(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        super.mouseOver(graphics, mouseX, mouseY, partialTicks);
         if (getTooltipKey() != null){
-            renderTooltip(stack, Utils.translatable(getTooltipKey()), mouseX, mouseY);
+            renderTooltip(graphics, Utils.translatable(getTooltipKey()), mouseX, mouseY);
         }
     }
 
@@ -88,22 +89,22 @@ public class ButtonWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         if (renderBackground){
             int x = realX();
             int y = realY();
-            fillGradient(matrixStack, x, y, getW(), getH(), backgroundCenter, backgroundCenter);
-            fillGradient(matrixStack, x + getW(), y - 1, 1, 1, backgroundCenter, backgroundCenter);
-            fillGradient(matrixStack, x - 1, y + getH(), 1, 1, backgroundCenter, backgroundCenter);
-            fillGradient(matrixStack, x - 1, y - 1, getW() + 1, 1, backgroundWhiteEdge, backgroundWhiteEdge);
-            fillGradient(matrixStack, x - 1, y, 1, getH(), backgroundWhiteEdge, backgroundWhiteEdge);
-            fillGradient(matrixStack, x, y + getH(), getW() + 1, 1, backgroundBlackEdge, backgroundBlackEdge);
-            fillGradient(matrixStack, x + getW(), y, 1, getH(), backgroundBlackEdge, backgroundBlackEdge);
+            fillGradient(graphics, x, y, getW(), getH(), backgroundCenter, backgroundCenter);
+            fillGradient(graphics, x + getW(), y - 1, 1, 1, backgroundCenter, backgroundCenter);
+            fillGradient(graphics, x - 1, y + getH(), 1, 1, backgroundCenter, backgroundCenter);
+            fillGradient(graphics, x - 1, y - 1, getW() + 1, 1, backgroundWhiteEdge, backgroundWhiteEdge);
+            fillGradient(graphics, x - 1, y, 1, getH(), backgroundWhiteEdge, backgroundWhiteEdge);
+            fillGradient(graphics, x, y + getH(), getW() + 1, 1, backgroundBlackEdge, backgroundBlackEdge);
+            fillGradient(graphics, x + getW(), y, 1, getH(), backgroundBlackEdge, backgroundBlackEdge);
         }
-        renderButtonBody(matrixStack, mouseX, mouseY, partialTicks);
+        renderButtonBody(graphics, mouseX, mouseY, partialTicks);
     }
 
-    protected void renderButtonBody(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks){
+    protected void renderButtonBody(GuiGraphics matrixStack, double mouseX, double mouseY, float partialTicks){
         int xTex = 0;
         int yTex = 0;
         if (getBody().isChangedOnHovered() && isInside(mouseX, mouseY)) {

@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.gui.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
 import org.gtreimagined.gtlib.gui.container.IGTContainer;
@@ -125,26 +126,26 @@ public class GTContainerScreen<T extends AbstractContainerMenu & IGTContainer> e
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
+    public void render(GuiGraphics graphic, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphic, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphic, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int x, int y) {
+    protected void renderLabels(GuiGraphics graphics, int x, int y) {
         float ticks = Minecraft.getInstance().getFrameTime();
-        matrixStack.pushPose();
-        matrixStack.translate((float) -this.leftPos, (float) -this.topPos, 0.0F);
+        graphics.pose().pushPose();
+        graphics.pose().translate((float) -this.leftPos, (float) -this.topPos, 0.0F);
         for (Widget widget : menu.source().widgetsToRender()) {
             if (!widget.isEnabled() || !widget.isVisible() || widget.depth() < this.depth()) continue;
-            widget.render(matrixStack, x, y, ticks);
+            widget.render(graphics, x, y, ticks);
         }
-        menu.source().getTopLevelWidget(x, y).ifPresent(t -> t.mouseOver(matrixStack, x, y, ticks));
-        matrixStack.popPose();
+        menu.source().getTopLevelWidget(x, y).ifPresent(t -> t.mouseOver(graphics, x, y, ticks));
+        graphics.pose().popPose();
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(GuiGraphics matrixStack, float partialTicks, int x, int y) {
         this.renderBackground(matrixStack);
         for (Widget widget : menu.source().widgetsToRender()) {
             if (!widget.isEnabled() || !widget.isVisible()) continue;
@@ -154,25 +155,25 @@ public class GTContainerScreen<T extends AbstractContainerMenu & IGTContainer> e
     }
 
 
-    public void drawTexture(PoseStack stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        Minecraft.getInstance().getTextureManager().bindForSetup(loc);
-        blit(stack, left, top, x, y, sizeX, sizeY);
+    public void drawTexture(GuiGraphics graphics, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
+        //RenderSystem.setShaderColor(1, 1, 1, 1);
+        //Minecraft.getInstance().getTextureManager().bindForSetup(loc);
+        graphics.blit(loc, left, top, x, y, sizeX, sizeY);
     }
 
     public int getCenteredStringX(String s) {
         return imageWidth / 2 - Minecraft.getInstance().font.width(s) / 2;
     }
 
-    public void drawTooltipInArea(PoseStack stack, String line, int mouseX, int mouseY, int x, int y, int sizeX, int sizeY) {
+    public void drawTooltipInArea(GuiGraphics stack, String line, int mouseX, int mouseY, int x, int y, int sizeX, int sizeY) {
         List<String> list = new ObjectArrayList<>();
         list.add(line);
         drawTooltipInArea(stack, list, mouseX, mouseY, x, y, sizeX, sizeY);
     }
 
-    public void drawTooltipInArea(PoseStack stack, List<String> lines, int mouseX, int mouseY, int x, int y, int sizeX, int sizeY) {
+    public void drawTooltipInArea(GuiGraphics graphics, List<String> lines, int mouseX, int mouseY, int x, int y, int sizeX, int sizeY) {
         if (isInGui(x, y, sizeX, sizeY, mouseX, mouseY)) {
-            renderTooltip(stack, lines.stream().map(t -> FormattedCharSequence.forward(t, Style.EMPTY)).collect(Collectors.toList()), mouseX - leftPos, mouseY - topPos);
+            graphics.renderTooltip(Minecraft.getInstance().font, lines.stream().map(t -> FormattedCharSequence.forward(t, Style.EMPTY)).collect(Collectors.toList()), mouseX - leftPos, mouseY - topPos);
         }
     }
 

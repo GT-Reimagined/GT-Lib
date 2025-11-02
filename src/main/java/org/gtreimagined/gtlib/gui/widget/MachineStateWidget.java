@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
@@ -39,25 +40,25 @@ public class MachineStateWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         //Draw error.
         //No need to sync machine state.
         MachineState machineState = ((BlockEntityMachine<?>) gui.handler).getMachineState();
         if (isRecipe) {
             if (machineState == MachineState.POWER_LOSS) {
-                drawTexture(matrixStack, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), getW(), 0, getW(), getH(), getW() * 2, getH());
+                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), getW(), 0, getW(), getH(), getW() * 2, getH());
             } else {
-                drawTexture(matrixStack, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), 0, 0, getW(), getH(), getW() * 2, getH());
+                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), 0, 0, getW(), getH(), getW() * 2, getH());
             }
         }
     }
 
     @Override
-    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
-        super.mouseOver(stack, mouseX, mouseY, partialTicks);
+    public void mouseOver(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        super.mouseOver(graphics, mouseX, mouseY, partialTicks);
         MachineState machineState = ((BlockEntityMachine<?>) gui.handler).getMachineState();
         if (isRecipe) {
-            renderTooltip(stack, Utils.literal(machineState.getDisplayName()), mouseX, mouseY);
+            renderTooltip(graphics, Utils.literal(machineState.getDisplayName()), mouseX, mouseY);
         }
     }
 

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
@@ -59,7 +59,7 @@ public class TextButtonWidget<T> extends ButtonWidget {
     }
 
     @Override
-    protected void renderButtonBody(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    protected void renderButtonBody(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         Component text = textToRender.apply(state);
         int textWidth = Minecraft.getInstance().font.width(text);
         int xScaled = textWidth / 2;
@@ -69,7 +69,7 @@ public class TextButtonWidget<T> extends ButtonWidget {
         int yScaled = textHeight / 2;
         int yCenter = (getH() / 2);
         int yPosition = yCenter - yScaled;
-        drawText(matrixStack, textToRender.apply(state), realX() + xPosition, realY() + yPosition, 4210752);
+        drawText(graphics, textToRender.apply(state), realX() + xPosition, realY() + yPosition, 4210752);
     }
 
     public static <T> WidgetSupplier build(Function<IGuiHandler, T> syncFunction, Function<T, Component> textToRender, T defaultValue, IGuiEvent.IGuiEventFactory ev, int id, boolean renderBackground) {

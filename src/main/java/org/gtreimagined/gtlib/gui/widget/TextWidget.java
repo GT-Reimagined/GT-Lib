@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
@@ -32,12 +33,12 @@ public class TextWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         String text = getter.apply(this);
         int textWidth = Minecraft.getInstance().font.width(text);
         int xScaled = textWidth / 2;
         int xCenter = (getW() / 2);
         int xPosition = xCenter - xScaled;
-        this.drawText(matrixStack, Utils.literal(text), (centered ? realX() + xPosition : realX()), realY(), color);
+        this.drawText(graphics, Utils.literal(text), (centered ? realX() + xPosition : realX()), realY(), color);
     }
 }

@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.ButtonOverlay;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -66,19 +67,19 @@ public class ExpandingWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         int x = realX();
         int y = realY();
         int width = getW();
         int height = getH();
-        fillGradient(matrixStack, x, y, width, height, rgbCenter, rgbCenter);
-        fillGradient(matrixStack, x + width, y - 1, 1, 1, rgbCorner, rgbCorner);
-        fillGradient(matrixStack, x - 1, y + height, 1, 1, rgbCorner, rgbCorner);
-        fillGradient(matrixStack, x - 1, y - 1, width + 1, 1, rgbEdgeTop, rgbEdgeTop);
-        fillGradient(matrixStack, x - 1, y, 1, height, rgbEdgeTop, rgbEdgeTop);
-        fillGradient(matrixStack, x, y + height, width + 1, 1, rgbEdgeBottom, rgbEdgeBottom);
-        fillGradient(matrixStack, x + width, y, 1, height, rgbEdgeBottom, rgbEdgeBottom);
-        drawTexture(matrixStack, icon.getTexture(), realX() + 1, realY() + 1, 0, 0, icon.getH(), icon.getW(), icon.getH(), icon.getW());
+        fillGradient(graphics, x, y, width, height, rgbCenter, rgbCenter);
+        fillGradient(graphics, x + width, y - 1, 1, 1, rgbCorner, rgbCorner);
+        fillGradient(graphics, x - 1, y + height, 1, 1, rgbCorner, rgbCorner);
+        fillGradient(graphics, x - 1, y - 1, width + 1, 1, rgbEdgeTop, rgbEdgeTop);
+        fillGradient(graphics, x - 1, y, 1, height, rgbEdgeTop, rgbEdgeTop);
+        fillGradient(graphics, x, y + height, width + 1, 1, rgbEdgeBottom, rgbEdgeBottom);
+        fillGradient(graphics, x + width, y, 1, height, rgbEdgeBottom, rgbEdgeBottom);
+        drawTexture(graphics, icon.getTexture(), realX() + 1, realY() + 1, 0, 0, icon.getH(), icon.getW(), icon.getH(), icon.getW());
     }
 
     @Override

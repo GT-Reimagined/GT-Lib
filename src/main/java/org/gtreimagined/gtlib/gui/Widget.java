@@ -6,13 +6,11 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -24,6 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.Collections;
 import java.util.List;
@@ -120,8 +119,8 @@ public abstract class Widget implements IGuiElement {
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void renderTooltip(PoseStack matrixStack, Component text, double mouseX, double mouseY) {
-        this.gui.screen.renderComponentTooltip(matrixStack, Collections.singletonList(text), (int)mouseX,(int) mouseY);
+    protected void renderTooltip(GuiGraphics graphics, Component text, double mouseX, double mouseY) {
+        graphics.renderComponentTooltip(Minecraft.getInstance().font, Collections.singletonList(text), (int) mouseX, (int) mouseY);
     }
 
     @Override
@@ -160,7 +159,7 @@ public abstract class Widget implements IGuiElement {
 
 
     @OnlyIn(Dist.CLIENT)
-    public abstract void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks);
+    public abstract void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks);
 
     public boolean isVisible() {
         return shouldRender;
@@ -190,7 +189,7 @@ public abstract class Widget implements IGuiElement {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
+    public void mouseOver(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
 
     }
 
@@ -258,47 +257,47 @@ public abstract class Widget implements IGuiElement {
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void fillGradient(PoseStack matrixStack, int x1, int y1, int width, int height, int colorFrom, int colorTo) {
-        RenderSystem.disableTexture();
+    protected void fillGradient(GuiGraphics graphics, int x1, int y1, int width, int height, int colorFrom, int colorTo) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        fillGradient(matrixStack.last().pose(), bufferbuilder, x1, y1, x1 + width,  y1 + height, 0, colorFrom, colorTo);
+        fillGradient(graphics.pose().last().pose(), bufferbuilder, x1, y1, x1 + width,  y1 + height, 0, colorFrom, colorTo);
         tesselator.end();
         RenderSystem.disableBlend();
-        RenderSystem.enableTexture();
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    protected void drawHoverText(List<Component> textLines, int x, int y, Font font, PoseStack matrixStack) {
-        this.gui.screen.renderComponentTooltip(matrixStack, textLines, x, y);
+    protected void drawHoverText(GuiGraphics graphics, List<Component> textLines, int x, int y) {
+        graphics.renderComponentTooltip(Minecraft.getInstance().font, textLines, x, y);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public int drawText(PoseStack matrixStack, Component text, float x, float y, int color) {
-        return Minecraft.getInstance().font.draw(matrixStack, text, x, y, color);
+    public int drawText(GuiGraphics graphics, Component text, float x, float y, int color) {
+        return graphics.drawString(Minecraft.getInstance().font, text, (int)x, (int)y, color);
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void drawTexture(PoseStack stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, loc);
+    protected void drawTexture(GuiGraphics graphics, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
+        //RenderSystem.setShaderColor(1, 1, 1, 1);
+        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        //RenderSystem.setShaderTexture(0, loc);
         //AbstractGui.blit(stack, left, top, x, y, sizeX, sizeY);
-        GuiComponent.blit(stack, left, top, 0, x, y, sizeX, sizeY, 256, 256);
+
+
+        graphics.blit(loc, x, y, sizeX, sizeY, sizeX, sizeY);
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void drawTexture(PoseStack stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY, int textureHeight, int textureWidth) {
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, loc);
+    protected void drawTexture(GuiGraphics graphics, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY, int textureHeight, int textureWidth) {
+        //RenderSystem.setShaderColor(1, 1, 1, 1);
+        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        //RenderSystem.setShaderTexture(0, loc);
         //AbstractGui.blit(stack, left, top, x, y, sizeX, sizeY);
-        GuiComponent.blit(stack, left, top, 0, x, y, sizeX, sizeY,  textureHeight, textureWidth);
+        graphics.blit(loc, x, y, sizeX, sizeY, sizeX, sizeY, textureHeight, textureWidth);
     }
 
     public static WidgetSupplier builder(BiFunction<GuiInstance, IGuiElement, Widget> source) {

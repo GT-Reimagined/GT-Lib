@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.cover.ICoverMode;
 import org.gtreimagined.gtlib.cover.ICoverModeHandler;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -26,9 +27,9 @@ public class CoverModeHandlerWidget  extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         if (gui.handler instanceof ICoverModeHandler coverModeHandler && coverMode != null) {
-            drawTexture(matrixStack, gui.handler.getGuiTexture(), realX() + coverMode.getX(), realY() + coverMode.getY(), coverModeHandler.getOverlayX(), coverModeHandler.getOverlayY(), 18, 18);
+            drawTexture(graphics, gui.handler.getGuiTexture(), realX() + coverMode.getX(), realY() + coverMode.getY(), coverModeHandler.getOverlayX(), coverModeHandler.getOverlayY(), 18, 18);
         }
     }
 

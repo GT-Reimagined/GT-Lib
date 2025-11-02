@@ -2,10 +2,10 @@ package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -45,17 +45,17 @@ public class BackgroundWidget extends Widget {
 
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
-        drawTexture(matrixStack, loc, realX(), realY(), 0, 0, xSize, ySize);
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        drawTexture(graphics, loc, realX(), realY(), 0, 0, xSize, ySize);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    protected void drawTexture(PoseStack stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, loc);
+    protected void drawTexture(GuiGraphics graphics, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
+        //RenderSystem.setShaderColor(1, 1, 1, 1);
+        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        //RenderSystem.setShaderTexture(0, loc);
         //AbstractGui.blit(stack, left, top, x, y, sizeX, sizeY);
-        GuiComponent.blit(stack, left, top, x, y, sizeX, sizeY, this.guiXSize, this.guiYSize);
+        graphics.blit(loc, left, top, x, y, sizeX, sizeY, this.guiXSize, this.guiYSize);
     }
 }

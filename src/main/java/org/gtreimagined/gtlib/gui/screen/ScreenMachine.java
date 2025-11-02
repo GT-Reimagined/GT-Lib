@@ -57,8 +57,8 @@ public class ScreenMachine<T extends BlockEntityMachine<T>, U extends ContainerM
 
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY, partialTicks);
+    public void render(PoseStack graphic, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphic, mouseX, mouseY, partialTicks);
         //container.getTile().drawInfo(stack, Minecraft.getInstance().fontRenderer, guiLeft, guiTop);
     }
 }

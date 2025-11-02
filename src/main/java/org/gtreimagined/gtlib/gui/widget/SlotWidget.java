@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.SlotData;
@@ -25,7 +26,7 @@ public class SlotWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
-        drawTexture(matrixStack, slot.getTexture(), realX(), realY(), 0, 0, 18, 18, 18, 18);
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        drawTexture(graphics, slot.getTexture(), realX(), realY(), 0, 0, 18, 18, 18, 18);
     }
 }

@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
 import org.gtreimagined.gtlib.gui.BarDir;
@@ -53,7 +54,7 @@ public class ProgressWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         int progressTime;
         int x = this.realX(), y = this.realY(), xLocation = uv.x, yLocation = uv.y, length = uv.z, width = uv.w;
         switch (direction) {
@@ -92,17 +93,17 @@ public class ProgressWidget extends Widget {
                 length = progressTime;
             }
         }
-        drawTexture(matrixStack, texture, realX(), realY(), 0, 0, uv.z, uv.w, uv.z, uv.w * 2);
+        drawTexture(graphics, texture, realX(), realY(), 0, 0, uv.z, uv.w, uv.z, uv.w * 2);
         if (progress > 0) {
-            drawTexture(matrixStack, texture, realX(), realY(), xLocation, yLocation, length, width, uv.z, uv.w * 2);
+            drawTexture(graphics, texture, realX(), realY(), xLocation, yLocation, length, width, uv.z, uv.w * 2);
         }
     }
 
     @Override
-    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
-        super.mouseOver(stack, mouseX, mouseY, partialTicks);
+    public void mouseOver(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        super.mouseOver(graphics, mouseX, mouseY, partialTicks);
         if (isInside(mouseX, mouseY)) {
-            renderTooltip(stack, Utils.translatable("gtlib.gui.show_recipes"), mouseX, mouseY);
+            renderTooltip(graphics, Utils.translatable("gtlib.gui.show_recipes"), mouseX, mouseY);
         }
     }
 
