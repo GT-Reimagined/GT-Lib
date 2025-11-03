@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.worldgen.stonelayer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.Material;
@@ -69,7 +70,7 @@ public record StoneLayerOre(Material material, long chance, int minY, int maxY, 
         if (biomes.isEmpty()) return biomeBlacklist;
         Predicate<String> predicate = s -> {
             if (s.contains("#")) return biome.is(TagUtils.getBiomeTag(new ResourceLocation(s.replace("#", ""))));
-            return biome.is(ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(s)));
+            return biome.is(ResourceKey.create(Registries.BIOME, new ResourceLocation(s)));
         };
         return biomeBlacklist ? biomes.stream().anyMatch(predicate) : biomes.stream().noneMatch(predicate);
     }

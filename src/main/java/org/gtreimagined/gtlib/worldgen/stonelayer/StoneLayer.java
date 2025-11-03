@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -24,10 +26,10 @@ public record StoneLayer(ResourceLocation id, @Nullable StoneType type, Block bl
     private static Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
     public static final Codec<StoneLayer> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(StoneLayer::id),
-            Registry.BLOCK.byNameCodec().fieldOf("block").forGetter(StoneLayer::block),
+            BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").forGetter(StoneLayer::block),
             Codec.INT.fieldOf("weight").forGetter(StoneLayer::weight),
             StoneLayerRestrictions.CODEC.optionalFieldOf("restrictions", StoneLayerRestrictions.EMPTY).forGetter(StoneLayer::restrictions),
-            ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(StoneLayer::dimensions),
+            ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(StoneLayer::dimensions),
             StoneLayerOre.CODEC.listOf().optionalFieldOf("ores", List.of()).forGetter(StoneLayer::ores)
     ).apply(instance, StoneLayer::new));
 

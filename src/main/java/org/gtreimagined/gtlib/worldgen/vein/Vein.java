@@ -5,6 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -27,7 +29,7 @@ public record Vein(ResourceLocation id, int minY, int maxY, int weight, int dens
             Material.CODEC.fieldOf("secondary").forGetter(Vein::secondary),
             Material.CODEC.fieldOf("between").forGetter(Vein::between),
             Material.CODEC.fieldOf("sporadic").forGetter(Vein::sporadic),
-            ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(Vein::dimensions)
+            ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(Vein::dimensions)
     ).apply(instance, Vein::new));
 
 

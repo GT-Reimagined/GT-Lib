@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -27,7 +29,7 @@ public record SmallOre(ResourceLocation id, Material material, int minY, int max
             Codec.INT.fieldOf("minY").forGetter(SmallOre::minY),
             Codec.INT.fieldOf("maxY").forGetter(SmallOre::maxY),
             Codec.INT.fieldOf("amountPerChunk").forGetter(SmallOre::amountPerChunk),
-            ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(SmallOre::dimensions),
+            ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(SmallOre::dimensions),
             Codec.STRING.listOf().optionalFieldOf("biomes", List.of()).forGetter(SmallOre::biomes),
             Codec.BOOL.optionalFieldOf("biomeBlacklist", true).forGetter(SmallOre::biomeBlacklist)
     ).apply(instance, SmallOre::new));
@@ -37,7 +39,7 @@ public record SmallOre(ResourceLocation id, Material material, int minY, int max
         if (biomes.isEmpty()) return biomeBlacklist;
         Predicate<String> predicate = s -> {
             if (s.contains("#")) return biome.is(TagUtils.getBiomeTag(new ResourceLocation(s.replace("#", ""))));
-            return biome.is(ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(s)));
+            return biome.is(ResourceKey.create(Registries.BIOME, new ResourceLocation(s)));
         };
         return biomeBlacklist ? biomes.stream().anyMatch(predicate) : biomes.stream().noneMatch(predicate);
     }
