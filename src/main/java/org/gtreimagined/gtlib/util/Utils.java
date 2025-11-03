@@ -2,14 +2,13 @@ package org.gtreimagined.gtlib.util;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectMap;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
@@ -84,6 +83,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 import org.gtreimagined.tesseract.api.hu.IHeatHandler;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -114,7 +115,7 @@ public class Utils {
      * Returns true of A is not empty, has the same Item and damage is equal to B
      **/
     public static boolean equals(ItemStack a, ItemStack b) {
-        return a.sameItem(b);
+        return ItemStack.isSameItem(a, b);
     }
 
     /**
@@ -575,7 +576,7 @@ public class Utils {
      * Creates a new {@link EnterBlockTrigger} for use with recipe unlock criteria.
      */
     public static EnterBlockTrigger.TriggerInstance enteredBlock(Block blockIn) {
-        return new EnterBlockTrigger.TriggerInstance(EntityPredicate.Composite.ANY, blockIn, StatePropertiesPredicate.ANY);
+        return new EnterBlockTrigger.TriggerInstance(ContextAwarePredicate.ANY, blockIn, StatePropertiesPredicate.ANY);
     }
 
     /**
@@ -609,7 +610,7 @@ public class Utils {
      * Creates a new {@link InventoryChangeTrigger} that checks for a player having a certain item.
      */
     public static InventoryChangeTrigger.TriggerInstance hasItem(ItemPredicate... predicates) {
-        return new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, ANY, ANY, ANY, predicates);
+        return new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, ANY, ANY, ANY, predicates);
     }
 
     public static MutableComponent translatable(String key, Object... objects){
@@ -808,7 +809,7 @@ public class Utils {
         }
         Vec3i vector3i = toRotate.getNormal();
         Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-        vector4f.transform(new com.mojang.math.Matrix4f(rot));
+        vector4f.transform(new Matrix4f(rot));
         return Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
     }
 
@@ -911,7 +912,7 @@ public class Utils {
                     BlockPos harvestPos = new BlockPos(x, y, z);
                     if (harvestPos.equals(origin)) continue;
                     if (excludeAir) {
-                        state = player.level.getBlockState(harvestPos);
+                        state = player.level().getBlockState(harvestPos);
                         if (state.isAir()) continue;
                     }
                     set.add(new BlockPos(x, y, z));
@@ -921,14 +922,14 @@ public class Utils {
         return set;
     }
    
-    public static void createExplosion(@Nullable Level world, BlockPos pos, float explosionRadius, Explosion.BlockInteraction modeIn) {
+    public static void createExplosion(@Nullable Level world, BlockPos pos, float explosionRadius, ExplosionInteraction modeIn) {
         if (world != null) {
             if (!world.isClientSide) {
                 world.explode(null, pos.getX(), pos.getY() + 0.0625D, pos.getZ(), explosionRadius, modeIn);
             } else {
                 world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY() + 0.5D, pos.getZ(), 0.0D, 0.0D, 0.0D);
             }
-            if (modeIn != BlockInteraction.NONE) {
+            if (modeIn != ExplosionInteraction.NONE) {
                 world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             }
         }
@@ -1093,7 +1094,7 @@ public class Utils {
         Color colour = new Color(rgb);
         Double2ObjectMap<DyeColor> distances = new Double2ObjectOpenHashMap<>();
         for (DyeColor dyeColour : DyeColor.values()) {
-            Color enumColour = new Color(dyeColour.getMaterialColor().col);
+            Color enumColour = new Color(dyeColour.getMapColor().col);
             double distance = (colour.getRed() - enumColour.getRed()) * (colour.getRed() - enumColour.getRed())
                     + (colour.getGreen() - enumColour.getGreen()) * (colour.getGreen() - enumColour.getGreen())
                     + (colour.getBlue() - enumColour.getBlue()) * (colour.getBlue() - enumColour.getBlue());

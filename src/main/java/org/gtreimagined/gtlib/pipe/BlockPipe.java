@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
@@ -64,7 +65,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -162,7 +162,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> list = super.getDrops(state, builder);
         BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (tileentity instanceof BlockEntityPipe<?> pipe){

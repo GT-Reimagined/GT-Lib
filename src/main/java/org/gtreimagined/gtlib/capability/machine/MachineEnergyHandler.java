@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -74,7 +75,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
         if (voltage > this.getInputVoltage()) {
             if (GTLibConfig.MACHINES_EXPLODE.get()) {
                 if (!exploded){
-                    Utils.createExplosion(this.tile.getLevel(), tile.getBlockPos(), 4.0F, Explosion.BlockInteraction.DESTROY);
+                    Utils.createExplosion(this.tile.getLevel(), tile.getBlockPos(), 4.0F, ExplosionInteraction.BLOCK);
                     tile.getLevel().playSound(null, tile.getBlockPos(), Ref.MACHINE_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
                     exploded = true;
                 }

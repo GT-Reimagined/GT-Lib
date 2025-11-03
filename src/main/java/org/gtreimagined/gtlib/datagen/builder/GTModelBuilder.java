@@ -2,12 +2,12 @@ package org.gtreimagined.gtlib.datagen.builder;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
-import com.mojang.math.Vector3f;
 import org.gtreimagined.gtlib.datagen.json.JGTLibModel;
 import org.gtreimagined.gtlib.datagen.json.JModel;
 import net.devtech.arrp.json.models.JElement;
 import net.devtech.arrp.json.models.JTextures;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;

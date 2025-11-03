@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraft.world.level.material.Material;
 
 public class BlockBasicSlab extends SlabBlock implements IGTObject, ITextureProvider, IModelProvider {
     protected final String domain, id;
@@ -28,7 +27,7 @@ public class BlockBasicSlab extends SlabBlock implements IGTObject, ITextureProv
     }
 
     public BlockBasicSlab(String domain, String id) {
-        this(domain, id, Properties.of(Material.METAL).strength(1.0f, 1.0f).sound(SoundType.STONE));
+        this(domain, id, Properties.of().strength(1.0f, 1.0f).sound(SoundType.STONE));
     }
 
     public String getDomain() {

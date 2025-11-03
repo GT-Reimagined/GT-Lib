@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -37,7 +39,7 @@ public class GTBlockTagProvider extends GTTagProvider<Block> {
     private final boolean replace;
 
     public GTBlockTagProvider(String providerDomain, String providerName, boolean replace) {
-        super(Registry.BLOCK, providerDomain, providerName, "blocks");
+        super(Registries.BLOCK, providerDomain, providerName, "blocks", b -> BuiltInRegistries.BLOCK.getResourceKey(b).get());
         this.replace = replace;
     }
 

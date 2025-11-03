@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.blockentity;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
@@ -305,7 +306,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             double d = Ref.RNG.nextDouble();
             if (d > 0.97D && this.level.isRainingAt(new BlockPos(this.worldPosition.getX(), this.worldPosition.getY() + 1, this.worldPosition.getZ()))) {
                 if (this.energyHandler.map(t -> t.getEnergy() > 0).orElse(false)) {
-                    Utils.createExplosion(this.level, worldPosition, 6.0F, Explosion.BlockInteraction.DESTROY);
+                    Utils.createExplosion(this.level, worldPosition, 6.0F, ExplosionInteraction.BLOCK);
                     level.playSound(null, this.worldPosition, Ref.MACHINE_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
                 }
             }

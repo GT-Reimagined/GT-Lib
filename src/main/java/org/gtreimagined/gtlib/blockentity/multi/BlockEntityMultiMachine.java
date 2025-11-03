@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.blockentity.multi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.EnergyHandler;
@@ -130,10 +131,10 @@ public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> exten
         this.components.forEach((s, l) -> {
             l.forEach(c -> {
                 if (c.getTile() instanceof BlockEntityMachine<?> machine){
-                    Utils.createExplosion(this.level, machine.getBlockPos(), 6.0F, Explosion.BlockInteraction.DESTROY);
+                    Utils.createExplosion(this.level, machine.getBlockPos(), 6.0F, ExplosionInteraction.BLOCK);
                 }
             });
         });
-        Utils.createExplosion(this.level, this.getBlockPos(), 6.0F, Explosion.BlockInteraction.DESTROY);
+        Utils.createExplosion(this.level, this.getBlockPos(), 6.0F, ExplosionInteraction.BLOCK);
     }
 }

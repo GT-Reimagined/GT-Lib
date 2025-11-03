@@ -9,7 +9,6 @@ import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
 
 public class BlockBasic extends Block implements IGTObject, ITextureProvider, IModelProvider {
 
@@ -23,7 +22,7 @@ public class BlockBasic extends Block implements IGTObject, ITextureProvider, IM
     }
 
     public BlockBasic(String domain, String id) {
-        this(domain, id, Properties.of(Material.METAL).strength(1.0f, 1.0f).sound(SoundType.STONE));
+        this(domain, id, Properties.of().strength(1.0f, 1.0f).sound(SoundType.STONE));
     }
 
     public String getDomain() {

@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagEntry;
 import net.minecraftforge.common.Tags;
 import org.gtreimagined.gtlib.GTAPI;
@@ -53,7 +55,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
     private final Function<TagKey<Block>, GTTagBuilder<Block>> blockTags;
 
     public GTItemTagProvider(String providerDomain, String providerName, boolean replace, GTBlockTagProvider p) {
-        super(Registry.ITEM, providerDomain, providerName, "items");
+        super(Registries.ITEM, providerDomain, providerName, "items", i -> BuiltInRegistries.ITEM.getResourceKey(i).get());
         Objects.requireNonNull(p);
         this.blockTags = p::getOrCreateRawBuilder;
         this.replace = replace;

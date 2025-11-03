@@ -3,12 +3,11 @@ package org.gtreimagined.gtlib.block;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
 
 public class BlockDimensionMarker extends BlockBasic {
     final String dimension;
     public BlockDimensionMarker(String dimension) {
-        super(Ref.ID, dimension + "_marker", Properties.of(Material.STONE).sound(SoundType.STONE).instabreak());
+        super(Ref.ID, dimension + "_marker", Properties.of().sound(SoundType.STONE).instabreak());
         this.dimension = dimension;
     }
 

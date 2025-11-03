@@ -7,7 +7,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 
 /**
  * Includes helper methods for cleaner properties instantiations.
@@ -36,7 +35,7 @@ public class BlockPropertiesHelper {
     }
 
     public static BlockBehaviour.Properties leaves() {
-        return BlockBehaviour.Properties.of(Material.LEAVES)
+        return BlockBehaviour.Properties.of()
                 .strength(0.2F)
                 .randomTicks()
                 .sound(SoundType.GRASS)
@@ -47,7 +46,7 @@ public class BlockPropertiesHelper {
     }
 
     public static BlockBehaviour.Properties glass(DyeColor dyeColor) {
-        return BlockBehaviour.Properties.of(Material.GLASS, dyeColor)
+        return BlockBehaviour.Properties.of().mapColor(dyeColor)
                 .strength(0.3F)
                 .sound(SoundType.GLASS)
                 .noOcclusion()

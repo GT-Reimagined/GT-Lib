@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.blockentity.multi;
 
 import lombok.Getter;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.block.BlockBasic;
@@ -74,7 +75,7 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
                         flag = voltage <= getInputVoltage();
                     }
                     if (!flag && GTLibConfig.MACHINES_EXPLODE.get()) {
-                        Utils.createExplosion(tile.getLevel(), tile.getBlockPos(), 4.0F, Explosion.BlockInteraction.BREAK);
+                        Utils.createExplosion(tile.getLevel(), tile.getBlockPos(), 4.0F, ExplosionInteraction.BLOCK);
                     }
                     return flag;
                 }

@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.StairsShape;
-import net.minecraft.world.level.material.Material;
 
 import static net.minecraft.core.Direction.*;
 import static net.minecraft.world.level.block.state.properties.StairsShape.STRAIGHT;
@@ -36,7 +35,7 @@ public class BlockBasicStair extends StairBlock implements IGTObject, ITexturePr
     }
 
     public BlockBasicStair(String domain, String id, Block base) {
-        this(domain, id, base, Properties.of(Material.METAL).strength(1.0f, 1.0f).sound(SoundType.STONE));
+        this(domain, id, base, Properties.of().strength(1.0f, 1.0f).sound(SoundType.STONE));
     }
 
     public String getDomain() {
