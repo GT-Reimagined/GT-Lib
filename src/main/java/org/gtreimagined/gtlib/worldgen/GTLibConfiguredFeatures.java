@@ -1,5 +1,9 @@
 package org.gtreimagined.gtlib.worldgen;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -13,17 +17,12 @@ import java.util.Collections;
 
 public class GTLibConfiguredFeatures {
     
-    public static final Holder<PlacedFeature> SMALL_ORES = register("small_ores", FeatureUtils.register("small_ores", GTLibWorldGenerator.SMALL_ORE, NoneFeatureConfiguration.NONE));
-    public static final Holder<PlacedFeature> VANILLA_VEINS = register("vanilla_veins", FeatureUtils.register("vanilla_veins", GTLibWorldGenerator.VANILLA_ORE, NoneFeatureConfiguration.NONE));
-    public static final Holder<PlacedFeature> VEINS = register("veins", FeatureUtils.register("veins", GTLibWorldGenerator.VEIN_LAYER, NoneFeatureConfiguration.NONE));
-    public static final Holder<PlacedFeature> ORE = register("ore", FeatureUtils.register("ore", GTLibWorldGenerator.ORE, NoneFeatureConfiguration.NONE));
-    public static final Holder<PlacedFeature> STONE_LAYERS = register("stone_layers", FeatureUtils.register("stone_layers", GTLibWorldGenerator.STONE_LAYER, NoneFeatureConfiguration.NONE));
-    public static final Holder<PlacedFeature> BEDROCK_VEINS = register("bedrock_veins", FeatureUtils.register("bedrock_veins", GTLibWorldGenerator.BEDROCK_VEINS, NoneFeatureConfiguration.NONE));
-
-    @SuppressWarnings("unchecked")
-    public static <T extends FeatureConfiguration> Holder<PlacedFeature> register(String id, Holder<ConfiguredFeature<T, ?>> feature) {
-        return PlacementUtils.register(Ref.ID + ":"+id, feature, Collections.emptyList());
-    }
+    public static final ResourceKey<PlacedFeature> SMALL_ORES = ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Ref.ID, "small_ores"));
+    public static final ResourceKey<PlacedFeature> VANILLA_VEINS = ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Ref.ID, "vanilla_veins"));
+    public static final ResourceKey<PlacedFeature> VEINS = ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Ref.ID, "veins"));
+    public static final ResourceKey<PlacedFeature> ORE = ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Ref.ID, "ore"));
+    public static final ResourceKey<PlacedFeature> STONE_LAYERS = ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Ref.ID, "stone_layers"));
+    public static final ResourceKey<PlacedFeature> BEDROCK_VEINS = ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Ref.ID, "bedrock_veins"));
 
     public static void init() {
     }
