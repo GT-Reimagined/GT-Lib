@@ -66,7 +66,8 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     }
 
     public MaterialItem(String domain, MaterialType<?> type, Material material) {
-        this(domain, type, material, new Properties().tab(Ref.TAB_MATERIALS));
+        this(domain, type, material, new Properties());
+        tab(Ref.TAB_MATERIALS);
     }
 
     public MaterialType<?> getType() {

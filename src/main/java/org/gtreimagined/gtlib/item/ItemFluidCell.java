@@ -259,7 +259,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
                     this.playEmptySound(fluid, player, world, pos);
                 }
             } else {
-                if (!world.isClientSide() && replaceable && !state.getMaterial().isLiquid()) {
+                if (!world.isClientSide() && replaceable && !state.liquid()) {
                     world.destroyBlock(pos, true);
                 }
 

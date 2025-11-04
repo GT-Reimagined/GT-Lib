@@ -1,8 +1,10 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
+import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
@@ -18,11 +20,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject, ITextureProvider, IModelProvider {
+public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject, ITextureProvider, IModelProvider, ICreativeTabProvider {
 
     @Getter
     protected String domain, id, tooltip = "", subDir = "";
     protected boolean enabled = true;
+    protected CreativeModeTab tab = Ref.TAB_ITEMS;
 
     public ItemBasic(String domain, String id, String subDir, Properties properties) {
         super(properties);
@@ -47,11 +50,21 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject
     }
 
     public ItemBasic(String domain, String id) {
-        this(domain, id, "", new Properties().tab(Ref.TAB_ITEMS));
+        this(domain, id, "", new Properties());
     }
 
     public ItemBasic(String domain, String id, String subDir) {
-        this(domain, id, subDir, new Properties().tab(Ref.TAB_ITEMS));
+        this(domain, id, subDir, new Properties());
+    }
+
+    @Override
+    public boolean isInTab(CreativeModeTab tab) {
+        return tab == this.tab;
+    }
+
+    public T tab(CreativeModeTab tab) {
+        this.tab = tab;
+        return (T) this;
     }
 
     public T tip(String tooltip) {
