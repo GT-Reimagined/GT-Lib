@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.machine;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
 import org.gtreimagined.gtlib.Ref;
@@ -56,7 +57,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -253,7 +253,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> list = super.getDrops(state, builder);
         BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (tileentity instanceof BlockEntityMachine<?> machine){

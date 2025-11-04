@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.block;
 
+import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -9,15 +11,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
-public class GTItemBlock extends BlockItem {
+public class GTItemBlock extends BlockItem implements ICreativeTabProvider {
 
     public GTItemBlock(Block block) {
-        super(block, new Properties().tab(block instanceof IItemBlockProvider ? ((IItemBlockProvider) block).getItemGroup() : Ref.TAB_BLOCKS));
+        super(block, new Properties());
     }
 
     @NotNull
     @Override
     public Component getName(@NotNull ItemStack stack) {
         return getBlock() instanceof IItemBlockProvider ? ((IItemBlockProvider) getBlock()).getDisplayName(stack) : Utils.translatable(stack.getDescriptionId());
+    }
+
+    @Override
+    public boolean allowedIn(CreativeModeTab tab) {
+        CreativeModeTab compareTab = getBlock() instanceof IItemBlockProvider provider ? provider.getItemGroup() : Ref.TAB_BLOCKS;
+        return tab == compareTab;
     }
 }

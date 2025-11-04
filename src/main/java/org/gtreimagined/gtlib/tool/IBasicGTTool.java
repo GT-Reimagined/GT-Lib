@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.tool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IAddInformation;
@@ -12,6 +13,7 @@ import org.gtreimagined.gtlib.behaviour.IInteractEntity;
 import org.gtreimagined.gtlib.behaviour.IItemHighlight;
 import org.gtreimagined.gtlib.behaviour.IItemRightClick;
 import org.gtreimagined.gtlib.behaviour.IItemUse;
+import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IModelProvider;
@@ -50,7 +52,7 @@ import java.util.Set;
 import static org.gtreimagined.gtlib.data.GTTools.KNIFE;
 import static org.gtreimagined.gtlib.data.GTTools.SCYTHE;
 
-public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
+public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods, ICreativeTabProvider {
     GTToolType getGTToolType();
 
     Tier getItemTier();
@@ -65,6 +67,11 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
 
     default Object2ObjectMap<String, IBehaviour<IBasicGTTool>> getBehaviours(){
         return getGTToolType().getBehaviours();
+    }
+
+    @Override
+    default boolean allowedIn(CreativeModeTab tab){
+        return tab == getGTToolType().getItemGroup();
     }
 
     default Set<TagKey<Block>> getActualTags() {
@@ -86,9 +93,6 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     default boolean genericIsCorrectToolForDrops(ItemStack stack, BlockState state) {
         GTToolType type = this.getGTToolType();
         boolean containsEffectiveBlock = false;
-        if (type.getEffectiveMaterials().contains(state.getMaterial())) {
-            containsEffectiveBlock = true;
-        }
         if (type.getEffectiveBlocks().contains(state.getBlock())) {
             containsEffectiveBlock = true;
         }

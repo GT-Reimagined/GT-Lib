@@ -1,11 +1,13 @@
 package org.gtreimagined.gtlib.tool;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.world.item.ArmorItem.Type;
+import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.material.MaterialTags;
+import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IModelProvider;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
+public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods, ICreativeTabProvider {
     GTArmorType getGTArmorType();
 
     Material getMat();
@@ -35,6 +37,11 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
 
     default Item getItem() {
         return (Item) this;
+    }
+
+    @Override
+    default boolean allowedIn(CreativeModeTab tab) {
+        return tab == getGTArmorType().getItemGroup();
     }
 
     default void onGenericAddInformation(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
@@ -69,7 +76,7 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
 
     @Override
     default void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
-        if (this.getGTArmorType().getSlot() == EquipmentSlot.HEAD) {
+        if (this.getGTArmorType().getArmorType() == Type.HELMET) {
             String id = this.getId();
             GTItemModelBuilder builder = prov.getBuilder(id + "_probe");
             builder.parent(new ResourceLocation("minecraft", "item/handheld"));

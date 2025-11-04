@@ -285,11 +285,11 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
         var mat = tooltipCache.get(stack.getItem());
         if (mat == null) {
             if (stack.getItem() instanceof MaterialItem item) {
-                MaterialItem.addTooltipsForMaterialItems(stack, item.material, item.type, player.level, tooltips, flag);
+                MaterialItem.addTooltipsForMaterialItems(stack, item.material, item.type, player.level(), tooltips, flag);
             }
             return;
         }
-        MaterialItem.addTooltipsForMaterialItems(stack, mat.getB(), mat.getA(), player.level, tooltips, flag);
+        MaterialItem.addTooltipsForMaterialItems(stack, mat.getB(), mat.getA(), player.level(), tooltips, flag);
     }
 
     public static Material getMaterialFromStackTypeless(ItemStack stack) {

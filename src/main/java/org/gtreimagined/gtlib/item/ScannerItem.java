@@ -34,7 +34,7 @@ public class ScannerItem extends ItemBasic<ScannerItem> {
     final boolean simple;
 
     public ScannerItem(String domain, String id, boolean simple) {
-        this(domain, id, simple, "", new Properties().tab(Ref.TAB_ITEMS));
+        this(domain, id, simple, "", new Properties());
 
     }
 

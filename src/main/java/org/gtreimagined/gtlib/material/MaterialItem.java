@@ -288,7 +288,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     @OnlyIn(Dist.CLIENT)
     private int getChangingMaterialColor(){
-        long currentRemainder = Minecraft.getInstance().player != null ?  Minecraft.getInstance().player.getLevel().getGameTime() % 100 : -1;
+        long currentRemainder = Minecraft.getInstance().player != null ?  Minecraft.getInstance().player.level().getGameTime() % 100 : -1;
         if (currentRemainder >= 0){
             int direction = (int) (currentRemainder < 50 ? currentRemainder : -(currentRemainder - 50));
             int rgb = material.getRGB();

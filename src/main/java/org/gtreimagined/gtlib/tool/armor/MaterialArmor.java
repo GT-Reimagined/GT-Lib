@@ -36,13 +36,13 @@ public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeather
     protected GTArmorType type;
     protected Material material;
 
-    public MaterialArmor(String domain, GTArmorType type, Material materialIn, EquipmentSlot slot, Properties builderIn) {
-        super(new MatArmorMaterial(type, materialIn), slot, builderIn);
+    public MaterialArmor(String domain, GTArmorType type, Material materialIn, ArmorItem.Type armorType, Properties builderIn) {
+        super(new MatArmorMaterial(type, materialIn), armorType, builderIn);
         this.domain = domain;
         this.material = materialIn;
         this.type = type;
         GTAPI.register(IGTArmor.class, this);
-        if (type.getSlot() == EquipmentSlot.HEAD && FMLEnvironment.dist.isClient()) {
+        if (type.getArmorType() == Type.HELMET && FMLEnvironment.dist.isClient()) {
             RenderHelper.registerProbePropertyOverrides(this);
         }
     }

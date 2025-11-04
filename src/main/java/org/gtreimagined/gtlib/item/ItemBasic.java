@@ -58,7 +58,7 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject
     }
 
     @Override
-    public boolean isInTab(CreativeModeTab tab) {
+    public boolean allowedIn(CreativeModeTab tab) {
         return tab == this.tab;
     }
 

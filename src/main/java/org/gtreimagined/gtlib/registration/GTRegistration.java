@@ -117,7 +117,7 @@ public final class GTRegistration {
             GTAPI.all(SoundEvent.class, domain, (t, d, i) -> {
                 ForgeRegistries.SOUND_EVENTS.register(new ResourceLocation(d, i), t);
             });
-        } else if (e.getRegistryKey() == Keys.RECIPE_SERIALIZERS) {
+        }  else if (e.getRegistryKey() == Keys.RECIPE_SERIALIZERS) {
             //TODO better solution for this
             GTAPI.all(IIngredientSerializer.class, domain, (s, d, i) -> {
                 CraftingHelper.register(new ResourceLocation(d, i), s);

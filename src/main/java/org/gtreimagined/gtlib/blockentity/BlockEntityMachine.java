@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
@@ -344,15 +345,15 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         }
     }
 
-    public void onDrop(BlockState state, LootContext.Builder builder, List<ItemStack> drops){
+    public void onDrop(BlockState state, LootParams.Builder builder, List<ItemStack> drops){
 
     }
 
-    public void dropInventory(BlockState state, LootContext.Builder builder, List<ItemStack> drops){
+    public void dropInventory(BlockState state, LootParams.Builder builder, List<ItemStack> drops){
         itemHandler.ifPresent(t -> drops.addAll(t.getAllItems()));
     }
 
-    public void dropCovers(BlockState state, LootContext.Builder builder, List<ItemStack> drops){
+    public void dropCovers(BlockState state, LootParams.Builder builder, List<ItemStack> drops){
         coverHandler.ifPresent(c -> {
             if (!drops.isEmpty()) {
                 ItemStack machine = drops.get(0);

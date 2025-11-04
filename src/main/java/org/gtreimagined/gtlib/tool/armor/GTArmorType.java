@@ -2,6 +2,10 @@ package org.gtreimagined.gtlib.tool.armor;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorItem.Type;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.IMaterialTag;
@@ -26,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+@Accessors(chain = true)
 public class GTArmorType implements IGTObject {
     private final String domain, id;
     @Getter
@@ -37,9 +42,11 @@ public class GTArmorType implements IGTObject {
     @Getter
     private final float extraToughness, extraKnockback;
     @Getter
-    private final CreativeModeTab itemGroup;
+    @Setter
+    private CreativeModeTab itemGroup;
     @Getter
-    private EquipmentSlot slot;
+    @Setter
+    private ArmorItem.Type armorType;
     @Getter
     private SoundEvent event;
     @Getter
@@ -56,10 +63,10 @@ public class GTArmorType implements IGTObject {
      * @param extraArmor       extra armor protection that would be applied to item's attribute on top of material value
      * @param extraToughness   extra toughness that would be applied to item's attribute on top of material value
      * @param extraKnockback   extra knockback resistance that would be applied to the item's attributes on top of material value
-     * @param slot             armor slot the item goes in
+     * @param armorType             armor slot the item goes in
      * @return a brand new GTArmorType for enjoyment
      */
-    public GTArmorType(String domain, String id, int durabilityFactor, int extraArmor, float extraToughness, float extraKnockback, EquipmentSlot slot) {
+    public GTArmorType(String domain, String id, int durabilityFactor, int extraArmor, float extraToughness, float extraKnockback, ArmorItem.Type armorType) {
         this.domain = domain;
         this.id = id;
         this.repairable = true;
@@ -68,7 +75,7 @@ public class GTArmorType implements IGTObject {
         this.extraToughness = extraToughness;
         this.extraKnockback = extraKnockback;
         this.itemGroup = Ref.TAB_TOOLS;
-        this.slot = slot;
+        this.armorType = armorType;
         this.event = SoundEvents.ARMOR_EQUIP_IRON;
         this.overlayLayers = 0;
         GTAPI.register(GTArmorType.class, this);
@@ -77,7 +84,7 @@ public class GTArmorType implements IGTObject {
     public List<IGTArmor> instantiateTools() {
         List<IGTArmor> armors = new ArrayList<>();
         MaterialTags.ARMOR.all().forEach(m -> {
-            armors.add(new MaterialArmor(domain, this, m, slot, prepareInstantiation(domain)));
+            armors.add(new MaterialArmor(domain, this, m, armorType, prepareInstantiation(domain)));
         });
         return armors;
     }
@@ -85,14 +92,14 @@ public class GTArmorType implements IGTObject {
     public List<IGTArmor> instantiateTools(String domain, Supplier<Item.Properties> properties) {
         List<IGTArmor> armors = new ArrayList<>();
         MaterialTags.ARMOR.all().forEach(m -> {
-            armors.add(new MaterialArmor(domain, this, m, slot, properties.get()));
+            armors.add(new MaterialArmor(domain, this, m, armorType, properties.get()));
         });
         return armors;
     }
 
     private Item.Properties prepareInstantiation(String domain) {
         if (domain.isEmpty()) Utils.onInvalidData("An GTArmorType was instantiated with an empty domain name!");
-        Item.Properties properties = new Item.Properties().tab(itemGroup);
+        Item.Properties properties = new Item.Properties();
         if (!repairable) properties.setNoRepair();
         return properties;
     }
@@ -104,11 +111,6 @@ public class GTArmorType implements IGTObject {
 
     public GTArmorType setEvent(SoundEvent event) {
         this.event = event;
-        return this;
-    }
-
-    public GTArmorType setArmorSlot(EquipmentSlot slot) {
-        this.slot = slot;
         return this;
     }
 
