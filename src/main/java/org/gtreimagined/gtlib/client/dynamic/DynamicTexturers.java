@@ -2,7 +2,6 @@ package org.gtreimagined.gtlib.client.dynamic;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
@@ -25,6 +24,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector4f;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,9 +1,7 @@
 package org.gtreimagined.gtlib.client.baked;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.math.Matrix4f;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.GTLibProperties.MachineProperties;
@@ -30,6 +28,8 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.Collections;
 import java.util.List;
@@ -86,7 +86,7 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
         quads.addAll(ModelUtils.getQuadsFromBaked(model, state, null, rand, level, pos));
         if (props.type.isNoFacing() || props.type.isNoTextureRotation()) return quads;
         Matrix4f f = new Matrix4f();
-        f.setIdentity();
+        f.identity();
         Transformation mat = new Transformation(f);
         mat = mat.blockCornerToCenter();
         mat = mat.compose(RenderHelper.faceRotation(state));

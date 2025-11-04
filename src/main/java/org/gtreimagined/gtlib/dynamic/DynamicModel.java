@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.dynamic;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.IGTModel;
@@ -40,11 +41,11 @@ public class DynamicModel implements IGTModel<DynamicModel> {
     }
 
     @Override
-    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         return new DynamicBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, particle)), getBakedConfigs(configuration, bakery, getter, transform, overrides, loc));
     }
 
-    public Int2ObjectOpenHashMap<BakedModel[]> getBakedConfigs(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+    public Int2ObjectOpenHashMap<BakedModel[]> getBakedConfigs(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         Int2ObjectOpenHashMap<BakedModel[]> bakedConfigs = GTLibModelManager.getStaticConfigMap(staticMapId);
         modelConfigs.forEach((k, v) -> {
             BakedModel[] baked = new BakedModel[v.length];
@@ -54,12 +55,5 @@ public class DynamicModel implements IGTModel<DynamicModel> {
             bakedConfigs.put((int) k, baked);
         });
         return bakedConfigs;
-    }
-
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
-        Set<Material> textures = new ObjectOpenHashSet<>();
-        modelConfigs.values().forEach(v -> Arrays.stream(v).forEach(m -> textures.addAll(m.getMaterials(configuration, getter, errors))));
-        return textures;
     }
 }

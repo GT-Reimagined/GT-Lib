@@ -1,8 +1,8 @@
 package org.gtreimagined.gtlib.client.model;
 
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.ModelUtils;
@@ -36,13 +36,8 @@ public class GTModel<T extends GTModel<T>> implements IGTModel<T> {
     }
 
     @Override
-    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         return model != null ? model.bake(bakery, getter, getModelTransform(transform, rotations), loc) : ModelUtils.getMissingModel().bake(bakery, getter, transform, loc);
-    }
-
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext configuration, Function<ResourceLocation, UnbakedModel> getter, Set<Pair<String, String>> errors) {
-        return model != null ? model.getMaterials(getter, errors) : Collections.emptyList();
     }
 
     public ModelState getModelTransform(ModelState base, int[] rots) {

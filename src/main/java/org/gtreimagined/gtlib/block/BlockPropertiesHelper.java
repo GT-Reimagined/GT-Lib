@@ -7,6 +7,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Includes helper methods for cleaner properties instantiations.
@@ -36,6 +39,9 @@ public class BlockPropertiesHelper {
 
     public static BlockBehaviour.Properties leaves() {
         return BlockBehaviour.Properties.of()
+                .mapColor(MapColor.PLANT)
+                .ignitedByLava()
+                .pushReaction(PushReaction.DESTROY)
                 .strength(0.2F)
                 .randomTicks()
                 .sound(SoundType.GRASS)
@@ -49,6 +55,7 @@ public class BlockPropertiesHelper {
         return BlockBehaviour.Properties.of().mapColor(dyeColor)
                 .strength(0.3F)
                 .sound(SoundType.GLASS)
+                .instrument(NoteBlockInstrument.HAT)
                 .noOcclusion()
                 .isValidSpawn(BlockPropertiesHelper::never)
                 .isRedstoneConductor(BlockPropertiesHelper::never)

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.client.scene;
 
-import com.mojang.math.Vector3f;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -34,6 +33,7 @@ import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +69,7 @@ public class TrackedDummyWorld extends Level {
     }
 
     public TrackedDummyWorld(Level world){
-        super(null, null,
+        super(null, null, null,
                 ServerLifecycleHooks.getCurrentServer().overworld().dimensionTypeRegistration(), null,true, false, 0, 1);
         proxyWorld = world;
     }
@@ -122,12 +122,17 @@ public class TrackedDummyWorld extends Level {
     }
 
     @Override
+    public void playSeededSound(@Nullable Player player, double v, double v1, double v2, Holder<SoundEvent> holder, SoundSource soundSource, float v3, float v4, long l) {
+
+    }
+
+    @Override
     public void playSeededSound(@Nullable Player player, double v, double v1, double v2, SoundEvent soundEvent, SoundSource soundSource, float v3, float v4, long l) {
 
     }
 
     @Override
-    public void playSeededSound(@Nullable Player player, Entity entity, SoundEvent soundEvent, SoundSource soundSource, float v, float v1, long l) {
+    public void playSeededSound(@Nullable Player player, Entity entity, Holder<SoundEvent> holder, SoundSource soundSource, float v, float v1, long l) {
 
     }
 
@@ -169,7 +174,8 @@ public class TrackedDummyWorld extends Level {
 
     @Override
     public int getBlockTint(@NotNull BlockPos blockPos, @NotNull ColorResolver colorResolver) {
-        return colorResolver.getColor(BuiltinRegistries.BIOME.get(net.minecraft.world.level.biome.Biomes.PLAINS), blockPos.getX(), blockPos.getY());
+        //return colorResolver.getColor(BuiltinRegistries.BIOME.get(net.minecraft.world.level.biome.Biomes.PLAINS), blockPos.getX(), blockPos.getY());
+        return 0;
     }
 
     @Override
@@ -286,6 +292,11 @@ public class TrackedDummyWorld extends Level {
 
     @Override
     public RegistryAccess registryAccess() {
+        return null;
+    }
+
+    @Override
+    public FeatureFlagSet enabledFeatures() {
         return null;
     }
 

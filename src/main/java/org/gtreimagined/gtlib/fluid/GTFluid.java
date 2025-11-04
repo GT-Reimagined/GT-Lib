@@ -3,6 +3,8 @@ package org.gtreimagined.gtlib.fluid;
 import lombok.Getter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
@@ -21,7 +23,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Flowing;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Properties;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Source;
@@ -99,7 +100,7 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     @Override
     public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
         if (registry == ForgeRegistries.Keys.ITEMS) {
-            GTAPI.register(Item.class, getId() + "_bucket", getDomain(), containerItem = new BucketItem(this::getFluid, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET).tab(CreativeModeTab.TAB_MISC)));
+            GTAPI.register(Item.class, getId() + "_bucket", getDomain(), containerItem = new BucketItem(this::getFluid, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET)));
         } else if (registry == ForgeRegistries.Keys.BLOCKS) {
             this.source = new Source(this.fluidProperties);
             this.flowing = new Flowing(this.fluidProperties);
@@ -148,7 +149,7 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     protected static Block.Properties getDefaultBlockProperties() {
-        return Block.Properties.of(Material.WATER).strength(100.0F).noLootTable();
+        return Block.Properties.of().mapColor(MapColor.WATER).replaceable().pushReaction(PushReaction.DESTROY).liquid().strength(100.0F).noLootTable();
     }
 
     protected static FluidType.Properties getDefaultFluidTypeProperties(boolean hot){

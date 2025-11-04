@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.block;
 
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.world.level.block.SoundType;

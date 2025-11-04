@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.data.loot.BlockLootSubProvider;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -28,7 +29,6 @@ import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
-import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -52,7 +52,7 @@ import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 
-public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTLibProvider {
+public class GTBlockLootProvider extends BlockLootSubProvider implements DataProvider, IGTLibProvider {
     protected final String providerDomain, providerName;
     protected final Map<Block, Function<Block, LootTable.Builder>> tables = new Object2ObjectOpenHashMap<>();
     protected static final Map<Block, Function<Block, LootTable.Builder>> GLOBAL_TABLES = new Object2ObjectOpenHashMap<>();
@@ -166,7 +166,7 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
         tables.put(block, addToFortuneWithoutCustomDrops(block));
     }
 
-    public static Function<Block, LootTable.Builder> addToFortuneWithoutCustomDrops(BlockOre block) {
+    public Function<Block, LootTable.Builder> addToFortuneWithoutCustomDrops(BlockOre block) {
         if (block.getOreType() == ORE) {
             Item drop;
             if (block.getMaterial().has(CRUSHED_ORE) || block.getMaterial().has(DUST)){
@@ -177,7 +177,7 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
             Item item = block.getStoneType().isSandLike() ? block.asItem() : RAW_ORE.get(block.getMaterial());
             return b -> createOreDropWithHammer(b, item, drop, MaterialTags.ORE_MULTI.get(block.getMaterial()));
         }
-        return BlockLoot::createSingleItemTable;
+        return this::createSingleItemTable;
     }
 
     public static LootTable.Builder createOreDropWithHammer(Block block, Item primaryDrop, Item hammerDrop, int hammerAmount){
@@ -226,5 +226,10 @@ public class GTBlockLootProvider extends BlockLoot implements DataProvider, IGTL
 
     protected static LootTable.Builder droppingWithBranchCutters(Block block, Block sapling, float... chances) {
         return createLeavesDrops(block, sapling, chances).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(GTBlockLootProvider.BRANCH_CUTTER).add(LootItem.lootTableItem(sapling)));
+    }
+
+    @Override
+    protected void generate() {
+
     }
 }

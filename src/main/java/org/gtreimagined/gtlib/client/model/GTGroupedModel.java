@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.client.model;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.baked.BakedMachineSide;
@@ -34,12 +35,12 @@ public class GTGroupedModel implements IGTModel<GTGroupedModel> {
     }
 
     @Override
-    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         ImmutableMap.Builder<String, BakedModel> builder = buildParts(configuration, bakery, getter, transform, overrides, loc, this.models.entrySet());
         return new GroupedBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())), builder.build());
     }
 
-    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IGTModel<?>>> entries) {
+    protected static ImmutableMap.Builder<String, BakedModel> buildParts(IGeometryBakingContext configuration, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IGTModel<?>>> entries) {
         ImmutableMap.Builder<String, BakedModel> builder = ImmutableMap.builder();
         for (Map.Entry<String, IGTModel<?>> entry : entries) {
             builder.put(entry.getKey(), entry.getValue().bake(configuration, bakery, getter, transform, overrides, loc));

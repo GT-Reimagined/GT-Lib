@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.block;
 
+import net.minecraft.world.level.material.MapColor;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IGTObject;
@@ -22,7 +23,7 @@ public class BlockBasic extends Block implements IGTObject, ITextureProvider, IM
     }
 
     public BlockBasic(String domain, String id) {
-        this(domain, id, Properties.of().strength(1.0f, 1.0f).sound(SoundType.STONE));
+        this(domain, id, Properties.of().mapColor(MapColor.METAL).strength(1.0f, 1.0f).sound(SoundType.STONE));
     }
 
     public String getDomain() {

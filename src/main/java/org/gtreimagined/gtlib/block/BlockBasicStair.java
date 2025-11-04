@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.block;
 
 import lombok.Getter;
+import net.minecraft.world.level.material.MapColor;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
@@ -35,7 +36,7 @@ public class BlockBasicStair extends StairBlock implements IGTObject, ITexturePr
     }
 
     public BlockBasicStair(String domain, String id, Block base) {
-        this(domain, id, base, Properties.of().strength(1.0f, 1.0f).sound(SoundType.STONE));
+        this(domain, id, base, Properties.of().mapColor(MapColor.METAL).strength(1.0f, 1.0f).sound(SoundType.STONE));
     }
 
     public String getDomain() {
