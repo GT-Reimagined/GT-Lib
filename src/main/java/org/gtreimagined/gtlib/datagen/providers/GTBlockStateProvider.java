@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
@@ -326,7 +327,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void stairsBlock(StairBlock block, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
-        stairsBlockInternal(block, Registry.BLOCK.getKey(block).toString(), side, bottom, top);
+        stairsBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), side, bottom, top);
     }
 
     public void stairsBlock(StairBlock block, String name, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
@@ -439,7 +440,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void fenceBlock(FenceBlock block, ResourceLocation texture) {
-        String baseName = Registry.BLOCK.getKey(block).toString();
+        String baseName = BuiltInRegistries.BLOCK.getKey(block).toString();
         fourWayBlock(block, models().fencePost(baseName + "_post", texture), models().fenceSide(baseName + "_side", texture));
     }
 
@@ -448,7 +449,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void fenceGateBlock(FenceGateBlock block, ResourceLocation texture) {
-        fenceGateBlockInternal(block, Registry.BLOCK.getKey(block).toString(), texture);
+        fenceGateBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), texture);
     }
 
     public void fenceGateBlock(FenceGateBlock block, String name, ResourceLocation texture) {
@@ -480,7 +481,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void wallBlock(WallBlock block, ResourceLocation texture) {
-        wallBlockInternal(block, Registry.BLOCK.getKey(block).toString(), texture);
+        wallBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), texture);
     }
 
     public void wallBlock(WallBlock block, String name, ResourceLocation texture) {
@@ -520,7 +521,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void paneBlock(IronBarsBlock block, ResourceLocation pane, ResourceLocation edge) {
-        paneBlockInternal(block, Registry.BLOCK.getKey(block).toString(), pane, edge);
+        paneBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), pane, edge);
     }
 
     public void paneBlock(IronBarsBlock block, String name, ResourceLocation pane, ResourceLocation edge) {
@@ -552,7 +553,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void doorBlock(DoorBlock block, ResourceLocation bottom, ResourceLocation top) {
-        doorBlockInternal(block, Registry.BLOCK.getKey(block).toString(), bottom, top);
+        doorBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), bottom, top);
     }
 
     public void doorBlock(DoorBlock block, String name, ResourceLocation bottom, ResourceLocation top) {
@@ -560,7 +561,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void doorBlockWithRenderType(DoorBlock block, ResourceLocation bottom, ResourceLocation top, String renderType) {
-        this.doorBlockInternalWithRenderType(block, Registry.BLOCK.getKey(block).toString(), bottom, top, ResourceLocation.tryParse(renderType));
+        this.doorBlockInternalWithRenderType(block, BuiltInRegistries.BLOCK.getKey(block).toString(), bottom, top, ResourceLocation.tryParse(renderType));
     }
 
     public void doorBlockWithRenderType(DoorBlock block, String name, ResourceLocation bottom, ResourceLocation top, String renderType) {
@@ -568,7 +569,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void doorBlockWithRenderType(DoorBlock block, ResourceLocation bottom, ResourceLocation top, ResourceLocation renderType) {
-        this.doorBlockInternalWithRenderType(block, Registry.BLOCK.getKey(block).toString(), bottom, top, renderType);
+        this.doorBlockInternalWithRenderType(block, BuiltInRegistries.BLOCK.getKey(block).toString(), bottom, top, renderType);
     }
 
     public void doorBlockWithRenderType(DoorBlock block, String name, ResourceLocation bottom, ResourceLocation top, ResourceLocation renderType) {
@@ -644,7 +645,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void trapdoorBlock(TrapDoorBlock block, ResourceLocation texture, boolean orientable) {
-        trapdoorBlockInternal(block, Registry.BLOCK.getKey(block).toString(), texture, orientable);
+        trapdoorBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), texture, orientable);
     }
 
     public void trapdoorBlock(TrapDoorBlock block, String name, ResourceLocation texture, boolean orientable) {

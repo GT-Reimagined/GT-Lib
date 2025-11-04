@@ -7,6 +7,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.data.recipes.RecipeCategory;
 import org.gtreimagined.gtlib.recipe.container.MirroredShapedRecipe;
 import org.gtreimagined.gtlib.recipe.material.MaterialSerializer;
 import org.gtreimagined.gtlib.util.RegistryUtils;
@@ -155,8 +157,8 @@ public class GTShapedRecipeBuilder {
      */
     public void build(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
         this.validate(id);
-        this.advBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.result.get(0), this.group == null ? "" : this.group, this.pattern, this.key, this.advBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.get(0).getItem().getItemCategory().getRecipeFolderName().replace(":", "/") + "/" + id.getPath()), this.mirrored));
+        this.advBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(ContextAwarePredicate.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
+        consumer.accept(new Result(id, this.result.get(0), this.group == null ? "" : this.group, this.pattern, this.key, this.advBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + RecipeCategory.BUILDING_BLOCKS.getFolderName().replace(":", "/") + "/" + id.getPath()), this.mirrored));
     }
 
     public void buildTool(Consumer<FinishedRecipe> consumer, String builder){
@@ -172,9 +174,8 @@ public class GTShapedRecipeBuilder {
      */
     public void buildTool(Consumer<FinishedRecipe> consumer, String builder, ResourceLocation id) {
         this.validate(id);
-        this.advBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-        CreativeModeTab group = this.result.get(0).getItem().getItemCategory();
-        String groupId = group != null ? group.getRecipeFolderName() : "";
+        this.advBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(ContextAwarePredicate.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
+        String groupId = RecipeCategory.TOOLS.getFolderName();
         consumer.accept(new ToolResult(builder, id, this.result, this.group == null ? "" : this.group, this.pattern, this.key, this.advBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + groupId + "/" + id.getPath())));
     }
 
@@ -184,7 +185,7 @@ public class GTShapedRecipeBuilder {
     private void validate(ResourceLocation id) {
         if (this.pattern.isEmpty()) {
             throw new IllegalStateException("No pattern is defined for shaped recipe " + id + "!");
-        } else if (this.result.get(0).sameItem(ItemStack.EMPTY)) {
+        } else if (this.result.get(0).isEmpty()) {
             throw new IllegalStateException("Resulting ItemStack cannot be empty!");
         } else {
             Set<Character> set = Sets.newHashSet(this.key.keySet());

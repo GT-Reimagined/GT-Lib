@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.util.RegistryUtils;
@@ -64,7 +66,7 @@ public class SequencedAssemblyBuilder {
             throw new IllegalStateException("Recipe must add a transitional item first!");
         }
         Ingredient ingredient;
-        if (in instanceof TagKey<?> key && key.registry() == Registry.ITEM_REGISTRY){
+        if (in instanceof TagKey<?> key && key.registry() == Registries.ITEM){
             ingredient = Ingredient.of((TagKey<Item>) key);
         } else if (in instanceof ItemLike itemLike){
             ingredient = Ingredient.of(itemLike);
@@ -174,7 +176,7 @@ public class SequencedAssemblyBuilder {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return Registry.RECIPE_SERIALIZER.get(new ResourceLocation(Ref.MOD_CREATE, "sequenced_assembly"));
+            return BuiltInRegistries.RECIPE_SERIALIZER.get(new ResourceLocation(Ref.MOD_CREATE, "sequenced_assembly"));
         }
 
         @Nullable

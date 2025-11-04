@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.data;
 
+import net.minecraft.world.item.ArmorItem.Type;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -55,10 +56,10 @@ public class GTTools {
     public static final GTToolType SCISSORS = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "scissors", 1, 2, 2, 1.0f, -1.5f, false));
     public static final GTToolType PLUNGER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "plunger", 5, 5, 10, 0.0F, -2.9F, false)).setUseSound(SoundEvents.BUCKET_EMPTY).setHasSecondary(false).setRepairable(false);
     public static final GTToolType SCYTHE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "scythe", 1, 2, 5, 6.5f, -3.1f, false)).setMaterialTypeItem(SCYTHE_BLADE);
-    public static final GTArmorType HELMET = new GTArmorType(Ref.SHARED_ID, "helmet", 40, 0, 0.0F, 0.0F, EquipmentSlot.HEAD);
-    public static final GTArmorType CHESTPLATE = new GTArmorType(Ref.SHARED_ID, "chestplate", 40, 0, 0.0F, 0.0F, EquipmentSlot.CHEST);
-    public static final GTArmorType LEGGINGS = new GTArmorType(Ref.SHARED_ID, "leggings", 40, 0, 0.0F, 0.0F, EquipmentSlot.LEGS);
-    public static final GTArmorType BOOTS = new GTArmorType(Ref.SHARED_ID, "boots", 40, 0, 0.0F, 0.0F, EquipmentSlot.FEET);
+    public static final GTArmorType HELMET = new GTArmorType(Ref.SHARED_ID, "helmet", 40, 0, 0.0F, 0.0F, Type.HELMET);
+    public static final GTArmorType CHESTPLATE = new GTArmorType(Ref.SHARED_ID, "chestplate", 40, 0, 0.0F, 0.0F, Type.CHESTPLATE);
+    public static final GTArmorType LEGGINGS = new GTArmorType(Ref.SHARED_ID, "leggings", 40, 0, 0.0F, 0.0F, Type.LEGGINGS);
+    public static final GTArmorType BOOTS = new GTArmorType(Ref.SHARED_ID, "boots", 40, 0, 0.0F, 0.0F, Type.BOOTS);
 
     public static void init(Dist side){
         AXE.addBehaviour(BehaviourLogStripping.INSTANCE, BehaviourTreeFelling.INSTANCE);

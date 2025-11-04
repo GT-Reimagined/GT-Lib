@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.recipe.ingredient;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.recipe.RecipeUtil;
@@ -48,7 +49,7 @@ public class FluidIngredient {
         evaluated = true;
         if (tag != null) {
             List<FluidStack> list = new ObjectArrayList<>();
-            Registry.FLUID.getTagOrEmpty(tag).iterator().forEachRemaining(t -> {
+            BuiltInRegistries.FLUID.getTagOrEmpty(tag).iterator().forEachRemaining(t -> {
                 if (!t.value().isSource(t.value().defaultFluidState())) return;
                 FluidStack stack = new FluidStack(t.value(), getAmount());
                 list.add(stack);

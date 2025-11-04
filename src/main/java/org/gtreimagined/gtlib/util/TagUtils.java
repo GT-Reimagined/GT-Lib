@@ -3,6 +3,8 @@ package org.gtreimagined.gtlib.util;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -30,7 +32,7 @@ public class TagUtils {
      * @return BlockTag variant of the ItemTag
      */
     public static TagKey<Block> itemToBlockTag(TagKey<Item> tag) {
-        return createTag(tag.location(), Block.class, name -> TagKey.create(Registry.BLOCK_REGISTRY, name));
+        return createTag(tag.location(), Block.class, name -> TagKey.create(Registries.BLOCK, name));
     }
 
     /**
@@ -42,7 +44,7 @@ public class TagUtils {
      * @return ItemTag variant of the BlockTag
      */
     public static TagKey<Item> blockToItemTag(TagKey<Block> tag) {
-        return createTag(tag.location(), Item.class, name -> TagKey.create(Registry.ITEM_REGISTRY, name));
+        return createTag(tag.location(), Item.class, name -> TagKey.create(Registries.ITEM, name));
     }
 
     /**
@@ -50,7 +52,7 @@ public class TagUtils {
      * @return BlockTag
      */
     public static TagKey<Block> getBlockTag(ResourceLocation loc) {
-        return createTag(loc, Block.class, name -> TagKey.create(Registry.BLOCK_REGISTRY, name));
+        return createTag(loc, Block.class, name -> TagKey.create(Registries.BLOCK, name));
     }
 
     public static Map<ResourceLocation, TagKey> getTags(Class clazz) {
@@ -72,7 +74,7 @@ public class TagUtils {
      * @return ItemTag
      */
     public static TagKey<Item> getItemTag(ResourceLocation loc) {
-        return createTag(loc, Item.class, name -> TagKey.create(Registry.ITEM_REGISTRY, name));
+        return createTag(loc, Item.class, name -> TagKey.create(Registries.ITEM, name));
     }
 
     /**
@@ -91,7 +93,7 @@ public class TagUtils {
      * @return FluidTag
      */
     public static TagKey<Fluid> getForgelikeFluidTag(String name) {
-        return createTag(new ResourceLocation("forge", name), Fluid.class, fluidName -> TagKey.create(Registry.FLUID_REGISTRY, fluidName));
+        return createTag(new ResourceLocation("forge", name), Fluid.class, fluidName -> TagKey.create(Registries.FLUID, fluidName));
     }
 
     /**
@@ -99,7 +101,7 @@ public class TagUtils {
      * @return FluidTag
      */
     public static TagKey<Fluid> getFluidTag(ResourceLocation name) {
-        return createTag(name, Fluid.class, fluidName -> TagKey.create(Registry.FLUID_REGISTRY, fluidName));
+        return createTag(name, Fluid.class, fluidName -> TagKey.create(Registries.FLUID, fluidName));
     }
 
     /**
@@ -107,7 +109,7 @@ public class TagUtils {
      * @return FluidTag
      */
     public static TagKey<Biome> getBiomeTag(ResourceLocation name){
-        return createTag(name, Biome.class, biomeName -> TagKey.create(Registry.BIOME_REGISTRY, biomeName));
+        return createTag(name, Biome.class, biomeName -> TagKey.create(Registries.BIOME, biomeName));
     }
 
     public static <T> TagKey<T> getTag(ResourceLocation name, Class<T> clazz, Registry<T> registry){
@@ -124,7 +126,7 @@ public class TagUtils {
      */
     public static List<Item> nc(TagKey<Item> tag) {
         List<Item> list = new ObjectArrayList<>();
-         Registry.ITEM.getTagOrEmpty(tag).iterator().forEachRemaining(t ->list.add(t.value()));
+         BuiltInRegistries.ITEM.getTagOrEmpty(tag).iterator().forEachRemaining(t ->list.add(t.value()));
          return list;
     }
 
@@ -137,7 +139,7 @@ public class TagUtils {
      * @return
      */
     public static TagKey<Item> nc(ResourceLocation tag) {
-        return new TagKey<>(Registry.ITEM_REGISTRY, tag);
+        return new TagKey<>(Registries.ITEM, tag);
     }
 
     protected static <T> TagKey<T> createTag(ResourceLocation loc, Class<T> clazz, Function<ResourceLocation, TagKey<T>> fn) {

@@ -72,7 +72,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     default DyeColor getDyeColor(ItemStack stack){
         CompoundTag data = getOrCreateDataTag(stack);
         if (data.contains(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR)){
-            Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(t -> t.getMaterialColor().col == data.getInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR)).findFirst();
+            Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(t -> t.getMapColor().col == data.getInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR)).findFirst();
             return color.orElse(DyeColor.WHITE);
         }
         return null;
@@ -100,7 +100,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     }
 
     default int getSubColour(ItemStack stack) {
-        return getDyeColor(stack) == null ? 0 : getDyeColor(stack).getMaterialColor().col;
+        return getDyeColor(stack) == null ? 0 : getDyeColor(stack).getMapColor().col;
     }
 
     default long getCurrentEnergy(ItemStack stack) {

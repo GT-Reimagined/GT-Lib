@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.blockentity.single;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
@@ -101,12 +102,12 @@ public class BlockEntityDigitalTransformer<T extends BlockEntityDigitalTransform
     }
 
     @Override
-    public int drawInfo(DigitalTransformerWidget widget, PoseStack stack, Font renderer, int left, int top) {
-        renderer.draw(stack, "Control Panel", left + 43, top + 21, 0xFAFAFF);
-        renderer.draw(stack, "VOLT: " + widget.voltage, left + 43, top + 40, 0xFAFAFF);
-        renderer.draw(stack, "TIER: " + Tier.getTier(widget.voltage < 0 ? -widget.voltage : widget.voltage).getId().toUpperCase(), left + 43, top + 48, 0xFAFAFF);
-        renderer.draw(stack, "AMP: " + widget.amperage, left + 43, top + 56, 0xFAFAFF);
-        renderer.draw(stack, "SUM: " + (widget.amperage * widget.voltage), left + 43, top + 64, 0xFAFAFF);
+    public int drawInfo(DigitalTransformerWidget widget, GuiGraphics graphics, Font font, int left, int top) {
+        graphics.drawString(font, "Control Panel", left + 43, top + 21, 0xFAFAFF);
+        graphics.drawString(font, "VOLT: " + widget.voltage, left + 43, top + 40, 0xFAFAFF);
+        graphics.drawString(font, "TIER: " + Tier.getTier(widget.voltage < 0 ? -widget.voltage : widget.voltage).getId().toUpperCase(), left + 43, top + 48, 0xFAFAFF);
+        graphics.drawString(font, "AMP: " + widget.amperage, left + 43, top + 56, 0xFAFAFF);
+        graphics.drawString(font, "SUM: " + (widget.amperage * widget.voltage), left + 43, top + 64, 0xFAFAFF);
         return 72;
     }
 

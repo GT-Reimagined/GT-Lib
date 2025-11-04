@@ -124,7 +124,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
         ICover copy = factory.get().get(this, outputCover.getTier(), side, factory);
         copy.deserialize(outputCover.serialize());
         outputCover = copy;
-        entity.getLevel().playSound(null, getTile().getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
+        entity.level().playSound(null, getTile().getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
         sync();
         if (getTile().getLevel() != null) {
             if (!getTile().getLevel().isClientSide) {
@@ -147,7 +147,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
         ICover copy = factory.get().get(this, secondaryOutputCover.getTier(), side, factory);
         copy.deserialize(secondaryOutputCover.serialize());
         secondaryOutputCover = copy;
-        entity.getLevel().playSound(null, getTile().getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
+        entity.level().playSound(null, getTile().getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
         sync();
         if (getTile().getLevel() != null) {
             if (!getTile().getLevel().isClientSide) {
@@ -170,7 +170,7 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
         ICover secondaryCopy = secondaryFactory.get().get(this, secondaryOutputCover.getTier(), newSecondaryOutputDir, secondaryFactory);
         secondaryCopy.deserialize(secondaryOutputCover.serialize());
         secondaryOutputCover = secondaryCopy;
-        entity.getLevel().playSound(null, getTile().getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
+        entity.level().playSound(null, getTile().getBlockPos(), Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 1.0f);
         sync();
         if (getTile().getLevel() != null) {
             if (!getTile().getLevel().isClientSide) {

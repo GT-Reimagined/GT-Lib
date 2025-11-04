@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.Registries;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.machine.types.HatchMachine;
@@ -58,8 +59,8 @@ public class StructureBuilder<T extends BlockEntityBasicMultiMachine<T>> {
                 elements.add(GTLibStructureUtility.ofHatch(machine));
             } else if (object instanceof Block block){
                 elements.add(StructureUtility.ofBlock(block));
-            } else if (object instanceof TagKey<?> tag && tag.isFor(Registry.BLOCK_REGISTRY)){
-                elements.add(StructureUtility.ofBlock(tag.cast(Registry.BLOCK_REGISTRY).get()));
+            } else if (object instanceof TagKey<?> tag && tag.isFor(Registries.BLOCK)){
+                elements.add(StructureUtility.ofBlock(tag.cast(Registries.BLOCK).get()));
             } else if (object instanceof IStructureElement element){
                 elements.add(element);
             }

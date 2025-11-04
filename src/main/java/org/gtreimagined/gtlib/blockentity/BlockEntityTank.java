@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.cover.CoverOutput;
@@ -44,16 +45,16 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
     }
 
     @Override
-    public int drawInfo(TankMachine.TankRenderWidget instance, PoseStack stack, Font renderer, int left, int top) {
+    public int drawInfo(TankMachine.TankRenderWidget instance, GuiGraphics graphics, Font font, int left, int top) {
         left = left + 55;
         top = top + 24;
         if (instance.stack.isEmpty()){
-            renderer.draw(stack, "Empty", left, top, 0xFAFAFF);
+            graphics.drawString(font, "Empty", left, top, 0xFAFAFF);
             return 8;
         }
-        renderer.draw(stack, FluidUtils.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
+        graphics.drawString(font, FluidUtils.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
         String fluidAmount = String.valueOf(instance.stack.getAmount());
-        renderer.draw(stack, fluidAmount + " mb", left, top + 8, 0xFAFAFF);
+        graphics.drawString(font, fluidAmount + " mb", left, top + 8, 0xFAFAFF);
         return 16;
     }
 

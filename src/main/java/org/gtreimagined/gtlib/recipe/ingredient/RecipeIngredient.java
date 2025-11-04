@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.Getter;
+import net.minecraft.core.registries.Registries;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.TagUtils;
@@ -119,7 +120,7 @@ public class RecipeIngredient extends Ingredient {
             return new RecipeValue(stack);
         } else if (json.has("tag")) {
             ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
-            TagKey<Item> tagKey = TagKey.create(Registry.ITEM_REGISTRY, resourceLocation);
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, resourceLocation);
             return new RecipeValue(tagKey, count);
         } else {
             throw new JsonParseException("An ingredient entry needs either a tag or an item");
@@ -184,7 +185,7 @@ public class RecipeIngredient extends Ingredient {
                 return compare.isEmpty();
             } else {
                 for (ItemStack itemstack : this.getItems()) {
-                    if (itemstack.is(compare.getItem()) && (ignoreNbt || ItemStack.tagMatches(itemstack, compare))) {
+                    if (itemstack.is(compare.getItem()) && (ignoreNbt || ItemStack.isSameItemSameTags(itemstack, compare))) {
                         return true;
                     }
                 }
@@ -255,7 +256,7 @@ public class RecipeIngredient extends Ingredient {
 
     public static RecipeIngredient of(ResourceLocation tagIn, int count) {
         ensureRegisteredTag(tagIn);
-        return new RecipeIngredient(new RecipeValue(new TagKey<>(Registry.ITEM_REGISTRY, tagIn), count));
+        return new RecipeIngredient(new RecipeValue(new TagKey<>(Registries.ITEM, tagIn), count));
     }
 
     public static RecipeIngredient of(TagKey<Item> tagIn, int count) {
