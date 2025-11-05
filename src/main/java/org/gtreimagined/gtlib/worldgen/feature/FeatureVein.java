@@ -3,12 +3,14 @@ package org.gtreimagined.gtlib.worldgen.feature;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome.ClimateSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
@@ -479,7 +481,7 @@ public class FeatureVein extends GTFeature<NoneFeatureConfiguration> {
     }
 
     @Override
-    public void build(ResourceLocation name, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.VEINS);
+    public void build(ResourceLocation name, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, getPlacedFeatureFromKey(placedFeatureRegistry, GTLibConfiguredFeatures.VEINS));
     }
 }

@@ -1,7 +1,9 @@
 package org.gtreimagined.gtlib.worldgen;
 
+import net.minecraft.core.Registry;
 import net.minecraft.world.level.biome.Biome.ClimateSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
@@ -18,7 +20,6 @@ import org.gtreimagined.gtlib.worldgen.feature.FeatureVein;
 import org.gtreimagined.gtlib.worldgen.feature.IGTFeature;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -149,13 +150,13 @@ public class GTLibWorldGenerator {
     }
 
 
-    public static void reloadEvent(ResourceLocation name, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns) {
+    public static void reloadEvent(ResourceLocation name, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
 
         GTAPI.all(IGTFeature.class, t -> {
-            t.build(name, climate, effects, gen, spawns);
+            t.build(name, climate, effects, gen, spawns, placedFeatureRegistry);
         });
         handleFeatureRemoval(gen);
-        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(name, climate, effects, gen, spawns));
+        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(name, climate, effects, gen, spawns, placedFeatureRegistry));
     }
 
     private static void handleFeatureRemoval(BiomeGenerationSettingsBuilder gen) {
