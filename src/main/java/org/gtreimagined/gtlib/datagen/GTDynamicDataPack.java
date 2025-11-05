@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
+import net.minecraft.server.packs.resources.IoSupplier;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -15,28 +17,20 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 //@ParametersAreNonnullByDefault
-public class DynamicDataPack implements PackResources {
+public class GTDynamicDataPack implements PackResources {
 
     protected static final ObjectSet<String> SERVER_DOMAINS = new ObjectOpenHashSet<>();
-    protected static final Map<ResourceLocation, JsonObject> DATA = new HashMap<>();
+    protected static final GTDynamicPackContents CONTENTS = new GTDynamicPackContents();
 
     private final String name;
 
@@ -44,13 +38,17 @@ public class DynamicDataPack implements PackResources {
         SERVER_DOMAINS.addAll(Sets.newHashSet(Ref.ID, Ref.SHARED_ID, "minecraft", "forge", "c"));
     }
 
-    public DynamicDataPack(String name, Collection<String> domains) {
+    public GTDynamicDataPack(String name, Collection<String> domains) {
         this.name = name;
         SERVER_DOMAINS.addAll(domains);
     }
 
     public static void clearServer() {
-        DATA.clear();
+        CONTENTS.clearData();
+    }
+
+    private static void addToData(ResourceLocation location, byte[] bytes) {
+        CONTENTS.addToData(location, bytes);
     }
 
     public static void addWorldgenObject(IWorldgenObject<?> object) {
@@ -59,7 +57,7 @@ public class DynamicDataPack implements PackResources {
         if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()){
             writeJson(object.getLoc(), "gt_worldgen/" + object.getSubDirectory() + "/", parent, object.toJson());
         }
-        DATA.put(getWorldgenLoc(object.getLoc(), object.getSubDirectory()), object.toJson());
+        addData(getWorldgenLoc(object.getLoc(), object.getSubDirectory()), object.toJson());
     }
 
     public static void addRecipe(FinishedRecipe recipe) {
@@ -69,13 +67,13 @@ public class DynamicDataPack implements PackResources {
         if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()){
             writeJson(recipe.getId(), "recipes", parent, recipeJson);
         }
-        DATA.put(getRecipeLoc(recipe.getId()), recipeJson);
+        addData(getRecipeLoc(recipe.getId()), recipeJson);
         if (recipe.serializeAdvancement() != null) {
             JsonObject advancement = recipe.serializeAdvancement();
             if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()){
                 writeJson(recipe.getAdvancementId(), "advancements", parent, advancement);
             }
-            DATA.put(getAdvancementLoc(Objects.requireNonNull(recipe.getAdvancementId())), advancement);
+            addData(getAdvancementLoc(Objects.requireNonNull(recipe.getAdvancementId())), advancement);
         }
     }
 
@@ -93,47 +91,36 @@ public class DynamicDataPack implements PackResources {
 
     public static void addAdvancement(ResourceLocation loc, JsonObject obj) {
         ResourceLocation l = getAdvancementLoc(loc);
-        synchronized (DATA) {
-            DATA.put(l, obj);
-        }
+        addData(l, obj);
     }
 
     public static void addData(ResourceLocation loc, JsonObject obj) {
-        synchronized (DATA) {
-            DATA.put(loc, obj);
+        addToData(loc, obj.toString().getBytes());
+    }
+
+    @Nullable
+    @Override
+    public IoSupplier<InputStream> getRootResource(String... elements) {
+        if (elements.length > 0 && elements[0].equals("pack.png")) {
+            return () -> GTLib.class.getResourceAsStream("/assets/gtlib/icon.png");
         }
+        return null;
     }
 
     @Override
-    public InputStream getResource(PackType type, ResourceLocation location) throws IOException {
+    public IoSupplier<InputStream> getResource(PackType type, ResourceLocation location) {
         if (type == PackType.SERVER_DATA) {
-            if (DATA.containsKey(location))
-                return new ByteArrayInputStream(DATA.get(location).toString().getBytes(StandardCharsets.UTF_8));
-            else throw new FileNotFoundException("Can't find " + location + " " + getName());
+            return CONTENTS.getResource(location);
         } else {
-            return new ByteArrayInputStream(new byte[0]);
+            return null;
         }
     }
 
     @Override
-    public InputStream getRootResource(String fileName) {
-        throw new UnsupportedOperationException("Dynamic Resource Pack cannot have root resources");
-    }
-
-    @Override
-    public boolean hasResource(PackType type, ResourceLocation location) {
-        if (type == PackType.CLIENT_RESOURCES) {
-            return false;
-        } else {
-            return DATA.containsKey(location);
+    public void listResources(PackType packType, String namespace, String path, ResourceOutput resourceOutput) {
+        if (packType == PackType.SERVER_DATA) {
+            CONTENTS.listResources(namespace, path, resourceOutput);
         }
-    }
-
-    @Override
-    public Collection<ResourceLocation> getResources(PackType type, String namespace, String path, Predicate<ResourceLocation> filter) {
-        if (type == PackType.SERVER_DATA)
-            return DATA.keySet().stream().filter(loc -> loc.getPath().startsWith(path) && filter.test(loc)).collect(Collectors.toList());
-        return Collections.emptyList();//LANG.keySet().stream().filter(loc -> loc.getPath().startsWith(path) && filter.test(loc.getPath())).collect(Collectors.toList());
     }
 
     @Override
@@ -142,7 +129,7 @@ public class DynamicDataPack implements PackResources {
     }
 
     @Override
-    public String getName() {
+    public String packId() {
         return name;
     }
 
@@ -160,6 +147,11 @@ public class DynamicDataPack implements PackResources {
             return null;
         }
         return metaReader.fromJson(new JsonObject());
+    }
+
+    @Override
+    public boolean isBuiltin() {
+       return true;
     }
 
     @Override

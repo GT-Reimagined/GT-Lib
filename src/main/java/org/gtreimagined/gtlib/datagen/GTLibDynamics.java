@@ -82,7 +82,7 @@ public class GTLibDynamics {
 
     public static final Consumer<FinishedRecipe> FINISHED_RECIPE_CONSUMER = f -> {
         if (RECIPE_IDS.add(f.getId())){
-            DynamicDataPack.addRecipe(f);
+            GTDynamicDataPack.addRecipe(f);
         } else {
             GTLib.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
         }
@@ -103,7 +103,7 @@ public class GTLibDynamics {
             GTLibDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
-        function.accept(new DynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDomain).collect(Collectors.toSet())));
+        function.accept(new GTDynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDomain).collect(Collectors.toSet())));
 
     }
 
@@ -221,7 +221,7 @@ public class GTLibDynamics {
      */
     public static void onResourceReload(boolean serverEvent) {
         GTRecipeProvider provider = new GTRecipeProvider(Ref.ID, "provider");
-        DynamicDataPack.clearServer();
+        GTDynamicDataPack.clearServer();
         RECIPE_IDS.clear();
         collectRecipes(provider , FINISHED_RECIPE_CONSUMER);
         GTAPI.all(RecipeMap.class, RecipeMap::reset);
@@ -262,20 +262,20 @@ public class GTLibDynamics {
             });
         }
         for (Vein vein : veins) {
-            DynamicDataPack.addWorldgenObject(vein);
+            GTDynamicDataPack.addWorldgenObject(vein);
         }
         for (StoneLayer stoneLayer : stoneLayers) {
-            DynamicDataPack.addWorldgenObject(stoneLayer);
+            GTDynamicDataPack.addWorldgenObject(stoneLayer);
         }
         StoneLayer.setCollisionMap(collisionMap);
         for (SmallOre smallOre : smallOres){
-            DynamicDataPack.addWorldgenObject(smallOre);
+            GTDynamicDataPack.addWorldgenObject(smallOre);
         }
         for (VanillaVein vanillaVein : vanillaVeins){
-            DynamicDataPack.addWorldgenObject(vanillaVein);
+            GTDynamicDataPack.addWorldgenObject(vanillaVein);
         }
         for (BedrockVein vein : bedrockVeins){
-            DynamicDataPack.addWorldgenObject(vein);
+            GTDynamicDataPack.addWorldgenObject(vein);
         }
         loaders.forEach((r, l) -> {
             RecipeBuilder.setCurrentModId(r.getNamespace());
