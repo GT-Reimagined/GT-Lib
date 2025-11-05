@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.recipe.container;
 
 import com.google.gson.JsonObject;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.recipe.BaseRecipeSerializer;
 import net.minecraft.core.NonNullList;
@@ -24,10 +25,12 @@ public class MirroredShapedRecipe extends ShapedRecipe {
     }
 
     private final boolean mirrored;
+    final ItemStack result;
 
-    public MirroredShapedRecipe(ResourceLocation resourceLocation, String string, int i, int j, NonNullList<Ingredient> nonNullList, ItemStack itemStack, boolean mirrored) {
-        super(resourceLocation, string, i, j, nonNullList, itemStack);
+    public MirroredShapedRecipe(ResourceLocation resourceLocation, String string, CraftingBookCategory category, int i, int j, NonNullList<Ingredient> nonNullList, ItemStack itemStack, boolean mirrored) {
+        super(resourceLocation, string, category, i, j, nonNullList, itemStack);
         this.mirrored = mirrored;
+        this.result = itemStack;
     }
 
     @Override
@@ -57,6 +60,7 @@ public class MirroredShapedRecipe extends ShapedRecipe {
 
         public MirroredShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             String string = GsonHelper.getAsString(json, "group", "");
+            CraftingBookCategory craftingbookcategory = CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(json, "category", null), CraftingBookCategory.MISC);
             Map<String, Ingredient> map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
             String[] strings = shrink(ShapedRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
             int i = strings[0].length();
@@ -64,7 +68,7 @@ public class MirroredShapedRecipe extends ShapedRecipe {
             NonNullList<Ingredient> nonNullList = ShapedRecipe.dissolvePattern(strings, map, i, j);
             ItemStack itemStack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             boolean mirrored = GsonHelper.getAsBoolean(json, "mirrored", false);
-            return new MirroredShapedRecipe(recipeId, string, i, j, nonNullList, itemStack, mirrored);
+            return new MirroredShapedRecipe(recipeId, string, craftingbookcategory, i, j, nonNullList, itemStack, mirrored);
         }
 
         String[] shrink(String... toShrink) {
@@ -122,25 +126,27 @@ public class MirroredShapedRecipe extends ShapedRecipe {
             int i = buffer.readVarInt();
             int j = buffer.readVarInt();
             String string = buffer.readUtf();
+            CraftingBookCategory category = buffer.readEnum(CraftingBookCategory.class);
             NonNullList<Ingredient> nonNullList = NonNullList.withSize(i * j, Ingredient.EMPTY);
 
             nonNullList.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
 
             ItemStack itemStack = buffer.readItem();
             boolean mirrored = buffer.readBoolean();
-            return new MirroredShapedRecipe(recipeId, string, i, j, nonNullList, itemStack, mirrored);
+            return new MirroredShapedRecipe(recipeId, string, category, i, j, nonNullList, itemStack, mirrored);
         }
 
         public void toNetwork(FriendlyByteBuf buffer, MirroredShapedRecipe recipe) {
             buffer.writeVarInt(recipe.getWidth());
             buffer.writeVarInt(recipe.getHeight());
             buffer.writeUtf(recipe.getGroup());
+            buffer.writeEnum(recipe.category());
 
             for (Ingredient ingredient : recipe.getIngredients()) {
                 ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItem(recipe.getResultItem());
+            buffer.writeItem(recipe.result);
             buffer.writeBoolean(recipe.mirrored);
         }
     }

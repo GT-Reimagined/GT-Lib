@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
@@ -70,26 +71,22 @@ public class VeinCategory implements IRecipeCategory<Vein> {
     }
 
     @Override
-    public void draw(Vein recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(Vein recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         int x = JEI_OFFSET_X;
         int y = JEI_OFFSET_Y + 3;
         String fullId = recipe.getLoc().getPath();
-        renderString(stack, "Vein Name: " + Utils.lowerUnderscoreToUpperSpaced(fullId), Minecraft.getInstance().font, 0, 18, 0x000000, x, y, false);
-        renderString(stack, "Primary: " + recipe.primary().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 38, 0x000000, x, y, false);
-        renderString(stack, "Secondary: " + recipe.secondary().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 48, 0x000000, x, y, false);
-        renderString(stack, "Between: " + recipe.between().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 58, 0x000000, x, y, false);
-        renderString(stack, "Sporadic: " + recipe.sporadic().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 68, 0x000000, x, y, false);
-        renderString(stack, "MinY: " + recipe.minY() + " MaxY: " + recipe.maxY(), Minecraft.getInstance().font, 0, 78, 0x000000, x, y, false);
-        renderString(stack, "Weight: " + recipe.weight(), Minecraft.getInstance().font, 100, 78, 0x000000, x, y, false);
-        renderString(stack, "Generated world:", Minecraft.getInstance().font, 0, 88, 0x000000, x, y, false);
+        renderString(graphics, "Vein Name: " + Utils.lowerUnderscoreToUpperSpaced(fullId), Minecraft.getInstance().font, 0, 18, 0x000000, x, y, false);
+        renderString(graphics, "Primary: " + recipe.primary().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 38, 0x000000, x, y, false);
+        renderString(graphics, "Secondary: " + recipe.secondary().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 48, 0x000000, x, y, false);
+        renderString(graphics, "Between: " + recipe.between().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 58, 0x000000, x, y, false);
+        renderString(graphics, "Sporadic: " + recipe.sporadic().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 68, 0x000000, x, y, false);
+        renderString(graphics, "MinY: " + recipe.minY() + " MaxY: " + recipe.maxY(), Minecraft.getInstance().font, 0, 78, 0x000000, x, y, false);
+        renderString(graphics, "Weight: " + recipe.weight(), Minecraft.getInstance().font, 100, 78, 0x000000, x, y, false);
+        renderString(graphics, "Generated world:", Minecraft.getInstance().font, 0, 88, 0x000000, x, y, false);
 
     }
 
-    void renderString(PoseStack stack, String string, Font render, float x, float y, int color, int guiOffsetX, int guiOffsetY, boolean shadow) {
-        if (shadow) {
-            render.drawShadow(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
-        } else {
-            render.draw(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
-        }
+    void renderString(GuiGraphics graphics, String string, Font font, float x, float y, int color, int guiOffsetX, int guiOffsetY, boolean shadow) {
+        graphics.drawString(font, string, (guiOffsetX + x), guiOffsetY + y, color, shadow);
     }
 }

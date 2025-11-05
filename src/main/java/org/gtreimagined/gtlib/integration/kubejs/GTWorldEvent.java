@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.integration.kubejs;
 import dev.latvian.mods.kubejs.event.EventJS;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.Registries;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.Material;
@@ -35,7 +36,7 @@ public class GTWorldEvent extends EventJS {
         if (dimensions == null || dimensions.length == 0) {
             dimensions = new String[]{"overworld"};
         }
-        VEINS.add(new VeinBuilder(new ResourceLocation(Ref.MOD_KJS, id)).asOreVein(minY, maxY, weight, density, size, primary, secondary, between, sporadic, Arrays.stream(dimensions).map(t -> ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(t))).toArray(ResourceKey[]::new)).buildVein());
+        VEINS.add(new VeinBuilder(new ResourceLocation(Ref.MOD_KJS, id)).asOreVein(minY, maxY, weight, density, size, primary, secondary, between, sporadic, Arrays.stream(dimensions).map(t -> ResourceKey.create(Registries.DIMENSION, new ResourceLocation(t))).toArray(ResourceKey[]::new)).buildVein());
     }
 
     /*public final void smallStoneLayer(String id, int weight, int minHeight, int maxHeight, String stoneType, String... dimensionKeys){
@@ -56,7 +57,7 @@ public class GTWorldEvent extends EventJS {
         if (dimensionKeys == null || dimensionKeys.length == 0) {
             dimensionKeys = new String[]{"overworld"};
         }
-        List<ResourceKey<Level>> dimension = Arrays.stream(dimensionKeys).map((dimensionKey) -> ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimensionKey))).toList();
+        List<ResourceKey<Level>> dimension = Arrays.stream(dimensionKeys).map((dimensionKey) -> ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionKey))).toList();
         StoneType type = Objects.requireNonNull(GTAPI.get(StoneType.class, stoneType));
 
         STONE_LAYERS.add(new StoneLayerBuilder(new ResourceLocation(Ref.MOD_KJS, id)).withStone(type).withWeight(weight).inDimensions(dimension).buildVein());

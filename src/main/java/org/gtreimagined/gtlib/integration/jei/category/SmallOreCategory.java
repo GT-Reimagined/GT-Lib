@@ -11,6 +11,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -109,19 +110,19 @@ public class SmallOreCategory implements IRecipeCategory<SmallOre> {
     }
 
     @Override
-    public void draw(SmallOre recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(SmallOre recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         int x = JEI_OFFSET_X;
         int y = JEI_OFFSET_Y + 3;
         String fullId = recipe.getLoc().getPath();
-        renderString(stack, "Vein Name: " + Utils.lowerUnderscoreToUpperSpaced(fullId), Minecraft.getInstance().font, 0, 18, 0x000000, x, y);
-        renderString(stack, "MinY: " + (recipe.minY() == Integer.MIN_VALUE ? "N/A" : recipe.minY()) + " MaxY: " + (recipe.maxY() == Integer.MAX_VALUE ? "N/A" : recipe.maxY()), Minecraft.getInstance().font, 0, 28, 0x000000, x, y);
-        renderString(stack, "Amount per chunk: " + recipe.amountPerChunk(), Minecraft.getInstance().font, 0, 38, 0x000000, x, y);
-        renderString(stack, "Drops: ", Minecraft.getInstance().font, 0, 58, 0x000000, x, y);
-        renderString(stack, "Generated world:", Minecraft.getInstance().font, 0, 88, 0x000000, x, y);
+        renderString(graphics, "Vein Name: " + Utils.lowerUnderscoreToUpperSpaced(fullId), Minecraft.getInstance().font, 0, 18, 0x000000, x, y);
+        renderString(graphics, "MinY: " + (recipe.minY() == Integer.MIN_VALUE ? "N/A" : recipe.minY()) + " MaxY: " + (recipe.maxY() == Integer.MAX_VALUE ? "N/A" : recipe.maxY()), Minecraft.getInstance().font, 0, 28, 0x000000, x, y);
+        renderString(graphics, "Amount per chunk: " + recipe.amountPerChunk(), Minecraft.getInstance().font, 0, 38, 0x000000, x, y);
+        renderString(graphics, "Drops: ", Minecraft.getInstance().font, 0, 58, 0x000000, x, y);
+        renderString(graphics, "Generated world:", Minecraft.getInstance().font, 0, 88, 0x000000, x, y);
 
     }
 
-    void renderString(PoseStack stack, String string, Font render, float x, float y, int color, int guiOffsetX, int guiOffsetY) {
-        render.draw(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
+    void renderString(GuiGraphics graphics, String string, Font font, float x, float y, int color, int guiOffsetX, int guiOffsetY) {
+        graphics.drawString(font, string, (guiOffsetX + x), guiOffsetY + y, color, false);
     }
 }
