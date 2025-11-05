@@ -4,6 +4,7 @@ import dev.latvian.mods.kubejs.KubeJSPaths;
 import dev.latvian.mods.kubejs.server.ServerScriptManager;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.gtreimagined.gtlib.GTMod;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
@@ -65,7 +66,7 @@ public class KubeJSRegistrar extends GTMod {
 
     public static void checkKubeJSServerScriptManager(){
         if (ServerScriptManager.instance == null){
-            ServerScriptManager.instance = new ServerScriptManager();
+            ServerScriptManager.instance = new ServerScriptManager(ServerLifecycleHooks.getCurrentServer());
             try {
                 if (Files.notExists(KubeJSPaths.DATA, new LinkOption[0])) {
                     Files.createDirectories(KubeJSPaths.DATA);

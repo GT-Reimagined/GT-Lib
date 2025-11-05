@@ -89,7 +89,7 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
         if (entityIn instanceof LivingEntity entity) {
             if (worldIn.getBlockEntity(pos) instanceof BlockEntityCable<?> cable) {
                 if (cable.getNetwork().cableIsActive.containsKey(worldIn.dimension().location()) && cable.getNetwork().cableIsActive.get(worldIn.dimension().location()).contains(pos.asLong())){
-                    entity.hurt(DamageSource.GENERIC, this.getType().getTier().getIntegerId());
+                    entity.hurt(worldIn.damageSources().generic(), this.getType().getTier().getIntegerId());
                 }
             }
         }

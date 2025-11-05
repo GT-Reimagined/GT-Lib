@@ -80,7 +80,7 @@ public class PonderUtils {
                     palette.add(NbtUtils.writeBlockState(s));
                 });
                 nbt.put("palette", palette);
-                nbt.putInt("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+                nbt.putInt("DataVersion", SharedConstants.getCurrentVersion().getDataVersion().getVersion());
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 try {
                     NbtIo.writeCompressed(nbt, stream);
