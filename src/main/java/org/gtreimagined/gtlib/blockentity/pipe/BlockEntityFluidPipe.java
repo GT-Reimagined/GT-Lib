@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.blockentity.pipe;
 
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.IPreTickTile;
@@ -332,8 +333,8 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
 
     public static boolean fire(Level aWorld, BlockPos pos, boolean aCheckFlammability) {
         BlockState tBlock = aWorld.getBlockState(pos);
-        if (tBlock.getMaterial() == Material.LAVA || tBlock.getMaterial() == Material.FIRE) return false;
-        if (tBlock.getMaterial() == Material.CLOTH_DECORATION || tBlock.getCollisionShape(aWorld, pos).isEmpty()) {
+        if (tBlock.is(Blocks.LAVA) || tBlock.is(BlockTags.FIRE)) return false;
+        if (tBlock.ignitedByLava() || tBlock.getCollisionShape(aWorld, pos).isEmpty()) {
             if (tBlock.getFlammability(aWorld, pos, Direction.NORTH) > 0) return aWorld.setBlock(pos, Blocks.FIRE.defaultBlockState(), 3);
             if (aCheckFlammability) {
                 for (Direction tSide : Direction.values()) {

@@ -62,7 +62,7 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
             stack.pushPose();
             stack.translate(0f, (1-liquidCache.percentage)*liquidCache.height, 0f);
             stack.translate(0.5D, 0.5D, 0.5D);
-            stack.last().pose().multiply(RenderHelper.faceRotation(tile.getBlockState()).getMatrix());
+            stack.last().pose().mul(RenderHelper.faceRotation(tile.getBlockState()).getMatrix());
             stack.translate(-0.5D, -0.5D, -0.5D);
             stack.scale(1.0f, liquidCache.percentage, 1.0f);
             Minecraft.getInstance().getBlockRenderer().getModelRenderer().tesselateBlock(tile.getLevel(), liquidCache.model,tile.getBlockState(), tile.getBlockPos(), stack, builder, true, tile.getLevel().getRandom(), light ,overlay);

@@ -48,11 +48,6 @@ public class GTGroupedModel implements IGTModel<GTGroupedModel> {
         return builder;
     }
 
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext configuration, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return models.values().stream().flatMap(t -> t.getMaterials(configuration, modelGetter, missingTextureErrors).stream()).collect(Collectors.toList());
-    }
-
     public static class CoverModel extends GTGroupedModel {
 
         public CoverModel(GTGroupedModel model) {
@@ -60,7 +55,7 @@ public class GTGroupedModel implements IGTModel<GTGroupedModel> {
         }
 
         @Override
-        public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+        public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
             ImmutableMap.Builder<String, BakedModel> builder = buildParts(configuration, bakery, getter, transform, overrides, loc, this.models.entrySet());
             return new CoverBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())), builder.build());
         }
@@ -73,7 +68,7 @@ public class GTGroupedModel implements IGTModel<GTGroupedModel> {
         }
 
         @Override
-        public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+        public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
             ImmutableMap.Builder<String, BakedModel> builder = buildParts(configuration, bakery, getter, transform, overrides, loc, this.models.entrySet());
             return new BakedMachineSide(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())), builder.build());
         }

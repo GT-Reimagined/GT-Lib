@@ -9,7 +9,6 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.recipe.RecipeUtil;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -88,7 +87,7 @@ public class FluidIngredient {
         return json;
     }
 
-    public static FluidIngredient of(FriendlyByteBuf buf) {
+    public static FluidIngredient read(FriendlyByteBuf buf) {
         int count = buf.readVarInt();
         FluidStack[] stacks = new FluidStack[count];
         for (int i = 0; i < count; i++) {

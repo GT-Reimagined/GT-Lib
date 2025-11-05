@@ -7,7 +7,9 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -40,11 +42,11 @@ public class GTCookingRecipeBuilder {
     }
 
     public static GTCookingRecipeBuilder blastingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn) {
-        return cookingRecipe(ingredientIn, resultIn, experienceIn, cookingTimeIn, RecipeSerializer.BLASTING_RECIPE);
+        return cookingRecipe(ingredientIn, resultIn, experienceIn, cookingTimeIn, (SimpleCookingSerializer<?>) RecipeSerializer.BLASTING_RECIPE);
     }
 
     public static GTCookingRecipeBuilder smeltingRecipe(Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookingTimeIn) {
-        return cookingRecipe(ingredientIn, resultIn, experienceIn, cookingTimeIn, RecipeSerializer.SMELTING_RECIPE);
+        return cookingRecipe(ingredientIn, resultIn, experienceIn, cookingTimeIn, (SimpleCookingSerializer<?>) RecipeSerializer.SMELTING_RECIPE);
     }
 
     public GTCookingRecipeBuilder addCriterion(String name, CriterionTriggerInstance criterionIn) {
@@ -53,11 +55,11 @@ public class GTCookingRecipeBuilder {
     }
 
     public void build(Consumer<FinishedRecipe> consumerIn) {
-        this.build(consumerIn, Registry.ITEM.getKey(this.result.getItem()));
+        this.build(consumerIn, BuiltInRegistries.ITEM.getKey(this.result.getItem()));
     }
 
     public void build(Consumer<FinishedRecipe> consumerIn, String save) {
-        ResourceLocation resourcelocation = Registry.ITEM.getKey(this.result.getItem());
+        ResourceLocation resourcelocation = BuiltInRegistries.ITEM.getKey(this.result.getItem());
         ResourceLocation resourcelocation1 = new ResourceLocation(save);
         if (resourcelocation1.equals(resourcelocation)) {
             throw new IllegalStateException("Recipe " + resourcelocation1 + " should remove its 'save' argument");
@@ -69,7 +71,7 @@ public class GTCookingRecipeBuilder {
     public void build(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
         this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-        consumerIn.accept(new Result(id, this.group == null ? "" : this.group, this.ingredient, this.result, this.experience, this.cookingTime, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath()), this.recipeSerializer));
+        consumerIn.accept(new Result(id, this.group == null ? "" : this.group, this.ingredient, this.result, this.experience, this.cookingTime, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + RecipeCategory.BUILDING_BLOCKS.getFolderName() + "/" + id.getPath()), this.recipeSerializer));
     }
 
     /**
@@ -111,7 +113,7 @@ public class GTCookingRecipeBuilder {
 
             json.add("ingredient", this.ingredient.toJson());
             JsonObject resultObj = new JsonObject();
-            resultObj.addProperty("item", Registry.ITEM.getKey(this.result.getItem()).toString());
+            resultObj.addProperty("item", BuiltInRegistries.ITEM.getKey(this.result.getItem()).toString());
             if (this.result.getCount() > 1) {
                 resultObj.addProperty("count", this.result.getCount());
             }

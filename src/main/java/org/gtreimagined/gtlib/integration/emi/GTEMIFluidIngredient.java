@@ -5,6 +5,7 @@ import dev.emi.emi.api.forge.ForgeEmiStack;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -64,7 +65,7 @@ public class GTEMIFluidIngredient implements EmiIngredient {
     }
 
     @Override
-    public void render(PoseStack poseStack, int i, int i1, float v, int i2) {
+    public void render(GuiGraphics graphics, int i, int i1, float v, int i2) {
 
     }
 

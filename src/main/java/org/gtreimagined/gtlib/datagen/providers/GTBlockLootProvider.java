@@ -111,7 +111,7 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
             GTAPI.all(BlockSurfaceRock.class, b -> {
                 ItemStack drop = b.getMaterial() != Material.NULL && b.getMaterial().has(BEARING_ROCK) ? BEARING_ROCK.get(b.getMaterial(), 1) : b.getStoneType().getMaterial().has(ROCK) ? ROCK.get(b.getStoneType().getMaterial(), 1) : ItemStack.EMPTY;
                 if (!drop.isEmpty()) {
-                    tables.put(b, b2 -> BlockLoot.createSingleItemTable(drop.getItem()));
+                    tables.put(b, b2 -> BlockLootSubProvider.createSingleItemTable(drop.getItem()));
                 }
             });
         }

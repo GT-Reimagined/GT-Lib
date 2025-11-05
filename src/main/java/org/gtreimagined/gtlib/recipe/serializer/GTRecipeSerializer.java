@@ -169,7 +169,7 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
         List<FluidIngredient> in = new ObjectArrayList<>(size);
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                in.add(FluidIngredient.of(buffer));
+                in.add(FluidIngredient.read(buffer));
             }
         }
         size = buffer.readInt();

@@ -271,7 +271,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
 
     public static Properties getOreProperties(Properties properties, StoneType type) {
         if (GTLibConfig.ORE_VEIN_SPECTATOR_DEBUG.get()) properties.noOcclusion().lightLevel(b -> 15);
-        properties.strength(type.getHardness() * 2, type.getResistence() / 2).sound(type.getSoundType());
+        properties.mapColor(type.getMapColor()).instrument(type.getInstrument()).strength(type.getHardness() * 2, type.getResistence() / 2).sound(type.getSoundType());
         if (type.doesRequireTool()) properties.requiresCorrectToolForDrops();
         return properties;
     }

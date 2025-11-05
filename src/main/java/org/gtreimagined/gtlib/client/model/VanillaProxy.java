@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.model.loader.IGTModelLoader;
 import org.gtreimagined.gtlib.mixin.client.BlockModelAccessor;
@@ -14,7 +15,6 @@ import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
@@ -38,7 +38,7 @@ public class VanillaProxy implements ISimpleModel<VanillaProxy>
     }
 
     @Override
-    public void addQuads(IGeometryBakingContext owner, IModelBuilder<?> modelBuilder, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation)
+    public void addQuads(IGeometryBakingContext owner, IModelBuilder<?> modelBuilder, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation)
     {
         for(BlockElement blockpart : elements) {
             for(Direction direction : blockpart.faces.keySet()) {
@@ -53,25 +53,6 @@ public class VanillaProxy implements ISimpleModel<VanillaProxy>
                 }
             }
         }
-    }
-
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
-    {
-        Set<Material> textures = Sets.newHashSet();
-
-        for(BlockElement part : elements) {
-            for(BlockElementFace face : part.faces.values()) {
-                Material texture = owner.getMaterial(face.texture);
-                if (Objects.equals(texture, MissingTextureAtlasSprite.getLocation().toString())) {
-                    missingTextureErrors.add(Pair.of(face.texture, owner.getModelName()));
-                }
-
-                textures.add(texture);
-            }
-        }
-
-        return textures;
     }
 
     public static class Loader implements IGTModelLoader<VanillaProxy>

@@ -27,7 +27,7 @@ public class BlockStone extends BlockBasic implements ISharedGTObject {
     }
 
     private static Properties getProps(StoneType type) {
-        Properties props = Properties.of(type.getBlockMaterial()).sound(type.getSoundType()).strength(type.getHardness(), type.getResistence());
+        Properties props = Properties.of().mapColor(type.getMapColor()).instrument(type.getInstrument()).sound(type.getSoundType()).strength(type.getHardness(), type.getResistence());
         if (type.doesRequireTool()) {
             props.requiresCorrectToolForDrops();
         }

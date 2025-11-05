@@ -3,6 +3,8 @@ package org.gtreimagined.gtlib.datagen.builder;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.data.recipes.RecipeCategory;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -134,8 +136,8 @@ public class GTShapelessRecipeBuilder {
      */
     public void save(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
-        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-        consumerIn.accept(new Result(id, this.result, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath())));
+        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(ContextAwarePredicate.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
+        consumerIn.accept(new Result(id, this.result, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + RecipeCategory.BUILDING_BLOCKS.getFolderName() + "/" + id.getPath())));
     }
 
     /**

@@ -15,6 +15,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.gui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiData;
@@ -300,17 +301,17 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
     }*/
 
     @Override
-    public void draw(IRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(IRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         if (progressBackground != null){
-            progressBackground.draw(stack, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
+            progressBackground.draw(graphics, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
         }
         if (progressBar != null)
-            progressBar.draw(stack, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
+            progressBar.draw(graphics, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
         gui.getSlots().getRecipeSlots(this.guiTier).forEach(s -> {
             IDrawable drawable = GTLibJEIPlugin.guiHelper.drawableBuilder(s.getTexture(), 0, 0, 18, 18).setTextureSize(18, 18).build();
-            drawable.draw(stack, s.getX() - 4,s.getY() - 4);
+            drawable.draw(graphics, s.getX() - 4,s.getY() - 4);
         });
-        infoRenderer.render(stack, recipe, Minecraft.getInstance().font, JEI_OFFSET_X, gui.getArea().y + JEI_OFFSET_Y + gui.getArea().z / 2);
+        infoRenderer.render(graphics, recipe, Minecraft.getInstance().font, JEI_OFFSET_X, gui.getArea().y + JEI_OFFSET_Y + gui.getArea().z / 2);
 
         int offsetX = gui.getArea().x + JEI_OFFSET_X, offsetY = gui.getArea().y + JEI_OFFSET_Y;
         //Draw chance overlay.
@@ -322,12 +323,12 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                     if (i >= slots.size()) break;
                     RenderSystem.disableBlend();
                     RenderSystem.disableDepthTest();
-                    stack.pushPose();
-                    stack.scale(0.5f, 0.5f, 1);
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(0.5f, 0.5f, 1);
                     String ch = (recipe.getOutputChances()[i] / 100) + "%";
-                    Minecraft.getInstance().font.drawShadow(stack, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00);
+                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00, true);
 
-                    stack.popPose();
+                    graphics.pose().popPose();
                     RenderSystem.enableBlend();
                     RenderSystem.enableDepthTest();
                 }
@@ -341,12 +342,12 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                     if (i >= slots.size()) break;
                     RenderSystem.disableBlend();
                     RenderSystem.disableDepthTest();
-                    stack.pushPose();
-                    stack.scale(0.5f, 0.5f, 1);
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(0.5f, 0.5f, 1);
                     String ch = (recipe.getInputChances()[i] / 100) + "%";
-                    Minecraft.getInstance().font.drawShadow(stack, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00);
+                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00, true);
 
-                    stack.popPose();
+                    graphics.pose().popPose();
                     RenderSystem.enableBlend();
                     RenderSystem.enableDepthTest();
                 }

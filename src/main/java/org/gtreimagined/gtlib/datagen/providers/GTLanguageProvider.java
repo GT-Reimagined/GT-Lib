@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectRBTreeMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
@@ -430,7 +431,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
     }
 
     public void add(CreativeModeTab key, String name) {
-        add("itemGroup." + key.getRecipeFolderName(), name);
+        add("itemGroup." + BuiltInRegistries.CREATIVE_MODE_TAB.getKey(key).toLanguageKey(), name);
     }
 
     public void add(String key, String value) {

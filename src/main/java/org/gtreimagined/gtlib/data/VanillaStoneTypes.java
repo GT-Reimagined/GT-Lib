@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.data;
 
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.Material;
@@ -17,8 +19,8 @@ public class VanillaStoneTypes {
     public static StoneType ANDESITE = GTAPI.register(StoneType.class, new VanillaStoneType(Ref.ID, "andesite", GTLibMaterials.Andesite, "block/stone/", new Texture("minecraft", "block/andesite"), SoundType.STONE, false).setState(Blocks.ANDESITE));
     public static StoneType DEEPSLATE = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "deepslate", GTLibMaterials.Deepslate, new Texture("minecraft", "block/deepslate"), SoundType.STONE, false).setState(Blocks.DEEPSLATE));
     public static StoneType TUFF = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "tuff", GTLibMaterials.Tuff, new Texture("minecraft", "block/tuff"), SoundType.STONE, false).setState(Blocks.TUFF));
-    public static StoneType GRAVEL = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "gravel", GTLibMaterials.Stone, new Texture("minecraft", "block/gravel"), SoundType.GRAVEL, false).setState(Blocks.GRAVEL)).setHardnessAndResistance(0.6F).setSandLike(true);
-    public static StoneType DIRT = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "dirt", GTLibMaterials.Dirt, new Texture("minecraft", "block/dirt"), SoundType.GRAVEL, false).setState(Blocks.DIRT).setHardnessAndResistance(0.5F).setRequiresTool(false).setType(BlockTags.MINEABLE_WITH_SHOVEL).setGenerateOre(false));
+    public static StoneType GRAVEL = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "gravel", GTLibMaterials.Stone, new Texture("minecraft", "block/gravel"), SoundType.GRAVEL, false).setState(Blocks.GRAVEL)).setHardnessAndResistance(0.6F).setSandLike(true).setMapColor(MapColor.STONE);
+    public static StoneType DIRT = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "dirt", GTLibMaterials.Dirt, new Texture("minecraft", "block/dirt"), SoundType.GRAVEL, false).setMapColor(MapColor.DIRT).setInstrument(NoteBlockInstrument.HARP).setState(Blocks.DIRT).setHardnessAndResistance(0.5F).setRequiresTool(false).setType(BlockTags.MINEABLE_WITH_SHOVEL).setGenerateOre(false));
     public static StoneType SAND = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "sand", GTLibMaterials.Sand, new Texture("minecraft", "block/sand"), SoundType.SAND, false).setState(Blocks.SAND)).setSandLike(true);
     public static StoneType SAND_RED = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "red_sand", GTLibMaterials.RedSand, new Texture("minecraft", "block/red_sand"), SoundType.SAND, false).setStateSupplier(Blocks.RED_SAND::defaultBlockState)).setSandLike(true);
     public static StoneType SANDSTONE = GTAPI.register(StoneType.class, new StoneType(Ref.ID, "sandstone", GTLibMaterials.Sand, new Texture("minecraft", "block/sandstone"), SoundType.STONE, false).setState(Blocks.SANDSTONE)

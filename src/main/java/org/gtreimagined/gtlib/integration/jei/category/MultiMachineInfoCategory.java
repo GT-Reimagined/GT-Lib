@@ -95,6 +95,6 @@ public class MultiMachineInfoCategory implements IRecipeCategory<MultiMachineInf
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder recipeLayout, MultiMachineInfoPage recipe, IFocusGroup iFocusGroup) {
-        recipe.setRecipeLayout(recipeLayout, guiHelper);
+        //recipe.setRecipeLayout(recipeLayout, guiHelper);
     }
 }

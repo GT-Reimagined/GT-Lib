@@ -7,6 +7,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.material.PushReaction;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
@@ -20,6 +21,7 @@ import org.gtreimagined.gtlib.material.IMaterialObject;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
+import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
@@ -51,7 +53,7 @@ import static org.gtreimagined.gtlib.data.GTMaterialTypes.BEARING_ROCK;
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.ROCK;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedBlock, ISharedGTObject, IColorHandler, IMaterialObject {
+public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedBlock, ISharedGTObject, IColorHandler, IMaterialObject, ICreativeTabProvider {
 
     protected static final int SURFACE_ROCK_MODEL_COUNT = 7;
     protected static final int[] CONFIG_ARRAY = new int[SURFACE_ROCK_MODEL_COUNT];
@@ -67,7 +69,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
     protected final ImmutableMap<String, Texture> textureMap;
 
     public BlockSurfaceRock(String domain, Material material, StoneType stoneType) {
-        super(domain, stoneType.getId() + (material == Material.NULL ? "" : "_" + material.getId()) +  "_surface_rock", Properties.of(net.minecraft.world.level.material.Material.DECORATION).explosionResistance(1.0f).instabreak().sound(SoundType.STONE).noCollission().noOcclusion());
+        super(domain, stoneType.getId() + (material == Material.NULL ? "" : "_" + material.getId()) +  "_surface_rock", Properties.of().pushReaction(PushReaction.DESTROY).explosionResistance(1.0f).instabreak().sound(SoundType.STONE).noCollission().noOcclusion());
         this.material = material;
         this.stoneType = stoneType;
         registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false));
@@ -86,8 +88,8 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (BEARING_ROCK.isVisible()) items.add(new ItemStack(this));
+    public boolean allowedIn(CreativeModeTab tab) {
+        return BEARING_ROCK.isVisible();
     }
 
     @Override

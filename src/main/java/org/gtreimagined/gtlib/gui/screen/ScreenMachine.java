@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.gui.container.ContainerMachine;
 import net.minecraft.client.Minecraft;
@@ -27,9 +28,9 @@ public class ScreenMachine<T extends BlockEntityMachine<T>, U extends ContainerM
         super.init();
     }
 
-    protected void drawTitle(PoseStack stack, int mouseX, int mouseY) {
+    protected void drawTitle(GuiGraphics stack, int mouseX, int mouseY) {
         if (container.getTile().getMachineType().getGuiData().isTitleDrawingAllowed()) {
-            Minecraft.getInstance().font.draw(stack, name, getCenteredStringX(name), 4, 0x404040);
+            stack.drawString(Minecraft.getInstance().font, name, getCenteredStringX(name), 4, 0x404040);
         }
     }
 
@@ -57,7 +58,7 @@ public class ScreenMachine<T extends BlockEntityMachine<T>, U extends ContainerM
 
 
     @Override
-    public void render(PoseStack graphic, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphic, int mouseX, int mouseY, float partialTicks) {
         super.render(graphic, mouseX, mouseY, partialTicks);
         //container.getTile().drawInfo(stack, Minecraft.getInstance().fontRenderer, guiLeft, guiTop);
     }
