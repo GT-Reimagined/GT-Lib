@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.RegistryUtils;
@@ -25,7 +26,7 @@ public abstract class LeavesBlockMixin extends Block {
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> list = super.getDrops(state, builder);
         ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
         if (stack != null && !stack.isEmpty() && stack.getItem() instanceof IGTTool) {
@@ -36,7 +37,7 @@ public abstract class LeavesBlockMixin extends Block {
                     return Collections.emptyList();
                 }
                 ServerLevel serverworld = builder.getLevel();
-                LootTable loottable = serverworld.getServer().getLootTables().get(resourcelocation);
+                LootTable loottable = serverworld.getServer().getLootData().getLootTable(resourcelocation);
                 ItemStack sapling = ItemStack.EMPTY;
                 ResourceLocation location = new ResourceLocation(RegistryUtils.getIdFromBlock(this).toString().replace("leaves", "sapling"));
                 if (RegistryUtils.blockExists(location)) {

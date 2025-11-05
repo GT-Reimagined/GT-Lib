@@ -46,7 +46,7 @@ public class BehaviourTorchPlacing implements IItemUse<IBasicGTTool> {
             }
         }
         if (!stack.isEmpty()) {
-            InteractionResult resultType = stack.useOn(new UseOnContext(c.getPlayer().getLevel(), c.getPlayer(), c.getHand(), stack, c.getHitResult()));
+            InteractionResult resultType = stack.useOn(new UseOnContext(c.getPlayer().level(), c.getPlayer(), c.getHand(), stack, c.getHitResult()));
             if (resultType.consumesAction()) {
                 return resultType;
             }

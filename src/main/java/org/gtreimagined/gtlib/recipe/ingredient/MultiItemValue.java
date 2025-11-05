@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.recipe.ingredient;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -39,7 +40,7 @@ public class MultiItemValue implements Ingredient.Value
     private JsonObject toJson(ItemStack stack)
     {
         JsonObject ret = new JsonObject();
-        ret.addProperty("item", Registry.ITEM.getKey(stack.getItem()).toString());
+        ret.addProperty("item", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
         if (stack.getCount() != 1)
             ret.addProperty("count", stack.getCount());
         if (stack.getTag() != null)

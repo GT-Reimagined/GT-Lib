@@ -44,7 +44,7 @@ public class CoverGuiEventPacket extends AbstractGuiEventPacket<CoverGuiEventPac
         public PacketContext handle(CoverGuiEventPacket msg) {
             return (sender, level) -> {
                 if (sender != null) {
-                    BlockEntity tile = Utils.getTile(sender.getLevel(), msg.pos);
+                    BlockEntity tile = Utils.getTile(sender.level(), msg.pos);
                     if (!(tile instanceof ICoverHandlerProvider<?> provider)) throw new RuntimeException("Somehow you got an incorrect packet, CoverGuiEventPacket::handleClient missing Entity!");
                     var coverHandler = provider.getCoverHandler();
                     if (msg.event.forward()) {

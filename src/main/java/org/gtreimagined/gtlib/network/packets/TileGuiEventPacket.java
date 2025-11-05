@@ -44,7 +44,7 @@ public class TileGuiEventPacket extends AbstractGuiEventPacket<TileGuiEventPacke
         public PacketContext handle(TileGuiEventPacket msg) {
             return (sender, level) -> {
                 if (sender != null) {
-                    BlockEntity tile = Utils.getTile(sender.getLevel(), msg.pos);
+                    BlockEntity tile = Utils.getTile(sender.level(), msg.pos);
                     if (tile instanceof IGuiHandler) {
                         if (msg.event.forward()) {
                             ((IGuiHandler) tile).onGuiEvent(msg.event, sender);

@@ -19,7 +19,7 @@ import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 public class GTBiomeModifier implements BiomeModifier {
     public static final Codec<GTBiomeModifier> CODEC = Codec.unit(GTBiomeModifier::new);
 
-    static RegistryAccess REGISTRY_ACCESS;
+    public static RegistryAccess REGISTRY_ACCESS;
 
 
     @SubscribeEvent

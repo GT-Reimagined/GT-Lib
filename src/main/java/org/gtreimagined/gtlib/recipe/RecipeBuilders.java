@@ -51,7 +51,7 @@ public class RecipeBuilders {
     public static final MaterialRecipe.Provider CROWBAR_BUILDER = MaterialRecipe.registerProvider("crowbar", Ref.ID, id -> new MaterialRecipe.ItemBuilder() {
         @Override
         public ItemStack build(CraftingContainer inv, MaterialRecipe.Result mats) {
-            int dye = ((DyeColor) mats.mats.get("secondary")).getMaterialColor().col;
+            int dye = ((DyeColor) mats.mats.get("secondary")).getMapColor().col;
             IGTTool type = GTAPI.get(IGTTool.class, id, Ref.SHARED_ID);
             ItemStack stack = type.asItemStack(type.getGTItemTier().getPrimary(), NULL);
             stack.getOrCreateTagElement(Ref.TAG_TOOL_DATA).putInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR, dye);
@@ -62,7 +62,7 @@ public class RecipeBuilders {
         public Map<String, Object> getFromResult(@NotNull ItemStack stack) {
             CompoundTag nbt = stack.getTag().getCompound(Ref.TAG_TOOL_DATA);
             int secondary = nbt.getInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR);
-            Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(t -> t.getMaterialColor().col == secondary).findFirst();
+            Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(t -> t.getMapColor().col == secondary).findFirst();
             return ImmutableMap.of( "secondary", color.isEmpty() ? NULL : color.get());
         }
     });
