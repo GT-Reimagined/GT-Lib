@@ -88,9 +88,9 @@ public class GTMaterialTypes {
     public static final MaterialTypeItem<?> SHOVEL_HEAD = new MaterialTypeItem<>("shovel_head", 2, true, U);
     public static final MaterialTypeItem<?> AXE_HEAD = new MaterialTypeItem<>("axe_head", 2, true, U * 3);
     public static final MaterialTypeItem<?> HOE_HEAD = new MaterialTypeItem<>("hoe_head", 2, true, U * 2);
-    public static final MaterialTypeItem<?> KNIFE_HEAD = new MaterialTypeItem<>("knife_head", 2, true, U);
     public static final MaterialTypeItem<?> HAMMER_HEAD = new MaterialTypeItem<>("hammer_head", 2, true, U * 6);
     public static final MaterialTypeItem<?> FILE_HEAD = new MaterialTypeItem<>("file_head", 2, true, U * 2);
+    public static final MaterialTypeItem<?> KNIFE_BLADE = new MaterialTypeItem<>("knife_blade", 2, true, U);
     public static final MaterialTypeItem<?> SAW_BLADE = new MaterialTypeItem<>("saw_blade", 2, true, U * 2);
     public static MaterialTypeItem<?> DRILL_BIT = new MaterialTypeItem<>("drill_bit", 2, true, U * 4);
     public static MaterialTypeItem<?> CHAINSAW_BIT = new MaterialTypeItem<>("chainsaw_bit", 2, true, U * 2);
@@ -234,7 +234,7 @@ public class GTMaterialTypes {
         SWORD_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         AXE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         HOE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
-        KNIFE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
+        KNIFE_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         HAMMER_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         FILE_HEAD.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
         SAW_BLADE.unSplitName().setLang(UNSPLIT_FUNCTION).setIgnoreTextureSets();
