@@ -48,7 +48,7 @@ public class MaterialDataInit {
                 .tool().toolDamage(WOOD.getAttackDamageBonus()).toolSpeed(WOOD.getSpeed()).toolDurability(192).toolQuality(WOOD.getLevel()).allowedToolTypes(List.of(GTTools.SOFT_HAMMER)).build();
         event.setMaterial(GTLibMaterials.Blaze).asDust().addHandleStat(-10, -0.5F, of(Enchantments.FIRE_ASPECT, 1));
 
-        event.setMaterial(GTLibMaterials.Flint).asDust(GTMaterialTypes.GEM, MaterialTags.FLINT)
+        event.setMaterial(GTLibMaterials.Flint).asDust(GTMaterialTypes.GEM, MaterialTags.FLINT, MaterialTags.HAS_MORTAR)
                 .tool().toolDamage(1.25f).toolSpeed(STONE.getSpeed()).toolDurability(128).toolQuality(1)
                 .toolEnchantments(of(Enchantments.FIRE_ASPECT, 1)).allowedToolTypes(List.of(GTTools.PICKAXE, GTTools.AXE, GTTools.SHOVEL, GTTools.SWORD, GTTools.HOE, GTTools.MORTAR, GTTools.KNIFE)).build();
 
