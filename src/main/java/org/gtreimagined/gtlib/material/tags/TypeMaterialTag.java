@@ -43,4 +43,12 @@ public class TypeMaterialTag<T> extends MaterialTag {
         }
         return mapping.get(mat);
     }
+
+    @Override
+    public void remove(Material... m) {
+        super.remove(m);
+        for (Material material : m){
+            mapping.remove(material);
+        }
+    }
 }
