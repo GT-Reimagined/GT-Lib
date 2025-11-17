@@ -2,6 +2,8 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.level.storage.loot.LootTable.Builder;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -47,6 +49,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -72,6 +75,7 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
 
 
     public GTBlockLootProvider(String providerDomain, String providerName) {
+        super(new HashSet<>(), FeatureFlagSet.of());
         this.providerDomain = providerDomain;
         this.providerName = providerName;
     }
@@ -103,7 +107,7 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
                 }
                 this.add(b);
             });
-            GTAPI.all(BlockStoneSlab.class, b -> tables.put(b, BlockLoot::createSlabItemTable));
+            GTAPI.all(BlockStoneSlab.class, b -> tables.put(b, this::createSlabItemTable));
             GTAPI.all(BlockStoneStair.class, this::add);
             GTAPI.all(BlockStoneWall.class, this::add);
             GTAPI.all(BlockOre.class, this::addToFortune);
@@ -111,7 +115,7 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
             GTAPI.all(BlockSurfaceRock.class, b -> {
                 ItemStack drop = b.getMaterial() != Material.NULL && b.getMaterial().has(BEARING_ROCK) ? BEARING_ROCK.get(b.getMaterial(), 1) : b.getStoneType().getMaterial().has(ROCK) ? ROCK.get(b.getStoneType().getMaterial(), 1) : ItemStack.EMPTY;
                 if (!drop.isEmpty()) {
-                    tables.put(b, b2 -> BlockLootSubProvider.createSingleItemTable(drop.getItem()));
+                    tables.put(b, b2 -> this.createSingleItemTable(drop.getItem()));
                 }
             });
         }
@@ -180,19 +184,19 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
         return this::createSingleItemTable;
     }
 
-    public static LootTable.Builder createOreDropWithHammer(Block block, Item primaryDrop, Item hammerDrop, int hammerAmount){
+    public LootTable.Builder createOreDropWithHammer(Block block, Item primaryDrop, Item hammerDrop, int hammerAmount){
         LootTable.Builder builder = LootTable.lootTable();
         if (block.asItem() == primaryDrop){
             LootPool.Builder loot = LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(primaryDrop));
             if (hammerDrop != null) loot.when(HAMMER.invert());
-            builder.withPool(applyExplosionCondition(block, loot));
+            builder.withPool(this.applyExplosionCondition(block, loot));
         } else {
             LootPoolSingletonContainer.Builder<?> pool = LootItem.lootTableItem(primaryDrop).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE));
             if (hammerDrop != null) pool.when(HAMMER.invert());
             builder = createSilkTouchDispatchTable(block, applyExplosionDecay(block, pool));
         }
         if (hammerDrop != null){
-            builder.withPool(applyExplosionCondition(hammerDrop, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(HAMMER).add(LootItem.lootTableItem(hammerDrop).apply(SetItemCountFunction.setCount(ConstantValue.exactly(hammerAmount))))));
+            builder.withPool(this.applyExplosionCondition(hammerDrop, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(HAMMER).add(LootItem.lootTableItem(hammerDrop).apply(SetItemCountFunction.setCount(ConstantValue.exactly(hammerAmount))))));
         }
         return builder;
     }
@@ -214,6 +218,11 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
         tables.put(block, this::build);
     }
 
+    @Override
+    protected void add(Block block, Builder builder) {
+        tables.put(block, b -> builder);
+    }
+
     protected LootTable.Builder build(Block block) {
         return createSingleItemTable(block);
     }
@@ -224,7 +233,7 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
     }
 
 
-    protected static LootTable.Builder droppingWithBranchCutters(Block block, Block sapling, float... chances) {
+    protected LootTable.Builder droppingWithBranchCutters(Block block, Block sapling, float... chances) {
         return createLeavesDrops(block, sapling, chances).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(GTBlockLootProvider.BRANCH_CUTTER).add(LootItem.lootTableItem(sapling)));
     }
 
