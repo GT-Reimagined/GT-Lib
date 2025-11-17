@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.blockentity.single.BlockEntityInfiniteStorage;
@@ -56,6 +57,7 @@ public class Data {
 
     public static ItemFluidIcon FLUID_ICON = new ItemFluidIcon();
     //public static Machine<?> MACHINE_INVALID = new Machine<>(Ref.ID, "invalid");
+    private static final Int2ObjectArrayMap<org.gtreimagined.gtlib.material.Material> MATERIAL_TIERMAP = new Int2ObjectArrayMap<>();
 
     public static final MobType CREEPER = new MobType();
 
@@ -147,5 +149,13 @@ public class Data {
 
     public static void postInit() {
         GTMaterialTypes.postInit();
+    }
+
+    public static Int2ObjectArrayMap<org.gtreimagined.gtlib.material.Material> getMaterialTiermap() {
+        return MATERIAL_TIERMAP;
+    }
+
+    public static void setMaterialTier(org.gtreimagined.gtlib.material.Material material, int tier){
+        MATERIAL_TIERMAP.put(tier, material);
     }
 }

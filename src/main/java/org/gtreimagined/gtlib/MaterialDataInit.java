@@ -34,6 +34,10 @@ public class MaterialDataInit {
         event.setMaterial(GTLibMaterials.DarkPrismarine).asDust();
 
         event.setMaterial(GTLibMaterials.Iron).asMetal(1811, PICKAXE_HEAD, AXE_HEAD, SHOVEL_HEAD, HOE_HEAD, SWORD_BLADE).asOre(1, 5, true).tool().toolDamage(IRON.getAttackDamageBonus()).toolSpeed(IRON.getSpeed()).toolDurability(256).toolQuality(IRON.getLevel()).build();
+        MaterialTags.ORE_RGB.add(GTLibMaterials.Iron, 0xe2c0aa);
+        Data.setMaterialTier(GTLibMaterials.Iron, 2);
+        Data.setMaterialTier(GTLibMaterials.Diamond, 3);
+        Data.setMaterialTier(GTLibMaterials.NetherizedDiamond, 4);
         event.setMaterial(GTLibMaterials.Gold).asMetal(1337, PICKAXE_HEAD, AXE_HEAD, SHOVEL_HEAD, HOE_HEAD, SWORD_BLADE).asOre(1, 5, true).tool().toolDamage(GOLD.getAttackDamageBonus()).toolSpeed(GOLD.getSpeed()).toolDurability(GOLD.getUses()).toolQuality(GOLD.getLevel()).toolEnchantments(of(Enchantments.SMITE, 3)).build().harvestLevel(2);
         //cause 1.18
         event.setMaterial(GTLibMaterials.Copper).asMetal(1357).asOre(1, 5, true).harvestLevel(1);

@@ -5,6 +5,7 @@ import mcp.mobius.waila.api.IWailaCommonRegistration;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
+import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
@@ -33,8 +34,8 @@ public class JadePlugin implements IWailaPlugin {
         registration.addConfig(HU, true);
         registration.addConfig(PROGRESS, true);
         registration.addConfig(STRUCTURE, true);
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(GTLibMaterials.Iron), WRENCH.getToolItem(GTLibMaterials.Diamond), WRENCH.getToolItem(GTLibMaterials.NetherizedDiamond)));
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(GTLibMaterials.Iron), WIRE_CUTTER.getToolItem(GTLibMaterials.Diamond), WIRE_CUTTER.getToolItem(GTLibMaterials.NetherizedDiamond)));
+        HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(Data.getMaterialTiermap().get(2)), WRENCH.getToolItem(Data.getMaterialTiermap().get(3)), WRENCH.getToolItem(Data.getMaterialTiermap().get(4))));
+        HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(2)), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(3)), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(4))));
     }
 
     @Override
