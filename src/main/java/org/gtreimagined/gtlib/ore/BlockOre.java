@@ -276,16 +276,16 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
         //TODO use tags for this instead?
-        if (i == 1 && material == GTLibMaterials.Iron){
-            return 0xe2c0aa;
+        if (i == 1 && material.has(MaterialTags.ORE_RGB)){
+            return MaterialTags.ORE_RGB.getInt(material);
         }
         return super.getBlockColor(state, world, pos, i);
     }
 
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
-        if (i == 1 && material == GTLibMaterials.Iron){
-            return 0xe2c0aa;
+        if (i == 1 && material.has(MaterialTags.ORE_RGB)){
+            return MaterialTags.ORE_RGB.getInt(material);
         }
         return super.getItemColor(stack, block, i);
     }

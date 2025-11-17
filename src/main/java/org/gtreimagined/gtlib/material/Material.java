@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 import static org.gtreimagined.gtlib.Ref.U;
 import static org.gtreimagined.gtlib.material.TextureSet.NONE;
 
+@Accessors(chain = true)
 public class Material implements ISharedGTObject {
 
     public static final Material NULL = GTAPI.register(Material.class, new Material(Ref.ID, "null", 0xffffff, NONE));
@@ -44,7 +46,8 @@ public class Material implements ISharedGTObject {
     @Setter
     private String displayNameString;
     @Getter
-    private final int rgb;
+    @Setter
+    private int rgb;
     @Getter
     private final TextureSet set;
 
