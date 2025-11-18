@@ -90,10 +90,8 @@ public class DynamicTexturers {
 
     public static final DynamicTextureProvider<Machine<?>, BlockEntityMachine.DynamicKey> TILE_DYNAMIC_TEXTURER = new DynamicTextureProvider<Machine<?>, BlockEntityMachine.DynamicKey>(
             t -> {
-                Vec3i vector3i = t.currentDir.getNormal();
-                Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-                vector4f.transform(RenderHelper.faceRotation(t.state).inverse().getMatrix());
-                Direction side = Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
+                Direction facing = RenderHelper.directionFromState(t.state);
+                Direction side = Utils.rotate(facing, t.currentDir);
                 UnbakedModel model = ModelUtils.getModel(t.source.getModel(t.type, side));
                 BlockEntity blockEntity = t.getBlockEntity();
                 if (!(blockEntity instanceof BlockEntityMachine<?> machine) ||!(model instanceof BlockModel m)) return Collections.emptyList();
