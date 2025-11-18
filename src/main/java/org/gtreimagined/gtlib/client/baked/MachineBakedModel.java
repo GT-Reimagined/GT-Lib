@@ -27,6 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -97,11 +98,8 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
 
     public BakedModel getModel(BlockState state, Direction dir, MachineState m, Machine<?> type) {
         if (type.isNoFacing() || type.isNoTextureRotation()) return sides.get(m)[dir.get3DDataValue()];
-        Vec3i vector3i = dir.getNormal();
-        Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-        vector4f.transform(RenderHelper.faceRotation(state).inverse().getMatrix());
-        Direction side = Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
-        return sides.get(m)[side.get3DDataValue()];
+        Direction facing = RenderHelper.directionFromState(state);
+        return sides.get(m)[Utils.rotate(facing, dir).get3DDataValue()];
     }
 
     public MachineProperties getMachineProperty(BlockEntityMachine<?> machine) {

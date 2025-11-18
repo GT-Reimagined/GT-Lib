@@ -736,6 +736,57 @@ public class Utils {
             }
     };
 
+    private static final Direction[][] ROTATION = new Direction[][]{
+            new Direction[]{ //DOWN
+                    Direction.SOUTH, //DOWN
+                    Direction.NORTH, //UP
+                    Direction.DOWN, //NORTH
+                    Direction.UP, //SOUTH
+                    Direction.WEST, //WEST
+                    Direction.EAST //EAST
+            },
+            new Direction[]{ //UP
+                    Direction.NORTH,
+                    Direction.SOUTH,
+                    Direction.UP,
+                    Direction.DOWN,
+                    Direction.WEST,
+                    Direction.EAST
+            },
+            new Direction[]{ //NORTH
+                    Direction.DOWN,
+                    Direction.UP,
+                    Direction.NORTH,
+                    Direction.SOUTH,
+                    Direction.WEST,
+                    Direction.EAST
+            },
+            new Direction[]{ //SOUTH
+                    Direction.DOWN,
+                    Direction.UP,
+                    Direction.SOUTH,
+                    Direction.NORTH,
+                    Direction.EAST,
+                    Direction.WEST,
+            },
+            new Direction[]{ //WEST
+                    Direction.DOWN,
+                    Direction.UP,
+                    Direction.WEST,
+                    Direction.EAST,
+                    Direction.SOUTH,
+                    Direction.NORTH
+            },
+            new Direction[]{ //EAST
+                    Direction.DOWN,
+                    Direction.UP,
+                    Direction.EAST,
+                    Direction.WEST,
+                    Direction.NORTH,
+                    Direction.SOUTH
+            }
+    };
+
     private static final Direction[][] TRANSFORM_INVERSE = new Direction[][]{
             new Direction[]{ //DOWN
                     Direction.NORTH,
@@ -795,22 +846,59 @@ public class Utils {
         return TRANSFORM_INVERSE[facing.get3DDataValue()][side.get3DDataValue()];
     }
 
-    public static Direction coverRotateFacing(Direction toRotate, Direction rotateBy) {
-        Quaternion rot = null;
-        switch (rotateBy.getAxis()) {
-            case Z:
-            case X:
-                rot = new Quaternion(Vector3f.YP, rotateBy.toYRot(), true);
-                break;
-            case Y:
-                rot = new Quaternion(Vector3f.XP, -90f*rotateBy.getNormal().getY(), true);
-                break;
+    private static final Direction[][] COVER_ROTATION = new Direction[][]{
+            new Direction[]{ //DOWN
+                    Direction.NORTH,
+                    Direction.SOUTH,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN
+            },
+            new Direction[]{ //UP
+                    Direction.SOUTH,
+                    Direction.NORTH,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN
+            },
+            new Direction[]{ //NORTH
+                    Direction.UP,
+                    Direction.DOWN,
+                    Direction.SOUTH,
+                    Direction.NORTH,
+                    Direction.WEST,
+                    Direction.EAST
+            },
+            new Direction[]{ //SOUTH
+                    Direction.DOWN,
+                    Direction.UP,
+                    Direction.NORTH,
+                    Direction.SOUTH,
+                    Direction.EAST,
+                    Direction.WEST,
+            },
+            new Direction[]{ //WEST
+                    Direction.WEST,
+                    Direction.WEST,
+                    Direction.EAST,
+                    Direction.WEST,
+                    Direction.SOUTH,
+                    Direction.NORTH
+            },
+            new Direction[]{ //EAST
+                    Direction.EAST,
+                    Direction.EAST,
+                    Direction.WEST,
+                    Direction.EAST,
+                    Direction.NORTH,
+                    Direction.SOUTH
+            }
+    };
 
-        }
-        Vec3i vector3i = toRotate.getNormal();
-        Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-        vector4f.transform(new Matrix4f(rot));
-        return Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
+    public static Direction coverRotateFacing(Direction toRotate, Direction rotateBy) {
+        return COVER_ROTATION[toRotate.get3DDataValue()][rotateBy.get3DDataValue()];
     }
 
     public static Direction getOffsetFacing(BlockPos center, BlockPos offset) {

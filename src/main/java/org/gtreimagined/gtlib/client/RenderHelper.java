@@ -127,7 +127,7 @@ public class RenderHelper {
         float blue = FastColor.ARGB32.blue(color);
         float alpha = FastColor.ARGB32.alpha(color);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, sprite.atlas().location());
+        RenderSystem.setShaderTexture(0, sprite.atlasLocation());
         RenderSystem.setShaderColor(red/255,green/255, blue/255, alpha/255);
         Matrix4f matrix = stack.last().pose();
 
@@ -374,11 +374,13 @@ public class RenderHelper {
         return InteractionResult.SUCCESS;
     }
 
+    public static Direction directionFromState(BlockState state){
+        if (state.hasProperty(BlockStateProperties.FACING)) return state.getValue(BlockStateProperties.FACING);
+        return state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+    }
+
     public static Transformation faceRotation(BlockState state) {
-        if (state.hasProperty(BlockStateProperties.FACING)) {
-            return faceRotation(state.getValue(BlockStateProperties.FACING));
-        } 
-        return faceRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING));
+        return faceRotation(directionFromState(state));
     }
 
     /*public static Transformation faceRotation(Direction facing, @Nullable Direction horiz) {
