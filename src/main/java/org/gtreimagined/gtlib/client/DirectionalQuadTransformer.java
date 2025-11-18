@@ -57,7 +57,7 @@ public class DirectionalQuadTransformer
             float z = Float.intBitsToFloat(getAtByteOffset(inData, offset + 8));
 
             Vector4f pos = new Vector4f(x, y, z, 1);
-            pos.transform(transform.getMatrix());
+            pos.mul(transform.getMatrix());
             //pos.perspectiveDivide();
 
             putAtByteOffset(outData, offset, Float.floatToRawIntBits(pos.x()));
