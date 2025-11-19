@@ -40,8 +40,4 @@ public class GTModel<T extends GTModel<T>> implements IGTModel<T> {
         return model != null ? model.bake(bakery, getter, getModelTransform(transform, rotations), loc) : ModelUtils.getMissingModel().bake(bakery, getter, transform, loc);
     }
 
-    public ModelState getModelTransform(ModelState base, int[] rots) {
-        if (rots == null || rots.length != 3 || (rots[0] == 0 && rots[1] == 0 && rots[2] == 0)) return base;
-        return new SimpleModelState(new Transformation(null, new Quaternion(rots[0], rots[1], rots[2], true), null, null));
-    }
 }
