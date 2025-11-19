@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class RotationHelper {
 
-    public static ModelRotation getModelRotation(int x, int y) {
+    /*public static ModelRotation getModelRotation(int x, int y) {
         return ModelRotation.getModelRotation(x, y);
     }
 
@@ -190,5 +190,5 @@ public class RotationHelper {
             this.m21 = 2.0F * (f8 + f10);
             this.m12 = 2.0F * (f8 - f10);
         }
-    }
+    }*/
 }
