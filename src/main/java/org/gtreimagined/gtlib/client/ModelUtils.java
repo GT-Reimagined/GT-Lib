@@ -54,7 +54,7 @@ import java.util.function.Predicate;
 public class ModelUtils {
     private static ModelBakery MODEL_BAKERY;
     //Assumes from North.
-    public static Transformation transform(Direction side) {
+    /*public static Transformation transform(Direction side) {
         switch (side) {
             case DOWN:
                 return new Transformation(null, new Quaternionf(new Quaternionf(new Vector3f(1.0F, 0.0F, 0.0F), 90.0F, true)), null, null);
@@ -71,7 +71,7 @@ public class ModelUtils {
             default:
                 throw new RuntimeException("Invalid direction/null sent to transform.");
         }
-    }
+    }*/
 
     public static UnbakedModel getMissingModel() {
         return getModelBakery().getModel(new ModelResourceLocation(new ResourceLocation("builtin/missing"), "missing"));
