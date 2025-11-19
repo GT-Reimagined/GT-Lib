@@ -686,64 +686,13 @@ public class Utils {
     }
 
     private static final Direction[][] TRANSFORM = new Direction[][]{
-            new Direction[]{
-                    Direction.SOUTH,
-                    Direction.NORTH,
-                    Direction.DOWN,
-                    Direction.UP,
-                    Direction.WEST,
-                    Direction.EAST
-            },
-            new Direction[]{
-                    Direction.NORTH,
-                    Direction.SOUTH,
-                    Direction.UP,
-                    Direction.DOWN,
-                    Direction.WEST,
-                    Direction.EAST
-            },
-            new Direction[]{
-                    Direction.DOWN,
-                    Direction.UP,
-                    Direction.NORTH,
-                    Direction.SOUTH,
-                    Direction.WEST,
-                    Direction.EAST
-            },
-            new Direction[]{
-                    Direction.DOWN,
-                    Direction.UP,
-                    Direction.SOUTH,
-                    Direction.NORTH,
-                    Direction.EAST,
-                    Direction.WEST,
-            },
-            new Direction[]{
-                    Direction.DOWN,
-                    Direction.UP,
-                    Direction.WEST,
-                    Direction.EAST,
-                    Direction.SOUTH,
-                    Direction.NORTH
-            },
-            new Direction[]{
-                    Direction.DOWN,
-                    Direction.UP,
-                    Direction.EAST,
-                    Direction.WEST,
-                    Direction.NORTH,
-                    Direction.SOUTH
-            }
-    };
-
-    private static final Direction[][] ROTATION = new Direction[][]{
             new Direction[]{ //DOWN
-                    Direction.SOUTH, //DOWN
-                    Direction.NORTH, //UP
-                    Direction.DOWN, //NORTH
-                    Direction.UP, //SOUTH
-                    Direction.WEST, //WEST
-                    Direction.EAST //EAST
+                    Direction.SOUTH,
+                    Direction.NORTH,
+                    Direction.DOWN,
+                    Direction.UP,
+                    Direction.WEST,
+                    Direction.EAST
             },
             new Direction[]{ //UP
                     Direction.NORTH,
@@ -837,6 +786,17 @@ public class Utils {
                     Direction.NORTH
             }
     };
+
+    public static Direction rotateModel(Direction facing, Direction side){
+        if (facing == Direction.UP || facing == Direction.DOWN){
+            return TRANSFORM[facing.get3DDataValue()][side.get3DDataValue()];
+        }
+        if (side == Direction.DOWN || side == Direction.UP) return side;
+        if (facing == Direction.WEST) return side.getClockWise();
+        if (facing == Direction.EAST) return side.getCounterClockWise();
+        if (facing == Direction.SOUTH) return side.getOpposite();
+        return side;
+    }
 
     public static Direction rotate(Direction facing, Direction side) {
         return TRANSFORM[facing.get3DDataValue()][side.get3DDataValue()];

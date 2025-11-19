@@ -99,7 +99,7 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
     public BakedModel getModel(BlockState state, Direction dir, MachineState m, Machine<?> type) {
         if (type.isNoFacing() || type.isNoTextureRotation()) return sides.get(m)[dir.get3DDataValue()];
         Direction facing = RenderHelper.directionFromState(state);
-        return sides.get(m)[Utils.rotate(facing, dir).get3DDataValue()];
+        return sides.get(m)[Utils.rotateModel(facing, dir).get3DDataValue()];
     }
 
     public MachineProperties getMachineProperty(BlockEntityMachine<?> machine) {
