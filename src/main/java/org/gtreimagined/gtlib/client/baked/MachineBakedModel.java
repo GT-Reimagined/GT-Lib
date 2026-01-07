@@ -121,7 +121,7 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
         };
         MachineState st = machine.getMachineState().getTextureState();
         Function<Direction, DynamicTexturer<ICover, ICover.DynamicKey>> tx = a -> machine.coverHandler.map(t -> t.getTexturer(a)).orElse(null);
-        MachineProperties mh = new MachineProperties(m, machine.getMachineTier(), covers, st, mText, machine.multiTexturer.get(), tx);
+        MachineProperties mh = new MachineProperties(m, machine.getMachineTier(), covers, st, mText, tx);
         return mh;
     }
 

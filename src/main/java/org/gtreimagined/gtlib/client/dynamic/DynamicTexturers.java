@@ -87,35 +87,4 @@ public class DynamicTexturers {
         }
         return predicate;
     }
-
-    public static final DynamicTextureProvider<Machine<?>, BlockEntityMachine.DynamicKey> TILE_DYNAMIC_TEXTURER = new DynamicTextureProvider<Machine<?>, BlockEntityMachine.DynamicKey>(
-            t -> {
-                Vec3i vector3i = t.currentDir.getNormal();
-                Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-                vector4f.transform(RenderHelper.faceRotation(t.state).inverse().getMatrix());
-                Direction side = Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
-                UnbakedModel model = ModelUtils.getModel(t.source.getModel(t.type, side));
-                BlockEntity blockEntity = t.getBlockEntity();
-                if (!(blockEntity instanceof BlockEntityMachine<?> machine) ||!(model instanceof BlockModel m)) return Collections.emptyList();
-                ((BlockModelAccessor)m).getTextureMap().put("base", Either.left(
-                    ModelUtils.getBlockMaterial(machine.getMultiTexture().apply(side))));
-                   GTLibProperties.MachineProperties prop = t.key.properties;
-                for (int i = 0; i < prop.type.getOverlayLayers(); i++) {
-                    String suffix = i == 0 ? "" : String.valueOf(i);
-                    ((BlockModelAccessor)m).getTextureMap().put("overlay" + suffix,
-                            Either
-                                    .left(ModelUtils.getBlockMaterial(prop.type.getOverlayTextures(
-                                            prop.state, prop.tier, i)[side.get3DDataValue()])));
-                }
-
-                BakedModel b = model.bake(ModelUtils.getModelBakery(), ModelUtils.getDefaultTextureGetter(),
-                        new SimpleModelState(RenderHelper.faceRotation(t.state)),
-                        new ResourceLocation(t.source.getId()));
-                List<BakedQuad> list = new ObjectArrayList<>(10);
-                for (Direction dir : Ref.DIRS) {
-                    list.addAll(ModelUtils.getQuadsFromBaked(b, t.state, dir, t.rand, t.level, t.pos));
-                }
-                list.addAll(ModelUtils.getQuadsFromBaked(b, t.state, null, t.rand, t.level, t.pos));
-                return list;
-            });
 }
