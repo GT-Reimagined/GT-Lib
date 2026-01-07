@@ -75,11 +75,6 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
         List<BakedQuad> coverQuads = getCoverQuads(state, side, rand, props, machine, level, pos);
         if (!coverQuads.isEmpty()) return coverQuads;
 
-        /*if (machine.getMultiTexture() != null) {
-            Function<Direction, Texture> ft = machine.getMultiTexture();
-            return props.machineTexturer.getQuads("machine", new ObjectArrayList<>(), state, props.type, new BlockEntityMachine.DynamicKey(new ResourceLocation(props.type.getId()), ft.apply(side), side, props.state, props), side.get3DDataValue(), level, pos);
-        }*/
-
         BakedModel model = getModel(state, side, props.state, props.type);
         for (Direction dir : Ref.DIRS) {
             quads.addAll(ModelUtils.getQuadsFromBaked(model, state, dir, rand, level, pos));
