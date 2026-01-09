@@ -4,6 +4,15 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.renderer.block.model.BlockElement;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BuiltInModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.SimpleBakedModel;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
@@ -27,9 +36,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class DynamicTexturers {
@@ -41,7 +52,7 @@ public class DynamicTexturers {
     public static final DynamicTextureProvider<ICover, ICover.DynamicKey> COVER_DYNAMIC_TEXTURER = new DynamicTextureProvider<ICover, ICover.DynamicKey>(
             t -> {
                 if (t.currentDir == t.source.side()) {
-                    BlockModel m = null;
+                    BlockModel m;
                     try {
                         m = ModelUtils.getModelBakery().loadBlockModel(t.source.getModel(t.type, Direction.SOUTH));
                     } catch (Exception e) {
@@ -53,16 +64,20 @@ public class DynamicTexturers {
                     t.source.setTextures(
                             (name, texture) -> ((BlockModelAccessor)model).getTextureMap().put(name, Either.left(ModelUtils.getBlockMaterial(texture))));
                     Transformation base = RenderHelper.faceRotation(t.source.side());
-                    BakedModel b = model.bake(ModelUtils.getModelBakery(), model, ModelUtils.getDefaultTextureGetter(),
-                            new SimpleModelState(base), t.source.getModel(t.type, Direction.SOUTH), true);
+                    //BakedModel b = model.bake(ModelUtils.getModelBakery(), model, ModelUtils.getDefaultTextureGetter(),
+                    //        new SimpleModelState(base), t.source.getModel(t.type, Direction.SOUTH), true);
 
-                    Predicate<Map.Entry<String, BakedModel>> predicate = getEntryPredicate(t);
 
                     List<BakedQuad> ret = new ObjectArrayList<>();
+
+                    ret.addAll(bakeVanilla(model, ModelUtils.getDefaultTextureGetter(),
+                            new SimpleModelState(base), t.source.getModel(t.type, Direction.SOUTH), true));
+                    /*Predicate<Map.Entry<String, BakedModel>> predicate = getEntryPredicate(t);
                     for (Direction dir : Ref.DIRS) {
                         ret.addAll(ModelUtils.getQuadsFromBakedCover(b, t.state, dir, t.rand, t.level, t.pos, predicate));
                     }
-                    ret.addAll(ModelUtils.getQuadsFromBakedCover(b, t.state, null, t.rand, t.level, t.pos, predicate));
+                    ret.addAll(ModelUtils.getQuadsFromBakedCover(b, t.state, null, t.rand, t.level, t.pos, predicate));*/
+
                     return t.source.transformQuads(t.state, ret);
                 }
                 return Collections.emptyList();
@@ -84,5 +99,28 @@ public class DynamicTexturers {
             };
         }
         return predicate;
+    }
+
+    private static List<BakedQuad> bakeVanilla(BlockModel model, Function<Material, TextureAtlasSprite> textureGetter, ModelState modelState, ResourceLocation modelLocation, boolean guiLight3d) {
+        TextureAtlasSprite textureatlassprite = (TextureAtlasSprite)textureGetter.apply(model.getMaterial("particle"));
+        List<BakedQuad> bakedQuads = new ArrayList<>();
+        //SimpleBakedModel.Builder simplebakedmodel$builder = (new SimpleBakedModel.Builder(model, ItemOverrides.EMPTY, guiLight3d)).particle(textureatlassprite);
+
+        for(BlockElement blockelement : model.getElements()) {
+            for(Direction direction : blockelement.faces.keySet()) {
+                BlockElementFace blockelementface = blockelement.faces.get(direction);
+                TextureAtlasSprite textureatlassprite1 = textureGetter.apply(model.getMaterial(blockelementface.texture));
+                bakedQuads.add(BlockModelAccessor.invokeBakeFace(blockelement, blockelementface, textureatlassprite1, direction, modelState, modelLocation));
+                //noinspection ConstantValue
+                /*if (blockelementface.cullForDirection == null) {
+                    simplebakedmodel$builder.addUnculledFace(BlockModelAccessor.invokeBakeFace(blockelement, blockelementface, textureatlassprite1, direction, modelState, modelLocation));
+                } else {
+                    simplebakedmodel$builder.addCulledFace(Direction.rotate(modelState.getRotation().getMatrix(), blockelementface.cullForDirection), BlockModelAccessor.invokeBakeFace(blockelement, blockelementface, textureatlassprite1, direction, modelState, modelLocation));
+                }*/
+            }
+        }
+
+        //return simplebakedmodel$builder.build();
+        return bakedQuads;
     }
 }
