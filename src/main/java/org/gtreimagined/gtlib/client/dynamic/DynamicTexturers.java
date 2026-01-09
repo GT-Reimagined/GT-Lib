@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -40,17 +41,14 @@ public class DynamicTexturers {
     public static final DynamicTextureProvider<ICover, ICover.DynamicKey> COVER_DYNAMIC_TEXTURER = new DynamicTextureProvider<ICover, ICover.DynamicKey>(
             t -> {
                 if (t.currentDir == t.source.side()) {
-                    UnbakedModel m = null;
+                    BlockModel m = null;
                     try {
-                        //for some reason first load can cause circular exception
-                        m = ModelUtils.getModel(t.source.getModel(t.type, Direction.SOUTH));
-                    } catch (Exception ignored) {
-
-                    }
-                    if (m == null) {
+                        m = ModelUtils.getModelBakery().loadBlockModel(t.source.getModel(t.type, Direction.SOUTH));
+                    } catch (Exception e) {
+                        GTLib.LOGGER.error(e);
                         return Collections.emptyList();
                     }
-                    BlockModel model = (BlockModel) m;
+                    BlockModel model = m;
                     ((BlockModelAccessor)model).getTextureMap().put("base", Either.left(ModelUtils.getBlockMaterial(t.key.machineTexture)));
                     t.source.setTextures(
                             (name, texture) -> ((BlockModelAccessor)model).getTextureMap().put(name, Either.left(ModelUtils.getBlockMaterial(texture))));
