@@ -271,19 +271,19 @@ public class RenderHelper {
         switch (result.getDirection()) {
             case UP:
                 poseStack.translate(modX, modY + 1, modZ + 1);
-                poseStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-90));
                 break;
             case DOWN:
                 poseStack.translate(modX, modY, modZ + 1);
-                poseStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-90));
                 break;
             case EAST:
                 poseStack.translate(modX + 1, modY, modZ);
-                poseStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-90));
                 break;
             case WEST:
                 poseStack.translate(modX, modY, modZ);
-                poseStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-90));
                 break;
             case SOUTH:
                 poseStack.translate(modX, modY, modZ + 1);
