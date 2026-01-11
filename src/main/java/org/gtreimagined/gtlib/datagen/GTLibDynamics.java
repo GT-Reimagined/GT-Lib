@@ -84,7 +84,11 @@ public class GTLibDynamics {
         if (RECIPE_IDS.add(f.getId())){
             DynamicDataPack.addRecipe(f);
         } else {
-            GTLib.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
+            if (FMLEnvironment.production){
+                GTLib.LOGGER.warn("Recipe duplicated: " + f.getId());
+            } else {
+                GTLib.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
+            }
         }
     };
 

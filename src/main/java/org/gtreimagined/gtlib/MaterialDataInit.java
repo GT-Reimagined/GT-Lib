@@ -34,6 +34,10 @@ public class MaterialDataInit {
         event.setMaterial(GTLibMaterials.DarkPrismarine).asDust();
 
         event.setMaterial(GTLibMaterials.Iron).asMetal(1811, PICKAXE_HEAD, AXE_HEAD, SHOVEL_HEAD, HOE_HEAD, SWORD_BLADE).asOre(1, 5, true).tool().toolDamage(IRON.getAttackDamageBonus()).toolSpeed(IRON.getSpeed()).toolDurability(256).toolQuality(IRON.getLevel()).build();
+        MaterialTags.ORE_RGB.add(GTLibMaterials.Iron, 0xe2c0aa);
+        Data.setMaterialTier(GTLibMaterials.Iron, 2);
+        Data.setMaterialTier(GTLibMaterials.Diamond, 3);
+        Data.setMaterialTier(GTLibMaterials.NetherizedDiamond, 4);
         event.setMaterial(GTLibMaterials.Gold).asMetal(1337, PICKAXE_HEAD, AXE_HEAD, SHOVEL_HEAD, HOE_HEAD, SWORD_BLADE).asOre(1, 5, true).tool().toolDamage(GOLD.getAttackDamageBonus()).toolSpeed(GOLD.getSpeed()).toolDurability(GOLD.getUses()).toolQuality(GOLD.getLevel()).toolEnchantments(of(Enchantments.SMITE, 3)).build().harvestLevel(2);
         //cause 1.18
         event.setMaterial(GTLibMaterials.Copper).asMetal(1357).asOre(1, 5, true).harvestLevel(1);
@@ -44,7 +48,7 @@ public class MaterialDataInit {
                 .tool().toolDamage(WOOD.getAttackDamageBonus()).toolSpeed(WOOD.getSpeed()).toolDurability(192).toolQuality(WOOD.getLevel()).allowedToolTypes(List.of(GTTools.SOFT_HAMMER)).build();
         event.setMaterial(GTLibMaterials.Blaze).asDust().addHandleStat(-10, -0.5F, of(Enchantments.FIRE_ASPECT, 1));
 
-        event.setMaterial(GTLibMaterials.Flint).asDust(GTMaterialTypes.GEM, MaterialTags.FLINT)
+        event.setMaterial(GTLibMaterials.Flint).asDust(GTMaterialTypes.GEM, MaterialTags.FLINT, MaterialTags.HAS_MORTAR)
                 .tool().toolDamage(1.25f).toolSpeed(STONE.getSpeed()).toolDurability(128).toolQuality(1)
                 .toolEnchantments(of(Enchantments.FIRE_ASPECT, 1)).allowedToolTypes(List.of(GTTools.PICKAXE, GTTools.AXE, GTTools.SHOVEL, GTTools.SWORD, GTTools.HOE, GTTools.MORTAR, GTTools.KNIFE)).build();
 

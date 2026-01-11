@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.jade;
 
+import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import net.minecraft.world.level.block.Block;
@@ -21,8 +22,8 @@ public class JadePlugin implements IWailaPlugin {
     public void register(IWailaCommonRegistration registration) {
         registration.registerBlockDataProvider(EUProvider.INSTANCE, BlockEntity.class);
         registration.registerBlockDataProvider(MachineProvider.INSTANCE, BlockEntityMachine.class);
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(GTLibMaterials.Iron), WRENCH.getToolItem(GTLibMaterials.Diamond), WRENCH.getToolItem(GTLibMaterials.NetherizedDiamond)));
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(GTLibMaterials.Iron), WIRE_CUTTER.getToolItem(GTLibMaterials.Diamond), WIRE_CUTTER.getToolItem(GTLibMaterials.NetherizedDiamond)));
+        HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(Data.getMaterialTiermap().get(2)), WRENCH.getToolItem(GTLibMaterials.Diamond), WRENCH.getToolItem(GTLibMaterials.NetherizedDiamond)));
+        HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(2)), WIRE_CUTTER.getToolItem(GTLibMaterials.Diamond), WIRE_CUTTER.getToolItem(GTLibMaterials.NetherizedDiamond)));
     }
 
     @Override

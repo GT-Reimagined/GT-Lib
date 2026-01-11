@@ -26,6 +26,7 @@ public class MaterialTags {
     public static final MaterialTag WOOD = new MaterialTag("wood");
     public static final MaterialTag MINED_WITH_AXE = new MaterialTag("mined_with_axe");
     public static final MaterialTag HAS_CUSTOM_SMELTING = new MaterialTag("has_custom_smelting");
+    public static final MaterialTag HAS_MORTAR = new MaterialTag("has_mortar");
     public static final MaterialTag TRANSPARENT = new MaterialTag("transparent");
     public static final MaterialTag METAL = new MaterialTag("metal");
     public static final MaterialTag ELEMENTAL = new MaterialTag("elemental");
@@ -35,6 +36,7 @@ public class MaterialTags {
     public static final MaterialTag ACID = new MaterialTag("acid");
     public static final MaterialTag POSITIVE_CHANGING_RGB = new MaterialTag("positive_changing_rgb");
     public static final MaterialTag NEGATIVE_CHANGING_RGB = new MaterialTag("negative_changing_rgb");
+    public static final NumberMaterialTag ORE_RGB = new NumberMaterialTag("ore_rgb");
 
     public static final MaterialTag QUARTZ_LIKE_BLOCKS = new MaterialTag("quartz_like_blocks");
 
