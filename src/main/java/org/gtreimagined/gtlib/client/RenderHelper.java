@@ -49,6 +49,7 @@ import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import org.gtreimagined.tesseract.api.Connectivity;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -401,7 +402,7 @@ public class RenderHelper {
     }*/
 
     public static Transformation faceRotation(Direction side) {
-        Quaternion quat = side.getAxis() != Axis.Y ? Vector3f.YP.rotationDegrees(-side.toYRot()) : Vector3f.XP.rotationDegrees(-side.getNormal().getY()*90f);
+        Quaternionf quat = side.getAxis() != Axis.Y ? com.mojang.math.Axis.YP.rotationDegrees(-side.toYRot()) : com.mojang.math.Axis.XP.rotationDegrees(-side.getNormal().getY()*90f);
         return new Transformation(null, quat, null, null);
         //return faceRotation(side, null);
     }
