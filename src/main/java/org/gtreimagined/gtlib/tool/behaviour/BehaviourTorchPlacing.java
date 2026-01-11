@@ -1,5 +1,8 @@
 package org.gtreimagined.gtlib.tool.behaviour;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.item.Item;
 import org.gtreimagined.gtlib.behaviour.IItemUse;
 import org.gtreimagined.gtlib.tool.IBasicGTTool;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -27,8 +30,12 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 public class BehaviourTorchPlacing implements IItemUse<IBasicGTTool> {
     public static final BehaviourTorchPlacing INSTANCE = new BehaviourTorchPlacing();
+
+    private static final Map<Item, Tuple<Block, Block>> TORCH_MAP = new Object2ObjectOpenHashMap<>();
 
     @Override
     public String getId() {
@@ -40,7 +47,7 @@ public class BehaviourTorchPlacing implements IItemUse<IBasicGTTool> {
         ItemStack stack = ItemStack.EMPTY;
         if (c.getPlayer() == null) return InteractionResult.PASS;
         for (ItemStack stack1 : c.getPlayer().getInventory().items) {
-            if (stack1.getItem() == Items.TORCH || stack1.getItem() == Items.SOUL_TORCH) {
+            if (TORCH_MAP.containsKey(stack1.getItem())) {
                 stack = stack1;
                 break;
             }
@@ -123,14 +130,15 @@ public class BehaviourTorchPlacing implements IItemUse<IBasicGTTool> {
 
     @Nullable
     protected static BlockState getStateForPlacement(BlockPlaceContext context, ItemStack torch) {
-        BlockState blockstate = torch.getItem() == Items.SOUL_TORCH ? Blocks.SOUL_WALL_TORCH.getStateForPlacement(context) : Blocks.WALL_TORCH.getStateForPlacement(context);
+        BlockState wallTorch = TORCH_MAP.get(torch.getItem()).getB().getStateForPlacement(context);
+        BlockState floorTorch = TORCH_MAP.get(torch.getItem()).getA().getStateForPlacement(context);
         BlockState blockstate1 = null;
         LevelReader iworldreader = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
 
         for (Direction direction : context.getNearestLookingDirections()) {
             if (direction != Direction.UP) {
-                BlockState blockstate2 = direction == Direction.DOWN ? (torch.getItem() == Items.SOUL_TORCH ? Blocks.SOUL_TORCH.getStateForPlacement(context) : Blocks.TORCH.getStateForPlacement(context)) : blockstate;
+                BlockState blockstate2 = direction == Direction.DOWN ? floorTorch : wallTorch;
                 if (blockstate2 != null && blockstate2.canSurvive(iworldreader, blockpos)) {
                     blockstate1 = blockstate2;
                     break;
@@ -139,5 +147,15 @@ public class BehaviourTorchPlacing implements IItemUse<IBasicGTTool> {
         }
 
         return blockstate1 != null && iworldreader.isUnobstructed(blockstate1, blockpos, CollisionContext.empty()) ? blockstate1 : null;
+    }
+
+    public static void addTorch(Item torch, Block torchBlock, Block wallTorchBlock){
+        TORCH_MAP.put(torch, new Tuple<>(torchBlock, wallTorchBlock));
+    }
+
+
+    static {
+        addTorch(Items.TORCH, Blocks.TORCH, Blocks.WALL_TORCH);
+        addTorch(Items.SOUL_TORCH, Blocks.SOUL_TORCH, Blocks.SOUL_WALL_TORCH);
     }
 }

@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"loader": "gtlib:cover",
 	"elements": [
 		{
 			"from": [0, 0, 16],
@@ -43,8 +42,8 @@
 			}
 		},
 		{
-			"from": [0, 16, 15],
-			"to": [16, 16, 16],
+			"from": [0, 15.99, 15],
+			"to": [16, 15.99, 16],
 			"faces": {
 				"north": {"uv": [0, 0, 16, 0], "texture": "#base"},
 				"east": {"uv": [0, 0, 1, 0], "texture": "#base"},
@@ -55,8 +54,8 @@
 			}
 		},
 		{
-			"from": [0, 0, 15],
-			"to": [0, 16, 16],
+			"from": [0.01, 0, 15],
+			"to": [0.01, 16, 16],
 			"faces": {
 				"north": {"uv": [0, 0, 0, 16], "texture": "#base"},
 				"east": {"uv": [0, 0, 1, 16], "texture": "#base"},
@@ -67,8 +66,8 @@
 			}
 		},
 		{
-			"from": [16, 0, 15],
-			"to": [16, 16, 16],
+			"from": [15.99, 0, 15],
+			"to": [15.99, 16, 16],
 			"faces": {
 				"north": {"uv": [0, 0, 0, 16], "texture": "#base"},
 				"east": {"uv": [0, 0, 1, 16], "texture": "#base"},
@@ -79,8 +78,8 @@
 			}
 		},
 		{
-			"from": [0, 0, 15],
-			"to": [16, 0, 16],
+			"from": [0, 0.01, 15],
+			"to": [16, 0.01, 16],
 			"faces": {
 				"north": {"uv": [0, 0, 16, 0], "texture": "#base"},
 				"east": {"uv": [0, 0, 1, 0], "texture": "#base"},
