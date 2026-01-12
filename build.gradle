@@ -116,7 +116,7 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
     //modCompileOnly("com.simibubi.create:create-${minecraft_version}:0.5.1.i-435:all")
     modImplementation(jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
-    modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
+    //modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
     modImplementation(jarJar("dev.engine-room.flywheel:flywheel-forge-${project.minecraft_version}:${project.flywheel_version}"))
     modImplementation("curse.maven:jade-324717:${project.jade_version}")
 }
