@@ -23,7 +23,7 @@ import snownee.jade.api.ui.IDisplayHelper;
 import snownee.jade.api.ui.IElementHelper;
 import snownee.jade.api.ui.IProgressStyle;
 
-public class EUProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
+public class EUProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
     private static final ResourceLocation ID = new ResourceLocation(Ref.ID, "eu_hu");
     public static EUProvider INSTANCE = new EUProvider();
 
@@ -77,13 +77,13 @@ public class EUProvider implements IBlockComponentProvider, IServerDataProvider<
     }
 
     @Override
-    public void appendServerData(CompoundTag compoundTag, ServerPlayer serverPlayer, Level level, BlockEntity blockEntity, boolean b) {
-        IEnergyHandler handler = blockEntity.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY).orElse(null);
+    public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {
+        IEnergyHandler handler = blockAccessor.getBlockEntity() == null ? null : blockAccessor.getBlockEntity().getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY).orElse(null);
         if (handler != null) {
             compoundTag.putLong("jadeEU", handler.getEnergy());
             compoundTag.putLong("jadeMaxEU", handler.getCapacity());
         }
-        IHeatHandler heatHandler = blockEntity.getCapability(TesseractCaps.HEAT_CAPABILITY).orElse(null);
+        IHeatHandler heatHandler = blockAccessor.getBlockEntity() == null ? null : blockAccessor.getBlockEntity().getCapability(TesseractCaps.HEAT_CAPABILITY).orElse(null);
         if (heatHandler != null) {
             compoundTag.putLong("jadeHU", heatHandler.getHeat());
             compoundTag.putLong("jadeMaxHU", heatHandler.getHeatCap());
