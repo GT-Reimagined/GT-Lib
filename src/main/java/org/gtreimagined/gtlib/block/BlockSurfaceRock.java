@@ -83,7 +83,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
         shapes.put(4, Block.box(6.0D, 0.0D, 2.0D, 11.0D, 3.0D, 9.0D));
         shapes.put(5, Block.box(9.0D, 0.0D, 4.0D, 12.0D, 1.0D, 8.0D));
         shapes.put(6, Block.box(5.0D, 0.0D, 4.0D, 12.0D, 2.0D, 8.0D));
-        String overlay = material == Material.NULL || !GTLibConfig.DETAILED_ROCKS.get() ? "block/empty" : "material/surface_rock_overlay";
+        String overlay = material == Material.NULL || !GTLibConfig.DETAILED_ROCKS.get() ? "block/empty" : "block/material/surface_rock_overlay";
         textureMap = ImmutableMap.of("all", stoneType.getTexture(), "overlay", new Texture(Ref.ID, overlay));
     }
 
