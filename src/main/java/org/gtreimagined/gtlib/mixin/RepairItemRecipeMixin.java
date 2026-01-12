@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.mixin;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import org.gtreimagined.gtlib.tool.IGTTool;
@@ -30,8 +31,8 @@ public abstract class RepairItemRecipeMixin extends CustomRecipe {
         super(id, category);
     }
 
-    @Inject(method = "assemble", at = @At("HEAD"), cancellable = true)
-    private void getCraftingResultInject(CraftingContainer inv, CallbackInfoReturnable<ItemStack> ci) {
+    @Inject(method = "assemble(Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/core/RegistryAccess;)Lnet/minecraft/world/item/ItemStack;", at = @At("HEAD"), cancellable = true)
+    private void getCraftingResultInject(CraftingContainer inv, RegistryAccess registryAccess, CallbackInfoReturnable<ItemStack> ci) {
         List<ItemStack> list = Lists.newArrayList();
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {

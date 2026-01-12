@@ -10,10 +10,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Map;
+
 @Mixin(ModelBakery.class)
 public class ModelBakeryMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gtlib$injectInit(ResourceManager resourceManager, BlockColors blockColors, ProfilerFiller profiler, int maxMipmapLevel, CallbackInfo ci){
+    private void gtlib$injectInit(BlockColors blockColors, ProfilerFiller profilerFiller, Map modelResources, Map blockStateResources, CallbackInfo ci){
         ModelUtils.setModelBakery((ModelBakery) (Object) this);
     }
 }
