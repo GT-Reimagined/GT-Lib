@@ -102,11 +102,11 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
         if (registry == ForgeRegistries.Keys.ITEMS) {
             GTAPI.register(Item.class, getId() + "_bucket", getDomain(), containerItem = new BucketItem(this::getFluid, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET)));
         } else if (registry == ForgeRegistries.Keys.BLOCKS) {
-            this.source = new Source(this.fluidProperties);
-            this.flowing = new Flowing(this.fluidProperties);
             this.fluidBlock = new LiquidBlock(this::getFluid, blockProperties);
             GTAPI.register(Block.class, "block_fluid_".concat(getId()), getDomain(), fluidBlock);
         } else if (registry == ForgeRegistries.Keys.FLUIDS) {
+            this.source = new Source(this.fluidProperties);
+            this.flowing = new Flowing(this.fluidProperties);
             GTAPI.register(Fluid.class, getId(), getDomain(), source);
             GTAPI.register(Fluid.class, "flowing_" + getId(), getDomain(), flowing);
             GTAPI.register(FlowingFluid.class, "flowing_".concat(getId()), getDomain(), flowing);

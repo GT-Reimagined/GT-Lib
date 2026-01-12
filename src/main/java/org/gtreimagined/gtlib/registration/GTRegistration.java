@@ -70,7 +70,7 @@ public final class GTRegistration {
         }
         if (domain.equals(Ref.ID)) {
             List<IGTRegistrar> list = GTAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
-            if (e.getRegistryKey() == Keys.BLOCKS) {
+            if (e.getRegistryKey() == Keys.SOUND_EVENTS) {
                 GTAPI.onRegistration(RegistrationEvent.DATA_INIT);
                 MaterialEvent event = new MaterialEvent();
                 MaterialDataInit.onMaterialEvent(event);
