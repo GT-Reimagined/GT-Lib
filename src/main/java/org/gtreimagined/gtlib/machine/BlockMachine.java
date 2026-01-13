@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.machine;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTAPI;
@@ -341,14 +342,18 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
         Texture[] base = type.getBaseTexture(tier, MachineState.ACTIVE);
         if (base.length >= 6) {
             for (int s = 0; s < 6; s++) {
-                b.texture("base" + Utils.coverRotateFacing(Ref.DIRS[s], Direction.NORTH).getSerializedName(), base[s]);
+                Direction dir = Direction.from3DDataValue(s);
+                Direction newDir = dir.getAxis() == Axis.Y ? dir : dir.getOpposite();
+                b.texture("base" + newDir.getSerializedName(), base[s]);
             }
         }
         for (int i = 0; i < type.getOverlayLayers(); i++) {
             Texture[] overlays = type.getOverlayTextures(MachineState.ACTIVE, tier, i);
             for (int s = 0; s < 6; s++) {
                 String suffix = i == 0 ? "" : String.valueOf(i);
-                b.texture("overlay" + Utils.coverRotateFacing(Ref.DIRS[s], Direction.NORTH).getSerializedName() + suffix, overlays[s]);
+                Direction dir = Direction.from3DDataValue(s);
+                Direction newDir = dir.getAxis() == Axis.Y ? dir : dir.getOpposite();
+                b.texture("overlay" + newDir.getSerializedName() + suffix, overlays[s]);
             }
         }
 
