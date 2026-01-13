@@ -45,6 +45,15 @@ public class DynamicModel implements IGTModel<DynamicModel> {
         return new DynamicBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, particle)), getBakedConfigs(configuration, bakery, getter, transform, overrides, loc));
     }
 
+    @Override
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context) {
+        modelConfigs.forEach((integer, igtModels) -> {
+            for (IGTModel<?> model : igtModels){
+                model.resolveParents(modelGetter, context);
+            }
+        });
+    }
+
     public Int2ObjectOpenHashMap<BakedModel[]> getBakedConfigs(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
         Int2ObjectOpenHashMap<BakedModel[]> bakedConfigs = GTLibModelManager.getStaticConfigMap(staticMapId);
         modelConfigs.forEach((k, v) -> {
