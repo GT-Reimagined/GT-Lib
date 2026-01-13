@@ -40,4 +40,8 @@ public class GTModel<T extends GTModel<T>> implements IGTModel<T> {
         return model != null ? model.bake(bakery, getter, getModelTransform(transform, rotations), loc) : ModelUtils.getMissingModel().bake(bakery, getter, transform, loc);
     }
 
+    @Override
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context) {
+        model.resolveParents(modelGetter);
+    }
 }

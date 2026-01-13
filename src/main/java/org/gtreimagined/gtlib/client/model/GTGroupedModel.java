@@ -40,6 +40,13 @@ public class GTGroupedModel implements IGTModel<GTGroupedModel> {
         return new GroupedBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, MissingTextureAtlasSprite.getLocation())), builder.build());
     }
 
+    @Override
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context) {
+        this.models.forEach((state, models) -> {
+            models.resolveParents(modelGetter, context);
+        });
+    }
+
     protected static ImmutableMap.Builder<String, BakedModel> buildParts(IGeometryBakingContext configuration, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc, Set<Map.Entry<String, IGTModel<?>>> entries) {
         ImmutableMap.Builder<String, BakedModel> builder = ImmutableMap.builder();
         for (Map.Entry<String, IGTModel<?>> entry : entries) {

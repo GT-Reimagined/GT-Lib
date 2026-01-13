@@ -35,18 +35,26 @@ public class MachineModel implements IGTModel<MachineModel> {
 
     @Override
     public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBaker bakery,
-            Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides,
-            ResourceLocation loc) {
-                ImmutableMap.Builder<MachineState, BakedModel[]> builder = ImmutableMap.builder();
+            Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+        ImmutableMap.Builder<MachineState, BakedModel[]> builder = ImmutableMap.builder();
 
-                for (Map.Entry<MachineState, UnbakedModel[]> pair : this.models.entrySet()) {
-                    BakedModel[] mod = new BakedModel[6];
-                    for (int i = 0; i < 6; i++) {
-                        mod[i] = pair.getValue()[i].bake(bakery, getter, transform, loc);
-                    }
-                    builder.put(pair.getKey(),mod);
-                }
-                return new MachineBakedModel(getter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, particle)), builder.build());
+        for (Map.Entry<MachineState, UnbakedModel[]> pair : this.models.entrySet()) {
+            BakedModel[] mod = new BakedModel[6];
+            for (int i = 0; i < 6; i++) {
+                mod[i] = pair.getValue()[i].bake(bakery, getter, transform, loc);
             }
+            builder.put(pair.getKey(),mod);
+        }
+        return new MachineBakedModel(getter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, particle)), builder.build());
     }
+
+    @Override
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context) {
+        this.models.forEach((state, models) -> {
+            for (UnbakedModel model : models) {
+                model.resolveParents(modelGetter);
+            }
+        });
+    }
+}
 
