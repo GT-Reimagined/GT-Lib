@@ -792,10 +792,10 @@ public class Utils {
             return TRANSFORM[facing.get3DDataValue()][side.get3DDataValue()];
         }
         if (side == Direction.DOWN || side == Direction.UP) return side;
-        if (facing == Direction.WEST) return side.getClockWise();
-        if (facing == Direction.EAST) return side.getCounterClockWise();
-        if (facing == Direction.SOUTH) return side.getOpposite();
-        return side;
+        if (facing == Direction.WEST) return side.getCounterClockWise();
+        if (facing == Direction.EAST) return side.getClockWise();
+        if (facing == Direction.SOUTH) return side;
+        return side.getOpposite();
     }
 
     public static Direction rotate(Direction facing, Direction side) {
