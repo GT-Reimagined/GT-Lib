@@ -153,7 +153,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
     }
 
     protected void processSubtags() {
-        for (PipeSize value : PipeSize.values()) {
+        for (PipeSize value : PipeSize.VALUES) {
             Set<Material> mats = WIRE.allSub(SubTag.COPPER_WIRE);
             if (mats.size() > 0) {
                 this.tag(TagUtils.getItemTag(new ResourceLocation(Ref.ID, SubTag.COPPER_WIRE.getId() + "_" + value.getId()))).add(mats.stream().map(t ->
