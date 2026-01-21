@@ -113,17 +113,17 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         shapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).maximumSize(1000).build());
         this.type = type;
         this.size = size;
-        side = new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_side");
+        side = new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_side");
         overlay = new Texture(Ref.ID, "block/empty");
         faces = new Texture[]{
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_vtiny"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_tiny"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_small"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_normal"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_large"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_huge"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_quadruple"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_nonuple")};
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_vtiny"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_tiny"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_small"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_normal"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_large"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_huge"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_quadruple"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_nonuple")};
         GTAPI.register(BlockPipe.class, this);
         registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false).setValue(TICKING, false));
         this.modelId = modelId;
