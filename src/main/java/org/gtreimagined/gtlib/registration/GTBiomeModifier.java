@@ -19,7 +19,7 @@ public class GTBiomeModifier implements BiomeModifier {
         if (phase == Phase.ADD){
             try {
                 Registry<PlacedFeature> placedFeatureRegistry = ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.PLACED_FEATURE);
-                GTLibWorldGenerator.reloadEvent(arg.unwrapKey().get().location(), builder.getClimateSettings().build(), builder.getSpecialEffects().build(), builder.getGenerationSettings(), builder.getMobSpawnSettings(), placedFeatureRegistry);
+                GTLibWorldGenerator.reloadEvent(arg, builder.getClimateSettings().build(), builder.getSpecialEffects().build(), builder.getGenerationSettings(), builder.getMobSpawnSettings(), placedFeatureRegistry);
             } catch (IllegalStateException ignored){}
         }
     }

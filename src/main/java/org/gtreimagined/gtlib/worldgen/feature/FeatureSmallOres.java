@@ -1,7 +1,9 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.ClimateSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -46,7 +48,7 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
 
 
     @Override
-    public void build(ResourceLocation name, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
+    public void build(Holder<Biome> biomeHolder, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
         gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, getPlacedFeatureFromKey(placedFeatureRegistry, GTLibConfiguredFeatures.SMALL_ORES));
     }
 

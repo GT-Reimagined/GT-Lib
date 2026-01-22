@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.worldgen;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.biome.Biome.ClimateSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
@@ -150,13 +151,12 @@ public class GTLibWorldGenerator {
     }
 
 
-    public static void reloadEvent(ResourceLocation name, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
-
+    public static void reloadEvent(Holder<Biome> biome, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
         GTAPI.all(IGTFeature.class, t -> {
-            t.build(name, climate, effects, gen, spawns, placedFeatureRegistry);
+            t.build(biome, climate, effects, gen, spawns, placedFeatureRegistry);
         });
         handleFeatureRemoval(gen);
-        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(name, climate, effects, gen, spawns, placedFeatureRegistry));
+        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(biome, climate, effects, gen, spawns, placedFeatureRegistry));
     }
 
     private static void handleFeatureRemoval(BiomeGenerationSettingsBuilder gen) {

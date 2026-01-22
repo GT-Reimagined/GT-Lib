@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.worldgen;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -10,5 +11,5 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 
 public interface IGTWorldgenFunction {
-    void build(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, MobSpawnSettings.Builder spawns, Registry<PlacedFeature> placedFeatureRegistry);
+    void build(Holder<Biome> biomeHolder, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, MobSpawnSettings.Builder spawns, Registry<PlacedFeature> placedFeatureRegistry);
 }
