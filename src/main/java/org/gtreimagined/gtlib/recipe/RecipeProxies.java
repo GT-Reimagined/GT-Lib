@@ -21,7 +21,7 @@ public class RecipeProxies {
             ItemStack[] stacks = input.getItems();
             RecipeIngredient ing = stacks.length == 1 ? RecipeIngredient.of(stacks[0]) : RecipeIngredient.of(1, input.getItems());
             return b.recipeMapOnly().ii(ing)
-                    .io(t.getResultItem(GTBiomeModifier.REGISTRY_ACCESS)).add(t.getId().getPath(), duration, power, 0, 1);
+                    .io(t.getResultItem(null)).add(t.getId().getPath(), duration, power, 0, 1);
         };
     }
 

@@ -139,12 +139,10 @@ public final class GTRegistration {
             });
         }
         if (domain.equals(Ref.ID)){
-            if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIERS){
-                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "modifier"), new GTBiomeModifier());
-            } else if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS){
-                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "modifier"), GTBiomeModifier.CODEC);
+            if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS){
+                ForgeRegistries.BIOME_MODIFIER_SERIALIZERS.get().register(new ResourceLocation(Ref.ID, "modifier"), GTBiomeModifier.CODEC);
             } else if (e.getRegistryKey() == ForgeRegistries.Keys.RECIPE_TYPES){
-                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "machine"), Recipe.RECIPE_TYPE);
+                ForgeRegistries.RECIPE_TYPES.register(new ResourceLocation(Ref.ID, "machine"), Recipe.RECIPE_TYPE);
             }
         }
         if (!domain.equals(Ref.ID)){
