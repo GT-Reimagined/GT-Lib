@@ -107,7 +107,7 @@ public class GTLibDynamics {
             GTLibDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
-        function.accept(new GTDynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDomain).collect(Collectors.toSet())));
+        function.accept(new GTDynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDataPackDomains).flatMap(Collection::stream).collect(Collectors.toSet())));
 
     }
 
