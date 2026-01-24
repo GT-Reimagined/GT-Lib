@@ -147,6 +147,7 @@ public class GTLibJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
+        guiHelper = registry.getJeiHelpers().getGuiHelper();
         MultiMachineInfoCategory.setGuiHelper(registry.getJeiHelpers().getGuiHelper());
         if (helpers == null) helpers = registry.getJeiHelpers();
         Set<ResourceLocation> registeredMachineCats = new ObjectOpenHashSet<>();
