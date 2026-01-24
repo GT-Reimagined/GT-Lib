@@ -105,7 +105,7 @@ public class GTLibJEIPlugin implements IModPlugin {
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
         runtime = jeiRuntime;
         guiHelper = runtime.getJeiHelpers().getGuiHelper();
-        if (GTAPI.isModLoaded(Ref.MOD_REI) || GTAPI.isModLoaded(Ref.MOD_EMI)) return;
+        if (GTAPI.isModLoaded(Ref.MOD_REI) || (GTAPI.isModLoaded(Ref.MOD_EMI) && !FMLEnvironment.production)) return;
         //Remove fluid "blocks".
         List<ItemLike> list = new ArrayList<>();
         GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));

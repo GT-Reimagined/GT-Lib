@@ -18,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiData;
@@ -39,6 +40,7 @@ import java.util.Map;
 public class GTLibEmiPlugin implements EmiPlugin {
     @Override
     public void register(EmiRegistry emiRegistry) {
+        if (FMLEnvironment.production) return;
         List<ItemLike> list = new ArrayList<>();
         GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));
         if (!list.isEmpty()) {
