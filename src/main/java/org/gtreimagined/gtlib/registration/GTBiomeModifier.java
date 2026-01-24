@@ -16,12 +16,10 @@ public class GTBiomeModifier implements BiomeModifier {
 
     @Override
     public void modify(Holder<Biome> arg, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
-        if (phase == Phase.ADD){
-            try {
-                Registry<PlacedFeature> placedFeatureRegistry = ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.PLACED_FEATURE);
-                GTLibWorldGenerator.reloadEvent(arg, builder.getClimateSettings().build(), builder.getSpecialEffects().build(), builder.getGenerationSettings(), builder.getMobSpawnSettings(), placedFeatureRegistry);
-            } catch (IllegalStateException ignored){}
-        }
+        try {
+            Registry<PlacedFeature> placedFeatureRegistry = ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.PLACED_FEATURE);
+            GTLibWorldGenerator.reloadEvent(phase, arg, builder.getClimateSettings().build(), builder.getSpecialEffects().build(), builder.getGenerationSettings(), builder.getMobSpawnSettings(), placedFeatureRegistry);
+        } catch (IllegalStateException ignored){}
     }
 
     @Override

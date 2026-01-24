@@ -6,6 +6,7 @@ import net.minecraft.world.level.biome.Biome.ClimateSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
+import net.minecraftforge.common.world.BiomeModifier.Phase;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
@@ -151,12 +152,14 @@ public class GTLibWorldGenerator {
     }
 
 
-    public static void reloadEvent(Holder<Biome> biome, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
+    public static void reloadEvent(Phase phase, Holder<Biome> biome, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
         GTAPI.all(IGTFeature.class, t -> {
-            t.build(biome, climate, effects, gen, spawns, placedFeatureRegistry);
+            t.build(phase, biome, climate, effects, gen, spawns, placedFeatureRegistry);
         });
-        handleFeatureRemoval(gen);
-        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(biome, climate, effects, gen, spawns, placedFeatureRegistry));
+        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(phase, biome, climate, effects, gen, spawns, placedFeatureRegistry));
+        if (phase == Phase.REMOVE) {
+            handleFeatureRemoval(gen);
+        }
     }
 
     private static void handleFeatureRemoval(BiomeGenerationSettingsBuilder gen) {
