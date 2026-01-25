@@ -27,7 +27,7 @@ public class BlockItemPipe<T extends ItemPipe<T>> extends BlockPipe<T> {
     final boolean restricted;
 
     public BlockItemPipe(T type, PipeSize size, boolean restricted) {
-        super((restricted ? "restrictive_" : "") + type.getId(), type, size, 0);
+        super((restricted ? "restrictive_" : "") + type.getType(), type, size, 0);
         this.restricted = restricted;
         if (restricted){
             this.side = new Texture(Ref.ID, "block/pipe/pipe_restrictor_side");

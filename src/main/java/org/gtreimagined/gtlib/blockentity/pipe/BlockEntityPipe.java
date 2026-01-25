@@ -473,7 +473,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
 
     @Override
     public Component getDisplayName() {
-        return Utils.literal(this.type.getTypeName());
+        return Utils.literal(this.type.getType());
     }
 
     @Nullable

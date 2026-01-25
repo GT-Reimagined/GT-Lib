@@ -94,4 +94,8 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
         this.sizes = ImmutableSet.copyOf(sizes);
         return (T) this;
     }
+
+    public String getSizeId(PipeSize size){
+        return size.getId();
+    }
 }

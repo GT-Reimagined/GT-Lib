@@ -103,12 +103,12 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     public static final BooleanProperty TICKING = BooleanProperty.create("ticking");
 
-    public BlockPipe(String prefix, T type, PipeSize size, int modelId) {
-        this(prefix, type, size, modelId, type.getMaterial() == GTLibMaterials.Wood ? Properties.of().sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of().strength(1.0f, 3.0f).requiresCorrectToolForDrops());
+    public BlockPipe(String suffix, T type, PipeSize size, int modelId) {
+        this(suffix, type, size, modelId, type.getMaterial() == GTLibMaterials.Wood ? Properties.of().sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of().strength(1.0f, 3.0f).requiresCorrectToolForDrops());
     }
 
-    public BlockPipe(String prefix, T type, PipeSize size, int modelId, Properties properties) {
-        super(type.domain, prefix + "_" + size.getId(), size.ordinal() < 6 ? properties.noOcclusion().dynamicShape() : properties);
+    public BlockPipe(String suffix, T type, PipeSize size, int modelId, Properties properties) {
+        super(type.domain, type.getSizeId(size) + "_" + type.getMaterial().getId() + "_" + suffix, size.ordinal() < 6 ? properties.noOcclusion().dynamicShape() : properties);
         pipeShapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build());
         shapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).maximumSize(1000).build());
         this.type = type;

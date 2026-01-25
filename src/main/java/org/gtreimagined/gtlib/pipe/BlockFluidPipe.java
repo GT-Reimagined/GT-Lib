@@ -22,7 +22,7 @@ import java.util.List;
 public class BlockFluidPipe<T extends FluidPipe<T>> extends BlockPipe<T> {
 
     public BlockFluidPipe(T type, PipeSize size) {
-        super(type.getId(), type, size, 0);
+        super(type.getType(), type, size, 0);
     }
 
     @Override
