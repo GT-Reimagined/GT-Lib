@@ -26,6 +26,7 @@ public class HatchMachine extends Machine<HatchMachine> {
         setOutputCover(cover);
         setOutputDir(Dir.FORWARD);
         setAllowsFrontCovers();
+        setAllowsOutputCoversOnFacing(true);
         setAllowsFrontIO();
         setBlockColorHandler((state, world, pos, machine, i) -> {
             if (machine instanceof BlockEntityHatch<?> hatch && hatch.getTextureBlock() instanceof IColorHandler colorHandler && i == 0) {

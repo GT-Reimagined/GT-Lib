@@ -72,7 +72,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     default DyeColor getDyeColor(ItemStack stack){
         CompoundTag data = getOrCreateDataTag(stack);
         if (data.contains(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR)){
-            Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(t -> t.getMaterialColor().col == data.getInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR)).findFirst();
+            Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(t -> t.getMapColor().col == data.getInt(Ref.KEY_TOOL_DATA_SECONDARY_COLOUR)).findFirst();
             return color.orElse(DyeColor.WHITE);
         }
         return null;
@@ -100,7 +100,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
     }
 
     default int getSubColour(ItemStack stack) {
-        return getDyeColor(stack) == null ? 0 : getDyeColor(stack).getMaterialColor().col;
+        return getDyeColor(stack) == null ? 0 : getDyeColor(stack).getMapColor().col;
     }
 
     default long getCurrentEnergy(ItemStack stack) {
@@ -146,14 +146,6 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
         if (!primary.has(MaterialTags.TOOLS)){
             return stack;
         }
-        Map<Enchantment, Integer> mainEnchants = MaterialTags.TOOLS.get(primary).toolEnchantment();
-        if (!mainEnchants.isEmpty()) {
-            mainEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack)).forEach(e -> stack.enchant(e.getKey(), e.getValue()));
-            //return stack;
-        }
-        /*if (!handleEnchants.isEmpty()) {
-            handleEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack) && !mainEnchants.containsKey(e.getKey())).forEach(e -> stack.enchant(e.getKey(), e.getValue()));
-        }*/
         return stack;
     }
 
@@ -215,6 +207,12 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
             tooltip.add(Utils.translatable("gtlib.tooltip.energy").append(": " + getCurrentEnergy(stack) + " / " + getMaxEnergy(stack)));
         tooltip.add(Utils.translatable("gtlib.tooltip.durability", Utils.literal((stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()).withStyle(ChatFormatting.GREEN)));
         IBasicGTTool.super.onGenericAddInformation(stack, tooltip, flag);
+    }
+
+    default void appendEnchantmentNames(List<Component> tooltipComponents, Map<Enchantment, Integer> enchantments) {
+        for (var enchantment : enchantments.entrySet()){
+            tooltipComponents.add(enchantment.getKey().getFullname(enchantment.getValue()));
+        }
     }
 
     default void refillTool(ItemStack stack, Player player){

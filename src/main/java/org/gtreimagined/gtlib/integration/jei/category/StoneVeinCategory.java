@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
@@ -29,8 +30,8 @@ import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.
 import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.JEI_OFFSET_Y;
 
 public class StoneVeinCategory implements IRecipeCategory<StoneVein> {
-    IDrawable icon = RecipeMapCategory.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
-    IDrawable background = RecipeMapCategory.guiHelper.drawableBuilder(new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"), 3, 3, 170, 60).addPadding(0, 60, 0,0).build();
+    IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
+    IDrawable background = GTLibJEIPlugin.guiHelper.drawableBuilder(new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"), 3, 3, 170, 60).addPadding(0, 60, 0,0).build();
     public static final RecipeType<StoneVein> STONE_VEINS = new RecipeType<>(new ResourceLocation(Ref.ID, "stone_veins"), StoneVein.class);
     public StoneVeinCategory() {
 
@@ -68,26 +69,22 @@ public class StoneVeinCategory implements IRecipeCategory<StoneVein> {
     }
 
     @Override
-    public void draw(StoneVein recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(StoneVein recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         int x = JEI_OFFSET_X;
         int y = JEI_OFFSET_Y + 3;
         DecimalFormat format = new DecimalFormat("###.####");
         String fullId = recipe.stoneLayer().getLoc().getPath();
-        renderString(stack, "Stone Layer Name: " + Utils.lowerUnderscoreToUpperSpaced(fullId), Minecraft.getInstance().font, 0, 18, 0x000000, x, y, false);
-        renderString(stack, "Stone: " + recipe.stoneLayer().block().getName().getString(), Minecraft.getInstance().font, 0, 28, 0x000000, x, y, false);
-        renderString(stack, "Ore: " + recipe.ore().material().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 38, 0x000000, x, y, false);
-        renderString(stack, "StoneLayerChance: " + format.format(((double) recipe.stoneLayer().weight() / recipe.totalWeight()) * 100) + "%", Minecraft.getInstance().font, 0, 58, 0x000000, x, y, false);
-        renderString(stack, "MinY: " + recipe.ore().minY() + " MaxY: " + recipe.ore().maxY(), Minecraft.getInstance().font, 0, 68, 0x000000, x, y, false);
-        renderString(stack, "Ore Chance per Stone: " + format.format(((double)recipe.ore().chance() / Ref.U) * 100) + "%", Minecraft.getInstance().font, 0, 78, 0x000000, x, y, false);
-        renderString(stack, "Generated world:", Minecraft.getInstance().font, 0, 88, 0x000000, x, y, false);
+        renderString(graphics, "Stone Layer Name: " + Utils.lowerUnderscoreToUpperSpaced(fullId), Minecraft.getInstance().font, 0, 18, 0x000000, x, y, false);
+        renderString(graphics, "Stone: " + recipe.stoneLayer().block().getName().getString(), Minecraft.getInstance().font, 0, 28, 0x000000, x, y, false);
+        renderString(graphics, "Ore: " + recipe.ore().material().getDisplayNameString() + " Ore", Minecraft.getInstance().font, 0, 38, 0x000000, x, y, false);
+        renderString(graphics, "StoneLayerChance: " + format.format(((double) recipe.stoneLayer().weight() / recipe.totalWeight()) * 100) + "%", Minecraft.getInstance().font, 0, 58, 0x000000, x, y, false);
+        renderString(graphics, "MinY: " + recipe.ore().minY() + " MaxY: " + recipe.ore().maxY(), Minecraft.getInstance().font, 0, 68, 0x000000, x, y, false);
+        renderString(graphics, "Ore Chance per Stone: " + format.format(((double)recipe.ore().chance() / Ref.U) * 100) + "%", Minecraft.getInstance().font, 0, 78, 0x000000, x, y, false);
+        renderString(graphics, "Generated world:", Minecraft.getInstance().font, 0, 88, 0x000000, x, y, false);
 
     }
 
-    void renderString(PoseStack stack, String string, Font render, float x, float y, int color, int guiOffsetX, int guiOffsetY, boolean shadow) {
-        if (shadow) {
-            render.drawShadow(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
-        } else {
-            render.draw(stack, string, (guiOffsetX + x), guiOffsetY + y, color);
-        }
+    void renderString(GuiGraphics graphics, String string, Font font, float x, float y, int color, int guiOffsetX, int guiOffsetY, boolean shadow) {
+        graphics.drawString(font, string, (guiOffsetX + x), guiOffsetY + y, color, shadow);
     }
 }

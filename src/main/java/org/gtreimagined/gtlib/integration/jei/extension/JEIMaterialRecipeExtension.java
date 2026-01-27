@@ -34,8 +34,8 @@ public record JEIMaterialRecipeExtension(MaterialRecipe recipe) implements ICraf
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder recipeLayout, @NotNull ICraftingGridHelper helper, IFocusGroup focuses) {
         if (focuses.isEmpty()) {
-            helper.setInputs(recipeLayout, VanillaTypes.ITEM_STACK, recipe.getIngredients().stream().map(t -> Arrays.asList(t.getItems())).toList(), recipe.getWidth(), recipe.getHeight());
-            helper.setOutputs(recipeLayout, VanillaTypes.ITEM_STACK, recipe.outputs);
+            helper.createAndSetInputs(recipeLayout, VanillaTypes.ITEM_STACK, recipe.getIngredients().stream().map(t -> Arrays.asList(t.getItems())).toList(), recipe.getWidth(), recipe.getHeight());
+            helper.createAndSetOutputs(recipeLayout, VanillaTypes.ITEM_STACK, recipe.outputs);
             return;
         }
         focuses.getFocuses(VanillaTypes.ITEM_STACK).forEach(focus -> {

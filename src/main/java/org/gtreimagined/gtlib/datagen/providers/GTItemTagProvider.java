@@ -1,6 +1,9 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagEntry;
+import net.minecraftforge.common.Tags;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -8,6 +11,7 @@ import org.gtreimagined.gtlib.block.BlockStone;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.data.ForgeTags;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.datagen.builder.GTTagBuilder;
 import org.gtreimagined.gtlib.item.ItemFluidCell;
@@ -51,7 +55,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
     private final Function<TagKey<Block>, GTTagBuilder<Block>> blockTags;
 
     public GTItemTagProvider(String providerDomain, String providerName, boolean replace, GTBlockTagProvider p) {
-        super(Registry.ITEM, providerDomain, providerName, "items");
+        super(Registries.ITEM, providerDomain, providerName, "items", i -> BuiltInRegistries.ITEM.getResourceKey(i).get());
         Objects.requireNonNull(p);
         this.blockTags = p::getOrCreateRawBuilder;
         this.replace = replace;
@@ -103,12 +107,12 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
             });
             GTAPI.all(BlockStorage.class, storage -> {
                 MaterialType<?> type = storage.getType();
-                String name = String.join("", getConventionalMaterialType(type), "/", (type == RAW_ORE_BLOCK ? "raw_" : ""), storage.getMaterial().getId());
+                String name = String.join("", type.getTagPrefix(), "/", (type == RAW_ORE_BLOCK ? "raw_" : ""), storage.getMaterial().getId());
                 this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
             });
             GTAPI.all(BlockFrame.class, storage -> {
                 MaterialType<?> type = storage.getType();
-                String name = String.join("", getConventionalMaterialType(type), "/", storage.getMaterial().getId());
+                String name = String.join("", type.getTagPrefix(), "/", storage.getMaterial().getId());
                 this.copy(getForgelikeBlockTag(name), getForgelikeItemTag(name));
             });
             GTAPI.all(MaterialItem.class, item -> {
@@ -135,6 +139,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                    });
                 }
             });
+            this.tag(Tags.Items.SHEARS).addTag(GTTools.SCISSORS.getTag());
             processSubtags();
             GTAPI.all(IGTTool.class, tool -> {
                 this.tag(tool.getGTToolType().getTag()).add(tool.getItem()).replace(replace);
@@ -148,7 +153,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
     }
 
     protected void processSubtags() {
-        for (PipeSize value : PipeSize.values()) {
+        for (PipeSize value : PipeSize.VALUES) {
             Set<Material> mats = WIRE.allSub(SubTag.COPPER_WIRE);
             if (mats.size() > 0) {
                 this.tag(TagUtils.getItemTag(new ResourceLocation(Ref.ID, SubTag.COPPER_WIRE.getId() + "_" + value.getId()))).add(mats.stream().map(t ->

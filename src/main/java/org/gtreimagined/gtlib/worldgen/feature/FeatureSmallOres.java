@@ -1,6 +1,13 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biome.ClimateSettings;
+import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
@@ -9,17 +16,13 @@ import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
 
 import java.util.Collection;
-import java.util.Random;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.SMALL_ORE;
 
@@ -45,8 +48,8 @@ public class FeatureSmallOres extends GTFeature<NoneFeatureConfiguration> {
 
 
     @Override
-    public void build(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GTLibConfiguredFeatures.SMALL_ORES);
+    public void build(Holder<Biome> biomeHolder, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
+        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, getPlacedFeatureFromKey(placedFeatureRegistry, GTLibConfiguredFeatures.SMALL_ORES));
     }
 
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> placer) {

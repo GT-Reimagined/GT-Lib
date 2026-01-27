@@ -76,7 +76,7 @@ public class BehaviourAOEBreak implements IBlockDestroyed<IBasicGTTool>, IItemRi
         //if(!super.onBlockDestroyed(stack, world, state, pos, entity)) return false;
         if (!(entity instanceof Player player)) return true;
         CompoundTag tag = instance.getDataTag(stack);
-        if (tag == null || !tag.getBoolean(Ref.KEY_TOOL_BEHAVIOUR_AOE_BREAK) || player.isCrouching() || player.getLevel().isClientSide) return true;
+        if (tag == null || !tag.getBoolean(Ref.KEY_TOOL_BEHAVIOUR_AOE_BREAK) || player.isCrouching() || player.level().isClientSide) return true;
         for (BlockPos blockPos : Utils.getHarvestableBlocksToBreak(world, player, instance, stack, column, row, depth)) {
             if (!instance.hasEnoughDurability(stack, instance.getGTToolType().getUseDurability(), instance.getGTToolType().isPowered()))
                 return true;

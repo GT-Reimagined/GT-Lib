@@ -2,14 +2,13 @@ package org.gtreimagined.gtlib.util;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectMap;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
@@ -84,6 +83,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 import org.gtreimagined.tesseract.api.hu.IHeatHandler;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -114,7 +115,7 @@ public class Utils {
      * Returns true of A is not empty, has the same Item and damage is equal to B
      **/
     public static boolean equals(ItemStack a, ItemStack b) {
-        return a.sameItem(b);
+        return ItemStack.isSameItem(a, b);
     }
 
     /**
@@ -575,7 +576,7 @@ public class Utils {
      * Creates a new {@link EnterBlockTrigger} for use with recipe unlock criteria.
      */
     public static EnterBlockTrigger.TriggerInstance enteredBlock(Block blockIn) {
-        return new EnterBlockTrigger.TriggerInstance(EntityPredicate.Composite.ANY, blockIn, StatePropertiesPredicate.ANY);
+        return new EnterBlockTrigger.TriggerInstance(ContextAwarePredicate.ANY, blockIn, StatePropertiesPredicate.ANY);
     }
 
     /**
@@ -609,7 +610,7 @@ public class Utils {
      * Creates a new {@link InventoryChangeTrigger} that checks for a player having a certain item.
      */
     public static InventoryChangeTrigger.TriggerInstance hasItem(ItemPredicate... predicates) {
-        return new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, ANY, ANY, ANY, predicates);
+        return new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, ANY, ANY, ANY, predicates);
     }
 
     public static MutableComponent translatable(String key, Object... objects){
@@ -685,7 +686,7 @@ public class Utils {
     }
 
     private static final Direction[][] TRANSFORM = new Direction[][]{
-            new Direction[]{
+            new Direction[]{ //DOWN
                     Direction.SOUTH,
                     Direction.NORTH,
                     Direction.DOWN,
@@ -693,7 +694,7 @@ public class Utils {
                     Direction.WEST,
                     Direction.EAST
             },
-            new Direction[]{
+            new Direction[]{ //UP
                     Direction.NORTH,
                     Direction.SOUTH,
                     Direction.UP,
@@ -701,7 +702,7 @@ public class Utils {
                     Direction.WEST,
                     Direction.EAST
             },
-            new Direction[]{
+            new Direction[]{ //NORTH
                     Direction.DOWN,
                     Direction.UP,
                     Direction.NORTH,
@@ -709,7 +710,7 @@ public class Utils {
                     Direction.WEST,
                     Direction.EAST
             },
-            new Direction[]{
+            new Direction[]{ //SOUTH
                     Direction.DOWN,
                     Direction.UP,
                     Direction.SOUTH,
@@ -717,7 +718,7 @@ public class Utils {
                     Direction.EAST,
                     Direction.WEST,
             },
-            new Direction[]{
+            new Direction[]{ //WEST
                     Direction.DOWN,
                     Direction.UP,
                     Direction.WEST,
@@ -725,7 +726,7 @@ public class Utils {
                     Direction.SOUTH,
                     Direction.NORTH
             },
-            new Direction[]{
+            new Direction[]{ //EAST
                     Direction.DOWN,
                     Direction.UP,
                     Direction.EAST,
@@ -786,6 +787,17 @@ public class Utils {
             }
     };
 
+    public static Direction rotateModel(Direction facing, Direction side){
+        if (facing == Direction.UP || facing == Direction.DOWN){
+            return TRANSFORM[facing.get3DDataValue()][side.get3DDataValue()];
+        }
+        if (side == Direction.DOWN || side == Direction.UP) return side;
+        if (facing == Direction.WEST) return side.getCounterClockWise();
+        if (facing == Direction.EAST) return side.getClockWise();
+        if (facing == Direction.SOUTH) return side;
+        return side.getOpposite();
+    }
+
     public static Direction rotate(Direction facing, Direction side) {
         return TRANSFORM[facing.get3DDataValue()][side.get3DDataValue()];
     }
@@ -794,22 +806,59 @@ public class Utils {
         return TRANSFORM_INVERSE[facing.get3DDataValue()][side.get3DDataValue()];
     }
 
-    public static Direction coverRotateFacing(Direction toRotate, Direction rotateBy) {
-        Quaternion rot = null;
-        switch (rotateBy.getAxis()) {
-            case Z:
-            case X:
-                rot = new Quaternion(Vector3f.YP, rotateBy.toYRot(), true);
-                break;
-            case Y:
-                rot = new Quaternion(Vector3f.XP, -90f*rotateBy.getNormal().getY(), true);
-                break;
+    private static final Direction[][] COVER_ROTATION = new Direction[][]{
+            new Direction[]{ //DOWN
+                    Direction.NORTH,
+                    Direction.SOUTH,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN
+            },
+            new Direction[]{ //UP
+                    Direction.SOUTH,
+                    Direction.NORTH,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN,
+                    Direction.DOWN
+            },
+            new Direction[]{ //NORTH
+                    Direction.UP,
+                    Direction.DOWN,
+                    Direction.SOUTH,
+                    Direction.NORTH,
+                    Direction.WEST,
+                    Direction.EAST
+            },
+            new Direction[]{ //SOUTH
+                    Direction.DOWN,
+                    Direction.UP,
+                    Direction.NORTH,
+                    Direction.SOUTH,
+                    Direction.EAST,
+                    Direction.WEST,
+            },
+            new Direction[]{ //WEST
+                    Direction.WEST,
+                    Direction.WEST,
+                    Direction.EAST,
+                    Direction.WEST,
+                    Direction.SOUTH,
+                    Direction.NORTH
+            },
+            new Direction[]{ //EAST
+                    Direction.EAST,
+                    Direction.EAST,
+                    Direction.WEST,
+                    Direction.EAST,
+                    Direction.NORTH,
+                    Direction.SOUTH
+            }
+    };
 
-        }
-        Vec3i vector3i = toRotate.getNormal();
-        Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-        vector4f.transform(new com.mojang.math.Matrix4f(rot));
-        return Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
+    public static Direction coverRotateFacing(Direction toRotate, Direction rotateBy) {
+        return COVER_ROTATION[toRotate.get3DDataValue()][rotateBy.get3DDataValue()];
     }
 
     public static Direction getOffsetFacing(BlockPos center, BlockPos offset) {
@@ -911,7 +960,7 @@ public class Utils {
                     BlockPos harvestPos = new BlockPos(x, y, z);
                     if (harvestPos.equals(origin)) continue;
                     if (excludeAir) {
-                        state = player.level.getBlockState(harvestPos);
+                        state = player.level().getBlockState(harvestPos);
                         if (state.isAir()) continue;
                     }
                     set.add(new BlockPos(x, y, z));
@@ -921,14 +970,14 @@ public class Utils {
         return set;
     }
    
-    public static void createExplosion(@Nullable Level world, BlockPos pos, float explosionRadius, Explosion.BlockInteraction modeIn) {
+    public static void createExplosion(@Nullable Level world, BlockPos pos, float explosionRadius, ExplosionInteraction modeIn) {
         if (world != null) {
             if (!world.isClientSide) {
                 world.explode(null, pos.getX(), pos.getY() + 0.0625D, pos.getZ(), explosionRadius, modeIn);
             } else {
                 world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY() + 0.5D, pos.getZ(), 0.0D, 0.0D, 0.0D);
             }
-            if (modeIn != BlockInteraction.NONE) {
+            if (modeIn != ExplosionInteraction.NONE) {
                 world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             }
         }
@@ -1093,7 +1142,7 @@ public class Utils {
         Color colour = new Color(rgb);
         Double2ObjectMap<DyeColor> distances = new Double2ObjectOpenHashMap<>();
         for (DyeColor dyeColour : DyeColor.values()) {
-            Color enumColour = new Color(dyeColour.getMaterialColor().col);
+            Color enumColour = new Color(dyeColour.getMapColor().col);
             double distance = (colour.getRed() - enumColour.getRed()) * (colour.getRed() - enumColour.getRed())
                     + (colour.getGreen() - enumColour.getGreen()) * (colour.getGreen() - enumColour.getGreen())
                     + (colour.getBlue() - enumColour.getBlue()) * (colour.getBlue() - enumColour.getBlue());
@@ -1173,23 +1222,12 @@ public class Utils {
     }
 
     public static String getConventionalMaterialType(MaterialType<?> type) {
-        if (type.getId().equals("raw_ore")){
-            //thank forge for this stupid tag
-            return "raw_materials";
-        }
-        if (type.getId().equals("raw_ore_block") || type.getId().equals("block")){
-            return "storage_blocks";
-        }
-        if (type.getId().equals("ore_stone")){
-            return "ore_stones";
-        }
         String id = type.getId();
         int index = id.indexOf("_");
         if (index != -1 && type.isSplitName()) {
-            id = String.join("", id.substring(index + 1), "_", id.substring(0, index), "s");
-            if (id.contains("crushed")) id = StringUtils.replace(id, "crushed", "ore");
+            id = String.join("", id.substring(0, index), "_", id.substring(index + 1), "s");
             return id;
-        } else if (id.equals("crushed")) return StringUtils.replace(id, "crushed", "crushed_ores");
+        }
         return id.charAt(id.length() - 1) == 's' ? id.concat("es") : id.concat("s");
     }
 
@@ -1209,7 +1247,7 @@ public class Utils {
         String id = type.getId();
         int index = id.indexOf("_");
         if (index != -1 && type.isSplitName()) {
-            String joined = String.join("", id.substring(index + 1), "_", id.substring(0, index));
+            String joined = String.join("", id.substring(0, index), "_", id.substring(index + 1));
             return lowerUnderscoreToUpperSpaced(joined).split(" ");
         }
         return new String[]{lowerUnderscoreToUpperSpaced(id).replace('_', ' ')};

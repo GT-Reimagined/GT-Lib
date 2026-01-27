@@ -24,11 +24,11 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import org.gtreimagined.gtlib.mixin.client.VertexFormatAccessor;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,7 +57,7 @@ public class DirectionalQuadTransformer
             float z = Float.intBitsToFloat(getAtByteOffset(inData, offset + 8));
 
             Vector4f pos = new Vector4f(x, y, z, 1);
-            pos.transform(transform.getMatrix());
+            pos.mul(transform.getMatrix());
             //pos.perspectiveDivide();
 
             putAtByteOffset(outData, offset, Float.floatToRawIntBits(pos.x()));

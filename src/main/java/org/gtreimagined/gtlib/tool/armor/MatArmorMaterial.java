@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.tool.armor;
 
+import net.minecraft.world.item.ArmorItem.Type;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
@@ -21,13 +22,13 @@ public class MatArmorMaterial implements ArmorMaterial {
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot slotIn) {
-        return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * MaterialTags.ARMOR.get(material).armorDurabilityFactor();
+    public int getDurabilityForType(Type type) {
+        return MAX_DAMAGE_ARRAY[type.ordinal()] * MaterialTags.ARMOR.get(material).armorDurabilityFactor();
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot slotIn) {
-        return type.getExtraArmor() + MaterialTags.ARMOR.get(material).armor()[slotIn.getIndex()];
+    public int getDefenseForType(Type type) {
+        return this.type.getExtraArmor() + MaterialTags.ARMOR.get(material).armor()[type.ordinal()];
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.cover.CoverOutput;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -40,22 +40,22 @@ public class IOWidget extends Widget {
     }
 
     @Override
-    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
-        super.mouseOver(stack, mouseX, mouseY, partialTicks);
+    public void mouseOver(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        super.mouseOver(graphics, mouseX, mouseY, partialTicks);
         if (isInside(0, 0, 18, 18, mouseX, mouseY) && hasFluid){
-            renderTooltip(stack, Utils.translatable("gtlib.tooltip.io_widget.fluid"), mouseX, mouseY);
+            renderTooltip(graphics, Utils.translatable("gtlib.tooltip.io_widget.fluid"), mouseX, mouseY);
         } else if (isInside(18, 0, 18, 18, mouseX, mouseY) && hasItem){
-            renderTooltip(stack, Utils.translatable("gtlib.tooltip.io_widget.item"), mouseX, mouseY);
+            renderTooltip(graphics, Utils.translatable("gtlib.tooltip.io_widget.item"), mouseX, mouseY);
         }
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
         if (hasItem){
-            drawTexture(matrixStack, new ResourceLocation(Ref.ID, "textures/gui/button/io.png"), realX() + 18, realY(), itemState ? 18 : 0, 18, 18, 18,36, 36);
+            drawTexture(graphics, new ResourceLocation(Ref.ID, "textures/gui/button/io.png"), realX() + 18, realY(), itemState ? 18 : 0, 18, 18, 18,36, 36);
         }
         if (hasFluid){
-            drawTexture(matrixStack, new ResourceLocation(Ref.ID, "textures/gui/button/io.png"), realX(), realY(), fluidState ? 18 : 0, 0, 18, 18,36, 36);
+            drawTexture(graphics, new ResourceLocation(Ref.ID, "textures/gui/button/io.png"), realX(), realY(), fluidState ? 18 : 0, 0, 18, 18,36, 36);
         }
     }
 

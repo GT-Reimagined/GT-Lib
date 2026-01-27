@@ -34,11 +34,13 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
+import org.gtreimagined.gtlib.material.MaterialTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.gtreimagined.tesseract.api.context.TesseractItemContext;
 import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -122,6 +124,7 @@ public class MaterialSword extends SwordItem implements IGTTool {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         onGenericAddInformation(stack, tooltip, flag);
         super.appendHoverText(stack, world, tooltip, flag);
+        appendEnchantmentNames(tooltip, getAllEnchantments(stack));
     }
 
     //TODO figure this out
@@ -238,13 +241,37 @@ public class MaterialSword extends SwordItem implements IGTTool {
     }
 
     @Override
+    public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+        Map<Enchantment, Integer> enchants = getAllEnchantments(stack);
+        if (enchants.containsKey(enchantment)) {
+            return enchants.get(enchantment);
+        }
+        return 0;
+    }
+
+    @Override
+    public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
+        Map<Enchantment, Integer> mainEnchants = MaterialTags.TOOLS.get(getPrimaryMaterial(stack)).toolEnchantment();
+        Map<Enchantment, Integer> enchants = new HashMap<>();
+        if (!mainEnchants.isEmpty()) {
+            mainEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack)).forEach(e -> enchants.put(e.getKey(), e.getValue()));
+        }
+        return enchants;
+    }
+
+    @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return !type.isPowered() && getTier(toRepair).getRepairIngredient().test(repair);
     }
 
     @Override
     public boolean isEnchantable(ItemStack stack) {
-        return true;
+        return false;
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        return false;
     }
 
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {

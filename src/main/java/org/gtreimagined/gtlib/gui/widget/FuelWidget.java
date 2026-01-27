@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.IFuelMachine;
@@ -39,8 +40,8 @@ public class FuelWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
-        drawTexture(stack, base, realX(), realY(), 0, 0, 18, 18, 18, 18);
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        drawTexture(graphics, base, realX(), realY(), 0, 0, 18, 18, 18, 18);
         if (fuel > 0) {
             float per = (float) fuel / maxFuel;
             if (per > 1.0F) {
@@ -51,21 +52,21 @@ public class FuelWidget extends Widget {
                 return;
             }
             int y = (realY() + 18) - lvl;
-            drawTexture(stack, overlay, realX(), y, 0, 18 - lvl, 18, lvl, 18, 18);
+            drawTexture(graphics, overlay, realX(), y, 0, 18 - lvl, 18, lvl, 18, 18);
         }
     }
 
     @Override
-    public void mouseOver(PoseStack stack, double mouseX, double mouseY, float partialTicks) {
-        super.mouseOver(stack, mouseX, mouseY, partialTicks);
-        renderTooltip(stack,"Show Recipes", mouseX, mouseY, 0, 0, 18, 18);
-        renderTooltip(stack,"Fuel: " + fuel, mouseX, mouseY + 10, 0, 10, 18, 18);
+    public void mouseOver(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        super.mouseOver(graphics, mouseX, mouseY, partialTicks);
+        renderTooltip(graphics,"Show Recipes", mouseX, mouseY, 0, 0, 18, 18);
+        renderTooltip(graphics,"Fuel: " + fuel, mouseX, mouseY + 10, 0, 10, 18, 18);
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void renderTooltip(PoseStack matrixStack, String text, double mouseX, double mouseY, int x, int y, int w, int h) {
+    protected void renderTooltip(GuiGraphics graphics, String text, double mouseX, double mouseY, int x, int y, int w, int h) {
         if (isInside(x, y, w, h, mouseX, mouseY)){
-            renderTooltip(matrixStack, Utils.literal(text), mouseX, mouseY);
+            renderTooltip(graphics, Utils.literal(text), mouseX, mouseY);
         }
 
     }

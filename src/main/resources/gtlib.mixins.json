@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.AbstractContainerScreenAccessor",
+    "client.BakedQuadMixin",
     "client.BlockModelAccessor",
+    "client.BlockModelMixin",
     "client.ChunkReaderAccessor",
     "client.ClientBlockUpdateMixin",
     "client.ClientPackSourceAccessor",
@@ -21,7 +23,6 @@
   "mixins": [
     "AxeItemMixin",
     "BiomeAccessor",
-    "BiomeGenerationBuilderAccessor",
     "BlockEntityMixin",
     "BlockLootTablesAccessor",
     "BlockStateBaseMixin",
@@ -47,5 +48,5 @@
     "TagLoaderMixin"
   ],
   "minVersion": "0.8",
-  "refmap": "antimatter.refmap.json"
+  "refmap": "gtlib.refmap.json"
 }

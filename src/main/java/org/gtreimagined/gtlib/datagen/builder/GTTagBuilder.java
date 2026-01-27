@@ -4,32 +4,44 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class GTTagBuilder<T> {
     public TagBuilder builder;
-    public final Registry<T> registry;
+    public final ResourceKey<Registry<T>> registry;
     public final List<T> removeElements = new ArrayList<>();
     private final String source;
     boolean replace = false;
+    private final Function<T, ResourceKey<T>> keyExtractor;
 
-    public GTTagBuilder(TagBuilder builder, Registry<T> registry, String string) {
+    public GTTagBuilder(TagBuilder builder, ResourceKey<Registry<T>> registry, String string, @Nullable Function<T, ResourceKey<T>> keyExtractor) {
         this.builder = builder;
         this.registry = registry;
         this.source = string;
+        this.keyExtractor = keyExtractor;
     }
 
     public GTTagBuilder<T> add(T item) {
-        this.builder.addElement(this.registry.getKey(item));
+        if (keyExtractor != null) {
+            return add(keyExtractor.apply(item));
+        }
+        return this;
+    }
+
+    public GTTagBuilder<T> add(ResourceKey<T> key) {
+        this.builder.addElement(key.location());
         return this;
     }
 
@@ -75,7 +87,9 @@ public class GTTagBuilder<T> {
 
     @SafeVarargs
     public final GTTagBuilder<T> add(T... toAdd) {
-        Stream.of(toAdd).map(this.registry::getKey).forEach(resourceLocation -> this.builder.addElement(resourceLocation));
+        if (keyExtractor != null) {
+            Stream.of(toAdd).map(keyExtractor).forEach(key -> this.builder.addElement(key.location()));
+        }
         return this;
     }
 

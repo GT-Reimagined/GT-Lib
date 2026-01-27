@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.client.model;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.IGTModel;
 import org.gtreimagined.gtlib.client.baked.MachineBakedModel;
@@ -33,24 +34,27 @@ public class MachineModel implements IGTModel<MachineModel> {
     }
 
     @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext configuration, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-            return models.values().stream().flatMap(t -> Arrays.stream(t).flatMap(i -> i.getMaterials(modelGetter, missingTextureErrors).stream())).collect(Collectors.toSet());
+    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBaker bakery,
+            Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+        ImmutableMap.Builder<MachineState, BakedModel[]> builder = ImmutableMap.builder();
+
+        for (Map.Entry<MachineState, UnbakedModel[]> pair : this.models.entrySet()) {
+            BakedModel[] mod = new BakedModel[6];
+            for (int i = 0; i < 6; i++) {
+                mod[i] = pair.getValue()[i].bake(bakery, getter, transform, loc);
+            }
+            builder.put(pair.getKey(),mod);
+        }
+        return new MachineBakedModel(getter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, particle)), builder.build());
     }
 
     @Override
-    public BakedModel bakeModel(IGeometryBakingContext configuration, ModelBakery bakery,
-            Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides,
-            ResourceLocation loc) {
-                ImmutableMap.Builder<MachineState, BakedModel[]> builder = ImmutableMap.builder();
-
-                for (Map.Entry<MachineState, UnbakedModel[]> pair : this.models.entrySet()) {
-                    BakedModel[] mod = new BakedModel[6];
-                    for (int i = 0; i < 6; i++) {
-                        mod[i] = pair.getValue()[i].bake(bakery, getter, transform, loc);
-                    }
-                    builder.put(pair.getKey(),mod);
-                }
-                return new MachineBakedModel(getter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, particle)), builder.build());
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context) {
+        this.models.forEach((state, models) -> {
+            for (UnbakedModel model : models) {
+                model.resolveParents(modelGetter);
             }
+        });
     }
+}
 

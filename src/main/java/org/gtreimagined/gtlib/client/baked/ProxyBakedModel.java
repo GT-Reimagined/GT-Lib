@@ -69,7 +69,7 @@ public class ProxyBakedModel extends GTBakedModel<ProxyBakedModel> {
         BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(fake.getState());
         UnbakedModel m = ModelUtils.getModel(BlockModelShaper.stateToModelLocation(fake.getState()));
 
-        Collection<Material> mats = m.getMaterials(ModelUtils.getDefaultModelGetter(), Sets.newLinkedHashSet());
+        /*Collection<Material> mats = m.getMaterials(ModelUtils.getDefaultModelGetter(), Sets.newLinkedHashSet());
         Material first = mats.iterator().next();
         BlockState cState = Blocks.AIR.defaultBlockState();
         BlockEntityBasicMultiMachine<?> machine = StructureCache.getAnyMulti(getWorld(level), fake.getBlockPos(), BlockEntityBasicMultiMachine.class);
@@ -82,7 +82,8 @@ public class ProxyBakedModel extends GTBakedModel<ProxyBakedModel> {
         if (cover.isEmpty())
             return ModelUtils.getQuadsFromBaked(model, fake.getState(), side, rand, level, pos);
         DynamicTexturer<ICover, ICover.DynamicKey> texturer = fake.getTexturer(side);
-        return texturer.getQuads("fake", new LinkedList<>(), cState, cover, new ICover.DynamicKey(cover.side(), new Texture(first.texture().toString()), cover.getId()), side.get3DDataValue(), level, pos);
+        return texturer.getQuads("fake", new LinkedList<>(), cState, cover, new ICover.DynamicKey(cover.side(), new Texture(first.texture().toString()), cover.getId()), side.get3DDataValue(), level, pos);*/
+        return List.of();
     }
 
     @Override

@@ -20,7 +20,7 @@ public class BehaviourShearing implements IInteractEntity<IBasicGTTool> {
 
     @Override
     public InteractionResult interactLivingEntity(IBasicGTTool instance, ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        if (!player.getLevel().isClientSide && interactionTarget instanceof Sheep sheep && sheep.readyForShearing()){
+        if (!player.level().isClientSide && interactionTarget instanceof Sheep sheep && sheep.readyForShearing()){
             sheep.shear(SoundSource.PLAYERS);
             sheep.gameEvent(GameEvent.SHEAR, player);
             stack.hurtAndBreak(1, player, (playerx) -> {

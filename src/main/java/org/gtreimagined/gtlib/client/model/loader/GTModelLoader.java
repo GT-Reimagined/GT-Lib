@@ -20,4 +20,9 @@ public abstract class GTModelLoader<T extends IGTModel<T>> implements IGTModelLo
     public String getId() {
         return getLoc().getPath();
     }
+
+    @Override
+    public String getDomain() {
+        return getLoc().getNamespace();
+    }
 }

@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.client.model.loader;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.baked.PipeBakedModel;
 import org.gtreimagined.gtlib.dynamic.DynamicModel;
@@ -27,7 +28,7 @@ public class PipeModelLoader extends DynamicModelLoader{
         public DynamicModel read(JsonObject json, JsonDeserializationContext context) {
             return new DynamicModel(super.read(json, context)) {
                 @Override
-                public BakedModel bakeModel(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
+                public BakedModel bakeModel(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
                     return new PipeBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, particle)), getBakedConfigs(owner, bakery, getter, transform, overrides, loc));
                 }
             };

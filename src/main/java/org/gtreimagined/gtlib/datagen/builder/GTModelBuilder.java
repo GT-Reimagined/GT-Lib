@@ -2,12 +2,12 @@ package org.gtreimagined.gtlib.datagen.builder;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
-import com.mojang.math.Vector3f;
 import org.gtreimagined.gtlib.datagen.json.JGTLibModel;
 import org.gtreimagined.gtlib.datagen.json.JModel;
 import net.devtech.arrp.json.models.JElement;
 import net.devtech.arrp.json.models.JTextures;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,8 @@ import java.util.List;
 public class GTModelBuilder<T extends GTModelBuilder<T>> implements IModelLocation {
     protected JGTLibModel model = JGTLibModel.modelKeepElements();
     protected JTextures textures = null;
+    protected String renderType = null;
+    protected String renderTypeFast = null;
     protected List<JElement> elements = new ArrayList<>();
     protected ResourceLocation customLoader = null;
 
@@ -98,6 +100,32 @@ public class GTModelBuilder<T extends GTModelBuilder<T>> implements IModelLocati
         return self();
     }
 
+    public T renderType(String renderType) {
+        Preconditions.checkNotNull(renderType, "Render type must not be null");
+        return (T)this.renderType(new ResourceLocation(renderType));
+    }
+
+    public T renderType(String renderType, String renderTypeFast) {
+        Preconditions.checkNotNull(renderType, "Render type must not be null");
+        Preconditions.checkNotNull(renderTypeFast, "Render type for fast graphics must not be null");
+        return (T)this.renderType(new ResourceLocation(renderType), new ResourceLocation(renderTypeFast));
+    }
+
+    public T renderType(ResourceLocation renderType) {
+        Preconditions.checkNotNull(renderType, "Render type must not be null");
+        this.renderType = renderType.toString();
+        this.renderTypeFast = null;
+        return (T)this.self();
+    }
+
+    public T renderType(ResourceLocation renderType, ResourceLocation renderTypeFast) {
+        Preconditions.checkNotNull(renderType, "Render type must not be null");
+        Preconditions.checkNotNull(renderTypeFast, "Render type for fast graphics must not be null");
+        this.renderType = renderType.toString();
+        this.renderTypeFast = renderTypeFast.toString();
+        return (T)this.self();
+    }
+
     public T ao(boolean ao) {
         model.ambientOcclusion(ao);
         return self();
@@ -167,6 +195,12 @@ public class GTModelBuilder<T extends GTModelBuilder<T>> implements IModelLocati
         }
         if (customLoader != null){
             model.loader(customLoader.toString());
+        }
+        if (renderType != null) {
+            model.renderType(renderType);
+        }
+        if (renderTypeFast != null) {
+            model.renderTypeFast(renderTypeFast);
         }
         return model;
     }

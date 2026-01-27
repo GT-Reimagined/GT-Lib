@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib;
 
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
+import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
@@ -60,7 +61,6 @@ import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.devtech.arrp.ARRP;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
@@ -164,7 +164,7 @@ public class GTLib extends GTMod {
         ev.addProvider(() -> new GTItemTagProvider(Ref.ID, Ref.NAME.concat(" Item Tags"),
                 false, p[0]));
         ev.addProvider(() -> new GTBlockLootProvider(Ref.ID, Ref.NAME.concat(" Loot generator")));
-        ev.addProvider(() -> new GTTagProvider<Biome>(BuiltinRegistries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome") {
+        ev.addProvider(() -> new GTTagProvider<Biome>(Registries.BIOME, Ref.ID, Ref.NAME.concat(" Biome Tags"), "worldgen/biome", null) {
             @Override
             protected void processTags(String domain) {
                 this.tag(TagUtils.getBiomeTag(new ResourceLocation("is_desert"))).add(Biomes.DESERT);
@@ -173,7 +173,9 @@ public class GTLib extends GTMod {
                 this.tag(TagUtils.getBiomeTag(new ResourceLocation("is_swamp"))).add(Biomes.SWAMP);
             }
         });
-        KubeJSRegistrar.providerEvent(ev);
+        if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
+            KubeJSRegistrar.providerEvent(ev);
+        }
     }
 
     @Override
@@ -226,15 +228,6 @@ public class GTLib extends GTMod {
                         }
                     });
 
-                }
-                if (!GTLibConfig.SHOW_ROCKS.get()){
-                    GTMaterialTypes.BEARING_ROCK.all().forEach(m -> {
-                        GTAPI.all(StoneType.class, s -> {
-                            if (s.doesGenerateOre()) {
-                                l.add(GTMaterialTypes.BEARING_ROCK.get().get(m, s).asBlock());
-                            }
-                        });
-                    });
                 }
                 GTAPI.all(MaterialTypeItem.class, t -> {
                     if (!t.hidden()) return;

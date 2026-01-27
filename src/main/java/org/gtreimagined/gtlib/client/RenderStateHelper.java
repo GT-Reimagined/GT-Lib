@@ -16,7 +16,6 @@ public class RenderStateHelper {
 
     public static void disableLightmap() {
         RenderSystem.activeTexture(GL13.GL_TEXTURE1);
-        RenderSystem.disableTexture();
         RenderSystem.activeTexture(GL13.GL_TEXTURE0);
     }
 
@@ -34,7 +33,6 @@ public class RenderStateHelper {
 //        RenderSystem.texParameter(3553, 10242, 10496);
 //        RenderSystem.texParameter(3553, 10243, 10496);
 //        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableTexture();
         RenderSystem.activeTexture(GL13.GL_TEXTURE0);
     }
 

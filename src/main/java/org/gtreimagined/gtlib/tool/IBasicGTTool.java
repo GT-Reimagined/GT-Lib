@@ -2,6 +2,9 @@ package org.gtreimagined.gtlib.tool;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IAddInformation;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
@@ -10,10 +13,12 @@ import org.gtreimagined.gtlib.behaviour.IInteractEntity;
 import org.gtreimagined.gtlib.behaviour.IItemHighlight;
 import org.gtreimagined.gtlib.behaviour.IItemRightClick;
 import org.gtreimagined.gtlib.behaviour.IItemUse;
+import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
+import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
@@ -44,7 +49,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods {
+import static org.gtreimagined.gtlib.data.GTTools.KNIFE;
+import static org.gtreimagined.gtlib.data.GTTools.SCYTHE;
+
+public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider, IModelProvider, IAbstractToolMethods, ICreativeTabProvider {
     GTToolType getGTToolType();
 
     Tier getItemTier();
@@ -59,6 +67,11 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
 
     default Object2ObjectMap<String, IBehaviour<IBasicGTTool>> getBehaviours(){
         return getGTToolType().getBehaviours();
+    }
+
+    @Override
+    default boolean allowedIn(CreativeModeTab tab){
+        return tab == getGTToolType().getItemGroup();
     }
 
     default Set<TagKey<Block>> getActualTags() {
@@ -80,9 +93,6 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     default boolean genericIsCorrectToolForDrops(ItemStack stack, BlockState state) {
         GTToolType type = this.getGTToolType();
         boolean containsEffectiveBlock = false;
-        if (type.getEffectiveMaterials().contains(state.getMaterial())) {
-            containsEffectiveBlock = true;
-        }
         if (type.getEffectiveBlocks().contains(state.getBlock())) {
             containsEffectiveBlock = true;
         }
@@ -129,8 +139,9 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
         if (entity instanceof Player player) {
             if (getGTToolType().getUseSound() != null)
                 player.playNotifySound(getGTToolType().getUseSound(), SoundSource.BLOCKS, 0.84F, 0.75F);
-            boolean isToolEffective = genericIsCorrectToolForDrops(stack, state);
-            if (state.getDestroySpeed(world, pos) != 0.0F) {
+            boolean isPlant = GTAPI.isModLoaded(Ref.MOD_TFC) && (this.getGTToolType() == KNIFE || this.getGTToolType() == SCYTHE) && state.is(TagUtils.getBlockTag(new ResourceLocation(Ref.MOD_TFC, "plants")));
+            boolean isToolEffective = isPlant || genericIsCorrectToolForDrops(stack, state);
+            if (state.getDestroySpeed(world, pos) != 0.0F || isPlant) {
                 int damage = isToolEffective ? getGTToolType().getUseDurability() : getGTToolType().getUseDurability() + 1;
                 Utils.damageStack(damage, stack, entity);
             }

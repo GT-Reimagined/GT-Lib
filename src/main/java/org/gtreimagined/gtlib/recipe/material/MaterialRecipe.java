@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.container.MirroredShapedRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.PropertyIngredient;
@@ -58,7 +60,7 @@ public class MaterialRecipe extends MirroredShapedRecipe {
     public final NonNullList<ItemStack> outputs;
 
     public MaterialRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, NonNullList<ItemStack> recipeOutputIn, String builderId, Map<String, Set<Integer>> materialSlots) {
-        super(idIn, groupIn, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn.get(0), false);
+        super(idIn, groupIn, CraftingBookCategory.EQUIPMENT, recipeWidthIn, recipeHeightIn, recipeItemsIn, recipeOutputIn.get(0), false);
         this.materialSlots = ImmutableMap.copyOf(materialSlots);
         this.size = materialSlots.values().stream().mapToInt(Set::size).sum();
         String[] ids = builderId.split("/");
@@ -156,7 +158,7 @@ public class MaterialRecipe extends MirroredShapedRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         Result m = build(inv, false);
 
         return this.builder.build(inv, m);

@@ -468,13 +468,13 @@ public final class GTAPI {
 
     public static void registerJEICategory(IRecipeMap map, GuiData gui, Tier tier, ResourceLocation model,
                                            boolean override) {
-        if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI)) {
+        if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
             GTLibXEIPlugin.registerCategory(map, gui, tier, model, override);
         }
     }
 
     public static void registerJEICategory(IRecipeMap map, GuiData gui, Machine<?> machine, @Nullable Tier tier, boolean override) {
-        if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI)) {
+        if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
             if (tier == null) tier = machine.getFirstTier();
             GTLibXEIPlugin.registerCategory(map, gui, tier,
                     new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier)), override);
@@ -482,7 +482,7 @@ public final class GTAPI {
     }
 
     public static void registerJEICategoryWorkstation(IRecipeMap map, Machine<?> machine, @Nullable Tier tier) {
-        if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI)) {
+        if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
             GTLibXEIPlugin.registerCategoryWorkstation(map,
                     new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier != null ? tier : machine.getFirstTier())));
         }

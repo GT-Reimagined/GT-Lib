@@ -1,8 +1,11 @@
 package org.gtreimagined.gtlib.blockentity.multi;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
+import org.gtreimagined.gtlib.capability.EnergyHandler;
 import org.gtreimagined.gtlib.capability.IComponentHandler;
 import org.gtreimagined.gtlib.capability.machine.MultiMachineEnergyHandler;
 import org.gtreimagined.gtlib.capability.machine.MultiMachineFluidHandler;
@@ -99,138 +102,11 @@ public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> exten
         }*/
     }
 
-//    /**
-//     * Returns list of items across all input hatches. Merges equal filters empty
-//     **/
-//    public ItemStack[] getStoredItems() {
-//        if (!has(MachineFlag.ITEM)) return new ItemStack[0];
-//        List<ItemStack> all = new ObjectArrayList<>();
-//        for (IComponentHandler hatch : getComponents("hatch_item_input")) {
-//            hatch.getItemHandler().ifPresent(h -> Utils.mergeItems(all, h.getInputList()));
-//        }
-//        System.out.println(all.toString());
-//        return all.toArray(new ItemStack[0]);
-//    }
-//
-//    /**
-//     * Returns list of fluids across all input hatches. Merges equal filters empty
-//     **/
-//    public FluidStack[] getStoredFluids() {
-//        if (!has(MachineFlag.FLUID)) return new FluidStack[0];
-//        List<FluidStack> all = new ObjectArrayList<>();
-//        for (IComponentHandler hatch : getComponents("hatch_fluid_input")) {
-//            hatch.getFluidHandler().ifPresent(h -> Utils.mergeFluids(all, Arrays.asList(h.getInputs())));
-//        }
-//        System.out.println(all.toString());
-//        return all.toArray(new FluidStack[0]);
-//    }
-//
-//    /**
-//     * Returns the total energy stored across all energy hatches
-//     **/
-//    public long getStoredEnergy() {
-//        long total = 0;
-//        for (IComponentHandler hatch : getComponents("hatch_energy")) {
-//            if (hatch.getEnergyHandler().isPresent())
-//                total += hatch.getEnergyHandler().map(MachineEnergyHandler::getEnergyStored).orElse(0);
-//        }
-//        return total;
-//    }
-//
-//    /**
-//     * Consumes inputs from all input hatches. Assumes Utils.doItemsMatchAndSizeValid has been used
-//     **/
-//    public void consumeItems(ItemStack[] items) {
-//        if (items == null) return;
-//        for (IComponentHandler hatch : getComponents("hatch_item_input")) {
-//            if (hatch.getItemHandler().isPresent()) {
-//                ItemStack[] finalItems = items;
-//                items = hatch.getItemHandler().map(ih -> ih.consumeAndReturnInputs(finalItems.clone())).orElse(new ItemStack[0]);
-//                if (items.length == 0) break;
-//            }
-//        }
-//        if (items.length > 0) System.out.println("DID NOT CONSUME ALL: " + Arrays.toString(items));
-//    }
-//
-//    /**
-//     * Consumes inputs from all input hatches. Assumes Utils.doFluidsMatchAndSizeValid has been used
-//     **/
-//    public void consumeFluids(FluidStack[] inp) {
-//        if (inp == null) return;
-//        List<FluidStack> fluids = Arrays.asList(inp);
-//        if (fluids.size() == 0) return;
-//        for (IComponentHandler hatch : getComponents("hatch_fluid_input")) {
-//            if (hatch.getFluidHandler().isPresent()) {
-//                List<FluidStack> finalFluids = fluids;
-//                fluids = hatch.getFluidHandler().map(fh -> fh.consumeAndReturnInputs(finalFluids, false)).orElse(Collections.emptyList());
-//                if (fluids.size() == 0) break;
-//            }
-//        }
-//        if (fluids.size() > 0) System.out.println("DID NOT CONSUME ALL: " + Arrays.toString(fluids.toArray()));
-//    }
-//
-//    /**
-//     * Export items to hatches regardless of space. Assumes canOutputsFit has been used
-//     **/
-//    public void outputItems(ItemStack[] items) {
-//        if (items == null) return;
-//        for (IComponentHandler hatch : getComponents("hatch_item_output")) {
-//            if (hatch.getItemHandler().isPresent()) {
-//                ItemStack[] finalItems = items;
-//                items = hatch.getItemHandler().map(ih -> ih.exportAndReturnOutputs(finalItems.clone())).orElse(new ItemStack[0]); //WHY CLONE?!!?
-//                if (items.length == 0) break;
-//            }
-//        }
-//        if (items.length > 0) System.out.println("HATCH OVERFLOW: " + Arrays.toString(items));
-//    }
-//
-//    /**
-//     * Export fluids to hatches regardless of space. Assumes canOutputsFit has been used
-//     **/
-//    public void outputFluids(FluidStack[] fluids) {
-//        if (fluids == null) return;
-//        for (IComponentHandler hatch : getComponents("hatch_fluid_output")) {
-//            if (hatch.getFluidHandler().isPresent()) {
-//                FluidStack[] finalFluids = fluids;
-//                fluids = hatch.getFluidHandler().map(fh -> fh.exportAndReturnOutputs(finalFluids.clone())).orElse(new FluidStack[0]);
-//                if (fluids.length == 0) break;
-//            }
-//        }
-//        if (fluids.length > 0) System.out.println("HATCH OVERFLOW: " + Arrays.toString(fluids));
-//    }
-//
-//    /**
-//     * Tests if items can fit across all output hatches
-//     **/
-//    public boolean canItemsFit(ItemStack[] items) {
-//        if (items == null) return true;
-//        int matchCount = 0;
-//        for (IComponentHandler hatch : getComponents("hatch_item_output")) {
-//            if (hatch.getItemHandler().isPresent()) {
-//                matchCount += hatch.getItemHandler().map(ih -> ih.getSpaceForOutputs(items)).orElse(0);
-//            }
-//        }
-//        return matchCount >= items.length;
-//    }
-//
-//    /**
-//     * Tests if fluids can fit across all output hatches
-//     **/
-//    public boolean canFluidsFit(FluidStack[] fluids) {
-//        if (fluids == null) return true;
-//        int matchCount = 0;
-//        for (IComponentHandler hatch : getComponents("hatch_fluid_output")) {
-//            if (hatch.getFluidHandler().isPresent()) {
-//                matchCount += hatch.getFluidHandler().map(fh -> fh.getSpaceForOutputs(fluids)).orElse(0);
-//            }
-//        }
-//        return matchCount >= fluids.length;
-//    }
-
     @Override
     public long getMaxInputVoltage() {
-        List<IComponentHandler> hatches = getComponentsByHandlerId("energy");
-        return hatches.size() >= 1 ? hatches.stream().mapToLong(t -> t.getEnergyHandler().map(eh -> eh.getInputVoltage()).orElse(0L)).sum() : Ref.V[0];
+        return getPowerLevel().getVoltage();
+        //List<IComponentHandler> hatches = getComponentsByHandlerId("energy");
+        //return !hatches.isEmpty() ? hatches.stream().mapToLong(t -> t.getEnergyHandler().map(EnergyHandler::getInputVoltage).orElse(0L)).sum() : Ref.V[0];
     }
 
     public WidgetSupplier getInfoWidget() {
@@ -238,15 +114,15 @@ public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> exten
     }
 
     @Override
-    public int drawInfo(InfoRenderWidget.MultiRenderWidget instance, PoseStack stack, Font renderer, int left, int top) {
-        renderer.draw(stack, this.getDisplayName().getString(), left, top, 0xFAFAFF);
+    public int drawInfo(InfoRenderWidget.MultiRenderWidget instance, GuiGraphics graphics, Font font, int left, int top) {
+        graphics.drawString(font, this.getDisplayName().getString(), left, top, 0xFAFAFF);
         if (getMachineState() != MachineState.ACTIVE) {
-            renderer.draw(stack, "Inactive.", left, top + 8, 0xFAFAFF);
+            graphics.drawString(font, "Inactive.", left, top + 8, 0xFAFAFF);
             return 16;
         } else if (instance.drawActiveInfo()) {
-            renderer.draw(stack, "Progress: " + instance.currentProgress + "/" + instance.maxProgress, left, top + 8, 0xFAFAFF);
-            renderer.draw(stack, "Overclock: " + instance.overclock, left, top + 16, 0xFAFAFF);
-            renderer.draw(stack, "EU/t: " + instance.euT, left, top + 24, 0xFAFAFF);
+            graphics.drawString(font, "Progress: " + instance.currentProgress + "/" + instance.maxProgress, left, top + 8, 0xFAFAFF);
+            graphics.drawString(font, "Overclock: " + instance.overclock, left, top + 16, 0xFAFAFF);
+            graphics.drawString(font, "EU/t: " + instance.euT, left, top + 24, 0xFAFAFF);
             return 32;
         }
         return 8;
@@ -256,10 +132,10 @@ public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> exten
         this.components.forEach((s, l) -> {
             l.forEach(c -> {
                 if (c.getTile() instanceof BlockEntityMachine<?> machine){
-                    Utils.createExplosion(this.level, machine.getBlockPos(), 6.0F, Explosion.BlockInteraction.DESTROY);
+                    Utils.createExplosion(this.level, machine.getBlockPos(), 6.0F, ExplosionInteraction.BLOCK);
                 }
             });
         });
-        Utils.createExplosion(this.level, this.getBlockPos(), 6.0F, Explosion.BlockInteraction.DESTROY);
+        Utils.createExplosion(this.level, this.getBlockPos(), 6.0F, ExplosionInteraction.BLOCK);
     }
 }

@@ -4,6 +4,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
@@ -13,6 +14,7 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
+import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
@@ -46,18 +48,31 @@ import java.util.List;
 import java.util.Random;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
+import static org.gtreimagined.gtlib.util.Utils.getLocalizedMaterialType;
 
-public class BlockOre extends BlockMaterialStone implements ITextureProvider, IModelProvider, ISharedGTObject, Fallable {
+public class BlockOre extends BlockMaterialStone implements ITextureProvider, IModelProvider, ISharedGTObject, Fallable, ICreativeTabProvider {
 
     private final MaterialType<?> oreType;
 
     public BlockOre(String domain, Material material, StoneType stoneType, MaterialType<?> oreType, Properties properties) {
-        super(domain, oreType.getId() + "_" + material.getId() + "_" + stoneType.getId(), material, stoneType, getOreProperties(properties, stoneType));
+        super(domain, getId(stoneType, oreType, material), material, stoneType, getOreProperties(properties, stoneType));
         this.oreType = oreType;
     }
 
     public BlockOre(String domain, Material material, StoneType stoneType, MaterialType<?> oreType) {
-        this(domain, material, stoneType, oreType, getOreProperties(Properties.of(stoneType.getBlockMaterial()), stoneType));
+        this(domain, material, stoneType, oreType, getOreProperties(Properties.of(), stoneType));
+    }
+
+    public static String getId(StoneType stoneType, MaterialType<?> materialType, Material material){
+        String[] split = getLocalizedMaterialType(materialType);
+        for (int i = 0; i < split.length; i++) {
+            split[i] = split[i].toLowerCase().replace(" ", "_");
+        }
+        if (split.length > 1) {
+            return String.join("", split[0], "_", stoneType.getId(), "_", material.getId(), "_", split[1]);
+        } else {
+            return String.join("", stoneType.getId(), "_", material.getId(), "_", split[0]);
+        }
     }
 
     @NotNull
@@ -71,12 +86,12 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (stoneType == VanillaStoneTypes.STONE) items.add(new ItemStack(this));
+    public boolean allowedIn(CreativeModeTab tab) {
+        return stoneType == VanillaStoneTypes.STONE;
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (this.oreType != GTMaterialTypes.SMALL_ORE) {
             return super.getDrops(state, builder);
         }
@@ -221,8 +236,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     }
 
     public static boolean canFallThrough(BlockState state) {
-        net.minecraft.world.level.material.Material material = state.getMaterial();
-        return state.isAir() || state.is(BlockTags.FIRE) || material.isLiquid() || material.isReplaceable();
+        return state.isAir() || state.is(BlockTags.FIRE) || state.liquid() || state.canBeReplaced();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -257,7 +271,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
 
     public static Properties getOreProperties(Properties properties, StoneType type) {
         if (GTLibConfig.ORE_VEIN_SPECTATOR_DEBUG.get()) properties.noOcclusion().lightLevel(b -> 15);
-        properties.strength(type.getHardness() * 2, type.getResistence() / 2).sound(type.getSoundType());
+        properties.mapColor(type.getMapColor()).instrument(type.getInstrument()).strength(type.getHardness() * 2, type.getResistence() / 2).sound(type.getSoundType());
         if (type.doesRequireTool()) properties.requiresCorrectToolForDrops();
         return properties;
     }
@@ -279,16 +293,16 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
         //TODO use tags for this instead?
-        if (i == 1 && material == GTLibMaterials.Iron){
-            return 0xe2c0aa;
+        if (i == 1 && material.has(MaterialTags.ORE_RGB)){
+            return MaterialTags.ORE_RGB.getInt(material);
         }
         return super.getBlockColor(state, world, pos, i);
     }
 
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
-        if (i == 1 && material == GTLibMaterials.Iron){
-            return 0xe2c0aa;
+        if (i == 1 && material.has(MaterialTags.ORE_RGB)){
+            return MaterialTags.ORE_RGB.getInt(material);
         }
         return super.getItemColor(stack, block, i);
     }

@@ -3,12 +3,12 @@ package org.gtreimagined.gtlib.recipe.ingredient;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.recipe.RecipeUtil;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -48,7 +48,7 @@ public class FluidIngredient {
         evaluated = true;
         if (tag != null) {
             List<FluidStack> list = new ObjectArrayList<>();
-            Registry.FLUID.getTagOrEmpty(tag).iterator().forEachRemaining(t -> {
+            BuiltInRegistries.FLUID.getTagOrEmpty(tag).iterator().forEachRemaining(t -> {
                 if (!t.value().isSource(t.value().defaultFluidState())) return;
                 FluidStack stack = new FluidStack(t.value(), getAmount());
                 list.add(stack);
@@ -87,7 +87,7 @@ public class FluidIngredient {
         return json;
     }
 
-    public static FluidIngredient of(FriendlyByteBuf buf) {
+    public static FluidIngredient read(FriendlyByteBuf buf) {
         int count = buf.readVarInt();
         FluidStack[] stacks = new FluidStack[count];
         for (int i = 0; i < count; i++) {

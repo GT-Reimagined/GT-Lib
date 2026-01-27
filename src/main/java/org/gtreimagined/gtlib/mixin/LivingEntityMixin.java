@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.gtreimagined.gtlib.entity.IRadiationEntity;
 import org.gtreimagined.gtlib.util.CodeUtils;
 import net.minecraft.core.Registry;
@@ -38,8 +39,8 @@ public abstract class LivingEntityMixin extends Entity implements IRadiationEnti
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tickInject(CallbackInfo callbackInfo){
-        if (getLevel() != null && getLevel().getGameTime() % 50 == 0) {
-            MobEffect ic2Radiation = Registry.MOB_EFFECT.get(new ResourceLocation("ic2", "radiation"));
+        if (level() != null && level().getGameTime() % 50 == 0) {
+            MobEffect ic2Radiation = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation("ic2", "radiation"));
             if (radiation >= 100) {
                 this.addEffect(new MobEffectInstance(ic2Radiation != null ? ic2Radiation : MobEffects.WITHER, 100));
                 this.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 2));

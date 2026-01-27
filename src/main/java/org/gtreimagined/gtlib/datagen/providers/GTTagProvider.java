@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagBuilder;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
@@ -20,25 +21,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public abstract class GTTagProvider<T> implements IGTLibProvider {
     private final String providerDomain, providerName, prefix;
     protected final Map<ResourceLocation, GTTagBuilder<T>> builders;
-    protected final Registry<T> registry;
+    protected final ResourceKey<Registry<T>> registry;
+    private Function<T, ResourceKey<T>> keyExtractor;
     public Object2ObjectMap<ResourceLocation, JsonObject> TAGS = new Object2ObjectOpenHashMap<>();
     public static Object2ObjectOpenHashMap<ResourceLocation, JsonObject> TAGS_GLOBAL = new Object2ObjectOpenHashMap<>();
 
     public Object2ObjectMap<ResourceLocation, List<T>> TAGS_TO_REMOVE = new Object2ObjectOpenHashMap<>();
 
-    public static Object2ObjectOpenHashMap<Registry<?>, Map<ResourceLocation, List<Object>>> TAGS_TO_REMOVE_GLOBAL = new Object2ObjectOpenHashMap<>();
+    public static Object2ObjectOpenHashMap<ResourceKey<?>, Map<ResourceLocation, List<Object>>> TAGS_TO_REMOVE_GLOBAL = new Object2ObjectOpenHashMap<>();
 
-    public GTTagProvider(Registry<T> registry, String providerDomain, String providerName, String prefix) {
+    public GTTagProvider(ResourceKey<Registry<T>> registry, String providerDomain, String providerName, String prefix, Function<T, ResourceKey<T>> keyExtractor) {
         this.builders = Maps.newLinkedHashMap();
         this.registry = registry;
         this.providerDomain = providerDomain;
         this.providerName = providerName;
         this.prefix = prefix;
         TAGS_TO_REMOVE_GLOBAL.computeIfAbsent(registry, r -> new Object2ObjectOpenHashMap<>());
+        this.keyExtractor = keyExtractor;
     }
 
     @Override
@@ -72,7 +76,7 @@ public abstract class GTTagProvider<T> implements IGTLibProvider {
     }
 
     protected GTTagBuilder<T> getOrCreateRawBuilder(TagKey<T> tag) {
-        return this.builders.computeIfAbsent(tag.location(), (location) -> new GTTagBuilder<>(new TagBuilder(), registry, providerDomain));
+        return this.builders.computeIfAbsent(tag.location(), (location) -> new GTTagBuilder<>(new TagBuilder(), registry, providerDomain, this.keyExtractor));
     }
 
     // Must append 's' in the identifier

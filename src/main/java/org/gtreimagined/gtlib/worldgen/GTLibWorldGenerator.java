@@ -1,12 +1,15 @@
 package org.gtreimagined.gtlib.worldgen;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.biome.Biome.ClimateSettings;
+import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
+import net.minecraftforge.common.world.BiomeModifier.Phase;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
-import org.gtreimagined.gtlib.mixin.BiomeGenerationBuilderAccessor;
-import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.feature.GTFeature;
@@ -19,9 +22,7 @@ import org.gtreimagined.gtlib.worldgen.feature.FeatureVein;
 import org.gtreimagined.gtlib.worldgen.feature.IGTFeature;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -29,22 +30,9 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.function.BiFunction;
-
-import static org.gtreimagined.gtlib.Ref.GSON;
 
 public class GTLibWorldGenerator {
     static final GTFeature<NoneFeatureConfiguration> SMALL_ORE = new FeatureSmallOres();
@@ -89,11 +77,11 @@ public class GTLibWorldGenerator {
         //}
     }
 
-    private static void removeStoneFeatures(BiomeGenerationSettings.Builder builder) {
+    private static void removeStoneFeatures(BiomeGenerationSettingsBuilder builder) {
         removeDecoratedFeatureFromAllBiomes(builder, GenerationStep.Decoration.UNDERGROUND_ORES, Feature.ORE, Blocks.ANDESITE.defaultBlockState(), Blocks.GRANITE.defaultBlockState(), Blocks.DIORITE.defaultBlockState(), Blocks.TUFF.defaultBlockState(), Blocks.DIRT.defaultBlockState(), Blocks.GRAVEL.defaultBlockState());
     }
 
-    private static void removeOreFeatures(BiomeGenerationSettings.Builder builder) {
+    private static void removeOreFeatures(BiomeGenerationSettingsBuilder builder) {
         removeDecoratedFeatureFromAllBiomes(builder, GenerationStep.Decoration.UNDERGROUND_ORES, Feature.ORE, Blocks.COAL_ORE.defaultBlockState(), Blocks.IRON_ORE.defaultBlockState(), Blocks.GOLD_ORE.defaultBlockState(), Blocks.COPPER_ORE.defaultBlockState(), Blocks.EMERALD_ORE.defaultBlockState(), Blocks.REDSTONE_ORE.defaultBlockState(), Blocks.LAPIS_ORE.defaultBlockState(), Blocks.DIAMOND_ORE.defaultBlockState());
         removeDecoratedFeatureFromAllBiomes(builder, GenerationStep.Decoration.UNDERGROUND_ORES, Feature.ORE, Blocks.DEEPSLATE_COAL_ORE.defaultBlockState(), Blocks.DEEPSLATE_IRON_ORE.defaultBlockState(), Blocks.DEEPSLATE_GOLD_ORE.defaultBlockState(), Blocks.DEEPSLATE_COPPER_ORE.defaultBlockState(), Blocks.DEEPSLATE_EMERALD_ORE.defaultBlockState(), Blocks.DEEPSLATE_REDSTONE_ORE.defaultBlockState(), Blocks.DEEPSLATE_LAPIS_ORE.defaultBlockState(), Blocks.DEEPSLATE_DIAMOND_ORE.defaultBlockState());
         removeDecoratedFeatureFromAllBiomes(builder, GenerationStep.Decoration.UNDERGROUND_ORES, Feature.SCATTERED_ORE, Blocks.IRON_ORE.defaultBlockState(), Blocks.COPPER_ORE.defaultBlockState(), Blocks.DEEPSLATE_IRON_ORE.defaultBlockState(), Blocks.DEEPSLATE_COPPER_ORE.defaultBlockState());
@@ -106,13 +94,10 @@ public class GTLibWorldGenerator {
      * @param featureToRemove feature instance wishing to be removed
      * @param states          BlockStates wish to be removed
      */
-    public static void removeDecoratedFeatureFromAllBiomes(BiomeGenerationSettings.Builder builder, @NotNull final GenerationStep.Decoration stage, @NotNull final Feature<?> featureToRemove, BlockState... states) {
+    public static void removeDecoratedFeatureFromAllBiomes(BiomeGenerationSettingsBuilder builder, @NotNull final GenerationStep.Decoration stage, @NotNull final Feature<?> featureToRemove, BlockState... states) {
         if (states.length == 0) Utils.onInvalidData("No BlockStates specified to be removed!");
         Set<BlockState> set = Set.of(states);
-        var features = ((BiomeGenerationBuilderAccessor)builder).getFeatures();
-        if (features.size() > stage.ordinal()){
-            features.get(stage.ordinal()).removeIf(f -> isDecoratedFeatureDisabled(f.value().feature().value(), featureToRemove, set));
-        }
+        builder.getFeatures(stage).removeIf(f -> isDecoratedFeatureDisabled(f.value().feature().value(), featureToRemove, set));
     }
 
     /**
@@ -167,16 +152,17 @@ public class GTLibWorldGenerator {
     }
 
 
-    public static void reloadEvent(ResourceLocation name, Biome.ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettings.Builder gen, MobSpawnSettings.Builder spawns) {
-
+    public static void reloadEvent(Phase phase, Holder<Biome> biome, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
         GTAPI.all(IGTFeature.class, t -> {
-            t.build(name, climate, effects, gen, spawns);
+            t.build(phase, biome, climate, effects, gen, spawns, placedFeatureRegistry);
         });
-        handleFeatureRemoval(gen);
-        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(name, climate, effects, gen, spawns));
+        GTAPI.all(IGTWorldgenFunction.class, t -> t.build(phase, biome, climate, effects, gen, spawns, placedFeatureRegistry));
+        if (phase == Phase.REMOVE) {
+            handleFeatureRemoval(gen);
+        }
     }
 
-    private static void handleFeatureRemoval(BiomeGenerationSettings.Builder gen) {
+    private static void handleFeatureRemoval(BiomeGenerationSettingsBuilder gen) {
         if (GTLibConfig.VANILLA_ORE_GEN.get()) {
             removeOreFeatures(gen);
         }

@@ -90,30 +90,34 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
     implementation("org.jetbrains:annotations:26.0.1")
     modCompileOnly("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
-    modRuntimeOnly("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
+    //modRuntimeOnly("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}")
+    modCompileOnly("dev.emi:emi-forge:${project.emi_version}+${project.minecraft_version}")
+    //modRuntimeOnly("dev.emi:emi-forge:${project.emi_version}+${project.minecraft_version}")
     modCompileOnly("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
     modImplementation("com.blamejared.crafttweaker:CraftTweaker-forge-${project.minecraft_version}:${project.crafttweaker_version}")
     modImplementation(jarJar("dev.trinsdar:arrp-forge:${project.arrp_version}"))
     modImplementation(jarJar("dev.trinsdar:terraform-utils-v1:${terraform_version}"))
     modImplementation(jarJar("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
     modImplementation(jarJar("com.teamresourceful.resourcefullib:resourcefullib-forge-${project.minecraft_version}:${project.resourcefullib_version}"))
-    modImplementation("maven.modrinth:carbon-config:${project.carbon_config_forge_version}")
-    jarJar("maven.modrinth:carbon-config:${project.carbon_config_forge_version}"){
+    implementation("com.teamresourceful:yabn:${project.yabn_version}")
+    modImplementation("maven.modrinth:carbon-config:${project.carbon_config_version}")
+    jarJar("maven.modrinth:carbon-config:${project.carbon_config_version}"){
         version {
-            prefer(project.carbon_config_forge_version)
+            prefer(project.carbon_config_version)
         }
     }
     modImplementation("dev.latvian.mods:kubejs-forge:${project.kubejs_version}")
     modImplementation("dev.latvian.mods:rhino-forge:${project.rhino_version}")
     modImplementation("dev.architectury:architectury-forge:${project.architectury_version}")
-    modImplementation("curse.maven:the-one-probe-245211:${project.top_forge_file}")
-    modImplementation("curse.maven:curios-309927:${project.curios_file}")
+    modImplementation("curse.maven:the-one-probe-245211:${project.top_forge_version}")
+    modImplementation("curse.maven:curios-309927:${project.curios_version}")
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
     //modCompileOnly("com.simibubi.create:create-${minecraft_version}:0.5.1.i-435:all")
     modImplementation(jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
-    modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
+    //modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
+    modImplementation(jarJar("dev.engine-room.flywheel:flywheel-forge-${project.minecraft_version}:${project.flywheel_version}"))
     modImplementation("curse.maven:jade-324717:${project.jade_version}")
 }
 

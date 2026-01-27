@@ -2,9 +2,9 @@ package org.gtreimagined.gtlib.datagen;
 
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 public interface IGTLibProvider extends DataProvider {
 
@@ -20,7 +20,8 @@ public interface IGTLibProvider extends DataProvider {
     }
 
     @Override
-    default void run(CachedOutput hashCache) throws IOException {
+    default CompletableFuture<?> run(CachedOutput hashCache) {
         //NOOP
+        return null;
     }
 }

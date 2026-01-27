@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.blockentity.single.BlockEntityInfiniteStorage;
@@ -35,8 +36,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.enchantment.DamageEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.api.distmarker.Dist;
 import org.jetbrains.annotations.Nullable;
@@ -50,12 +49,12 @@ import static org.gtreimagined.gtlib.machine.Tier.MAX;
 
 public class Data {
 
-    public static final Material WRENCH_MATERIAL = new Material(MaterialColor.METAL, false, true, true, true, false, false, PushReaction.NORMAL);
 
     public static ScannerItem DEBUG_SCANNER = new ScannerItem(Ref.ID, "debug_scanner", false).tip(ChatFormatting.AQUA + "" + ChatFormatting.ITALIC + "Development Item");
 
     public static ItemFluidIcon FLUID_ICON = new ItemFluidIcon();
     //public static Machine<?> MACHINE_INVALID = new Machine<>(Ref.ID, "invalid");
+    private static final Int2ObjectArrayMap<org.gtreimagined.gtlib.material.Material> MATERIAL_TIERMAP = new Int2ObjectArrayMap<>();
 
     public static final MobType CREEPER = new MobType();
 
@@ -141,5 +140,13 @@ public class Data {
 
     public static void postInit() {
         GTMaterialTypes.postInit();
+    }
+
+    public static Int2ObjectArrayMap<org.gtreimagined.gtlib.material.Material> getMaterialTiermap() {
+        return MATERIAL_TIERMAP;
+    }
+
+    public static void setMaterialTier(org.gtreimagined.gtlib.material.Material material, int tier){
+        MATERIAL_TIERMAP.put(tier, material);
     }
 }

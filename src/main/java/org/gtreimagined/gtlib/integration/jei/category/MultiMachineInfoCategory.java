@@ -11,6 +11,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.util.Utils;
@@ -52,9 +53,10 @@ public class MultiMachineInfoCategory implements IRecipeCategory<MultiMachineInf
         return recipe.handleClick(mouseX, mouseY, mouseButton);
     }*/
 
+
     @Override
-    public void draw(@NotNull MultiMachineInfoPage recipe, IRecipeSlotsView view, @NotNull PoseStack matrixStack, double mouseX, double mouseY) {
-        recipe.drawInfo(matrixStack, (int)mouseX, (int)mouseY);
+    public void draw(MultiMachineInfoPage recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        //recipe.drawInfo(matrixStack, (int)mouseX, (int)mouseY);
     }
 
     @NotNull
@@ -93,6 +95,6 @@ public class MultiMachineInfoCategory implements IRecipeCategory<MultiMachineInf
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder recipeLayout, MultiMachineInfoPage recipe, IFocusGroup iFocusGroup) {
-        recipe.setRecipeLayout(recipeLayout, guiHelper);
+        //recipe.setRecipeLayout(recipeLayout, guiHelper);
     }
 }

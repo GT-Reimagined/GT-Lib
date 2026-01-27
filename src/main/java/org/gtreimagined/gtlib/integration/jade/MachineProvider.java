@@ -25,7 +25,7 @@ import snownee.jade.api.ui.IProgressStyle;
 import static org.gtreimagined.gtlib.machine.MachineFlag.EU;
 import static org.gtreimagined.gtlib.machine.MachineFlag.FE;
 
-public class MachineProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
+public class MachineProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
     private static final ResourceLocation ID = new ResourceLocation(Ref.ID, "machine");
     public static MachineProvider INSTANCE = new MachineProvider();
     @Override
@@ -80,8 +80,8 @@ public class MachineProvider implements IBlockComponentProvider, IServerDataProv
     }
 
     @Override
-    public void appendServerData(CompoundTag compoundTag, ServerPlayer serverPlayer, Level level, BlockEntity blockEntity, boolean b) {
-        if (blockEntity instanceof BlockEntityMachine<?> machine){
+    public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {
+        if (blockAccessor.getBlockEntity() instanceof BlockEntityMachine<?> machine) {
             machine.recipeHandler.ifPresent(r -> {
                 if (r.isGenerator()){
                     compoundTag.putLong("jadeProgress", r.getPowerGenerated());

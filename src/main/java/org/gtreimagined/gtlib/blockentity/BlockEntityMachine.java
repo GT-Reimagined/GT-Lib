@@ -3,12 +3,12 @@ package org.gtreimagined.gtlib.blockentity;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTLibConfig;
-import org.gtreimagined.gtlib.GTLibProperties;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
@@ -28,13 +28,10 @@ import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
 import org.gtreimagined.gtlib.client.SoundHelper;
-import org.gtreimagined.gtlib.client.dynamic.DynamicTexturer;
-import org.gtreimagined.gtlib.client.dynamic.DynamicTexturers;
 import org.gtreimagined.gtlib.client.tesr.Caches;
 import org.gtreimagined.gtlib.client.tesr.MachineTESR;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.cover.ICover.DynamicKey;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
@@ -67,7 +64,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -158,7 +154,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     /**
      * Client related fields.
      **/
-    public LazyLoadedValue<DynamicTexturer<Machine<?>, DynamicKey>> multiTexturer;
     public Cache<List<Caches.LiquidCache>> liquidCache;
 
     public BlockEntityMachine(Machine<?> type, BlockPos pos, BlockState state) {
@@ -187,7 +182,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         if (type.has(COVERABLE)) {
             coverHandler.set(() -> new MachineCoverHandler<>((T) this));
         }
-        multiTexturer = new LazyLoadedValue<>(() -> new DynamicTexturer<>(DynamicTexturers.TILE_DYNAMIC_TEXTURER));
     }
 
     public void addOpenContainer(ContainerMachine<T> c, Player player) {
@@ -305,7 +299,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             double d = Ref.RNG.nextDouble();
             if (d > 0.97D && this.level.isRainingAt(new BlockPos(this.worldPosition.getX(), this.worldPosition.getY() + 1, this.worldPosition.getZ()))) {
                 if (this.energyHandler.map(t -> t.getEnergy() > 0).orElse(false)) {
-                    Utils.createExplosion(this.level, worldPosition, 6.0F, Explosion.BlockInteraction.DESTROY);
+                    Utils.createExplosion(this.level, worldPosition, 6.0F, ExplosionInteraction.BLOCK);
                     level.playSound(null, this.worldPosition, Ref.MACHINE_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
                 }
             }
@@ -343,15 +337,15 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         }
     }
 
-    public void onDrop(BlockState state, LootContext.Builder builder, List<ItemStack> drops){
+    public void onDrop(BlockState state, LootParams.Builder builder, List<ItemStack> drops){
 
     }
 
-    public void dropInventory(BlockState state, LootContext.Builder builder, List<ItemStack> drops){
+    public void dropInventory(BlockState state, LootParams.Builder builder, List<ItemStack> drops){
         itemHandler.ifPresent(t -> drops.addAll(t.getAllItems()));
     }
 
-    public void dropCovers(BlockState state, LootContext.Builder builder, List<ItemStack> drops){
+    public void dropCovers(BlockState state, LootParams.Builder builder, List<ItemStack> drops){
         coverHandler.ifPresent(c -> {
             if (!drops.isEmpty()) {
                 ItemStack machine = drops.get(0);
@@ -578,10 +572,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     public void setMachineState(MachineState newState) {
         if (this.machineState != newState) {
-            if (newState == MachineState.OUTPUT_FULL){
-                GTLib.LOGGER.info("Setting output full machine state, stack trace following.");
-                Thread.dumpStack();
-            }
             MachineState old = this.machineState;
             this.machineState = newState;
             if (level != null) {
@@ -888,40 +878,4 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         this.network = network;
     }
 
-    /**
-     * The key used to build dynamic textures.
-     */
-    public static class DynamicKey {
-        public final ResourceLocation model;
-        public final Texture tex;
-        public Direction facing;
-        public final MachineState state;
-        public GTLibProperties.MachineProperties properties;
-
-        public DynamicKey(ResourceLocation model, Texture tex, Direction dir, MachineState state, GTLibProperties.MachineProperties properties) {
-            this.model = model;
-            this.tex = tex;
-            this.facing = dir;
-            this.state = state;
-            this.properties = properties;
-        }
-
-        public void setDir(Direction dir) {
-            this.facing = dir;
-        }
-
-        @Override
-        public int hashCode() {
-            return tex.hashCode() + facing.hashCode() + state.hashCode() + model.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof DynamicKey) {
-                DynamicKey key = (DynamicKey) o;
-                return key.state == state && key.facing == facing && tex.equals(key.tex) && model.equals(key.model);
-            }
-            return false;
-        }
-    }
 }

@@ -38,7 +38,7 @@ public class GTItemModelBuilder extends GTModelBuilder<GTItemModelBuilder> {
     }
 
     public GTItemModelBuilder bucketLoader() {
-        super.loader(new ResourceLocation("forge", "bucket"));
+        super.loader(new ResourceLocation("forge", "fluid_container"));
         return this;
     }
 
@@ -53,7 +53,7 @@ public class GTItemModelBuilder extends GTModelBuilder<GTItemModelBuilder> {
 
     public GTItemModelBuilder bucketProperties(Fluid fluid, boolean tint, boolean islighter) {
         property("fluid", RegistryUtils.getIdFromFluid(fluid).toString());
-        property("flipGas", islighter);
+        property("flip_gas", islighter);
         property("applyTint", tint);
         // property("coverIsMask", false);
         return bucketLoader();

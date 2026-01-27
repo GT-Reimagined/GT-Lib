@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.gui.Widget;
 import org.gtreimagined.gtlib.gui.container.ContainerCover;
 import net.minecraft.client.Minecraft;
@@ -23,21 +24,21 @@ public class ScreenCover<T extends ContainerCover> extends GTContainerScreen<T> 
     }
 
     @Override
-    protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        drawTitle(stack, mouseX, mouseY);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        drawTitle(graphics, mouseX, mouseY);
     }
 
-    protected void drawTitle(PoseStack stack, int mouseX, int mouseY) {
-        Minecraft.getInstance().font.draw(stack, name, getCenteredStringX(name), 4, 0x404040);
+    protected void drawTitle(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(Minecraft.getInstance().font, name, getCenteredStringX(name), 4, 0x404040);
     }
 
     @Override
-    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        this.renderBackground(stack);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(graphics);
         for (Widget widget : menu.source().widgetsToRender()) {
             if (!widget.isEnabled() || !widget.isVisible()) continue;
             if (widget.depth() >= this.depth()) return;
-            widget.render(stack, mouseX, mouseY, Minecraft.getInstance().getFrameTime());
+            widget.render(graphics, mouseX, mouseY, Minecraft.getInstance().getFrameTime());
         }
     }
 }

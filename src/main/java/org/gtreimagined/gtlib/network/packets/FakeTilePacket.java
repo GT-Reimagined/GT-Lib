@@ -48,9 +48,9 @@ public class FakeTilePacket implements Packet<FakeTilePacket> {
         public PacketContext handle(FakeTilePacket msg) {
             return (sender, level) -> {
                 if (sender != null) {
-                    BlockEntity tile = Utils.getTile(sender.getLevel(), msg.fakeTilePos);
+                    BlockEntity tile = Utils.getTile(sender.level(), msg.fakeTilePos);
                     if (tile instanceof BlockEntityFakeBlock fakeBlock) {
-                        BlockEntity controller = Utils.getTile(sender.getLevel(), msg.controllerPos);
+                        BlockEntity controller = Utils.getTile(sender.level(), msg.controllerPos);
                         if (controller instanceof BlockEntityBasicMultiMachine<?> machine){
                             fakeBlock.setController(machine);
                         }

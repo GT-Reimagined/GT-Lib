@@ -18,10 +18,10 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Ref.ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientEventsMod {
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void onTextureStitch(final TextureStitchEvent.Pre event) {
         GTTextureStitcher.onTextureStitch(event.getAtlas(), event::addSprite);
-    }
+    }*/
 
     @SubscribeEvent
     public static void onBlockColorHandler(RegisterColorHandlersEvent.Block e) {

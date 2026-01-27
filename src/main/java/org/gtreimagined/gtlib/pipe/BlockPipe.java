@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
@@ -64,7 +65,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -103,27 +103,27 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     public static final BooleanProperty TICKING = BooleanProperty.create("ticking");
 
-    public BlockPipe(String prefix, T type, PipeSize size, int modelId) {
-        this(prefix, type, size, modelId, type.getMaterial() == GTLibMaterials.Wood ? Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of(Data.WRENCH_MATERIAL).strength(1.0f, 3.0f).requiresCorrectToolForDrops());
+    public BlockPipe(String suffix, T type, PipeSize size, int modelId) {
+        this(suffix, type, size, modelId, type.getMaterial() == GTLibMaterials.Wood ? Properties.of().sound(SoundType.WOOD).strength(1.0f, 3.0f) : Properties.of().strength(1.0f, 3.0f).requiresCorrectToolForDrops());
     }
 
-    public BlockPipe(String prefix, T type, PipeSize size, int modelId, Properties properties) {
-        super(type.domain, prefix + "_" + size.getId(), size.ordinal() < 6 ? properties.noOcclusion().dynamicShape() : properties);
+    public BlockPipe(String suffix, T type, PipeSize size, int modelId, Properties properties) {
+        super(type.domain, type.getSizeId(size) + "_" + type.getMaterial().getId() + "_" + suffix, size.ordinal() < 6 ? properties.noOcclusion().dynamicShape() : properties);
         pipeShapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build());
         shapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).maximumSize(1000).build());
         this.type = type;
         this.size = size;
-        side = new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_side");
+        side = new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_side");
         overlay = new Texture(Ref.ID, "block/empty");
         faces = new Texture[]{
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_vtiny"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_tiny"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_small"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_normal"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_large"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_huge"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_quadruple"),
-                new Texture(type.getMaterial().getSet().getDomain(), type.getMaterial().getSet().getPath() + "/pipe/pipe_nonuple")};
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_vtiny"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_tiny"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_small"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_normal"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_large"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_huge"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_quadruple"),
+                new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_nonuple")};
         GTAPI.register(BlockPipe.class, this);
         registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false).setValue(TICKING, false));
         this.modelId = modelId;
@@ -162,7 +162,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> list = super.getDrops(state, builder);
         BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (tileentity instanceof BlockEntityPipe<?> pipe){
@@ -464,6 +464,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
+        if (i > 1) return  -1;
         BlockEntityPipe<?> pipe = getTilePipe(world, pos);
         if (pipe != null && pipe.getPipeColor() != -1) return pipe.getPipeColor();
         return getRGB();

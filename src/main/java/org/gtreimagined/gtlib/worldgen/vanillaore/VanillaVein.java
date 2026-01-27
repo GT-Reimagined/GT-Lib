@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.worldgen.vanillaore;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
@@ -34,7 +35,7 @@ public record VanillaVein(ResourceLocation id, OreObject primary, OreObject seco
                 Codec.BOOL.fieldOf("triangle").forGetter(VanillaVein::triangle),
                 Codec.INT.fieldOf("plateau").forGetter(VanillaVein::plateau),
                 Codec.BOOL.fieldOf("spawnOnOceanFloor").forGetter(VanillaVein::spawnOnOceanFloor),
-                ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(VanillaVein::dimensions),
+                ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(VanillaVein::dimensions),
                 Codec.STRING.listOf().optionalFieldOf("biomes", List.of()).forGetter(VanillaVein::biomes),
                 Codec.BOOL.optionalFieldOf("biomeBlacklist", true).forGetter(VanillaVein::biomeBlacklist)
         ).apply(instance, VanillaVein::new);
@@ -45,7 +46,7 @@ public record VanillaVein(ResourceLocation id, OreObject primary, OreObject seco
         if (biomes.isEmpty()) return biomeBlacklist;
         Predicate<String> predicate = s -> {
             if (s.contains("#")) return biome.is(TagUtils.getBiomeTag(new ResourceLocation(s.replace("#", ""))));
-            return biome.is(ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(s)));
+            return biome.is(ResourceKey.create(Registries.BIOME, new ResourceLocation(s)));
         };
         return biomeBlacklist ? biomes.stream().anyMatch(predicate) : biomes.stream().noneMatch(predicate);
     }

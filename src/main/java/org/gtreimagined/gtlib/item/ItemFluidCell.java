@@ -50,7 +50,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -85,19 +84,6 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
     public int getMaxTemp() {
         return MaterialTags.MELTING_POINT.getInt(material);
     }
-
-   /* @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (tab instanceof GregTechItemGroup && ((GregTechItemGroup) tab).getName().equals("items")) {
-            if (Configs.JEI.SHOW_ALL_FLUID_CELLS) {
-                MaterialType.LIQUID.all().forEach(m -> items.add(fill(m.getLiquid())));
-                MaterialType.GAS.all().forEach(m -> items.add(fill(m.getGas())));
-                MaterialType.PLASMA.all().forEach(m -> items.add(fill(m.getPlasma())));
-            } else {
-                items.add(new ItemStack(this));
-            }
-        }
-    }*/
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
@@ -273,7 +259,7 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
                     this.playEmptySound(fluid, player, world, pos);
                 }
             } else {
-                if (!world.isClientSide() && replaceable && !state.getMaterial().isLiquid()) {
+                if (!world.isClientSide() && replaceable && !state.liquid()) {
                     world.destroyBlock(pos, true);
                 }
 

@@ -2,6 +2,9 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTTools;
@@ -17,7 +20,6 @@ import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Registry;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -45,9 +47,11 @@ public class GTRecipeProvider extends RecipeProvider {
     @Getter
     private static final Set<ResourceLocation> RECIPES_TO_REMOVE = new HashSet<>();
 
+    public static final PackOutput EMPTY_OUTPUT = new PackOutput(FMLPaths.GAMEDIR.get().resolve("null"));
+
     @SuppressWarnings("ConstantConditions")
     public GTRecipeProvider(String providerDomain, String providerName) {
-        super(null);
+        super(EMPTY_OUTPUT);
         this.providerDomain = providerDomain;
         this.providerName = providerName;
     }
@@ -92,7 +96,7 @@ public class GTRecipeProvider extends RecipeProvider {
         if (!customCriterion){
             List<String> criteria = new ArrayList<>();
             for (Object o : inputs.values()) {
-                if (o instanceof TagKey<?> tag && tag.registry() == Registry.ITEM_REGISTRY) {
+                if (o instanceof TagKey<?> tag && tag.registry() == Registries.ITEM) {
                     String id = "has_" + tag.location().getPath();
                     if (criteria.contains(id)) continue;
                     recipeBuilder.addCriterion(id, hasSafeItem((TagKey<Item>) tag));
@@ -216,8 +220,8 @@ public class GTRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    public String getName() {
-        return providerName;
+    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+
     }
 
     public CriterionTriggerInstance hasSafeItem(TagKey<Item> tag) {

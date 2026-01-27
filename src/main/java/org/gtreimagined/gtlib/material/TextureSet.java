@@ -55,7 +55,8 @@ public class TextureSet implements IGTObject {
 
     public Texture getTexture(MaterialType<?> type, int layer) {
         StringBuilder builder = new StringBuilder();
-        builder.append("material/");
+        String prefix = type instanceof MaterialTypeBlock<?> || type instanceof MaterialTypeFluid<?> ? "block" : "item";
+        builder.append(prefix).append("/material/");
         if (!type.ignoreTextureSets() || force) builder.append(id).append("/");
         //TODO return different numbered overlay based on current layer
         builder.append(type.getId()).append(layer == 0 ? "" : "_overlay"/*"_overlay_" + layer*/);

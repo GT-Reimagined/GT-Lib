@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.data;
 
+import net.minecraft.world.item.ArmorItem.Type;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -32,16 +33,15 @@ import net.minecraftforge.api.distmarker.Dist;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.data.GTLibMaterials.*;
-import static net.minecraft.world.level.material.Material.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.FLINT;
 
 public class GTTools {
     public static final GTToolType SWORD = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "sword", 2, 1, 10, 3.0F, -2.4F, false)).setToolClass(MaterialSword.class).addEffectiveBlocks(Blocks.COBWEB).setHasContainer(false).setMaterialTypeItem(SWORD_BLADE).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
-    public static final GTToolType PICKAXE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "pickaxe", 1, 2, 10, 1.0F, -2.8F, true)).addEffectiveMaterials(ICE_SOLID, PISTON).setHasContainer(false).setMaterialTypeItem(PICKAXE_HEAD).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
-    public static final GTToolType SHOVEL = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "shovel", 1, 2, 10, 1.5F, -3.0F, true)).addEffectiveMaterials(CLAY, SAND, TOP_SNOW, SNOW, DIRT).setHasContainer(false).setMaterialTypeItem(SHOVEL_HEAD).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
-    public static final GTToolType AXE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "axe", 1, 1, 10, 6.0F, -3.0F, true)).addEffectiveMaterials(PLANT, REPLACEABLE_PLANT, BAMBOO).setHasContainer(false).setMaterialTypeItem(AXE_HEAD).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
+    public static final GTToolType PICKAXE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "pickaxe", 1, 2, 10, 1.0F, -2.8F, true)).addEffectiveBlocks(Blocks.PISTON, Blocks.STICKY_PISTON).addEffectiveBlockTags(BlockTags.ICE).setHasContainer(false).setMaterialTypeItem(PICKAXE_HEAD).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
+    public static final GTToolType SHOVEL = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "shovel", 1, 2, 10, 1.5F, -3.0F, true)).setHasContainer(false).setMaterialTypeItem(SHOVEL_HEAD).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
+    public static final GTToolType AXE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "axe", 1, 1, 10, 6.0F, -3.0F, true)).setHasContainer(false).setMaterialTypeItem(AXE_HEAD).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
     public static final GTToolType HOE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "hoe", 1, 2, 10, -2.0F, -1.0F, true)).setHasContainer(false).setMaterialTypeItem(HOE_HEAD).setMaterialTypeItemPredicate(m -> !m.has(FLINT));
-    public static final GTToolType HAMMER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "hammer", 1, 2, 2, 3.0F, -3.0F, false)).addTags("pickaxe").addEffectiveMaterials(net.minecraft.world.level.material.Material.METAL, STONE).setUseSound(SoundEvents.ANVIL_PLACE).setRepairable(false).setMaterialTypeItem(HAMMER_HEAD);
+    public static final GTToolType HAMMER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "hammer", 1, 2, 2, 3.0F, -3.0F, false)).addTags("pickaxe").setUseSound(SoundEvents.ANVIL_PLACE).setRepairable(false).setMaterialTypeItem(HAMMER_HEAD);
     public static final GTToolType WRENCH = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "wrench", 1, 2, 2, 1.5F, -2.8F, false)).setUseSound(Ref.WRENCH).addEffectiveBlocks(Blocks.HOPPER).setHasSecondary(false).setOverlayLayers(0).setRepairable(false).addBlacklistedEnchantments(Enchantments.BLOCK_EFFICIENCY);
     public static final GTToolType WRENCH_ALT = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "wrench_alt", 1, 2, 2, 1.5F, -2.8F, false)).setUseSound(Ref.WRENCH).addEffectiveBlocks(Blocks.HOPPER).addTags("wrench").setHasSecondary(false).setOverlayLayers(0).setRepairable(false).addBlacklistedEnchantments(Enchantments.BLOCK_EFFICIENCY).setCustomName("Wrench (Alt)");
     public static final GTToolType SAW = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "saw", 1, 2, 2, 2.0F, -2.8F, false)).addEffectiveBlocks(Blocks.ICE, Blocks.PACKED_ICE, Blocks.BLUE_ICE).setRepairable(false).setMaterialTypeItem(SAW_BLADE).addTags("axe");
@@ -49,17 +49,17 @@ public class GTTools {
     public static final GTToolType CROWBAR = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "crowbar", 1, 10, 5, 1.0F, -2.0F, false)).setUseSound(SoundEvents.ITEM_BREAK).setHasSecondary(false).setRepairable(false);
     public static final GTToolType SOFT_HAMMER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "soft_hammer", 1, 2, 2, 1.0F, -3.0F, false)).setRepairable(false).setPrimaryRequirement(MaterialTags.RUBBERTOOLS);//.setUseSound();
     public static final GTToolType SCREWDRIVER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "screwdriver", 1, 2, 2, 0.0F, -1.0F, false)).setUseSound(Ref.WRENCH).setRepairable(false).setMaterialTypeItem(SCREWDRIVER_TIP);
-    public static final GTToolType MORTAR = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "mortar", 1, 5, 2, -2.0F, 0.0F, false)).setUseSound(SoundEvents.GRINDSTONE_USE).setBlockBreakability(false).setRepairable(false);
-    public static final GTToolType WIRE_CUTTER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "wire_cutter", 1, 3, 2, 0.0F, -1.5F, false)).setUseSound(Ref.WIRE_CUTTERS).addEffectiveMaterials(WOOL, SPONGE, WEB, CLOTH_DECORATION).setRepairable(false).addBlacklistedEnchantments(Enchantments.BLOCK_EFFICIENCY);
-    public static final GTToolType BRANCH_CUTTER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "branch_cutter", 1, 3, 2, 0.0F, -1.5F, false)).addTags("grafter").addEffectiveMaterials(LEAVES).setHasContainer(false).setDurabilityMultiplier(0.25f);
-    public static final GTToolType KNIFE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "knife", 1, 2, 1, 2.1F, -2.0F, false)).addEffectiveBlocks(Blocks.COBWEB).setRepairable(false).setTag(new ResourceLocation(Ref.ID, "knives")).setOriginalTag(true);
+    public static final GTToolType MORTAR = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "mortar", 1, 5, 2, -2.0F, 0.0F, false)).setUseSound(SoundEvents.GRINDSTONE_USE).setBlockBreakability(false).setRepairable(false).setHasSecondary(false).setPrimaryRequirement(MaterialTags.HAS_MORTAR);
+    public static final GTToolType WIRE_CUTTER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "wire_cutter", 1, 3, 2, 0.0F, -1.5F, false)).setUseSound(Ref.WIRE_CUTTERS).setRepairable(false).addBlacklistedEnchantments(Enchantments.BLOCK_EFFICIENCY);
+    public static final GTToolType BRANCH_CUTTER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "branch_cutter", 1, 3, 2, 0.0F, -1.5F, false)).addTags("grafter").setHasContainer(false).setDurabilityMultiplier(0.25f);
+    public static final GTToolType KNIFE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "knife", 1, 2, 1, 2.1F, -2.0F, false)).addEffectiveBlocks(Blocks.COBWEB).setRepairable(false).setMaterialTypeItem(KNIFE_BLADE).setTag(new ResourceLocation(Ref.ID, "knives")).setOriginalTag(true);
     public static final GTToolType SCISSORS = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "scissors", 1, 2, 2, 1.0f, -1.5f, false));
     public static final GTToolType PLUNGER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "plunger", 5, 5, 10, 0.0F, -2.9F, false)).setUseSound(SoundEvents.BUCKET_EMPTY).setHasSecondary(false).setRepairable(false);
     public static final GTToolType SCYTHE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "scythe", 1, 2, 5, 6.5f, -3.1f, false)).setMaterialTypeItem(SCYTHE_BLADE);
-    public static final GTArmorType HELMET = new GTArmorType(Ref.SHARED_ID, "helmet", 40, 0, 0.0F, 0.0F, EquipmentSlot.HEAD);
-    public static final GTArmorType CHESTPLATE = new GTArmorType(Ref.SHARED_ID, "chestplate", 40, 0, 0.0F, 0.0F, EquipmentSlot.CHEST);
-    public static final GTArmorType LEGGINGS = new GTArmorType(Ref.SHARED_ID, "leggings", 40, 0, 0.0F, 0.0F, EquipmentSlot.LEGS);
-    public static final GTArmorType BOOTS = new GTArmorType(Ref.SHARED_ID, "boots", 40, 0, 0.0F, 0.0F, EquipmentSlot.FEET);
+    public static final GTArmorType HELMET = new GTArmorType(Ref.SHARED_ID, "helmet", 40, 0, 0.0F, 0.0F, Type.HELMET);
+    public static final GTArmorType CHESTPLATE = new GTArmorType(Ref.SHARED_ID, "chestplate", 40, 0, 0.0F, 0.0F, Type.CHESTPLATE);
+    public static final GTArmorType LEGGINGS = new GTArmorType(Ref.SHARED_ID, "leggings", 40, 0, 0.0F, 0.0F, Type.LEGGINGS);
+    public static final GTArmorType BOOTS = new GTArmorType(Ref.SHARED_ID, "boots", 40, 0, 0.0F, 0.0F, Type.BOOTS);
 
     public static void init(Dist side){
         AXE.addBehaviour(BehaviourLogStripping.INSTANCE, BehaviourTreeFelling.INSTANCE);

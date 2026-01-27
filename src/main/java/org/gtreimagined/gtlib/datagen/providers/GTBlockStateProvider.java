@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
@@ -290,7 +291,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
                 .forAllStates(state -> new VariantBuilder()
                         .modelFile(modelFunc.apply(state))
                         .rotationX(state.getValue(BlockStateProperties.ATTACH_FACE).ordinal() * 90)
-                        .rotationY((((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + angleOffset) + (state.getValue(BlockStateProperties.ATTACH_FACE) == AttachFace.CEILING ? 180 : 0)) % 360)
+                        .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + angleOffset + (state.getValue(BlockStateProperties.ATTACH_FACE) == AttachFace.CEILING ? 180 : 0)) % 360)
                 );
     }
 
@@ -313,7 +314,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
                     return new VariantBuilder()
                             .modelFile(modelFunc.apply(state))
                             .rotationX(dir == Direction.DOWN ? 180 : dir.getAxis().isHorizontal() ? 90 : 0)
-                            .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + angleOffset) % 360);
+                            .rotationY(dir.getAxis().isVertical() ? 0 : ((int) dir.toYRot() + angleOffset) % 360);
                 });
     }
 
@@ -326,7 +327,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void stairsBlock(StairBlock block, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
-        stairsBlockInternal(block, Registry.BLOCK.getKey(block).toString(), side, bottom, top);
+        stairsBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), side, bottom, top);
     }
 
     public void stairsBlock(StairBlock block, String name, ResourceLocation side, ResourceLocation bottom, ResourceLocation top) {
@@ -396,7 +397,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
 
             return new VariantBuilder()
                     .modelFile(powered ? buttonPressed : button)
-                    .rotationX(face == AttachFace.FLOOR ? 0 : (face == AttachFace.WALL ? 90 : 180))
+                    .rotationX(face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180)
                     .rotationY((int) (face == AttachFace.CEILING ? facing : facing.getOpposite()).toYRot())
                     .uvLock(face == AttachFace.WALL);
         });
@@ -432,14 +433,14 @@ public class GTBlockStateProvider implements IGTLibProvider {
         PipeBlock.PROPERTY_BY_DIRECTION.entrySet().forEach(e -> {
             Direction dir = e.getKey();
             if (dir.getAxis().isHorizontal()) {
-                builder.part().modelFile(side).rotationY((((int) dir.toYRot()) + 180) % 360).uvLock().addModel()
+                builder.part().modelFile(side).rotationY(((int) dir.toYRot() + 180) % 360).uvLock().addModel()
                         .condition(e.getValue(), true);
             }
         });
     }
 
     public void fenceBlock(FenceBlock block, ResourceLocation texture) {
-        String baseName = Registry.BLOCK.getKey(block).toString();
+        String baseName = BuiltInRegistries.BLOCK.getKey(block).toString();
         fourWayBlock(block, models().fencePost(baseName + "_post", texture), models().fenceSide(baseName + "_side", texture));
     }
 
@@ -448,7 +449,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void fenceGateBlock(FenceGateBlock block, ResourceLocation texture) {
-        fenceGateBlockInternal(block, Registry.BLOCK.getKey(block).toString(), texture);
+        fenceGateBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), texture);
     }
 
     public void fenceGateBlock(FenceGateBlock block, String name, ResourceLocation texture) {
@@ -480,7 +481,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void wallBlock(WallBlock block, ResourceLocation texture) {
-        wallBlockInternal(block, Registry.BLOCK.getKey(block).toString(), texture);
+        wallBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), texture);
     }
 
     public void wallBlock(WallBlock block, String name, ResourceLocation texture) {
@@ -513,14 +514,14 @@ public class GTBlockStateProvider implements IGTLibProvider {
     private void wallSidePart(MultiPartBlockStateBuilder builder, IModelLocation model, Map.Entry<Direction, Property<WallSide>> entry, WallSide height) {
         builder.part()
                 .modelFile(model)
-                .rotationY((((int) entry.getKey().toYRot()) + 180) % 360)
+                .rotationY(((int) entry.getKey().toYRot() + 180) % 360)
                 .uvLock()
                 .addModel()
                 .condition(entry.getValue(), height);
     }
 
     public void paneBlock(IronBarsBlock block, ResourceLocation pane, ResourceLocation edge) {
-        paneBlockInternal(block, Registry.BLOCK.getKey(block).toString(), pane, edge);
+        paneBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), pane, edge);
     }
 
     public void paneBlock(IronBarsBlock block, String name, ResourceLocation pane, ResourceLocation edge) {
@@ -552,41 +553,99 @@ public class GTBlockStateProvider implements IGTLibProvider {
     }
 
     public void doorBlock(DoorBlock block, ResourceLocation bottom, ResourceLocation top) {
-        doorBlockInternal(block, Registry.BLOCK.getKey(block).toString(), bottom, top);
+        doorBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), bottom, top);
     }
 
     public void doorBlock(DoorBlock block, String name, ResourceLocation bottom, ResourceLocation top) {
         doorBlockInternal(block, name + "_door", bottom, top);
     }
 
-    private void doorBlockInternal(DoorBlock block, String baseName, ResourceLocation bottom, ResourceLocation top) {
-        IModelLocation bottomLeft = models().doorBottomLeft(baseName + "_bottom", bottom, top);
-        IModelLocation bottomRight = models().doorBottomRight(baseName + "_bottom_hinge", bottom, top);
-        IModelLocation topLeft = models().doorTopLeft(baseName + "_top", bottom, top);
-        IModelLocation topRight = models().doorTopRight(baseName + "_top_hinge", bottom, top);
-        doorBlock(block, bottomLeft, bottomRight, topLeft, topRight);
+    public void doorBlockWithRenderType(DoorBlock block, ResourceLocation bottom, ResourceLocation top, String renderType) {
+        this.doorBlockInternalWithRenderType(block, BuiltInRegistries.BLOCK.getKey(block).toString(), bottom, top, ResourceLocation.tryParse(renderType));
     }
 
-    public void doorBlock(DoorBlock block, IModelLocation bottomLeft, IModelLocation bottomRight, IModelLocation topLeft, IModelLocation topRight) {
-        getVariantBuilder(block).forAllStatesExcept(state -> {
-            int yRot = ((int) state.getValue(DoorBlock.FACING).toYRot()) + 90;
-            boolean rh = state.getValue(DoorBlock.HINGE) == DoorHingeSide.RIGHT;
+    public void doorBlockWithRenderType(DoorBlock block, String name, ResourceLocation bottom, ResourceLocation top, String renderType) {
+        this.doorBlockInternalWithRenderType(block, name + "_door", bottom, top, ResourceLocation.tryParse(renderType));
+    }
+
+    public void doorBlockWithRenderType(DoorBlock block, ResourceLocation bottom, ResourceLocation top, ResourceLocation renderType) {
+        this.doorBlockInternalWithRenderType(block, BuiltInRegistries.BLOCK.getKey(block).toString(), bottom, top, renderType);
+    }
+
+    public void doorBlockWithRenderType(DoorBlock block, String name, ResourceLocation bottom, ResourceLocation top, ResourceLocation renderType) {
+        this.doorBlockInternalWithRenderType(block, name + "_door", bottom, top, renderType);
+    }
+
+    private void doorBlockInternal(DoorBlock block, String baseName, ResourceLocation bottom, ResourceLocation top) {
+        IModelLocation bottomLeft = this.models().doorBottomLeft(baseName + "_bottom_left", bottom, top);
+        IModelLocation bottomLeftOpen = this.models().doorBottomLeftOpen(baseName + "_bottom_left_open", bottom, top);
+        IModelLocation bottomRight = this.models().doorBottomRight(baseName + "_bottom_right", bottom, top);
+        IModelLocation bottomRightOpen = this.models().doorBottomRightOpen(baseName + "_bottom_right_open", bottom, top);
+        IModelLocation topLeft = this.models().doorTopLeft(baseName + "_top_left", bottom, top);
+        IModelLocation topLeftOpen = this.models().doorTopLeftOpen(baseName + "_top_left_open", bottom, top);
+        IModelLocation topRight = this.models().doorTopRight(baseName + "_top_right", bottom, top);
+        IModelLocation topRightOpen = this.models().doorTopRightOpen(baseName + "_top_right_open", bottom, top);
+        this.doorBlock(block, bottomLeft, bottomLeftOpen, bottomRight, bottomRightOpen, topLeft, topLeftOpen, topRight, topRightOpen);
+    }
+
+    private void doorBlockInternalWithRenderType(DoorBlock block, String baseName, ResourceLocation bottom, ResourceLocation top, ResourceLocation renderType) {
+        IModelLocation bottomLeft = this.models().doorBottomLeft(baseName + "_bottom_left", bottom, top).renderType(renderType);
+        IModelLocation bottomLeftOpen = this.models().doorBottomLeftOpen(baseName + "_bottom_left_open", bottom, top).renderType(renderType);
+        IModelLocation bottomRight = this.models().doorBottomRight(baseName + "_bottom_right", bottom, top).renderType(renderType);
+        IModelLocation bottomRightOpen = this.models().doorBottomRightOpen(baseName + "_bottom_right_open", bottom, top).renderType(renderType);
+        IModelLocation topLeft = this.models().doorTopLeft(baseName + "_top_left", bottom, top).renderType(renderType);
+        IModelLocation topLeftOpen = this.models().doorTopLeftOpen(baseName + "_top_left_open", bottom, top).renderType(renderType);
+        IModelLocation topRight = this.models().doorTopRight(baseName + "_top_right", bottom, top).renderType(renderType);
+        IModelLocation topRightOpen = this.models().doorTopRightOpen(baseName + "_top_right_open", bottom, top).renderType(renderType);
+        this.doorBlock(block, bottomLeft, bottomLeftOpen, bottomRight, bottomRightOpen, topLeft, topLeftOpen, topRight, topRightOpen);
+    }
+
+    public void doorBlock(DoorBlock block, IModelLocation bottomLeft, IModelLocation bottomLeftOpen, IModelLocation bottomRight, IModelLocation bottomRightOpen, IModelLocation topLeft, IModelLocation topLeftOpen, IModelLocation topRight, IModelLocation topRightOpen) {
+        this.getVariantBuilder(block).forAllStatesExcept(state -> {
+            int yRot = (int) state.getValue(DoorBlock.FACING).toYRot() + 90;
+            boolean right = state.getValue(DoorBlock.HINGE) == DoorHingeSide.RIGHT;
             boolean open = state.getValue(DoorBlock.OPEN);
-            boolean right = rh ^ open;
+            boolean lower = state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER;
             if (open) {
                 yRot += 90;
             }
-            if (rh && open) {
+
+            if (right && open) {
                 yRot += 180;
             }
+
             yRot %= 360;
-            return new VariantBuilder().modelFile(state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? (right ? bottomRight : bottomLeft) : (right ? topRight : topLeft))
-                    .rotationY(yRot);
+            IModelLocation model = null;
+            if (lower && right && open) {
+                model = bottomRightOpen;
+            } else if (lower && !right && open) {
+                model = bottomLeftOpen;
+            }
+
+            if (lower && right && !open) {
+                model = bottomRight;
+            } else if (lower && !right && !open) {
+                model = bottomLeft;
+            }
+
+            if (!lower && right && open) {
+                model = topRightOpen;
+            } else if (!lower && !right && open) {
+                model = topLeftOpen;
+            }
+
+            if (!lower && right && !open) {
+                model = topRight;
+            } else if (!lower && !right && !open) {
+                model = topLeft;
+            }
+
+            return new VariantBuilder().modelFile(model).rotationY(yRot);
         }, DoorBlock.POWERED);
     }
 
     public void trapdoorBlock(TrapDoorBlock block, ResourceLocation texture, boolean orientable) {
-        trapdoorBlockInternal(block, Registry.BLOCK.getKey(block).toString(), texture, orientable);
+        trapdoorBlockInternal(block, BuiltInRegistries.BLOCK.getKey(block).toString(), texture, orientable);
     }
 
     public void trapdoorBlock(TrapDoorBlock block, String name, ResourceLocation texture, boolean orientable) {
@@ -603,7 +662,7 @@ public class GTBlockStateProvider implements IGTLibProvider {
     public void trapdoorBlock(TrapDoorBlock block, IModelLocation bottom, IModelLocation top, IModelLocation open, boolean orientable) {
         getVariantBuilder(block).forAllStatesExcept(state -> {
             int xRot = 0;
-            int yRot = ((int) state.getValue(TrapDoorBlock.FACING).toYRot()) + 180;
+            int yRot = (int) state.getValue(TrapDoorBlock.FACING).toYRot() + 180;
             boolean isOpen = state.getValue(TrapDoorBlock.OPEN);
             if (orientable && isOpen && state.getValue(TrapDoorBlock.HALF) == Half.TOP) {
                 xRot += 180;

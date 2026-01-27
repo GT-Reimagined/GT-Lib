@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import lombok.Getter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraftforge.registries.ForgeRegistries.Keys;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
@@ -83,6 +84,7 @@ public class MaterialTypeBlock<T> extends MaterialType<T> {
     @Override
     public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
         super.onRegistryBuild(registry);
+        if (registry != Keys.BLOCKS) return;
         if (doRegister()) {
             for (Material material : this.materials) {
                 if (!material.enabled) continue;

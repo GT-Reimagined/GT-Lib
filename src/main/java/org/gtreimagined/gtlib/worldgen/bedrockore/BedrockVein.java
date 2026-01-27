@@ -3,6 +3,8 @@ package org.gtreimagined.gtlib.worldgen.bedrockore;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.worldgen.IWorldgenObject;
@@ -24,8 +26,8 @@ public record BedrockVein(ResourceLocation id, int probability, Material materia
             Material.CODEC.fieldOf("material").forGetter(BedrockVein::material),
             Codec.BOOL.fieldOf("indicatorRocks").forGetter(BedrockVein::indicatorRocks),
             Codec.BOOL.fieldOf("indicatorFlowers").forGetter(BedrockVein::indicatorFlowers),
-            Registry.BLOCK.byNameCodec().optionalFieldOf("flower", Blocks.AIR).forGetter(BedrockVein::flower),
-            ResourceKey.codec(Registry.DIMENSION_REGISTRY).listOf().fieldOf("dimensions").forGetter(BedrockVein::dimensions)
+            BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("flower", Blocks.AIR).forGetter(BedrockVein::flower),
+            ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(BedrockVein::dimensions)
     ).apply(instance, BedrockVein::new));
 
     @SafeVarargs

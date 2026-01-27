@@ -1,13 +1,12 @@
 package org.gtreimagined.gtlib.util;
 
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class RotationHelper {
 
-    public static ModelRotation getModelRotation(int x, int y) {
+    /*public static ModelRotation getModelRotation(int x, int y) {
         return ModelRotation.getModelRotation(x, y);
     }
 
@@ -50,8 +49,8 @@ public class RotationHelper {
 
         ModelRotation(int x, int y) {
             this.combinedXY = combineXY(x, y);
-            Quaternion quaternion = new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), (float) (-y), true);
-            quaternion.mul(new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), (float) (-x), true));
+            Quaternionf quaternion = new Quaternionf(new Vector3f(0.0F, 1.0F, 0.0F), (float) (-y), true);
+            quaternion.mul(new Quaternionf(new Vector3f(1.0F, 0.0F, 0.0F), (float) (-x), true));
             this.transformation = new TransformationMatrix(quaternion);
         }
 
@@ -67,12 +66,12 @@ public class RotationHelper {
     public static final class TransformationMatrix {
         private final Matrix4f matrix;
 
-        public TransformationMatrix(@Nullable Quaternion rotationLeftIn) {
+        public TransformationMatrix(@Nullable Quaternionf rotationLeftIn) {
             this.matrix = composeVanilla(rotationLeftIn);
         }
 
 
-        private static Matrix4f composeVanilla(@Nullable Quaternion rotationLeft) {
+        private static Matrix4f composeVanilla(@Nullable Quaternionf rotationLeft) {
             Matrix4f matrix4f = new Matrix4f(new float[]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
             if (rotationLeft != null) {
                 matrix4f.mul(new Matrix4f(rotationLeft));
@@ -85,7 +84,7 @@ public class RotationHelper {
         public Direction rotateFace(Direction facing) {
             Vec3i vector3i = facing.getNormal();
             Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-            vector4f.transform(new com.mojang.math.Matrix4f(matrix.values()));
+            vector4f.transform(new Matrix4f(matrix.values()));
             return Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
         }
     }
@@ -166,7 +165,7 @@ public class RotationHelper {
             this.m33 = f15;
         }
 
-        public Matrix4f(Quaternion quaternionIn) {
+        public Matrix4f(Quaternionf quaternionIn) {
             float f = quaternionIn.i();
             float f1 = quaternionIn.j();
             float f2 = quaternionIn.k();
@@ -191,5 +190,5 @@ public class RotationHelper {
             this.m21 = 2.0F * (f8 + f10);
             this.m12 = 2.0F * (f8 - f10);
         }
-    }
+    }*/
 }

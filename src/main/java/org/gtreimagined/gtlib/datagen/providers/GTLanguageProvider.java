@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.datagen.providers;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectRBTreeMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
@@ -13,7 +14,9 @@ import org.gtreimagined.gtlib.block.BlockStoneWall;
 import org.gtreimagined.gtlib.block.BlockStorage;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.cover.CoverFactory;
+import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.fluid.GTFluid;
@@ -184,10 +187,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
             GTAPI.all(Material.class).forEach(m -> add("material.".concat(m.getId()), getLocalizedType(m)));
             GTAPI.all(BlockOre.class, o -> {
                 String nativeSuffix = o.getMaterial().getElement() != null ? "Native " : "";
+                String stoneType = o.getStoneType() == VanillaStoneTypes.STONE ? "" : getLocalizeStoneType(o.getStoneType()) + " ";
                 if (o.getOreType() == GTMaterialTypes.ORE)
-                    add(o, String.join("", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
+                    add(o, String.join("", stoneType, nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
                 else
-                    add(o, String.join("", "Small ", getLocalizeStoneType(o.getStoneType()) + " ", nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
+                    add(o, String.join("", "Small ", stoneType, nativeSuffix, getLocalizedType(o.getMaterial()), " Ore"));
             });
 
             GTAPI.all(BlockOreStone.class, o -> {
@@ -257,23 +261,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                         return;
                     }
                 }
-                String[] split = getLocalizedMaterialType(t);
-                if (t == GTMaterialTypes.CRUSHED_ORE)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Crushed Ores"));
-                else if (t == GTMaterialTypes.PURIFIED_ORE)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Purified Ores"));
-                else if (t == GTMaterialTypes.REFINED_ORE)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Refined Ores"));
-                else if (t == GTMaterialTypes.RAW_ORE_BLOCK)
-                    add(Ref.ID + ".rei.group." + t.getId(), "Raw Ore Blocks");
-                else if (t == GTMaterialTypes.ITEM_CASING)
-                    add(Ref.ID + ".rei.group." + t.getId(), String.join("", "Item Casings"));
-                else if (split.length > 1) {
-                    if (t.isSplitName())
-                        add(Ref.ID + ".rei.group." + t.getId(), String.join("", split[0], " ", split[1], "s"));
-                    else
-                        add(Ref.ID + ".rei.group." + t.getId(), String.join("", split[1], " ", split[0], "s"));
-                } else add(Ref.ID + ".rei.group." + t.getId(), split[0] + "s");
+                add(Ref.ID + ".rei.group." + t.getId(), ((String) t.getLang().apply(GTLibMaterials.Iron)).replace(" Iron", "") + "s");
             });
             GTAPI.all(StoneType.class, s -> {
                 if (s instanceof CobbleStoneType){
@@ -291,7 +279,9 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
             pipeTranslations();
             GTAPI.all(RecipeMap.class, t -> {
                 String id = "jei.category." + t.getId();
+                String emiID = "emi.category.gt." + t.getId();
                 add(id, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
+                add(emiID, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
             });
         }
     }
@@ -360,6 +350,8 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("jei.category.gtlib.veins", "Vein Stats");
         add("jei.category.gtlib.small_ores", "Small Ore Stats");
         add("jei.category.gtlib.stone_veins", "Stone Layer Vein Stats");
+        add("config.jade.plugin_gtlib.eu_hu", "EU and HU Plugin for GT Lib");
+        add("config.jade.plugin_gtlib.machine", "Machine Plugin for GT Lib");
     }
 
     private final void pipeTranslations() {
@@ -439,7 +431,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
     }
 
     public void add(CreativeModeTab key, String name) {
-        add("itemGroup." + key.getRecipeFolderName(), name);
+        add("itemGroup." + BuiltInRegistries.CREATIVE_MODE_TAB.getKey(key).toLanguageKey(), name);
     }
 
     public void add(String key, String value) {

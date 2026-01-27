@@ -60,13 +60,14 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     protected MaterialType<?> type;
 
     public MaterialItem(String domain, MaterialType<?> type, Material material, Properties properties) {
-        super(domain, type.getId() + "_" + material.getId(), MaterialItem.class, properties);
+        super(domain, type.getIdGetter().apply(material), MaterialItem.class, properties);
         this.material = material;
         this.type = type;
     }
 
     public MaterialItem(String domain, MaterialType<?> type, Material material) {
-        this(domain, type, material, new Properties().tab(Ref.TAB_MATERIALS));
+        this(domain, type, material, new Properties());
+        tab(Ref.TAB_MATERIALS);
     }
 
     public MaterialType<?> getType() {
@@ -249,7 +250,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     }
 
     public TagKey<Item> getTag() {
-        return TagUtils.getForgelikeItemTag(String.join("", Utils.getConventionalMaterialType(type), "/", material.getId()));
+        return type.getMaterialTag(this.material);
     }
 
     public static boolean hasType(ItemStack stack, MaterialType<?> type) {
@@ -287,7 +288,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     @OnlyIn(Dist.CLIENT)
     private int getChangingMaterialColor(){
-        long currentRemainder = Minecraft.getInstance().player != null ?  Minecraft.getInstance().player.getLevel().getGameTime() % 100 : -1;
+        long currentRemainder = Minecraft.getInstance().player != null ?  Minecraft.getInstance().player.level().getGameTime() % 100 : -1;
         if (currentRemainder >= 0){
             int direction = (int) (currentRemainder < 50 ? currentRemainder : -(currentRemainder - 50));
             int rgb = material.getRGB();

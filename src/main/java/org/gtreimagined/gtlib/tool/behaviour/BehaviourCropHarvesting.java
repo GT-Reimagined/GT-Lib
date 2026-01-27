@@ -33,7 +33,7 @@ public class BehaviourCropHarvesting implements IItemUse<IBasicGTTool> {
             BlockPos.betweenClosedStream(boundingBox).forEach(p -> {
                 BlockState blockState =  serverLevel.getBlockState(p);
                 if (blockState.getBlock() instanceof CropBlock cropBlock){
-                    int age = blockState.getValue(cropBlock.getAgeProperty());
+                    int age = cropBlock.getAge(blockState);
                     if (age == cropBlock.getMaxAge()){
                         List<ItemStack> drops = CropBlock.getDrops(blockState, serverLevel, p, null);
                         ItemStack replant = blockState.getBlock().getCloneItemStack(serverLevel, p, blockState);
@@ -47,7 +47,7 @@ public class BehaviourCropHarvesting implements IItemUse<IBasicGTTool> {
                             if (!c.getPlayer().addItem(drop)){
                                 c.getPlayer().drop(drop, true);
                             }
-                            serverLevel.setBlock(p, blockState.setValue(cropBlock.getAgeProperty(), 0), 3);
+                            serverLevel.setBlock(p, cropBlock.getStateForAge(0), 3);
                         }
                         success[0] = true;
 

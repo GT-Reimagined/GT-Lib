@@ -4,6 +4,7 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.tool.IGTArmor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -33,13 +36,13 @@ public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeather
     protected GTArmorType type;
     protected Material material;
 
-    public MaterialArmor(String domain, GTArmorType type, Material materialIn, EquipmentSlot slot, Properties builderIn) {
-        super(new MatArmorMaterial(type, materialIn), slot, builderIn);
+    public MaterialArmor(String domain, GTArmorType type, Material materialIn, ArmorItem.Type armorType, Properties builderIn) {
+        super(new MatArmorMaterial(type, materialIn), armorType, builderIn);
         this.domain = domain;
         this.material = materialIn;
         this.type = type;
         GTAPI.register(IGTArmor.class, this);
-        if (type.getSlot() == EquipmentSlot.HEAD && FMLEnvironment.dist.isClient()) {
+        if (type.getArmorType() == Type.HELMET && FMLEnvironment.dist.isClient()) {
             RenderHelper.registerProbePropertyOverrides(this);
         }
     }
@@ -66,7 +69,7 @@ public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeather
 
     @Override
     public ItemStack asItemStack() {
-        return resolveStack();
+        return new ItemStack(this);
     }
 
     @Override
@@ -80,14 +83,44 @@ public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeather
     }
 
     @Override
+    public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+        Map<Enchantment, Integer> enchants = getAllEnchantments(stack);
+        if (enchants.containsKey(enchantment)) {
+            return enchants.get(enchantment);
+        }
+        return 0;
+    }
+
+    @Override
+    public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
+        Map<Enchantment, Integer> mainEnchants = MaterialTags.ARMOR.get(getMat()).toolEnchantment();
+        Map<Enchantment, Integer> enchants = new HashMap<>();
+        if (!mainEnchants.isEmpty()) {
+            mainEnchants.entrySet().stream().filter(e -> e.getKey().canEnchant(stack)).forEach(e -> enchants.put(e.getKey(), e.getValue()));
+        }
+        return enchants;
+    }
+
+    @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return enchantment.category.canEnchant(stack.getItem());
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        return false;
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return false;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         onGenericAddInformation(stack, tooltip, flag);
         super.appendHoverText(stack, world, tooltip, flag);
+        appendEnchantmentNames(tooltip, getAllEnchantments(stack));
     }
 
     @Override

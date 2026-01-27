@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Vector3f;
 import org.gtreimagined.gtlib.client.RenderStateHelper;
 import org.gtreimagined.gtlib.client.glu.GLU;
 import net.minecraft.client.Minecraft;
@@ -28,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
@@ -150,7 +150,7 @@ public abstract class WorldSceneRenderer {
         Vec3 vecX = new Vec3(Math.cos(rotationPitch), 0, Math.sin(rotationPitch));
         Vec3 vecY = new Vec3(0, Math.tan(rotationYaw) * vecX.length(), 0);
         Vec3 pos = new Vec3(vecX.x, vecX.y, vecX.z).add(vecY).normalize().multiply(radius, radius, radius);
-        this.eyePos = new Vector3f(pos.add(lookAt.x(), lookAt.y(), lookAt.z()));
+        //this.eyePos = new Vector3f(pos.add(lookAt.x(), lookAt.y(), lookAt.z()));
     }
 
     protected int[] getPositionedRect(int x, int y, int width, int height) {
@@ -227,7 +227,6 @@ public abstract class WorldSceneRenderer {
         mc.getTextureManager().bindForSetup(TextureAtlas.LOCATION_BLOCKS);
   //      RenderType oldRenderLayer = MinecraftForgeClient.getRenderLayer();
   //      RenderSystem.disableLighting();
-        RenderSystem.enableTexture();
  //       RenderSystem.enableAlphaTest();
 
         try { // render block in each layer

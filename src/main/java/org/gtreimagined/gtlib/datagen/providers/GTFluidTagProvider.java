@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.datagen.providers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.Tags;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
@@ -21,7 +23,7 @@ public class GTFluidTagProvider extends GTTagProvider<Fluid> implements IGTLibPr
     private final boolean replace;
 
     public GTFluidTagProvider(String providerDomain, String providerName, boolean replace) {
-        super(Registry.FLUID, providerDomain, providerName, "fluids");
+        super(Registries.FLUID, providerDomain, providerName, "fluids", f -> BuiltInRegistries.FLUID.getResourceKey(f).get());
         this.replace = replace;
     }
 

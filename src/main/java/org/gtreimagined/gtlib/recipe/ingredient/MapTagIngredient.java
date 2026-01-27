@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.recipe.ingredient;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -13,13 +14,13 @@ public class MapTagIngredient extends AbstractMapIngredient {
 
     public MapTagIngredient(ResourceLocation tag, boolean insideMap) {
         super(insideMap);
-        this.loc = new TagKey<>(Registry.ITEM_REGISTRY, tag);
-        this.floc = new TagKey<>(Registry.FLUID_REGISTRY, tag);
+        this.loc = new TagKey<>(Registries.ITEM, tag);
+        this.floc = new TagKey<>(Registries.FLUID, tag);
     }
 
     public void setTag(ResourceLocation loc) {
-        this.loc = new TagKey<>(Registry.ITEM_REGISTRY, loc);
-        this.floc = new TagKey<>(Registry.FLUID_REGISTRY, loc);
+        this.loc = new TagKey<>(Registries.ITEM, loc);
+        this.floc = new TagKey<>(Registries.FLUID, loc);
         invalidate();
     }
 

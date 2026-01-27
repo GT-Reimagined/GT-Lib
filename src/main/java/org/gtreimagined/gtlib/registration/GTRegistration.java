@@ -70,7 +70,7 @@ public final class GTRegistration {
         }
         if (domain.equals(Ref.ID)) {
             List<IGTRegistrar> list = GTAPI.all(IGTRegistrar.class).stream().sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
-            if (e.getRegistryKey() == Keys.BLOCKS) {
+            if (e.getRegistryKey() == Keys.SOUND_EVENTS) {
                 GTAPI.onRegistration(RegistrationEvent.DATA_INIT);
                 MaterialEvent event = new MaterialEvent();
                 MaterialDataInit.onMaterialEvent(event);
@@ -117,7 +117,7 @@ public final class GTRegistration {
             GTAPI.all(SoundEvent.class, domain, (t, d, i) -> {
                 ForgeRegistries.SOUND_EVENTS.register(new ResourceLocation(d, i), t);
             });
-        } else if (e.getRegistryKey() == Keys.RECIPE_SERIALIZERS) {
+        }  else if (e.getRegistryKey() == Keys.RECIPE_SERIALIZERS) {
             //TODO better solution for this
             GTAPI.all(IIngredientSerializer.class, domain, (s, d, i) -> {
                 CraftingHelper.register(new ResourceLocation(d, i), s);
@@ -139,12 +139,10 @@ public final class GTRegistration {
             });
         }
         if (domain.equals(Ref.ID)){
-            if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIERS){
-                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "modifier"), new GTBiomeModifier());
-            } else if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS){
-                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "modifier"), GTBiomeModifier.CODEC);
+            if (e.getRegistryKey() == ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS){
+                ForgeRegistries.BIOME_MODIFIER_SERIALIZERS.get().register(new ResourceLocation(Ref.ID, "modifier"), GTBiomeModifier.CODEC);
             } else if (e.getRegistryKey() == ForgeRegistries.Keys.RECIPE_TYPES){
-                e.getForgeRegistry().register(new ResourceLocation(Ref.ID, "machine"), Recipe.RECIPE_TYPE);
+                ForgeRegistries.RECIPE_TYPES.register(new ResourceLocation(Ref.ID, "machine"), Recipe.RECIPE_TYPE);
             }
         }
         if (!domain.equals(Ref.ID)){

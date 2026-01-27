@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
@@ -47,13 +48,16 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
     @Getter
     protected int layers;
     @Getter
+    @Setter
     protected long unitValue;
     @Getter
     protected boolean generating = true, blockType, visible, splitName;
     protected final Set<Material> materials = new ObjectLinkedOpenHashSet<>(); //Linked to preserve insertion order for JEI
     protected final Map<MaterialType<?>, TagKey<?>> tagMap = new Object2ObjectOpenHashMap<>();
     @Getter
-    protected Function<Material, String> lang;
+    protected String tagPrefix;
+    @Getter
+    protected Function<Material, String> lang, idGetter;
     protected T getter;
     private boolean hidden = false;
     @Getter
@@ -69,13 +73,22 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
         this.unitValue = unitValue;
         this.layers = layers;
         this.splitName = id.contains("_");
-        this.tagMap.put(this, tagFromString(Utils.getConventionalMaterialType(this)));
+        this.tagPrefix = Utils.getConventionalMaterialType(this);
+        this.tagMap.put(this, tagFromString(this.tagPrefix));
         this.lang = m -> {
             String[] split = getLocalizedMaterialType(this);
             if (split.length > 1) {
                 return String.join("", split[0], " ", getLocalizedType(m), " ", split[1]);
             } else {
                 return String.join("", getLocalizedType(m), " ", split[0]);
+            }
+        };
+        this.idGetter = m -> {
+            String[] split = getLocalizedMaterialType(this);
+            if (split.length > 1) {
+                return String.join("", split[0].toLowerCase().replace(" ", "_"), "_", m.getId(), "_", split[1].toLowerCase().replace(" ", "_"));
+            } else {
+                return String.join("", m.getId(), "_", split[0].toLowerCase().replace(" ", "_"));
             }
         };
         register(MaterialType.class, getId());
@@ -161,7 +174,7 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     @SuppressWarnings("unchecked")
     public TagKey<Item> getMaterialTag(Material m) {
-        return (TagKey<Item>) tagFromString(String.join("", Utils.getConventionalMaterialType(this), "/", (getId().equals("raw_ore_block") ? "raw_" : ""), m.getId()));
+        return (TagKey<Item>) tagFromString(String.join("", this.tagPrefix, "/", (getId().equals("raw_ore_block") ? "raw_" : ""), m.getId()));
     }
 
     public RecipeIngredient getMaterialIngredient(Material m, int count) {
@@ -176,7 +189,8 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     public MaterialType<T> unSplitName() {
         splitName = false;
-        this.tagMap.put(this, tagFromString(Utils.getConventionalMaterialType(this)));
+        this.tagPrefix = Utils.getConventionalMaterialType(this);
+        this.tagMap.put(this, tagFromString(tagPrefix));
         return this;
     }
 
@@ -187,6 +201,17 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
 
     public MaterialType<T> setLang(BiFunction<MaterialType<?>, Material, String> lang){
         return setLang(m -> lang.apply(this, m));
+    }
+
+    public MaterialType<T> setIdGetter(Function<Material, String> idGetter){
+        this.idGetter = idGetter;
+        return this;
+    }
+
+    public MaterialType<T> setTagPrefix(String prefix){
+        this.tagPrefix = prefix;
+        tagMap.put(this, tagFromString(prefix));
+        return this;
     }
 
     @Override
@@ -260,11 +285,11 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
         var mat = tooltipCache.get(stack.getItem());
         if (mat == null) {
             if (stack.getItem() instanceof MaterialItem item) {
-                MaterialItem.addTooltipsForMaterialItems(stack, item.material, item.type, player.level, tooltips, flag);
+                MaterialItem.addTooltipsForMaterialItems(stack, item.material, item.type, player.level(), tooltips, flag);
             }
             return;
         }
-        MaterialItem.addTooltipsForMaterialItems(stack, mat.getB(), mat.getA(), player.level, tooltips, flag);
+        MaterialItem.addTooltipsForMaterialItems(stack, mat.getB(), mat.getA(), player.level(), tooltips, flag);
     }
 
     public static Material getMaterialFromStackTypeless(ItemStack stack) {

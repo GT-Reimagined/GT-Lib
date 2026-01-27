@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.gui.container;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -91,7 +92,7 @@ public abstract class GTContainer extends AbstractContainerMenu implements IGTCo
                 CrashReport crashreport = CrashReport.forThrowable(exception, "Container click");
                 CrashReportCategory crashreportcategory = crashreport.addCategory("Click info");
                 crashreportcategory.setDetail("Menu Type", () -> {
-                    return this.containerType != null ? Registry.MENU.getKey(this.containerType).toString() : "<no type>";
+                    return this.containerType != null ? ForgeRegistries.MENU_TYPES.getKey(this.containerType).toString() : "<no type>";
                 });
                 crashreportcategory.setDetail("Menu Class", () -> {
                     return this.getClass().getCanonicalName();

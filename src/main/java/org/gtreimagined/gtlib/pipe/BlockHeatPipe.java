@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockHeatPipe<T extends HeatPipe<T>> extends BlockPipe<T> {
 
     public BlockHeatPipe(T type, PipeSize size) {
-        super(type.getId(), type, size, 0);
+        super(type.getType(), type, size, 0);
     }
 
     @Override

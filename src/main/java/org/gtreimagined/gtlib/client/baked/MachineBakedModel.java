@@ -1,9 +1,7 @@
 package org.gtreimagined.gtlib.client.baked;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.math.Matrix4f;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.GTLibProperties.MachineProperties;
@@ -14,6 +12,8 @@ import org.gtreimagined.gtlib.client.DirectionalQuadTransformer;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.client.dynamic.DynamicTexturer;
+import org.gtreimagined.gtlib.client.quad.ITextureReferenceBakedQuad;
+import org.gtreimagined.gtlib.client.quad.RetexturedBakedQuad;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.types.Machine;
@@ -29,7 +29,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.Collections;
 import java.util.List;
@@ -74,19 +77,25 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
         List<BakedQuad> coverQuads = getCoverQuads(state, side, rand, props, machine, level, pos);
         if (!coverQuads.isEmpty()) return coverQuads;
 
-        if (machine.getMultiTexture() != null) {
-            Function<Direction, Texture> ft = machine.getMultiTexture();
-            return props.machineTexturer.getQuads("machine", new ObjectArrayList<>(), state, props.type, new BlockEntityMachine.DynamicKey(new ResourceLocation(props.type.getId()), ft.apply(side), side, props.state, props), side.get3DDataValue(), level, pos);
-        }
-
         BakedModel model = getModel(state, side, props.state, props.type);
         for (Direction dir : Ref.DIRS) {
             quads.addAll(ModelUtils.getQuadsFromBaked(model, state, dir, rand, level, pos));
         }
         quads.addAll(ModelUtils.getQuadsFromBaked(model, state, null, rand, level, pos));
+        if (machine.getMultiTexture() != null) {
+            for (int i = 0; i < quads.size(); i++) {
+                var quad  = quads.get(i);
+                if (quad instanceof ITextureReferenceBakedQuad textureReferenceBakedQuad){
+                    if (textureReferenceBakedQuad.gtLib$getTextureId().equals("#base")){
+                        var sprite = ModelUtils.getDefaultTextureGetter().apply(ModelUtils.getBlockMaterial(machine.getMultiTexture().apply(side)));
+                        quads.set(i, new RetexturedBakedQuad(quad, sprite));
+                    }
+                }
+            }
+        }
         if (props.type.isNoFacing() || props.type.isNoTextureRotation()) return quads;
         Matrix4f f = new Matrix4f();
-        f.setIdentity();
+        f.identity();
         Transformation mat = new Transformation(f);
         mat = mat.blockCornerToCenter();
         mat = mat.compose(RenderHelper.faceRotation(state));
@@ -97,11 +106,8 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
 
     public BakedModel getModel(BlockState state, Direction dir, MachineState m, Machine<?> type) {
         if (type.isNoFacing() || type.isNoTextureRotation()) return sides.get(m)[dir.get3DDataValue()];
-        Vec3i vector3i = dir.getNormal();
-        Vector4f vector4f = new Vector4f((float) vector3i.getX(), (float) vector3i.getY(), (float) vector3i.getZ(), 0.0F);
-        vector4f.transform(RenderHelper.faceRotation(state).inverse().getMatrix());
-        Direction side = Direction.getNearest(vector4f.x(), vector4f.y(), vector4f.z());
-        return sides.get(m)[side.get3DDataValue()];
+        Direction facing = RenderHelper.directionFromState(state);
+        return sides.get(m)[Utils.rotateModel(facing, dir).get3DDataValue()];
     }
 
     public MachineProperties getMachineProperty(BlockEntityMachine<?> machine) {
@@ -114,7 +120,7 @@ public class MachineBakedModel extends GTBakedModel<MachineBakedModel> {
         };
         MachineState st = machine.getMachineState().getTextureState();
         Function<Direction, DynamicTexturer<ICover, ICover.DynamicKey>> tx = a -> machine.coverHandler.map(t -> t.getTexturer(a)).orElse(null);
-        MachineProperties mh = new MachineProperties(m, machine.getMachineTier(), covers, st, mText, machine.multiTexturer.get(), tx);
+        MachineProperties mh = new MachineProperties(m, machine.getMachineTier(), covers, st, mText, tx);
         return mh;
     }
 

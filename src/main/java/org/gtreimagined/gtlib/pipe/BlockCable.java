@@ -33,7 +33,7 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
     public final boolean insulated;
 
     public BlockCable(T type, PipeSize size, boolean insulated) {
-        super(type.getId(), type, size, 2);
+        super(type.getType(), type, size, 2);
         this.insulated = insulated;
         String prefix = insulated ? "cable" : "wire";
         this.side = new Texture(Ref.ID, "block/pipe/" + prefix + "_side");
@@ -89,7 +89,7 @@ public class BlockCable<T extends Cable<T>> extends BlockPipe<T> {
         if (entityIn instanceof LivingEntity entity) {
             if (worldIn.getBlockEntity(pos) instanceof BlockEntityCable<?> cable) {
                 if (cable.getNetwork().cableIsActive.containsKey(worldIn.dimension().location()) && cable.getNetwork().cableIsActive.get(worldIn.dimension().location()).contains(pos.asLong())){
-                    entity.hurt(DamageSource.GENERIC, this.getType().getTier().getIntegerId());
+                    entity.hurt(worldIn.damageSources().generic(), this.getType().getTier().getIntegerId());
                 }
             }
         }

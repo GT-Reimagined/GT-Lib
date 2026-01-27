@@ -2,6 +2,9 @@ package org.gtreimagined.gtlib.mixin;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -24,12 +27,12 @@ import java.util.Map;
 @Mixin(RepairItemRecipe.class)
 public abstract class RepairItemRecipeMixin extends CustomRecipe {
 
-    public RepairItemRecipeMixin(ResourceLocation idIn) {
-        super(idIn);
+    public RepairItemRecipeMixin(ResourceLocation id, CraftingBookCategory category) {
+        super(id, category);
     }
 
-    @Inject(method = "assemble", at = @At("HEAD"), cancellable = true)
-    private void getCraftingResultInject(CraftingContainer inv, CallbackInfoReturnable<ItemStack> ci) {
+    @Inject(method = "assemble(Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/core/RegistryAccess;)Lnet/minecraft/world/item/ItemStack;", at = @At("HEAD"), cancellable = true)
+    private void getCraftingResultInject(CraftingContainer inv, RegistryAccess registryAccess, CallbackInfoReturnable<ItemStack> ci) {
         List<ItemStack> list = Lists.newArrayList();
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
@@ -68,7 +71,7 @@ public abstract class RepairItemRecipeMixin extends CustomRecipe {
                 Map<Enchantment, Integer> map = Maps.newHashMap();
                 Map<Enchantment, Integer> map1 = EnchantmentHelper.getEnchantments(a);
                 Map<Enchantment, Integer> map2 = EnchantmentHelper.getEnchantments(b);
-                Registry.ENCHANTMENT.stream().filter(Enchantment::isCurse).forEach((curse) -> {
+                BuiltInRegistries.ENCHANTMENT.stream().filter(Enchantment::isCurse).forEach((curse) -> {
                     int j1 = Math.max(map1.getOrDefault(curse, 0), map2.getOrDefault(curse, 0));
                     if (j1 > 0) {
                         map.put(curse, j1);

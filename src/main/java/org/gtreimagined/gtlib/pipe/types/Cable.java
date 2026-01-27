@@ -64,4 +64,9 @@ public class Cable<T extends Cable<T>> extends PipeType<T> {
         this.loss = loss;
         return (T) this;
     }
+
+    @Override
+    public String getSizeId(PipeSize size) {
+        return size.getCableThickness() + "x";
+    }
 }

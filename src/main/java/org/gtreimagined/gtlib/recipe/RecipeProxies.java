@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.gtreimagined.gtlib.registration.GTBiomeModifier;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -20,7 +21,7 @@ public class RecipeProxies {
             ItemStack[] stacks = input.getItems();
             RecipeIngredient ing = stacks.length == 1 ? RecipeIngredient.of(stacks[0]) : RecipeIngredient.of(1, input.getItems());
             return b.recipeMapOnly().ii(ing)
-                    .io(t.getResultItem()).add(t.getId().getPath(), duration, power, 0, 1);
+                    .io(t.getResultItem(null)).add(t.getId().getPath(), duration, power, 0, 1);
         };
     }
 

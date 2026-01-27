@@ -3,7 +3,6 @@ package org.gtreimagined.gtlib.datagen;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.JsonSerializer;
-import dev.latvian.mods.kubejs.script.ScriptType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -21,10 +20,7 @@ import org.gtreimagined.gtlib.event.GTCraftingEvent;
 import org.gtreimagined.gtlib.event.GTLoaderEvent;
 import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.event.GTWorldGenEvent;
-import org.gtreimagined.gtlib.integration.kubejs.GTLibKubeJS;
-import org.gtreimagined.gtlib.integration.kubejs.GTWorldEvent;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
-import org.gtreimagined.gtlib.integration.kubejs.RecipeLoaderEventKubeJS;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
@@ -86,9 +82,13 @@ public class GTLibDynamics {
 
     public static final Consumer<FinishedRecipe> FINISHED_RECIPE_CONSUMER = f -> {
         if (RECIPE_IDS.add(f.getId())){
-            DynamicDataPack.addRecipe(f);
+            GTDynamicDataPack.addRecipe(f);
         } else {
-            GTLib.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
+            if (FMLEnvironment.production){
+                GTLib.LOGGER.warn("Recipe duplicated: " + f.getId());
+            } else {
+                GTLib.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
+            }
         }
     };
 
@@ -107,7 +107,7 @@ public class GTLibDynamics {
             GTLibDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
         }
         function.accept(RUNTIME_DATA_PACK);
-        function.accept(new DynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDomain).collect(Collectors.toSet())));
+        function.accept(new GTDynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDataPackDomains).flatMap(Collection::stream).collect(Collectors.toSet())));
 
     }
 
@@ -225,15 +225,13 @@ public class GTLibDynamics {
      */
     public static void onResourceReload(boolean serverEvent) {
         GTRecipeProvider provider = new GTRecipeProvider(Ref.ID, "provider");
-        DynamicDataPack.clearServer();
+        GTDynamicDataPack.clearServer();
         RECIPE_IDS.clear();
         collectRecipes(provider , FINISHED_RECIPE_CONSUMER);
         GTAPI.all(RecipeMap.class, RecipeMap::reset);
         final Set<ResourceLocation> filter;
         if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
-            if (serverEvent) KubeJSRegistrar.checkKubeJSServerScriptManager();
-            RecipeLoaderEventKubeJS ev = RecipeLoaderEventKubeJS.createAndPost(serverEvent);
-            filter = ev.forLoaders;
+           filter = KubeJSRegistrar.getFilter(serverEvent);
         } else {
             filter = Collections.emptySet();
         }
@@ -253,12 +251,7 @@ public class GTLibDynamics {
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
-            GTWorldEvent ev = new GTWorldEvent();
-            GTLibKubeJS.WORLDGEN.post(ev);
-            veins.addAll(ev.VEINS);
-            stoneLayers.addAll(ev.STONE_LAYERS);
-            collisionMap.putAll(ev.COLLISION_MAP);
-            runRegular = !ev.disableBuiltin;
+            runRegular = KubeJSRegistrar.postWorldgenEvent(veins, stoneLayers, collisionMap);
         }
         if (runRegular) {
             GTWorldGenEvent ev = new GTWorldGenEvent(GTLib.INSTANCE);
@@ -273,20 +266,20 @@ public class GTLibDynamics {
             });
         }
         for (Vein vein : veins) {
-            DynamicDataPack.addWorldgenObject(vein);
+            GTDynamicDataPack.addWorldgenObject(vein);
         }
         for (StoneLayer stoneLayer : stoneLayers) {
-            DynamicDataPack.addWorldgenObject(stoneLayer);
+            GTDynamicDataPack.addWorldgenObject(stoneLayer);
         }
         StoneLayer.setCollisionMap(collisionMap);
         for (SmallOre smallOre : smallOres){
-            DynamicDataPack.addWorldgenObject(smallOre);
+            GTDynamicDataPack.addWorldgenObject(smallOre);
         }
         for (VanillaVein vanillaVein : vanillaVeins){
-            DynamicDataPack.addWorldgenObject(vanillaVein);
+            GTDynamicDataPack.addWorldgenObject(vanillaVein);
         }
         for (BedrockVein vein : bedrockVeins){
-            DynamicDataPack.addWorldgenObject(vein);
+            GTDynamicDataPack.addWorldgenObject(vein);
         }
         loaders.forEach((r, l) -> {
             RecipeBuilder.setCurrentModId(r.getNamespace());

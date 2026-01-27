@@ -10,8 +10,7 @@ pipeline {
         stage('Update submodule') {
             steps {
                 echo 'Updating submodule'
-                sh 'git submodule init'
-                sh 'git submodule update'
+                sh 'git submodule update --init --recursive'
             }
         }
         stage('Clean') {

@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.ICanSyncData;
@@ -34,8 +34,8 @@ public class TextBoxWidget extends Widget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, double mouseX, double mouseY, float partialTicks) {
-        textBox.render(matrixStack, (int) mouseX, (int) mouseY, partialTicks);
+    public void render(GuiGraphics graphics, double mouseX, double mouseY, float partialTicks) {
+        textBox.render(graphics, (int) mouseX, (int) mouseY, partialTicks);
     }
 
     @Override
@@ -43,9 +43,9 @@ public class TextBoxWidget extends Widget {
         super.onClick(mouseX, mouseY, button);
         if (isInside(mouseX, mouseY)){
             if (button == 0 && !textBox.isFocused()){
-                textBox.setFocus(true);
+                textBox.setFocused(true);
             } else if (button == 1 && textBox.isFocused()){
-                textBox.setFocus(false);
+                textBox.setFocused(false);
             }
         }
     }
@@ -76,8 +76,8 @@ public class TextBoxWidget extends Widget {
     public void updateSize() {
         super.updateSize();
         if (gui.isRemote && textBox != null){
-            textBox.x = realX();
-            textBox.y = realY();
+            textBox.setX(realX());
+            textBox.setY(realY());
         }
     }
 

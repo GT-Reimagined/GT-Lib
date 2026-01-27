@@ -157,7 +157,7 @@ public class WorldGenHelper {
             rockState = GTMaterialTypes.BEARING_ROCK.get().get(material, stone != null && stone.doesGenerateOre() ? stone : VanillaStoneTypes.STONE).asState();
         }
         final BlockState existingBelow = world.getBlockState(pos.below());
-        if (existingBelow.isAir() || !existingBelow.getMaterial().isSolid())
+        if (existingBelow.isAir() || !existingBelow.isSolid())
             return false;
 
         final BlockState existing = world.getBlockState(pos);

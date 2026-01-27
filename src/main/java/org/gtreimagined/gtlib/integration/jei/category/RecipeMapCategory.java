@@ -11,16 +11,17 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.gui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiData;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.xei.renderer.IRecipeInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
@@ -51,7 +52,6 @@ import java.util.List;
 public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
 
     protected static int JEI_OFFSET_X = 1, JEI_OFFSET_Y = 1;
-    public static IGuiHelper guiHelper;
 
     protected String title;
     protected final ResourceLocation loc;
@@ -68,21 +68,21 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         this.guiTier = map.getGuiTier() == null ? defaultTier : map.getGuiTier();
         title = map.getDisplayName().getString();
         int4 area = gui.getArea(), progress = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
-        background = guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
-        progressBar = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
-        progressBackground = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
+        background = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
+        progressBar = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
+        progressBackground = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
         Object icon = map.getIcon();
         if (icon != null) {
             if (icon instanceof ItemStack itemStack) {
-                this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
+                this.icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
             }
             if (icon instanceof ItemLike item) {
-                this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
+                this.icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
             }
         } else {
             Item item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
-            this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
+            this.icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
         }
         this.gui = gui;
         this.infoRenderer = map.getInfoRenderer();
@@ -94,23 +94,23 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         this.guiTier = map.getGuiTier() == null ? defaultTier : map.getGuiTier();
         title = Utils.translatable(subCategory.langKey()).getString();
         int4 area = gui.getArea(), progress = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
-        background = guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
-        progressBar = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
-        progressBackground = guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
+        background = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
+        progressBar = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
+        progressBackground = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
         Object icon = subCategory.icon().get();
         if (icon != null) {
             if (icon instanceof ItemStack itemStack) {
-                this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
+                this.icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, itemStack);
             }
             if (icon instanceof ItemLike item) {
-                this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
+                this.icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item));
             }
             if (icon instanceof ResourceLocation resourceLocation){
-                this.icon = guiHelper.drawableBuilder(resourceLocation, 0, 0, 16, 16).setTextureSize(16, 16).build();
+                this.icon = GTLibJEIPlugin.guiHelper.drawableBuilder(resourceLocation, 0, 0, 16, 16).setTextureSize(16, 16).build();
             }
         } else {
             Item item = Data.DEBUG_SCANNER;
-            this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
+            this.icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(item, 1));
         }
         this.gui = gui;
         this.infoRenderer = map.getInfoRenderer();
@@ -301,17 +301,17 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
     }*/
 
     @Override
-    public void draw(IRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(IRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         if (progressBackground != null){
-            progressBackground.draw(stack, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
+            progressBackground.draw(graphics, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
         }
         if (progressBar != null)
-            progressBar.draw(stack, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
+            progressBar.draw(graphics, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
         gui.getSlots().getRecipeSlots(this.guiTier).forEach(s -> {
-            IDrawable drawable = guiHelper.drawableBuilder(s.getTexture(), 0, 0, 18, 18).setTextureSize(18, 18).build();
-            drawable.draw(stack, s.getX() - 4,s.getY() - 4);
+            IDrawable drawable = GTLibJEIPlugin.guiHelper.drawableBuilder(s.getTexture(), 0, 0, 18, 18).setTextureSize(18, 18).build();
+            drawable.draw(graphics, s.getX() - 4,s.getY() - 4);
         });
-        infoRenderer.render(stack, recipe, Minecraft.getInstance().font, JEI_OFFSET_X, gui.getArea().y + JEI_OFFSET_Y + gui.getArea().z / 2);
+        infoRenderer.render(graphics, recipe, Minecraft.getInstance().font, JEI_OFFSET_X, gui.getArea().y + JEI_OFFSET_Y + gui.getArea().z / 2);
 
         int offsetX = gui.getArea().x + JEI_OFFSET_X, offsetY = gui.getArea().y + JEI_OFFSET_Y;
         //Draw chance overlay.
@@ -323,12 +323,12 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                     if (i >= slots.size()) break;
                     RenderSystem.disableBlend();
                     RenderSystem.disableDepthTest();
-                    stack.pushPose();
-                    stack.scale(0.5f, 0.5f, 1);
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(0.5f, 0.5f, 1);
                     String ch = (recipe.getOutputChances()[i] / 100) + "%";
-                    Minecraft.getInstance().font.drawShadow(stack, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00);
+                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00, true);
 
-                    stack.popPose();
+                    graphics.pose().popPose();
                     RenderSystem.enableBlend();
                     RenderSystem.enableDepthTest();
                 }
@@ -342,22 +342,17 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                     if (i >= slots.size()) break;
                     RenderSystem.disableBlend();
                     RenderSystem.disableDepthTest();
-                    stack.pushPose();
-                    stack.scale(0.5f, 0.5f, 1);
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(0.5f, 0.5f, 1);
                     String ch = (recipe.getInputChances()[i] / 100) + "%";
-                    Minecraft.getInstance().font.drawShadow(stack, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00);
+                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00, true);
 
-                    stack.popPose();
+                    graphics.pose().popPose();
                     RenderSystem.enableBlend();
                     RenderSystem.enableDepthTest();
                 }
             }
         }
     }
-
-    public static void setGuiHelper(IGuiHelper helper) {
-        guiHelper = helper;
-    }
-
 
 }

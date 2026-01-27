@@ -115,7 +115,7 @@ public class ClientEvents {
                 poseStack.translate(modX, modY, modZ);
                 if (partialDamage == -1)
                     return false; // Not sure why this happens, but it certainly is an edge-case, if we made it so it returns 0 every time it hit -1, the animation will have a delay
-                VertexConsumer builderBreak = new SheetedDecalTextureGenerator(bufferSource.getBuffer(ModelBakery.DESTROY_TYPES.get(partialDamage)), poseStack.last().pose(), poseStack.last().normal());
+                VertexConsumer builderBreak = new SheetedDecalTextureGenerator(bufferSource.getBuffer(ModelBakery.DESTROY_TYPES.get(partialDamage)), poseStack.last().pose(), poseStack.last().normal(), 1.0f);
                 MC.getBlockRenderer().renderBreakingTexture(world.getBlockState(nextPos), nextPos, world, poseStack, builderBreak);
                 // MC.getBlockRendererDispatcher().renderModel(world.getBlockState(nextPos), nextPos, world, matrix, builderBreak, ModelDataManager.getModelData(world, nextPos));
                 poseStack.popPose();
@@ -142,7 +142,7 @@ public class ClientEvents {
             return;
         Level world = Minecraft.getInstance().level;
         if (world == null) return;
-        BlockPos pos = new BlockPos(MC.hitResult.getLocation());
+        BlockPos pos = BlockPos.containing( MC.hitResult.getLocation());
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof IInfoProvider info) {
             left.add("");

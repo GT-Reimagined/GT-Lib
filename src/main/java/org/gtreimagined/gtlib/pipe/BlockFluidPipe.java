@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.pipe;
 
+import net.minecraft.world.damagesource.DamageSources;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityFluidPipe;
 import org.gtreimagined.gtlib.pipe.types.FluidPipe;
 import org.gtreimagined.gtlib.util.Utils;
@@ -21,7 +22,7 @@ import java.util.List;
 public class BlockFluidPipe<T extends FluidPipe<T>> extends BlockPipe<T> {
 
     public BlockFluidPipe(T type, PipeSize size) {
-        super(type.getId(), type, size, 0);
+        super(type.getType(), type, size, 0);
     }
 
     @Override
@@ -53,11 +54,11 @@ public class BlockFluidPipe<T extends FluidPipe<T>> extends BlockPipe<T> {
 
     public static boolean applyTemperatureDamage(Entity entity, long temperature, float multiplier, float cap) {
         if (temperature > 320) {
-            entity.hurt(DamageSource.HOT_FLOOR, Math.max(1, Math.min(cap, (multiplier * (temperature - 300)) / 50.0F)));
+            entity.hurt(entity.level().damageSources().hotFloor(), Math.max(1, Math.min(cap, (multiplier * (temperature - 300)) / 50.0F)));
             return true;
         }
         if (temperature < 260) {
-            entity.hurt(DamageSource.FREEZE, Math.max(1, Math.min(cap, (multiplier * (270 - temperature)) / 25.0F)));
+            entity.hurt(entity.level().damageSources().freeze(), Math.max(1, Math.min(cap, (multiplier * (270 - temperature)) / 25.0F)));
             return true;
         }
         return false;

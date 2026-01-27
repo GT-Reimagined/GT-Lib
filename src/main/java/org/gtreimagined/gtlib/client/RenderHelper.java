@@ -7,11 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.item.ItemBattery;
 import org.gtreimagined.gtlib.mixin.client.LevelRendererAccessor;
@@ -51,6 +47,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import org.gtreimagined.tesseract.api.Connectivity;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -128,7 +128,7 @@ public class RenderHelper {
         float blue = FastColor.ARGB32.blue(color);
         float alpha = FastColor.ARGB32.alpha(color);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, sprite.atlas().location());
+        RenderSystem.setShaderTexture(0, sprite.atlasLocation());
         RenderSystem.setShaderColor(red/255,green/255, blue/255, alpha/255);
         Matrix4f matrix = stack.last().pose();
 
@@ -271,19 +271,19 @@ public class RenderHelper {
         switch (result.getDirection()) {
             case UP:
                 poseStack.translate(modX, modY + 1, modZ + 1);
-                poseStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-90));
                 break;
             case DOWN:
                 poseStack.translate(modX, modY, modZ + 1);
-                poseStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-90));
                 break;
             case EAST:
                 poseStack.translate(modX + 1, modY, modZ);
-                poseStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-90));
                 break;
             case WEST:
                 poseStack.translate(modX, modY, modZ);
-                poseStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -90, true));
+                poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-90));
                 break;
             case SOUTH:
                 poseStack.translate(modX, modY, modZ + 1);
@@ -375,11 +375,13 @@ public class RenderHelper {
         return InteractionResult.SUCCESS;
     }
 
+    public static Direction directionFromState(BlockState state){
+        if (state.hasProperty(BlockStateProperties.FACING)) return state.getValue(BlockStateProperties.FACING);
+        return state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+    }
+
     public static Transformation faceRotation(BlockState state) {
-        if (state.hasProperty(BlockStateProperties.FACING)) {
-            return faceRotation(state.getValue(BlockStateProperties.FACING));
-        } 
-        return faceRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING));
+        return faceRotation(directionFromState(state));
     }
 
     /*public static Transformation faceRotation(Direction facing, @Nullable Direction horiz) {
@@ -400,7 +402,7 @@ public class RenderHelper {
     }*/
 
     public static Transformation faceRotation(Direction side) {
-        Quaternion quat = side.getAxis() != Axis.Y ? Vector3f.YP.rotationDegrees(-side.toYRot()) : Vector3f.XP.rotationDegrees(-side.getNormal().getY()*90f);
+        Quaternionf quat = side.getAxis() != Axis.Y ? com.mojang.math.Axis.YP.rotationDegrees(-side.toYRot()) : com.mojang.math.Axis.XP.rotationDegrees(-side.getNormal().getY()*90f);
         return new Transformation(null, quat, null, null);
         //return faceRotation(side, null);
     }

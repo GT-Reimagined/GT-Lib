@@ -4,8 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
@@ -29,6 +27,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Collection;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("removal")
 public class MultiMachineInfoPage {
 
-    private final BasicMultiMachine<?> machine;
+    /*private final BasicMultiMachine<?> machine;
     private int layerIndex = -1;
     private int currentRendererPage = 0;
     private int lastMouseX;
@@ -221,13 +221,13 @@ public class MultiMachineInfoPage {
     private void renderBlockOverLay(BlockHitResult rayTraceResult) {
         BlockPos pos = rayTraceResult.getBlockPos();
         doOverlay(pos, 1,1,1,0.7f);
-        /*StructureResult res =this.controllers[currentRendererPage].getResult();
+        *//*StructureResult res =this.controllers[currentRendererPage].getResult();
         if (res != null) {
             StructureElement el = res.get(pos);
             if (el != null && el.renderShared()) {
                 //this.machine.getStructure(this.machine.getFirstTier()).allShared(el, this.controllers[currentRendererPage]).stream().filter(t -> !t.equals(pos) && this.getCurrentRenderer().world.getBlockState(t) != Blocks.AIR.defaultBlockState()).forEach(b -> this.doOverlay(b, 0.5f, 1, 0.5f, 0.4f));
             }
-        }*/
+        }*//*
     }
 
     private void doOverlay(BlockPos pos, float r, float g, float b, float alpha) {
@@ -256,9 +256,9 @@ public class MultiMachineInfoPage {
                 buttonNextLayer.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    /*public void setIngredients(IIngredients ingredients) {
+    *//*public void setIngredients(IIngredients ingredients) {
         ingredients.setOutput(VanillaTypes.ITEM, machine.getItem(machine.getFirstTier()).getDefaultInstance());
-    }*/
+    }*//*
 
     public List<Component> getTooltipStrings(double mouseX, double mouseY) {
         if (getCurrentRenderer() != null && !ClientEvents.leftDown && !ClientEvents.rightDown && !ClientEvents.middleDown) {
@@ -271,18 +271,18 @@ public class MultiMachineInfoPage {
                 if (itemStack != null && !itemStack.isEmpty()) {
                     TooltipFlag flag = minecraft.options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
                     List<Component> list = itemStack.getTooltipLines(minecraft.player, flag);
-                    /*StructureResult res = this.controllers[currentRendererPage].getResult();
+                    *//*StructureResult res = this.controllers[currentRendererPage].getResult();
                     if (res != null) {
                         StructureElement el = res.get(rayTraceResult.getBlockPos());
                         if (el != null) {
                             long count = 0;//this.machine.getStructure(this.machine.getFirstTier()).allShared(el, this.controllers[currentRendererPage]).stream().filter(t -> !t.equals(rayTraceResult.getBlockPos()) && this.getCurrentRenderer().world.getBlockState(t) != Blocks.AIR.defaultBlockState()).count();
                             el.onInfoTooltip(list, count, this.controllers[currentRendererPage]);
                         }
-                    }*/
+                    }*//*
                     return list;
                 }
             }
         }
         return Collections.emptyList();
-    }
+    }*/
 }

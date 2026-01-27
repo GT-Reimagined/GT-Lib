@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.mixin.LootPoolAccessor;
@@ -118,7 +119,7 @@ public class GTLoot {
 
     public static class RandomWeightLootFunction extends LootItemConditionalFunction implements LootItemFunction {
 
-        public static final LootItemFunctionType TYPE = Registry.register(Registry.LOOT_FUNCTION_TYPE,
+        public static final LootItemFunctionType TYPE = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE,
                 new ResourceLocation(Ref.ID,"random_weight"), new LootItemFunctionType(new Serializer()));
 
         private final ItemStack stack;

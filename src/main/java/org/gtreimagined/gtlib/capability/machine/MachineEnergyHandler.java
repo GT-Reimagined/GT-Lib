@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
@@ -74,7 +75,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
         if (voltage > this.getInputVoltage()) {
             if (GTLibConfig.MACHINES_EXPLODE.get()) {
                 if (!exploded){
-                    Utils.createExplosion(this.tile.getLevel(), tile.getBlockPos(), 4.0F, Explosion.BlockInteraction.DESTROY);
+                    Utils.createExplosion(this.tile.getLevel(), tile.getBlockPos(), 4.0F, ExplosionInteraction.BLOCK);
                     tile.getLevel().playSound(null, tile.getBlockPos(), Ref.MACHINE_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
                     exploded = true;
                 }
@@ -229,6 +230,9 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
     public void onUpdate() {
         super.onUpdate();
         cachedItems.forEach(t -> t.right().getState().onTick());
+        int ampsExtracted = 0;
+        long ampsAvailable = this.availableAmpsOutput();
+        outer:
         for (Direction dir : Ref.DIRS) {
             if (canOutput(dir)) {
                 BlockEntity tile = this.tile.getCachedBlockEntity(dir);
@@ -236,7 +240,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
                 if (tile instanceof IEUCable && (!(tile instanceof IEUNode node) || !node.isActuallyNode())){
                     if (this.tile.getNetwork() == null) continue;
                     if (!this.tile.connects(dir)) continue;
-                    for (long amp = 0; amp < this.availableAmpsOutput(); amp++) {
+                    for (long amp = 0; amp < ampsAvailable; amp++) {
                         long extracted = this.extractEu(this.getOutputVoltage(), true);
                         if (extracted > 0){
                             EUTransaction transaction = new EUTransaction(extracted, t -> {});
@@ -245,6 +249,8 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
                             if (insertEu > 0){
                                 this.extractEu(insertEu, false);
                                 transaction.commit();
+                                ampsExtracted++;
+                                if (ampsExtracted == ampsAvailable) break outer;
                             }
                         }
                     }

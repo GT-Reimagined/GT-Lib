@@ -2,7 +2,9 @@ package org.gtreimagined.gtlib.machine;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
 import org.gtreimagined.gtlib.Ref;
@@ -56,7 +58,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -71,7 +72,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import static org.gtreimagined.gtlib.Data.WRENCH_MATERIAL;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 
 public class BlockMachine extends BlockBasic implements IItemBlockProvider, EntityBlock, IColorHandler {
@@ -82,7 +82,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     protected final StateDefinition<Block, BlockState> stateContainer;
 
     public BlockMachine(Machine<?> type, Tier tier) {
-        this(type, tier, Properties.of(WRENCH_MATERIAL).strength(1.0f, 10.0f).sound(SoundType.METAL).requiresCorrectToolForDrops());
+        this(type, tier, Properties.of().strength(1.0f, 10.0f).sound(SoundType.METAL).requiresCorrectToolForDrops());
     }
 
     public BlockMachine(Machine<?> type, Tier tier, Properties properties) {
@@ -254,7 +254,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> list = super.getDrops(state, builder);
         BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (tileentity instanceof BlockEntityMachine<?> machine){
@@ -342,14 +342,18 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
         Texture[] base = type.getBaseTexture(tier, MachineState.ACTIVE);
         if (base.length >= 6) {
             for (int s = 0; s < 6; s++) {
-                b.texture("base" + Utils.coverRotateFacing(Ref.DIRS[s], Direction.NORTH).getSerializedName(), base[s]);
+                Direction dir = Direction.from3DDataValue(s);
+                Direction newDir = dir.getAxis() == Axis.Y ? dir : dir.getOpposite();
+                b.texture("base" + newDir.getSerializedName(), base[s]);
             }
         }
         for (int i = 0; i < type.getOverlayLayers(); i++) {
             Texture[] overlays = type.getOverlayTextures(MachineState.ACTIVE, tier, i);
             for (int s = 0; s < 6; s++) {
                 String suffix = i == 0 ? "" : String.valueOf(i);
-                b.texture("overlay" + Utils.coverRotateFacing(Ref.DIRS[s], Direction.NORTH).getSerializedName() + suffix, overlays[s]);
+                Direction dir = Direction.from3DDataValue(s);
+                Direction newDir = dir.getAxis() == Axis.Y ? dir : dir.getOpposite();
+                b.texture("overlay" + newDir.getSerializedName() + suffix, overlays[s]);
             }
         }
 

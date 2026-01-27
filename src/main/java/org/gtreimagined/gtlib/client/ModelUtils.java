@@ -1,9 +1,8 @@
 package org.gtreimagined.gtlib.client;
 
-import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
@@ -42,6 +41,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,27 +54,27 @@ import java.util.function.Predicate;
 public class ModelUtils {
     private static ModelBakery MODEL_BAKERY;
     //Assumes from North.
-    public static Transformation transform(Direction side) {
+    /*public static Transformation transform(Direction side) {
         switch (side) {
             case DOWN:
-                return new Transformation(null, new Quaternion(new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), 90.0F, true)), null, null);
+                return new Transformation(null, new Quaternionf(new Quaternionf(new Vector3f(1.0F, 0.0F, 0.0F), 90.0F, true)), null, null);
             case UP:
-                return new Transformation(null, new Quaternion(new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), -90.0F, true)), null, null);
+                return new Transformation(null, new Quaternionf(new Quaternionf(new Vector3f(1.0F, 0.0F, 0.0F), -90.0F, true)), null, null);
             case NORTH:
                 return Transformation.identity();
             case SOUTH:
-                return new Transformation(null, new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), 180.0F, true), null, null);
+                return new Transformation(null, new Quaternionf(new Vector3f(0.0F, 1.0F, 0.0F), 180.0F, true), null, null);
             case WEST:
-                return new Transformation(null, new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), 90.0f, true), null, null);
+                return new Transformation(null, new Quaternionf(new Vector3f(0.0F, 1.0F, 0.0F), 90.0f, true), null, null);
             case EAST:
-                return new Transformation(null, new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), -90.0f, true), null, null);
+                return new Transformation(null, new Quaternionf(new Vector3f(0.0F, 1.0F, 0.0F), -90.0f, true), null, null);
             default:
                 throw new RuntimeException("Invalid direction/null sent to transform.");
         }
-    }
+    }*/
 
     public static UnbakedModel getMissingModel() {
-        return getModelBakery().getModel(new ModelResourceLocation("builtin/missing", "missing"));
+        return getModelBakery().getModel(new ModelResourceLocation(new ResourceLocation("builtin/missing"), "missing"));
     }
 
 
@@ -133,7 +134,7 @@ public class ModelUtils {
         return builder.build();
     }
 
-    public static BakedModel getBakedFromModel(BlockModel model, ModelBakery bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
+    public static BakedModel getBakedFromModel(BlockModel model, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ResourceLocation loc) {
         List<BakedQuad> generalQuads = model.bake(bakery, model, getter, transform, loc, true).getQuads(null, null, Ref.RNG, ModelData.EMPTY, null);
         SimpleBakedModel.Builder builder = new SimpleBakedModel.Builder(model, ItemOverrides.EMPTY, true).particle(getter.apply(model.getMaterial("particle")));
         generalQuads.forEach(builder::addUnculledFace);
@@ -167,12 +168,12 @@ public class ModelUtils {
     }
 
     public static List<BakedQuad> trans(List<BakedQuad> quads, Vector3f rotationL, Vector3f rotationR) {
-        Quaternion rotL = rotationL == null ? null : quatFromXYZ(rotationL, true);
-        Quaternion rotR = rotationR == null ? null : quatFromXYZ(rotationR, true);
+        Quaternionf rotL = rotationL == null ? null : quatFromXYZ(rotationL, true);
+        Quaternionf rotR = rotationR == null ? null : quatFromXYZ(rotationR, true);
         return trans(quads, new Transformation(new Vector3f(0, 0, 0), rotL, null, rotR));
     }
 
-    public static Quaternion quatFromXYZ(Vector3f xyz, boolean degrees){
+    public static Quaternionf quatFromXYZ(Vector3f xyz, boolean degrees){
         return TransformationHelper.quatFromXYZ(xyz, degrees);
     }
 
