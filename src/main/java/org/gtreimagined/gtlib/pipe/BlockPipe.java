@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.pipe;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -22,6 +23,8 @@ import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
+import org.gtreimagined.gtlib.datagen.json.JLoaderModel;
+import org.gtreimagined.gtlib.datagen.json.JModel;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.dynamic.BlockDynamic;
@@ -501,6 +504,27 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     public GTBlockModelBuilder getPipeConfig(GTBlockModelBuilder builder) {
         if (size.ordinal() > 5) return getPipeConfigForFullBlock(builder);
+        if (size == PipeSize.HUGE || size == PipeSize.LARGE){
+            builder.loader(GTLibModelManager.LOADER_PIPE_NEW);
+            ImmutableMap.Builder<String, String> builder1 = ImmutableMap.builder();
+            builder1.put("side", getSide().toString());
+            builder1.put("end", getFace().toString());
+            builder1.put("overlay", "gtlib:block/empty");
+            JLoaderModel baseModel = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/base").toString(), builder1.build());
+            JLoaderModel baseEndModel = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/base_end").toString(), builder1.build());
+            builder.property("base", baseModel);
+            builder.property("base_end", baseEndModel);
+            JLoaderModel[] connections = new JLoaderModel[6];
+            JLoaderModel[] connectionsEnd = new JLoaderModel[6];
+            for (Direction dir : Direction.values()) {
+                connections[dir.get3DDataValue()] = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/" + dir.getSerializedName() + "_connection").toString(), builder1.build());
+                connectionsEnd[dir.get3DDataValue()] = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/" + dir.getSerializedName() + "_end").toString(), builder1.build());
+            }
+            builder.property("connections", connections);
+            builder.property("connections_end", connectionsEnd);
+            builder.particle(getFace());
+            return builder;
+        }
         builder.model(getModelLoc("base", 0), of("all", getSide(), "overlay", getFace()));
         builder.staticConfigId("pipe");
         builder.particle(getFace());

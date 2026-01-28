@@ -5,6 +5,7 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.pipe.BlockCable;
 import net.minecraft.world.level.block.Block;
+import org.gtreimagined.gtlib.pipe.PipeSize;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,5 +29,18 @@ public class Wire<T extends Wire<T>> extends Cable<T> {
     @Override
     public Set<Block> getBlocks() {
         return sizes.stream().map(s -> new BlockCable(this, s, false)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getModelPath(PipeSize size){
+        return "pipe/" +  switch (size){
+            case HUGE -> "12x12";
+            case LARGE -> "10x10";
+            case NORMAL -> "8x8";
+            case SMALL -> "6x6";
+            case TINY -> "4x4";
+            case VTINY -> "2x2";
+            default -> "";
+        };
     }
 }
