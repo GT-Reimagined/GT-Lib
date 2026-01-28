@@ -1,0 +1,28 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "down-connection",
+			"from": [2, 0, 2],
+			"to": [14, 2, 14],
+			"faces": {
+				"north": {"uv": [2, 14, 14, 16], "texture": "#side", "tintindex": 0},
+				"east": {"uv": [2, 14, 14, 16], "texture": "#side", "tintindex": 0},
+				"south": {"uv": [2, 14, 14, 16], "texture": "#side", "tintindex": 0},
+				"west": {"uv": [2, 14, 14, 16], "texture": "#side", "tintindex": 0}
+			}
+		},
+		{
+			"name": "down-connection-overlay",
+			"from": [2, 0, 2],
+			"to": [14, 2, 14],
+			"faces": {
+				"north": {"uv": [2, 14, 14, 16], "texture": "#overlay", "tintindex": 2},
+				"east": {"uv": [2, 14, 14, 16], "texture": "#overlay", "tintindex": 2},
+				"south": {"uv": [2, 14, 14, 16], "texture": "#overlay", "tintindex": 2},
+				"west": {"uv": [2, 14, 14, 16], "texture": "#overlay", "tintindex": 2}
+			}
+		}
+	]
+}
