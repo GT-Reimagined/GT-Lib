@@ -1,0 +1,30 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "north-connection",
+			"from": [4, 4, 0],
+			"to": [12, 12, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 1, 0]},
+			"faces": {
+				"east": {"uv": [12, 4, 16, 12], "texture": "#side", "tintindex": 0},
+				"west": {"uv": [0, 4, 4, 12], "texture": "#side", "tintindex": 0},
+				"up": {"uv": [4, 0, 12, 4], "texture": "#side", "tintindex": 0},
+				"down": {"uv": [4, 12, 12, 16], "texture": "#side", "tintindex": 0}
+			}
+		},
+		{
+			"name": "north-connection-overlay",
+			"from": [4, 4, 0],
+			"to": [12, 12, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 1, 0]},
+			"faces": {
+				"east": {"uv": [12, 4, 16, 12], "texture": "#overlay", "tintindex": 2},
+				"west": {"uv": [0, 4, 4, 12], "texture": "#overlay", "tintindex": 2},
+				"up": {"uv": [4, 0, 12, 4], "texture": "#overlay", "tintindex": 2},
+				"down": {"uv": [4, 12, 12, 16], "texture": "#overlay", "tintindex": 2}
+			}
+		}
+	]
+}
