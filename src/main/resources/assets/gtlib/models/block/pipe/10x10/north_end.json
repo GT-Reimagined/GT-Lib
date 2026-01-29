@@ -7,7 +7,7 @@
 			"from": [4, 4, -0.01],
 			"to": [12, 12, -0.01],
 			"faces": {
-				"north": {"uv": [3, 3, 13, 13], "texture": "#end", "tintindex": 1}
+				"north": {"uv": [4, 4, 12, 12], "texture": "#end", "tintindex": 1}
 			}
 		},
 		{
