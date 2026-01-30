@@ -72,6 +72,7 @@ public class Cable<T extends Cable<T>> extends PipeType<T> {
 
     @Override
     public String getModelPath(PipeSize size){
+        if (this instanceof Wire<?>) return super.getModelPath(size);
         return "pipe/" +  switch (size){
             case HUGE -> "14x14";
             case LARGE -> "12x12";
