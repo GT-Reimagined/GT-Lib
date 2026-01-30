@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "down-end",
+			"from": [2, -0.01, 2],
+			"to": [14, -0.01, 14],
+			"faces": {
+				"down": {"uv": [2, 2, 14, 13], "texture": "#end", "tintindex": 1}
+			}
+		},
+		{
+			"name": "down-side",
+			"from": [1, 0, 1],
+			"to": [15, 0, 15],
+			"faces": {
+				"down": {"uv": [1, 1, 15, 15], "texture": "#side", "tintindex": 0}
+			}
+		}
+	]
+}

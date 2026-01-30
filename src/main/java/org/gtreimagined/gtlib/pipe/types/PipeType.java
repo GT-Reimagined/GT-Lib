@@ -98,4 +98,16 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
     public String getSizeId(PipeSize size){
         return size.getId();
     }
+
+    public String getModelPath(PipeSize size){
+        return "pipe/" +  switch (size){
+            case HUGE -> "12x12";
+            case LARGE -> "10x10";
+            case NORMAL -> "8x8";
+            case SMALL -> "6x6";
+            case TINY -> "4x4";
+            case VTINY -> "2x2";
+            default -> "";
+        };
+    }
 }

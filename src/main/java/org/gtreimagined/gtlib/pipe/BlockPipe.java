@@ -2,13 +2,13 @@ package org.gtreimagined.gtlib.pipe;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
-import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
@@ -22,6 +22,7 @@ import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
+import org.gtreimagined.gtlib.datagen.json.JLoaderModel;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.dynamic.BlockDynamic;
@@ -65,7 +66,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -95,6 +95,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     protected final int modelId;
     @Getter
     protected Texture side;
+    @Getter
     protected Texture overlay;
     protected Texture[] faces;
 
@@ -472,6 +473,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
+        if (i > 1) return  -1;
         if (stack.getTag() != null && stack.getTag().contains(Ref.KEY_PIPE_TILE_COLOR)){
             return stack.getTag().getInt(Ref.KEY_PIPE_TILE_COLOR);
         }
@@ -483,7 +485,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         if (size.ordinal() > 5){
             prov.getBuilder(item).parent(new ResourceLocation(SIMPLE)).texture("all", getSide()).texture("north", getFace());
         } else {
-            prov.getBuilder(item).parent(prov.existing(Ref.ID, "block/pipe/" + getSize().getId() + "/line_inv")).texture("all", getSide()).texture("overlay", getFace());
+            prov.getBuilder(item).parent(prov.existing(Ref.ID, "block/" + type.getModelPath(size) + "/line_inv")).texture("side", getSide()).texture("end", getFace()).texture("overlay", getOverlay());
         }
     }
 
@@ -495,101 +497,27 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         );
     }
 
-    public String getModelLoc(String shape, int cull) {
-        return Ref.ID + ":block/pipe/" + getSize().getId() + "/" + shape + (cull == 0 ? "" : (shape.equals("base") ? "" : "_culled"));
-    }
-
     public GTBlockModelBuilder getPipeConfig(GTBlockModelBuilder builder) {
         if (size.ordinal() > 5) return getPipeConfigForFullBlock(builder);
-        builder.model(getModelLoc("base", 0), of("all", getSide(), "overlay", getFace()));
-        builder.staticConfigId("pipe");
+        builder.loader(GTLibModelManager.LOADER_PIPE);
+        ImmutableMap.Builder<String, String> builder1 = ImmutableMap.builder();
+        builder1.put("side", getSide().toString());
+        builder1.put("end", getFace().toString());
+        builder1.put("overlay", getOverlay().toString());
+        JLoaderModel baseModel = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/base").toString(), builder1.build());
+        JLoaderModel baseEndModel = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/base_end").toString(), builder1.build());
+        builder.property("base", baseModel);
+        builder.property("base_end", baseEndModel);
+        JLoaderModel[] connections = new JLoaderModel[6];
+        JLoaderModel[] connectionsEnd = new JLoaderModel[6];
+        for (Direction dir : Direction.values()) {
+            connections[dir.get3DDataValue()] = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/" + dir.getSerializedName() + "_connection").toString(), builder1.build());
+            connectionsEnd[dir.get3DDataValue()] = builder.addModelObject(JLoaderModel.modelKeepElements(), new ResourceLocation(Ref.ID, "block/" + type.getModelPath(size) + "/" + dir.getSerializedName() + "_end").toString(), builder1.build());
+        }
+        builder.property("connections", connections);
+        builder.property("connections_end", connectionsEnd);
         builder.particle(getFace());
-
-        //Default Shape (0 Connections)
-        builder.config(getPipeID(0, 0), getModelLoc("base", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-
-        //Single Shapes (1 Connections)
-        builder.config(getPipeID(1, 0), getModelLoc("single", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(-90, 0, 0));
-        builder.config(getPipeID(2, 0), getModelLoc("single", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(4, 0), getModelLoc("single", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-        builder.config(getPipeID(8, 0), getModelLoc("single", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 180, 0));
-        builder.config(getPipeID(16, 0), getModelLoc("single", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(32, 0), getModelLoc("single", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -90, 0));
-
-        //Line Shapes (2 Connections)
-        builder.config(getPipeID(3, 0), getModelLoc("line", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(12, 0), getModelLoc("line", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-        builder.config(getPipeID(48, 0), getModelLoc("line", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 0));
-
-        //Elbow Shapes (2 Connections)
-        builder.config(getPipeID(5, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, -90));
-        builder.config(getPipeID(6, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, 90));
-        builder.config(getPipeID(9, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 180, -90));
-        builder.config(getPipeID(10, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 180, 90));
-        builder.config(getPipeID(17, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 180, 0));
-        builder.config(getPipeID(18, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(-90, 180, 0));
-        builder.config(getPipeID(20, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(24, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -180, 0));
-        builder.config(getPipeID(33, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(-90, 0, 0));
-        builder.config(getPipeID(34, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(36, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-        builder.config(getPipeID(40, 0), getModelLoc("elbow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -90, 0));
-
-        //Side Shapes (3 Connections)
-        builder.config(getPipeID(7, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(-90, 0, 0));
-        builder.config(getPipeID(11, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(13, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, 180));
-        builder.config(getPipeID(14, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-        builder.config(getPipeID(19, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, 90));
-        builder.config(getPipeID(28, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, 90));
-        builder.config(getPipeID(35, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, -90));
-        builder.config(getPipeID(44, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, -90));
-        builder.config(getPipeID(49, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 180));
-        builder.config(getPipeID(50, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(52, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, -90));
-        builder.config(getPipeID(56, 0), getModelLoc("side", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 90));
-
-        //Corner Shapes (3 Connections)
-        builder.config(getPipeID(21, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, 180));
-        builder.config(getPipeID(22, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(25, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -270, 180));
-        builder.config(getPipeID(26, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 180, 0));
-        builder.config(getPipeID(41, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -180, 180));
-        builder.config(getPipeID(42, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -90, 0));
-        builder.config(getPipeID(37, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -90, 180));
-        builder.config(getPipeID(38, 0), getModelLoc("corner", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-
-        //Arrow Shapes (4 Connections)
-        builder.config(getPipeID(23, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, 90));
-        builder.config(getPipeID(27, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -270, 90));
-        builder.config(getPipeID(29, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 180));
-        builder.config(getPipeID(30, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(39, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -90, 90));
-        builder.config(getPipeID(43, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -180, 90));
-        builder.config(getPipeID(45, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -90, 180));
-        builder.config(getPipeID(46, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, -90, 0));
-        builder.config(getPipeID(53, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(180, 180, 0));
-        builder.config(getPipeID(54, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-        builder.config(getPipeID(57, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(180, 0, 0));
-        builder.config(getPipeID(58, 0), getModelLoc("arrow", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 180, 0));
-
-        //Cross Shapes (4 Connections)
-        builder.config(getPipeID(15, 0), getModelLoc("cross", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, 90));
-        builder.config(getPipeID(51, 0), getModelLoc("cross", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(60, 0), getModelLoc("cross", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-
-        //Five Shapes (5 Connections)
-        builder.config(getPipeID(31, 0), getModelLoc("five", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, 90));
-        builder.config(getPipeID(47, 0), getModelLoc("five", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(0, 0, -90));
-        builder.config(getPipeID(55, 0), getModelLoc("five", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(-90, 0, 0));
-        builder.config(getPipeID(59, 0), getModelLoc("five", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(61, 0), getModelLoc("five", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())).rot(180, 0, 0));
-        builder.config(getPipeID(62, 0), getModelLoc("five", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-
-        //All Shapes (6 Connections)
-        builder.config(getPipeID(63, 0), getModelLoc("all", 0), c -> c.tex(of("all", getSide(), "overlay", getFace())));
-
-        return builder.loader(GTLibModelManager.LOADER_PIPE);
+        return builder;
     }
 
     public GTBlockModelBuilder getPipeConfigForFullBlock(GTBlockModelBuilder builder) {
@@ -681,7 +609,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         //All Shapes (6 Connections)
         builder.config(getPipeID(63, 0), SIMPLE, c -> c.tex(of("all", getFace())));
 
-        return builder.loader(GTLibModelManager.LOADER_PIPE);
+        return builder.loader(GTLibModelManager.LOADER_PIPE_FULL);
     }
 
     @Override

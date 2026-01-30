@@ -69,4 +69,18 @@ public class Cable<T extends Cable<T>> extends PipeType<T> {
     public String getSizeId(PipeSize size) {
         return size.getCableThickness() + "x";
     }
+
+    @Override
+    public String getModelPath(PipeSize size){
+        if (this instanceof Wire<?>) return super.getModelPath(size);
+        return "pipe/" +  switch (size){
+            case HUGE -> "14x14";
+            case LARGE -> "12x12";
+            case NORMAL -> "10x10";
+            case SMALL -> "8x8";
+            case TINY -> "6x6";
+            case VTINY -> "4x4";
+            default -> "";
+        };
+    }
 }

@@ -1,0 +1,30 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "east-connection",
+			"from": [13, 3, 3],
+			"to": [16, 13, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-1, 1, 1]},
+			"faces": {
+				"north": {"uv": [0, 3, 3, 13], "texture": "#side", "tintindex": 0},
+				"south": {"uv": [13, 3, 16, 13], "texture": "#side", "tintindex": 0},
+				"up": {"uv": [13, 3, 16, 13], "texture": "#side", "tintindex": 0},
+				"down": {"uv": [13, 3, 16, 13], "texture": "#side", "tintindex": 0}
+			}
+		},
+		{
+			"name": "east-connection-overlay",
+			"from": [13, 3, 3],
+			"to": [16, 13, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-1, 1, 1]},
+			"faces": {
+				"north": {"uv": [0, 3, 3, 13], "texture": "#overlay", "tintindex": 2},
+				"south": {"uv": [13, 3, 16, 13], "texture": "#overlay", "tintindex": 2},
+				"up": {"uv": [13, 3, 16, 13], "texture": "#overlay", "tintindex": 2},
+				"down": {"uv": [13, 3, 16, 13], "texture": "#overlay", "tintindex": 2}
+			}
+		}
+	]
+}
