@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "west-end",
+			"from": [-0.01, 2, 2],
+			"to": [-0.01, 14, 14],
+			"faces": {
+				"west": {"uv": [2, 2, 14, 14], "texture": "#end", "tintindex": 1}
+			}
+		},
+		{
+			"name": "west-side",
+			"from": [0, 1, 1],
+			"to": [0, 15, 15],
+			"faces": {
+				"west": {"uv": [1, 1, 15, 15], "texture": "#side", "tintindex": 0}
+			}
+		}
+	]
+}

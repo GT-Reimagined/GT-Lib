@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "south-end",
+			"from": [2, 2, 16.01],
+			"to": [14, 14, 16.01],
+			"faces": {
+				"south": {"uv": [2, 2, 14, 14], "texture": "#end", "tintindex": 1}
+			}
+		},
+		{
+			"name": "south-side",
+			"from": [1, 1, 16],
+			"to": [15, 15, 16],
+			"faces": {
+				"south": {"uv": [1, 1, 15, 15], "texture": "#side", "tintindex": 0}
+			}
+		}
+	]
+}

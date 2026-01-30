@@ -1,0 +1,28 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "up-connection",
+			"from": [1, 15, 1],
+			"to": [15, 16, 15],
+			"faces": {
+				"north": {"uv": [1, 0, 15, 1], "texture": "#side", "tintindex": 0},
+				"east": {"uv": [1, 0, 15, 1], "texture": "#side", "tintindex": 0},
+				"south": {"uv": [1, 0, 15, 1], "texture": "#side", "tintindex": 0},
+				"west": {"uv": [1, 0, 15, 1], "texture": "#side", "tintindex": 0}
+			}
+		},
+		{
+			"name": "up-connection-overlay",
+			"from": [1, 15, 1],
+			"to": [15, 16, 15],
+			"faces": {
+				"north": {"uv": [1, 0, 15, 1], "texture": "#overlay", "tintindex": 2},
+				"east": {"uv": [1, 0, 15, 1], "texture": "#overlay", "tintindex": 2},
+				"south": {"uv": [1, 0, 15, 1], "texture": "#overlay", "tintindex": 2},
+				"west": {"uv": [1, 0, 15, 1], "texture": "#overlay", "tintindex": 2}
+			}
+		}
+	]
+}

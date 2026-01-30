@@ -30,7 +30,7 @@ public class BlockItemPipe<T extends ItemPipe<T>> extends BlockPipe<T> {
         super((restricted ? "restrictive_" : "") + type.getType(), type, size, 0);
         this.restricted = restricted;
         if (restricted){
-            this.side = new Texture(Ref.ID, "block/pipe/pipe_restrictor_side");
+            this.overlay = new Texture(Ref.ID, "block/pipe/pipe_restrictor");
         }
     }
 

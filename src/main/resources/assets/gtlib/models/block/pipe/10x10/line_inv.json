@@ -1,36 +1,50 @@
 {
+	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"particle": "#all"
+		"particle": "#side"
 	},
 	"elements": [
 		{
+			"name": "side",
 			"from": [3, 3, 0],
 			"to": [13, 13, 16],
-			"color": 1,
 			"faces": {
-				"north": {"uv": [3, 3, 13, 13], "texture": "#all", "tintindex": 1},
-				"east": {"uv": [3, 3, 16, 13], "texture": "#all", "tintindex": 0},
-				"south": {"uv": [3, 3, 13, 13], "texture": "#all", "tintindex": 0},
-				"west": {"uv": [0, 3, 13, 13], "texture": "#all", "tintindex": 0},
-				"up": {"uv": [3, 0, 13, 13], "texture": "#all", "tintindex": 0},
-				"down": {"uv": [3, 3, 13, 16], "texture": "#all", "tintindex": 0}
+				"north": {"uv": [3, 3, 13, 13], "texture": "#side", "tintindex": 0},
+				"east": {"uv": [0, 3, 16, 13], "texture": "#side", "tintindex": 0},
+				"south": {"uv": [3, 3, 13, 13], "texture": "#side", "tintindex": 0},
+				"west": {"uv": [0, 3, 16, 13], "texture": "#side", "tintindex": 0},
+				"up": {"uv": [3, 0, 13, 16], "texture": "#side", "tintindex": 0},
+				"down": {"uv": [3, 0, 13, 16], "texture": "#side", "tintindex": 0}
 			}
 		},
 		{
+			"name": "overlay",
+			"from": [3, 3, 0],
+			"to": [13, 13, 16],
+			"faces": {
+				"north": {"uv": [3, 3, 13, 13], "texture": "#overlay", "tintindex": 2},
+				"east": {"uv": [0, 3, 16, 13], "texture": "#overlay", "tintindex": 2},
+				"south": {"uv": [3, 3, 13, 13], "texture": "#overlay", "tintindex": 2},
+				"west": {"uv": [0, 3, 16, 13], "texture": "#overlay", "tintindex": 2},
+				"up": {"uv": [3, 0, 13, 16], "texture": "#overlay", "tintindex": 2},
+				"down": {"uv": [3, 0, 13, 16], "texture": "#overlay", "tintindex": 2}
+			}
+		},
+		{
+			"name": "south-end",
 			"from": [4, 4, 16.01],
 			"to": [12, 12, 16.01],
-			"color": 4,
 			"faces": {
-				"south": {"uv": [4, 4, 12, 12], "texture": "#overlay", "tintindex": 1}
+				"south": {"uv": [4, 4, 12, 12], "texture": "#end", "tintindex": 1}
 			}
 		},
 		{
+			"name": "north-end",
 			"from": [4, 4, -0.01],
 			"to": [12, 12, -0.01],
-			"color": 0,
 			"faces": {
-				"north": {"uv": [4, 4, 12, 12], "texture": "#overlay", "tintindex": 1}
+				"north": {"uv": [4, 4, 12, 12], "texture": "#end", "tintindex": 1}
 			}
 		}
 	]
