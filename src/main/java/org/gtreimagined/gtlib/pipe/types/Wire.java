@@ -5,7 +5,6 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.pipe.BlockCable;
 import net.minecraft.world.level.block.Block;
-import org.gtreimagined.gtlib.pipe.PipeSize;
 
 import java.util.Set;
 import java.util.stream.Collectors;
