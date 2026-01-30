@@ -11,18 +11,18 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.gtreimagined.gtlib.client.IGTModel;
-import org.gtreimagined.gtlib.client.baked.PipeBakedModelNew;
+import org.gtreimagined.gtlib.client.baked.PipeBakedModel;
 
 import java.util.function.Function;
 
-public class PipeModelNew implements IGTModel<PipeModelNew> {
+public class PipeModel implements IGTModel<PipeModel> {
     protected final UnbakedModel base;
     protected final UnbakedModel baseEnd;
     protected final UnbakedModel[] connections;
     protected final UnbakedModel[] connectionsEnd;
     protected final ResourceLocation particle;
 
-    public PipeModelNew(UnbakedModel base, UnbakedModel baseEnd, UnbakedModel[] connections, UnbakedModel[] connectionsEnd, ResourceLocation particle) {
+    public PipeModel(UnbakedModel base, UnbakedModel baseEnd, UnbakedModel[] connections, UnbakedModel[] connectionsEnd, ResourceLocation particle) {
         this.base = base;
         this.baseEnd = baseEnd;
         this.connections = connections;
@@ -38,7 +38,7 @@ public class PipeModelNew implements IGTModel<PipeModelNew> {
             connections[i] = this.connections[i].bake(bakery, getter, transform, loc);
             connectionsEnd[i] = this.connectionsEnd[i].bake(bakery, getter, transform, loc);
         }
-        return new PipeBakedModelNew(getter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, particle)), base.bake(bakery, getter, transform, loc), baseEnd.bake(bakery, getter, transform, loc), connections, connectionsEnd);
+        return new PipeBakedModel(getter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, particle)), base.bake(bakery, getter, transform, loc), baseEnd.bake(bakery, getter, transform, loc), connections, connectionsEnd);
     }
 
     @Override

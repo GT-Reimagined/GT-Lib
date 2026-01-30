@@ -9,7 +9,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
-import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
@@ -24,7 +23,6 @@ import org.gtreimagined.gtlib.data.GTLibMaterials;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.builder.VariantBlockStateBuilder;
 import org.gtreimagined.gtlib.datagen.json.JLoaderModel;
-import org.gtreimagined.gtlib.datagen.json.JModel;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.dynamic.BlockDynamic;
@@ -68,7 +66,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -502,7 +499,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     public GTBlockModelBuilder getPipeConfig(GTBlockModelBuilder builder) {
         if (size.ordinal() > 5) return getPipeConfigForFullBlock(builder);
-        builder.loader(GTLibModelManager.LOADER_PIPE_NEW);
+        builder.loader(GTLibModelManager.LOADER_PIPE);
         ImmutableMap.Builder<String, String> builder1 = ImmutableMap.builder();
         builder1.put("side", getSide().toString());
         builder1.put("end", getFace().toString());
@@ -612,7 +609,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
         //All Shapes (6 Connections)
         builder.config(getPipeID(63, 0), SIMPLE, c -> c.tex(of("all", getFace())));
 
-        return builder.loader(GTLibModelManager.LOADER_PIPE);
+        return builder.loader(GTLibModelManager.LOADER_PIPE_FULL);
     }
 
     @Override

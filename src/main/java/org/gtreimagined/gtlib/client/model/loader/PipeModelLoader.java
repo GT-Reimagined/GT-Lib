@@ -1,36 +1,34 @@
 package org.gtreimagined.gtlib.client.model.loader;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
-import org.gtreimagined.gtlib.client.baked.PipeBakedModel;
-import org.gtreimagined.gtlib.dynamic.DynamicModel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
+import com.google.gson.JsonParseException;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
-import org.jetbrains.annotations.NotNull;
+import org.gtreimagined.gtlib.client.model.PipeModel;
 
-import java.util.function.Function;
-
-public class PipeModelLoader extends DynamicModelLoader{
-        public PipeModelLoader(ResourceLocation location) {
-            super(location);
-        }
-
-        @NotNull
-        @Override
-        public DynamicModel read(JsonObject json, JsonDeserializationContext context) {
-            return new DynamicModel(super.read(json, context)) {
-                @Override
-                public BakedModel bakeModel(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
-                    return new PipeBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, particle)), getBakedConfigs(owner, bakery, getter, transform, overrides, loc));
-                }
-            };
-        }
+public class PipeModelLoader extends GTModelLoader<PipeModel>{
+    public PipeModelLoader(ResourceLocation loc) {
+        super(loc);
     }
+
+    @Override
+    public PipeModel read(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
+        ResourceLocation particle = json.has("particle") ? new ResourceLocation(json.get("particle").getAsString()) : MissingTextureAtlasSprite.getLocation();
+        UnbakedModel base = context.deserialize(json.get("base"), BlockModel.class);
+        UnbakedModel baseEnd = context.deserialize(json.get("base_end"), BlockModel.class);
+        UnbakedModel[] connections = new UnbakedModel[6];
+        UnbakedModel[] connectionsEnd = new UnbakedModel[6];
+        JsonArray connectionsJson = json.getAsJsonArray("connections");
+        JsonArray connectionsJsonEnd = json.getAsJsonArray("connections_end");
+        for (Direction dir : Direction.values()) {
+            connections[dir.get3DDataValue()] = context.deserialize(connectionsJson.get(dir.get3DDataValue()), BlockModel.class);
+            connectionsEnd[dir.get3DDataValue()] = context.deserialize(connectionsJsonEnd.get(dir.get3DDataValue()), BlockModel.class);
+        }
+        return new PipeModel(base, baseEnd, connections, connectionsEnd, particle);
+    }
+}

@@ -3,12 +3,12 @@ package org.gtreimagined.gtlib.client;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.baked.PipeBakedModel;
+import org.gtreimagined.gtlib.client.baked.PipeFullBakedModel;
 import org.gtreimagined.gtlib.client.model.loader.DefaultModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.DynamicModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.MachineModelLoader;
+import org.gtreimagined.gtlib.client.model.loader.PipeFullModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.PipeModelLoader;
-import org.gtreimagined.gtlib.client.model.loader.PipeModelNewLoader;
 import org.gtreimagined.gtlib.client.model.loader.ProxyModelLoader;
 import org.gtreimagined.gtlib.datagen.builder.GTBlockModelBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockStateProvider;
@@ -37,21 +37,21 @@ public class GTLibModelManager {
 
     public static final ResourceLocation LOADER_DYNAMIC = new ResourceLocation(Ref.ID, "dynamic");
     public static final ResourceLocation LOADER_MACHINE = new ResourceLocation(Ref.ID, "machine");
+    public static final ResourceLocation LOADER_PIPE_FULL = new ResourceLocation(Ref.ID, "pipe_full");
     public static final ResourceLocation LOADER_PIPE = new ResourceLocation(Ref.ID, "pipe");
-    public static final ResourceLocation LOADER_PIPE_NEW = new ResourceLocation(Ref.ID, "pipe_new");
 
     public static final ResourceLocation LOADER_PROXY = new ResourceLocation(Ref.ID, "proxy");
 
     public static void init() {
-        GTLibModelManager.registerStaticConfigMap("pipe", () -> PipeBakedModel.CONFIGS);
+        GTLibModelManager.registerStaticConfigMap("pipe", () -> PipeFullBakedModel.CONFIGS);
 
         new DefaultModelLoader(LOADER_MAIN);
         new MachineModelLoader.CoverModelLoader(LOADER_COVER);
         new MachineModelLoader.SideModelLoader(LOADER_MACHINE_SIDE);
         new DynamicModelLoader(LOADER_DYNAMIC);
         new MachineModelLoader(LOADER_MACHINE);
+        new PipeFullModelLoader(LOADER_PIPE_FULL);
         new PipeModelLoader(LOADER_PIPE);
-        new PipeModelNewLoader(LOADER_PIPE_NEW);
         new ProxyModelLoader(LOADER_PROXY);
     }
 
