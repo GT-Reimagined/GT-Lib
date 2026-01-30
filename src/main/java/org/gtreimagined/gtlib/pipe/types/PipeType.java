@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.pipe.types;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import lombok.Getter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
@@ -29,7 +30,9 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
      * Basic Members
      **/
     public final String domain;
+    @Getter
     protected Material material;
+    @Getter
     protected ImmutableSet<PipeSize> sizes = ImmutableSet.of();
     protected BlockEntityType<? extends BlockEntityPipe<?>> tileType;
     protected Map<PipeSize, Block> registeredBlocks;
@@ -77,14 +80,6 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
     }
 
     public abstract String getTypeName();
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public ImmutableSet<PipeSize> getSizes() {
-        return sizes;
-    }
 
     public BlockEntityType<?> getTileType() {
         return tileType;
