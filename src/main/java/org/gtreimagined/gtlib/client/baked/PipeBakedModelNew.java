@@ -44,26 +44,29 @@ public class PipeBakedModelNew extends GTBakedModel<PipeBakedModelNew>{
         if (!(blockEntity instanceof BlockEntityPipe<?> pipe)) return Collections.emptyList();
         List<BakedQuad> quads = new ArrayList<>();
         PipeCoverHandler<?> covers = pipe.coverHandler.orElse(null);
-        quads.addAll(getQuadsFromModel(base, state, rand, level, pos));
-        List<BakedQuad> coverQuads = new LinkedList<>();
-        boolean connected = false;
-        for (Direction d : Direction.values()) {
-            if (pipe.connects(d)){
-                connected = true;
-                quads.addAll(getQuadsFromModel(connections[d.get3DDataValue()], state, rand, level, pos));
-                if (covers != null && covers.get(d).isEmpty()){
-                    quads.addAll(getQuadsFromModel(connectionsEnd[d.get3DDataValue()], state, rand, level, pos));
+        if (side == null){
+            quads.addAll(getQuadsFromModel(base, state, rand, level, pos));
+            List<BakedQuad> coverQuads = new LinkedList<>();
+            boolean connected = false;
+            for (Direction d : Direction.values()) {
+                if (pipe.connects(d)){
+                    connected = true;
+                    quads.addAll(getQuadsFromModel(connections[d.get3DDataValue()], state, rand, level, pos));
+                }
+                if (covers != null && !covers.get(d).isEmpty()){
+                    Texture tex = ((BlockPipe<?>) state.getBlock()).getFace();
+                    ICover c = covers.get(d);
+                    coverQuads = covers.getTexturer(d).getQuads("pipe", coverQuads, state, c,
+                            new BaseCover.DynamicKey(d, tex, c.getId()), d.get3DDataValue(), level, pos);
                 }
             }
-            if (covers != null && !covers.get(d).isEmpty()){
-                Texture tex = ((BlockPipe<?>) state.getBlock()).getFace();
-                ICover c = covers.get(d);
-                coverQuads = covers.getTexturer(d).getQuads("pipe", coverQuads, state, c,
-                        new BaseCover.DynamicKey(d, tex, c.getId()), d.get3DDataValue(), level, pos);
+            quads.addAll(coverQuads);
+            if (!connected) quads.addAll(getQuadsFromModel(baseEnd, state, rand, level, pos));
+        } else {
+            if (pipe.connects(side) && covers != null && covers.get(side).isEmpty()){
+                quads.addAll(getQuadsFromModel(connectionsEnd[side.get3DDataValue()], state, rand, level, pos));
             }
         }
-        quads.addAll(coverQuads);
-        if (!connected) quads.addAll(getQuadsFromModel(baseEnd, state, rand, level, pos));
         return quads;
     }
 
