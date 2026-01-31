@@ -16,6 +16,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.gui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiData;
@@ -256,9 +257,17 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
     }
 
     private void createFluidTooltip(IRecipeSlotView ing, List<Component> list, FluidStack stack) {
-        Component component = list.get(2);
-        list.remove(2);
-        list.remove(1);
+        Component component = null;
+        for (Component comp : list) {
+            if (comp.getContents() instanceof TranslatableContents translatable){
+                if (translatable.getKey().equals("jei.tooltip.recipe.by")){
+                    component = comp;
+                    break;
+                }
+            }
+        }
+        if (list.size() > 2) list.remove(2);
+        if (list.size() > 1) list.remove(1);
         int mb = stack.getAmount();
         list.add(Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         list.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
@@ -266,7 +275,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         list.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
         if (Utils.hasNoConsumeTag(ing.getDisplayedIngredient().get().getIngredient(ForgeTypes.FLUID_STACK).get()))
             list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
-        list.add(component);
+        if (component != null) list.add(component);
     }
 
     /*
