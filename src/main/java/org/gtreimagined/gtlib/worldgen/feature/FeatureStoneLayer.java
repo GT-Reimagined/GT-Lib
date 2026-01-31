@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
+import net.minecraftforge.common.world.BiomeModifier.Phase;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.block.BlockSurfaceRock;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
@@ -59,8 +60,8 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
     }
 
     @Override
-    public void build(Holder<Biome> biomeHolder, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
-        gen.addFeature(Decoration.RAW_GENERATION, getPlacedFeatureFromKey(placedFeatureRegistry, GTLibConfiguredFeatures.STONE_LAYERS));
+    public void build(Phase phase, Holder<Biome> biomeHolder, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
+        if(phase == Phase.ADD) gen.addFeature(Decoration.RAW_GENERATION, getPlacedFeatureFromKey(placedFeatureRegistry, GTLibConfiguredFeatures.STONE_LAYERS));
     }
 
     @Override

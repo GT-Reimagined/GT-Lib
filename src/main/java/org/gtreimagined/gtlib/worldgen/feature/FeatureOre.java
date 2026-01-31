@@ -8,6 +8,7 @@ import net.minecraft.world.level.biome.Biome.ClimateSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.Builder;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
+import net.minecraftforge.common.world.BiomeModifier.Phase;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
@@ -49,8 +50,8 @@ public class FeatureOre extends GTFeature<NoneFeatureConfiguration> {
 
 
     @Override
-    public void build(Holder<Biome> biomeHolder, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
-        gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, getPlacedFeatureFromKey(placedFeatureRegistry, GTLibConfiguredFeatures.ORE));
+    public void build(Phase phase, Holder<Biome> biomeHolder, ClimateSettings climate, BiomeSpecialEffects effects, BiomeGenerationSettingsBuilder gen, Builder spawns, Registry<PlacedFeature> placedFeatureRegistry) {
+        if (phase == Phase.ADD) gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, getPlacedFeatureFromKey(placedFeatureRegistry, GTLibConfiguredFeatures.ORE));
     }
 
     @Override
