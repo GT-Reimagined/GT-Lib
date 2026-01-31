@@ -1,8 +1,10 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IGTObject;
@@ -25,7 +27,7 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject
     @Getter
     protected String domain, id, tooltip = "", subDir = "";
     protected boolean enabled = true;
-    protected CreativeModeTab tab = Ref.TAB_ITEMS;
+    protected ResourceKey<CreativeModeTab> tab = GTCreativeTabs.ITEMS.getKey();
 
     public ItemBasic(String domain, String id, String subDir, Properties properties) {
         super(properties);
@@ -58,11 +60,11 @@ public class ItemBasic<T extends ItemBasic<T>> extends Item implements IGTObject
     }
 
     @Override
-    public boolean allowedIn(CreativeModeTab tab) {
+    public boolean allowedIn(ResourceKey<CreativeModeTab> tab) {
         return tab == this.tab;
     }
 
-    public T tab(CreativeModeTab tab) {
+    public T tab(ResourceKey<CreativeModeTab> tab) {
         this.tab = tab;
         return (T) this;
     }

@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.machine;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTAPI;
@@ -290,7 +291,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
     }
 
     @Override
-    public CreativeModeTab getItemGroup() {
+    public ResourceKey<CreativeModeTab> getItemGroup() {
         return getType().getGroup();
     }
 

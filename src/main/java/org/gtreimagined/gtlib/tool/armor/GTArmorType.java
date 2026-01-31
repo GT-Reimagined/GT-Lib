@@ -4,10 +4,10 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorItem.Type;
 import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.material.IMaterialTag;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
@@ -17,7 +17,6 @@ import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +42,7 @@ public class GTArmorType implements IGTObject {
     private final float extraToughness, extraKnockback;
     @Getter
     @Setter
-    private CreativeModeTab itemGroup;
+    private ResourceKey<CreativeModeTab> itemGroup;
     @Getter
     @Setter
     private ArmorItem.Type armorType;
@@ -74,7 +73,7 @@ public class GTArmorType implements IGTObject {
         this.extraArmor = extraArmor;
         this.extraToughness = extraToughness;
         this.extraKnockback = extraKnockback;
-        this.itemGroup = Ref.TAB_TOOLS;
+        this.itemGroup = GTCreativeTabs.TOOLS.getKey();
         this.armorType = armorType;
         this.event = SoundEvents.ARMOR_EQUIP_IRON;
         this.overlayLayers = 0;

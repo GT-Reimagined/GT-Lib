@@ -7,6 +7,7 @@ import lombok.Getter;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
@@ -127,7 +128,7 @@ public class MaterialTool extends DiggerItem implements IGTTool {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
+    public void fillItemCategory(ResourceKey<CreativeModeTab> group, NonNullList<ItemStack> list) {
         onGenericFillItemGroup(group, list, maxEnergy);
     }
 

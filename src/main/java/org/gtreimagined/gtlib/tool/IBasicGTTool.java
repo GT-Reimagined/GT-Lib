@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.tool;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.GTAPI;
@@ -70,7 +71,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     }
 
     @Override
-    default boolean allowedIn(CreativeModeTab tab){
+    default boolean allowedIn(ResourceKey<CreativeModeTab> tab){
         return tab == getGTToolType().getItemGroup();
     }
 

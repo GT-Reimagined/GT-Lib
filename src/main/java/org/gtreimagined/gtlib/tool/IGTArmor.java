@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.tool;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ArmorItem.Type;
 import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.Ref;
@@ -40,7 +41,7 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
     }
 
     @Override
-    default boolean allowedIn(CreativeModeTab tab) {
+    default boolean allowedIn(ResourceKey<CreativeModeTab> tab) {
         return tab == getGTArmorType().getItemGroup();
     }
 

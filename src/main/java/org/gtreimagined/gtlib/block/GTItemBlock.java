@@ -1,7 +1,8 @@
 package org.gtreimagined.gtlib.block;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
-import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
 import org.gtreimagined.gtlib.util.Utils;
@@ -24,9 +25,9 @@ public class GTItemBlock extends BlockItem implements ICreativeTabProvider {
     }
 
     @Override
-    public boolean allowedIn(CreativeModeTab tab) {
+    public boolean allowedIn(ResourceKey<CreativeModeTab> tab) {
         if (getBlock() instanceof ICreativeTabProvider provider && !provider.allowedIn(tab)) return false;
-        CreativeModeTab compareTab = getBlock() instanceof IItemBlockProvider provider ? provider.getItemGroup() : Ref.TAB_BLOCKS;
+        ResourceKey<CreativeModeTab> compareTab = getBlock() instanceof IItemBlockProvider provider ? provider.getItemGroup() : GTCreativeTabs.BLOCKS.getKey();
         return tab == compareTab;
     }
 }

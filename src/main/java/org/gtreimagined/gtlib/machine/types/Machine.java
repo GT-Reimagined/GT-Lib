@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
@@ -128,7 +129,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     protected GuiData guiData;
     @Getter
-    protected CreativeModeTab group = Ref.TAB_MACHINES;
+    protected ResourceKey<CreativeModeTab> group = GTCreativeTabs.MACHINES.getKey();
 
     /**
      * Texture Members
@@ -460,7 +461,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    public T setItemGroup(CreativeModeTab group) {
+    public T setItemGroup(ResourceKey<CreativeModeTab> group) {
         this.group = group;
         return (T) this;
     }

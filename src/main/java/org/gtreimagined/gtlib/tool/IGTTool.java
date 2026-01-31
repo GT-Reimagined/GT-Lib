@@ -2,7 +2,9 @@ package org.gtreimagined.gtlib.tool;
 
 import com.google.common.collect.Streams;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.Data;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.energy.ItemEnergyHandler;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
@@ -176,8 +178,8 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
         return tier;
     }
 
-    default void onGenericFillItemGroup(CreativeModeTab group, NonNullList<ItemStack> list, long maxEnergy) {
-        if (group != Ref.TAB_TOOLS) return;
+    default void onGenericFillItemGroup(ResourceKey<CreativeModeTab> group, NonNullList<ItemStack> list, long maxEnergy) {
+        if (group != GTCreativeTabs.TOOLS.getKey()) return;
         if (getGTToolType().isPowered()) {
             ItemStack stack = asItemStack(NULL, NULL);
             IEnergyHandlerItem h = stack.getCapability(TesseractCaps.ENERGY_HANDLER_CAPABILITY_ITEM).resolve().orElse(null);

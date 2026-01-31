@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.material;
 
-import org.gtreimagined.gtlib.Ref;
+import net.minecraft.resources.ResourceKey;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.item.ItemBasic;
@@ -12,7 +13,6 @@ import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.CodeUtils;
-import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import net.minecraft.ChatFormatting;
@@ -67,7 +67,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     public MaterialItem(String domain, MaterialType<?> type, Material material) {
         this(domain, type, material, new Properties());
-        tab(Ref.TAB_MATERIALS);
+        tab(GTCreativeTabs.MATERIALS.getKey());
     }
 
     public MaterialType<?> getType() {
@@ -79,7 +79,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(ResourceKey<CreativeModeTab> group, NonNullList<ItemStack> items) {
         if (allowedIn(group) && getType().isVisible()) items.add(new ItemStack(this));
     }
 

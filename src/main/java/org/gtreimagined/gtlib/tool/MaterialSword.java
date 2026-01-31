@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.tool;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
@@ -116,7 +117,7 @@ public class MaterialSword extends SwordItem implements IGTTool {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
+    public void fillItemCategory(ResourceKey<CreativeModeTab> group, NonNullList<ItemStack> list) {
         onGenericFillItemGroup(group, list, maxEnergy);
     }
 

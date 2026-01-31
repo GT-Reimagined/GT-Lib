@@ -7,7 +7,9 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.material.IMaterialTag;
@@ -91,7 +93,7 @@ public class GTToolType implements IGTObject {
     private float baseAttackDamage, baseAttackSpeed;
     @Getter
     @Setter
-    private CreativeModeTab itemGroup;
+    private ResourceKey<CreativeModeTab> itemGroup;
     @Getter
     protected TagKey<Item> tag, forgeTag; // Set?
     @Getter
@@ -150,7 +152,7 @@ public class GTToolType implements IGTObject {
         this.baseAttackDamage = baseAttackDamage;
         this.baseAttackSpeed = baseAttackSpeed;
         this.overlayLayers = 1;
-        this.itemGroup = Ref.TAB_TOOLS;
+        this.itemGroup = GTCreativeTabs.TOOLS.getKey();
         String tagString = id.equals("wrench") ? id + "es" : id.endsWith("s") ? id : id + "s";
         this.tag = TagUtils.getItemTag(new ResourceLocation(Ref.ID, tagString));
         this.forgeTag = TagUtils.getForgelikeItemTag("tools/".concat(tagString));

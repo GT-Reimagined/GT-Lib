@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.registration;
 
-import org.gtreimagined.gtlib.Ref;
+import net.minecraft.resources.ResourceKey;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -15,8 +16,8 @@ public interface IItemBlockProvider {
         return new GTItemBlock((Block) this);
     }
 
-    default CreativeModeTab getItemGroup() {
-        return Ref.TAB_BLOCKS;
+    default ResourceKey<CreativeModeTab> getItemGroup() {
+        return GTCreativeTabs.BLOCKS.getKey();
     }
 
     default Component getDisplayName(ItemStack stack) {

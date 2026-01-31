@@ -3,11 +3,13 @@ package org.gtreimagined.gtlib.block;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.material.PushReaction;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTLibMaterials;
@@ -88,8 +90,8 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
     }
 
     @Override
-    public boolean allowedIn(CreativeModeTab tab) {
-        return BEARING_ROCK.isVisible();
+    public boolean allowedIn(ResourceKey<CreativeModeTab> tab) {
+        return BEARING_ROCK.isVisible() && tab == GTCreativeTabs.BLOCKS.getKey();
     }
 
     @Override

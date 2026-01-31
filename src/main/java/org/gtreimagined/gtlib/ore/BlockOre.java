@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.ore;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -86,7 +87,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
     }
 
     @Override
-    public boolean allowedIn(CreativeModeTab tab) {
+    public boolean allowedIn(ResourceKey<CreativeModeTab> tab) {
         return stoneType == VanillaStoneTypes.STONE;
     }
 

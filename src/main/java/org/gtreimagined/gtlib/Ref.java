@@ -2,13 +2,13 @@ package org.gtreimagined.gtlib;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.gtreimagined.gtlib.client.itemgroup.GTItemGroup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.util.XSTR;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 
 public class Ref {
 
@@ -24,15 +24,6 @@ public class Ref {
     public static final String ID = "gtlib";
     public static final String NAME = "GTLib";
     public static final String SHARED_ID = "gt";
-
-    /**
-     * Creative Tabs
-     **/
-    public static final CreativeModeTab TAB_ITEMS = new GTItemGroup(ID, "items", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_TOOLS = new GTItemGroup(ID, "tools", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_BLOCKS = new GTItemGroup(ID, "blocks", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MATERIALS = new GTItemGroup(ID, "materials", () -> new ItemStack(Data.DEBUG_SCANNER));
-    public static final CreativeModeTab TAB_MACHINES = new GTItemGroup(ID, "machines", () -> new ItemStack(Data.DEBUG_SCANNER));
 
     /**
      * Sound Events

@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.tool.armor;
 
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.RenderHelper;
 import org.gtreimagined.gtlib.material.Material;
@@ -124,8 +126,8 @@ public class MaterialArmor extends ArmorItem implements IGTArmor, DyeableLeather
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
-        if (category != Ref.TAB_TOOLS) return;
+    public void fillItemCategory(ResourceKey<CreativeModeTab> category, NonNullList<ItemStack> items) {
+        if (category != GTCreativeTabs.TOOLS.getKey()) return;
         items.add(asItemStack());
     }
 

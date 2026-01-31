@@ -125,6 +125,7 @@ public class GTLib extends GTMod {
         GTLibDynamics.clientProvider(Ref.SHARED_ID,
                 () -> new GTLanguageProvider(Ref.SHARED_ID, Ref.NAME.concat(" en_us Localization (Shared)"), "en_us"));
         GTAPI.init();
+        GTCreativeTabs.init();
         GTLibNetwork.register();
         GTLibConfig.createConfig();
         /* Lifecycle events */

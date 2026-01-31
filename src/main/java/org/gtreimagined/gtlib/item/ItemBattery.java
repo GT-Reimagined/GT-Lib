@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
+import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.energy.ItemEnergyHandler;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -53,7 +54,7 @@ public class ItemBattery extends ItemBasic<ItemBattery> implements IEnergyItem {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(ResourceKey<CreativeModeTab> group, NonNullList<ItemStack> items) {
         if (this.allowedIn(group)) {
             ItemStack stack = new ItemStack(this);
             items.add(stack.copy());

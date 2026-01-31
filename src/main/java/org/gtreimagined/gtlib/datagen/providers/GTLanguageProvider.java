@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectRBTreeMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.block.BlockFrame;
@@ -45,7 +46,6 @@ import org.gtreimagined.gtlib.util.Utils;
 import net.devtech.arrp.json.lang.JLang;
 import net.minecraft.Util;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
@@ -56,7 +56,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -366,11 +365,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
     }
 
     private void processGTLibTranslations() {
-        add(Ref.TAB_BLOCKS, "GT Blocks");
-        add(Ref.TAB_ITEMS, "GT Items");
-        add(Ref.TAB_MACHINES, "GT Machines");
-        add(Ref.TAB_MATERIALS, "GT Material Items");
-        add(Ref.TAB_TOOLS, "GT Tools");
+        add(GTCreativeTabs.BLOCKS.get(), "GT Blocks");
+        add(GTCreativeTabs.ITEMS.get(), "GT Items");
+        add(GTCreativeTabs.MACHINES.get(), "GT Machines");
+        add(GTCreativeTabs.MATERIALS.get(), "GT Material Items");
+        add(GTCreativeTabs.TOOLS.get(), "GT Tools");
     }
 
     @Override
