@@ -94,6 +94,10 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
         return size.getId();
     }
 
+    public String createId(PipeSize size, String suffix){
+        return getSizeId(size) + "_" + this.material.getId() + "_" + suffix;
+    }
+
     public String getModelPath(PipeSize size){
         return "pipe/" +  switch (size){
             case HUGE -> "12x12";
