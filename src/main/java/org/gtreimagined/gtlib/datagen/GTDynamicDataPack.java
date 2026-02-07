@@ -35,20 +35,22 @@ public class GTDynamicDataPack implements PackResources {
     private final String name;
 
     static {
-        SERVER_DOMAINS.addAll(Sets.newHashSet(Ref.ID, Ref.SHARED_ID, "minecraft", "forge", "c"));
+        //SERVER_DOMAINS.addAll(Sets.newHashSet(Ref.ID, Ref.SHARED_ID, "minecraft", "forge", "c"));
     }
 
     public GTDynamicDataPack(String name, Collection<String> domains) {
         this.name = name;
-        SERVER_DOMAINS.addAll(domains);
+        //SERVER_DOMAINS.addAll(domains);
     }
 
     public static void clearServer() {
         CONTENTS.clearData();
+        SERVER_DOMAINS.clear();
     }
 
     private static void addToData(ResourceLocation location, byte[] bytes) {
         CONTENTS.addToData(location, bytes);
+        SERVER_DOMAINS.add(location.getNamespace());
     }
 
     public static void addWorldgenObject(IWorldgenObject<?> object) {
