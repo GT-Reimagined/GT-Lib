@@ -2,8 +2,11 @@ package org.gtreimagined.gtlib.client;
 
 import com.mojang.math.Transformation;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.util.RandomSource;
+import net.minecraftforge.client.model.DynamicFluidContainerModel;
+import net.minecraftforge.client.model.DynamicFluidContainerModel.Colors;
 import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.util.TransformationHelper;
@@ -53,6 +56,7 @@ import java.util.function.Predicate;
 
 public class ModelUtils {
     private static ModelBakery MODEL_BAKERY;
+    public static final ItemColor ITEM_COLORS = new Colors();
     //Assumes from North.
     /*public static Transformation transform(Direction side) {
         switch (side) {

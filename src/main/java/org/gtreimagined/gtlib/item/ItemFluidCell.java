@@ -1,13 +1,16 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
+import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.mixin.BucketItemAccessor;
+import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.TagUtils;
 import org.gtreimagined.gtlib.util.Utils;
@@ -57,7 +60,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
 
-public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidItem{
+public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidItem, IColorHandler {
 
     public final Material material;
     @Getter
@@ -395,5 +398,10 @@ public class ItemFluidCell extends ItemBasic<ItemFluidCell> implements IFluidIte
             map.put("cover", getDomain() + ":item/other/" + getId() + "_cover");
             map.put("fluid", getDomain() + ":item/other/" + getId() + "_fluid");
         });
+    }
+
+    @Override
+    public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
+        return ModelUtils.ITEM_COLORS.getColor(stack, i);
     }
 }

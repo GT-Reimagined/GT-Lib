@@ -1,11 +1,14 @@
 package org.gtreimagined.gtlib.item;
 
 import lombok.Getter;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
+import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -25,7 +28,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 
-public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidItem{
+public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidItem, IColorHandler {
 
     @Getter
     private final int capacity;
@@ -105,4 +108,10 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
             map.put("fluid", getDomain() + ":item/mask/icon_fluid");
         });
     }
+
+    @Override
+    public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
+        return ModelUtils.ITEM_COLORS.getColor(stack, i);
+    }
+
 }
