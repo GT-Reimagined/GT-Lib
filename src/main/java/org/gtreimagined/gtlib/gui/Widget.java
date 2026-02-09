@@ -277,27 +277,17 @@ public abstract class Widget implements IGuiElement {
 
     @OnlyIn(Dist.CLIENT)
     public int drawText(GuiGraphics graphics, Component text, float x, float y, int color) {
-        return graphics.drawString(Minecraft.getInstance().font, text, (int)x, (int)y, color);
+        return graphics.drawString(Minecraft.getInstance().font, text, (int)x, (int)y, color, false);
     }
 
     @OnlyIn(Dist.CLIENT)
     protected void drawTexture(GuiGraphics graphics, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
-        //RenderSystem.setShaderColor(1, 1, 1, 1);
-        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        //RenderSystem.setShaderTexture(0, loc);
-        //AbstractGui.blit(stack, left, top, x, y, sizeX, sizeY);
-
-
-        graphics.blit(loc, x, y, sizeX, sizeY, sizeX, sizeY);
+        graphics.blit(loc, left, top, x, y, sizeX, sizeY);
     }
 
     @OnlyIn(Dist.CLIENT)
     protected void drawTexture(GuiGraphics graphics, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY, int textureHeight, int textureWidth) {
-        //RenderSystem.setShaderColor(1, 1, 1, 1);
-        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        //RenderSystem.setShaderTexture(0, loc);
-        //AbstractGui.blit(stack, left, top, x, y, sizeX, sizeY);
-        graphics.blit(loc, x, y, sizeX, sizeY, sizeX, sizeY, textureHeight, textureWidth);
+        graphics.blit(loc, left, top, x, y, sizeX, sizeY, textureHeight, textureWidth);
     }
 
     public static WidgetSupplier builder(BiFunction<GuiInstance, IGuiElement, Widget> source) {

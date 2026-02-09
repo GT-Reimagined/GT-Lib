@@ -52,10 +52,6 @@ public class BackgroundWidget extends Widget {
     @OnlyIn(Dist.CLIENT)
     @Override
     protected void drawTexture(GuiGraphics graphics, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY) {
-        //RenderSystem.setShaderColor(1, 1, 1, 1);
-        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        //RenderSystem.setShaderTexture(0, loc);
-        //AbstractGui.blit(stack, left, top, x, y, sizeX, sizeY);
         graphics.blit(loc, left, top, x, y, sizeX, sizeY, this.guiXSize, this.guiYSize);
     }
 }
