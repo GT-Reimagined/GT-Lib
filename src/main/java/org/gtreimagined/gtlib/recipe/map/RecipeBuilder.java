@@ -88,12 +88,12 @@ public class RecipeBuilder {
     public IRecipe build() {
         if (itemsOutput != null && !itemsOutput.isEmpty() && !Utils.areItemsValid(itemsOutput.toArray(new ItemStack[0]))) {
             String id = this.id == null ? "": " Recipe ID: " + this.id;
-            Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT ITEMS INVALID!" + id + " Recipe map ID:" + recipeMap.getId());
+            Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT ITEMS INVALID!" + id + " Recipe map ID:" + recipeMap.getLoc());
             return Utils.getEmptyRecipe();
         }
         if (fluidsOutput != null && !fluidsOutput.isEmpty() && !Utils.areFluidsValid(fluidsOutput.toArray(new FluidStack[0]))) {
             String id = this.id == null ? "": " Recipe ID: " + this.id;
-            Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT FLUIDS INVALID!" + id + " Recipe map ID:" + recipeMap.getId());
+            Utils.onInvalidData("RECIPE BUILDER ERROR - OUTPUT FLUIDS INVALID!" + id + " Recipe map ID:" + recipeMap.getLoc());
             return Utils.getEmptyRecipe();
         }
         if (ingredientInput == null) ingredientInput = Collections.emptyList();
@@ -123,7 +123,7 @@ public class RecipeBuilder {
         recipe.setFake(fake);
         recipe.addTags(new ObjectOpenHashSet<>(tags));
         recipe.setId(this.id);
-        recipe.setMapId(this.recipeMap.getId());
+        recipe.setMapId(this.recipeMap.getLoc().toString());
         return recipe;
     }
 

@@ -186,16 +186,7 @@ public class GTLibDynamics {
             Map<String, List<IRecipe>> map = recipes.stream().collect(Collectors.groupingBy(IRecipe::getMapId));
 
             for (Map.Entry<String, List<IRecipe>> entry : map.entrySet()) {
-                String[] split = entry.getKey().split(":");
-                String name;
-                if (split.length == 2) {
-                    name = split[1];
-                } else if (split.length == 1) {
-                    name = split[0];
-                } else {
-                    continue;
-                }
-                IRecipeMap rmap = GTAPI.get(IRecipeMap.class, name);
+                IRecipeMap rmap = GTAPI.get(IRecipeMap.class, new ResourceLocation(entry.getKey()));
                 if (rmap != null){
                     entry.getValue().forEach(rmap::compileRecipe);
                     //entry.getValue().forEach(rmap::add);

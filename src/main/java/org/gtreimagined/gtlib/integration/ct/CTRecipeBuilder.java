@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.Recipe;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
@@ -30,7 +31,7 @@ public class CTRecipeBuilder {
     RecipeManager manager;
 
     public CTRecipeBuilder(String mapId, RecipeManager manager) {
-        IRecipeMap map = GTAPI.get(IRecipeMap.class, mapId);
+        IRecipeMap map = GTAPI.get(IRecipeMap.class, new ResourceLocation(mapId));
         if(!(map instanceof RecipeMap<?> recipeMap)) {
             throw new IllegalArgumentException("Invalid recipe map: " + mapId);
         }

@@ -72,7 +72,7 @@ public class RecipeMapRecipe implements EmiRecipe {
                 outputs.add(new GTFluidEmiStack(stack.getFluid(), stack.getTag(), stack.getAmount()));
             }
         }
-        this.map = GTAPI.get(RecipeMap.class, recipe.getMapId());
+        this.map = GTAPI.get(RecipeMap.class, recipe.getMapLoc());
         id = recipe.getTags().contains("emi_proxy") ? new ResourceLocation(recipe.getId().getNamespace(), "/" + recipe.getId().getPath()) : recipe.getId();
     }
     @Override

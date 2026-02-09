@@ -47,7 +47,7 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
     public T fromJson(ResourceLocation recipeId, JsonObject json) {
         try {
             String mapId = json.get("map").getAsString();
-            RecipeMap<?> map = GTAPI.get(RecipeMap.class, mapId);
+            RecipeMap<?> map = GTAPI.get(RecipeMap.class, new ResourceLocation(mapId));
             if (map == null) throw new IllegalStateException("Recipe map: " + mapId + " is unknown");
             if (map.getRecipeSerializer().getRecipeType() != this.getRecipeType()) throw new IllegalStateException("Recipe map: " + mapId + " doesn't use recipe type: " + this.getRecipeType());
             List<Ingredient> list = new ObjectArrayList<>();

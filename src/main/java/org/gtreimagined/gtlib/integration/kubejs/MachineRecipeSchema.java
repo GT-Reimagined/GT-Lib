@@ -11,12 +11,13 @@ import dev.latvian.mods.kubejs.recipe.component.ItemComponents;
 import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
 import dev.latvian.mods.kubejs.recipe.component.StringComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
+import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 
 public interface MachineRecipeSchema {
     StringComponent MAP_COMPONENT = new StringComponent("Unknown recipe map", s -> {
-        RecipeMap<?> rMap = GTAPI.get(RecipeMap.class, s);
+        RecipeMap<?> rMap = GTAPI.get(RecipeMap.class, new ResourceLocation(s));
         return rMap != null;
     });
     RecipeKey<String> MAP = MAP_COMPONENT.key("map");

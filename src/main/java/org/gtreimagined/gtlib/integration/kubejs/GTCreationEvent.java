@@ -62,7 +62,7 @@ public class GTCreationEvent extends EventJS {
     }
 
     public RecipeMap createRecipeMap(String id){
-        return GTAPI.register(RecipeMap.class, new RecipeMap<>(Ref.MOD_KJS, id, new RecipeBuilder()));
+        return new RecipeMap<>(Ref.MOD_KJS, id, new RecipeBuilder());
     }
 
 
@@ -83,7 +83,7 @@ public class GTCreationEvent extends EventJS {
     }
 
     public RecipeMap recipeMap(String id){
-        return GTAPI.get(RecipeMap.class, id);
+        return GTAPI.get(RecipeMap.class, new ResourceLocation(id));
     }
 
     public SlotType slotType(String id){

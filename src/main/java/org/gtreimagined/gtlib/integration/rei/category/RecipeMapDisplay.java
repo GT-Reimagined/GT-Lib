@@ -39,7 +39,7 @@ public class RecipeMapDisplay implements Display {
     private final IRecipe recipe;
 
     public RecipeMapDisplay(IRecipe recipe){
-        this.id = CategoryIdentifier.of(Ref.SHARED_ID, recipe.getMapId());
+        this.id = CategoryIdentifier.of(recipe.getMapLoc());
         this.recipe = recipe;
         List<EntryIngredient> fluidInputs = createFluidInputEntries(recipe.getInputFluids().stream().map(fluidIngredient -> Arrays.stream(fluidIngredient.getStacks()).map(REIUtils::toREIFLuidStack).toList()).toList());
         List<EntryIngredient> itemInputs = createInputEntries(recipe.getInputItems(), recipe);

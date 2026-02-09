@@ -10,6 +10,7 @@ import org.gtreimagined.gtlib.integration.xei.renderer.IRecipeInfoRenderer;
 import org.gtreimagined.gtlib.integration.xei.renderer.InfoRenderers;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
+import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public interface IRecipeMap extends ISharedGTObject {
+public interface IRecipeMap extends IGTObject {
     ItemStack[] EMPTY_ITEM = new ItemStack[0];
     FluidStack[] EMPTY_FLUID = new FluidStack[0];
 

@@ -97,9 +97,13 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
 
     String getMapId();
 
+    default ResourceLocation getMapLoc(){
+        return new ResourceLocation(getMapId());
+    }
+
     default JsonObject toJson() {
         JsonObject json = new JsonObject();
-        RecipeMap<?> recipeMap = GTAPI.get(RecipeMap.class, getMapId());
+        RecipeMap<?> recipeMap = GTAPI.get(RecipeMap.class, getMapLoc());
         if (recipeMap != null) {
             recipeMap.getRecipeSerializer().toJson(json, this);
         } else {

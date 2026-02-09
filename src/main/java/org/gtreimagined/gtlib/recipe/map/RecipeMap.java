@@ -56,14 +56,12 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRecipeMap {
+public class RecipeMap<B extends RecipeBuilder> implements IRecipeMap {
 
     private static final ItemStack[] EMPTY_ITEM = new ItemStack[0];
     private static final FluidStack[] EMPTY_FLUID = new FluidStack[0];
 
     private final ResourceLocation loc;
-    //in case we have some use for this
-    private final String domainCreatedWith;
     private final B builder;
     private final Branch LOOKUP = new Branch();
     private final List<IRecipe> RECIPES_TO_COMPILE = new ObjectArrayList<>();
@@ -94,10 +92,10 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
     // Data allows you to set related data to the map, e.g. which tier the gui
     // displays.
     public RecipeMap(String domain, String categoryId, B builder) {
-        this.loc = new ResourceLocation(Ref.SHARED_ID, categoryId);
-        this.domainCreatedWith = domain;
+        this.loc = new ResourceLocation(domain, categoryId);
         this.builder = builder;
         this.builder.setMap(this);
+        GTAPI.register(RecipeMap.class, this);
         GTAPI.register(IRecipeMap.class, this);
     }
 
@@ -200,6 +198,11 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
     }
 
     @Override
+    public String getDomain() {
+        return loc.getNamespace();
+    }
+
+    @Override
     public RecipeType<? extends IRecipe> getRecipeType() {
         return recipeSerializer.getRecipeType();
     }
@@ -295,7 +298,7 @@ public class RecipeMap<B extends RecipeBuilder> implements ISharedGTObject, IRec
                     ROOT_SPECIAL.add(ing);
             }));
         }
-        recipe.setMapId(this.loc.getPath());
+        recipe.setMapId(this.loc.toString());
     }
 
     protected void buildFromFluids(List<List<AbstractMapIngredient>> builder, List<FluidIngredient> ingredients,

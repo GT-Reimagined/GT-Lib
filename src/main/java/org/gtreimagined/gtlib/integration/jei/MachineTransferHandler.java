@@ -36,16 +36,7 @@ public class MachineTransferHandler implements IRecipeTransferInfo<ContainerBasi
 
     @Override
     public boolean canHandle(ContainerBasicMachine container, IRecipe recipe) {
-        String[] split = recipe.getMapId().split(":");
-        String name;
-        if (split.length == 2) {
-            name = split[1];
-        } else if (split.length == 1) {
-            name = split[0];
-        } else {
-            return false;
-        }
-        IRecipeMap rmap = GTAPI.get(IRecipeMap.class, name);
+        IRecipeMap rmap = GTAPI.get(IRecipeMap.class, recipe.getMapLoc());
         if (rmap == null) return false;
         Machine<?> machine = container.getTile().getMachineType();
         if (machine.getRecipeMap(container.getTile().getMachineTier()) == null || machine.getRecipeMap(container.getTile().getMachineTier()) != rmap) return false;
