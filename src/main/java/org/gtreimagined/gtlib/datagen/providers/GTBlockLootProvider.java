@@ -101,9 +101,18 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
             });
             GTAPI.all(BlockFrame.class, this::add);
             GTAPI.all(BlockStone.class, b -> {
-                if (b.getType() instanceof CobbleStoneType && b.getSuffix().isEmpty()) {
-                    tables.put(b, b2 -> createSingleItemTableWithSilkTouch(b, ((CobbleStoneType) b.getType()).getBlock("cobble")));
-                    return;
+                if (b.getType() instanceof CobbleStoneType cobbleStoneType) {
+                    if (b.getSuffix().isEmpty()) {
+                        if (b.getType().getMaterial().has(ROCK)) {
+                            tables.put(b, b2 -> createSilkDropWithHammer(b, cobbleStoneType.getBlock("cobble").asItem(), ROCK.get(cobbleStoneType.getMaterial()), 4));
+                        } else {
+                            tables.put(b, b2 -> createSingleItemTableWithSilkTouch(b, cobbleStoneType.getBlock("cobble")));
+                        }
+                        return;
+                    } else if (b.getSuffix().equals("cobble") && cobbleStoneType.getMaterial().has(ROCK)){
+                        tables.put(b, b2 -> createSilkDropWithHammer(b, b.asItem(), ROCK.get(cobbleStoneType.getMaterial()), 4));
+                        return;
+                    }
                 }
                 this.add(b);
             });
@@ -192,6 +201,23 @@ public class GTBlockLootProvider extends BlockLootSubProvider implements DataPro
             builder.withPool(this.applyExplosionCondition(block, loot));
         } else {
             LootPoolSingletonContainer.Builder<?> pool = LootItem.lootTableItem(primaryDrop).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE));
+            if (hammerDrop != null) pool.when(HAMMER.invert());
+            builder = createSilkTouchDispatchTable(block, applyExplosionDecay(block, pool));
+        }
+        if (hammerDrop != null){
+            builder.withPool(this.applyExplosionCondition(hammerDrop, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).when(HAMMER).add(LootItem.lootTableItem(hammerDrop).apply(SetItemCountFunction.setCount(ConstantValue.exactly(hammerAmount))))));
+        }
+        return builder;
+    }
+
+    public LootTable.Builder createSilkDropWithHammer(Block block, Item primaryDrop, Item hammerDrop, int hammerAmount){
+        LootTable.Builder builder = LootTable.lootTable();
+        if (block.asItem() == primaryDrop){
+            LootPool.Builder loot = LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(primaryDrop));
+            if (hammerDrop != null) loot.when(HAMMER.invert());
+            builder.withPool(this.applyExplosionCondition(block, loot));
+        } else {
+            LootPoolSingletonContainer.Builder<?> pool = LootItem.lootTableItem(primaryDrop);
             if (hammerDrop != null) pool.when(HAMMER.invert());
             builder = createSilkTouchDispatchTable(block, applyExplosionDecay(block, pool));
         }
