@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.worldgen.feature;
 
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.util.Mth;
@@ -77,7 +78,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
         BlockState existing;
         int maxHeight;
         boolean isAir;
-        Material lastMaterial;
+        Pair<StoneType, Material> lastMaterialAndStone;
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 int tX = pos.getX() + i, tZ = pos.getZ() + j;
@@ -96,7 +97,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                 int minHeight = world.getMinBuildHeight();
                 for (int tY = -63; tY < maxHeight; tY++) {
                     int offsetY = tY + 64;
-                    lastMaterial = null;
+                    lastMaterialAndStone = null;
                     BlockPos offset = pos.offset(i, offsetY, j);
                     existing = world.getBlockState(offset);
                     isAir = existing.isAir();
@@ -130,7 +131,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                                         topStoneType = rockType;
                                     }
                                 } else {
-                                    lastMaterial = type != null ? type.getMaterial() : null;
+                                    lastMaterialAndStone = type != null ? Pair.of(type, type.getMaterial()) : null;
                                     if (type != null){
                                         topStoneType = type;
                                     }
@@ -144,7 +145,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                         if (layers[1] == layers[5]) {
                             for (StoneLayerOre ore : layers[3].ores()) {
                                 if (ore.canPlace(offset, rand, world) && WorldGenHelper.addOre(world, offset, ore.material(), layers[0] == layers[6])) {
-                                    lastMaterial = ore.material();
+                                    lastMaterialAndStone = Pair.of(layers[3].type(), ore.material());
                                     break;
                                 }
                             }
@@ -153,7 +154,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                             if (type != null && type.doesGenerateOre()) {
                                 for (StoneLayerOre ore : StoneLayer.getCollision(type, layers[5].block().defaultBlockState(), layers[1].block().defaultBlockState())) {
                                     if (ore.canPlace(offset, rand, world) && WorldGenHelper.addOre(world, offset, ore.material(), true)) {
-                                        lastMaterial = ore.material();
+                                        lastMaterialAndStone = Pair.of(type, ore.material());
                                         break;
                                     }
                                 }
@@ -161,12 +162,16 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                         }
                     }
 
-                    if (!placedRock && lastMaterial != null && lastMaterial.has(GTMaterialTypes.ORE) && lastMaterial.has(BEARING_ROCK)) {
+                    if (!placedRock && lastMaterialAndStone != null && lastMaterialAndStone.right().has(GTMaterialTypes.ORE) && lastMaterialAndStone.right().has(BEARING_ROCK)) {
                         BlockState below = world.getBlockState(offset.offset(0, -1, 0));
                         int y = Math.min(world.getHeight(Heightmap.Types.OCEAN_FLOOR, offset.getX(), offset.getZ()), world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, offset.getX(), offset.getZ()));
                         if (!below.isAir() && below != WorldGenHelper.WATER_STATE && GTLibConfig.STONE_LAYER_ORE_ROCKS.get() && GTLibConfig.SURFACE_ROCKS.get()) {
-                            if (WorldGenHelper.setRock(world, offset.mutable().setY(y).immutable(), lastMaterial, below, GTLibConfig.STONE_LAYER_ORE_ROCK_CHANCE.get())){
+                            if (WorldGenHelper.setRock(world, new BlockPos(offset.getX(), y, offset.getZ()), lastMaterialAndStone.right(), below, GTLibConfig.STONE_LAYER_ORE_ROCK_CHANCE.get())){
                                 placedRock = true;
+                            } else if (lastMaterialAndStone.left().getMaterial().has(ROCK)) {
+                                if (WorldGenHelper.setRock(world, new BlockPos(offset.getX(), y, offset.getZ()), Material.NULL, lastMaterialAndStone.left().getState(), GTLibConfig.STONE_LAYER_ROCK_CHANCE.get())) {
+                                    placedRock = true;
+                                }
                             }
                         }
                     }
