@@ -282,7 +282,7 @@ public class BlockOre extends BlockMaterialStone implements ITextureProvider, IM
         if (silkTouchLevel == 0 && material.has(MaterialTags.EXP_RANGE)) {
             if (level instanceof ServerLevel serverLevel) {
                 List<ItemStack> self = getDrops(state, serverLevel, pos, level.getBlockEntity(pos));
-                if (self.stream().anyMatch(i -> i.getItem() == this.asItem())) {
+                if (self.stream().anyMatch(i -> i.getItem() == this.asItem() || i.is(RAW_ORE.getTag()))) {
                     return 0;
                 }
             }
