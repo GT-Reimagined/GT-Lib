@@ -260,7 +260,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
                         return;
                     }
                 }
-                add(Ref.ID + ".rei.group." + t.getId(), ((String) t.getLang().apply(GTLibMaterials.Iron)).replace(" Iron", "") + "s");
+                add(Ref.ID + ".rei.group." + t.getId(), Utils.getLocalizedType(t) + "s");
             });
             GTAPI.all(StoneType.class, s -> {
                 if (s instanceof CobbleStoneType){

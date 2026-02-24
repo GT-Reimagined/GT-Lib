@@ -32,17 +32,17 @@ public class StoneRecipes {
         provider.addItemRecipe(output, "minecraft", "", "furnaces", Items.FURNACE,
                 ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS), "CCC", "C C", "CCC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.DROPPER,
-                ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone)), "CCC", "C C", "CRC");
+                ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', Items.REDSTONE), "CCC", "C C", "CRC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.OBSERVER,
-                ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone), 'Q', ForgeTags.GEMS_QUARTZ_ALL), "CCC", "RRQ", "CCC");
+                ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', Items.REDSTONE, 'Q', ForgeTags.GEMS_QUARTZ_ALL), "CCC", "RRQ", "CCC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.LEVER,
                 ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', ROD.getMaterialTag(Wood)), "R", "C");
         //provider.addItemRecipe(output, "minecraft", "", "redstone", Items.PISTON,
         //        ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone), 'I', INGOT.getMaterialTag(Iron), 'W', ItemTags.PLANKS), "WWW", "CIC", "CRC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.DISPENSER,
-                ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', DUST.getMaterialTag(Redstone), 'B', Items.BOW), "CCC", "CBC", "CRC");
+                ImmutableMap.of('C', ItemTags.STONE_CRAFTING_MATERIALS, 'R', Items.REDSTONE, 'B', Items.BOW), "CCC", "CBC", "CRC");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.REPEATER,
-                of('T', Items.REDSTONE_TORCH, 'R', DUST.getMaterialTag(Redstone), 'S', TagUtils.getForgelikeItemTag("stone")), "TRT", "SSS");
+                of('T', Items.REDSTONE_TORCH, 'R', Items.REDSTONE, 'S', TagUtils.getForgelikeItemTag("stone")), "TRT", "SSS");
         provider.addItemRecipe(output, "minecraft", "", "redstone", Items.COMPARATOR,
                 of('T', Items.REDSTONE_TORCH, 'Q', ForgeTags.GEMS_QUARTZ_ALL, 'S', TagUtils.getForgelikeItemTag("stone")), " T ", "TQT", "SSS");
         provider.addItemRecipe(output, "stones", Items.SAND, of('S', DUST.getMaterialTag(Sand)), "SS", "SS");

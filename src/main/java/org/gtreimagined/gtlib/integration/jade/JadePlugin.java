@@ -22,8 +22,10 @@ public class JadePlugin implements IWailaPlugin {
     public void register(IWailaCommonRegistration registration) {
         registration.registerBlockDataProvider(EUProvider.INSTANCE, BlockEntity.class);
         registration.registerBlockDataProvider(MachineProvider.INSTANCE, BlockEntityMachine.class);
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(Data.getMaterialTiermap().get(2)), WRENCH.getToolItem(GTLibMaterials.Diamond), WRENCH.getToolItem(GTLibMaterials.NetherizedDiamond)));
-        HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(2)), WIRE_CUTTER.getToolItem(GTLibMaterials.Diamond), WIRE_CUTTER.getToolItem(GTLibMaterials.NetherizedDiamond)));
+        if (Data.getMaterialTiermap().containsKey(2) && Data.getMaterialTiermap().containsKey(3) && Data.getMaterialTiermap().containsKey(4)) {
+            HarvestToolProvider.registerHandler(new SimpleToolHandler("wrench", WRENCH.getToolType(), WRENCH.getToolItem(Data.getMaterialTiermap().get(2)), WRENCH.getToolItem(Data.getMaterialTiermap().get(3)), WRENCH.getToolItem(Data.getMaterialTiermap().get(4))));
+            HarvestToolProvider.registerHandler(new SimpleToolHandler("wire_cutter", WIRE_CUTTER.getToolType(), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(2)), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(3)), WIRE_CUTTER.getToolItem(Data.getMaterialTiermap().get(4))));
+        }
     }
 
     @Override

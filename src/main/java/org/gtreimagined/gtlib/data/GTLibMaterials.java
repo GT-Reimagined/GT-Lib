@@ -25,6 +25,7 @@ public class GTLibMaterials {
     public static Material Bedrock = GTAPI.register(Material.class, new Material(Ref.ID, "bedrock", 0x404040, NONE));
     public static Material Prismarine = GTAPI.register(Material.class, new Material(Ref.ID, "prismarine", 0x6eb2a5, NONE));
     public static Material DarkPrismarine = GTAPI.register(Material.class, new Material(Ref.ID, "dark_prismarine", 0x587d6c, NONE));
+    public static Material Wood = GTAPI.register(Material.class, new Material(Ref.ID, "wood", 0x643200, TextureSet.WOOD));
     //Vanilla Metal/Gem Materials
     public static Material Iron = GTAPI.register(Material.class, new Material(Ref.ID, "iron", 0xc8c8c8, METALLIC, Fe));
     public static Material Gold = GTAPI.register(Material.class, new Material(Ref.ID, "gold", 0xffe650, SHINY, Au));
@@ -33,7 +34,6 @@ public class GTLibMaterials {
     public static Material Glowstone = GTAPI.register(Material.class, new Material(Ref.ID, "glowstone", 0xffff00, SHINY));
     public static Material Sugar = GTAPI.register(Material.class, new Material(Ref.ID, "sugar", 0xfafafa, DULL));
     public static Material Bone = GTAPI.register(Material.class, new Material(Ref.ID, "bone", 0xb3b3b3, DULL));
-    public static Material Wood = GTAPI.register(Material.class, new Material(Ref.ID, "wood", 0x643200, TextureSet.WOOD));
     public static Material Blaze = GTAPI.register(Material.class, new Material(Ref.ID, "blaze", 0xffc800, NONE)).setMassMultiplierAndDivider(3,2);
     public static Material Flint = GTAPI.register(Material.class, new Material(Ref.ID, "flint", 0x002040, FLINT));
     public static Material Charcoal = GTAPI.register(Material.class, new Material(Ref.ID, "charcoal", 0x644646, LIGNITE));

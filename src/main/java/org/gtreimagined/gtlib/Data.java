@@ -26,6 +26,7 @@ import org.gtreimagined.gtlib.item.ItemCover;
 import org.gtreimagined.gtlib.item.ItemFluidIcon;
 import org.gtreimagined.gtlib.item.ScannerItem;
 import org.gtreimagined.gtlib.machine.types.BasicMachine;
+import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.tool.enchantment.ElectricEnchantment;
 import net.minecraft.ChatFormatting;
@@ -54,7 +55,7 @@ public class Data {
 
     public static ItemFluidIcon FLUID_ICON = new ItemFluidIcon();
     //public static Machine<?> MACHINE_INVALID = new Machine<>(Ref.ID, "invalid");
-    private static final Int2ObjectArrayMap<org.gtreimagined.gtlib.material.Material> MATERIAL_TIERMAP = new Int2ObjectArrayMap<>();
+    private static final Int2ObjectArrayMap<Material> MATERIAL_TIERMAP = new Int2ObjectArrayMap<>();
 
     public static final MobType CREEPER = new MobType();
 
@@ -142,11 +143,11 @@ public class Data {
         GTMaterialTypes.postInit();
     }
 
-    public static Int2ObjectArrayMap<org.gtreimagined.gtlib.material.Material> getMaterialTiermap() {
+    public static Int2ObjectArrayMap<Material> getMaterialTiermap() {
         return MATERIAL_TIERMAP;
     }
 
-    public static void setMaterialTier(org.gtreimagined.gtlib.material.Material material, int tier){
+    public static void setMaterialTier(Material material, int tier){
         MATERIAL_TIERMAP.put(tier, material);
     }
 }
