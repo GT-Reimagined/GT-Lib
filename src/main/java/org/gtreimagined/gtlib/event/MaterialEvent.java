@@ -94,7 +94,6 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
     public T asOre(boolean small, IMaterialTag... tags) {
         asDust(GTMaterialTypes.ORE, GTMaterialTypes.BEARING_ROCK, GTMaterialTypes.CRUSHED_ORE, GTMaterialTypes.PURIFIED_ORE, GTMaterialTypes.REFINED_ORE, GTMaterialTypes.IMPURE_DUST, GTMaterialTypes.PURE_DUST, GTMaterialTypes.RAW_ORE, GTMaterialTypes.RAW_ORE_BLOCK);
         if (small) flags(GTMaterialTypes.SMALL_ORE);
-        if (!has(EXP_RANGE)) EXP_RANGE.add(material, UniformInt.of(1, 5));
         flags(tags);
         return (T) this;
     }
