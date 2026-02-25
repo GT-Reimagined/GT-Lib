@@ -249,64 +249,7 @@ public class GTMaterialTypes {
     }
 
     private static void replacements(){
-        NUGGET.replacement(GTLibMaterials.Iron, () -> Items.IRON_NUGGET);
-        NUGGET.replacement(GTLibMaterials.Gold, () -> Items.GOLD_NUGGET);
-        INGOT.replacement(GTLibMaterials.Iron, () -> Items.IRON_INGOT);
-        INGOT.replacement(GTLibMaterials.Gold, () -> Items.GOLD_INGOT);
-        INGOT.replacement(GTLibMaterials.Netherite, () -> Items.NETHERITE_INGOT);
-        INGOT.replacement(GTLibMaterials.Copper, () -> Items.COPPER_INGOT);
-        INGOT.replacement(GTLibMaterials.NetheriteScrap, () -> Items.NETHERITE_SCRAP);
-
-
-        DUST.replacement(GTLibMaterials.Redstone, () -> Items.REDSTONE);
-        DUST.replacement(GTLibMaterials.Glowstone, () -> Items.GLOWSTONE_DUST);
-        DUST.replacement(GTLibMaterials.Blaze, () -> Items.BLAZE_POWDER);
-        DUST.replacement(GTLibMaterials.Sugar, () -> Items.SUGAR);
-        RAW_ORE.replacement(GTLibMaterials.Iron, () -> Items.RAW_IRON);
-        RAW_ORE.replacement(GTLibMaterials.Copper, () -> Items.RAW_COPPER);
-        RAW_ORE.replacement(GTLibMaterials.Gold, () -> Items.RAW_GOLD);
-        GEM.replacement(GTLibMaterials.Flint, () -> Items.FLINT);
-        GEM.replacement(GTLibMaterials.Diamond, () -> Items.DIAMOND);
-        GEM.replacement(GTLibMaterials.Emerald, () -> Items.EMERALD);
-        GEM.replacement(GTLibMaterials.Lapis, () -> Items.LAPIS_LAZULI);
-        GEM.replacement(GTLibMaterials.Quartz, () -> Items.QUARTZ);
-        GEM.replacement(GTLibMaterials.Coal, () -> Items.COAL);
-        GEM.replacement(GTLibMaterials.Charcoal, () -> Items.CHARCOAL);
-        GEM.replacement(GTLibMaterials.EnderEye, () -> Items.ENDER_EYE);
-        GEM.replacement(GTLibMaterials.EnderPearl, () -> Items.ENDER_PEARL);
-
-        ROD.replacement(GTLibMaterials.Blaze, () -> Items.BLAZE_ROD);
-        ROD.replacement(GTLibMaterials.Bone, () -> Items.BONE);
         ROD.replacement(Wood, () -> Items.STICK);
-
-        BLOCK.replacement(GTLibMaterials.Coal, () -> Items.COAL_BLOCK);
-        BLOCK.replacement(GTLibMaterials.Iron, () -> Items.IRON_BLOCK);
-        BLOCK.replacement(GTLibMaterials.Copper, () -> Items.COPPER_BLOCK);
-        BLOCK.replacement(GTLibMaterials.Gold, () -> Items.GOLD_BLOCK);
-        BLOCK.replacement(GTLibMaterials.Diamond, () -> Items.DIAMOND_BLOCK);
-        BLOCK.replacement(GTLibMaterials.Emerald, () -> Items.EMERALD_BLOCK);
-        BLOCK.replacement(GTLibMaterials.Lapis, () -> Items.LAPIS_BLOCK);
-        BLOCK.replacement(GTLibMaterials.Netherite, () -> Items.NETHERITE_BLOCK);
-        RAW_ORE_BLOCK.replacement(GTLibMaterials.Iron, () -> Items.RAW_IRON_BLOCK);
-        RAW_ORE_BLOCK.replacement(GTLibMaterials.Copper, () -> Items.RAW_COPPER_BLOCK);
-        RAW_ORE_BLOCK.replacement(GTLibMaterials.Gold, () -> Items.RAW_GOLD_BLOCK);
-        ORE.replacement(GTLibMaterials.Coal, VanillaStoneTypes.STONE, () -> Items.COAL_ORE);
-        ORE.replacement(GTLibMaterials.Coal, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COAL_ORE);
-        ORE.replacement(GTLibMaterials.Iron, VanillaStoneTypes.STONE, () -> Items.IRON_ORE);
-        ORE.replacement(GTLibMaterials.Iron, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_IRON_ORE);
-        ORE.replacement(GTLibMaterials.Copper, VanillaStoneTypes.STONE, () -> Items.COPPER_ORE);
-        ORE.replacement(GTLibMaterials.Copper, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_COPPER_ORE);
-        ORE.replacement(GTLibMaterials.Gold, VanillaStoneTypes.STONE, () -> Items.GOLD_ORE);
-        ORE.replacement(GTLibMaterials.Gold, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_GOLD_ORE);
-        ORE.replacement(GTLibMaterials.Redstone, VanillaStoneTypes.STONE, () -> Items.REDSTONE_ORE);
-        ORE.replacement(GTLibMaterials.Redstone, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_REDSTONE_ORE);
-        ORE.replacement(GTLibMaterials.Emerald, VanillaStoneTypes.STONE, () -> Items.EMERALD_ORE);
-        ORE.replacement(GTLibMaterials.Emerald, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_EMERALD_ORE);
-        ORE.replacement(GTLibMaterials.Lapis, VanillaStoneTypes.STONE, () -> Items.LAPIS_ORE);
-        ORE.replacement(GTLibMaterials.Lapis, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_LAPIS_ORE);
-        ORE.replacement(GTLibMaterials.Diamond, VanillaStoneTypes.STONE, () -> Items.DIAMOND_ORE);
-        ORE.replacement(GTLibMaterials.Diamond, VanillaStoneTypes.DEEPSLATE, () -> Items.DEEPSLATE_DIAMOND_ORE);
-        ORE.replacement(GTLibMaterials.Quartz, VanillaStoneTypes.NETHERRACK, () -> Items.NETHER_QUARTZ_ORE);
     }
 
     private static void dependents() {

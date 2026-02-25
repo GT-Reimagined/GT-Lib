@@ -44,7 +44,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
-import static org.gtreimagined.gtlib.data.GTLibMaterials.Quartz;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
 import static org.gtreimagined.gtlib.util.TagUtils.*;
 import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
@@ -63,7 +62,7 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
 
     private void gtLibTags() {
         this.tag(TagUtils.getForgelikeItemTag("pistons")).add(Items.PISTON, Items.STICKY_PISTON);
-        this.tag(ForgeTags.GEMS_QUARTZ_ALL).addTag(GEM.getMaterialTag(Quartz));
+        this.tag(ForgeTags.GEMS_QUARTZ_ALL).addTag(Tags.Items.GEMS_QUARTZ);
         this.tag(TagUtils.getForgelikeItemTag("stone")).add(Items.BASALT);
     }
 

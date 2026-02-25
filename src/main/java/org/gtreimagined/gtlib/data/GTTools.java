@@ -72,21 +72,6 @@ public class GTTools {
         if (side == Dist.CLIENT) {
             clientInit();
         }
-        PICKAXE.addReplacement(Iron, () -> Items.IRON_PICKAXE);
-        PICKAXE.addReplacement(Gold, () -> Items.GOLDEN_PICKAXE);
-        PICKAXE.addReplacement(Diamond, () -> Items.DIAMOND_PICKAXE);
-        AXE.addReplacement(Iron, () -> Items.IRON_AXE);
-        AXE.addReplacement(Gold, () -> Items.GOLDEN_AXE);
-        AXE.addReplacement(Diamond, () -> Items.DIAMOND_AXE);
-        SHOVEL.addReplacement(Iron, () -> Items.IRON_SHOVEL);
-        SHOVEL.addReplacement(Gold, () -> Items.GOLDEN_SHOVEL);
-        SHOVEL.addReplacement(Diamond, () -> Items.DIAMOND_SHOVEL);
-        SWORD.addReplacement(Iron, () -> Items.IRON_SWORD);
-        SWORD.addReplacement(Gold, () -> Items.GOLDEN_SWORD);
-        SWORD.addReplacement(Diamond, () -> Items.DIAMOND_SWORD);
-        HOE.addReplacement(Iron, () -> Items.IRON_HOE);
-        HOE.addReplacement(Gold, () -> Items.GOLDEN_HOE);
-        HOE.addReplacement(Diamond, () -> Items.DIAMOND_HOE);
     }
 
     public static void postInit(){
