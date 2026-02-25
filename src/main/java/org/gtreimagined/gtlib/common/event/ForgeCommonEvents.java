@@ -1,5 +1,8 @@
 package org.gtreimagined.gtlib.common.event;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
@@ -14,6 +17,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
 import org.gtreimagined.gtlib.capability.fluid.FluidHandlerItem;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
+import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.datagen.GTLibDynamics;
 import org.gtreimagined.gtlib.datagen.GTLoot;
 import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
@@ -28,6 +32,7 @@ import org.gtreimagined.gtlib.pipe.TileTicker;
 import org.gtreimagined.gtlib.proxy.ClientHandler;
 import org.gtreimagined.gtlib.structure.StructureCache;
 import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.tool.behaviour.BehaviourTreeFelling;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.client.Minecraft;
@@ -136,6 +141,26 @@ public class ForgeCommonEvents {
             }
         }
         GTLoot.onLootTableLoad(event.getTable().getPool("main"), event.getName());
+    }
+
+    @SubscribeEvent
+    public static void onBreakSpeedEvent(PlayerEvent.BreakSpeed event) {
+        if (event.getState().is(BlockTags.LOGS) && event.getEntity().getMainHandItem().is(GTTools.AXE.getTag())){
+            if (event.getPosition().isPresent()){
+                BlockPos pos = event.getPosition().get();
+                int logs = 1;
+                for (int y = pos.getY() + 1; y < event.getEntity().level().getMaxBuildHeight(); y++) {
+                    BlockPos newPos = new BlockPos(pos.getX(), y, pos.getZ());
+                    BlockState newState = event.getEntity().level().getBlockState(newPos);
+                    if (newState.is(BlockTags.LOGS)) {
+                        logs++;
+                    }
+                }
+                if (logs > 1) {
+                    event.setNewSpeed(event.getOriginalSpeed() / logs);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
