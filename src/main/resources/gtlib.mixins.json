@@ -21,7 +21,6 @@
     "client.VertexFormatAccessor"
   ],
   "mixins": [
-    "AxeItemMixin",
     "BiomeAccessor",
     "BlockEntityMixin",
     "BlockLootTablesAccessor",
