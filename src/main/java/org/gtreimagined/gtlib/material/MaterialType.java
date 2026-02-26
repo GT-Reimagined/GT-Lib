@@ -37,8 +37,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.gtreimagined.gtlib.util.Utils.getLocalizedMaterialType;
-import static org.gtreimagined.gtlib.util.Utils.getLocalizedType;
+import static org.gtreimagined.gtlib.util.Utils.*;
 
 public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistryEntryProvider {
 
@@ -221,6 +220,14 @@ public class MaterialType<T> implements IMaterialTag, ISharedGTObject, IRegistry
                 all().add(m2);
                 m2.types.add(this);
             }
+        }
+    }
+
+    @Override
+    public void remove(Material... m) {
+        for (Material m2 : m) {
+            all().remove(m2);
+            m2.types.remove(this);
         }
     }
 
