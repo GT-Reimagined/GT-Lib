@@ -186,7 +186,7 @@ public class GTShapedRecipeBuilder {
         if (this.pattern.isEmpty()) {
             throw new IllegalStateException("No pattern is defined for shaped recipe " + id + "!");
         } else if (this.result.get(0).isEmpty()) {
-            throw new IllegalStateException("Resulting ItemStack cannot be empty!");
+            throw new IllegalStateException("Resulting ItemStack cannot be empty! Recipe: " + id);
         } else {
             Set<Character> set = Sets.newHashSet(this.key.keySet());
             set.remove(' ');
