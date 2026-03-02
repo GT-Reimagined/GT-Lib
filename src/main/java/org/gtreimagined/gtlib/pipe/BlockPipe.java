@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.Getter;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.GTAPI;
@@ -378,6 +379,16 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
             }
         }
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
+        return size.ordinal() > 5 && super.isPathfindable(state, level, pos, type);
+    }
+
+    @Override
+    public boolean useShapeForLightOcclusion(BlockState state) {
+        return true;
     }
 
     @Override
