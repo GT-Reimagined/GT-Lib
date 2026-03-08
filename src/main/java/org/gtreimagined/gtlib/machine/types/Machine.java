@@ -1,8 +1,14 @@
 package org.gtreimagined.gtlib.machine.types;
 
 import brachy.modularui.api.drawable.IDrawable;
+import brachy.modularui.drawable.UITexture;
 import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.widgets.slot.FluidSlot;
+import brachy.modularui.widgets.slot.ItemSlot;
+import brachy.modularui.widgets.slot.ModularSlot;
 import com.google.common.collect.ImmutableMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -18,6 +24,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -35,6 +42,8 @@ import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
+import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
+import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.cover.CoverFactory;
@@ -135,7 +144,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> ModularPanel.defaultPanel(this.getId(), guiData.getXSize(), guiData.getYSize());
     @Getter
-    protected IPanelFunction backGroundFunction = (modularPanel, guiData1, syncManager, settings) -> {
+    protected IPanelFunction backGroundFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
         if (guiData.hasGTIcon()) {
             modularPanel.child(guiData.getGtIcon().asWidget().pos(guiData.getGtIconPos().x, guiData.getGtIconPos().y));
         }
@@ -144,7 +153,35 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         }
     };
     @Getter
-    protected IPanelFunction slotFunction = (modularPanel, guiData1, syncManager, settings) -> {};
+    protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
+        Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
+        for (SlotData<?> slotData : getSlots(machine.getMachineTier())){
+            ResourceLocation overlay = slotData.getTexture().getPath().equals(Ref.ID) && (slotData.getTexture().getNamespace().endsWith("item.png")) ? null : slotData.getTexture();
+            UITexture slotOverlay = overlay != null ? UITexture.fullImage(overlay) : null;
+            boolean item = slotData.getType() != SlotType.FL_IN && slotData.getType() != SlotType.FL_OUT;
+            slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
+            if (item){
+                Slot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
+                ItemSlot itemSlot = new ItemSlot().pos(slotData.getX(), slotData.getY());
+                if (slot instanceof ModularSlot modularSlot){
+                    itemSlot.slot(modularSlot);
+                }
+                modularPanel.child(itemSlot);
+                //if (slotOverlay != null) modularPanel.child(slotOverlay.asWidget().pos(slotData.getX(), slotData.getY()));
+            } else {
+                FluidTanks tanks = slotData.getType() == SlotType.FL_IN ? machine.fluidHandler.get().getInputTanks() : machine.fluidHandler.get().getOutputTanks();
+                FluidSlot fluidSlot = new FluidSlot().pos(slotData.getX(), slotData.getY()).alwaysShowFull(true)
+                        .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))));
+                modularPanel.child(fluidSlot);
+                //if (slotOverlay != null) fluidSlot.
+            }
+            slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {
+                if (b == null) return 0;
+                return b + 1;
+            });
+
+        }
+    };
     @Getter
     protected List<IPanelFunction> guiFunctions = new ArrayList<>();
     @Getter

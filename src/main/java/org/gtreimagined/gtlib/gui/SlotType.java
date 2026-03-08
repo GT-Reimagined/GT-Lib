@@ -96,4 +96,9 @@ public class SlotType<T extends Slot> implements IGTObject, IMachineEvent {
             return true;
         }
     }
+
+    public enum Type {
+        ITEM,
+        FLUID
+    }
 }

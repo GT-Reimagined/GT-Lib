@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui.slot;
 
+import brachy.modularui.widgets.slot.ModularSlot;
 import lombok.Getter;
 import org.gtreimagined.gtlib.capability.IFilterableHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
@@ -10,23 +11,26 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 
-public class AbstractSlot<T extends Slot> extends SlotItemHandler {
+public class AbstractSlot<T extends Slot> extends ModularSlot {
     protected final int index;
     public final SlotType<T> type;
     protected final IGuiHandler holder;
+    private final int x1;
+    private final int y1;
     @Getter
     private final IItemHandler container;
 
     public AbstractSlot(SlotType<T> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
-        super(stackHandler, index, x, y);
+        super(stackHandler, index);
         this.container = stackHandler;
         this.index = index;
         this.type = type;
         this.holder = tile;
+        x1 = x;
+        this.y1 = y;
     }
 
     @Override
