@@ -659,11 +659,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    public T setGuiTiers(ImmutableMap.Builder<Tier, Tier> tiers) {
-        guiData.setTieredGui(tiers);
-        return (T) this;
-    }
-
     /**
      * Set the multiblock structure for this machine, for all tiers.
      * Useless if the tile is not a multiblock.

@@ -23,11 +23,9 @@ public class GuiData {
 
     @Getter
     protected ResourceLocation loc;
-    protected ResourceLocation override = null;
 
     @Getter
     protected MenuHandler<?> menuHandler;
-    protected ImmutableMap<Tier, Tier> guiTiers;
 
     protected Map<String, ResourceLocation> backgroundTextures = new Object2ObjectOpenHashMap<>();
 
@@ -47,18 +45,21 @@ public class GuiData {
     @Getter
     protected MachineWidgetData machineData = new MachineWidgetData(this);
 
-    private final int buttons = 0;
-
     @Setter
     private ISlotProvider<?> slots;
     @Getter
     private Map<String, String> themeMap = new HashMap<>();
     @Getter
     @Setter
+    @Deprecated
     private int playerYOffset = 0, playerXOffset = 0;
     @Getter
     @Setter
-    private int xSize = 176, textureXSize = 256, ySize = 166, textureYSize = 256;
+    private int xSize = 176, ySize = 166;
+    @Getter
+    @Setter
+    @Deprecated
+    private int textureXSize = 256, textureYSize = 256;
 
     @Getter
     @Setter
@@ -79,27 +80,15 @@ public class GuiData {
         this.menuHandler = menuHandler;
     }
 
-    public GuiData setTieredGui(ImmutableMap.Builder<Tier, Tier> guiTiers) {
-        this.guiTiers = guiTiers.build();
-        return this;
-    }
-
     public ISlotProvider<?> getSlots() {
         if (slots == null) throw new IllegalStateException("Called GuiData::getSlots without setting it first");
         return slots;
     }
 
     public ResourceLocation getTexture(Tier tier, String type) {
-        if (override != null) return override;
        if (backgroundTextures.containsKey(tier.getId())) return backgroundTextures.get(tier.getId());
        return backgroundTextures.get("");
     }
-
-    /*public void screenCreationCallBack(GTContainerScreen<? extends T> screen, IGuiHandler handler, @Nullable Object lookup) {
-        this.widgets.forEach(t -> screen.addWidget(t.apply(screen, handler)));
-        List<BiFunction<GTContainerScreen<? extends T>, IGuiHandler, Widget>> wid = this.objectWidgets.get(lookup);
-        if (wid != null) wid.forEach(t -> t.apply(screen, handler));
-    }*/
 
     public boolean enablePlayerSlots() {
         return enablePlayerSlots;
@@ -120,24 +109,22 @@ public class GuiData {
         return this;
     }
 
-    public GuiData setOverrideLocation(ResourceLocation override) {
-        this.override = override;
-        return this;
-    }
-
+    @Deprecated
     public GuiData setBackgroundTexture(String textureName){
         this.backgroundTextures.put("", new ResourceLocation(loc.getNamespace(), "textures/gui/background/" + textureName + ".png"));
         return this;
     }
+    @Deprecated
     public GuiData setBackgroundTexture(Tier tier, String textureName){
         this.backgroundTextures.put(tier.getId(), new ResourceLocation(loc.getNamespace(), "textures/gui/background/" + textureName + ".png"));
         return this;
     }
-
+    @Deprecated
     public GuiData setBackgroundTexture(ResourceLocation textureName){
         this.backgroundTextures.put("", new ResourceLocation(textureName.getNamespace(), "textures/gui/background/" + textureName.getPath() + ".png"));
         return this;
     }
+    @Deprecated
     public GuiData setBackgroundTexture(Tier tier, ResourceLocation textureName){
         this.backgroundTextures.put(tier.getId(), new ResourceLocation(textureName.getNamespace(), "textures/gui/background/" + textureName.getPath() + ".png"));
         return this;
