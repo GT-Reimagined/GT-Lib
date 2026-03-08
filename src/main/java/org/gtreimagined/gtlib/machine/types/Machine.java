@@ -133,6 +133,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> new ModularPanel<>(this.getLoc().toString());
     @Getter
+    protected IPanelFunction backGroundFunction = (modularPanel, guiData1, syncManager, settings) -> {};
+    @Getter
     protected IPanelFunction slotFunction = (modularPanel, guiData1, syncManager, settings) -> {};
     @Getter
     protected List<IPanelFunction> guiFunctions = new ArrayList<>();

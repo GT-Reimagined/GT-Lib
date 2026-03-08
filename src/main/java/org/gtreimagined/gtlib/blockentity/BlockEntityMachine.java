@@ -264,6 +264,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Override
     public ModularPanel<?> buildUI(PosGuiData posGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
         ModularPanel<?> panel = type.getModularPanelSupplier().get();
+        type.getBackGroundFunction().modifyPanel(panel, posGuiData, panelSyncManager, uiSettings);
         type.getSlotFunction().modifyPanel(panel, posGuiData, panelSyncManager, uiSettings);
         type.getGuiFunctions().forEach(f -> f.modifyPanel(panel, posGuiData, panelSyncManager, uiSettings));
         return panel;
