@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui;
 
+import brachy.modularui.api.drawable.IDrawable;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
@@ -8,10 +9,13 @@ import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.registration.IGTObject;
+import org.gtreimagined.gtlib.util.int2;
 import org.gtreimagined.gtlib.util.int4;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Accessors(chain = true)
@@ -27,6 +31,15 @@ public class GuiData {
 
     protected Map<String, ResourceLocation> backgroundTextures = new Object2ObjectOpenHashMap<>();
 
+    @Accessors(fluent = true)
+    @Getter
+    private boolean hasGTIcon = true;
+    @Getter
+    @Setter
+    private int2 gtIconPos = new int2(153, 64);
+    @Getter
+    @Setter
+    private IDrawable gtIcon = GTGuiTextures.GT_LOGO;
     protected boolean enablePlayerSlots = true;
     @Getter
     protected int4 area = new int4(3, 3, 170, 80);
@@ -38,6 +51,8 @@ public class GuiData {
 
     @Setter
     private ISlotProvider<?> slots;
+    @Getter
+    private Map<String, String> themeMap = new HashMap<>();
     @Getter
     @Setter
     private int playerYOffset = 0, playerXOffset = 0;
@@ -92,6 +107,11 @@ public class GuiData {
 
     public GuiData setEnablePlayerSlots(boolean enablePlayerSlots) {
         this.enablePlayerSlots = enablePlayerSlots;
+        return this;
+    }
+
+    public GuiData setHasGTIcon(boolean hasGTIcon) {
+        this.hasGTIcon = hasGTIcon;
         return this;
     }
 

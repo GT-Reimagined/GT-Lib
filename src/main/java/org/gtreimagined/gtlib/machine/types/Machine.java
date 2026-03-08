@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.machine.types;
 
+import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.screen.ModularPanel;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -56,6 +57,7 @@ import org.gtreimagined.gtlib.machine.IShapeGetter;
 import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -134,7 +136,12 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> ModularPanel.defaultPanel(this.getId(), guiData.getXSize(), guiData.getYSize());
     @Getter
     protected IPanelFunction backGroundFunction = (modularPanel, guiData1, syncManager, settings) -> {
-
+        if (guiData.hasGTIcon()) {
+            modularPanel.child(guiData.getGtIcon().asWidget().pos(guiData.getGtIconPos().x, guiData.getGtIconPos().y));
+        }
+        if (guiData.enablePlayerSlots()) {
+            modularPanel.bindPlayerInventory();
+        }
     };
     @Getter
     protected IPanelFunction slotFunction = (modularPanel, guiData1, syncManager, settings) -> {};
