@@ -67,6 +67,8 @@ import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
+import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
+import org.gtreimagined.gtlib.mui.widgets.GTItemSlot;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -162,18 +164,20 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
             slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
             if (item){
                 Slot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
-                ItemSlot itemSlot = new ItemSlot().pos(slotData.getX(), slotData.getY());
+                GTItemSlot itemSlot = new GTItemSlot();
+                itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
                 if (slot instanceof ModularSlot modularSlot){
                     itemSlot.slot(modularSlot);
                 }
                 modularPanel.child(itemSlot);
-                //if (slotOverlay != null) modularPanel.child(slotOverlay.asWidget().pos(slotData.getX(), slotData.getY()));
+                if (slotOverlay != null) itemSlot.drawable(slotOverlay);
             } else {
                 FluidTanks tanks = slotData.getType() == SlotType.FL_IN ? machine.fluidHandler.get().getInputTanks() : machine.fluidHandler.get().getOutputTanks();
-                FluidSlot fluidSlot = new FluidSlot().pos(slotData.getX(), slotData.getY()).alwaysShowFull(true)
+                GTFluidSlot fluidSlot = new GTFluidSlot();
+                fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
                         .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))));
                 modularPanel.child(fluidSlot);
-                //if (slotOverlay != null) fluidSlot.
+                if (slotOverlay != null) fluidSlot.drawable(slotOverlay);
             }
             slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {
                 if (b == null) return 0;
