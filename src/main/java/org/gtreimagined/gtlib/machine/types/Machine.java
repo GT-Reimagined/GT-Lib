@@ -131,9 +131,11 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     protected GuiData guiData;
     @Getter
-    protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> new ModularPanel<>(this.getLoc().toString());
+    protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> ModularPanel.defaultPanel(this.getId(), guiData.getXSize(), guiData.getYSize());
     @Getter
-    protected IPanelFunction backGroundFunction = (modularPanel, guiData1, syncManager, settings) -> {};
+    protected IPanelFunction backGroundFunction = (modularPanel, guiData1, syncManager, settings) -> {
+
+    };
     @Getter
     protected IPanelFunction slotFunction = (modularPanel, guiData1, syncManager, settings) -> {};
     @Getter
