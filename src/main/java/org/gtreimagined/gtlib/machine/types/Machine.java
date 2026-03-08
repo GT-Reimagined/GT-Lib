@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.machine.types;
 
+import brachy.modularui.screen.ModularPanel;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -50,6 +51,7 @@ import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.IMachineColorHandlerBlock;
 import org.gtreimagined.gtlib.machine.IMachineColorHandlerItem;
+import org.gtreimagined.gtlib.machine.IPanelFunction;
 import org.gtreimagined.gtlib.machine.IShapeGetter;
 import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -128,6 +130,12 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      **/
     @Getter
     protected GuiData guiData;
+    @Getter
+    protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> new ModularPanel<>(this.getLoc().toString());
+    @Getter
+    protected IPanelFunction slotFunction = (modularPanel, guiData1, syncManager, settings) -> modularPanel;
+    @Getter
+    protected List<IPanelFunction> guiFunctions = new ArrayList<>();
     @Getter
     protected ResourceKey<CreativeModeTab> group = GTCreativeTabs.MACHINES.getKey();
 

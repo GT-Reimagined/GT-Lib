@@ -1,5 +1,11 @@
 package org.gtreimagined.gtlib.blockentity;
 
+import brachy.modularui.api.IUIHolder;
+import brachy.modularui.factory.PosGuiData;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.ModularScreen;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.value.sync.PanelSyncManager;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import net.minecraft.util.RandomSource;
@@ -107,7 +113,7 @@ import static org.gtreimagined.gtlib.gui.event.GuiEvents.ITEM_EJECT;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
-public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode {
+public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode, IUIHolder<PosGuiData> {
 
     /**
      * Open container. Allows for better syncing
@@ -247,6 +253,20 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Override
     public GuiData getGui() {
         return getMachineType().getGuiData();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public ModularScreen createScreen(PosGuiData posGuiData, ModularPanel<?> modularPanel) {
+        return null;
+    }
+
+    @Override
+    public ModularPanel<?> buildUI(PosGuiData posGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
+        ModularPanel<?> panel = type.getModularPanelSupplier().get();
+        type.getSlotFunction().modifyPanel(panel, posGuiData, panelSyncManager, uiSettings);
+        type.getGuiFunctions().forEach(f -> f.modifyPanel(panel, posGuiData, panelSyncManager, uiSettings));
+        return panel;
     }
 
     /**
