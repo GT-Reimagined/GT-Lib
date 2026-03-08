@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.machine;
 
+import brachy.modularui.factory.UIFactories;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import net.minecraft.core.Direction.Axis;
@@ -242,9 +243,10 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         return InteractionResult.SUCCESS;
                     }
                     if (getType().has(MachineFlag.GUI) && tile.canPlayerOpenGui(player)) {
-                        NetworkHooks.openScreen((ServerPlayer) player, tile, extra -> {
+                        UIFactories.blockEntity().open(player, pos);
+                        /*NetworkHooks.openScreen((ServerPlayer) player, tile, extra -> {
                             extra.writeBlockPos(pos);
-                        });
+                        });*/
                         return InteractionResult.SUCCESS;
                     }
                     return InteractionResult.PASS;
