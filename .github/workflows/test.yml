@@ -24,5 +24,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           ignorePreReleases: true
+          outputFile: build/changelog.md
       - name: Output changelog
-        run: echo "${{steps.github_release.outputs.changelog}}"
+        run: cat build/changelog.md
