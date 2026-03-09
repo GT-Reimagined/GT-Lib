@@ -69,6 +69,7 @@ import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.mui.widgets.GTItemSlot;
+import org.gtreimagined.gtlib.mui.widgets.MachineStateWidget;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -80,6 +81,7 @@ import org.gtreimagined.gtlib.texture.ITextureHandler;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Dir;
 import org.gtreimagined.gtlib.util.Utils;
+import org.gtreimagined.gtlib.util.int2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,6 +155,14 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         if (guiData.enablePlayerSlots()) {
             modularPanel.bindPlayerInventory();
         }
+        int2 size = guiData.getMachineData().getMachineStateSize();
+        UITexture.Builder builder = new UITexture.Builder();
+        builder.imageSize(size.x * 2, size.y)
+                .location(guiData.getMachineData().getMachineStateTexture(machine.getMachineTier()));
+
+        modularPanel.child(new MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState, builder
+                        .subAreaXYWH(0, 0, size.x, size.y).build(), builder.subAreaXYWH(size.x, 0, size.x, size.y).build(), size)
+                .pos(guiData.getMachineData().getMachineStatePos().x, guiData.getMachineData().getMachineStatePos().y));
     };
     @Getter
     protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
