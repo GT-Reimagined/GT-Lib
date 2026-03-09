@@ -17,6 +17,8 @@ jobs:
           submodules: recursive
       - name: Fetch tags
         run: git fetch --tags
+      - name: Make build dir
+        run: mkdir build
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v6
