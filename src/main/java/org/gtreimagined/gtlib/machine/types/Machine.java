@@ -3,7 +3,11 @@ package org.gtreimagined.gtlib.machine.types;
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.value.sync.InteractionSyncHandler;
+import brachy.modularui.widget.ParentWidget;
+import brachy.modularui.widgets.PagedWidget;
 import brachy.modularui.widgets.slot.FluidSlot;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
@@ -41,12 +45,14 @@ import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
+import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.cover.CoverFactory;
+import org.gtreimagined.gtlib.cover.CoverOutput;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.gui.BarDir;
@@ -69,6 +75,8 @@ import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.mui.widgets.GTItemSlot;
+import org.gtreimagined.gtlib.mui.widgets.IOWidgetFluid;
+import org.gtreimagined.gtlib.mui.widgets.IOWidgetItem;
 import org.gtreimagined.gtlib.mui.widgets.MachineStateWidget;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
@@ -101,7 +109,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.gtreimagined.gtlib.Data.COVEROUTPUT;
-import static org.gtreimagined.gtlib.machine.MachineFlag.RECIPE;
+import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 import static org.gtreimagined.gtlib.machine.Tier.NONE;
 
 /**
@@ -162,6 +170,28 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         modularPanel.child(new MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState, builder.build())
                 .pos(guiData.getMachineData().getMachineStatePos().x, guiData.getMachineData().getMachineStatePos().y)
                 .size(size.x, size.y));
+        if (machine.getOutputFacing() != null &&
+                machine.coverHandler.map(c -> c.getOutputCover() instanceof CoverOutput).orElse(false) &&
+                !(machine instanceof BlockEntityMultiMachine<?>)){
+            ParentWidget<?> widget = new ParentWidget<>();
+            if (this.has(ITEM)) {
+                IOWidgetItem itemWidget = new IOWidgetItem(machine).pos(guiData.getMachineData().getIoPos().x + 18, guiData.getMachineData().getIoPos().y);
+                syncManager.syncValue("item_output",
+                        new BooleanSyncValue(() -> machine.coverHandler.map(
+                                t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false),
+                                itemWidget::setItem));
+                widget.child(itemWidget);
+            }
+            if (this.has(FLUID)) {
+                IOWidgetFluid fluidWidget = new IOWidgetFluid(machine).pos(guiData.getMachineData().getIoPos().x, guiData.getMachineData().getIoPos().y);
+                syncManager.syncValue("fluid_output",
+                        new BooleanSyncValue(() -> machine.coverHandler.map(
+                                t -> ((CoverOutput) t.getOutputCover()).shouldOutputFluids()).orElse(false),
+                                fluidWidget::setFluid));
+                widget.child(fluidWidget);
+            }
+            modularPanel.child(widget);
+        }
     };
     @Getter
     protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {

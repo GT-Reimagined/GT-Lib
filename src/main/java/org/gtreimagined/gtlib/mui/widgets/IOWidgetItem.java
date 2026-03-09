@@ -20,8 +20,8 @@ public class IOWidgetItem extends ButtonWidget<IOWidgetItem> {
 
     public IOWidgetItem(IGuiHandler handler) {
         this.size(18, 18);
-        itemOff = GTGuiTextures.IO_BUTTON.getSubArea(0, 0, 0.5f, 0.5f);
-        itemOn = GTGuiTextures.IO_BUTTON.getSubArea(0.5f, 0, 1, 0.5f);
+        itemOff = GTGuiTextures.IO_BUTTON.getSubArea(0, 0.5f, 0.5f, 1);
+        itemOn = GTGuiTextures.IO_BUTTON.getSubArea(0.5f, 0.5f, 1, 1);
         tooltip(new RichTooltip().add(Utils.translatable("gtlib.tooltip.io_widget.item")));
         this.onMousePressed((mouseX, mouseY, button) -> this.mouseClicked(mouseX, mouseY, button, handler));
     }
@@ -39,18 +39,7 @@ public class IOWidgetItem extends ButtonWidget<IOWidgetItem> {
         return true;
     }
 
-    /*
-    @Override
-    public void init() {
-        super.init();
-        ContainerMachine<?> m = (ContainerMachine<?>) gui.container;
-        if (hasItem)
-            gui.syncBoolean(() -> (m.getTile().coverHandler.map(t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false)), this::setItem, SERVER_TO_CLIENT);
-        if (hasFluid)
-            gui.syncBoolean(() -> (m.getTile().coverHandler.map(t -> ((CoverOutput) t.getOutputCover()).shouldOutputFluids()).orElse(false)), this::setFluid, SERVER_TO_CLIENT);
-    }*/
-
-    private void setItem(boolean item) {
+    public void setItem(boolean item) {
         this.itemState = item;
     }
 
