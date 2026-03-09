@@ -1,0 +1,28 @@
+name: Test Changelog
+on:
+  workflow_dispatch:
+jobs:
+  release:
+    strategy:
+      matrix:
+        # Use these Java versions
+        java: [17]
+        # and run on both Linux and Windows
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout GT-Lib
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Fetch tags
+        run: git fetch --tags
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          ignorePreReleases: true
+      - name: Output changelog
+        run: echo "${{steps.github_release.outputs.changelog}}"
