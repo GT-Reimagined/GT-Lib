@@ -24,7 +24,7 @@ public class MachineWidgetData {
     private final GuiData parent;
     public MachineWidgetData(GuiData parent){
         this.parent = parent;
-        this.machineStateTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/button/machine_state.png"));
+        this.machineStateTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/widgets/machine_state.png"));
         this.progressTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/progress_bars/default.png"));
     }
 

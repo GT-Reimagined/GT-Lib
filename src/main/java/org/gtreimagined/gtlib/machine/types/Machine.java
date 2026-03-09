@@ -159,10 +159,9 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         UITexture.Builder builder = new UITexture.Builder();
         builder.imageSize(size.x * 2, size.y)
                 .location(guiData.getMachineData().getMachineStateTexture(machine.getMachineTier()));
-
-        modularPanel.child(new MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState, builder
-                        .subAreaXYWH(0, 0, size.x, size.y).build(), builder.subAreaXYWH(size.x, 0, size.x, size.y).build(), size)
-                .pos(guiData.getMachineData().getMachineStatePos().x, guiData.getMachineData().getMachineStatePos().y));
+        modularPanel.child(new MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState, builder.build())
+                .pos(guiData.getMachineData().getMachineStatePos().x, guiData.getMachineData().getMachineStatePos().y)
+                .size(size.x, size.y));
     };
     @Getter
     protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {

@@ -16,4 +16,6 @@ public class GTGuiTextures {
     }
 
     public static final UITexture GT_LOGO = UITexture.fullImage(Ref.ID,"textures/gui/icons/gt_logo.png");
+
+    public static final UITexture MACHINE_STATE = UITexture.builder().imageSize(20, 11).location(Ref.ID, "textures/gui/widgets/machine_state.png").build();
 }

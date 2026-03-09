@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.mui.widgets;
 
 import brachy.modularui.api.drawable.IDrawable;
+import brachy.modularui.drawable.UITexture;
 import brachy.modularui.screen.RichTooltip;
 import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetThemeEntry;
@@ -21,17 +22,14 @@ public class MachineStateWidget extends Widget<MachineStateWidget> {
     private final Supplier<MachineState> machineStateSupplier;
     private final IDrawable textureRegular, texturePowerLoss;
     @org.jetbrains.annotations.NotNull
-    private final int2 size;
     protected final Tier tier;
 
-    public MachineStateWidget(Tier tier, boolean isRecipe, Supplier<MachineState> machineStateSupplier, IDrawable texture, IDrawable texturePowerLoss, int2 size) {
+    public MachineStateWidget(Tier tier, boolean isRecipe, Supplier<MachineState> machineStateSupplier, UITexture texture) {
         this.tier = tier;
         this.isRecipe = isRecipe;
         this.machineStateSupplier = machineStateSupplier;
-        this.textureRegular = texture;
-        this.texturePowerLoss = texturePowerLoss;
-        this.size = size;
-        this.size(size.x, size.y);
+        this.textureRegular = texture.getSubArea(0,0,0.5f,1);
+        this.texturePowerLoss = texture.getSubArea(0.5f, 0, 1, 1);
     }
 
     @Override
@@ -39,9 +37,9 @@ public class MachineStateWidget extends Widget<MachineStateWidget> {
         MachineState machineState = machineStateSupplier.get();
         if (isRecipe) {
             if (machineState == MachineState.POWER_LOSS){
-                texturePowerLoss.drawAtZero(context, size.x, size.y, widgetTheme.getTheme(false));
+                texturePowerLoss.drawAtZero(context, this.getArea().getWidth(), this.getArea().getHeight(), widgetTheme.getTheme(false));
             } else {
-                textureRegular.drawAtZero(context, size.x, size.y, widgetTheme.getTheme(false));
+                textureRegular.drawAtZero(context, this.getArea().getWidth(), this.getArea().getHeight(), widgetTheme.getTheme(false));
             }
         }
     }
