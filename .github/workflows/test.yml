@@ -27,5 +27,9 @@ jobs:
         with:
           ignorePreReleases: true
           outputFile: build/changelog.md
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>\n#{{RELEASE_DIFF}}"
+            }
       - name: Output changelog
         run: cat build/changelog.md
