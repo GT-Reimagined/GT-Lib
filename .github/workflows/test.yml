@@ -35,7 +35,7 @@ jobs:
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>\n#{{RELEASE_DIFF}}",
-              "empty_template": "{{RELEASE_DIFF}}"
+              "empty_template": "#{{RELEASE_DIFF}}"
             }
       - name: Output changelog
         run: cat build/changelog.md
