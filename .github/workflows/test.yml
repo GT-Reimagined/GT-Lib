@@ -2,7 +2,7 @@ name: Test Changelog
 on:
   workflow_dispatch:
 jobs:
-  release:
+  test-changelog:
     strategy:
       matrix:
         # Use these Java versions
@@ -19,6 +19,11 @@ jobs:
         run: git fetch --tags
       - name: Make build dir
         run: mkdir build
+      - name: Create Tag
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "0.5.1" -m "Release 0.5.1"
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v6
@@ -29,7 +34,8 @@ jobs:
           outputFile: build/changelog.md
           configurationJson: |
             {
-              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>\n#{{RELEASE_DIFF}}"
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>\n#{{RELEASE_DIFF}}",
+              "empty_template": "{{RELEASE_DIFF}}"
             }
       - name: Output changelog
         run: cat build/changelog.md
