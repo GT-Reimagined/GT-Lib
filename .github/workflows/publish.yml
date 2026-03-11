@@ -17,6 +17,15 @@ jobs:
           submodules: recursive
       - name: Fetch tags
         run: git fetch --tags
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          ignorePreReleases: true
+      - name: Create Release
+        run: echo "${{steps.github_release.outputs.changelog}}"
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Setup JDK ${{ matrix.java }}
