@@ -163,35 +163,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         if (guiData.enablePlayerSlots()) {
             modularPanel.bindPlayerInventory();
         }
-        int2 size = guiData.getMachineData().getMachineStateSize();
-        UITexture.Builder builder = new UITexture.Builder();
-        builder.imageSize(size.x * 2, size.y)
-                .location(guiData.getMachineData().getMachineStateTexture(machine.getMachineTier()));
-        modularPanel.child(new MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState, builder.build())
-                .pos(guiData.getMachineData().getMachineStatePos().x, guiData.getMachineData().getMachineStatePos().y)
-                .size(size.x, size.y));
-        if (machine.getOutputFacing() != null &&
-                machine.coverHandler.map(c -> c.getOutputCover() instanceof CoverOutput).orElse(false) &&
-                !(machine instanceof BlockEntityMultiMachine<?>)){
-            ParentWidget<?> widget = new ParentWidget<>();
-            if (this.has(ITEM)) {
-                IOWidgetItem itemWidget = new IOWidgetItem(machine).pos(guiData.getMachineData().getIoPos().x + 18, guiData.getMachineData().getIoPos().y);
-                syncManager.syncValue("item_output",
-                        new BooleanSyncValue(() -> machine.coverHandler.map(
-                                t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false),
-                                itemWidget::setItem));
-                widget.child(itemWidget);
-            }
-            if (this.has(FLUID)) {
-                IOWidgetFluid fluidWidget = new IOWidgetFluid(machine).pos(guiData.getMachineData().getIoPos().x, guiData.getMachineData().getIoPos().y);
-                syncManager.syncValue("fluid_output",
-                        new BooleanSyncValue(() -> machine.coverHandler.map(
-                                t -> ((CoverOutput) t.getOutputCover()).shouldOutputFluids()).orElse(false),
-                                fluidWidget::setFluid));
-                widget.child(fluidWidget);
-            }
-            modularPanel.child(widget);
-        }
+
     };
     @Getter
     protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {

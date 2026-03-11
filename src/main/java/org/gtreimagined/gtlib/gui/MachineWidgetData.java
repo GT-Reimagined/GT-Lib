@@ -1,7 +1,10 @@
 package org.gtreimagined.gtlib.gui;
 
+import brachy.modularui.widgets.ProgressWidget.Direction;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.util.int2;
@@ -9,9 +12,17 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
+@Accessors(chain = true)
 public class MachineWidgetData {
     @Getter
+    @Setter
+    @Deprecated
     public BarDir dir = BarDir.LEFT;
+    @Getter
+    @Setter
+    public Direction direction = Direction.LEFT;
+    @Getter
+    @Setter
     public boolean barFill = true;
     @Getter
     protected int2 progressSize = new int2(20, 18), progressPos = new int2(72, 18);
@@ -70,16 +81,6 @@ public class MachineWidgetData {
 
     public MachineWidgetData setMachineStateLocation(Tier tier, String name){
         this.progressTextures.put(tier.getId(), new ResourceLocation(parent.loc.getNamespace(), "textures/gui/button/" + name + ".png"));
-        return this;
-    }
-
-    public MachineWidgetData setDir(BarDir dir) {
-        this.dir = dir;
-        return this;
-    }
-
-    public MachineWidgetData setBarFill(boolean barFill) {
-        this.barFill = barFill;
         return this;
     }
 
