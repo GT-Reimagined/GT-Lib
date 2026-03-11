@@ -45,7 +45,7 @@ env:
   CURSEFORGE_ID: 1159821
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -130,7 +130,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           ignorePreReleases: true
-          outputFile: build/changelog.md
+          outputFile: ${{ env.CHANGELOG_LOCATION }}
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>\nFull Changelog: #{{RELEASE_DIFF}}",
@@ -143,21 +143,9 @@ jobs:
           tag_name: "${{ inputs.version }}"
           token: ${{ secrets.GITHUB_TOKEN }}
           files: "build/libs/*.jar"
-          body_path: build/changelog.md
+          body_path: ${{ env.CHANGELOG_LOCATION }}
           fail_on_unmatched_files: true
           make_latest: "true"
-
-      - name: Get Changelog
-        run: |
-          mkdir -p build
-          RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ inputs.version }}"
-          RELEASE_JSON=$(curl -sSL $RELEASE_URL)
-          CHANGELOG="$(echo $RELEASE_JSON | jq -r '.body')"
-          if [ "$CHANGELOG" == "null" ]; then
-            echo "No changelog found" > $CHANGELOG_LOCATION
-          else
-            echo "$CHANGELOG" > $CHANGELOG_LOCATION
-          fi
 
       - name: Publish to Curseforge
         if: ${{ inputs.publish-cf }}
