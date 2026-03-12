@@ -1,3 +1,6 @@
 [submodule "TesseractAPI"]
 	path = TesseractAPI
 	url = https://github.com/GT-Reimagined/TesseractAPI
+[submodule "ModularUI-Modern"]
+    path = ModularUI-Modern
+    url = https://github.com/brachy84/ModularUI-Modern
