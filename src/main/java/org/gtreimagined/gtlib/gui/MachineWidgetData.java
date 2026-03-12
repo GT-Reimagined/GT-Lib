@@ -20,7 +20,7 @@ public class MachineWidgetData {
     public BarDir dir = BarDir.LEFT;
     @Getter
     @Setter
-    public Direction direction = Direction.LEFT;
+    public Direction direction = Direction.RIGHT;
     @Getter
     @Setter
     public boolean barFill = true;
