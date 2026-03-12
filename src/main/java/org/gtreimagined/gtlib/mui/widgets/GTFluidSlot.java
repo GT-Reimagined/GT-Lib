@@ -27,7 +27,6 @@ import java.util.List;
 public class GTFluidSlot extends FluidSlot {
     @Setter
     IDrawable drawable;
-    private FluidSlotSyncHandler syncHandler2;
 
     @Override
     public @Nullable IDrawable getBackground() {
@@ -35,14 +34,8 @@ public class GTFluidSlot extends FluidSlot {
     }
 
     @Override
-    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
-        super.setSyncOrValue(syncOrValue);
-        this.syncHandler2 = syncOrValue.castNullable(FluidSlotSyncHandler.class);
-    }
-
-    @Override
     protected void addTooltip(RichTooltip tooltip) {
-        FluidStack fluid = this.syncHandler2.getValue();
+        FluidStack fluid = this.getFluidStack();
         if (fluid == null || fluid.isEmpty()) return;
         tooltip.addLine(IKey.lang(fluid.getDisplayName()));
         List<Component> str = new ArrayList<>();
