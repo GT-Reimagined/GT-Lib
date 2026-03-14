@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.util;
 
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.Tags.Fluids;
@@ -14,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -25,12 +25,16 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE;
 
 public class FluidUtils {
+    private static List<IStateFluidHandler> STATE_FLUID_HANDLERS = new ArrayList<>();
+
     public static ResourceLocation getStillTexture(Fluid fluid){
         return IClientFluidTypeExtensions.of(fluid).getStillTexture();
     }
@@ -70,8 +74,11 @@ public class FluidUtils {
     public static LazyOptional<IFluidHandler> getFluidHandler(Level level, BlockPos pos, @Nullable BlockEntity be, Direction side){
         if (be == null){
             BlockState state = level.getBlockState(pos);
-            if (state.getBlock() instanceof AbstractCauldronBlock){
-                return LazyOptional.of(() ->new CauldronWrapper(state, level, pos));
+            for (IStateFluidHandler function : STATE_FLUID_HANDLERS){
+                IFluidHandler handler = function.createFluidHandler(state, level, pos);
+                if (handler != null){
+                    return LazyOptional.of(() -> handler);
+                }
             }
             return LazyOptional.empty();
         }
@@ -137,5 +144,23 @@ public class FluidUtils {
             tag.remove("Nbt");
         }
         return FluidStack.loadFluidStackFromNBT(tag);
+    }
+
+    public static void addStateFluidHandler(IStateFluidHandler fluidHandler){
+        STATE_FLUID_HANDLERS.add(fluidHandler);
+    }
+
+    static {
+        STATE_FLUID_HANDLERS.add((state, level1, pos) -> {
+            if (state.getBlock() == Blocks.CAULDRON || state.getBlock() == Blocks.LAVA_CAULDRON || state.getBlock() == Blocks.WATER_CAULDRON){
+                return new CauldronWrapper(state, level1, pos);
+            }
+            return null;
+        });
+    }
+
+    @FunctionalInterface
+    public interface IStateFluidHandler {
+        IFluidHandler createFluidHandler(BlockState state, Level level, BlockPos pos);
     }
 }
