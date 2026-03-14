@@ -16,6 +16,7 @@ import org.gtreimagined.gtlib.gui.widget.MachineStateWidget;
 import org.gtreimagined.gtlib.gui.widget.ProgressWidget;
 import org.gtreimagined.gtlib.gui.widget.TextWidget;
 import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
+import org.gtreimagined.gtlib.mui.widgets.GTProgressWidget;
 import org.gtreimagined.gtlib.mui.widgets.IOWidgetFluid;
 import org.gtreimagined.gtlib.mui.widgets.IOWidgetItem;
 import org.gtreimagined.gtlib.util.int2;
@@ -57,7 +58,7 @@ public class BasicMachine extends Machine<BasicMachine> {
                         .size(size.x, size.y));
 
                 syncManager.syncValue("progress", new DoubleSyncValue(() -> machine.recipeHandler.map(MachineRecipeHandler::getClientProgress).orElse(0f)));
-                modularPanel.child(new brachy.modularui.widgets.ProgressWidget()
+                modularPanel.child(new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
                         .texture(UITexture
                                 .builder()
                                 .location(guiData.getMachineData().getProgressTexture(machine.getMachineTier()))
