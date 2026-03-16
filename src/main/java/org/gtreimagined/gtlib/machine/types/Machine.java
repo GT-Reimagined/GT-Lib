@@ -1,17 +1,9 @@
 package org.gtreimagined.gtlib.machine.types;
 
-import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.screen.ModularPanel;
-import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
-import brachy.modularui.value.sync.InteractionSyncHandler;
-import brachy.modularui.widget.ParentWidget;
-import brachy.modularui.widgets.PagedWidget;
-import brachy.modularui.widgets.slot.FluidSlot;
-import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
-import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -45,18 +37,16 @@ import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
-import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.cover.CoverFactory;
-import org.gtreimagined.gtlib.cover.CoverOutput;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.gui.BarDir;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.MenuHandler;
 import org.gtreimagined.gtlib.gui.SlotData;
@@ -72,12 +62,8 @@ import org.gtreimagined.gtlib.machine.IShapeGetter;
 import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
-import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.mui.widgets.GTItemSlot;
-import org.gtreimagined.gtlib.mui.widgets.IOWidgetFluid;
-import org.gtreimagined.gtlib.mui.widgets.IOWidgetItem;
-import org.gtreimagined.gtlib.mui.widgets.MachineStateWidget;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -89,7 +75,6 @@ import org.gtreimagined.gtlib.texture.ITextureHandler;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Dir;
 import org.gtreimagined.gtlib.util.Utils;
-import org.gtreimagined.gtlib.util.int2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -152,15 +137,15 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * GUI Members
      **/
     @Getter
-    protected GuiData guiData;
+    protected GuiProperties guiProperties;
     @Getter
-    protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> ModularPanel.defaultPanel(this.getId(), guiData.getXSize(), guiData.getYSize());
+    protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> ModularPanel.defaultPanel(this.getId(), guiProperties.getXSize(), guiProperties.getYSize());
     @Getter
     protected IPanelFunction backGroundFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
-        if (guiData.hasGTIcon()) {
-            modularPanel.child(guiData.getGtIcon().asWidget().pos(guiData.getGtIconPos().x, guiData.getGtIconPos().y));
+        if (guiProperties.hasGTIcon()) {
+            modularPanel.child(guiProperties.getGtIcon().asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
         }
-        if (guiData.enablePlayerSlots()) {
+        if (guiProperties.enablePlayerSlots()) {
             modularPanel.bindPlayerInventory();
         }
 
@@ -347,13 +332,13 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * Registers the recipemap into JEI. This can be overriden in RecipeMap::setGuiData.
      */
     public void registerJei() {
-        if (this.guiData != null) {
+        if (this.guiProperties != null) {
             tierRecipeMaps.forEach((s, r) -> {
                 if (s.isEmpty()){
                     for (int i = 0; i < tiers.size(); i++) {
                         Tier tier = tiers.get(i);
                         if (i == 0 && r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)){
-                            GTAPI.registerJEICategory(r, this.guiData, this, tier, false);
+                            GTAPI.registerJEICategory(r, this.guiProperties, this, tier, false);
                         } else {
                             GTAPI.registerJEICategoryWorkstation(r, this, tier);
                         }
@@ -363,7 +348,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 Tier t = GTAPI.get(Tier.class, s);
                 //If the recipe map has another GUI present don't register it.
                 if (r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)) {
-                    GTAPI.registerJEICategory(r, this.guiData, this, t, false);
+                    GTAPI.registerJEICategory(r, this.guiProperties, this, t, false);
                 } else {
                     GTAPI.registerJEICategoryWorkstation(r, this, t);
                 }
@@ -663,14 +648,14 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * @param menuHandler the menu handler.
      */
     public void setGUI(MenuHandler<?> menuHandler) {
-        guiData = new GuiData(this, menuHandler);
-        guiData.setSlots(this);
+        guiProperties = new GuiProperties(this, menuHandler);
+        guiProperties.setSlots(this);
         registerJei();
     }
 
     public T setGuiProgressBarForJEI(BarDir dir, boolean barFill){
-        guiData.getMachineData().setDir(dir);
-        guiData.getMachineData().setBarFill(barFill);
+        guiProperties.getMachineData().setDir(dir);
+        guiProperties.getMachineData().setBarFill(barFill);
         return (T) this;
     }
 

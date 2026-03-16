@@ -109,6 +109,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return tile.getMachineType().getRecipeMap(tile.getMachineTier());
     }
 
+    @Deprecated
     public float getClientProgress() {
         return ((float) currentProgress / (float) maxProgress);
     }

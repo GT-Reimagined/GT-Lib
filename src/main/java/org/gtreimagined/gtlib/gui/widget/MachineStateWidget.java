@@ -46,9 +46,9 @@ public class MachineStateWidget extends Widget {
         MachineState machineState = ((BlockEntityMachine<?>) gui.handler).getMachineState();
         if (isRecipe) {
             if (machineState == MachineState.POWER_LOSS) {
-                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), getW(), 0, getW(), getH(), getW() * 2, getH());
+                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier).location(), realX(), realY(), getW(), 0, getW(), getH(), getW() * 2, getH());
             } else {
-                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier), realX(), realY(), 0, 0, getW(), getH(), getW() * 2, getH());
+                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier).location(), realX(), realY(), 0, 0, getW(), getH(), getW() * 2, getH());
             }
         }
     }

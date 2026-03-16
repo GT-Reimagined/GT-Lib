@@ -16,7 +16,7 @@ import org.gtreimagined.gtlib.capability.IMachineHandler;
 import org.gtreimagined.gtlib.capability.pipe.PipeCoverHandler;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
@@ -95,7 +95,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     }
 
     @Override
-    public GuiData getGui() {
+    public GuiProperties getGui() {
         return null;
     }
 

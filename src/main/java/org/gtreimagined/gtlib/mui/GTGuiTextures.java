@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.mui;
 
 import brachy.modularui.drawable.UITexture;
+import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.Ref;
 
 public class GTGuiTextures {
@@ -19,5 +20,6 @@ public class GTGuiTextures {
 
     public static final UITexture MACHINE_STATE = UITexture.builder().imageSize(20, 11).location(Ref.ID, "textures/gui/widgets/machine_state.png").build();
     public static final UITexture IO_BUTTON = UITexture.fullImage(Ref.ID, "textures/gui/button/io.png");
+    public static final UITexture DEFAULT_PROGRESS = UITexture.builder().location(new ResourceLocation(Ref.ID, "textures/gui/progress_bars/default.png")).imageSize(20, 36).build();
 
 }

@@ -10,7 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;
@@ -466,14 +466,14 @@ public final class GTAPI {
      * JEI Registry Section
      **/
 
-    public static void registerJEICategory(IRecipeMap map, GuiData gui, Tier tier, ResourceLocation model,
+    public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Tier tier, ResourceLocation model,
                                            boolean override) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
             GTLibXEIPlugin.registerCategory(map, gui, tier, model, override);
         }
     }
 
-    public static void registerJEICategory(IRecipeMap map, GuiData gui, Machine<?> machine, @Nullable Tier tier, boolean override) {
+    public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Machine<?> machine, @Nullable Tier tier, boolean override) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
             if (tier == null) tier = machine.getFirstTier();
             GTLibXEIPlugin.registerCategory(map, gui, tier,
@@ -488,7 +488,7 @@ public final class GTAPI {
         }
     }
 
-    public static void registerJEICategory(IRecipeMap map, GuiData gui) {
+    public static void registerJEICategory(IRecipeMap map, GuiProperties gui) {
         registerJEICategory(map, gui, Tier.LV, null, true);
     }
 

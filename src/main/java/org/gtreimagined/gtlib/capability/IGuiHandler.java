@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.capability;
 
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
@@ -17,7 +17,7 @@ public interface IGuiHandler {
         // NOOP
     }
 
-    GuiData getGui();
+    GuiProperties getGui();
 
     boolean isRemote();
 

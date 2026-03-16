@@ -1,11 +1,10 @@
 package org.gtreimagined.gtlib.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
 import org.gtreimagined.gtlib.gui.BarDir;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.Widget;
@@ -30,7 +29,7 @@ public class ProgressWidget extends Widget {
 
     public ProgressWidget(GuiInstance instance, IGuiElement parent) {
         super(instance, parent);
-        GuiData gui = instance.handler.getGui();
+        GuiProperties gui = instance.handler.getGui();
         this.direction = gui.getMachineData().getDir();
         this.uv = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
         this.barFill = gui.getMachineData().doesBarFill();
@@ -38,13 +37,13 @@ public class ProgressWidget extends Widget {
         setY(gui.getMachineData().getProgressPos().y + 6);
         setW(gui.getMachineData().getProgressSize().x);
         setH(gui.getMachineData().getProgressSize().y);
-        texture = gui.getMachineData().getProgressTexture(((BlockEntityMachine<?>)instance.handler).getMachineTier());
+        texture = gui.getMachineData().getProgressTexture(((BlockEntityMachine<?>)instance.handler).getMachineTier()).location();
     }
 
     @Override
     public void init() {
         super.init();
-        gui.syncFloat(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(MachineRecipeHandler::getClientProgress).orElse(0F), i -> this.percent = i, SERVER_TO_CLIENT);
+        gui.syncFloat(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(r -> gui.handler.getGui().getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0F), i -> this.percent = i, SERVER_TO_CLIENT);
         gui.syncInt(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(MachineRecipeHandler::getCurrentProgress).orElse(0), i -> this.progress = i, SERVER_TO_CLIENT);
         gui.syncInt(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(rec -> rec.getActiveRecipe() == null ? 0 : rec.getActiveRecipe().getDuration()).orElse(0), i -> this.maxProgress = i, SERVER_TO_CLIENT);
     }

@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui;
 
+import brachy.modularui.drawable.UITexture;
 import brachy.modularui.widgets.ProgressWidget.Direction;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
@@ -7,10 +8,12 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.util.int2;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 
 @Accessors(chain = true)
 public class MachineWidgetData {
@@ -27,25 +30,40 @@ public class MachineWidgetData {
     @Getter
     protected int2 progressSize = new int2(20, 18), progressPos = new int2(72, 18);
     @Getter
+    @Setter
+    protected BiFunction<Integer, Integer, Float> progressPercentFunction = (progress, maxProgress) -> (float)progress / (float)maxProgress;
+    @Getter
     protected int2 ioPos = new int2(7, 62), machineStatePos = new int2(83, 43), machineStateSize = new int2(10, 11);
-    protected Map<String, ResourceLocation> machineStateTextures = new Object2ObjectOpenHashMap<>();
-    protected Map<String, ResourceLocation> progressTextures = new Object2ObjectOpenHashMap<>();
+    protected Map<String, UITexture> machineStateTextures = new Object2ObjectOpenHashMap<>();
+    protected Map<String, UITexture> progressTextures = new Object2ObjectOpenHashMap<>();
 
     @Getter
-    private final GuiData parent;
-    public MachineWidgetData(GuiData parent){
+    private final GuiProperties parent;
+    public MachineWidgetData(GuiProperties parent){
         this.parent = parent;
-        this.machineStateTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/widgets/machine_state.png"));
-        this.progressTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/progress_bars/default.png"));
+        this.machineStateTextures.put("", GTGuiTextures.MACHINE_STATE);
+        this.progressTextures.put("", GTGuiTextures.DEFAULT_PROGRESS);
     }
 
+    @Deprecated
     public MachineWidgetData setProgressLocation(String name){
-        this.progressTextures.put("", new ResourceLocation(parent.loc.getNamespace(), "textures/gui/progress_bars/" + name + ".png"));
+        this.progressTextures.put("", UITexture.builder().location(new ResourceLocation(parent.loc.getNamespace(), "textures/gui/progress_bars/" + name + ".png")).imageSize(20, 36).build());
         return this;
     }
 
+    @Deprecated
     public MachineWidgetData setProgressLocation(Tier tier, String name){
-        this.progressTextures.put(tier.getId(), new ResourceLocation(parent.loc.getNamespace(), "textures/gui/progress_bars/" + name + ".png"));
+        this.progressTextures.put(tier.getId(), UITexture.builder().location(new ResourceLocation(parent.loc.getNamespace(), "textures/gui/progress_bars/" + name + ".png")).imageSize(20, 36).build());
+        return this;
+    }
+
+    public MachineWidgetData setProgressLocation(UITexture texture){
+        this.progressTextures.put("", texture);
+        return this;
+    }
+
+    public MachineWidgetData setProgressLocation(Tier tier, UITexture texture){
+        this.progressTextures.put(tier.getId(), texture);
         return this;
     }
 
@@ -74,17 +92,17 @@ public class MachineWidgetData {
         return this;
     }
 
-    public MachineWidgetData setMachineStateLocation(String name){
-        this.progressTextures.put("", new ResourceLocation(parent.loc.getNamespace(), "textures/gui/button/" + name + ".png"));
+    public MachineWidgetData setMachineStateLocation(UITexture texture){
+        this.progressTextures.put("", texture);
         return this;
     }
 
-    public MachineWidgetData setMachineStateLocation(Tier tier, String name){
-        this.progressTextures.put(tier.getId(), new ResourceLocation(parent.loc.getNamespace(), "textures/gui/button/" + name + ".png"));
+    public MachineWidgetData setMachineStateLocation(Tier tier, UITexture texture){
+        this.progressTextures.put(tier.getId(), texture);
         return this;
     }
 
-    public ResourceLocation getProgressTexture(Tier tier) {
+    public UITexture getProgressTexture(Tier tier) {
         if (tier != null && progressTextures.containsKey(tier.getId())) return progressTextures.get(tier.getId());
         return progressTextures.get("");
     }
@@ -93,7 +111,7 @@ public class MachineWidgetData {
         return barFill;
     }
 
-    public ResourceLocation getMachineStateTexture(Tier tier) {
+    public UITexture getMachineStateTexture(Tier tier) {
         if (tier != null && machineStateTextures.containsKey(tier.getId())) return machineStateTextures.get(tier.getId());
         return machineStateTextures.get("");
     }

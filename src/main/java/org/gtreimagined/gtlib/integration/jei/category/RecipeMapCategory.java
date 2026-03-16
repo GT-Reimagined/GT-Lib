@@ -1,7 +1,6 @@
 package org.gtreimagined.gtlib.integration.jei.category;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
@@ -19,7 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.gui.BarDir;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
@@ -59,19 +58,19 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
     protected final RecipeType<IRecipe> type;
     protected IDrawable background, icon, progressBackground;
     protected IDrawableAnimated progressBar;
-    protected GuiData gui;
+    protected GuiProperties gui;
     protected Tier guiTier;
     private final IRecipeInfoRenderer infoRenderer;
 
-    public RecipeMapCategory(IRecipeMap map, RecipeType<IRecipe> type, GuiData gui, Tier defaultTier, ResourceLocation iconId) {
+    public RecipeMapCategory(IRecipeMap map, RecipeType<IRecipe> type, GuiProperties gui, Tier defaultTier, ResourceLocation iconId) {
         loc = map.getLoc();
         this.type = type;
         this.guiTier = map.getGuiTier() == null ? defaultTier : map.getGuiTier();
         title = map.getDisplayName().getString();
         int4 area = gui.getArea(), progress = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
         background = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
-        progressBar = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
-        progressBackground = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
+        progressBar = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier).location(), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
+        progressBackground = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier).location(), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
         Object icon = map.getIcon();
         if (icon != null) {
             if (icon instanceof ItemStack itemStack) {
@@ -89,15 +88,15 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         this.infoRenderer = map.getInfoRenderer();
     }
 
-    public RecipeMapCategory(IRecipeMap map, RecipeType<IRecipe> type, GuiData gui, Tier defaultTier, ResourceLocation subCategoryId, SubCategory subCategory) {
+    public RecipeMapCategory(IRecipeMap map, RecipeType<IRecipe> type, GuiProperties gui, Tier defaultTier, ResourceLocation subCategoryId, SubCategory subCategory) {
         loc = subCategoryId;
         this.type = type;
         this.guiTier = map.getGuiTier() == null ? defaultTier : map.getGuiTier();
         title = Utils.translatable(subCategory.langKey()).getString();
         int4 area = gui.getArea(), progress = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
         background = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getTexture(guiTier, "machine"), area.x, area.y, area.z, area.w).addPadding(0, (map.getInfoRenderer().getRows() <= 0 ? 0 : 7 + (10 *map.getInfoRenderer().getRows())), 0, 0).build();
-        progressBar = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
-        progressBackground = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
+        progressBar = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier).location(), progress.x, progress.y, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).buildAnimated(50, fromDir(gui.getMachineData().getDir()), !gui.getMachineData().doesBarFill());
+        progressBackground = GTLibJEIPlugin.guiHelper.drawableBuilder(gui.getMachineData().getProgressTexture(this.guiTier).location(), 0, 0, progress.z, progress.w).setTextureSize(progress.z, progress.w * 2).build();
         Object icon = subCategory.icon().get();
         if (icon != null) {
             if (icon instanceof ItemStack itemStack) {

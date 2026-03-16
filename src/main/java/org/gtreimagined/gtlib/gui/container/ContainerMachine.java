@@ -29,7 +29,7 @@ public abstract class ContainerMachine<T extends BlockEntityMachine<T>> extends 
         super(tile, menuHandler.getContainerType(), windowId, playerInv, tile.getMachineType().getSlots(tile.getMachineTier()).size());
         this.tile = tile;
         addSlots(tile);
-        if (tile.getMachineType().getGuiData().enablePlayerSlots()) addPlayerSlots();
+        if (tile.getMachineType().getGuiProperties().enablePlayerSlots()) addPlayerSlots();
         //Ugly hack but syncing is broken otherwise.
         //if (!(playerInv.player instanceof ServerPlayerEntity)) {
         //    tile.recipeHandler.ifPresent(t -> t.setClientProgress(0));
@@ -39,12 +39,12 @@ public abstract class ContainerMachine<T extends BlockEntityMachine<T>> extends 
 
     @Override
     protected int getXPlayerOffset() {
-        return tile.getMachineType().getGuiData().getPlayerXOffset();
+        return tile.getMachineType().getGuiProperties().getPlayerXOffset();
     }
 
     @Override
     protected int getYPlayerOffset() {
-        return tile.getMachineType().getGuiData().getPlayerYOffset();
+        return tile.getMachineType().getGuiProperties().getPlayerYOffset();
     }
 
     @Override

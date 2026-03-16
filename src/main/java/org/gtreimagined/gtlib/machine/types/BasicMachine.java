@@ -1,7 +1,6 @@
 package org.gtreimagined.gtlib.machine.types;
 
 import brachy.modularui.drawable.UITexture;
-import brachy.modularui.value.DoubleValue;
 import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.widget.ParentWidget;
@@ -49,24 +48,18 @@ public class BasicMachine extends Machine<BasicMachine> {
         });
         guiFunctions.add(((modularPanel, machine, guiData1, syncManager, settings) -> {
             if (has(RECIPE)) {
-                int2 size = guiData.getMachineData().getMachineStateSize();
-                UITexture.Builder builder = new UITexture.Builder();
-                builder.imageSize(size.x * 2, size.y)
-                        .location(guiData.getMachineData().getMachineStateTexture(machine.getMachineTier()));
-                modularPanel.child(new org.gtreimagined.gtlib.mui.widgets.MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState, builder.build())
-                        .pos(guiData.getMachineData().getMachineStatePos().x, guiData.getMachineData().getMachineStatePos().y)
+                int2 size = guiProperties.getMachineData().getMachineStateSize();
+                modularPanel.child(new org.gtreimagined.gtlib.mui.widgets.MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState,
+                        guiProperties.getMachineData().getMachineStateTexture(machine.getMachineTier()))
+                        .pos(guiProperties.getMachineData().getMachineStatePos().x, guiProperties.getMachineData().getMachineStatePos().y)
                         .size(size.x, size.y));
 
-                syncManager.syncValue("progress", new DoubleSyncValue(() -> machine.recipeHandler.map(MachineRecipeHandler::getClientProgress).orElse(0f)));
+                syncManager.syncValue("progress", new DoubleSyncValue(() -> machine.recipeHandler.map(r -> guiProperties.getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0f)));
                 modularPanel.child(new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
-                        .texture(UITexture
-                                .builder()
-                                .location(guiData.getMachineData().getProgressTexture(machine.getMachineTier()))
-                                .imageSize(guiData.getMachineData().getProgressSize().x, guiData.getMachineData().getProgressSize().y * 2)
-                                .build(), guiData.getMachineData().getProgressSize().x)
-                        .direction(guiData.getMachineData().getDirection())
+                        .texture(guiProperties.getMachineData().getProgressTexture(machine.getMachineTier()), guiProperties.getMachineData().getProgressSize().x)
+                        .direction(guiProperties.getMachineData().getDirection())
                         .syncHandler("progress")
-                        .pos(guiData.getMachineData().getProgressPos().x + 6, guiData.getMachineData().getProgressPos().y + 6));
+                        .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6));
             }
 
             if (machine.getOutputFacing() != null &&
@@ -74,7 +67,7 @@ public class BasicMachine extends Machine<BasicMachine> {
                     !(machine instanceof BlockEntityMultiMachine<?>)){
                 ParentWidget<?> widget = new ParentWidget<>();
                 if (this.has(ITEM)) {
-                    IOWidgetItem itemWidget = new IOWidgetItem(machine).pos(guiData.getMachineData().getIoPos().x + 18, guiData.getMachineData().getIoPos().y);
+                    IOWidgetItem itemWidget = new IOWidgetItem(machine).pos(guiProperties.getMachineData().getIoPos().x + 18, guiProperties.getMachineData().getIoPos().y);
                     syncManager.syncValue("item_output",
                             new BooleanSyncValue(() -> machine.coverHandler.map(
                                     t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false),
@@ -82,7 +75,7 @@ public class BasicMachine extends Machine<BasicMachine> {
                     widget.child(itemWidget);
                 }
                 if (this.has(FLUID)) {
-                    IOWidgetFluid fluidWidget = new IOWidgetFluid(machine).pos(guiData.getMachineData().getIoPos().x, guiData.getMachineData().getIoPos().y);
+                    IOWidgetFluid fluidWidget = new IOWidgetFluid(machine).pos(guiProperties.getMachineData().getIoPos().x, guiProperties.getMachineData().getIoPos().y);
                     syncManager.syncValue("fluid_output",
                             new BooleanSyncValue(() -> machine.coverHandler.map(
                                     t -> ((CoverOutput) t.getOutputCover()).shouldOutputFluids()).orElse(false),

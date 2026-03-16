@@ -1,35 +1,23 @@
 package org.gtreimagined.gtlib.integration.emi.recipe;
 
-import dev.emi.emi.api.forge.ForgeEmiStack;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.SlotWidget;
-import dev.emi.emi.api.widget.TankWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
-import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
-import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.integration.emi.GTEMIFluidIngredient;
 import org.gtreimagined.gtlib.integration.emi.GTFluidEmiStack;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
-import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
@@ -37,8 +25,6 @@ import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class RecipeMapRecipe implements EmiRecipe {
@@ -46,14 +32,14 @@ public class RecipeMapRecipe implements EmiRecipe {
     private final IRecipe recipe;
     private final List<EmiIngredient> inputs = new ArrayList<>();
     private final List<EmiStack> outputs = new ArrayList<>();
-    GuiData gui;
+    GuiProperties gui;
     Tier guiTier;
     int fluidInputOffset;
     int fluidOutputOffset;
     ResourceLocation id;
     IRecipeMap map;
 
-    public RecipeMapRecipe(EmiRecipeCategory category, IRecipe recipe, GuiData gui, Tier guiTier){
+    public RecipeMapRecipe(EmiRecipeCategory category, IRecipe recipe, GuiProperties gui, Tier guiTier){
         this.category = category;
         this.recipe = recipe;
         this.gui = gui;

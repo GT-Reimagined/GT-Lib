@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -225,7 +225,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
 
     ICoverHandler<?> source();
 
-    default GuiData getGui() {
+    default GuiProperties getGui() {
         return null;
     }
 

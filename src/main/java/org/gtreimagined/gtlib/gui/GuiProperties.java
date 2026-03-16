@@ -1,7 +1,8 @@
 package org.gtreimagined.gtlib.gui;
 
 import brachy.modularui.api.drawable.IDrawable;
-import com.google.common.collect.ImmutableMap;
+import brachy.modularui.drawable.UITexture;
+import brachy.modularui.widgets.ProgressWidget.Direction;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Accessors(chain = true)
-public class GuiData {
+public class GuiProperties {
 
     @Getter
     protected ResourceLocation loc;
@@ -38,6 +39,8 @@ public class GuiData {
     @Getter
     @Setter
     private IDrawable gtIcon = GTGuiTextures.GT_LOGO;
+    @Accessors(fluent = true)
+    @Getter
     protected boolean enablePlayerSlots = true;
     @Getter
     protected int4 area = new int4(3, 3, 170, 80);
@@ -65,17 +68,17 @@ public class GuiData {
     @Setter
     private boolean titleDrawingAllowed = true;
 
-    public GuiData(String domain, String id) {
+    public GuiProperties(String domain, String id) {
         this.loc = new ResourceLocation(domain, id);
         this.backgroundTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"));
     }
 
-    public GuiData(String domain, String id, MenuHandler menuHandler) {
+    public GuiProperties(String domain, String id, MenuHandler menuHandler) {
         this(domain, id);
         this.menuHandler = menuHandler;
     }
 
-    public GuiData(IGTObject type, MenuHandler menuHandler) {
+    public GuiProperties(IGTObject type, MenuHandler menuHandler) {
         this(type.getDomain(), type.getId());
         this.menuHandler = menuHandler;
     }
@@ -90,42 +93,38 @@ public class GuiData {
        return backgroundTextures.get("");
     }
 
-    public boolean enablePlayerSlots() {
-        return enablePlayerSlots;
-    }
-
-    public GuiData setEnablePlayerSlots(boolean enablePlayerSlots) {
+    public GuiProperties setEnablePlayerSlots(boolean enablePlayerSlots) {
         this.enablePlayerSlots = enablePlayerSlots;
         return this;
     }
 
-    public GuiData setHasGTIcon(boolean hasGTIcon) {
+    public GuiProperties setHasGTIcon(boolean hasGTIcon) {
         this.hasGTIcon = hasGTIcon;
         return this;
     }
 
-    public GuiData setArea(int x, int y, int z, int w) {
+    public GuiProperties setArea(int x, int y, int z, int w) {
         area.set(x, y, z, w);
         return this;
     }
 
     @Deprecated
-    public GuiData setBackgroundTexture(String textureName){
+    public GuiProperties setBackgroundTexture(String textureName){
         this.backgroundTextures.put("", new ResourceLocation(loc.getNamespace(), "textures/gui/background/" + textureName + ".png"));
         return this;
     }
     @Deprecated
-    public GuiData setBackgroundTexture(Tier tier, String textureName){
+    public GuiProperties setBackgroundTexture(Tier tier, String textureName){
         this.backgroundTextures.put(tier.getId(), new ResourceLocation(loc.getNamespace(), "textures/gui/background/" + textureName + ".png"));
         return this;
     }
     @Deprecated
-    public GuiData setBackgroundTexture(ResourceLocation textureName){
+    public GuiProperties setBackgroundTexture(ResourceLocation textureName){
         this.backgroundTextures.put("", new ResourceLocation(textureName.getNamespace(), "textures/gui/background/" + textureName.getPath() + ".png"));
         return this;
     }
     @Deprecated
-    public GuiData setBackgroundTexture(Tier tier, ResourceLocation textureName){
+    public GuiProperties setBackgroundTexture(Tier tier, ResourceLocation textureName){
         this.backgroundTextures.put(tier.getId(), new ResourceLocation(textureName.getNamespace(), "textures/gui/background/" + textureName.getPath() + ".png"));
         return this;
     }

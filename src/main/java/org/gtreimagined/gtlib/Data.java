@@ -30,14 +30,12 @@ import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.tool.enchantment.ElectricEnchantment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.enchantment.DamageEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.api.distmarker.Dist;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,7 +114,7 @@ public class Data {
             .setNoOutputCover();
 
     public static void init(Dist side) {
-        CREATIVE_GENERATOR.getGuiData().setBackgroundTexture("creative_generator");
+        CREATIVE_GENERATOR.getGuiProperties().setBackgroundTexture("creative_generator");
         if (side.isClient()){
             CREATIVE_GENERATOR.addGuiCallback(t -> {
                 t.addButton(10, 18, APAD_LEFT, false)

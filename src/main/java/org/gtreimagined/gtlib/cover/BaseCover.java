@@ -9,7 +9,7 @@ import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.item.FakeTrackedItemHandler;
 import org.gtreimagined.gtlib.capability.item.ITrackedHandler;
 import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
@@ -50,7 +50,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     @Nullable
     public final Tier tier;
     @Nullable
-    public final GuiData gui;
+    public final GuiProperties gui;
     public final Direction side;
     private final List<Consumer<GuiInstance>> guiCallbacks = new ObjectArrayList<>();
 
@@ -79,7 +79,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
         this.tier = tier;
         this.side = side;
         if (factory.hasGui()) {
-            this.gui = new GuiData(this, factory.getMenuHandler());
+            this.gui = new GuiProperties(this, factory.getMenuHandler());
             gui.setEnablePlayerSlots(true);
             gui.setSlots(ISlotProvider.DEFAULT());
             this.addGuiCallback(t -> {
@@ -224,7 +224,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     }
 
     @Override
-    public GuiData getGui() {
+    public GuiProperties getGui() {
         return gui;
     }
 

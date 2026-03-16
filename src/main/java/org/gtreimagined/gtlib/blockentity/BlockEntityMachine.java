@@ -38,7 +38,7 @@ import org.gtreimagined.gtlib.client.tesr.Caches;
 import org.gtreimagined.gtlib.client.tesr.MachineTESR;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.SlotData;
@@ -78,12 +78,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -236,10 +234,10 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         for (SlotData<?> slot : this.getMachineType().getSlots(this.getMachineTier())) {
             instance.addWidget(SlotWidget.build(slot));
         }
-        for (SlotData<?> slot : this.getMachineType().getGuiData().getSlots().getSlots(SlotType.FL_IN, getMachineTier())) {
+        for (SlotData<?> slot : this.getMachineType().getGuiProperties().getSlots().getSlots(SlotType.FL_IN, getMachineTier())) {
             instance.addWidget(FluidSlotWidget.build(index++, slot));
         }
-        for (SlotData<?> slot : this.getMachineType().getGuiData().getSlots().getSlots(SlotType.FL_OUT, getMachineTier())) {
+        for (SlotData<?> slot : this.getMachineType().getGuiProperties().getSlots().getSlots(SlotType.FL_OUT, getMachineTier())) {
             instance.addWidget(FluidSlotWidget.build(index++, slot));
         }
         this.getMachineType().getCallbacks().forEach(t -> t.accept(instance));
@@ -247,12 +245,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @Override
     public ResourceLocation getGuiTexture() {
-        return getMachineType().getGuiData().getTexture(this.getMachineTier(), "machine");
+        return getMachineType().getGuiProperties().getTexture(this.getMachineTier(), "machine");
     }
 
     @Override
-    public GuiData getGui() {
-        return getMachineType().getGuiData();
+    public GuiProperties getGui() {
+        return getMachineType().getGuiProperties();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -660,7 +658,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, @NotNull Inventory inv, @NotNull Player player) {
-        return getMachineType().has(GUI) ? getMachineType().getGuiData().getMenuHandler().menu(this, inv, windowId) : null;
+        return getMachineType().has(GUI) ? getMachineType().getGuiProperties().getMenuHandler().menu(this, inv, windowId) : null;
     }
 
     public boolean canPlayerOpenGui(Player playerEntity) {
