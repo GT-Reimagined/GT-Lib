@@ -93,6 +93,11 @@ public class GuiProperties {
        return backgroundTextures.get("");
     }
 
+    public String getTheme(Tier tier) {
+        if (tier != null && themeMap.containsKey(tier.getId())) return themeMap.get(tier.getId());
+        return themeMap.get("");
+    }
+
     public GuiProperties setEnablePlayerSlots(boolean enablePlayerSlots) {
         this.enablePlayerSlots = enablePlayerSlots;
         return this;
@@ -126,6 +131,16 @@ public class GuiProperties {
     @Deprecated
     public GuiProperties setBackgroundTexture(Tier tier, ResourceLocation textureName){
         this.backgroundTextures.put(tier.getId(), new ResourceLocation(textureName.getNamespace(), "textures/gui/background/" + textureName.getPath() + ".png"));
+        return this;
+    }
+
+    public GuiProperties setTheme(String theme){
+        this.themeMap.put("", theme);
+        return this;
+    }
+
+    public GuiProperties setTheme(Tier tier, String theme){
+        this.themeMap.put(tier.getId(), theme);
         return this;
     }
 }

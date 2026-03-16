@@ -256,7 +256,9 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @OnlyIn(Dist.CLIENT)
     @Override
     public ModularScreen createScreen(PosGuiData posGuiData, ModularPanel<?> modularPanel) {
-        return new ModularScreen(type.getDomain(), modularPanel);
+        ModularScreen modularScreen = new ModularScreen(type.getDomain(), modularPanel);
+        if (type.getGuiProperties().getTheme(getMachineTier()) != null) modularScreen.useTheme(type.getGuiProperties().getTheme(getMachineTier()));
+        return modularScreen;
     }
 
     @Override
