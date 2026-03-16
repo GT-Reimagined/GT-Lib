@@ -14,7 +14,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 
-public class AbstractSlot<T extends Slot> extends ModularSlot {
+public class AbstractSlot<T extends ModularSlot> extends ModularSlot {
     protected final int index;
     public final SlotType<T> type;
     protected final IGuiHandler holder;

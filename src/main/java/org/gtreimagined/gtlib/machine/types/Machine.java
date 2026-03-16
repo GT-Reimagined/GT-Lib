@@ -161,12 +161,10 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
             boolean item = slotData.getType() != SlotType.FL_IN && slotData.getType() != SlotType.FL_OUT;
             slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
             if (item){
-                Slot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
+                ModularSlot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
                 GTItemSlot itemSlot = new GTItemSlot();
                 itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
-                if (slot instanceof ModularSlot modularSlot){
-                    itemSlot.slot(modularSlot);
-                }
+                itemSlot.slot(slot);
                 modularPanel.child(itemSlot);
                 if (slotOverlay != null) itemSlot.drawable(slotOverlay);
             } else {

@@ -1,9 +1,10 @@
 package org.gtreimagined.gtlib.gui;
 
+import brachy.modularui.widgets.slot.ModularSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 
-public class SlotData<T extends Slot> {
+public class SlotData<T extends ModularSlot> {
 
     private final SlotType<T> type;
     private final int x;

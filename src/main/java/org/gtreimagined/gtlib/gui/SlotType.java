@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui;
 
+import brachy.modularui.widgets.slot.ModularSlot;
 import lombok.Getter;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
@@ -27,7 +28,7 @@ import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
-public class SlotType<T extends Slot> implements IGTObject, IMachineEvent {
+public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent {
 
     public static SlotType<SlotInput> IT_IN = new SlotType<>("item_in", (type, gui, inv, i, d) -> new SlotInput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), new ItIn(), true, false);
     public static SlotType<SlotOutput> IT_OUT = new SlotType<>("item_out", (type, gui, inv, i, d) -> new SlotOutput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()), (t, i) -> false, false, true);
@@ -78,7 +79,7 @@ public class SlotType<T extends Slot> implements IGTObject, IMachineEvent {
         GTAPI.register(SlotType.class, this);
     }
 
-    public interface ISlotSupplier<T extends Slot> {
+    public interface ISlotSupplier<T extends ModularSlot> {
         T get(SlotType<T> type, IGuiHandler tile, Map<SlotType<?>, IItemHandler> slots, int index, SlotData<T> data);
     }
 
