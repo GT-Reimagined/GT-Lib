@@ -141,7 +141,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> ModularPanel.defaultPanel(this.getId(), guiProperties.getXSize(), guiProperties.getYSize());
     @Getter
-    protected IPanelFunction backGroundFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
+    @Setter
+    protected IPanelFunction backgroundFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
         if (guiProperties.hasGTIcon()) {
             modularPanel.child(guiProperties.getGtIcon().asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
         }
@@ -151,6 +152,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
 
     };
     @Getter
+    @Setter
     protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
         Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
         for (SlotData<?> slotData : getSlots(machine.getMachineTier())){
