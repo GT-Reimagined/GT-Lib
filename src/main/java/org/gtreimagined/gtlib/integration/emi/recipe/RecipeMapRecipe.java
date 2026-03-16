@@ -158,7 +158,10 @@ public class RecipeMapRecipe implements EmiRecipe {
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {
                     int offsetIndex = s + fluidInputOffset;
-                    widgetHolder.addTexture(slots.get(s).getTexture(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    widgetHolder.addTexture(slots.get(s).getBaseTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    if (slots.get(s).getOverlayTexture() != null){
+                        widgetHolder.addTexture(slots.get(s).getOverlayTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    }
                     if (offsetIndex < inputs.size()){
                         widgetHolder.addTank(inputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getInputFluids().get(s).getAmount()).drawBack(false);
                     }
@@ -172,7 +175,10 @@ public class RecipeMapRecipe implements EmiRecipe {
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {
                     int offsetIndex = s + fluidOutputOffset;
-                    widgetHolder.addTexture(slots.get(s).getTexture(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    widgetHolder.addTexture(slots.get(s).getBaseTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    if (slots.get(s).getOverlayTexture() != null){
+                        widgetHolder.addTexture(slots.get(s).getOverlayTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    }
                     if (offsetIndex < outputs.size()){
                         widgetHolder.addTank(outputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getOutputFluids()[s].getAmount()).drawBack(false).recipeContext(this);
                     }

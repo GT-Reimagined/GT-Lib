@@ -29,7 +29,7 @@ public class GTFluidSlot extends FluidSlot {
     IDrawable drawable;
 
     @Override
-    public @Nullable IDrawable getBackground() {
+    public @Nullable IDrawable getOverlay() {
         return drawable;
     }
 

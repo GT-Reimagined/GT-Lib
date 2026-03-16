@@ -316,8 +316,12 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         if (progressBar != null)
             progressBar.draw(graphics, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
         gui.getSlots().getRecipeSlots(this.guiTier).forEach(s -> {
-            IDrawable drawable = GTLibJEIPlugin.guiHelper.drawableBuilder(s.getTexture(), 0, 0, 18, 18).setTextureSize(18, 18).build();
+            IDrawable drawable = GTLibJEIPlugin.guiHelper.drawableBuilder(s.getBaseTexture().location(), 0, 0, 18, 18).setTextureSize(18, 18).build();
             drawable.draw(graphics, s.getX() - 4,s.getY() - 4);
+            if (s.getOverlayTexture() != null){
+                drawable = GTLibJEIPlugin.guiHelper.drawableBuilder(s.getOverlayTexture().location(), 0, 0, 18, 18).setTextureSize(18, 18).build();
+                drawable.draw(graphics, s.getX() - 4,s.getY() - 4);
+            }
         });
         infoRenderer.render(graphics, recipe, Minecraft.getInstance().font, JEI_OFFSET_X, gui.getArea().y + JEI_OFFSET_Y + gui.getArea().z / 2);
 

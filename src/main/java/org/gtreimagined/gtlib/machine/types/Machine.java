@@ -159,8 +159,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
         Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
         for (SlotData<?> slotData : getSlots(machine.getMachineTier())){
-            ResourceLocation overlay = slotData.getTexture().getPath().equals(Ref.ID) && (slotData.getTexture().getNamespace().endsWith("item.png")) ? null : slotData.getTexture();
-            UITexture slotOverlay = overlay != null ? UITexture.fullImage(overlay) : null;
+            UITexture slotOverlay = slotData.getOverlayTexture();
             boolean item = slotData.getType().getSlotSupplier() != null;
             boolean fluid = slotData.getType().getFluidHandlerSupplier() != null;
             slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);

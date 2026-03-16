@@ -125,7 +125,10 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (inputs.size() > 0){
                         if (s < inputs.size()){
@@ -153,7 +156,10 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (outputs.size() > 0){
                         if (s < outputs.size()){
@@ -175,7 +181,10 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (fluids.size() > 0){
                         if (s < fluids.size()){
@@ -202,7 +211,10 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (fluids != null && fluids.length > 0){
                         if (s < fluids.length){

@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui;
 
+import brachy.modularui.drawable.UITexture;
 import brachy.modularui.widgets.slot.ModularSlot;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -24,6 +25,7 @@ import org.gtreimagined.gtlib.gui.slot.SlotFluidDisplaySettable;
 import org.gtreimagined.gtlib.gui.slot.SlotInput;
 import org.gtreimagined.gtlib.gui.slot.SlotOutput;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -58,10 +60,10 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
             .tester((t, i) -> true).build();
     public static SlotType<SlotCell> CELL_IN = SlotType.<SlotCell>builder().id("cell_in").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
             .tester((t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
-            .output(false).textureName(new ResourceLocation(Ref.ID, "cell_in")).build();
+            .output(false).overlay(GTGuiTextures.CELL_IN_SLOT_OVERLAY).build();
     public static SlotType<SlotCell> CELL_OUT = SlotType.<SlotCell>builder().id("cell_out").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
             .tester((t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
-            .input(false).textureName(new ResourceLocation(Ref.ID, "cell_out")).build();
+            .input(false).overlay(GTGuiTextures.CELL_OUT_SLOT_OVERLAY).build();
     public static SlotType<SlotEnergy> ENERGY = SlotType.<SlotEnergy>builder().id("energy").slotSupplier((type, gui, inv, i, d) -> new SlotEnergy(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
             .tester((t, i) -> {
                 if (t instanceof BlockEntityMachine<?> machine) {
@@ -72,26 +74,26 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
                     }).orElse(false);
                 }
                 return true;
-            }).output(false).textureName(new ResourceLocation(Ref.ID, "energy")).build();
+            }).output(false).overlay(GTGuiTextures.ENERGY_SLOT_OVERLAY).build();
     public static SlotType<ModularSlot> FL_IN = SlotType.builder().id("fluid_in").fluidHandlerSupplier(g -> {
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getInputTanks).orElse(FluidTanks.EMPTY_TANK);
         }
         return FluidTanks.EMPTY_TANK;
-    }).textureName(new ResourceLocation(Ref.ID, "fluid_in")).build();
+    }).overlay(GTGuiTextures.FLUID_IN_SLOT_OVERLAY).build();
     //Cheat using same ID to get working counter.
     public static SlotType<ModularSlot> FL_OUT = SlotType.builder().id("fluid_out").fluidHandlerSupplier(g -> {
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getOutputTanks).orElse(FluidTanks.EMPTY_TANK);
         }
         return FluidTanks.EMPTY_TANK;
-    }).textureName(new ResourceLocation(Ref.ID, "fluid_out")).build();
+    }).overlay(GTGuiTextures.FLUID_OUT_SLOT_OVERLAY).build();
     public static SlotType<ModularSlot> FL_PHANTOM = SlotType.builder().id("fluid_phantom").fluidHandlerSupplier(g -> {
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getPhantomTanks).orElse(FluidTanks.EMPTY_TANK);
         }
         return FluidTanks.EMPTY_TANK;
-    }).textureName(new ResourceLocation(Ref.ID, "fluid")).phantom(true).build();
+    }).texture(GTGuiTextures.FLUID_SLOT).phantom(true).build();
 
     @Getter
     private String id;
@@ -111,6 +113,11 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
     @Getter
     @Default
     private ResourceLocation textureName = new ResourceLocation(Ref.ID, "item");
+    @Default
+    @Getter
+    private UITexture texture = GTGuiTextures.ITEM_SLOT;
+    @Getter
+    private UITexture overlay;
     @Getter
     private BiPredicate<IGuiHandler, ItemStack> tester;
 

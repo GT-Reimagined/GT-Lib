@@ -11,7 +11,7 @@ public class GTPhantomItemSlot extends PhantomItemSlot implements IGTItemSlot {
     IDrawable drawable;
 
     @Override
-    public @Nullable IDrawable getBackground() {
+    public @Nullable IDrawable getOverlay() {
         return drawable;
     }
 

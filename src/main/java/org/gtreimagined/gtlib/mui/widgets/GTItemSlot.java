@@ -10,7 +10,7 @@ public class GTItemSlot extends ItemSlot implements IGTItemSlot {
     IDrawable drawable;
 
     @Override
-    public @Nullable IDrawable getBackground() {
+    public @Nullable IDrawable getOverlay() {
         return drawable;
     }
 
