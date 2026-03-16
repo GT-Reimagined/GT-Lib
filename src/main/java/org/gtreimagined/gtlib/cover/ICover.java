@@ -225,7 +225,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
 
     ICoverHandler<?> source();
 
-    default GuiProperties getGui() {
+    default GuiProperties getGuiProperties() {
         return null;
     }
 

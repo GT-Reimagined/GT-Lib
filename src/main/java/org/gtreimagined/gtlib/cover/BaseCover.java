@@ -225,7 +225,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     }
 
     @Override
-    public GuiProperties getGui() {
+    public GuiProperties getGuiProperties() {
         return gui;
     }
 
@@ -243,7 +243,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
 
     @Override
     public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-        return hasGui() ? getGui().getMenuHandler().menu(this, p_createMenu_3_.getInventory(), p_createMenu_1_) : null;
+        return hasGui() ? this.getGuiProperties().getMenuHandler().menu(this, p_createMenu_3_.getInventory(), p_createMenu_1_) : null;
     }
 
     @Override

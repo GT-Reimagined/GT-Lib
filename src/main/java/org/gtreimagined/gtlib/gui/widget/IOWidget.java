@@ -26,8 +26,8 @@ public class IOWidget extends Widget {
 
     protected IOWidget(GuiInstance instance, IGuiElement parent) {
         super(instance, parent);
-        this.setX(instance.handler.getGui().getMachineData().getIoPos().x);
-        this.setY(instance.handler.getGui().getMachineData().getIoPos().y);
+        this.setX(instance.handler.getGuiProperties().getMachineData().getIoPos().x);
+        this.setY(instance.handler.getGuiProperties().getMachineData().getIoPos().y);
         this.setW(36);
         this.setH(18);
         ContainerMachine<?> m = (ContainerMachine<?>) instance.container;

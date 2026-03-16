@@ -249,7 +249,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @Override
-    public GuiProperties getGui() {
+    public GuiProperties getGuiProperties() {
         return getMachineType().getGuiProperties();
     }
 

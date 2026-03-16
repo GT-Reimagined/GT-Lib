@@ -17,7 +17,7 @@ public interface IGuiHandler {
         // NOOP
     }
 
-    GuiProperties getGui();
+    GuiProperties getGuiProperties();
 
     boolean isRemote();
 
@@ -30,19 +30,19 @@ public interface IGuiHandler {
     ResourceLocation getGuiTexture();
 
     default int guiSize() {
-        return getGui().getXSize();
+        return getGuiProperties().getXSize();
     }
 
     default int guiHeight() {
-        return getGui().getYSize();
+        return getGuiProperties().getYSize();
     }
 
     default int guiTextureSize() {
-        return getGui().getTextureXSize();
+        return getGuiProperties().getTextureXSize();
     }
 
     default int guiTextureHeight() {
-        return getGui().getTextureYSize();
+        return getGuiProperties().getTextureYSize();
     }
 
     /**

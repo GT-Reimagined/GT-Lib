@@ -25,13 +25,13 @@ public class ContainerCover extends GTContainer {
         this.c = on;
         this.m = menuHandler;
         addSlots(c);
-        if (c.getGui().enablePlayerSlots()) addPlayerSlots();
+        if (c.getGuiProperties().enablePlayerSlots()) addPlayerSlots();
         this.onEntity = Objects.requireNonNull(on.source().getTile());
     }
 
     private static int getInvSize(ICover cover){
-        if (cover.getGui().getSlots() != null){
-            List<SlotData<?>> slots = cover.getTier() == null ? cover.getGui().getSlots().getAnySlots() : cover.getGui().getSlots().getSlots(cover.getTier());
+        if (cover.getGuiProperties().getSlots() != null){
+            List<SlotData<?>> slots = cover.getTier() == null ? cover.getGuiProperties().getSlots().getAnySlots() : cover.getGuiProperties().getSlots().getSlots(cover.getTier());
             return slots.size();
         }
         return 0;
@@ -39,8 +39,8 @@ public class ContainerCover extends GTContainer {
 
     protected void addSlots(ICover cover) {
         Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
-        if (cover.getGui().getSlots() != null){
-            List<SlotData<?>> slots = cover.getTier() == null ? cover.getGui().getSlots().getAnySlots() : cover.getGui().getSlots().getSlots(cover.getTier());
+        if (cover.getGuiProperties().getSlots() != null){
+            List<SlotData<?>> slots = cover.getTier() == null ? cover.getGuiProperties().getSlots().getAnySlots() : cover.getGuiProperties().getSlots().getSlots(cover.getTier());
             for (SlotData<?> slot : slots) {
                 slotIndexMap.computeIntIfAbsent(slot.getType().getId(), k -> 0);
                 Slot supplier = slot.getType().getSlotSupplier().get((SlotType) slot.getType(), cover, cover.getAll(), slotIndexMap.getInt(slot.getType().getId()), (SlotData) slot);

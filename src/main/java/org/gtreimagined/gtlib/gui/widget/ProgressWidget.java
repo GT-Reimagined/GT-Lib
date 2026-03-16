@@ -29,7 +29,7 @@ public class ProgressWidget extends Widget {
 
     public ProgressWidget(GuiInstance instance, IGuiElement parent) {
         super(instance, parent);
-        GuiProperties gui = instance.handler.getGui();
+        GuiProperties gui = instance.handler.getGuiProperties();
         this.direction = gui.getMachineData().getDir();
         this.uv = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
         this.barFill = gui.getMachineData().doesBarFill();
@@ -43,7 +43,7 @@ public class ProgressWidget extends Widget {
     @Override
     public void init() {
         super.init();
-        gui.syncFloat(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(r -> gui.handler.getGui().getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0F), i -> this.percent = i, SERVER_TO_CLIENT);
+        gui.syncFloat(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(r -> gui.handler.getGuiProperties().getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0F), i -> this.percent = i, SERVER_TO_CLIENT);
         gui.syncInt(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(MachineRecipeHandler::getCurrentProgress).orElse(0), i -> this.progress = i, SERVER_TO_CLIENT);
         gui.syncInt(() -> ((ContainerMachine<?>) gui.container).getTile().recipeHandler.map(rec -> rec.getActiveRecipe() == null ? 0 : rec.getActiveRecipe().getDuration()).orElse(0), i -> this.maxProgress = i, SERVER_TO_CLIENT);
     }

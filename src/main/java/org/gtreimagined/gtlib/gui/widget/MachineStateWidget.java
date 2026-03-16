@@ -1,6 +1,5 @@
 package org.gtreimagined.gtlib.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.gui.GuiInstance;
@@ -26,10 +25,10 @@ public class MachineStateWidget extends Widget {
     protected MachineStateWidget(GuiInstance gui, IGuiElement parent) {
         super(gui, parent);
         this.tier = ((BlockEntityMachine<?>) gui.handler).getMachineTier();
-        this.setX(gui.handler.getGui().getMachineData().getMachineStatePos().x);
-        this.setY(gui.handler.getGui().getMachineData().getMachineStatePos().y);
-        this.setW(gui.handler.getGui().getMachineData().getMachineStateSize().x);
-        this.setH(gui.handler.getGui().getMachineData().getMachineStateSize().y);
+        this.setX(gui.handler.getGuiProperties().getMachineData().getMachineStatePos().x);
+        this.setY(gui.handler.getGuiProperties().getMachineData().getMachineStatePos().y);
+        this.setW(gui.handler.getGuiProperties().getMachineData().getMachineStateSize().x);
+        this.setH(gui.handler.getGuiProperties().getMachineData().getMachineStateSize().y);
         this.isRecipe = ((BlockEntityMachine<?>) gui.handler).has(MachineFlag.RECIPE);
     }
 
@@ -46,9 +45,9 @@ public class MachineStateWidget extends Widget {
         MachineState machineState = ((BlockEntityMachine<?>) gui.handler).getMachineState();
         if (isRecipe) {
             if (machineState == MachineState.POWER_LOSS) {
-                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier).location(), realX(), realY(), getW(), 0, getW(), getH(), getW() * 2, getH());
+                drawTexture(graphics, this.gui.handler.getGuiProperties().getMachineData().getMachineStateTexture(tier).location(), realX(), realY(), getW(), 0, getW(), getH(), getW() * 2, getH());
             } else {
-                drawTexture(graphics, this.gui.handler.getGui().getMachineData().getMachineStateTexture(tier).location(), realX(), realY(), 0, 0, getW(), getH(), getW() * 2, getH());
+                drawTexture(graphics, this.gui.handler.getGuiProperties().getMachineData().getMachineStateTexture(tier).location(), realX(), realY(), 0, 0, getW(), getH(), getW() * 2, getH());
             }
         }
     }

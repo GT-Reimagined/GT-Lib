@@ -95,7 +95,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     }
 
     @Override
-    public GuiProperties getGui() {
+    public GuiProperties getGuiProperties() {
         return null;
     }
 
