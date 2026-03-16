@@ -2,11 +2,12 @@ package org.gtreimagined.gtlib.mui.widgets;
 
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.widgets.slot.ItemSlot;
+import brachy.modularui.widgets.slot.PhantomItemSlot;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
-public class GTItemSlot extends ItemSlot implements IGTItemSlot {
+public class GTPhantomItemSlot extends PhantomItemSlot implements IGTItemSlot {
     IDrawable drawable;
 
     @Override

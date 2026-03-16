@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.gui.slot;
 
+import org.gtreimagined.gtlib.capability.FluidHandler.FluidTankType;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.gui.SlotType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class SlotFakeFluid extends AbstractSlot<SlotFakeFluid> {
 
-    public final MachineFluidHandler.FluidDirection dir;
+    public final FluidTankType dir;
 
-    public SlotFakeFluid(SlotType<SlotFakeFluid> type, IGuiHandler tile, MachineFluidHandler.FluidDirection dir, int index, int x, int y) {
+    public SlotFakeFluid(SlotType<SlotFakeFluid> type, IGuiHandler tile, FluidTankType dir, int index, int x, int y) {
         super(type, tile, new EmptyHandler(), index, x, y);
         this.dir = dir;
     }

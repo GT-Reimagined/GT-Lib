@@ -117,11 +117,12 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
             slots.forEach(s ->{
                 for (Map.Entry<SlotType<?>, List<SlotData<?>>> entry : map.entrySet()) {
                     SlotType<?> type = entry.getKey();
+                    if (type.getSlotSupplier() == null) continue;
                     int count = gui.getSlots().getCount(tier, entry.getKey());
-                    if (type == SlotType.DISPLAY_SETTABLE || type == SlotType.DISPLAY) {
-                        inventories.put(type, new FakeTrackedItemHandler<>(this, type, count, type.output, type.input, type.tester));
+                    if (type.isPhantom()) {
+                        inventories.put(type, new FakeTrackedItemHandler<>(this, type, count, type.isOutput(), type.isInput(), type.getTester()));
                     } else {
-                        inventories.put(type, new TrackedItemHandler<>(this, type, count, type.output, type.input, type.tester));
+                        inventories.put(type, new TrackedItemHandler<>(this, type, count, type.isOutput(), type.isInput(), type.getTester()));
                     }
 
                 }

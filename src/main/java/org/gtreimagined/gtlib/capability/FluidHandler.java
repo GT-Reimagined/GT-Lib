@@ -25,7 +25,7 @@ import java.util.List;
 public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> implements IMachineHandler, IFluidNode, Serializable {
     @Getter
     protected final T tile;
-    protected final EnumMap<FluidDirection, FluidTanks> tanks = new EnumMap<>(FluidDirection.class);
+    protected final EnumMap<FluidTankType, FluidTanks> tanks = new EnumMap<>(FluidTankType.class);
     protected int capacity;
 
     /**
@@ -33,11 +33,11 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
      **/
     protected boolean dirty;
 
-    public FluidHandler(T tile, int capacity, int inputCount, int outputCount) {
+    public FluidHandler(T tile, int capacity, int inputCount, int outputCount, int phantomCount) {
         this.tile = tile;
         this.capacity = capacity;
         if (inputCount > 0) {
-            tanks.put(FluidDirection.INPUT, FluidTanks.create(tile, SlotType.FL_IN, b -> {
+            tanks.put(FluidTankType.INPUT, FluidTanks.create(tile, SlotType.FL_IN, b -> {
                 for (int i = 0; i < inputCount; i++) {
                     b.tank(capacity);
                 }
@@ -45,13 +45,22 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
             }));
         }
         if (outputCount > 0) {
-            tanks.put(FluidDirection.OUTPUT, FluidTanks.create(tile, SlotType.FL_OUT, b -> {
+            tanks.put(FluidTankType.OUTPUT, FluidTanks.create(tile, SlotType.FL_OUT, b -> {
                 for (int i = 0; i < outputCount; i++) {
                     b.tank(capacity);
                 }
                 return b;
             }));
         }
+        if (phantomCount > 0){
+            tanks.put(FluidTankType.PHANTOM, FluidTanks.create(tile, SlotType.FL_PHANTOM, b -> {
+                for (int i = 0; i < outputCount; i++) {
+                    b.tank(1000);
+                }
+                return b;
+            }));
+        }
+
     }
 
     public void onRemove() {
@@ -231,12 +240,16 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
 
     @Nullable
     public FluidTanks getInputTanks() {
-        return this.tanks.get(FluidDirection.INPUT);
+        return this.tanks.get(FluidTankType.INPUT);
     }
 
     @Nullable
     public FluidTanks getOutputTanks() {
-        return this.tanks.get(FluidDirection.OUTPUT);
+        return this.tanks.get(FluidTankType.OUTPUT);
+    }
+
+    public FluidTanks getPhantomTanks() {
+        return this.tanks.get(FluidTankType.PHANTOM);
     }
 
     @Override
@@ -272,7 +285,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        if (this.tanks.containsKey(FluidDirection.INPUT)) {
+        if (this.tanks.containsKey(FluidTankType.INPUT)) {
             builder.append("Inputs:\n");
             for (int i = 0; i < getInputTanks().getTanks(); i++) {
                 FluidStack stack = getInputTanks().getFluidInTank(i);
@@ -284,8 +297,20 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
                 }
             }
         }
-        if (this.tanks.containsKey(FluidDirection.OUTPUT)) {
+        if (this.tanks.containsKey(FluidTankType.OUTPUT)) {
             builder.append("Outputs:\n");
+            for (int i = 0; i < getOutputTanks().getTanks(); i++) {
+                FluidStack stack = getOutputTanks().getFluidInTank(i);
+                if (!stack.isEmpty()) {
+                    builder.append(RegistryUtils.getIdFromFluid(stack.getFluid())).append(" - ").append(stack.getAmount());
+                    if (i != getOutputTanks().getTanks() - 1) {
+                        builder.append("\n");
+                    }
+                }
+            }
+        }
+        if (this.tanks.containsKey(FluidTankType.PHANTOM)) {
+            builder.append("Phantom Fluids:\n");
             for (int i = 0; i < getOutputTanks().getTanks(); i++) {
                 FluidStack stack = getOutputTanks().getFluidInTank(i);
                 if (!stack.isEmpty()) {
@@ -316,8 +341,9 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
         return nbt;
     }
 
-    public enum FluidDirection {
+    public enum FluidTankType {
         INPUT,
-        OUTPUT
+        OUTPUT,
+        PHANTOM
     }
 }

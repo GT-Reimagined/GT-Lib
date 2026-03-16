@@ -16,7 +16,7 @@ public class SlotData<T extends ModularSlot> {
         this.type = type;
         this.x = x;
         this.y = y;
-        texture = new ResourceLocation(type.textureName.getNamespace(), "textures/gui/slots/" + type.textureName.getPath() + ".png");
+        texture = new ResourceLocation(type.getTextureName().getNamespace(), "textures/gui/slots/" + type.getTextureName().getPath() + ".png");
     }
 
     public SlotData(SlotType<T> type, int x, int y, ResourceLocation texture){

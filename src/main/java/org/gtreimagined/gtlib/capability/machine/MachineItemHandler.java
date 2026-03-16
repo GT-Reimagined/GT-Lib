@@ -59,7 +59,9 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             Map<SlotType<?>, List<SlotData<?>>> map = tile.getMachineType().getSlots(tile.getMachineTier()).stream().collect(Collectors.groupingBy(SlotData::getType));
             for (var entry : map.entrySet()) {
                 SlotType<?> type = entry.getKey();
-                inventories.put(type, this.createTrackedHandler(type, tile));
+                if (type.getSlotSupplier() != null) {
+                    inventories.put(type, this.createTrackedHandler(type, tile));
+                }
 
             }
         }
@@ -68,10 +70,10 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
 
     protected TrackedItemHandler<T> createTrackedHandler(SlotType<?> type, T tile){
         int count = tile.getMachineType().getCount(tile.getMachineTier(), type);
-        if (type == SlotType.DISPLAY_SETTABLE || type == SlotType.DISPLAY || type == SlotType.FLUID_DISPLAY_SETTABLE) {
-            return new FakeTrackedItemHandler<>(tile, type, count, type.output, type.input, type.tester);
+        if (type.isPhantom()) {
+            return new FakeTrackedItemHandler<>(tile, type, count, type.isOutput(), type.isInput(), type.getTester());
         } else {
-            return new TrackedItemHandler<>(tile, type, count, type.output, type.input, type.tester);
+            return new TrackedItemHandler<>(tile, type, count, type.isOutput(), type.isInput(), type.getTester());
         }
     }
 

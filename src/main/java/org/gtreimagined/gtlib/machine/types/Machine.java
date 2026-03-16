@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.machine.types;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -64,6 +65,8 @@ import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.mui.widgets.GTItemSlot;
+import org.gtreimagined.gtlib.mui.widgets.GTPhantomItemSlot;
+import org.gtreimagined.gtlib.mui.widgets.IGTItemSlot;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -158,20 +161,21 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         for (SlotData<?> slotData : getSlots(machine.getMachineTier())){
             ResourceLocation overlay = slotData.getTexture().getPath().equals(Ref.ID) && (slotData.getTexture().getNamespace().endsWith("item.png")) ? null : slotData.getTexture();
             UITexture slotOverlay = overlay != null ? UITexture.fullImage(overlay) : null;
-            boolean item = slotData.getType() != SlotType.FL_IN && slotData.getType() != SlotType.FL_OUT;
+            boolean item = slotData.getType().getSlotSupplier() != null;
+            boolean fluid = slotData.getType().getFluidHandlerSupplier() != null;
             slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
             if (item){
                 ModularSlot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
-                GTItemSlot itemSlot = new GTItemSlot();
+                ItemSlot itemSlot = slotData.getType().isPhantom() ? new GTPhantomItemSlot() : new GTItemSlot();
                 itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
                 itemSlot.slot(slot);
                 modularPanel.child(itemSlot);
-                if (slotOverlay != null) itemSlot.drawable(slotOverlay);
-            } else {
-                FluidTanks tanks = slotData.getType() == SlotType.FL_IN ? machine.fluidHandler.get().getInputTanks() : machine.fluidHandler.get().getOutputTanks();
+                if (slotOverlay != null) ((IGTItemSlot)itemSlot).setDrawable(slotOverlay);
+            } else if (fluid){
+                FluidTanks tanks = slotData.getType().getFluidHandlerSupplier().apply(machine);
                 GTFluidSlot fluidSlot = new GTFluidSlot();
                 fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
-                        .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))));
+                        .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))).phantom(slotData.getType().isPhantom()));
                 modularPanel.child(fluidSlot);
                 if (slotOverlay != null) fluidSlot.drawable(slotOverlay);
             }

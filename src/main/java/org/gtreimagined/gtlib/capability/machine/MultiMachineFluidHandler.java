@@ -20,7 +20,7 @@ public class MultiMachineFluidHandler<T extends BlockEntityMultiMachine<T>> exte
 
     protected void cacheInputs() {
         inputs = tile.getComponentsByHandlerId(inputComponentString()).stream().map(IComponentHandler::getFluidHandler).map(Optional::get).sorted(this::compareInputHatches).toArray(MachineFluidHandler<?>[]::new);//this::allocateExtraSize);
-        tanks.put(FluidDirection.INPUT, new FluidTanks(Arrays.stream(inputs).filter(t -> t.getInputTanks() != null).flatMap(t -> Arrays.stream(t.getInputTanks().getBackingTanks())).collect(Collectors.toList())));
+        tanks.put(FluidTankType.INPUT, new FluidTanks(Arrays.stream(inputs).filter(t -> t.getInputTanks() != null).flatMap(t -> Arrays.stream(t.getInputTanks().getBackingTanks())).collect(Collectors.toList())));
     }
 
     protected int compareInputHatches(MachineFluidHandler<?> a, MachineFluidHandler<?> b) {
@@ -37,7 +37,7 @@ public class MultiMachineFluidHandler<T extends BlockEntityMultiMachine<T>> exte
 
     protected void cacheOutputs() {
         outputs = tile.getComponentsByHandlerId(outputComponentString()).stream().map(IComponentHandler::getFluidHandler).map(Optional::get).sorted(this::compareOutputHatches).toArray(MachineFluidHandler<?>[]::new);//this::allocateExtraSize);
-        tanks.put(FluidDirection.OUTPUT, new FluidTanks(Arrays.stream(outputs).filter(t -> t.getOutputTanks() != null).flatMap(t -> Arrays.stream(t.getOutputTanks().getBackingTanks())).collect(Collectors.toList())));
+        tanks.put(FluidTankType.OUTPUT, new FluidTanks(Arrays.stream(outputs).filter(t -> t.getOutputTanks() != null).flatMap(t -> Arrays.stream(t.getOutputTanks().getBackingTanks())).collect(Collectors.toList())));
     }
 
     protected int compareOutputHatches(MachineFluidHandler<?> a, MachineFluidHandler<?> b) {
