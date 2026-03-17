@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -176,7 +175,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
                         .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))).phantom(slotData.getType().isPhantom()));
                 modularPanel.child(fluidSlot);
-                if (slotOverlay != null) fluidSlot.drawable(slotOverlay);
+                if (slotOverlay != null) fluidSlot.overlay(slotOverlay);
             }
             slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {
                 if (b == null) return 0;

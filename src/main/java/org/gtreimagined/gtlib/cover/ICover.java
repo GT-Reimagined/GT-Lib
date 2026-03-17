@@ -3,7 +3,6 @@ package org.gtreimagined.gtlib.cover;
 import brachy.modularui.api.IUIHolder;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.factory.SidedPosGuiData;
-import brachy.modularui.factory.UIFactories;
 import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.ModularScreen;
 import brachy.modularui.screen.UISettings;
@@ -19,7 +18,6 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
-import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
@@ -56,7 +54,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -299,7 +296,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
                     fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
                             .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))).phantom(slotData.getType().isPhantom()));
                     modularPanel.child(fluidSlot);
-                    if (slotOverlay != null) fluidSlot.drawable(slotOverlay);
+                    if (slotOverlay != null) fluidSlot.overlay(slotOverlay);
                 }
                 slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {
                     if (b == null) return 0;
