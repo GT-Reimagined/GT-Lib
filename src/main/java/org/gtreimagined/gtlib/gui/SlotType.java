@@ -119,7 +119,8 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
     @Getter
     private UITexture overlay;
     @Getter
-    private BiPredicate<IGuiHandler, ItemStack> tester;
+    @Default
+    private BiPredicate<IGuiHandler, ItemStack> tester = (g, i) -> true;
 
     public interface ISlotSupplier<T extends ModularSlot> {
         T get(SlotType<T> type, IGuiHandler tile, Map<SlotType<?>, IItemHandler> slots, int index, SlotData<T> data);
