@@ -1,16 +1,37 @@
 package org.gtreimagined.gtlib.cover;
 
+import brachy.modularui.api.IUIHolder;
+import brachy.modularui.drawable.UITexture;
+import brachy.modularui.factory.SidedPosGuiData;
+import brachy.modularui.factory.UIFactories;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.ModularScreen;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widgets.slot.ItemSlot;
+import brachy.modularui.widgets.slot.ModularSlot;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
+import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
+import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
+import org.gtreimagined.gtlib.mui.factory.CoverUIFactory;
+import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
+import org.gtreimagined.gtlib.mui.widgets.GTItemSlot;
+import org.gtreimagined.gtlib.mui.widgets.GTPhantomItemSlot;
+import org.gtreimagined.gtlib.mui.widgets.IGTItemSlot;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
@@ -46,7 +67,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuProvider, IGuiHandler {
+public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuProvider, IGuiHandler, IUIHolder<SidedPosGuiData> {
     ResourceLocation PIPE_COVER_MODEL = new ResourceLocation(Ref.ID, "block/cover/cover_pipe");
     Cache<Direction, VoxelShape> DEFAULT_SHAPES = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
@@ -133,10 +154,11 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
     default boolean openGui(Player player, Direction side) {
         if (!hasGui())
             return false;
-        NetworkHooks.openScreen((ServerPlayer) player, this, packetBuffer -> {
+        CoverUIFactory.INSTANCE.open((ServerPlayer) player, this);
+        /*NetworkHooks.openScreen((ServerPlayer) player, this, packetBuffer -> {
             packetBuffer.writeBlockPos(this.source().getTile().getBlockPos());
             packetBuffer.writeInt(side.get3DDataValue());
-        });
+        });*/
         player.playNotifySound(Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 2.0f);
         return true;
     }
@@ -226,6 +248,66 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
     ICoverHandler<?> source();
 
     default GuiProperties getGuiProperties() {
+        return null;
+    }
+
+
+    @Override
+    default ModularScreen createScreen(SidedPosGuiData sidedPosGuiData, ModularPanel<?> modularPanel){
+        ModularScreen modularScreen = new ModularScreen(this.getDomain(), modularPanel);
+        if (getTheme() != null){
+            modularScreen.useTheme(getTheme());
+        }
+        return modularScreen;
+    }
+
+    default String getTheme(){
+        return null;
+    }
+
+    default ModularPanel<?> createModularPanel(){
+        return ModularPanel.defaultPanel(this.getId(), getGuiProperties().getXSize(), getGuiProperties().getYSize());
+    }
+
+    @Override
+    default ModularPanel<?> buildUI(SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
+        if (hasGui() && getGuiProperties() != null){
+            ModularPanel<?> modularPanel = createModularPanel();
+            GuiProperties guiProperties = getGuiProperties();
+            if (guiProperties.hasGTIcon()) {
+                modularPanel.child(guiProperties.getGtIcon().asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
+            }
+            if (guiProperties.enablePlayerSlots()) {
+                modularPanel.bindPlayerInventory();
+            }
+            Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
+            for (SlotData<?> slotData : guiProperties.getSlots().getSlots(this.getTier())){
+                UITexture slotOverlay = slotData.getOverlayTexture();
+                boolean item = slotData.getType().getSlotSupplier() != null;
+                boolean fluid = slotData.getType().getFluidHandlerSupplier() != null;
+                slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
+                if (item){
+                    ModularSlot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), this, this.getAll(), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
+                    ItemSlot itemSlot = slotData.getType().isPhantom() ? new GTPhantomItemSlot() : new GTItemSlot();
+                    itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
+                    itemSlot.slot(slot);
+                    modularPanel.child(itemSlot);
+                    if (slotOverlay != null) ((IGTItemSlot)itemSlot).setDrawable(slotOverlay);
+                } else if (fluid){
+                    FluidTanks tanks = slotData.getType().getFluidHandlerSupplier().apply(this);
+                    GTFluidSlot fluidSlot = new GTFluidSlot();
+                    fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
+                            .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))).phantom(slotData.getType().isPhantom()));
+                    modularPanel.child(fluidSlot);
+                    if (slotOverlay != null) fluidSlot.drawable(slotOverlay);
+                }
+                slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {
+                    if (b == null) return 0;
+                    return b + 1;
+                });
+            }
+            return modularPanel;
+        }
         return null;
     }
 

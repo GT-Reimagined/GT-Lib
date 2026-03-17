@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib;
 
+import brachy.modularui.factory.GuiManager;
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,6 +43,7 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.material.SubTag;
+import org.gtreimagined.gtlib.mui.factory.CoverUIFactory;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.ore.BlockOre;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -128,6 +130,7 @@ public class GTLib extends GTMod {
         GTCreativeTabs.init();
         GTLibNetwork.register();
         GTLibConfig.createConfig();
+        GuiManager.registerFactory(CoverUIFactory.INSTANCE);
         /* Lifecycle events */
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::clientSetup);
