@@ -25,6 +25,8 @@ import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
+import org.gtreimagined.gtlib.mui.drawable.GTDrawableStack;
 import org.gtreimagined.gtlib.mui.factory.CoverUIFactory;
 import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
@@ -283,7 +285,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
                     ModularSlot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), this, this.getAll(), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
                     ItemSlot itemSlot = ItemSlot.create(slotData.getType().isPhantom());
                     itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
-                    itemSlot.background(slotData.getBaseTexture(), slotData.getOverlayTexture());
+                    itemSlot.background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.ITEM_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
                     itemSlot.slot(slot);
                     modularPanel.child(itemSlot);
                 } else if (fluid){
@@ -291,7 +293,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
                     GTFluidSlot fluidSlot = new GTFluidSlot();
                     fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
                             .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))).phantom(slotData.getType().isPhantom()));
-                    fluidSlot.background(slotData.getBaseTexture(), slotData.getOverlayTexture());
+                    fluidSlot.background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.FLUID_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
                     modularPanel.child(fluidSlot);
                 }
                 slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {

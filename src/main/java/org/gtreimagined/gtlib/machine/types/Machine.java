@@ -62,6 +62,8 @@ import org.gtreimagined.gtlib.machine.IShapeGetter;
 import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
+import org.gtreimagined.gtlib.mui.drawable.GTDrawableStack;
 import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
@@ -163,7 +165,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 ItemSlot itemSlot = ItemSlot.create(slotData.getType().isPhantom());
                 itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
                 itemSlot.slot(slot);
-                itemSlot.background(slotData.getBaseTexture(), slotData.getOverlayTexture());
+                itemSlot.background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.ITEM_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
                 modularPanel.child(itemSlot);
             } else if (fluid){
                 FluidTanks tanks = slotData.getType().getFluidHandlerSupplier().apply(machine);
@@ -171,7 +173,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
                         .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId())))
                                 .phantom(slotData.getType().isPhantom()))
-                        .background(slotData.getBaseTexture(), slotData.getOverlayTexture());
+                        .background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.FLUID_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
                 modularPanel.child(fluidSlot);
             }
             slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {
