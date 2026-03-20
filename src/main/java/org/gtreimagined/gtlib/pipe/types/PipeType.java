@@ -5,6 +5,9 @@ import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
@@ -108,5 +111,13 @@ public abstract class PipeType<T extends PipeType<T>> implements IRegistryEntryP
             case VTINY -> "2x2";
             default -> "";
         };
+    }
+
+    public AABB getCenterShape(PipeSize size){
+        return size.getAABB();
+    }
+
+    public float getOffset(PipeSize size){
+        return 0.0625f * size.ordinal();
     }
 }

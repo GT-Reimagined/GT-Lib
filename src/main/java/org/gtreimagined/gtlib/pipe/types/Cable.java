@@ -1,6 +1,9 @@
 package org.gtreimagined.gtlib.pipe.types;
 
 import lombok.Getter;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.material.Material;
@@ -82,5 +85,21 @@ public class Cable<T extends Cable<T>> extends PipeType<T> {
             case VTINY -> "4x4";
             default -> "";
         };
+    }
+
+    @Override
+    public AABB getCenterShape(PipeSize size) {
+        if (this instanceof Wire<?>) return super.getCenterShape(size);
+        if (size == PipeSize.HUGE){
+            float offset = getOffset(size);
+            return new AABB(0.4375 - offset, 0.4375 - offset, 0.4375 - offset, 0.5625 + offset, 0.5625 + offset, 0.5625 + offset);
+        }
+        return PipeSize.values()[size.ordinal() + 1].getAABB();
+    }
+
+    @Override
+    public float getOffset(PipeSize size) {
+        if (this instanceof Wire<?>) return super.getOffset(size);
+        return 0.0625f * (size.ordinal() + 1);
     }
 }
