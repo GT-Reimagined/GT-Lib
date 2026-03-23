@@ -78,7 +78,7 @@ public class GTLibWorldGenerator {
     }
 
     private static void removeStoneFeatures(BiomeGenerationSettingsBuilder builder) {
-        removeDecoratedFeatureFromAllBiomes(builder, GenerationStep.Decoration.UNDERGROUND_ORES, Feature.ORE, Blocks.ANDESITE.defaultBlockState(), Blocks.GRANITE.defaultBlockState(), Blocks.DIORITE.defaultBlockState(), Blocks.TUFF.defaultBlockState(), Blocks.DIRT.defaultBlockState(), Blocks.GRAVEL.defaultBlockState());
+        removeDecoratedFeatureFromAllBiomes(builder, GenerationStep.Decoration.UNDERGROUND_ORES, Feature.ORE, Blocks.ANDESITE.defaultBlockState(), Blocks.GRANITE.defaultBlockState(), Blocks.DIORITE.defaultBlockState(), Blocks.TUFF.defaultBlockState(), Blocks.DIRT.defaultBlockState());
     }
 
     private static void removeOreFeatures(BiomeGenerationSettingsBuilder builder) {
