@@ -33,6 +33,7 @@ public class MaterialTags {
     public static final MaterialTag FLINT = new MaterialTag("flint");
     public static final MaterialTag MOLTEN = new MaterialTag("molten");
     public static final MaterialTag ACID = new MaterialTag("acid");
+    public static final MaterialTag MAGIC = new MaterialTag("magic");
     public static final MaterialTag POSITIVE_CHANGING_RGB = new MaterialTag("positive_changing_rgb");
     public static final MaterialTag NEGATIVE_CHANGING_RGB = new MaterialTag("negative_changing_rgb");
     public static final NumberMaterialTag ORE_RGB = new NumberMaterialTag("ore_rgb");

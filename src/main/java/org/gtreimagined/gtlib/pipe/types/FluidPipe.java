@@ -22,6 +22,8 @@ public class FluidPipe<T extends FluidPipe<T>> extends PipeType<T> {
     protected boolean acidProof = false;
     @Getter
     protected boolean heatProof = false;
+    @Getter
+    protected boolean magicProof = false;
     protected int[] caps, pressures;
 
     public FluidPipe(String domain, Material material, int maxTemperature, boolean gasProof) {
@@ -84,6 +86,11 @@ public class FluidPipe<T extends FluidPipe<T>> extends PipeType<T> {
 
     public T heatProof(boolean heatProof){
         this.heatProof = heatProof;
+        return (T) this;
+    }
+
+    public T magicProof(boolean magicProof){
+        this.magicProof = magicProof;
         return (T) this;
     }
 

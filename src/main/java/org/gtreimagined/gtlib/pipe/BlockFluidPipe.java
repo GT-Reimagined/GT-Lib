@@ -35,6 +35,9 @@ public class BlockFluidPipe<T extends FluidPipe<T>> extends BlockPipe<T> {
         if (getType().isAcidProof()){
             tooltip.add(Utils.translatable("gtlib.tooltip.acid_proof").withStyle(ChatFormatting.GOLD));
         }
+        if (getType().isMagicProof()){
+            tooltip.add(Utils.translatable("gtlib.tooltip.magic_proof").withStyle(ChatFormatting.GOLD));
+        }
         tooltip.add(Utils.translatable("gtlib.tooltip.max_temperature").append(": " +getType().getMaxTemperature()).withStyle(ChatFormatting.DARK_RED));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
