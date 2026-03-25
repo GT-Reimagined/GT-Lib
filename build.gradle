@@ -93,7 +93,7 @@ dependencies {
     jarJar("org.gt-reimagined:tesseract-forge:${project.tesseract_version}-${project.minecraft_version}")
 
     //MIXIN
-    annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
+    annotationProcessor 'net.fabricmc:sponge-mixin:0.11.4+mixin.0.8.5'
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
     implementation("org.jetbrains:annotations:26.0.1")
