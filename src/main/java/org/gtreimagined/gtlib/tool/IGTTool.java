@@ -1,11 +1,13 @@
 package org.gtreimagined.gtlib.tool;
 
 import com.google.common.collect.Streams;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceKey;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.capability.energy.ItemEnergyHandler;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.integration.curios.CuriosHelper;
@@ -43,7 +45,9 @@ import org.gtreimagined.tesseract.api.eu.IEnergyItem;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.gtreimagined.gtlib.material.Material.NULL;
 
@@ -78,6 +82,13 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
             return color.orElse(DyeColor.WHITE);
         }
         return null;
+    }
+
+    @Override
+    default Map<String, IBehaviour<IBasicGTTool>> getBehaviours(ItemStack stack){
+        var behaviours = getGTToolType().getBehaviours().entrySet().stream().collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        MaterialTags.TOOLS.get(getPrimaryMaterial(stack)).behaviours().forEach(b -> behaviours.put(b.getId(), b));
+        return behaviours;
     }
 
     default int getPoweredBarColor(ItemStack stack){

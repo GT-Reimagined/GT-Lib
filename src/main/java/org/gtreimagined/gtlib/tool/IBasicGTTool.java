@@ -66,7 +66,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
         return (Item) this;
     }
 
-    default Object2ObjectMap<String, IBehaviour<IBasicGTTool>> getBehaviours(){
+    default Map<String, IBehaviour<IBasicGTTool>> getBehaviours(ItemStack stack){
         return getGTToolType().getBehaviours();
     }
 
@@ -120,7 +120,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
         if (getGTToolType().getTooltip().size() != 0) tooltip.addAll(getGTToolType().getTooltip());
         tooltip.add(Utils.translatable("gtlib.tooltip.mining_level", getTier(stack).getLevel()).withStyle(ChatFormatting.YELLOW));
         tooltip.add(Utils.translatable("gtlib.tooltip.tool_speed", Utils.literal("" + getDefaultMiningSpeed(stack)).withStyle(ChatFormatting.LIGHT_PURPLE)));
-        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours(stack).entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IAddInformation addInformation)) continue;
             addInformation.onAddInformation(this, stack, tooltip, flag);
@@ -148,7 +148,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
             }
         }
         boolean returnValue = true;
-        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours(stack).entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IBlockDestroyed)) continue;
             returnValue = ((IBlockDestroyed) b).onBlockDestroyed(this, stack, world, state, pos, entity);
@@ -161,7 +161,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
 
     default InteractionResult genericInteractLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand){
         InteractionResult result = InteractionResult.PASS;
-        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours(stack).entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IInteractEntity interactEntity)) continue;
             InteractionResult r = interactEntity.interactLivingEntity(this, stack, player, interactionTarget, usedHand);
@@ -173,7 +173,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     @SuppressWarnings({"unchecked", "rawtypes"})
     default InteractionResult onGenericItemUse(UseOnContext ctx) {
         InteractionResult result = InteractionResult.PASS;
-        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours(ctx.getItemInHand()).entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IItemUse itemUse)) continue;
             InteractionResult r = itemUse.onItemUse(this, ctx);
@@ -184,7 +184,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     default InteractionResultHolder<ItemStack> onGenericRightclick(Level level, Player player, InteractionHand usedHand){
-        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours(player.getItemInHand(usedHand)).entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IItemRightClick rightClick)) continue;
             InteractionResultHolder<ItemStack> r = rightClick.onRightClick(this, level, player, usedHand);
@@ -196,7 +196,7 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
     @SuppressWarnings("rawtypes")
     default InteractionResult onGenericHighlight(Player player, LevelRenderer levelRenderer, Camera camera, HitResult target, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource) {
         InteractionResult result = InteractionResult.PASS;
-        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours().entrySet()) {
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours(player.getMainHandItem()).entrySet()) {
             IBehaviour<?> b = e.getValue();
             if (!(b instanceof IItemHighlight)) continue;
             InteractionResult type = ((IItemHighlight) b).onDrawHighlight(player, levelRenderer, camera, target, partialTicks, poseStack, multiBufferSource);
