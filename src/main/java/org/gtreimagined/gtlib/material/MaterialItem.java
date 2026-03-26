@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.material;
 
 import net.minecraft.resources.ResourceKey;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
@@ -278,9 +280,9 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
         if (i == 0) {
-            /*if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB)) && GTAPI.getSIDE().isClient()){
+            if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB)) && FMLEnvironment.dist.isClient()){
                 return getChangingMaterialColor();
-            }*/
+            }
             return material.getRGB();
         }
         return -1;
