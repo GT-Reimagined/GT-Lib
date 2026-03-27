@@ -270,8 +270,8 @@ public class GTMaterialTypes {
     }
 
     public static void postInit() {
-        LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
-        GAS.all().forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, GAS)));
+        LIQUID.all().stream().filter(l -> !LIQUID.hasReplacement(l)).forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
+        GAS.all().stream().filter(g -> !GAS.hasReplacement(g)).forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, GAS)));
         ORE_STONE.all().forEach(m -> GTAPI.register(StoneType.class, new StoneType(ID, m.getId(), m, new Texture(m.materialDomain(), "block/stone/" + m.getId()), SoundType.STONE, false).setGenerateOre(false).setStateSupplier(() -> ORE_STONE.get().get(m).asState())));
     }
 }

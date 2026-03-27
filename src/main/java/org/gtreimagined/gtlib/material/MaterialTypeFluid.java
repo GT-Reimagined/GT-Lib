@@ -47,10 +47,6 @@ public class MaterialTypeFluid<T> extends MaterialType<T> {
         //NOOP
     }
 
-    public boolean allowGen(Material material) {
-        return generating && materials.contains(material) && !hasReplacement(material);
-    }
-
     @Override
     protected TagKey<?> tagFromString(String name) {
         return TagUtils.getForgelikeFluidTag(name);
