@@ -33,7 +33,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.Ref.*;
-import static org.gtreimagined.gtlib.data.GTLibMaterials.Wood;
+import static org.gtreimagined.gtlib.data.GTLibMaterials.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.RUBBERTOOLS;
 
 public class GTMaterialTypes {
@@ -181,14 +181,14 @@ public class GTMaterialTypes {
 
         LIQUID.set((m, i) -> {
             if (m == null || !LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(LIQUID, m);
-            if (m.getId().equals("water")) return new FluidStack(Fluids.WATER, i);
-            else if (m.getId().equals("lava")) return new FluidStack(Fluids.LAVA, i);
+            if (LIQUID.getFluidReplacements().containsKey(m)) return new FluidStack(LIQUID.getFluidReplacements().get(m).get(), i);
             GTFluid fluid = GTAPI.get(GTFluid.class, LIQUID.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
         });
         GAS.set((m, i) -> {
             if (m == null || !GAS.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(GAS, m);
+            if (GAS.getFluidReplacements().containsKey(m)) return new FluidStack(GAS.getFluidReplacements().get(m).get(), i);
             GTFluid fluid = GTAPI.get(GTFluid.class, GAS.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
@@ -250,6 +250,8 @@ public class GTMaterialTypes {
 
     private static void replacements(){
         ROD.replacement(Wood, () -> Items.STICK);
+        LIQUID.addReplacement(Water, () -> Fluids.WATER);
+        LIQUID.addReplacement(Lava, () -> Fluids.LAVA);
     }
 
     private static void dependents() {
