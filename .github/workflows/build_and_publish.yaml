@@ -43,6 +43,7 @@ env:
   JAVA: 17 # TODO get from properties
   MODRINTH_ID: ezjMui03
   CURSEFORGE_ID: 1159821
+  GITHUB_RELEASE: true
 
 jobs:
   publish:
