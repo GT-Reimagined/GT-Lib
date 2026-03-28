@@ -52,6 +52,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          token: ${{ secrets.PAT }}
 
       - name: Read current mod version
         id: read_version
@@ -141,7 +142,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "${{ inputs.version }}"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           files: "build/libs/*.jar"
           body_path: ${{ env.CHANGELOG_LOCATION }}
           fail_on_unmatched_files: true
