@@ -6,3 +6,9 @@
 - Made axe timbering slow down gt tools
 - Fixed pipes not properly updating skylight
 - Fix Cable Shapes not matching render size.
+- Reenabled underground gravel generation
+- Added fluid tag to define fluids as magic
+- Added magic proof property to fluid pipes
+- Added fluid replacements system
+
+Full Changelog: [0.5.0...0.5.1](https://github.com/GT-Reimagined/GT-Lib/compare/0.5.0...0.5.1)
