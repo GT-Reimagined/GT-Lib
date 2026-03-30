@@ -5,6 +5,7 @@ import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
+import brachy.modularui.widgets.slot.SlotGroup;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -81,6 +82,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -156,12 +158,17 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Setter
     protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
         Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
+        Set<String> slotGroupList = new HashSet<>();
         for (SlotData<?> slotData : getSlots(machine.getMachineTier())){
             boolean item = slotData.getType().getSlotSupplier() != null;
             boolean fluid = slotData.getType().getFluidHandlerSupplier() != null;
             slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
             if (item){
                 ModularSlot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
+                if (slotData.getType().isSlotGroup()){
+                    slotGroupList.add(slotData.getType().getId());
+                    slot.slotGroup(slotData.getType().getId());
+                }
                 ItemSlot itemSlot = ItemSlot.create(slotData.getType().isPhantom());
                 itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
                 itemSlot.slot(slot);
@@ -180,7 +187,11 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 if (b == null) return 0;
                 return b + 1;
             });
-
+        }
+        for (String slotId : slotIndexMap.keySet()){
+            if (slotGroupList.contains(slotId)){
+                syncManager.registerSlotGroup(slotId, slotIndexMap.getInt(slotId));
+            }
         }
     };
     @Getter

@@ -41,14 +41,14 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
             .tester(new ItIn()).output(false).build();
     public static SlotType<SlotOutput> IT_OUT = SlotType.<SlotOutput>builder().id("item_out")
             .slotSupplier((type, gui, inv, i, d) -> new SlotOutput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
-            .tester(NO_INPUT).input(false).build();
+            .tester(NO_INPUT).slotGroup(false).input(false).build();
 
     public static SlotType<SlotFake> DISPLAY = SlotType.<SlotFake>builder().id("display")
             .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, false))
-            .tester(NO_INPUT).input(false).output(false).phantom(true).build();
+            .tester(NO_INPUT).slotGroup(false).input(false).output(false).phantom(true).build();
     public static SlotType<SlotFake> DISPLAY_SETTABLE = SlotType.<SlotFake>builder().id("display_settable")
             .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, true))
-            .tester(NO_INPUT).output(false).phantom(true).build();
+            .tester(NO_INPUT).slotGroup(false).output(false).phantom(true).build();
     public static SlotType<AbstractSlot<?>> STORAGE = SlotType.<AbstractSlot<?>>builder().id("storage").slotSupplier((type, gui, item, i, d) -> new AbstractSlot<>(type, gui, item.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> true).build();
     public static SlotType<SlotCell> CELL_IN = SlotType.<SlotCell>builder().id("cell_in").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
@@ -56,7 +56,7 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
             .output(false).overlay(GTGuiTextures.CELL_IN_SLOT_OVERLAY).build();
     public static SlotType<SlotCell> CELL_OUT = SlotType.<SlotCell>builder().id("cell_out").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
-            .input(false).overlay(GTGuiTextures.CELL_OUT_SLOT_OVERLAY).build();
+            .input(false).slotGroup(false).overlay(GTGuiTextures.CELL_OUT_SLOT_OVERLAY).build();
     public static SlotType<SlotEnergy> ENERGY = SlotType.<SlotEnergy>builder().id("energy").slotSupplier((type, gui, inv, i, d) -> new SlotEnergy(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> {
                 if (t instanceof BlockEntityMachine<?> machine) {
@@ -103,6 +103,9 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
     @Default
     @Getter
     private boolean phantom = false;
+    @Default
+    @Getter
+    private boolean slotGroup = true;
     @Getter
     @Default
     private ResourceLocation textureName = new ResourceLocation(Ref.ID, "item");
