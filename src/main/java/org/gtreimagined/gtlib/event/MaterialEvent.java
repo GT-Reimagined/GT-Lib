@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.IMaterialTag;
@@ -24,6 +25,7 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.apache.commons.lang3.tuple.Pair;
+import org.gtreimagined.gtlib.tool.IBasicGTTool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -173,7 +175,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         if (!has(MaterialTags.TOOLS)) return (T) this;
         ToolData data = MaterialTags.TOOLS.get(this.material);
         List<GTToolType> toolTypesList = toolTypes.length > 0 ? Arrays.asList(toolTypes) : GTAPI.all(GTToolType.class);
-        MaterialTags.TOOLS.add(this.material, new ToolData(data.toolDamage(), data.toolSpeed(), data.toolDurability(), data.toolQuality(), data.handleMaterial(), data.toolEnchantment(), toolTypesList));
+        MaterialTags.TOOLS.add(this.material, new ToolData(data.toolDamage(), data.toolSpeed(), data.toolDurability(), data.toolQuality(), data.handleMaterial(), data.toolEnchantment(), toolTypesList, data.behaviours()));
         return (T) this;
     }
 
@@ -355,6 +357,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
         int toolDurability;
         int toolQuality;
         ImmutableMap<Enchantment, Integer> toolEnchantments = ImmutableMap.of();
+        List<IBehaviour<IBasicGTTool>> materialBehaviours = new ArrayList<>();
         Material handleMaterial;
         public ToolBuiler(){
             allowedToolTypes = GTAPI.all(GTToolType.class);
@@ -363,6 +366,11 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
 
         public ToolBuiler blacklistToolTypes(GTToolType... types){
             allowedToolTypes.removeAll(List.of(types));
+            return this;
+        }
+
+        public ToolBuiler addBehaviour(IBehaviour<IBasicGTTool> behaviour){
+            materialBehaviours.add(behaviour);
             return this;
         }
 
@@ -376,7 +384,7 @@ public class MaterialEvent<T extends MaterialEvent<T>> {
             if (toolTypes.contains(GTTools.WRENCH) && !toolTypes.contains(GTTools.WRENCH_ALT)) toolTypes.add(GTTools.WRENCH_ALT);
             allowedToolTypes = ImmutableList.copyOf(toolTypes);
             int toolDurability = GTAPI.isModLoaded(Ref.MOD_TFC) ? this.toolDurability * 4 : this.toolDurability;
-            return MaterialEvent.this.buildTool(new ToolData(toolDamage, toolSpeed, toolDurability, toolQuality, handleMaterial, toolEnchantments, allowedToolTypes));
+            return MaterialEvent.this.buildTool(new ToolData(toolDamage, toolSpeed, toolDurability, toolQuality, handleMaterial, toolEnchantments, allowedToolTypes, materialBehaviours));
         }
     }
 

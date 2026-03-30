@@ -33,7 +33,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.Ref.*;
-import static org.gtreimagined.gtlib.data.GTLibMaterials.Wood;
+import static org.gtreimagined.gtlib.data.GTLibMaterials.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.RUBBERTOOLS;
 
 public class GTMaterialTypes {
@@ -181,14 +181,14 @@ public class GTMaterialTypes {
 
         LIQUID.set((m, i) -> {
             if (m == null || !LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(LIQUID, m);
-            if (m.getId().equals("water")) return new FluidStack(Fluids.WATER, i);
-            else if (m.getId().equals("lava")) return new FluidStack(Fluids.LAVA, i);
+            if (LIQUID.getFluidReplacements().containsKey(m)) return new FluidStack(LIQUID.getFluidReplacements().get(m).get(), i);
             GTFluid fluid = GTAPI.get(GTFluid.class, LIQUID.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
         });
         GAS.set((m, i) -> {
             if (m == null || !GAS.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(GAS, m);
+            if (GAS.getFluidReplacements().containsKey(m)) return new FluidStack(GAS.getFluidReplacements().get(m).get(), i);
             GTFluid fluid = GTAPI.get(GTFluid.class, GAS.getId() + "_" + m.getId());
             if (fluid == null) throw new IllegalStateException("Tried to get null fluid");
             return new FluidStack(fluid.getFluid(), i);
@@ -250,6 +250,8 @@ public class GTMaterialTypes {
 
     private static void replacements(){
         ROD.replacement(Wood, () -> Items.STICK);
+        LIQUID.addReplacement(Water, () -> Fluids.WATER);
+        LIQUID.addReplacement(Lava, () -> Fluids.LAVA);
     }
 
     private static void dependents() {
@@ -268,8 +270,8 @@ public class GTMaterialTypes {
     }
 
     public static void postInit() {
-        LIQUID.all().stream().filter(l -> !l.getId().equals("water") && !l.getId().equals("lava")).forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
-        GAS.all().forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, GAS)));
+        LIQUID.all().stream().filter(l -> !LIQUID.hasReplacement(l)).forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, LIQUID)));
+        GAS.all().stream().filter(g -> !GAS.hasReplacement(g)).forEach(m -> GTAPI.register(GTFluid.class, new GTMaterialFluid(Ref.SHARED_ID, m, GAS)));
         ORE_STONE.all().forEach(m -> GTAPI.register(StoneType.class, new StoneType(ID, m.getId(), m, new Texture(m.materialDomain(), "block/stone/" + m.getId()), SoundType.STONE, false).setGenerateOre(false).setStateSupplier(() -> ORE_STONE.get().get(m).asState())));
     }
 }

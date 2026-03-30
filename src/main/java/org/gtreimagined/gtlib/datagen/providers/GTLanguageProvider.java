@@ -333,6 +333,7 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("gtlib.tooltip.stepsize", "Stepsize: %s");
         add("gtlib.tooltip.gas_proof", "Can handle Gases");
         add("gtlib.tooltip.acid_proof", "Can handle Acids");
+        add("gtlib.tooltip.magic_proof", "Can handle Magic");
         add("gtlib.tooltip.max_temperature", "Max Temperature");
         add("gtlib.tooltip.energy", "Energy");
         add("gtlib.tooltip.heat_capacity", "Heat capacity");

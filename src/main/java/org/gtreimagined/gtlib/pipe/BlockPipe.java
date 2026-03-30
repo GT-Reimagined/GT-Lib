@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -100,8 +101,8 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     protected Texture overlay;
     protected Texture[] faces;
 
-    protected static Map<PipeSize, Cache<Integer, VoxelShape>> pipeShapes = new Object2ObjectLinkedOpenHashMap<>();
-    protected static Map<PipeSize, Cache<PipeShapeKey, VoxelShape>> shapes = new Object2ObjectLinkedOpenHashMap<>();
+    protected static Map<Class<?>, Map<PipeSize, Cache<Integer, VoxelShape>>> pipeShapes = new Object2ObjectLinkedOpenHashMap<>();
+    protected static Map<Class<?>, Map<PipeSize, Cache<PipeShapeKey, VoxelShape>>> shapes = new Object2ObjectLinkedOpenHashMap<>();
 
     public static final BooleanProperty TICKING = BooleanProperty.create("ticking");
 
@@ -115,8 +116,8 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
 
     public BlockPipe(String suffix, T type, PipeSize size, int modelId, Properties properties) {
         super(type.domain, type.createId(size, suffix), size.ordinal() < 6 ? properties.noOcclusion().dynamicShape() : properties);
-        pipeShapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build());
-        shapes.computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).maximumSize(1000).build());
+        pipeShapes.computeIfAbsent(type.getClass(), t -> new Object2ObjectOpenHashMap<>()).computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build());
+        shapes.computeIfAbsent(type.getClass(), t -> new Object2ObjectOpenHashMap<>()).computeIfAbsent(size, s -> CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.MINUTES).maximumSize(1000).build());
         this.type = type;
         this.size = size;
         side = new Texture(type.getMaterial().getSet().getDomain(), "block/" + type.getMaterial().getSet().getPath() + "/pipe/pipe_side");
@@ -192,27 +193,27 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     public Cache<Integer, VoxelShape> getPipeShapes(){
-        return pipeShapes.get(size);
+        return pipeShapes.get(type.getClass()).get(size);
     }
 
     protected Cache<PipeShapeKey, VoxelShape> getShapes(){
-        return shapes.get(size);
+        return shapes.get(type.getClass()).get(size);
     }
 
-    public VoxelShape makeShapes(short which) {
-        float offset = 0.0625f * size.ordinal();
-        VoxelShape shape = Shapes.create(size.getAABB());
-        if ((which & (1)) > 0)
+    public VoxelShape makeShapes(short config) {
+        float offset = type.getOffset(size);
+        VoxelShape shape = Shapes.create(type.getCenterShape(size));
+        if ((config & (1)) > 0)
             shape = Shapes.or(shape, Shapes.box(0.4375 - offset, 0, 0.4375 - offset,0.5625 + offset, 0.4375 - offset, 0.5625 + offset));
-        if ((which & (1 << 1)) > 0)
+        if ((config & (1 << 1)) > 0)
             shape = Shapes.or(shape, Shapes.box(0.4375 - offset, 0.5625 + offset, 0.4375 - offset, 0.5625 + offset, 1, 0.5625 + offset));
-        if ((which & (1 << 2)) > 0)
+        if ((config & (1 << 2)) > 0)
             shape = Shapes.or(shape, Shapes.box(0.4375 - offset, 0.4375 - offset, 0, 0.5625 + offset, 0.5625 + offset, 0.4375 - offset));
-        if ((which & (1 << 3)) > 0)
+        if ((config & (1 << 3)) > 0)
             shape = Shapes.or(shape, Shapes.box(0.4375 - offset, 0.4375 - offset, 0.5625 + offset, 0.5625 + offset, 0.5625 + offset, 1));
-        if ((which & (1 << 4)) > 0)
+        if ((config & (1 << 4)) > 0)
             shape = Shapes.or(shape, Shapes.box(0, 0.4375 - offset, 0.4375 - offset, 0.4375 - offset, 0.5625 + offset, 0.5625 + offset));
-        if ((which & (1 << 5)) > 0)
+        if ((config & (1 << 5)) > 0)
             shape = Shapes.or(shape, Shapes.box(0.5625 + offset, 0.4375 - offset, 0.4375 - offset, 1, 0.5625 + offset, 0.5625 + offset));
         return shape;
     }

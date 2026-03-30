@@ -33,6 +33,7 @@ public class MaterialTags {
     public static final MaterialTag FLINT = new MaterialTag("flint");
     public static final MaterialTag MOLTEN = new MaterialTag("molten");
     public static final MaterialTag ACID = new MaterialTag("acid");
+    public static final MaterialTag MAGIC = new MaterialTag("magic");
     public static final MaterialTag POSITIVE_CHANGING_RGB = new MaterialTag("positive_changing_rgb");
     public static final MaterialTag NEGATIVE_CHANGING_RGB = new MaterialTag("negative_changing_rgb");
     public static final NumberMaterialTag ORE_RGB = new NumberMaterialTag("ore_rgb");
@@ -91,7 +92,7 @@ public class MaterialTags {
     public static TypeMaterialTag<ToolData> TOOLS = new TypeMaterialTag<>("tools"){
         @Override
         public ToolData get(Material mat) {
-            if (mat == Material.NULL) return mapping.computeIfAbsent(mat, m -> new ToolData(5.0f, 5.0f, Integer.MAX_VALUE, 3, GTLibMaterials.Wood, ImmutableMap.of(), List.of()));
+            if (mat == Material.NULL) return mapping.computeIfAbsent(mat, m -> new ToolData(5.0f, 5.0f, Integer.MAX_VALUE, 3, GTLibMaterials.Wood, ImmutableMap.of(), List.of(), List.of()));
             return super.get(mat);
         }
     };

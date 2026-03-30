@@ -43,6 +43,9 @@ public class GTFluidTagProvider extends GTTagProvider<Fluid> implements IGTLibPr
                 if (m.has(MaterialTags.ACID)){
                     tag(GTLibTags.ACID).add(f.getFluid());
                 }
+                if (m.has(MaterialTags.MAGIC)){
+                    tag(GTLibTags.MAGIC).add(f.getFluid());
+                }
             }
         });
         if (domain.equals(Ref.SHARED_ID)){

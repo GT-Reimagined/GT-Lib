@@ -3,7 +3,13 @@ package org.gtreimagined.gtlib.blockentity.pipe;
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.IPreTickTile;
 import org.gtreimagined.gtlib.capability.Dispatch;
@@ -233,6 +239,18 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
                         return;
                     }
                 }
+                if (!type.isMagicProof() && tFluid.getFluid().is(GTLibTags.MAGIC)){
+                    transferredAmount += tTank.drain(Utils.ca(16, tFluid), FluidAction.EXECUTE).getAmount();
+                    level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
+                    for (LivingEntity tEntity : level.getEntitiesOfClass(LivingEntity.class, new AABB(pos.offset(-3, -3, -3), pos.offset(4, 4, 4)))){
+                        tEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 1200, 1));
+                    }
+                    if (level.random.nextInt(100) == 0){
+                        tTank.drain(tTank.getFluidAmount(), FluidAction.EXECUTE);
+                        level.setBlock(pos, Blocks.FIRE.defaultBlockState(), 3);
+                        return;
+                    }
+                }
             }
             if (mTemperature > getTemperature()) {
                 burn(level, pos.getX(), pos.getY(), pos.getZ());
@@ -384,6 +402,7 @@ public class BlockEntityFluidPipe<T extends FluidPipe<T>> extends BlockEntityPip
         list.add("Max temperature: " + getPipeType().getMaxTemperature());
         list.add(getPipeType().isGasProof() ? "Gas proof." : "Cannot handle gas.");
         list.add(getPipeType().isAcidProof() ? "Acid proof." : "Cannot handle acids.");
+        list.add(getPipeType().isMagicProof() ? "Magic proof." : "Cannot handle magic.");
         return list;
     }
 
