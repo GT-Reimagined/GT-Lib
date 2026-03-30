@@ -243,7 +243,7 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
                         return InteractionResult.SUCCESS;
                     }
                     if (getType().has(MachineFlag.GUI) && tile.canPlayerOpenGui(player)) {
-                        UIFactories.blockEntity().open(player, pos);
+                        UIFactories.sidedBlockEntity().open(player, pos, hit.getDirection());
                         /*NetworkHooks.openScreen((ServerPlayer) player, tile, extra -> {
                             extra.writeBlockPos(pos);
                         });*/

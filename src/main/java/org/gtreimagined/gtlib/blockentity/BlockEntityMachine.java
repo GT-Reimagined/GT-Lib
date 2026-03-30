@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.blockentity;
 
 import brachy.modularui.api.IUIHolder;
 import brachy.modularui.factory.PosGuiData;
+import brachy.modularui.factory.SidedPosGuiData;
 import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.ModularScreen;
 import brachy.modularui.screen.UISettings;
@@ -111,7 +112,7 @@ import static org.gtreimagined.gtlib.gui.event.GuiEvents.ITEM_EJECT;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
-public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode, IUIHolder<PosGuiData> {
+public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode, IUIHolder<SidedPosGuiData> {
 
     /**
      * Open container. Allows for better syncing
@@ -255,14 +256,14 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public ModularScreen createScreen(PosGuiData posGuiData, ModularPanel<?> modularPanel) {
+    public ModularScreen createScreen(SidedPosGuiData posGuiData, ModularPanel<?> modularPanel) {
         ModularScreen modularScreen = new ModularScreen(type.getDomain(), modularPanel);
         if (type.getGuiProperties().getTheme(getMachineTier()) != null) modularScreen.useTheme(type.getGuiProperties().getTheme(getMachineTier()));
         return modularScreen;
     }
 
     @Override
-    public ModularPanel<?> buildUI(PosGuiData posGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
+    public ModularPanel<?> buildUI(SidedPosGuiData posGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
         ModularPanel<?> panel = type.getModularPanelSupplier().get();
         type.getBackgroundFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
         type.getSlotFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
