@@ -6,22 +6,16 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.FluidHandler;
-import org.gtreimagined.gtlib.capability.FluidHandler.FluidTankType;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.gui.slot.AbstractSlot;
 import org.gtreimagined.gtlib.gui.slot.SlotCell;
 import org.gtreimagined.gtlib.gui.slot.SlotEnergy;
 import org.gtreimagined.gtlib.gui.slot.SlotFake;
-import org.gtreimagined.gtlib.gui.slot.SlotFakeFluid;
-import org.gtreimagined.gtlib.gui.slot.SlotFluidDisplaySettable;
 import org.gtreimagined.gtlib.gui.slot.SlotInput;
 import org.gtreimagined.gtlib.gui.slot.SlotOutput;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
@@ -36,7 +30,6 @@ import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @Builder
 public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent {
@@ -44,27 +37,27 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
     static final BiPredicate<IGuiHandler, ItemStack> NO_INPUT = (gu, stack) -> false;
 
     public static SlotType<SlotInput> IT_IN = SlotType.<SlotInput>builder().id("item_in")
-            .slotSupplier((type, gui, inv, i, d) -> new SlotInput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
+            .slotSupplier((type, gui, inv, i, d) -> new SlotInput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester(new ItIn()).output(false).build();
     public static SlotType<SlotOutput> IT_OUT = SlotType.<SlotOutput>builder().id("item_out")
-            .slotSupplier((type, gui, inv, i, d) -> new SlotOutput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
+            .slotSupplier((type, gui, inv, i, d) -> new SlotOutput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester(NO_INPUT).input(false).build();
 
     public static SlotType<SlotFake> DISPLAY = SlotType.<SlotFake>builder().id("display")
-            .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY(), false))
+            .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, false))
             .tester(NO_INPUT).input(false).output(false).phantom(true).build();
     public static SlotType<SlotFake> DISPLAY_SETTABLE = SlotType.<SlotFake>builder().id("display_settable")
-            .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY(), true))
+            .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, true))
             .tester(NO_INPUT).output(false).phantom(true).build();
-    public static SlotType<AbstractSlot<?>> STORAGE = SlotType.<AbstractSlot<?>>builder().id("storage").slotSupplier((type, gui, item, i, d) -> new AbstractSlot<>(type, gui, item.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
+    public static SlotType<AbstractSlot<?>> STORAGE = SlotType.<AbstractSlot<?>>builder().id("storage").slotSupplier((type, gui, item, i, d) -> new AbstractSlot<>(type, gui, item.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> true).build();
-    public static SlotType<SlotCell> CELL_IN = SlotType.<SlotCell>builder().id("cell_in").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
+    public static SlotType<SlotCell> CELL_IN = SlotType.<SlotCell>builder().id("cell_in").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
             .output(false).overlay(GTGuiTextures.CELL_IN_SLOT_OVERLAY).build();
-    public static SlotType<SlotCell> CELL_OUT = SlotType.<SlotCell>builder().id("cell_out").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
+    public static SlotType<SlotCell> CELL_OUT = SlotType.<SlotCell>builder().id("cell_out").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
             .input(false).overlay(GTGuiTextures.CELL_OUT_SLOT_OVERLAY).build();
-    public static SlotType<SlotEnergy> ENERGY = SlotType.<SlotEnergy>builder().id("energy").slotSupplier((type, gui, inv, i, d) -> new SlotEnergy(type, gui, inv.getOrDefault(type, new EmptyHandler()), i, d.getX(), d.getY()))
+    public static SlotType<SlotEnergy> ENERGY = SlotType.<SlotEnergy>builder().id("energy").slotSupplier((type, gui, inv, i, d) -> new SlotEnergy(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> {
                 if (t instanceof BlockEntityMachine<?> machine) {
                     return machine.energyHandler.map(eh -> {

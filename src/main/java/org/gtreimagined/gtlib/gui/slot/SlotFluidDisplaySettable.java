@@ -13,8 +13,8 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class SlotFluidDisplaySettable extends SlotFake {
-    public SlotFluidDisplaySettable(SlotType<SlotFake> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
-        super(type, tile, stackHandler, index, x, y, true);
+    public SlotFluidDisplaySettable(SlotType<SlotFake> type, IGuiHandler tile, IItemHandler stackHandler, int index) {
+        super(type, tile, stackHandler, index, true);
     }
 
     @Override

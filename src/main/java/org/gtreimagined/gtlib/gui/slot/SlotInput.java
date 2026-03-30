@@ -7,8 +7,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class SlotInput extends AbstractSlot<SlotInput> {
 
-    public SlotInput(SlotType<SlotInput> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
-        super(type, tile, stackHandler, index, x, y);
+    public SlotInput(SlotType<SlotInput> type, IGuiHandler tile, IItemHandler stackHandler, int index) {
+        super(type, tile, stackHandler, index);
     }
 
     @Override

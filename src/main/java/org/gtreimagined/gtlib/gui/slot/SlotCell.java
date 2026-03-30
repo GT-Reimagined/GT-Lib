@@ -6,8 +6,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class SlotCell extends AbstractSlot<SlotCell> {
 
-    public SlotCell(SlotType<SlotCell> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
-        super(type, tile, stackHandler, index, x, y);
+    public SlotCell(SlotType<SlotCell> type, IGuiHandler tile, IItemHandler stackHandler, int index) {
+        super(type, tile, stackHandler, index);
     }
 
 }

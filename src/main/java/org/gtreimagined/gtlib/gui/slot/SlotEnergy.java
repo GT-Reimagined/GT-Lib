@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class SlotEnergy extends AbstractSlot<SlotEnergy> {
-    public SlotEnergy(SlotType<SlotEnergy> type, IGuiHandler tile, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-        super(type, tile, itemHandler, index, xPosition, yPosition);
+    public SlotEnergy(SlotType<SlotEnergy> type, IGuiHandler tile, IItemHandler itemHandler, int index) {
+        super(type, tile, itemHandler, index);
     }
 
     @Override

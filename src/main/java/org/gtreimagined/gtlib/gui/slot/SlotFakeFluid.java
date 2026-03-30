@@ -13,8 +13,8 @@ public class SlotFakeFluid extends AbstractSlot<SlotFakeFluid> {
 
     public final FluidTankType dir;
 
-    public SlotFakeFluid(SlotType<SlotFakeFluid> type, IGuiHandler tile, FluidTankType dir, int index, int x, int y) {
-        super(type, tile, new EmptyHandler(), index, x, y);
+    public SlotFakeFluid(SlotType<SlotFakeFluid> type, IGuiHandler tile, FluidTankType dir, int index) {
+        super(type, tile, new EmptyHandler(), index);
         this.dir = dir;
     }
 
