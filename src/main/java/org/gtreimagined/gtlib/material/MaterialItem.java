@@ -54,6 +54,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
+import static org.gtreimagined.gtlib.material.MaterialTags.RAINBOW_RGB;
 import static org.gtreimagined.gtlib.material.MaterialTags.TOOLS;
 
 public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTObject, IColorHandler, ITextureProvider, IModelProvider, IMaterialObject {
@@ -280,7 +281,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
         if (i == 0) {
-            if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB)) && FMLEnvironment.dist.isClient()){
+            if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB) || material.has(RAINBOW_RGB)) && FMLEnvironment.dist.isClient()){
                 return getChangingMaterialColor();
             }
             return material.getRGB();
@@ -290,16 +291,40 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     @OnlyIn(Dist.CLIENT)
     private int getChangingMaterialColor(){
-        long currentRemainder = Minecraft.getInstance().player != null ?  Minecraft.getInstance().player.level().getGameTime() % 100 : -1;
+        long time = Minecraft.getInstance().player != null ? Minecraft.getInstance().player.level().getGameTime() : -1;
+        long currentRemainder = time >= 0 ? time % 100 : -1;
         if (currentRemainder >= 0){
             int direction = (int) (currentRemainder < 50 ? currentRemainder : -(currentRemainder - 50));
             int rgb = material.getRGB();
+            if (material.has(RAINBOW_RGB)){
+                switch((int)(time % 50)) {
+                    case   0, 1, 2, 3, 4 -> rgb = ChatFormatting.RED.getColor();
+                    case   5, 6, 7, 8, 9 -> rgb = ChatFormatting.GOLD.getColor();
+                    case  10, 11, 12, 13, 14 -> rgb = ChatFormatting.YELLOW.getColor();
+                    case  15, 16, 17, 18, 19 -> rgb = ChatFormatting.GREEN.getColor();
+                    case  20, 21, 22, 23, 24 -> rgb = ChatFormatting.AQUA.getColor();
+                    case  25, 26, 27, 28, 29 -> rgb = ChatFormatting.DARK_AQUA.getColor();
+                    case  30, 31, 32, 33, 34 -> rgb = ChatFormatting.DARK_BLUE.getColor();
+                    case  35, 36, 37, 38, 39 -> rgb = ChatFormatting.BLUE.getColor();
+                    case  40, 41, 42, 43, 44 -> rgb = ChatFormatting.DARK_PURPLE.getColor();
+                    case  45, 46, 47, 48, 49 -> rgb = ChatFormatting.LIGHT_PURPLE.getColor();
+                }
+            }
+
             int r = CodeUtils.getR(rgb);
             int g = CodeUtils.getG(rgb);
             int b = CodeUtils.getB(rgb);
-            int newR = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? r + direction : r - direction;
-            int newG = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? g + direction : g - direction;
-            int newB = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? b + direction : b - direction;
+            int newR, newG, newB;
+            if (material.has(RAINBOW_RGB)){
+                boolean
+                        tNR = CodeUtils.inside(  0,  99, (time/2) % 300), tNG = CodeUtils.inside( 50, 149, (time/2) % 300), tNB = CodeUtils.inside(100, 199, (time/2) % 300),
+                        tPR = CodeUtils.inside(100, 199, (time/2) % 300), tPG = CodeUtils.inside(150, 249, (time/2) % 300), tPB = CodeUtils.inside(200, 299, (time/2) % 300);
+            } else {
+
+            }
+            newR = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? r + direction : r - direction;
+            newG = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? g + direction : g - direction;
+            newB = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? b + direction : b - direction;
             return CodeUtils.getRGB(newR, newG, newB);
         }
         return material.getRGB();
