@@ -73,10 +73,15 @@ public class MachineTESR implements BlockEntityRenderer<BlockEntityMachine<?>> {
 
     private static BakedModel renderInner(BlockState state, RandomSource rand, int light, BakedModel inner, Fluid fluid, BlockAndTintGetter level, BlockPos pos) {
         List<BakedQuad> quads = ModelUtils.getQuadsFromBaked(inner, state, null, rand, level, pos);
-        List<BakedQuad> out = VertexTransformer.processMany(quads, FluidUtils.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidUtils.getStillTexture(fluid)));
-        boolean hot = FluidUtils.getFluidTemperature(fluid) >= FluidUtils.getFluidTemperature(Fluids.LAVA);
-        for (BakedQuad bakedQuad : out) {
-            setLightData(bakedQuad, hot ? 1 << 7 : light);
+        List<BakedQuad> out;
+        if (fluid == Fluids.EMPTY) {
+            out = quads;
+        } else {
+            out = VertexTransformer.processMany(quads, FluidUtils.getFluidColor(fluid), Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(FluidUtils.getStillTexture(fluid)));
+            boolean hot = FluidUtils.getFluidTemperature(fluid) >= FluidUtils.getFluidTemperature(Fluids.LAVA);
+            for (BakedQuad bakedQuad : out) {
+                setLightData(bakedQuad, hot ? 1 << 7 : light);
+            }
         }
         return new ListBakedModel(out);
     }
