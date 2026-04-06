@@ -9,6 +9,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
@@ -62,6 +64,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.gtreimagined.gtlib.data.GTTools.KNIFE;
+import static org.gtreimagined.gtlib.data.GTTools.SCISSORS;
 
 //@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -245,6 +248,12 @@ public class MaterialTool extends DiggerItem implements IGTTool {
             modifiers.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", type.getBaseAttackSpeed(), AttributeModifier.Operation.ADDITION));
         }
         return modifiers;
+    }
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+        if (type.getTag().equals(SCISSORS.getTag())) return ToolActions.DEFAULT_SHEARS_ACTIONS.contains(toolAction);
+        return super.canPerformAction(stack, toolAction);
     }
 
     @Override
