@@ -177,4 +177,4 @@ jobs:
           changelog-file: ${{ env.CHANGELOG_LOCATION }}
           loaders: forge
           java: ${{ env.JAVA }}
-          fail-mode: fail
+          fail-mode: warn
