@@ -56,7 +56,7 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof BlockEntityFakeBlock fakeBlock){
             if (fakeBlock.getController() != null){
-                if (fakeBlock.getController().getMachineType().has(MachineFlag.GUI) && fakeBlock.getController().canPlayerOpenGui(player)) {
+                if (fakeBlock.getController().getMachineType().has(MachineFlag.GUI) && fakeBlock.getController().canPlayerOpenGui(player, hit.getDirection())) {
                     if (!level.isClientSide){
                         NetworkHooks.openScreen((ServerPlayer) player, fakeBlock.getController(), extra -> {
                             extra.writeBlockPos(fakeBlock.getController().getBlockPos());

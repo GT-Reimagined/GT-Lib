@@ -664,7 +664,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         return getMachineType().has(GUI) ? getMachineType().getGuiProperties().getMenuHandler().menu(this, inv, windowId) : null;
     }
 
-    public boolean canPlayerOpenGui(Player playerEntity) {
+    public boolean canPlayerOpenGui(Player playerEntity, Direction side) {
         return true;
     }
 
