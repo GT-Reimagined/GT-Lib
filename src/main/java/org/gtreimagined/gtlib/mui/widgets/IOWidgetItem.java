@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.mui.widgets;
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.api.widget.Interactable;
 import brachy.modularui.screen.RichTooltip;
+import brachy.modularui.screen.viewport.GuiContext;
 import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetThemeEntry;
 import brachy.modularui.widgets.ButtonWidget;
@@ -23,7 +24,7 @@ public class IOWidgetItem extends ButtonWidget<IOWidgetItem> {
         itemOff = GTGuiTextures.IO_BUTTON.getSubArea(0, 0.5f, 0.5f, 1);
         itemOn = GTGuiTextures.IO_BUTTON.getSubArea(0.5f, 0.5f, 1, 1);
         tooltip(new RichTooltip().add(Utils.translatable("gtlib.tooltip.io_widget.item")));
-        this.onMousePressed((mouseX, mouseY, button) -> this.mouseClicked(mouseX, mouseY, button, handler));
+        this.onMousePressed((context, button) -> this.mouseClicked(context, button, handler));
     }
 
     @Override
@@ -34,7 +35,7 @@ public class IOWidgetItem extends ButtonWidget<IOWidgetItem> {
 
 
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button, IGuiHandler handler) {
+    public boolean mouseClicked(GuiContext context, int button, IGuiHandler handler) {
         GTLibNetwork.NETWORK.sendToServer(handler.createGuiPacket(new GuiEvent(GuiEvents.ITEM_EJECT, Interactable.hasShiftDown() ? 1 : 0, 0)));
         return true;
     }

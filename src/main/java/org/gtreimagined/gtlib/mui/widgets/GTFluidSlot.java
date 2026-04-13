@@ -1,6 +1,5 @@
 package org.gtreimagined.gtlib.mui.widgets;
 
-import brachy.modularui.api.drawable.IKey;
 import brachy.modularui.screen.RichTooltip;
 import brachy.modularui.widgets.slot.FluidSlot;
 import lombok.experimental.Accessors;
@@ -20,7 +19,7 @@ public class GTFluidSlot extends FluidSlot {
     protected void addTooltip(RichTooltip tooltip) {
         FluidStack fluid = this.getFluidStack();
         if (fluid == null || fluid.isEmpty()) return;
-        tooltip.addLine(IKey.lang(fluid.getDisplayName()));
+        tooltip.addLine(fluid.getDisplayName());
         List<Component> str = new ArrayList<>();
         int mb = fluid.getAmount();
         str.add(Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
