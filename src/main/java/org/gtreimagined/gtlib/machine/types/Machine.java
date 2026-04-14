@@ -659,6 +659,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      *
      * @param menuHandler the menu handler.
      */
+    @Deprecated(forRemoval = true)
     public void setGUI(MenuHandler<?> menuHandler) {
         guiProperties = new GuiProperties(this, menuHandler);
         guiProperties.setSlots(this);
