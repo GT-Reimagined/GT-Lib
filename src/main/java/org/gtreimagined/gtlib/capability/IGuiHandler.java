@@ -58,6 +58,7 @@ public interface IGuiHandler {
     interface IHaveWidgets {
         List<Consumer<GuiInstance>> getCallbacks();
 
+        @Deprecated(forRemoval = true)
         default IHaveWidgets addGuiCallback(Consumer<GuiInstance> gui) {
             getCallbacks().add(gui);
             return this;

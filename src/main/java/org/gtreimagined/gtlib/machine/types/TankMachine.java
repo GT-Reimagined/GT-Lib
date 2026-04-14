@@ -31,7 +31,6 @@ public class TankMachine extends Machine<TankMachine> {
             tooltip.add(Utils.translatable("machine.tank.capacity", capacityPerTier.apply(machine.getTier())));
         });
         addFlags(ITEM, FLUID, COVERABLE);
-        setGUI(Data.BASIC_MENU_HANDLER);
         setAllowsFrontCovers();
         setAllowsFrontIO();
     }

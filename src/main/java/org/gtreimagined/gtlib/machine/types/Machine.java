@@ -319,6 +319,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         };
         itemModelParent = new ResourceLocation(Ref.ID, "block/preset/layered");
         tiers = Arrays.asList(Tier.getStandard());
+        guiProperties = new GuiProperties(domain, id);
+        guiProperties.setSlots(this);
         GTAPI.register(Machine.class, this);
         //if (FMLEnvironment.dist.isClient()) {
         setupGui();
@@ -326,7 +328,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     }
 
     protected void setupGui() {
-        addGuiCallback(t -> t.addWidget(BackgroundWidget.build(t.handler.getGuiTexture(), t.handler.guiSize(), t.handler.guiHeight(), t.handler.guiTextureSize(), t.handler.guiTextureHeight())));
     }
 
     public Direction handlePlacementFacing(BlockPlaceContext ctxt, Property<?> which, Direction dir) {

@@ -34,18 +34,6 @@ public class BasicMachine extends Machine<BasicMachine> {
     @Override
     protected void setupGui() {
         super.setupGui();
-        addGuiCallback(t -> {
-            t.addWidget(WidgetSupplier.build((a, b) -> TextWidget.build(((GTContainerScreen<?>) b).getTitle().getString(), 4210752, false).build(a, b)).setPos(9, 5).clientSide());
-            if (has(RECIPE)) {
-                t.addWidget(ProgressWidget.build())
-                        .addWidget(MachineStateWidget.build());
-            }
-            if ((has(ITEM) || has(FLUID)))
-                t.addWidget(IOWidget.build(9, 63).onlyIf(u -> u.handler instanceof BlockEntityMachine<?> machine &&
-                        machine.getOutputFacing() != null &&
-                        machine.coverHandler.map(c -> c.getOutputCover() instanceof CoverOutput).orElse(false) &&
-                        !(u.handler instanceof BlockEntityMultiMachine<?>)));
-        });
         guiFunctions.add(((modularPanel, machine, guiData1, syncManager, settings) -> {
             if (has(RECIPE)) {
                 int2 size = guiProperties.getMachineData().getMachineStateSize();

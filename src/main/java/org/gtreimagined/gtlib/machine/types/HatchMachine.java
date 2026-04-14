@@ -21,7 +21,6 @@ public class HatchMachine extends Machine<HatchMachine> {
         setTile(BlockEntityHatch::new);
         setTiers(Tier.getAllElectric());
         addFlags(HATCH, COVERABLE);
-        setGUI(Data.BASIC_MENU_HANDLER);
         setVerticalFacingAllowed(true);
         setOutputCover(cover);
         setOutputDir(Dir.FORWARD);

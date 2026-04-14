@@ -37,7 +37,6 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
         setItemBlockClass(() -> BlockMultiMachine.class);
         addFlags(MULTI, COVERABLE);
         setClientTicking();
-        setGUI(Data.BASIC_MENU_HANDLER);
         setOutputCover(ICover.emptyFactory);
         addTooltipInfo((machine, stack, world, tooltip, flag) -> {
             if (machine.getType().getStructure(machine.getTier()) != null) {
