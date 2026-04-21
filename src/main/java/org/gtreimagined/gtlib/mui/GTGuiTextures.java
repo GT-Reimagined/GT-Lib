@@ -17,7 +17,7 @@ public class GTGuiTextures {
         public static final String STANDARD_BUTTON = "gregtech_standard_button";
     }
 
-    public static final UITexture GT_LOGO = UITexture.fullImage(Ref.ID,"textures/gui/icons/gt_logo.png");
+    public static final UITexture GT_LOGO = UITexture.fullImage(Ref.ID,"textures/gui/icons/gt_logo.png", null);
 
     public static final UITexture BATTERY_SLOT_OVERLAY = UITexture.builder().location(Ref.ID, "textures/gui/slots/overlays/battery.png").colorType(null).build();
     public static final UITexture CELL_SLOT_OVERLAY = UITexture.builder().location(Ref.ID, "textures/gui/slots/overlays/cell.png").defaultColorType().build();
@@ -33,5 +33,6 @@ public class GTGuiTextures {
     public static final UITexture MACHINE_STATE = UITexture.builder().imageSize(20, 11).location(Ref.ID, "textures/gui/widgets/machine_state.png").build();
     public static final UITexture IO_BUTTON = UITexture.fullImage(Ref.ID, "textures/gui/button/io.png");
     public static final UITexture DEFAULT_PROGRESS = UITexture.builder().location(new ResourceLocation(Ref.ID, "textures/gui/progress_bars/default.png")).imageSize(20, 36).build();
+    public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "textures/gui/button/tank.png"), null);
 
 }

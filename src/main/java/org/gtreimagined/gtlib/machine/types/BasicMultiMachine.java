@@ -50,11 +50,6 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     protected void setupGui() {
         super.setupGui();
         if (!(this instanceof MultiMachine)) {
-            addGuiCallback(t -> {
-                if (this.has(RECIPE)) {
-                    t.addWidget(ProgressWidget.build());
-                }
-            });
         }
     }
 

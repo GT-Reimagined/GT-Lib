@@ -6,6 +6,7 @@ import org.gtreimagined.gtlib.blockentity.multi.BlockEntityHatch;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.gui.widget.TankIconWidget;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.util.Dir;
 
@@ -43,9 +44,9 @@ public class HatchMachine extends Machine<HatchMachine> {
     @Override
     protected void setupGui() {
         super.setupGui();
-        addGuiCallback(t -> {
+        getGuiFunctions().add((modularPanel, machine, guiData, syncManager, settings) -> {
             if (has(FLUID)){
-                t.addWidget(TankIconWidget.build().setPos(8, 39));
+                modularPanel.child(GTGuiTextures.TANK_ICON.asWidget().pos(8, 39));
             }
         });
     }

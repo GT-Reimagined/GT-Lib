@@ -11,7 +11,6 @@ public class MultiMachine extends BasicMultiMachine<MultiMachine> {
     public MultiMachine(String domain, String name) {
         super(domain, name);
         setTile(BlockEntityMultiMachine::new);
-        setGUI(Data.MULTI_MENU_HANDLER);
         setOutputCover(ICover.emptyFactory);
     }
 
