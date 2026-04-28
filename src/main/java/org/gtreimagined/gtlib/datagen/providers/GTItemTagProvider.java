@@ -27,6 +27,7 @@ import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.pipe.PipeSize;
 import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.pipe.types.Wire;
+import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.tool.IGTTool;
 import org.gtreimagined.gtlib.util.TagUtils;
 import net.minecraft.core.Registry;
@@ -136,6 +137,11 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                             this.tag(getForgelikeItemTag(String.join("", getConventionalStoneType(s), "_", getConventionalMaterialType(t)))).add(i.get());
                         });
                    });
+                }
+                String ie = "immersiveengineering";
+                if (GTAPI.isModLoaded(ie)){
+                    var tagBuilder = this.tag(TagUtils.getItemTag(new ResourceLocation(ie, "recycling/ignored_components")));
+                    GTAPI.all(GTToolType.class).forEach(tool -> tagBuilder.addTag(tool.getTag()));
                 }
             });
             this.tag(Tags.Items.SHEARS).addTag(GTTools.SCISSORS.getTag());

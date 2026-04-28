@@ -118,8 +118,9 @@ public class FluidUtils {
         IFluidHandlerItem itemHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().orElse(null);
         if (itemHandler == null) return false;
         final int actualMax = maxDrain == -1 ? itemHandler.getTankCapacity(0) : maxDrain;
+        final int actuallyDrained = FluidUtil.tryFluidTransfer(handler, itemHandler, actualMax, false).getAmount();
         ItemStack checkContainer = stack.copy().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).map(t -> {
-            t.drain(actualMax, EXECUTE);
+            t.drain(actuallyDrained, EXECUTE);
             return t.getContainer();
         }).orElse(ItemStack.EMPTY);
         if (!tester.test(checkContainer)) return false;
