@@ -3,7 +3,7 @@ package org.gtreimagined.gtlib.gui.widget;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
-import org.gtreimagined.gtlib.gui.BarDir;
+import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
@@ -57,7 +57,7 @@ public class ProgressWidget extends Widget {
         int progressTime;
         int x = this.realX(), y = this.realY(), xLocation = uv.x, yLocation = uv.y, length = uv.z, width = uv.w;
         switch (direction) {
-            case TOP -> {
+            case UP -> {
                 progressTime = (int) (uv.w * percent);
                 if (!barFill) {
                     progressTime = width - progressTime;
@@ -74,7 +74,7 @@ public class ProgressWidget extends Widget {
                     length = length - progressTime;
                 }
             }
-            case BOTTOM -> {
+            case DOWN -> {
                 progressTime = (int) (uv.w * percent);
                 if (barFill) {
                     width = progressTime;

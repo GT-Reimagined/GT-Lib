@@ -2,7 +2,6 @@ package org.gtreimagined.gtlib.gui;
 
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.drawable.UITexture;
-import brachy.modularui.widgets.ProgressWidget.Direction;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,13 +1,13 @@
 package org.gtreimagined.gtlib.gui;
 
 import brachy.modularui.drawable.UITexture;
-import brachy.modularui.widgets.ProgressWidget.Direction;
+import brachy.modularui.drawable.progress.ProgressDrawable.Direction;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.util.int2;
 import net.minecraft.resources.ResourceLocation;
@@ -19,11 +19,7 @@ import java.util.function.BiFunction;
 public class MachineWidgetData {
     @Getter
     @Setter
-    @Deprecated
-    public BarDir dir = BarDir.LEFT;
-    @Getter
-    @Setter
-    public Direction direction = Direction.RIGHT;
+    public BarDir dir = BarDir.RIGHT;
     @Getter
     @Setter
     public boolean barFill = true;

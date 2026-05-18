@@ -13,7 +13,7 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Data;
-import org.gtreimagined.gtlib.gui.BarDir;
+import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
@@ -239,7 +239,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
         int realX = bounds.x + params.x - 1, realY = bounds.y + params.y - 1;
         int x = realX, y = realY, xLocation = params.posX, yLocation = params.posY, length = params.length, width = params.width;
         switch (params.dir) {
-            case TOP -> {
+            case UP -> {
                 progressTime = (int) (params.width * percent);
                 if (!params.fill) {
                     progressTime = width - progressTime;
@@ -256,7 +256,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                     length = length - progressTime;
                 }
             }
-            case BOTTOM -> {
+            case DOWN -> {
                 progressTime = (int) (params.width * percent);
                 if (params.fill) {
                     width = progressTime;

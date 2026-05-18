@@ -17,7 +17,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import org.gtreimagined.gtlib.Data;
-import org.gtreimagined.gtlib.gui.BarDir;
+import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
@@ -118,8 +118,8 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
 
     private IDrawableAnimated.StartDirection fromDir(BarDir dir){
         return switch (dir){
-            case TOP -> IDrawableAnimated.StartDirection.TOP;
-            case BOTTOM -> IDrawableAnimated.StartDirection.BOTTOM;
+            case UP -> IDrawableAnimated.StartDirection.TOP;
+            case DOWN -> IDrawableAnimated.StartDirection.BOTTOM;
             case LEFT -> IDrawableAnimated.StartDirection.LEFT;
             case RIGHT -> IDrawableAnimated.StartDirection.RIGHT;
         };

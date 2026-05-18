@@ -1,20 +1,16 @@
 package org.gtreimagined.gtlib.machine.types;
 
 import brachy.modularui.drawable.UITexture;
+import brachy.modularui.drawable.progress.CompositeProgress;
 import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.widget.ParentWidget;
+import brachy.modularui.widgets.ProgressWidget;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
-import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
 import org.gtreimagined.gtlib.cover.CoverOutput;
-import org.gtreimagined.gtlib.gui.screen.GTContainerScreen;
-import org.gtreimagined.gtlib.gui.widget.IOWidget;
-import org.gtreimagined.gtlib.gui.widget.MachineStateWidget;
-import org.gtreimagined.gtlib.gui.widget.ProgressWidget;
-import org.gtreimagined.gtlib.gui.widget.TextWidget;
-import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
+import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.mui.widgets.GTProgressWidget;
 import org.gtreimagined.gtlib.mui.widgets.IOWidgetFluid;
 import org.gtreimagined.gtlib.mui.widgets.IOWidgetItem;
@@ -43,11 +39,21 @@ public class BasicMachine extends Machine<BasicMachine> {
                         .size(size.x, size.y));
 
                 syncManager.syncValue("progress", new DoubleSyncValue(() -> machine.recipeHandler.map(r -> guiProperties.getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0f)));
-                modularPanel.child(new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
-                        .texture(guiProperties.getMachineData().getProgressTexture(machine.getMachineTier()), guiProperties.getMachineData().getProgressSize().x)
-                        .direction(guiProperties.getMachineData().getDirection())
+                BarDir direction = guiProperties.getMachineData().getDir();
+                UITexture texture = guiProperties.getMachineData().getProgressTexture(machine.getMachineTier());
+                ProgressWidget progressWidget = new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
                         .syncHandler("progress")
-                        .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6));
+                        .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6);
+                modularPanel.child(progressWidget);
+                if (!direction.isCircular()) {
+                    progressWidget.texture(texture, direction.toRegularDirection());
+                } else {
+                            progressWidget.progress(CompositeProgress.circularLike4Slice(
+                                    texture.getSubArea(0.0f, 0.0f, 1f, 0.5f),
+                                    texture.getSubArea(0f, 0.5f,1f, 1f),
+                                    direction.toCircularDirection()
+                            ));
+                }
             }
 
             if (machine.getOutputFacing() != null &&

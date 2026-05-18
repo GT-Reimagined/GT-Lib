@@ -1,11 +1,9 @@
 package org.gtreimagined.gtlib.machine.types;
 
-import brachy.modularui.drawable.UITexture;
 import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
-import brachy.modularui.widgets.slot.SlotGroup;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -46,14 +44,13 @@ import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTTools;
-import org.gtreimagined.gtlib.gui.BarDir;
+import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.MenuHandler;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
-import org.gtreimagined.gtlib.gui.widget.BackgroundWidget;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.IMachineColorHandlerBlock;
