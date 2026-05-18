@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib;
 
+import brachy.modularui.widgets.ButtonWidget;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
@@ -27,6 +28,7 @@ import org.gtreimagined.gtlib.item.ItemFluidIcon;
 import org.gtreimagined.gtlib.item.ScannerItem;
 import org.gtreimagined.gtlib.machine.types.BasicMachine;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.tool.enchantment.ElectricEnchantment;
 import net.minecraft.ChatFormatting;
@@ -115,6 +117,13 @@ public class Data {
 
     public static void init(Dist side) {
         CREATIVE_GENERATOR.getGuiProperties().setBackgroundTexture("creative_generator");
+        CREATIVE_GENERATOR.getGuiFunctions().add(((modularPanel, machine, guiData, syncManager, settings) -> {
+            int buttonCounter = 0;
+            modularPanel.child(new ButtonWidget<>()
+                    .overlay(GTGuiTextures.APAD_LEFT.getSubArea(0f, 0f, 1.0f, 0.5f))
+                    .hoverOverlay(GTGuiTextures.APAD_LEFT.getSubArea(0f, 0.5f, 1f, 1f))
+                    .size(14).pos(10, 18));
+        }));
         if (side.isClient()){
             CREATIVE_GENERATOR.addGuiCallback(t -> {
                 t.addButton(10, 18, APAD_LEFT, false)
