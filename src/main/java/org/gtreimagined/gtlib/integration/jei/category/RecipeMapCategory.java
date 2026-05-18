@@ -8,6 +8,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableAnimated.StartDirection;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -122,6 +123,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             case DOWN -> IDrawableAnimated.StartDirection.BOTTOM;
             case LEFT -> IDrawableAnimated.StartDirection.LEFT;
             case RIGHT -> IDrawableAnimated.StartDirection.RIGHT;
+            case CW, CCW -> StartDirection.LEFT;
         };
     }
 
