@@ -4,6 +4,7 @@ import brachy.modularui.drawable.ColorType;
 import brachy.modularui.drawable.UITexture;
 import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.gui.ButtonOverlay;
 
 public class GTGuiTextures {
     public static class IDs {
@@ -34,5 +35,39 @@ public class GTGuiTextures {
     public static final UITexture IO_BUTTON = UITexture.fullImage(Ref.ID, "textures/gui/button/io.png");
     public static final UITexture DEFAULT_PROGRESS = UITexture.builder().location(new ResourceLocation(Ref.ID, "textures/gui/progress_bars/default.png")).imageSize(20, 36).build();
     public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "textures/gui/button/tank.png"), null);
+
+    public static UITexture STOP = UITexture.fullImage(Ref.ID,"stop", null);
+    public static UITexture TORCH_OFF = UITexture.fullImage(Ref.ID,"torch_off", null);
+    public static UITexture TORCH_ON = UITexture.fullImage(Ref.ID,"torch_on", null);
+    public static UITexture REDSTONE = UITexture.fullImage(new ResourceLocation("textures/item/redstone.png"), null);
+    public static UITexture EXPORT = UITexture.fullImage(Ref.ID,"export", null);
+    public static UITexture IMPORT =  UITexture.fullImage(Ref.ID,"import", null);
+    public static UITexture EXPORT_IMPORT =  UITexture.fullImage(Ref.ID,"export_import", null);
+    public static UITexture IMPORT_EXPORT =  UITexture.fullImage(Ref.ID,"import_export", null);
+    public static UITexture INPUT_OFF =  UITexture.fullImage(Ref.ID,"input_off", null);
+
+    public static UITexture GREY_OFF =  UITexture.fullImage(Ref.ID,"textures/gui/button/grey_off.png",  null);
+    public static UITexture GREY_ON =  UITexture.fullImage(Ref.ID,"textures/gui/button/grey_on.png",  null);
+    public static UITexture BLUE_OFF =  UITexture.fullImage(Ref.ID,"textures/gui/button/blue_off.png",  null);
+    public static UITexture BLUE_ON =  UITexture.fullImage(Ref.ID,"textures/gui/button/blue_on.png",  null);
+    public static UITexture LESS =  UITexture.fullImage(Ref.ID,"textures/gui/button/less.png", null);
+    public static UITexture EQUAL =  UITexture.fullImage(Ref.ID,"textures/gui/button/equal.png", null);
+    public static UITexture MORE =  UITexture.fullImage(Ref.ID,"textures/gui/button/more.png", null);
+    public static UITexture WHITELIST =  UITexture.fullImage(Ref.ID,"textures/gui/button/whitelist.png", null);
+    public static UITexture BLACKLIST =  UITexture.fullImage(Ref.ID,"textures/gui/button/blacklist.png", null);
+    public static UITexture MINUS =  UITexture.fullImage(Ref.ID,"textures/gui/button/minus.png",  null);
+    public static UITexture PLUS =  UITexture.fullImage(Ref.ID,"textures/gui/button/plus.png",  null);
+    public static UITexture DIVISION =  UITexture.fullImage(Ref.ID,"textures/gui/button/division.png",  null);
+    public static UITexture MULT =  UITexture.fullImage(Ref.ID,"textures/gui/button/mult.png",  null);
+    public static UITexture PERCENT =  UITexture.fullImage(Ref.ID,"textures/gui/button/percent.png",  null);
+    public static UITexture ARROW_LEFT =  UITexture.fullImage(Ref.ID,"textures/gui/button/arrow_left.png", null);
+    public static UITexture A_LEFT =  UITexture.fullImage(Ref.ID,"textures/gui/button/a_left.png",  null);
+    public static UITexture A_RIGHT =  UITexture.fullImage(Ref.ID,"textures/gui/button/a_right.png",  null);
+    public static UITexture ARROW_RIGHT =  UITexture.fullImage(Ref.ID,"textures/gui/button/arrow_right.png",  null);
+    public static UITexture INPUT_OUTPUT =  UITexture.fullImage(Ref.ID,"textures/gui/button/in_out.png",  null);
+    public static final UITexture APAD_LEFT = UITexture.builder().location(Ref.ID, "textures/gui/button/apad_left.png").imageSize(14, 28).colorType(null).build();
+    public static final UITexture PAD_LEFT = UITexture.builder().location(Ref.ID, "textures/gui/button/pad_left.png").imageSize(14, 28).colorType(null).build();
+    public static final UITexture APAD_RIGHT = UITexture.builder().location(Ref.ID, "textures/gui/button/apad_right.png").imageSize(14, 28).colorType(null).build();
+    public static final UITexture PAD_RIGHT = UITexture.builder().location(Ref.ID, "textures/gui/button/pad_right.png").imageSize(14, 28).colorType(null).build();
 
 }
