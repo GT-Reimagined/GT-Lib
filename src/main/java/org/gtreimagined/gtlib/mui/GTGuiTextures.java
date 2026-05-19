@@ -35,6 +35,7 @@ public class GTGuiTextures {
     public static final UITexture IO_BUTTON = UITexture.fullImage(Ref.ID, "textures/gui/button/io.png");
     public static final UITexture DEFAULT_PROGRESS = UITexture.builder().location(new ResourceLocation(Ref.ID, "textures/gui/progress_bars/default.png")).imageSize(20, 36).build();
     public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "textures/gui/button/tank.png"), null);
+    public static final UITexture CREATIVE_GENERATOR_OVERLAY = UITexture.builder().location(Ref.ID, "textures/gui/widgets/creative_generator_overlay.png").imageSize(158, 61).colorType(null).build();
 
     public static UITexture STOP = UITexture.fullImage(Ref.ID,"stop", null);
     public static UITexture TORCH_OFF = UITexture.fullImage(Ref.ID,"torch_off", null);

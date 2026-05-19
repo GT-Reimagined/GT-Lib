@@ -1,7 +1,9 @@
 package org.gtreimagined.gtlib;
 
+import brachy.modularui.drawable.UITexture;
 import brachy.modularui.widgets.ButtonWidget;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import net.minecraft.client.gui.screens.Screen;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.blockentity.single.BlockEntityInfiniteStorage;
@@ -23,6 +25,7 @@ import org.gtreimagined.gtlib.gui.container.ContainerBasicMachine;
 import org.gtreimagined.gtlib.gui.container.ContainerCover;
 import org.gtreimagined.gtlib.gui.container.ContainerMachine;
 import org.gtreimagined.gtlib.gui.container.ContainerMultiMachine;
+import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.item.ItemCover;
 import org.gtreimagined.gtlib.item.ItemFluidIcon;
 import org.gtreimagined.gtlib.item.ScannerItem;
@@ -116,34 +119,30 @@ public class Data {
             .setNoOutputCover();
 
     public static void init(Dist side) {
-        CREATIVE_GENERATOR.getGuiProperties().setBackgroundTexture("creative_generator");
         CREATIVE_GENERATOR.getGuiFunctions().add(((modularPanel, machine, guiData, syncManager, settings) -> {
-            int buttonCounter = 0;
-            modularPanel.child(new ButtonWidget<>()
-                    .overlay(GTGuiTextures.APAD_LEFT.getSubArea(0f, 0f, 1.0f, 0.5f))
-                    .hoverOverlay(GTGuiTextures.APAD_LEFT.getSubArea(0f, 0.5f, 1f, 1f))
-                    .size(14).pos(10, 18));
-        }));
-        if (side.isClient()){
-            CREATIVE_GENERATOR.addGuiCallback(t -> {
-                t.addButton(10, 18, APAD_LEFT, false)
-                        .addButton(25, 18, PAD_LEFT, false)
-                        .addButton(10, 33, APAD_LEFT, false)
-                        .addButton(25, 33, PAD_LEFT, false)
-                        .addButton(10, 48, APAD_LEFT, false)
-                        .addButton(25, 48, PAD_LEFT, false)
-                        .addButton(10, 63, APAD_LEFT, false)
-                        .addButton(25, 63, PAD_LEFT, false)
-                        .addButton(137, 18, PAD_RIGHT, false)
-                        .addButton(152, 18, APAD_RIGHT, false)
-                        .addButton(137, 33, PAD_RIGHT, false)
-                        .addButton(152, 33, APAD_RIGHT, false)
-                        .addButton(137, 48, PAD_RIGHT, false)
-                        .addButton(152, 48, APAD_RIGHT, false)
-                        .addButton(137, 63, PAD_RIGHT, false)
-                        .addButton(152, 63, APAD_RIGHT, false);
+            modularPanel.child(GTGuiTextures.CREATIVE_GENERATOR_OVERLAY.asWidget().size(158, 61).pos(9, 17));
+            syncManager.registerSyncedAction("buttonEvent", packet -> {
+                machine.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), syncManager.getPlayer());
             });
-        }
+            for (int i = 0; i < 16; i++){
+                boolean leftSide = i < 8;
+                boolean leftOuter = i % 2 == 0;
+                UITexture texture = leftSide ? (leftOuter ? GTGuiTextures.APAD_LEFT : GTGuiTextures.PAD_LEFT) : (leftOuter ? GTGuiTextures.PAD_RIGHT : GTGuiTextures.APAD_RIGHT);
+                int x = leftSide ? (leftOuter ? 10 : 25) : (leftOuter ? 137 : 152);
+                int y = (i < 8 ? i : i - 8) / 2;
+                int finalI = i;
+                modularPanel.child(new ButtonWidget<>()
+                        .overlay(texture.getSubArea(0f, 0f, 1.0f, 0.5f))
+                        .hoverOverlay(texture.getSubArea(0f, 0.5f, 1f, 1f))
+                                .onMousePressed((context, mouseButton) -> {
+                                    syncManager.callSyncedAction("buttonEvent", packet -> {
+                                        packet.writeVarIntArray(new int[]{Screen.hasShiftDown() ? 1 : 0, finalI});
+                                    });
+                                    return true;
+                                })
+                        .size(14).pos(x, 18 + (15 * y)));
+            }
+        }));
     }
 
     public static void postInit() {
