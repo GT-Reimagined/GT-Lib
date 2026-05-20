@@ -1,7 +1,10 @@
 package org.gtreimagined.gtlib.blockentity.single;
 
+import brachy.modularui.screen.viewport.ModularGuiContext;
+import brachy.modularui.theme.WidgetThemeEntry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
@@ -16,6 +19,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 
 import static org.gtreimagined.gtlib.gui.ICanSyncData.SyncDirection.SERVER_TO_CLIENT;
 
@@ -111,6 +115,16 @@ public class BlockEntityDigitalTransformer<T extends BlockEntityDigitalTransform
         return 72;
     }
 
+    @Override
+    public void drawInfo(GTInfoRenderWidget widget, ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+        widget.drawText(context, widgetTheme, 0, 0, Component.literal("Control Panel"), 0xFAFAFF);
+        long voltage = widget.getSyncedValue("volts", Long.class).orElse(32L);
+        long amps = widget.getSyncedValue("amps", Long.class).orElse(4L);
+        widget.drawText(context, widgetTheme, 0, 19, Component.literal("VOLT: " + voltage), 0xFAFAFF);
+        widget.drawText(context, widgetTheme, 0, 27, Component.literal("TIER: " + Tier.getTier(voltage < 0 ? -voltage : voltage).getId().toUpperCase()), 0xFAFAFF);
+        widget.drawText(context, widgetTheme, 0, 35, Component.literal("AMP: " + amps), 0xFAFAFF);
+        widget.drawText(context, widgetTheme, 0, 43, Component.literal("SUM: " + (voltage * amps)), 0xFAFAFF);
+    }
     @Override
     public void addWidgets(GuiInstance instance, IGuiElement parent) {
         super.addWidgets(instance, parent);
