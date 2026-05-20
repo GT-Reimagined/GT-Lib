@@ -10,7 +10,7 @@ import brachy.modularui.value.sync.ModularSyncManager;
 import brachy.modularui.value.sync.SyncHandler;
 import brachy.modularui.widget.Widget;
 import net.minecraft.network.chat.Component;
-import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.mui.IInfoRenderer;
 
 import java.util.Optional;
 import java.util.function.IntSupplier;

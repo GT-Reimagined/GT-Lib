@@ -1,7 +1,7 @@
 package org.gtreimagined.gtlib.machine.types;
 
 import org.gtreimagined.gtlib.blockentity.BlockEntityTank;
-import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.mui.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 import org.gtreimagined.gtlib.util.Utils;

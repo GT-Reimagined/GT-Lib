@@ -13,7 +13,7 @@ import org.gtreimagined.gtlib.capability.machine.MultiMachineEnergyHandler;
 import org.gtreimagined.gtlib.capability.machine.MultiMachineFluidHandler;
 import org.gtreimagined.gtlib.capability.machine.MultiMachineItemHandler;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.mui.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;

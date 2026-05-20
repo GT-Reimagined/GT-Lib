@@ -1,14 +1,12 @@
 package org.gtreimagined.gtlib;
 
 import brachy.modularui.drawable.UITexture;
-import brachy.modularui.value.sync.LongSyncValue;
 import brachy.modularui.widgets.ButtonWidget;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.minecraft.client.gui.screens.Screen;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.blockentity.single.BlockEntityInfiniteStorage;
-import org.gtreimagined.gtlib.capability.EnergyHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.cover.CoverDebug;
 import org.gtreimagined.gtlib.cover.CoverDynamo;
@@ -28,7 +26,7 @@ import org.gtreimagined.gtlib.gui.container.ContainerCover;
 import org.gtreimagined.gtlib.gui.container.ContainerMachine;
 import org.gtreimagined.gtlib.gui.container.ContainerMultiMachine;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
-import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.mui.IInfoRenderer;
 import org.gtreimagined.gtlib.item.ItemCover;
 import org.gtreimagined.gtlib.item.ItemFluidIcon;
 import org.gtreimagined.gtlib.item.ScannerItem;
@@ -48,7 +46,6 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import org.jetbrains.annotations.Nullable;
 
-import static org.gtreimagined.gtlib.gui.ButtonOverlay.*;
 import static org.gtreimagined.gtlib.machine.MachineFlag.EU;
 import static org.gtreimagined.gtlib.machine.MachineFlag.GUI;
 import static org.gtreimagined.gtlib.machine.Tier.MAX;

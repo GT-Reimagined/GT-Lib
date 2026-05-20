@@ -1,11 +1,8 @@
 package org.gtreimagined.gtlib.machine.types;
 
-import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
-import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
-import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.mui.IInfoRenderer;
 import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 
 public class MultiMachine extends BasicMultiMachine<MultiMachine> {

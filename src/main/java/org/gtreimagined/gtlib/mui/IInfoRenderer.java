@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.xei.renderer;
+package org.gtreimagined.gtlib.mui;
 
 import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetThemeEntry;
