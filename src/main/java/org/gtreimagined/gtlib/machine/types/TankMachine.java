@@ -1,6 +1,11 @@
 package org.gtreimagined.gtlib.machine.types;
 
+import brachy.modularui.drawable.UITexture;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTank;
+import org.gtreimagined.gtlib.machine.IPanelFunction;
 import org.gtreimagined.gtlib.mui.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
@@ -10,8 +15,12 @@ import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 
+@Accessors(chain = true)
 public class TankMachine extends Machine<TankMachine> {
     final Function<Tier, Integer> capacityPerTier;
+    @Getter
+    @Setter
+    UITexture backgroundConsole = null;
 
     public TankMachine(String domain, String name) {
         this(domain, name, t -> 8000 * (1 + t.getIntegerId()));
@@ -36,6 +45,13 @@ public class TankMachine extends Machine<TankMachine> {
     @Override
     protected void setupGui() {
         super.setupGui();
+        IPanelFunction background = getBackgroundFunction();
+        setBackgroundFunction(((modularPanel, machine, guiData, syncManager, settings) -> {
+            background.modifyPanel(modularPanel, machine, guiData, syncManager, settings);
+            if (getBackgroundConsole() != null){
+                modularPanel.child(getBackgroundConsole().asWidget());
+            }
+        }));
         getGuiFunctions().add(((modularPanel, machine, guiData, syncManager, settings) -> {
             if (machine instanceof IInfoRenderer renderer){
                 renderer.registerSyncHandlers(syncManager);
