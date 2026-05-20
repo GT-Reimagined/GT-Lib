@@ -128,8 +128,9 @@ public class Data {
             syncManager.registerSyncedAction("buttonEvent", packet -> {
                 machine.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), syncManager.getPlayer());
             });
-            syncManager.syncValue("volts", new LongSyncValue(() -> machine.energyHandler.map(EnergyHandler::getOutputVoltage).orElse(0L)));
-            syncManager.syncValue("amps", new LongSyncValue(() -> machine.energyHandler.map(EnergyHandler::getOutputAmperage).orElse(0L)));
+            if (machine instanceof IInfoRenderer<?> renderer){
+                renderer.registerSyncHandlers(syncManager);
+            }
 
             for (int i = 0; i < 16; i++){
                 boolean leftSide = i < 8;

@@ -3,7 +3,9 @@ package org.gtreimagined.gtlib.blockentity.single;
 import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetThemeEntry;
 import brachy.modularui.value.LongValue;
+import brachy.modularui.value.sync.LongSyncValue;
 import brachy.modularui.value.sync.ModularSyncManager;
+import brachy.modularui.value.sync.PanelSyncManager;
 import brachy.modularui.value.sync.SyncHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
@@ -155,6 +157,12 @@ public class BlockEntityInfiniteStorage<T extends BlockEntityInfiniteStorage<T>>
         widget.drawText(context, widgetTheme, 0, 27, Component.literal("TIER: " + Tier.getTier(voltage < 0 ? -voltage : voltage).getId().toUpperCase()), 0xFAFAFF);
         widget.drawText(context, widgetTheme, 0, 35, Component.literal("AMP: " + amps), 0xFAFAFF);
         widget.drawText(context, widgetTheme, 0, 43, Component.literal("SUM: " + (voltage * amps)), 0xFAFAFF);
+    }
+
+    @Override
+    public void registerSyncHandlers(PanelSyncManager manager) {
+        manager.syncValue("volts", new LongSyncValue(() -> this.energyHandler.map(EnergyHandler::getOutputVoltage).orElse(0L)));
+        manager.syncValue("amps", new LongSyncValue(() -> this.energyHandler.map(EnergyHandler::getOutputAmperage).orElse(0L)));
     }
 
     @Override
