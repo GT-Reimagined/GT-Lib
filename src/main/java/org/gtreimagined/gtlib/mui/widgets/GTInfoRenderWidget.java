@@ -17,9 +17,9 @@ import java.util.function.IntSupplier;
 
 public class GTInfoRenderWidget extends Widget<GTInfoRenderWidget> {
 
-    private final IInfoRenderer<?> renderer;
+    private final IInfoRenderer renderer;
 
-    public GTInfoRenderWidget(IInfoRenderer<?> renderer){
+    public GTInfoRenderWidget(IInfoRenderer renderer){
         this.renderer = renderer;
     }
 

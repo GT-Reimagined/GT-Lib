@@ -1,28 +1,28 @@
 package org.gtreimagined.gtlib.blockentity.multi;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiGraphics;
+import brachy.modularui.screen.viewport.ModularGuiContext;
+import brachy.modularui.theme.WidgetThemeEntry;
+import brachy.modularui.value.sync.IntSyncValue;
+import brachy.modularui.value.sync.LongSyncValue;
+import brachy.modularui.value.sync.PanelSyncManager;
 import net.minecraft.world.level.Level.ExplosionInteraction;
-import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
-import org.gtreimagined.gtlib.capability.EnergyHandler;
 import org.gtreimagined.gtlib.capability.IComponentHandler;
+import org.gtreimagined.gtlib.capability.machine.MachineRecipeHandler;
 import org.gtreimagined.gtlib.capability.machine.MultiMachineEnergyHandler;
 import org.gtreimagined.gtlib.capability.machine.MultiMachineFluidHandler;
 import org.gtreimagined.gtlib.capability.machine.MultiMachineItemHandler;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.gui.widget.InfoRenderWidget;
-import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
 import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;
+import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.state.BlockState;
+import org.gtreimagined.gtlib.util.int2;
 import org.gtreimagined.tesseract.api.hu.IHeatHandler;
 
 import java.util.Collections;
@@ -31,7 +31,7 @@ import java.util.Optional;
 
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 
-public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> extends BlockEntityBasicMultiMachine<T> implements IInfoRenderer<InfoRenderWidget.MultiRenderWidget> {
+public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> extends BlockEntityBasicMultiMachine<T> implements IInfoRenderer {
 
     protected long EUt;
     protected List<IHeatHandler> heatHandlers = Collections.emptyList();
@@ -109,23 +109,38 @@ public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> exten
         //return !hatches.isEmpty() ? hatches.stream().mapToLong(t -> t.getEnergyHandler().map(EnergyHandler::getInputVoltage).orElse(0L)).sum() : Ref.V[0];
     }
 
-    public WidgetSupplier getInfoWidget() {
-        return InfoRenderWidget.MultiRenderWidget.build().setPos(10, 10);
+    @Override
+    public void drawInfo(GTInfoRenderWidget widget, ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+        widget.drawText(context, widgetTheme, 0, 0, this.getDisplayName(), 0xFAFAFF);
+        if (getMachineState() != MachineState.ACTIVE) {
+            widget.drawText(context, widgetTheme, 0, 8, Utils.literal("Inactive."), 0xFAFAFF);
+        } else {
+            widget.drawText(context, widgetTheme, 0, 8, Utils.literal("Progress: " +
+                    widget.getSyncedValue("progress", Integer.class).orElse(0) + "/" +
+                    widget.getSyncedValue("maxProgress", Integer.class)), 0xFAFAFF);
+            widget.drawText(context, widgetTheme, 0, 16, Utils.literal("Overclock: " +
+                    widget.getSyncedValue("overclock", Integer.class)), 0xFAFAFF);
+            widget.drawText(context, widgetTheme, 0, 24, Utils.literal("EU/t: " +
+                    widget.getSyncedValue("eut", Long.class)), 0xFAFAFF);
+        }
     }
 
     @Override
-    public int drawInfo(InfoRenderWidget.MultiRenderWidget instance, GuiGraphics graphics, Font font, int left, int top) {
-        graphics.drawString(font, this.getDisplayName().getString(), left, top, 0xFAFAFF);
-        if (getMachineState() != MachineState.ACTIVE) {
-            graphics.drawString(font, "Inactive.", left, top + 8, 0xFAFAFF);
-            return 16;
-        } else if (instance.drawActiveInfo()) {
-            graphics.drawString(font, "Progress: " + instance.currentProgress + "/" + instance.maxProgress, left, top + 8, 0xFAFAFF);
-            graphics.drawString(font, "Overclock: " + instance.overclock, left, top + 16, 0xFAFAFF);
-            graphics.drawString(font, "EU/t: " + instance.euT, left, top + 24, 0xFAFAFF);
-            return 32;
-        }
-        return 8;
+    public void registerSyncHandlers(PanelSyncManager manager) {
+        manager.syncValue("progress", new IntSyncValue(() -> recipeHandler.map(MachineRecipeHandler::getCurrentProgress).orElse(0)));
+        manager.syncValue("maxProgress", new IntSyncValue(() -> recipeHandler.map(MachineRecipeHandler::getMaxProgress).orElse(0)));
+        manager.syncValue("overclock", new IntSyncValue(() -> recipeHandler.map(MachineRecipeHandler::getOverclock).orElse(0)));
+        manager.syncValue("eut", new LongSyncValue(() -> recipeHandler.map(MachineRecipeHandler::getPower).orElse(0L)));
+    }
+
+    @Override
+    public int2 getSize() {
+        return new int2(90, 90);
+    }
+
+    @Override
+    public int2 getPos() {
+        return new int2(3, 3);
     }
 
     public void explodeMultiblock() {

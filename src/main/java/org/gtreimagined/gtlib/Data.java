@@ -128,9 +128,6 @@ public class Data {
             syncManager.registerSyncedAction("buttonEvent", packet -> {
                 machine.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), syncManager.getPlayer());
             });
-            if (machine instanceof IInfoRenderer<?> renderer){
-                renderer.registerSyncHandlers(syncManager);
-            }
 
             for (int i = 0; i < 16; i++){
                 boolean leftSide = i < 8;
@@ -150,7 +147,12 @@ public class Data {
                                 })
                         .size(14).pos(x, 18 + (15 * y)));
             }
-            modularPanel.child(new GTInfoRenderWidget((IInfoRenderer<?>) machine).pos(43, 21).size(90, 53));
+            if (machine instanceof IInfoRenderer renderer){
+                renderer.registerSyncHandlers(syncManager);
+                modularPanel.child(new GTInfoRenderWidget(renderer)
+                        .pos(renderer.getPos().x, renderer.getPos().y)
+                        .size(renderer.getSize().x, renderer.getSize().y));
+            }
         }));
     }
 

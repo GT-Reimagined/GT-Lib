@@ -1,7 +1,10 @@
 package org.gtreimagined.gtlib.blockentity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiGraphics;
+import brachy.modularui.screen.viewport.ModularGuiContext;
+import brachy.modularui.theme.WidgetThemeEntry;
+import brachy.modularui.value.sync.GenericSyncValue;
+import brachy.modularui.value.sync.PanelSyncManager;
+import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.cover.CoverOutput;
@@ -9,18 +12,20 @@ import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.machine.types.TankMachine;
+import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 import org.gtreimagined.gtlib.util.FluidUtils;
-import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.gtreimagined.gtlib.util.Utils;
+import org.gtreimagined.gtlib.util.int2;
 import org.jetbrains.annotations.Nullable;
 
 import static org.gtreimagined.gtlib.machine.MachineFlag.FLUID;
 import static org.gtreimagined.gtlib.machine.MachineFlag.ITEM;
 
-public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntityMachine<T> implements IInfoRenderer<TankMachine.TankRenderWidget> {
+public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntityMachine<T> implements IInfoRenderer {
 
     public BlockEntityTank(Machine<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -45,17 +50,30 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
     }
 
     @Override
-    public int drawInfo(TankMachine.TankRenderWidget instance, GuiGraphics graphics, Font font, int left, int top) {
-        left = left + 55;
-        top = top + 24;
-        if (instance.stack.isEmpty()){
-            graphics.drawString(font, "Empty", left, top, 0xFAFAFF);
-            return 8;
+    public void drawInfo(GTInfoRenderWidget widget, ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+        FluidStack stack = widget.getSyncedValue("fluid", FluidStack.class).orElse(FluidStack.EMPTY);
+        if (stack.isEmpty()){
+            widget.drawText(context, widgetTheme, 0, 0, Utils.literal("Empty"), 0xFAFAFF);
+            return;
         }
-        graphics.drawString(font, FluidUtils.getFluidDisplayName(instance.stack).getString(), left, top, 0xFAFAFF);
-        String fluidAmount = String.valueOf(instance.stack.getAmount());
-        graphics.drawString(font, fluidAmount + " mb", left, top + 8, 0xFAFAFF);
-        return 16;
+        widget.drawText(context, widgetTheme, 0, 0, FluidUtils.getFluidDisplayName(stack), 0xFAFAFF);
+        String fluidAmount = String.valueOf(stack.getAmount());
+        widget.drawText(context, widgetTheme, 0, 8, Utils.literal(fluidAmount + "L"), 0xFAFAFF);
+    }
+
+    @Override
+    public void registerSyncHandlers(PanelSyncManager manager) {
+        manager.syncValue("fluid", GenericSyncValue.forFluid(() -> this.fluidHandler.map(f -> f.getFluidInTank(0)).orElse(FluidStack.EMPTY), null));
+    }
+
+    @Override
+    public int2 getPos() {
+        return new int2(55, 24);
+    }
+
+    @Override
+    public int2 getSize() {
+        return new int2(90, 90);
     }
 
     private String intToSuperScript(int i){

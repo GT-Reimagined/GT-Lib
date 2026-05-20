@@ -2,38 +2,27 @@ package org.gtreimagined.gtlib.blockentity.single;
 
 import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetThemeEntry;
-import brachy.modularui.value.LongValue;
 import brachy.modularui.value.sync.LongSyncValue;
-import brachy.modularui.value.sync.ModularSyncManager;
 import brachy.modularui.value.sync.PanelSyncManager;
-import brachy.modularui.value.sync.SyncHandler;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.EnergyHandler;
 import org.gtreimagined.gtlib.capability.machine.MachineEnergyHandler;
-import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.gui.widget.InfoRenderWidget;
-import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
 import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;
-import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
+import org.gtreimagined.gtlib.util.int2;
 
 import java.util.List;
 
-import static org.gtreimagined.gtlib.gui.ICanSyncData.SyncDirection.SERVER_TO_CLIENT;
-
-public class BlockEntityInfiniteStorage<T extends BlockEntityInfiniteStorage<T>> extends BlockEntityMachine<T> implements IInfoRenderer<BlockEntityInfiniteStorage.InfiniteStorageWidget> {
+public class BlockEntityInfiniteStorage<T extends BlockEntityInfiniteStorage<T>> extends BlockEntityMachine<T> implements IInfoRenderer {
 
     public BlockEntityInfiniteStorage(Machine<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -139,16 +128,6 @@ public class BlockEntityInfiniteStorage<T extends BlockEntityInfiniteStorage<T>>
     }
 
     @Override
-    public int drawInfo(InfiniteStorageWidget widget, GuiGraphics graphics, Font font, int left, int top) {
-        graphics.drawString(font,"Control Panel", left + 43, top + 21, 0xFAFAFF);
-        graphics.drawString(font,"VOLT: " + widget.voltage, left + 43, top + 40, 0xFAFAFF);
-        graphics.drawString(font,"TIER: " + Tier.getTier(widget.voltage < 0 ? -widget.voltage : widget.voltage).getId().toUpperCase(), left + 43, top + 48, 0xFAFAFF);
-        graphics.drawString(font,"AMP: " + widget.amperage, left + 43, top + 56, 0xFAFAFF);
-        graphics.drawString(font,"SUM: " + (long)(widget.amperage * widget.voltage), left + 43, top + 64, 0xFAFAFF);
-        return 72;
-    }
-
-    @Override
     public void drawInfo(GTInfoRenderWidget widget, ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         widget.drawText(context, widgetTheme, 0, 0, Component.literal("Control Panel"), 0xFAFAFF);
         long voltage = widget.getSyncedValue("volts", Long.class).orElse(32L);
@@ -166,28 +145,12 @@ public class BlockEntityInfiniteStorage<T extends BlockEntityInfiniteStorage<T>>
     }
 
     @Override
-    public void addWidgets(GuiInstance instance, IGuiElement parent) {
-        super.addWidgets(instance, parent);
-        instance.addWidget(InfiniteStorageWidget.build());
+    public int2 getPos() {
+        return new int2(43, 21);
     }
 
-    public static class InfiniteStorageWidget extends InfoRenderWidget<InfiniteStorageWidget> {
-        public int amperage = 0;
-        public long voltage = 0;
-        protected InfiniteStorageWidget(GuiInstance gui, IGuiElement parent, IInfoRenderer<InfiniteStorageWidget> renderer) {
-            super(gui, parent, renderer);
-        }
-
-        @Override
-        public void init() {
-            super.init();
-            BlockEntityInfiniteStorage<?> m = (BlockEntityInfiniteStorage<?>) gui.handler;
-            gui.syncInt(() -> Math.toIntExact(m.energyHandler.map(EnergyHandler::getOutputAmperage).orElse(0L)), i -> amperage = i, SERVER_TO_CLIENT);
-            gui.syncLong(() -> m.energyHandler.map(EnergyHandler::getOutputVoltage).orElse(0L), i -> voltage = i, SERVER_TO_CLIENT);
-        }
-
-        public static WidgetSupplier build() {
-            return builder((a,b) -> new InfiniteStorageWidget(a,b, (IInfoRenderer) a.handler));
-        }
+    @Override
+    public int2 getSize() {
+        return new int2(90, 53);
     }
 }
