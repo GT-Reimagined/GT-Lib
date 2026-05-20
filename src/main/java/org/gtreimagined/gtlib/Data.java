@@ -1,12 +1,14 @@
 package org.gtreimagined.gtlib;
 
 import brachy.modularui.drawable.UITexture;
+import brachy.modularui.value.sync.LongSyncValue;
 import brachy.modularui.widgets.ButtonWidget;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.minecraft.client.gui.screens.Screen;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.blockentity.single.BlockEntityInfiniteStorage;
+import org.gtreimagined.gtlib.capability.EnergyHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.cover.CoverDebug;
 import org.gtreimagined.gtlib.cover.CoverDynamo;
@@ -26,12 +28,14 @@ import org.gtreimagined.gtlib.gui.container.ContainerCover;
 import org.gtreimagined.gtlib.gui.container.ContainerMachine;
 import org.gtreimagined.gtlib.gui.container.ContainerMultiMachine;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
+import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
 import org.gtreimagined.gtlib.item.ItemCover;
 import org.gtreimagined.gtlib.item.ItemFluidIcon;
 import org.gtreimagined.gtlib.item.ScannerItem;
 import org.gtreimagined.gtlib.machine.types.BasicMachine;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
+import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.tool.enchantment.ElectricEnchantment;
 import net.minecraft.ChatFormatting;
@@ -124,6 +128,9 @@ public class Data {
             syncManager.registerSyncedAction("buttonEvent", packet -> {
                 machine.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), syncManager.getPlayer());
             });
+            syncManager.syncValue("volts", new LongSyncValue(() -> machine.energyHandler.map(EnergyHandler::getOutputVoltage).orElse(0L)));
+            syncManager.syncValue("amps", new LongSyncValue(() -> machine.energyHandler.map(EnergyHandler::getOutputAmperage).orElse(0L)));
+
             for (int i = 0; i < 16; i++){
                 boolean leftSide = i < 8;
                 boolean leftOuter = i % 2 == 0;
@@ -142,6 +149,7 @@ public class Data {
                                 })
                         .size(14).pos(x, 18 + (15 * y)));
             }
+            modularPanel.child(new GTInfoRenderWidget((IInfoRenderer<?>) machine).pos(43, 21).size(90, 53));
         }));
     }
 
