@@ -68,12 +68,12 @@ public class BlockEntityTank<T extends BlockEntityMachine<T>> extends BlockEntit
 
     @Override
     public int2 getPos() {
-        return new int2(55, 24);
+        return new int2(56, 24);
     }
 
     @Override
     public int2 getSize() {
-        return new int2(90, 90);
+        return new int2(90, 16);
     }
 
     private String intToSuperScript(int i){

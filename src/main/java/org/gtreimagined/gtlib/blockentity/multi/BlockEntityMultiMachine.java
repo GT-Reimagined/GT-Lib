@@ -135,12 +135,12 @@ public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> exten
 
     @Override
     public int2 getSize() {
-        return new int2(90, 90);
+        return new int2(136, 66);
     }
 
     @Override
     public int2 getPos() {
-        return new int2(3, 3);
+        return new int2(10, 10);
     }
 
     public void explodeMultiblock() {
