@@ -13,9 +13,6 @@ import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 @Accessors(chain = true)
 public class MultiMachine extends BasicMultiMachine<MultiMachine> {
 
-    @Getter
-    @Setter
-    UITexture backgroundConsole = null;
 
     public MultiMachine(String domain, String name) {
         super(domain, name);
@@ -26,13 +23,6 @@ public class MultiMachine extends BasicMultiMachine<MultiMachine> {
     @Override
     protected void setupGui() {
         super.setupGui();
-        IPanelFunction background = getBackgroundFunction();
-        setBackgroundFunction(((modularPanel, machine, guiData, syncManager, settings) -> {
-            background.modifyPanel(modularPanel, machine, guiData, syncManager, settings);
-            if (getBackgroundConsole() != null){
-                modularPanel.child(getBackgroundConsole().asWidget());
-            }
-        }));
         guiFunctions.add(((modularPanel, machine, guiData, syncManager, settings) -> {
             if (machine instanceof IInfoRenderer renderer){
                 renderer.registerSyncHandlers(syncManager);
