@@ -1,15 +1,14 @@
 package org.gtreimagined.gtlib.mui.widgets;
 
-import brachy.modularui.api.value.IValue;
 import brachy.modularui.drawable.text.TextRenderer;
 import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetTheme;
 import brachy.modularui.theme.WidgetThemeEntry;
 import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.ModularSyncManager;
-import brachy.modularui.value.sync.SyncHandler;
 import brachy.modularui.widget.Widget;
 import net.minecraft.network.chat.Component;
+import org.gtreimagined.gtlib.mui.GTMuiUtils;
 import org.gtreimagined.gtlib.mui.IInfoRenderer;
 
 import java.util.Optional;
@@ -30,9 +29,7 @@ public class GTInfoRenderWidget extends Widget<GTInfoRenderWidget> {
 
     public <T> Optional<T> getSyncedValue(String id, Class<T> tClass){
         ModularSyncManager syncManager = this.getScreen().getSyncManager();
-        SyncHandler<?> handler = syncManager.findSyncHandler(id);
-        IValue<T> value = handler.castValueNullable(tClass);
-        return value == null ? Optional.empty() : Optional.of(value.getValue());
+        return GTMuiUtils.getSyncedValue(id, tClass, syncManager);
     }
 
     public void drawText(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme, int x, int y, Component text){
