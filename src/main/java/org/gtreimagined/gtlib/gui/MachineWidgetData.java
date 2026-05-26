@@ -25,6 +25,9 @@ public class MachineWidgetData {
     public boolean barFill = true;
     @Getter
     protected int2 progressSize = new int2(20, 18), progressPos = new int2(72, 18);
+    @Accessors(fluent = true)
+    @Getter
+    protected boolean hasProgressWidget = true, hasMachineStateWidget = true, hasIOWidgets = true;
     @Getter
     @Setter
     protected BiFunction<Integer, Integer, Float> progressPercentFunction = (progress, maxProgress) -> (float)progress / (float)maxProgress;
@@ -70,6 +73,21 @@ public class MachineWidgetData {
 
     public MachineWidgetData setProgressPos(int x, int y){
         this.progressPos = new int2(x, y);
+        return this;
+    }
+
+    public MachineWidgetData setHasProgressWidget(boolean hasProgressWidget){
+        this.hasProgressWidget = hasProgressWidget;
+        return this;
+    }
+
+    public MachineWidgetData setHasMachineStateWidget(boolean hasMachineStateWidget){
+        this.hasMachineStateWidget = hasMachineStateWidget;
+        return this;
+    }
+
+    public MachineWidgetData setHasIOWidgets(boolean hasIOWidgets){
+        this.hasIOWidgets = hasIOWidgets;
         return this;
     }
 
