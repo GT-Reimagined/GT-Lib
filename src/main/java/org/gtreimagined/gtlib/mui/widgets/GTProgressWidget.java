@@ -17,11 +17,6 @@ public class GTProgressWidget extends ProgressWidget implements Interactable {
     public GTProgressWidget(Machine<?> machine, Tier tier) {
         this.machine = machine;
         this.tier = tier;
-        this.tooltipBuilder(this::addTooltip);
-    }
-
-    private void addTooltip(RichTooltip tooltip){
-        tooltip.addLine(Utils.translatable("gtlib.gui.show_recipes"));
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.mui.widgets.GTProgressWidget;
 import org.gtreimagined.gtlib.mui.widgets.IOWidgetFluid;
 import org.gtreimagined.gtlib.mui.widgets.IOWidgetItem;
+import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.util.int2;
 
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
@@ -32,28 +33,33 @@ public class BasicMachine extends Machine<BasicMachine> {
         super.setupGui();
         guiFunctions.add(((modularPanel, machine, guiData1, syncManager, settings) -> {
             if (has(RECIPE)) {
-                int2 size = guiProperties.getMachineData().getMachineStateSize();
-                modularPanel.child(new org.gtreimagined.gtlib.mui.widgets.MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState,
-                        guiProperties.getMachineData().getMachineStateTexture(machine.getMachineTier()))
-                        .pos(guiProperties.getMachineData().getMachineStatePos().x, guiProperties.getMachineData().getMachineStatePos().y)
-                        .size(size.x, size.y));
-
-                syncManager.syncValue("progress", new DoubleSyncValue(() -> machine.recipeHandler.map(r -> guiProperties.getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0f)));
-                BarDir direction = guiProperties.getMachineData().getDir();
-                UITexture texture = guiProperties.getMachineData().getProgressTexture(machine.getMachineTier());
-                ProgressWidget progressWidget = new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
-                        .syncHandler("progress")
-                        .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6);
-                modularPanel.child(progressWidget);
-                if (!direction.isCircular()) {
-                    progressWidget.texture(texture, direction.toRegularDirection());
-                } else {
-                            progressWidget.progress(CompositeProgress.circularLike4Slice(
-                                    texture.getSubArea(0.0f, 0.0f, 1f, 0.5f),
-                                    texture.getSubArea(0f, 0.5f,1f, 1f),
-                                    direction.toCircularDirection()
-                            ));
+                if (guiProperties.getMachineData().hasMachineStateWidget()){
+                    int2 size = guiProperties.getMachineData().getMachineStateSize();
+                    modularPanel.child(new org.gtreimagined.gtlib.mui.widgets.MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState,
+                            guiProperties.getMachineData().getMachineStateTexture(machine.getMachineTier()))
+                            .pos(guiProperties.getMachineData().getMachineStatePos().x, guiProperties.getMachineData().getMachineStatePos().y)
+                            .size(size.x, size.y));
                 }
+                if (guiProperties.getMachineData().hasProgressWidget()){
+                    syncManager.syncValue("progress", new DoubleSyncValue(() -> machine.recipeHandler.map(r -> guiProperties.getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0f)));
+                    BarDir direction = guiProperties.getMachineData().getDir();
+                    UITexture texture = guiProperties.getMachineData().getProgressTexture(machine.getMachineTier());
+                    ProgressWidget progressWidget = new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
+                            .tooltip(t -> t.addLine(Utils.translatable("gtlib.gui.show_recipes")))
+                            .syncHandler("progress")
+                            .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6);
+                    modularPanel.child(progressWidget);
+                    if (!direction.isCircular()) {
+                        progressWidget.texture(texture, direction.toRegularDirection());
+                    } else {
+                        progressWidget.progress(CompositeProgress.circularLike4Slice(
+                                texture.getSubArea(0.0f, 0.0f, 1f, 0.5f),
+                                texture.getSubArea(0f, 0.5f,1f, 1f),
+                                direction.toCircularDirection()
+                        ));
+                    }
+                }
+
             }
 
             if (machine.getOutputFacing() != null &&
