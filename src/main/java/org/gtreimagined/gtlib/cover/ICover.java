@@ -271,7 +271,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
             ModularPanel<?> modularPanel = createModularPanel();
             GuiProperties guiProperties = getGuiProperties();
             if (guiProperties.hasGTIcon()) {
-                modularPanel.child(guiProperties.getGtIcon().asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
+                modularPanel.child(guiProperties.getGTIcon(getTier()).asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
             }
             if (guiProperties.enablePlayerSlots()) {
                 modularPanel.bindPlayerInventory();

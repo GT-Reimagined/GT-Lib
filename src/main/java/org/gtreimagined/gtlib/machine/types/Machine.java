@@ -144,7 +144,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Setter
     protected IPanelFunction backgroundFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
         if (guiProperties.hasGTIcon()) {
-            modularPanel.child(guiProperties.getGtIcon().asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
+            modularPanel.child(guiProperties.getGTIcon(machine.getMachineTier()).asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
         }
         if (guiProperties.enablePlayerSlots()) {
             modularPanel.bindPlayerInventory();
