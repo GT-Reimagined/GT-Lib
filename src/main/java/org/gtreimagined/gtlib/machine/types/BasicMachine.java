@@ -25,7 +25,6 @@ public class BasicMachine extends Machine<BasicMachine> {
         super(domain, id);
         addFlags(BASIC, EU, COVERABLE);
         setTile(BlockEntityMachine::new);
-        setGUI(Data.BASIC_MENU_HANDLER);
     }
 
     @Override

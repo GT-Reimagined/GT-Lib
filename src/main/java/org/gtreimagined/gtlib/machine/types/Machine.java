@@ -652,18 +652,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    /**
-     * Sets this machines GUI handler which provides containers and screens.
-     *
-     * @param menuHandler the menu handler.
-     */
-    @Deprecated(forRemoval = true)
-    public void setGUI(MenuHandler<?> menuHandler) {
-        guiProperties = new GuiProperties(this, menuHandler);
-        guiProperties.setSlots(this);
-        registerJei();
-    }
-
     public T setGuiProgressBarForJEI(BarDir dir, boolean barFill){
         guiProperties.getMachineData().setDir(dir);
         guiProperties.getMachineData().setBarFill(barFill);
