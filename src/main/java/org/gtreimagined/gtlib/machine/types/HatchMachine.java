@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityHatch;
 import org.gtreimagined.gtlib.cover.CoverFactory;
-import org.gtreimagined.gtlib.gui.widget.TankIconWidget;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.registration.IColorHandler;
