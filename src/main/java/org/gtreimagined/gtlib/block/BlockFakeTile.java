@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.block;
 
+import brachy.modularui.factory.UIFactories;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.registries.ForgeRegistries.Keys;
@@ -58,9 +59,10 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
             if (fakeBlock.getController() != null){
                 if (fakeBlock.getController().getMachineType().has(MachineFlag.GUI) && fakeBlock.getController().canPlayerOpenGui(player, hit.getDirection())) {
                     if (!level.isClientSide){
-                        NetworkHooks.openScreen((ServerPlayer) player, fakeBlock.getController(), extra -> {
+                        UIFactories.sidedBlockEntity().open(player, fakeBlock.getController().getBlockPos(), hit.getDirection());
+                        /*NetworkHooks.openScreen((ServerPlayer) player, fakeBlock.getController(), extra -> {
                             extra.writeBlockPos(fakeBlock.getController().getBlockPos());
-                        });
+                        });*/
                     }
                     return InteractionResult.sidedSuccess(!level.isClientSide());
                 }
