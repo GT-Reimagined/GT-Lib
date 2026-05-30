@@ -63,7 +63,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuProvider, IGuiHandler, IUIHolder<SidedPosGuiData> {
+public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHandler, IUIHolder<SidedPosGuiData> {
     ResourceLocation PIPE_COVER_MODEL = new ResourceLocation(Ref.ID, "block/cover/cover_pipe");
     Cache<Direction, VoxelShape> DEFAULT_SHAPES = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
@@ -426,12 +426,6 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
         @Override
         public boolean ticks() {
             return false;
-        }
-
-        @Nullable
-        @Override
-        public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-            return null;
         }
     };
     CoverFactory emptyFactory = CoverFactory.builder((a, b, c, d) -> empty).build(Ref.ID, "none");

@@ -112,7 +112,7 @@ import static org.gtreimagined.gtlib.gui.event.GuiEvents.ITEM_EJECT;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
-public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode, IUIHolder<SidedPosGuiData> {
+public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode, IUIHolder<SidedPosGuiData> {
 
     /**
      * Open container. Allows for better syncing
@@ -653,16 +653,10 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @NotNull
-    @Override
     public Component getDisplayName() {
         return getMachineType().getDisplayName(getMachineTier());
     }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int windowId, @NotNull Inventory inv, @NotNull Player player) {
-        return getMachineType().has(GUI) ? getMachineType().getGuiProperties().getMenuHandler().menu(this, inv, windowId) : null;
-    }
 
     public boolean canPlayerOpenGui(Player playerEntity, Direction side) {
         return true;

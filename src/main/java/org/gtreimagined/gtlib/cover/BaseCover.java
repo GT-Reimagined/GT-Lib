@@ -79,7 +79,7 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
         this.tier = tier;
         this.side = side;
         if (factory.hasGui()) {
-            this.gui = new GuiProperties(this, factory.getMenuHandler());
+            this.gui = new GuiProperties(this);
             gui.setEnablePlayerSlots(true);
             gui.setSlots(ISlotProvider.DEFAULT());
             this.addGuiCallback(t -> {
@@ -239,11 +239,6 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
             });
         }
         return nbt;
-    }
-
-    @Override
-    public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-        return hasGui() ? this.getGuiProperties().getMenuHandler().menu(this, p_createMenu_3_.getInventory(), p_createMenu_1_) : null;
     }
 
     @Override

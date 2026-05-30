@@ -22,9 +22,6 @@ public class GuiProperties {
     @Getter
     protected ResourceLocation loc;
 
-    @Getter
-    protected MenuHandler<?> menuHandler;
-
     protected Map<String, ResourceLocation> backgroundTextures = new Object2ObjectOpenHashMap<>();
 
     @Accessors(fluent = true)
@@ -68,14 +65,8 @@ public class GuiProperties {
         this.backgroundTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"));
     }
 
-    public GuiProperties(String domain, String id, MenuHandler menuHandler) {
-        this(domain, id);
-        this.menuHandler = menuHandler;
-    }
-
-    public GuiProperties(IGTObject type, MenuHandler menuHandler) {
+    public GuiProperties(IGTObject type) {
         this(type.getDomain(), type.getId());
-        this.menuHandler = menuHandler;
     }
 
     public ISlotProvider<?> getSlots() {
