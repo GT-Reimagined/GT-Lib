@@ -15,9 +15,6 @@ import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
-import org.gtreimagined.gtlib.gui.widget.BackgroundWidget;
-import org.gtreimagined.gtlib.gui.widget.CoverModeHandlerWidget;
-import org.gtreimagined.gtlib.gui.widget.SlotWidget;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
 import org.gtreimagined.gtlib.network.packets.CoverGuiEventPacket;
@@ -25,9 +22,6 @@ import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -82,16 +76,6 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
             this.gui = new GuiProperties(this);
             gui.setEnablePlayerSlots(true);
             gui.setSlots(ISlotProvider.DEFAULT());
-            this.addGuiCallback(t -> {
-                t.addWidget(BackgroundWidget.build(t.handler.getGuiTexture(), t.handler.guiSize(), t.handler.guiHeight(), t.handler.guiTextureSize(), t.handler.guiTextureHeight()));
-                if (BaseCover.this instanceof ICoverModeHandler){
-                    t.addWidget(CoverModeHandlerWidget.build());
-                }
-                List<SlotData<?>> slots = tier == null ? gui.getSlots().getAnySlots() : gui.getSlots().getSlots(tier);
-                slots.forEach(s ->{
-                    t.addWidget(SlotWidget.build(s));
-                });
-            });
         } else {
             this.gui = null;
         }

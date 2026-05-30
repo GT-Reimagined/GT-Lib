@@ -1,7 +1,6 @@
 package org.gtreimagined.gtlib.blockentity;
 
 import brachy.modularui.api.IUIHolder;
-import brachy.modularui.factory.PosGuiData;
 import brachy.modularui.factory.SidedPosGuiData;
 import brachy.modularui.screen.ModularPanel;
 import brachy.modularui.screen.ModularScreen;
@@ -42,13 +41,10 @@ import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
-import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.container.ContainerMachine;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.gui.event.SlotClickEvent;
-import org.gtreimagined.gtlib.gui.widget.FluidSlotWidget;
-import org.gtreimagined.gtlib.gui.widget.SlotWidget;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.MachineFlag;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -73,11 +69,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -231,17 +224,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @Override
     public void addWidgets(GuiInstance instance, IGuiElement parent) {
-        int index = 0;
-        for (SlotData<?> slot : this.getMachineType().getSlots(this.getMachineTier())) {
-            instance.addWidget(SlotWidget.build(slot));
-        }
-        for (SlotData<?> slot : this.getMachineType().getGuiProperties().getSlots().getSlots(SlotType.FL_IN, getMachineTier())) {
-            instance.addWidget(FluidSlotWidget.build(index++, slot));
-        }
-        for (SlotData<?> slot : this.getMachineType().getGuiProperties().getSlots().getSlots(SlotType.FL_OUT, getMachineTier())) {
-            instance.addWidget(FluidSlotWidget.build(index++, slot));
-        }
-        this.getMachineType().getCallbacks().forEach(t -> t.accept(instance));
     }
 
     @Override

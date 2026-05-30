@@ -20,7 +20,6 @@ import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.gui.widget.BackgroundWidget;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
 import org.gtreimagined.gtlib.pipe.BlockPipe;
 import org.gtreimagined.gtlib.pipe.PipeSize;
@@ -474,7 +473,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     @Override
     public void addWidgets(GuiInstance instance, IGuiElement parent) {
         //instance.addWidget(WidgetSupplier.build((a, b) -> TextWidget.build(((GTContainerScreen<?>) b).getTitle().getString(), 4210752).build(a, b)).setPos(9, 5).clientSide());
-        instance.addWidget(BackgroundWidget.build(instance.handler.getGuiTexture(), instance.handler.guiSize(), instance.handler.guiHeight()));
     }
 
     @Override
