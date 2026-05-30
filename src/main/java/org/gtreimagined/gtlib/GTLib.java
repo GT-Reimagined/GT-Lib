@@ -7,7 +7,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
-import org.gtreimagined.gtlib.client.ClientData;
 import org.gtreimagined.gtlib.common.event.ARRPEvents;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTTools;
@@ -258,7 +257,6 @@ public class GTLib extends GTMod {
             });
         } else if (event == RegistrationEvent.CLIENT_DATA_INIT){
             GTLibModelManager.init();
-            ClientData.init();
         }
     }
 

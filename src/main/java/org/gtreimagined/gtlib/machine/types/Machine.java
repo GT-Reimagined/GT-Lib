@@ -47,7 +47,6 @@ import org.gtreimagined.gtlib.data.GTTools;
 import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.MenuHandler;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
