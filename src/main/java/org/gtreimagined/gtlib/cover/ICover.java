@@ -301,9 +301,14 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
                     return b + 1;
                 });
             }
+            addWidgets(modularPanel, sidedPosGuiData, panelSyncManager, uiSettings);
             return modularPanel;
         }
         return null;
+    }
+
+    default void addWidgets(ModularPanel<?> panel, SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
+
     }
 
     default List<BakedQuad> transformQuads(BlockState state, List<BakedQuad> quads) {
