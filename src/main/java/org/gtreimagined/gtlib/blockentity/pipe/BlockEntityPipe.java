@@ -53,7 +53,7 @@ import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HAN
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
 
-public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntityTickable<BlockEntityPipe<T>> implements IMachineHandler, MenuProvider, IGuiHandler, IConnectable, ICoverHandlerProvider<BlockEntityPipe<?>> {
+public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntityTickable<BlockEntityPipe<T>> implements IMachineHandler, IGuiHandler, IConnectable, ICoverHandlerProvider<BlockEntityPipe<?>> {
 
     /**
      * Pipe Data
@@ -469,17 +469,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     @Override
     public AbstractGuiEventPacket createGuiPacket(IGuiEvent event) {
         return null;
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Utils.literal(this.type.getType());
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-        return Data.PIPE_MENU_HANDLER.menu(this, p_createMenu_2_, p_createMenu_1_);
     }
 
     @Override

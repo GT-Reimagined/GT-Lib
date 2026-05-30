@@ -38,8 +38,6 @@ public class CoverFactory implements IGTObject {
     private Item itemStack;
     private List<Texture> textures;
     @Getter
-    private MenuHandler<?> menuHandler = Data.COVER_MENU_HANDLER;
-    @Getter
     private Predicate<BlockEntity> isValid = b -> true;
 
     protected boolean gui = false;
@@ -84,10 +82,6 @@ public class CoverFactory implements IGTObject {
 
     void setHasGui() {
         this.gui = true;
-    }
-
-    void setMenuHandler(MenuHandler<?> handler) {
-        this.menuHandler = handler;
     }
 
     void setIsValid(Predicate<BlockEntity> isValid) {
@@ -178,7 +172,6 @@ public class CoverFactory implements IGTObject {
         BiFunction<CoverFactory, Tier, Item> itemBuilder;
         boolean gui = false;
         List<Texture> textures;
-        MenuHandler<?> menuHandler;
         Predicate<BlockEntity> isValid;
 
         public Builder(final CoverSupplier supplier) {
@@ -197,11 +190,6 @@ public class CoverFactory implements IGTObject {
 
         public Builder gui() {
             this.gui = true;
-            return this;
-        }
-
-        public Builder setMenuHandler(MenuHandler<?> handler) {
-            this.menuHandler = handler;
             return this;
         }
 
@@ -232,9 +220,6 @@ public class CoverFactory implements IGTObject {
             }
             if (gui) {
                 factory.setHasGui();
-                if (menuHandler != null) {
-                    factory.setMenuHandler(menuHandler);
-                }
             }
             if (textures != null)
                 factory.addTextures(textures);
