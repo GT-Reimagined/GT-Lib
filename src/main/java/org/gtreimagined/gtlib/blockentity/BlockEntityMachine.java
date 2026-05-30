@@ -42,7 +42,6 @@ import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.gui.container.ContainerMachine;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.gui.event.SlotClickEvent;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -110,7 +109,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     /**
      * Open container. Allows for better syncing
      **/
-    protected final Set<ContainerMachine<T>> openContainers = new ObjectOpenHashSet<>();
+    protected final Set<Player> playersInGui = new ObjectOpenHashSet<>();
 
     /**
      * Machine Data
@@ -182,12 +181,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         }
     }
 
-    public void addOpenContainer(ContainerMachine<T> c, Player player) {
-        this.openContainers.add(c);
+    public void onContainerOpen(Player player) {
+        this.playersInGui.add(player);
     }
 
-    public void onContainerClose(ContainerMachine<T> c, Player player) {
-        this.openContainers.remove(c);
+    public void onContainerClose(Player player) {
+        this.playersInGui.remove(player);
     }
 
     @Override
@@ -247,6 +246,8 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Override
     public ModularPanel<?> buildUI(SidedPosGuiData posGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
         ModularPanel<?> panel = type.getModularPanelSupplier().get();
+        panelSyncManager.addOpenListener(this::onContainerOpen);
+        panelSyncManager.addCloseListener(this::onContainerClose);
         type.getBackgroundFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
         type.getSlotFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
         type.getGuiFunctions().forEach(f -> f.modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings));

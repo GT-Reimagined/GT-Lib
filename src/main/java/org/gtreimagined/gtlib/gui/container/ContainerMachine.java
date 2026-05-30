@@ -34,7 +34,6 @@ public abstract class ContainerMachine<T extends BlockEntityMachine<T>> extends 
         //if (!(playerInv.player instanceof ServerPlayerEntity)) {
         //    tile.recipeHandler.ifPresent(t -> t.setClientProgress(0));
         //}
-        tile.addOpenContainer(this, playerInv.player);
     }
 
     @Override
@@ -50,7 +49,6 @@ public abstract class ContainerMachine<T extends BlockEntityMachine<T>> extends 
     @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
-        tile.onContainerClose(this, playerIn);
     }
 
     @Override
