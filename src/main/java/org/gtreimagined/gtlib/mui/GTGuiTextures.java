@@ -38,15 +38,15 @@ public class GTGuiTextures {
     public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "textures/gui/button/tank.png"), null);
     public static final UITexture CREATIVE_GENERATOR_OVERLAY = UITexture.builder().location(Ref.ID, "textures/gui/widgets/creative_generator_overlay.png").imageSize(158, 61).colorType(null).build();
 
-    public static UITexture STOP = UITexture.fullImage(Ref.ID,"stop", null);
-    public static UITexture TORCH_OFF = UITexture.fullImage(Ref.ID,"torch_off", null);
-    public static UITexture TORCH_ON = UITexture.fullImage(Ref.ID,"torch_on", null);
+    public static UITexture STOP = UITexture.fullImage(Ref.ID,"textures/gui/button/stop", null);
+    public static UITexture TORCH_OFF = UITexture.fullImage(Ref.ID,"textures/gui/button/torch_off", null);
+    public static UITexture TORCH_ON = UITexture.fullImage(Ref.ID,"textures/gui/button/torch_on", null);
     public static UITexture REDSTONE = UITexture.fullImage(new ResourceLocation("textures/item/redstone.png"), null);
-    public static UITexture EXPORT = UITexture.fullImage(Ref.ID,"export", null);
-    public static UITexture IMPORT =  UITexture.fullImage(Ref.ID,"import", null);
-    public static UITexture EXPORT_IMPORT =  UITexture.fullImage(Ref.ID,"export_import", null);
-    public static UITexture IMPORT_EXPORT =  UITexture.fullImage(Ref.ID,"import_export", null);
-    public static UITexture INPUT_OFF =  UITexture.fullImage(Ref.ID,"input_off", null);
+    public static UITexture EXPORT = UITexture.fullImage(Ref.ID,"textures/gui/button/export", null);
+    public static UITexture IMPORT =  UITexture.fullImage(Ref.ID,"textures/gui/button/import", null);
+    public static UITexture EXPORT_IMPORT =  UITexture.fullImage(Ref.ID,"textures/gui/button/export_import", null);
+    public static UITexture IMPORT_EXPORT =  UITexture.fullImage(Ref.ID,"textures/gui/button/import_export", null);
+    public static UITexture INPUT_OFF =  UITexture.fullImage(Ref.ID,"textures/gui/button/input_off", null);
 
     public static UITexture GREY_OFF =  UITexture.fullImage(Ref.ID,"textures/gui/button/grey_off.png",  null);
     public static UITexture GREY_ON =  UITexture.fullImage(Ref.ID,"textures/gui/button/grey_on.png",  null);
