@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.util.int2;
 import org.gtreimagined.gtlib.util.int4;
@@ -63,6 +64,7 @@ public class GuiProperties {
     public GuiProperties(String domain, String id) {
         this.loc = new ResourceLocation(domain, id);
         this.backgroundTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"));
+        gtIcons.put("", GTGuiTextures.GT_LOGO);
     }
 
     public GuiProperties(IGTObject type) {
