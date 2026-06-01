@@ -8,9 +8,6 @@ import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 public interface IGuiHandler {
 
     default void onGuiEvent(IGuiEvent event, Player player) {
@@ -22,9 +19,7 @@ public interface IGuiHandler {
     boolean isRemote();
 
     default void addWidgets(GuiInstance instance, IGuiElement parent) {
-        if (this instanceof IHaveWidgets) {
-            ((IHaveWidgets) this).getCallbacks().forEach(t -> t.accept(instance));
-        }
+
     }
 
     ResourceLocation getGuiTexture();
@@ -55,13 +50,4 @@ public interface IGuiHandler {
 
     String handlerDomain();
 
-    interface IHaveWidgets {
-        List<Consumer<GuiInstance>> getCallbacks();
-
-        @Deprecated(forRemoval = true)
-        default IHaveWidgets addGuiCallback(Consumer<GuiInstance> gui) {
-            getCallbacks().add(gui);
-            return this;
-        }
-    }
 }

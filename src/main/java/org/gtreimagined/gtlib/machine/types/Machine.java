@@ -102,7 +102,7 @@ import static org.gtreimagined.gtlib.machine.Tier.NONE;
  *
  * @param <T> this class as a generic argument.
  */
-public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryProvider, ISlotProvider<Machine<T>>, IGuiHandler.IHaveWidgets, IDynamicModelProvider {
+public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryProvider, ISlotProvider<Machine<T>>, IDynamicModelProvider {
 
     
     /**
@@ -289,8 +289,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     private final Map<String, List<SlotData<?>>> slotLookup = new Object2ObjectOpenHashMap<>();
 
-    @Getter
-    private final List<Consumer<GuiInstance>> callbacks = new ObjectArrayList<>(1);
     private static final Map<String, Set<Machine<?>>> FLAG_MAP = new Object2ObjectOpenHashMap<>();
 
     public Machine(String domain, String id) {

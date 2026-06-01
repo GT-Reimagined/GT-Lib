@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 //The base Cover class. All cover classes extend from this.
-public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
+public abstract class BaseCover implements ICover {
     @NotNull
     public final CoverFactory factory;
     @NotNull
@@ -46,7 +46,6 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     @Nullable
     public final GuiProperties gui;
     public final Direction side;
-    private final List<Consumer<GuiInstance>> guiCallbacks = new ObjectArrayList<>();
 
     protected Object2ObjectMap<SlotType<?>, TrackedItemHandler<?>> inventories = null;
 
@@ -117,11 +116,6 @@ public abstract class BaseCover implements ICover, IGuiHandler.IHaveWidgets {
     @Override
     public @Nullable Tier getTier() {
         return tier;
-    }
-
-    @Override
-    public List<Consumer<GuiInstance>> getCallbacks() {
-        return this.guiCallbacks;
     }
 
     @Override
