@@ -66,19 +66,24 @@ public class BasicMachine extends Machine<BasicMachine> {
                     !(machine instanceof BlockEntityMultiMachine<?>)){
                 ParentWidget<?> widget = new ParentWidget<>();
                 if (this.has(ITEM)) {
-                    IOWidgetItem itemWidget = new IOWidgetItem(machine).pos(guiProperties.getMachineData().getIoPos().x + 18, guiProperties.getMachineData().getIoPos().y);
                     syncManager.syncValue("item_output",
                             new BooleanSyncValue(() -> machine.coverHandler.map(
-                                    t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false),
-                                    itemWidget::setItem));
-                    widget.child(itemWidget);
+                                    t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false), b -> {
+                                machine.coverHandler.ifPresent(t -> {
+                                    if (t.getOutputCover() instanceof CoverOutput output) output.setEjects(output.shouldOutputFluids(), b);
+                                });
+                            }).allowC2S());
+                    widget.child(new IOWidgetItem().pos(guiProperties.getMachineData().getIoPos().x + 18, guiProperties.getMachineData().getIoPos().y));
                 }
                 if (this.has(FLUID)) {
-                    IOWidgetFluid fluidWidget = new IOWidgetFluid(machine).pos(guiProperties.getMachineData().getIoPos().x, guiProperties.getMachineData().getIoPos().y);
                     syncManager.syncValue("fluid_output",
                             new BooleanSyncValue(() -> machine.coverHandler.map(
-                                    t -> ((CoverOutput) t.getOutputCover()).shouldOutputFluids()).orElse(false),
-                                    fluidWidget::setFluid));
+                                    t -> ((CoverOutput) t.getOutputCover()).shouldOutputFluids()).orElse(false), b -> {
+                                machine.coverHandler.ifPresent(t -> {
+                                    if (t.getOutputCover() instanceof CoverOutput output) output.setEjects(b, output.shouldOutputItems());
+                                });
+                            }).allowC2S());
+                    IOWidgetFluid fluidWidget = new IOWidgetFluid(machine).pos(guiProperties.getMachineData().getIoPos().x, guiProperties.getMachineData().getIoPos().y);
                     widget.child(fluidWidget);
                 }
                 modularPanel.child(widget);
