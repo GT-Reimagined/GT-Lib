@@ -471,11 +471,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     }
 
     @Override
-    public void addWidgets(GuiInstance instance, IGuiElement parent) {
-        //instance.addWidget(WidgetSupplier.build((a, b) -> TextWidget.build(((GTContainerScreen<?>) b).getTitle().getString(), 4210752).build(a, b)).setPos(9, 5).clientSide());
-    }
-
-    @Override
     public Optional<ICoverHandler<BlockEntityPipe<?>>> getCoverHandler() {
         return coverHandler.map(p -> (ICoverHandler<BlockEntityPipe<?>>) p);
     }
