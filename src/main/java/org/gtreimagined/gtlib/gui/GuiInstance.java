@@ -6,12 +6,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.gui.core.RTree;
-import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.screen.GTContainerScreen;
-import org.gtreimagined.gtlib.gui.widget.ButtonWidget;
-import org.gtreimagined.gtlib.gui.widget.CycleButtonWidget;
-import org.gtreimagined.gtlib.gui.widget.SwitchButtonWidget;
-import org.gtreimagined.gtlib.gui.widget.TextButtonWidget;
 import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
@@ -19,7 +14,6 @@ import org.gtreimagined.gtlib.network.packets.ClientboundGuiSyncPacket;
 import org.gtreimagined.gtlib.network.packets.GuiSyncPacket;
 import org.gtreimagined.gtlib.network.packets.ServerboundGuiSyncPacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -36,10 +30,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 
 public class GuiInstance implements ICanSyncData {
@@ -190,51 +181,6 @@ public class GuiInstance implements ICanSyncData {
 
     public GuiInstance addWidget(WidgetSupplier provider) {
         builders.add(provider);
-        return this;
-    }
-
-    public GuiInstance addButton(int x, int y, ButtonOverlay body) {
-        addWidget(ButtonWidget.build(body, GuiEvents.EXTRA_BUTTON, buttonCounter++, false).setSize(x, y, body.w, body.h));
-        return this;
-    }
-
-    public GuiInstance addButton(int x, int y, ButtonOverlay body, boolean renderBackground) {
-        addWidget(ButtonWidget.build(body, GuiEvents.EXTRA_BUTTON, buttonCounter++, renderBackground).setSize(x, y, body.w, body.h));
-        return this;
-    }
-
-    public GuiInstance addButton(int x, int y, ButtonOverlay body, boolean renderBackground, String tooltipKey) {
-        addWidget(ButtonWidget.build(body, GuiEvents.EXTRA_BUTTON, buttonCounter++, renderBackground, tooltipKey).setSize(x, y, body.w, body.h));
-        return this;
-    }
-
-    public GuiInstance addButton(int x, int y, ButtonOverlay body, String tooltipKey) {
-        addWidget(ButtonWidget.build(body, GuiEvents.EXTRA_BUTTON, buttonCounter++, false, tooltipKey).setSize(x, y, body.w, body.h));
-        return this;
-    }
-
-    public GuiInstance addSwitchButton(int x, int y, int w, int h, ButtonOverlay bodyOff, ButtonOverlay bodyOn, Predicate<IGuiHandler> syncFunction, boolean renderBackground) {
-        addWidget(SwitchButtonWidget.build(bodyOff, bodyOn, syncFunction, GuiEvents.EXTRA_BUTTON, buttonCounter++, renderBackground).setSize(x, y, w, h));
-        return this;
-    }
-
-    public GuiInstance addSwitchButton(int x, int y, int w, int h, ButtonOverlay bodyOff, ButtonOverlay bodyOn, Predicate<IGuiHandler> syncFunction, boolean renderBackground, Function<Boolean, String> tooltipKeyFunction) {
-        addWidget(SwitchButtonWidget.build(bodyOff, bodyOn, syncFunction, GuiEvents.EXTRA_BUTTON, buttonCounter++, renderBackground, tooltipKeyFunction).setSize(x, y, w, h));
-        return this;
-    }
-
-    public GuiInstance addCycleButton(int x, int y, int w, int h, ToIntFunction<IGuiHandler> syncFunction, boolean renderBackground, ButtonOverlay... buttons) {
-        addWidget(CycleButtonWidget.build(syncFunction, GuiEvents.EXTRA_BUTTON, buttonCounter++, renderBackground, buttons).setSize(x, y, w, h));
-        return this;
-    }
-
-    public GuiInstance addCycleButton(int x, int y, int w, int h, ToIntFunction<IGuiHandler> syncFunction, boolean renderBackground, IntFunction<String> tooltipKey, ButtonOverlay... buttons) {
-        addWidget(CycleButtonWidget.build(syncFunction, GuiEvents.EXTRA_BUTTON, buttonCounter++, renderBackground, tooltipKey, buttons).setSize(x, y, w, h));
-        return this;
-    }
-
-    public <T> GuiInstance addTextButton(int x, int y, int w, int h, Function<IGuiHandler, T> syncFunction, Function<T, Component> textToRender, T defaultValue, boolean renderBackground){
-        addWidget(TextButtonWidget.build(syncFunction, textToRender, defaultValue, GuiEvents.EXTRA_BUTTON, buttonCounter++, renderBackground).setSize(x, y, w, h));
         return this;
     }
 
