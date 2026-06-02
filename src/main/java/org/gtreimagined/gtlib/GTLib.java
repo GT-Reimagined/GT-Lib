@@ -42,6 +42,7 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.material.SubTag;
+import org.gtreimagined.gtlib.mui.GTGuiThemes;
 import org.gtreimagined.gtlib.mui.factory.CoverUIFactory;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.ore.BlockOre;
@@ -275,6 +276,7 @@ public class GTLib extends GTMod {
         ClientHandler.setup();
         GTAPI.onRegistration(RegistrationEvent.DATA_READY);
         GTLibDynamics.runDataProvidersDynamically();
+        GTGuiThemes.registerThemes();
         e.enqueueWork(() -> GTAPI.getClientDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {

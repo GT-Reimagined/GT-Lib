@@ -60,6 +60,7 @@ import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
+import org.gtreimagined.gtlib.mui.GTGuiThemes;
 import org.gtreimagined.gtlib.mui.drawable.GTDrawableStack;
 import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
@@ -316,6 +317,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         guiProperties = new GuiProperties(domain, id);
         guiProperties.setSlots(this);
         GTAPI.register(Machine.class, this);
+        guiProperties.setTheme(GTGuiThemes.STANDARD_THEME_ID);
         //if (FMLEnvironment.dist.isClient()) {
         setupGui();
         //}
