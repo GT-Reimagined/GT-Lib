@@ -150,7 +150,6 @@ public class GuiInstance implements ICanSyncData {
     }
 
     private void initWidgets(IGuiElement parent) {
-        handler.addWidgets(this, parent);
         for (WidgetSupplier builder : builders) {
             if (!builder.shouldAdd(this)) continue;
             builder.buildAndAdd(this, parent);

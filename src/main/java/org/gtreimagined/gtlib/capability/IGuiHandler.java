@@ -22,10 +22,6 @@ public interface IGuiHandler {
 
     boolean isRemote();
 
-    default void addWidgets(GuiInstance instance, IGuiElement parent) {
-
-    }
-
     default void addWidgets(ModularPanel<?> panel, SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
 
     }
