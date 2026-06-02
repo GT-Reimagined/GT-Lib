@@ -307,10 +307,6 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
         return null;
     }
 
-    default void addWidgets(ModularPanel<?> panel, SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
-
-    }
-
     default List<BakedQuad> transformQuads(BlockState state, List<BakedQuad> quads) {
         /*
          * if (state.getBlock() instanceof IColorHandler) { quads.forEach(t -> {

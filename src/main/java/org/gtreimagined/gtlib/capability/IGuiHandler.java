@@ -1,5 +1,9 @@
 package org.gtreimagined.gtlib.capability;
 
+import brachy.modularui.factory.SidedPosGuiData;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.value.sync.PanelSyncManager;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
@@ -19,6 +23,10 @@ public interface IGuiHandler {
     boolean isRemote();
 
     default void addWidgets(GuiInstance instance, IGuiElement parent) {
+
+    }
+
+    default void addWidgets(ModularPanel<?> panel, SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
 
     }
 

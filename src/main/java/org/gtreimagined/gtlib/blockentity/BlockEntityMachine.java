@@ -222,10 +222,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @Override
-    public void addWidgets(GuiInstance instance, IGuiElement parent) {
-    }
-
-    @Override
     public ResourceLocation getGuiTexture() {
         return getMachineType().getGuiProperties().getTexture(this.getMachineTier(), "machine");
     }
@@ -251,6 +247,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         type.getBackgroundFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
         type.getSlotFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
         type.getGuiFunctions().forEach(f -> f.modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings));
+        this.addWidgets(panel, posGuiData, panelSyncManager, uiSettings);
         return panel;
     }
 
