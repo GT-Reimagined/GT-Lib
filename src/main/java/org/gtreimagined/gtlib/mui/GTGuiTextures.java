@@ -43,6 +43,9 @@ public class GTGuiTextures {
     public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "textures/gui/button/tank.png"), null);
     public static final UITexture CREATIVE_GENERATOR_OVERLAY = UITexture.builder().location(Ref.ID, "textures/gui/widgets/creative_generator_overlay.png").imageSize(158, 61).colorType(null).build();
 
+    public static final UITexture IO_ITEM = UITexture.fullImage(Ref.ID, "textures/gui/button/io_item", null);
+    public static final UITexture IO_FLUID = UITexture.fullImage(Ref.ID, "textures/gui/button/io_fluid", null);
+
     public static final UITexture STOP = UITexture.fullImage(Ref.ID,"textures/gui/button/stop", null);
     public static final UITexture TORCH_OFF = UITexture.fullImage(Ref.ID,"textures/gui/button/torch_off", null);
     public static final UITexture TORCH_ON = UITexture.fullImage(Ref.ID,"textures/gui/button/torch_on", null);
