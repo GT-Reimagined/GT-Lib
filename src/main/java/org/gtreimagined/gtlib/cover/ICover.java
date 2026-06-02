@@ -22,6 +22,7 @@ import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
@@ -269,6 +270,9 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
     default ModularPanel<?> buildUI(SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
         if (hasGui() && getGuiProperties() != null){
             ModularPanel<?> modularPanel = createModularPanel();
+            panelSyncManager.registerSyncedAction("extra_button_event", packet -> {
+                this.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), panelSyncManager.getPlayer());
+            });
             GuiProperties guiProperties = getGuiProperties();
             if (guiProperties.hasGTIcon()) {
                 modularPanel.child(guiProperties.getGTIcon(getTier()).asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));

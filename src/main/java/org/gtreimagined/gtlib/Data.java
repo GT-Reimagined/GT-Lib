@@ -76,10 +76,6 @@ public class Data {
     public static void init(Dist side) {
         CREATIVE_GENERATOR.getGuiFunctions().add(((modularPanel, machine, guiData, syncManager, settings) -> {
             modularPanel.child(GTGuiTextures.CREATIVE_GENERATOR_OVERLAY.asWidget().size(158, 61).pos(9, 17));
-            syncManager.registerSyncedAction("buttonEvent", packet -> {
-                machine.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), syncManager.getPlayer());
-            });
-
             for (int i = 0; i < 16; i++){
                 boolean leftSide = i < 8;
                 boolean leftOuter = i % 2 == 0;
@@ -91,7 +87,7 @@ public class Data {
                         .overlay(texture.getSubArea(0f, 0f, 1.0f, 0.5f))
                         .hoverOverlay(texture.getSubArea(0f, 0.5f, 1f, 1f))
                                 .onMousePressed((context, mouseButton) -> {
-                                    syncManager.callSyncedAction("buttonEvent", packet -> {
+                                    syncManager.callSyncedAction("extra_button_event", packet -> {
                                         packet.writeVarIntArray(new int[]{Screen.hasShiftDown() ? 1 : 0, finalI});
                                     });
                                     return true;

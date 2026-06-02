@@ -42,6 +42,7 @@ import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.gui.IGuiElement;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.gui.event.SlotClickEvent;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -242,6 +243,9 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     @Override
     public ModularPanel<?> buildUI(SidedPosGuiData posGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
         ModularPanel<?> panel = type.getModularPanelSupplier().get();
+        panelSyncManager.registerSyncedAction("extra_button_event", packet -> {
+            this.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), panelSyncManager.getPlayer());
+        });
         panelSyncManager.addOpenListener(this::onContainerOpen);
         panelSyncManager.addCloseListener(this::onContainerClose);
         type.getBackgroundFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
