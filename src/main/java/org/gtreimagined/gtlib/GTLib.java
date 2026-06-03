@@ -5,6 +5,7 @@ import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.common.event.ARRPEvents;
@@ -133,6 +134,7 @@ public class GTLib extends GTMod {
         GuiManager.registerFactory(CoverUIFactory.INSTANCE);
         /* Lifecycle events */
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::modConstructionEvent);
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::commonSetup);
         eventBus.addListener(this::serverSetup);
@@ -271,6 +273,10 @@ public class GTLib extends GTMod {
         return Ref.ID;
     }
 
+
+    private void modConstructionEvent(FMLConstructModEvent event){
+        GTGuiThemes.registerThemes();
+    }
 
     private void clientSetup(final FMLClientSetupEvent e) {
         ClientHandler.setup();
