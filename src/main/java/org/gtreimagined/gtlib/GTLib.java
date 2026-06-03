@@ -276,7 +276,6 @@ public class GTLib extends GTMod {
         ClientHandler.setup();
         GTAPI.onRegistration(RegistrationEvent.DATA_READY);
         GTLibDynamics.runDataProvidersDynamically();
-        GTGuiThemes.registerThemes();
         e.enqueueWork(() -> GTAPI.getClientDeferredQueue().ifPresent(t -> {
             for (Runnable r : t) {
                 try {
