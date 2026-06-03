@@ -18,7 +18,7 @@ public class GTGuiThemes {
     public static final ThemeBuilder<?> STANDARD_THEME = new ThemeBuilder<>(STANDARD_THEME_ID)
             .background(IThemeApi.BUTTON, IDs.STANDARD_BUTTON)
             .background(IThemeApi.CLOSE_BUTTON, IDs.STANDARD_BUTTON)
-            .background(IThemeApi.TOGGLE_BUTTON, new SelectableTheme.Builder<>().background(IDs.STANDARD_BUTTON).selectedBackground(IDs.STANDARD_BUTTON_PRESSED));
+            .widgetTheme(IThemeApi.TOGGLE_BUTTON, new SelectableTheme.Builder<>().background(IDs.STANDARD_BUTTON).selectedBackground(IDs.STANDARD_BUTTON_PRESSED));
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
