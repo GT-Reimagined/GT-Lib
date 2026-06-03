@@ -1,7 +1,6 @@
 package org.gtreimagined.gtlib.mui.drawable;
 
 import brachy.modularui.ModularUI;
-import brachy.modularui.api.IJsonSerializable;
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.screen.viewport.GuiContext;
 import brachy.modularui.theme.WidgetTheme;
@@ -19,7 +18,7 @@ import java.util.List;
 /**
  * A stack of {@link IDrawable} backed by an array which are drawn on top of each other.
  */
-public record GTDrawableStack(IDrawable... drawables) implements IDrawable, IJsonSerializable<GTDrawableStack> {
+public record GTDrawableStack(IDrawable... drawables) implements IDrawable {
 
     public static final IDrawable[] EMPTY_BACKGROUND = {};
     public static final GTDrawableStack EMPTY = new GTDrawableStack(EMPTY_BACKGROUND);
@@ -78,7 +77,7 @@ public record GTDrawableStack(IDrawable... drawables) implements IDrawable, IJso
     }
 
     // this method should never be called, but the special casing code is copied here in case it does.
-    @Override
+    //@Override
     public boolean saveToJson(JsonObject json) {
         JsonArray jsonArray = new JsonArray();
         for (IDrawable drawable : this.drawables()) {
