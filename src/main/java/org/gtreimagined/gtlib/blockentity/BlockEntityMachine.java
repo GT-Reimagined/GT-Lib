@@ -218,11 +218,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @Override
-    public ResourceLocation getGuiTexture() {
-        return getMachineType().getGuiProperties().getTexture(this.getMachineTier(), "machine");
-    }
-
-    @Override
     public GuiProperties getGuiProperties() {
         return getMachineType().getGuiProperties();
     }
@@ -481,11 +476,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
                 ch.getOutputCover().onGuiEvent(event, player);
             });
         }
-    }
-
-    @Override
-    public String handlerDomain() {
-        return getDomain();
     }
 
     public void setMuffled(boolean muffled) {

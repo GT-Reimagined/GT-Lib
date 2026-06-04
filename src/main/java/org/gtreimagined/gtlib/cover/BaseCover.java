@@ -218,11 +218,6 @@ public abstract class BaseCover implements ICover {
     }
 
     @Override
-    public ResourceLocation getGuiTexture() {
-        return new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png");
-    }
-
-    @Override
     public CoverFactory getFactory() {
         return factory;
     }

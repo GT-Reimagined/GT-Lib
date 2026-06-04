@@ -79,11 +79,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     }
 
     @Override
-    public String handlerDomain() {
-        return getPipeType().domain;
-    }
-
-    @Override
     public GuiProperties getGuiProperties() {
         return null;
     }
@@ -448,11 +443,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     @Override
     public boolean isRemote() {
         return this.getLevel().isClientSide;
-    }
-
-    @Override
-    public ResourceLocation getGuiTexture() {
-        return new ResourceLocation(Ref.ID, "textures/gui/empty_multi.png");
     }
 
     @Override

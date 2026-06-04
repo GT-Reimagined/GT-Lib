@@ -130,11 +130,6 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
 
     }
 
-    @Override
-    default String handlerDomain() {
-        return getDomain();
-    }
-
     default void onMachineEvent(IGuiHandler tile, IMachineEvent event, int... data) {
         // NOOP
     }
@@ -396,11 +391,6 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
         @Override
         public boolean isRemote() {
             return false;
-        }
-
-        @Override
-        public ResourceLocation getGuiTexture() {
-            return null;
         }
 
         @Override

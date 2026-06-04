@@ -23,24 +23,4 @@ public interface IGuiHandler {
 
     }
 
-    ResourceLocation getGuiTexture();
-
-    default int guiSize() {
-        return getGuiProperties().getXSize();
-    }
-
-    default int guiHeight() {
-        return getGuiProperties().getYSize();
-    }
-
-    default int guiTextureSize() {
-        return getGuiProperties().getTextureXSize();
-    }
-
-    default int guiTextureHeight() {
-        return getGuiProperties().getTextureYSize();
-    }
-
-    String handlerDomain();
-
 }

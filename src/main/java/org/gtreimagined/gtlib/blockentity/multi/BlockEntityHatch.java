@@ -193,8 +193,4 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
         }
     }
 
-    @Override
-    public ResourceLocation getGuiTexture() {
-        return new ResourceLocation(getMachineType().getDomain(), "textures/gui/machine/hatch.png");
-    }
 }
