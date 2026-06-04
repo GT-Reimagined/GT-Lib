@@ -65,7 +65,6 @@ import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.gui.event.SlotClickEvent;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.MachineFlag;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -480,12 +479,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         if (event.getFactory() == ITEM_EJECT || event.getFactory() == FLUID_EJECT) {
             coverHandler.ifPresent(ch -> {
                 ch.getOutputCover().onGuiEvent(event, player);
-            });
-        }
-        if (event.getFactory() == SlotClickEvent.SLOT_CLICKED) {
-            itemHandler.ifPresent(t -> {
-               // ItemStack stack = player.get;
-              //  GTLib.LOGGER.info("packet got");
             });
         }
     }

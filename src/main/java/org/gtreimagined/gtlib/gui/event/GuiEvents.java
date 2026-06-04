@@ -22,7 +22,6 @@ public enum GuiEvents implements IGuiEvent.IGuiEventFactory {
     }
 
     public static void init() {
-        SlotClickEvent.init();
     }
 
     @Override
