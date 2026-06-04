@@ -1,10 +1,8 @@
 package org.gtreimagined.gtlib.mui;
 
-import brachy.modularui.drawable.ColorType;
 import brachy.modularui.drawable.UITexture;
 import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.gui.ButtonOverlay;
 
 public class GTGuiTextures {
     public static class IDs {
