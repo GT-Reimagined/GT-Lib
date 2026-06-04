@@ -2,28 +2,22 @@ package org.gtreimagined.gtlib.cover;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.capability.ICoverHandler;
-import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.capability.item.FakeTrackedItemHandler;
-import org.gtreimagined.gtlib.capability.item.ITrackedHandler;
-import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
-import org.gtreimagined.gtlib.gui.GuiProperties;
-import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
-import org.gtreimagined.gtlib.machine.Tier;
-import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
-import org.gtreimagined.gtlib.network.packets.CoverGuiEventPacket;
-import org.gtreimagined.gtlib.texture.Texture;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.capability.ICoverHandler;
+import org.gtreimagined.gtlib.capability.item.FakeTrackedItemHandler;
+import org.gtreimagined.gtlib.capability.item.ITrackedHandler;
+import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
+import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.gui.SlotData;
+import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
+import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.texture.Texture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 //The base Cover class. All cover classes extend from this.
@@ -227,11 +220,6 @@ public abstract class BaseCover implements ICover {
     @Override
     public ResourceLocation getGuiTexture() {
         return new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png");
-    }
-
-    @Override
-    public AbstractGuiEventPacket createGuiPacket(IGuiEvent event) {
-        return new CoverGuiEventPacket(event, this.handler.getTile().getBlockPos(), this.side);
     }
 
     @Override

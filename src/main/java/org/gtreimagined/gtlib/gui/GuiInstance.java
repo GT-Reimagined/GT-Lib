@@ -1,23 +1,15 @@
 package org.gtreimagined.gtlib.gui;
 
-import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.gui.container.IGTContainer;
-import org.gtreimagined.gtlib.gui.core.RTree;
-import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
-import org.gtreimagined.gtlib.network.GTLibNetwork;
-import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
-import org.gtreimagined.gtlib.network.packets.ClientboundGuiSyncPacket;
-import org.gtreimagined.gtlib.network.packets.GuiSyncPacket;
-import org.gtreimagined.gtlib.network.packets.ServerboundGuiSyncPacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.gtreimagined.gtlib.capability.IGuiHandler;
+import org.gtreimagined.gtlib.gui.core.RTree;
+import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -189,12 +181,6 @@ public class GuiInstance implements ICanSyncData {
                 toSync.add(sync);
             }
         }
-        if (toSync.size() > 0)
-            writeToServer(toSync);
-    }
-
-    public void sendPacket(AbstractGuiEventPacket pkt) {
-        GTLibNetwork.NETWORK.sendToServer(pkt);
     }
 
     /**
@@ -210,8 +196,6 @@ public class GuiInstance implements ICanSyncData {
                 toSync.add(sync);
             }
         }
-        if (toSync.size() > 0)
-            writeToClient(toSync);
     }
 
     public ItemStack getHeldItem() {
@@ -221,31 +205,6 @@ public class GuiInstance implements ICanSyncData {
     @Nullable
     public IGuiElement getFocus() {
         return focus;
-    }
-
-    public void receivePacket(GuiSyncPacket packet, SyncDirection dir) {
-        ByteBuf data = packet.clientData;
-        FriendlyByteBuf buf = new FriendlyByteBuf(data);
-        int size = buf.readVarInt();
-        for (int i = 0; i < size; i++) {
-            int offset = buf.readVarInt();
-            Object o = this.syncData.get(offset).reader.apply(buf);
-            SyncHolder holder = this.syncData.get(offset);
-            holder.current = o;
-            holder.sink.accept(o);
-        }
-    }
-
-    private void writeToClient(final List<SyncHolder> data) {
-        GuiSyncPacket pkt = new ClientboundGuiSyncPacket(data);
-        for (ServerPlayer listener : ((IGTContainer)container).listeners()) {
-            GTLibNetwork.NETWORK.sendToPlayer(pkt, listener);
-        }
-    }
-
-    private void writeToServer(final List<SyncHolder> data) {
-        GuiSyncPacket pkt = new ServerboundGuiSyncPacket(data);
-        GTLibNetwork.NETWORK.sendToServer(pkt);
     }
 
     @Override

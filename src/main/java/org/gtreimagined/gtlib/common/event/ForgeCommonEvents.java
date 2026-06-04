@@ -1,54 +1,19 @@
 package org.gtreimagined.gtlib.common.event;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistries.Keys;
-import net.minecraftforge.registries.MissingMappingsEvent;
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.GTLibConfig;
-import org.gtreimagined.gtlib.GTRemapping;
-import org.gtreimagined.gtlib.Data;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
-import org.gtreimagined.gtlib.capability.fluid.FluidHandlerItem;
-import org.gtreimagined.gtlib.data.GTMaterialTypes;
-import org.gtreimagined.gtlib.data.GTTools;
-import org.gtreimagined.gtlib.datagen.GTLibDynamics;
-import org.gtreimagined.gtlib.datagen.GTLoot;
-import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
-import org.gtreimagined.gtlib.gui.container.IGTContainer;
-import org.gtreimagined.gtlib.item.IFluidItem;
-import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.network.GTLibNetwork;
-import org.gtreimagined.gtlib.network.packets.ClientboundWorldgenSyncPacket;
-import org.gtreimagined.gtlib.ore.BlockOre;
-import org.gtreimagined.gtlib.pipe.BlockPipe;
-import org.gtreimagined.gtlib.pipe.TileTicker;
-import org.gtreimagined.gtlib.proxy.ClientHandler;
-import org.gtreimagined.gtlib.structure.StructureCache;
-import org.gtreimagined.gtlib.tool.IGTTool;
-import org.gtreimagined.gtlib.tool.behaviour.BehaviourTreeFelling;
-import org.gtreimagined.gtlib.util.RegistryUtils;
-import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -57,32 +22,42 @@ import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.ForgeRegistries.Keys;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
-
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.DUST;
-import static org.gtreimagined.gtlib.data.GTLibMaterials.Stone;
-import static org.gtreimagined.gtlib.material.Material.NULL;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.GTLibConfig;
+import org.gtreimagined.gtlib.GTRemapping;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe;
+import org.gtreimagined.gtlib.capability.fluid.FluidHandlerItem;
+import org.gtreimagined.gtlib.data.GTTools;
+import org.gtreimagined.gtlib.datagen.GTLibDynamics;
+import org.gtreimagined.gtlib.datagen.GTLoot;
+import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
+import org.gtreimagined.gtlib.item.IFluidItem;
+import org.gtreimagined.gtlib.network.GTLibNetwork;
+import org.gtreimagined.gtlib.network.packets.ClientboundWorldgenSyncPacket;
+import org.gtreimagined.gtlib.pipe.BlockPipe;
+import org.gtreimagined.gtlib.pipe.TileTicker;
+import org.gtreimagined.gtlib.proxy.ClientHandler;
+import org.gtreimagined.gtlib.structure.StructureCache;
+import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.util.RegistryUtils;
 
 @Mod.EventBusSubscriber(modid = Ref.ID)
 public class ForgeCommonEvents {
-
-    @SubscribeEvent
-    public static void onContainerOpen(PlayerContainerEvent.Open ev) {
-        if (ev.getEntity() instanceof ServerPlayer serverPlayer) {
-            if (ev.getContainer() instanceof IGTContainer gtContainer) {
-                gtContainer.listeners().add(serverPlayer);
-            }
-        }
-    }
 
     @SubscribeEvent
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent e) {
