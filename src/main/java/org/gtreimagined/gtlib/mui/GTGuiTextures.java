@@ -35,7 +35,6 @@ public class GTGuiTextures {
 
 
     public static final UITexture MACHINE_STATE = UITexture.builder().imageSize(20, 11).location(Ref.ID, "textures/gui/widgets/machine_state.png").build();
-    public static final UITexture IO_BUTTON = UITexture.fullImage(Ref.ID, "textures/gui/button/io.png");
     public static final UITexture STANDARD_BUTTON = UITexture.builder().name(IDs.STANDARD_BUTTON).location(Ref.ID, "textures/gui/button/standard.png").build();
     public static final UITexture STANDARD_BUTTON_PRESSED = UITexture.builder().name(IDs.STANDARD_BUTTON_PRESSED).location(Ref.ID, "textures/gui/button/standard_pressed.png").build();
     public static final UITexture STANDARD_BUTTON_DISABLED = UITexture.builder().name(IDs.STANDARD_BUTTON_DISABLED).location(Ref.ID, "textures/gui/button/standard_disabled.png").build();
