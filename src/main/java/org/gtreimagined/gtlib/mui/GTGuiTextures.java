@@ -18,6 +18,7 @@ public class GTGuiTextures {
         public static final String STANDARD_BUTTON = "gt:standard_button";
         public static final String STANDARD_BUTTON_DISABLED = "gt:standard_button_disabled";
         public static final String STANDARD_BUTTON_PRESSED = "gt:standard_button_pressed";
+        public static final String STANDARD_BUTTON_HOVER = "gt:standard_button_hover";
     }
 
     public static final UITexture GT_LOGO = UITexture.fullImage(Ref.ID,"textures/gui/icons/gt_logo.png", null);
@@ -38,6 +39,7 @@ public class GTGuiTextures {
     public static final UITexture STANDARD_BUTTON = UITexture.builder().name(IDs.STANDARD_BUTTON).location(Ref.ID, "textures/gui/button/standard.png").build();
     public static final UITexture STANDARD_BUTTON_PRESSED = UITexture.builder().name(IDs.STANDARD_BUTTON_PRESSED).location(Ref.ID, "textures/gui/button/standard_pressed.png").build();
     public static final UITexture STANDARD_BUTTON_DISABLED = UITexture.builder().name(IDs.STANDARD_BUTTON_DISABLED).location(Ref.ID, "textures/gui/button/standard_disabled.png").build();
+    public static final UITexture STANDARD_BUTTON_HOVER = UITexture.builder().name(IDs.STANDARD_BUTTON_HOVER).location(Ref.ID, "textures/gui/button/standard_hover.png").build();
     public static final UITexture DEFAULT_PROGRESS = UITexture.builder().location(new ResourceLocation(Ref.ID, "textures/gui/progress_bars/default.png")).imageSize(20, 36).build();
     public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "textures/gui/button/tank.png"), null);
     public static final UITexture CREATIVE_GENERATOR_OVERLAY = UITexture.builder().location(Ref.ID, "textures/gui/widgets/creative_generator_overlay.png").imageSize(158, 61).colorType(null).build();
