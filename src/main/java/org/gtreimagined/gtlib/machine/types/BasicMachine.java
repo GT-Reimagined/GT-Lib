@@ -2,18 +2,15 @@ package org.gtreimagined.gtlib.machine.types;
 
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.drawable.progress.CompositeProgress;
-import brachy.modularui.value.sync.BooleanSyncValue;
 import brachy.modularui.value.sync.DoubleSyncValue;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
-import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityMultiMachine;
 import org.gtreimagined.gtlib.cover.CoverOutput;
 import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.mui.widgets.GTProgressWidget;
-import org.gtreimagined.gtlib.mui.widgets.IOWidgetFluid;
-import org.gtreimagined.gtlib.mui.widgets.IOWidgetItem;
+import org.gtreimagined.gtlib.mui.widgets.IOButton;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.util.int2;
 
@@ -66,25 +63,12 @@ public class BasicMachine extends Machine<BasicMachine> {
                     !(machine instanceof BlockEntityMultiMachine<?>)){
                 ParentWidget<?> widget = new ParentWidget<>();
                 if (this.has(ITEM)) {
-                    syncManager.syncValue("item_output",
-                            new BooleanSyncValue(() -> machine.coverHandler.map(
-                                    t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false), b -> {
-                                machine.coverHandler.ifPresent(t -> {
-                                    if (t.getOutputCover() instanceof CoverOutput output) output.setEjects(output.shouldOutputFluids(), b);
-                                });
-                            }).allowC2S());
-                    widget.child(new IOWidgetItem().pos(guiProperties.getMachineData().getIoPos().x + 18, guiProperties.getMachineData().getIoPos().y));
+                    widget.child(new IOButton(true, syncManager, machine)
+                            .pos(guiProperties.getMachineData().getIoPos().x + 18, guiProperties.getMachineData().getIoPos().y));
                 }
                 if (this.has(FLUID)) {
-                    syncManager.syncValue("fluid_output",
-                            new BooleanSyncValue(() -> machine.coverHandler.map(
-                                    t -> ((CoverOutput) t.getOutputCover()).shouldOutputFluids()).orElse(false), b -> {
-                                machine.coverHandler.ifPresent(t -> {
-                                    if (t.getOutputCover() instanceof CoverOutput output) output.setEjects(b, output.shouldOutputItems());
-                                });
-                            }).allowC2S());
-                    IOWidgetFluid fluidWidget = new IOWidgetFluid(machine).pos(guiProperties.getMachineData().getIoPos().x, guiProperties.getMachineData().getIoPos().y);
-                    widget.child(fluidWidget);
+                    widget.child(new IOButton(false, syncManager, machine)
+                            .pos(guiProperties.getMachineData().getIoPos().x, guiProperties.getMachineData().getIoPos().y));
                 }
                 modularPanel.child(widget);
             }

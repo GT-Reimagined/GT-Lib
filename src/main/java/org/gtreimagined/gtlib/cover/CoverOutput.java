@@ -165,12 +165,10 @@ public class CoverOutput extends BaseCover {
     @Override
     public void onGuiEvent(IGuiEvent event, Player player) {
         if (event.getFactory() == GuiEvents.ITEM_EJECT) {
-            ejectItems = !ejectItems;
             if (ejectItems) processItemOutput();
             Utils.markTileForNBTSync(handler.getTile());
         }
         if (event.getFactory() == GuiEvents.FLUID_EJECT) {
-            ejectFluids = !ejectFluids;
             if (ejectFluids) processFluidOutput();
             Utils.markTileForNBTSync(handler.getTile());
         }
