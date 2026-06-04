@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.gui.container.IGTContainer;
 import org.gtreimagined.gtlib.gui.core.RTree;
-import org.gtreimagined.gtlib.gui.screen.GTContainerScreen;
 import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
@@ -41,10 +40,6 @@ public class GuiInstance implements ICanSyncData {
     public final boolean isRemote;
     private final List<SyncHolder> syncData = new ObjectArrayList<>();
     private int indexCounter = 0;
-
-    @OnlyIn(Dist.CLIENT)
-    @Nullable
-    public GTContainerScreen<?> screen;
 
     private final List<WidgetSupplier> builders = new ObjectArrayList<>();
     private final RTree<Widget> widgetLookup = new RTree<>();
@@ -155,15 +150,6 @@ public class GuiInstance implements ICanSyncData {
 
     public void init() {
         initWidgets(null);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void initClient(GTContainerScreen<?> parent) {
-        this.screen = parent;
-        initWidgets(parent);
-        for (Widget mut : unsortedWidgets()) {
-            if (mut.parent == null) mut.setParent(parent);
-        }
     }
 
     /**
