@@ -45,16 +45,7 @@ public class GuiProperties {
     private Map<String, String> themeMap = new HashMap<>();
     @Getter
     @Setter
-    @Deprecated
-    private int playerYOffset = 0, playerXOffset = 0;
-    @Getter
-    @Setter
     private int xSize = 176, ySize = 166;
-    @Getter
-    @Setter
-    @Deprecated
-    private int textureXSize = 256, textureYSize = 256;
-
     @Getter
     @Setter
     private boolean titleDrawingAllowed = true;
