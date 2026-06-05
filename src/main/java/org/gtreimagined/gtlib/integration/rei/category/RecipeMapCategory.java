@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.rei.category;
 
+import brachy.modularui.drawable.GuiTextures;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -87,10 +88,10 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
         widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
             int ySize = Math.min(bounds.getHeight() - 6, 79);
             int extraPixels = (bounds.getHeight() - 6) - ySize;
-            drawTexture(graphics, gui.getTexture(guiTier, "machine"), bounds.x + 3, bounds.y + 3, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, ySize, 256, 256);
+            drawTexture(graphics, GuiTextures.MC_BACKGROUND.location(), bounds.x + 3, bounds.y + 3, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, ySize, 256, 256);
             if (extraPixels > 0){
                 for (int i = 0; i < extraPixels; i++){
-                    drawTexture(graphics, gui.getTexture(guiTier, ""), bounds.x + 3, bounds.y + 3 + ySize + i, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, 1, 256, 256);
+                    drawTexture(graphics, GuiTextures.MC_BACKGROUND.location(), bounds.x + 3, bounds.y + 3 + ySize + i, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, 1, 256, 256);
                 }
             }
         }));

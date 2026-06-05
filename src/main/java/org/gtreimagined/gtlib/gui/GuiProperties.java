@@ -23,8 +23,6 @@ public class GuiProperties {
     @Getter
     protected ResourceLocation loc;
 
-    protected Map<String, ResourceLocation> backgroundTextures = new Object2ObjectOpenHashMap<>();
-
     @Accessors(fluent = true)
     @Getter
     private boolean hasGTIcon = true;
@@ -63,7 +61,6 @@ public class GuiProperties {
 
     public GuiProperties(String domain, String id) {
         this.loc = new ResourceLocation(domain, id);
-        this.backgroundTextures.put("", new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"));
         gtIcons.put("", GTGuiTextures.GT_LOGO);
     }
 
@@ -74,11 +71,6 @@ public class GuiProperties {
     public ISlotProvider<?> getSlots() {
         if (slots == null) throw new IllegalStateException("Called GuiData::getSlots without setting it first");
         return slots;
-    }
-
-    public ResourceLocation getTexture(Tier tier, String type) {
-       if (backgroundTextures.containsKey(tier.getId())) return backgroundTextures.get(tier.getId());
-       return backgroundTextures.get("");
     }
 
     public String getTheme(Tier tier) {
@@ -113,27 +105,6 @@ public class GuiProperties {
 
     public GuiProperties setArea(int x, int y, int z, int w) {
         area.set(x, y, z, w);
-        return this;
-    }
-
-    @Deprecated
-    public GuiProperties setBackgroundTexture(String textureName){
-        this.backgroundTextures.put("", new ResourceLocation(loc.getNamespace(), "textures/gui/background/" + textureName + ".png"));
-        return this;
-    }
-    @Deprecated
-    public GuiProperties setBackgroundTexture(Tier tier, String textureName){
-        this.backgroundTextures.put(tier.getId(), new ResourceLocation(loc.getNamespace(), "textures/gui/background/" + textureName + ".png"));
-        return this;
-    }
-    @Deprecated
-    public GuiProperties setBackgroundTexture(ResourceLocation textureName){
-        this.backgroundTextures.put("", new ResourceLocation(textureName.getNamespace(), "textures/gui/background/" + textureName.getPath() + ".png"));
-        return this;
-    }
-    @Deprecated
-    public GuiProperties setBackgroundTexture(Tier tier, ResourceLocation textureName){
-        this.backgroundTextures.put(tier.getId(), new ResourceLocation(textureName.getNamespace(), "textures/gui/background/" + textureName.getPath() + ".png"));
         return this;
     }
 
