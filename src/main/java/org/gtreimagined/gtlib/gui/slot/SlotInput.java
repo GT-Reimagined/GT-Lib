@@ -10,9 +10,4 @@ public class SlotInput extends AbstractSlot<SlotInput> {
     public SlotInput(SlotType<SlotInput> type, IGuiHandler tile, IItemHandler stackHandler, int index) {
         super(type, tile, stackHandler, index);
     }
-
-    @Override
-    public boolean mayPickup(Player player) {
-        return true;
-    }
 }

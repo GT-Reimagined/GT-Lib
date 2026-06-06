@@ -22,9 +22,4 @@ public class SlotEnergy extends AbstractSlot<SlotEnergy> {
     public int getMaxStackSize(@NotNull ItemStack stack) {
         return 1;
     }
-
-    @Override
-    public boolean mayPickup(Player playerIn) {
-        return true;
-    }
 }
