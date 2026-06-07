@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class AbstractSlot<T extends ModularSlot> extends ModularSlot {
+    @Getter
     protected final int index;
     public final SlotType<T> type;
     protected final IGuiHandler holder;
