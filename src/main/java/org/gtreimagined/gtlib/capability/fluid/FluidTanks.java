@@ -117,6 +117,12 @@ public class FluidTanks implements IFluidHandler {
         return !hasFluid;
     }
 
+    public void clearContent(){
+        for (FluidTank tank : tanks){
+            tank.setFluid(FluidStack.EMPTY);
+        }
+    }
+
     @NotNull
     public FluidStack getFluidInTank(int tank) {
         return this.tanks[tank].getFluid();
