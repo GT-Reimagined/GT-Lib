@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class AbstractSlot<T extends ModularSlot> extends ModularSlot {
-    @Getter
     protected final int index;
     public final SlotType<T> type;
     protected final IGuiHandler holder;
@@ -50,6 +49,11 @@ public class AbstractSlot<T extends ModularSlot> extends ModularSlot {
     @NotNull
     public ItemStack remove(int amount) {
         return MachineItemHandler.extractFromInput(this.container, index, amount, false);
+    }
+
+    @Override
+    public boolean mayPickup(Player playerIn) {
+        return !MachineItemHandler.extractFromInput(this.container, index, 1, true).isEmpty();
     }
 
     @Override
