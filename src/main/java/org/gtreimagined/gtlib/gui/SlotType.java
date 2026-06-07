@@ -10,8 +10,10 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.FluidHandler;
+import org.gtreimagined.gtlib.capability.FluidHandler.FluidTankType;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
+import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.slot.AbstractSlot;
 import org.gtreimagined.gtlib.gui.slot.SlotCell;
 import org.gtreimagined.gtlib.gui.slot.SlotEnergy;
@@ -72,6 +74,11 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getInputTanks).orElse(FluidTanks.EMPTY_TANK);
         }
+        if (g instanceof ICover cover){
+            if (cover.getFluidTanks() != null){
+                return cover.getFluidTanks().getOrDefault(FluidTankType.INPUT, FluidTanks.EMPTY_TANK);
+            }
+        }
         return FluidTanks.EMPTY_TANK;
     }).overlay(GTGuiTextures.FLUID_IN_SLOT_OVERLAY).build();
     //Cheat using same ID to get working counter.
@@ -79,11 +86,21 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getOutputTanks).orElse(FluidTanks.EMPTY_TANK);
         }
+        if (g instanceof ICover cover){
+            if (cover.getFluidTanks() != null){
+                return cover.getFluidTanks().getOrDefault(FluidTankType.OUTPUT, FluidTanks.EMPTY_TANK);
+            }
+        }
         return FluidTanks.EMPTY_TANK;
     }).overlay(GTGuiTextures.FLUID_OUT_SLOT_OVERLAY).build();
     public static SlotType<ModularSlot> FL_PHANTOM = SlotType.builder().id("fluid_phantom").fluidHandlerSupplier(g -> {
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getPhantomTanks).orElse(FluidTanks.EMPTY_TANK);
+        }
+        if (g instanceof ICover cover){
+            if (cover.getFluidTanks() != null){
+                return cover.getFluidTanks().getOrDefault(FluidTankType.PHANTOM, FluidTanks.EMPTY_TANK);
+            }
         }
         return FluidTanks.EMPTY_TANK;
     }).texture(GTGuiTextures.FLUID_SLOT).phantom(true).build();

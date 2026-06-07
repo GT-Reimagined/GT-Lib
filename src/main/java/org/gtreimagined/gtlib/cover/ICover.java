@@ -30,6 +30,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.capability.FluidHandler.FluidTankType;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
@@ -151,6 +152,10 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
     }
 
     default Map<SlotType<?>, IItemHandler> getAll(){
+        return null;
+    }
+
+    default Map<FluidTankType, FluidTanks> getFluidTanks() {
         return null;
     }
 

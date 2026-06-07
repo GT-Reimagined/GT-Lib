@@ -2,13 +2,16 @@ package org.gtreimagined.gtlib.cover;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.capability.FluidHandler.FluidTankType;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
+import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.capability.item.FakeTrackedItemHandler;
 import org.gtreimagined.gtlib.capability.item.ITrackedHandler;
 import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
@@ -23,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -39,6 +43,7 @@ public abstract class BaseCover implements ICover {
     @Nullable
     public final GuiProperties gui;
     public final Direction side;
+    protected Object2ObjectMap<FluidTankType, FluidTanks> fluidTanks = null;
 
     protected Object2ObjectMap<SlotType<?>, TrackedItemHandler<?>> inventories = null;
 
@@ -88,8 +93,20 @@ public abstract class BaseCover implements ICover {
             if (inventories == null){
                 inventories = new Object2ObjectOpenHashMap<>();
             }
+            if (fluidTanks == null){
+                fluidTanks = new Object2ObjectOpenHashMap<>();
+            }
             List<SlotData<?>> slots = tier == null ? gui.getSlots().getAnySlots() : gui.getSlots().getSlots(tier);
             Map<SlotType<?>, List<SlotData<?>>> map = slots.stream().collect(Collectors.groupingBy(SlotData::getType));
+            if (map.containsKey(SlotType.FL_IN)){
+                fluidTanks.put(FluidTankType.INPUT, new FluidTanks(map.get(SlotType.FL_IN).size(), 16000));
+            }
+            if (map.containsKey(SlotType.FL_OUT)){
+                fluidTanks.put(FluidTankType.OUTPUT, new FluidTanks(map.get(SlotType.FL_OUT).size(), 16000));
+            }
+            if (map.containsKey(SlotType.FL_PHANTOM)){
+                fluidTanks.put(FluidTankType.PHANTOM, new FluidTanks(map.get(SlotType.FL_PHANTOM).size(), 1000));
+            }
             slots.forEach(s ->{
                 for (Map.Entry<SlotType<?>, List<SlotData<?>>> entry : map.entrySet()) {
                     SlotType<?> type = entry.getKey();
@@ -115,20 +132,39 @@ public abstract class BaseCover implements ICover {
     public Map<SlotType<?>, IItemHandler> getAll() {
         return (Map<SlotType<?>, IItemHandler>) (Object) inventories;
     }
+
+    @Override
+    public Object2ObjectMap<FluidTankType, FluidTanks> getFluidTanks() {
+        return fluidTanks;
+    }
+
     public ITrackedHandler getInventory(SlotType<?> type){
         return inventories.get(type);
     }
 
     @Override
     public void deserializeStack(@Nullable CompoundTag tag) {
-        if (tag != null && tag.contains("coverInventories")){
-            CompoundTag nbt = tag.getCompound("coverInventories");
-            if (inventories != null && getFactory().hasGui()){
-                this.inventories.forEach((f, i) -> {
-                    if (!nbt.contains(f.getId())) return;
-                    i.deserializeNBT(nbt.getCompound(f.getId()));
-                });
-                handler.getTile().setChanged();
+        if (tag != null) {
+            if (tag.contains("coverInventories")) {
+                CompoundTag nbt = tag.getCompound("coverInventories");
+                if (inventories != null && getFactory().hasGui()) {
+                    this.inventories.forEach((f, i) -> {
+                        if (!nbt.contains(f.getId())) return;
+                        i.deserializeNBT(nbt.getCompound(f.getId()));
+                    });
+                    handler.getTile().setChanged();
+                }
+            }
+            if (tag.contains("coverTanks")){
+                CompoundTag nbt = tag.getCompound("coverTanks");
+                if (fluidTanks != null && getFactory().hasGui()) {
+                    this.fluidTanks.forEach((t, f) -> {
+                        if (!nbt.contains(t.name().toLowerCase(Locale.ROOT))) return;
+                        f.deserialize(nbt.getList(t.name().toLowerCase(Locale.ROOT), 10));
+                    });
+                    handler.getTile().setChanged();
+                }
+
             }
         }
     }
@@ -144,6 +180,14 @@ public abstract class BaseCover implements ICover {
             if (!nbt.isEmpty()) {
                 tag.put("coverInventories", nbt);
             }
+        }
+        if (fluidTanks != null && getFactory().hasGui()){
+            CompoundTag nbt = new CompoundTag();
+            this.fluidTanks.forEach((t, f) -> {
+                if (f.isEmpty()) return;
+                nbt.put(t.name().toLowerCase(Locale.ROOT), f.serialize());
+            });
+            if (!nbt.isEmpty()) tag.put("coverTanks", nbt);
         }
         return tag;
     }
@@ -187,6 +231,29 @@ public abstract class BaseCover implements ICover {
                 if (!nbt.contains(f.getId())) return;
                 i.deserializeNBT(nbt.getCompound(f.getId()));
             });
+            if (nbt != null) {
+                if (nbt.contains("coverInventories")) {
+                    CompoundTag tag = nbt.getCompound("coverInventories");
+                    if (inventories != null && getFactory().hasGui()) {
+                        this.inventories.forEach((f, i) -> {
+                            if (!tag.contains(f.getId())) return;
+                            i.deserializeNBT(tag.getCompound(f.getId()));
+                        });
+                        handler.getTile().setChanged();
+                    }
+                }
+                if (nbt.contains("coverTanks")){
+                    CompoundTag tag = nbt.getCompound("coverTanks");
+                    if (fluidTanks != null && getFactory().hasGui()) {
+                        this.fluidTanks.forEach((t, f) -> {
+                            if (!tag.contains(t.name().toLowerCase(Locale.ROOT))) return;
+                            f.deserialize(tag.getList(t.name().toLowerCase(Locale.ROOT), 10));
+                        });
+                        handler.getTile().setChanged();
+                    }
+
+                }
+            }
         }
     }
 
@@ -202,14 +269,26 @@ public abstract class BaseCover implements ICover {
 
     @Override
     public CompoundTag serialize() {
-        CompoundTag nbt = new CompoundTag();
+        CompoundTag tag = new CompoundTag();
         if (inventories != null && getFactory().hasGui()){
+            CompoundTag nbt = new CompoundTag();
             this.inventories.forEach((f, i) -> {
                 if (i.isEmpty()) return;
                 nbt.put(f.getId(), i.serializeNBT());
             });
+            if (!nbt.isEmpty()) {
+                tag.put("coverInventories", nbt);
+            }
         }
-        return nbt;
+        if (fluidTanks != null && getFactory().hasGui()){
+            CompoundTag nbt = new CompoundTag();
+            this.fluidTanks.forEach((t, f) -> {
+                if (f.isEmpty()) return;
+                nbt.put(t.name().toLowerCase(Locale.ROOT), f.serialize());
+            });
+            if (!nbt.isEmpty()) tag.put("coverTanks", nbt);
+        }
+        return tag;
     }
 
     @Override
