@@ -33,7 +33,7 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
      * Adds a slot for the given Tier
      **/
     default T add(Tier tier, SlotType<?> type, int x, int y) {
-        return add(tier.getId(), new SlotData<>(type, x, y));
+        return add(tier.getId(), SlotData.builder().type((SlotType<ModularSlot>) type).x(x).y(y).build());
     }
 
     /**

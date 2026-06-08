@@ -40,10 +40,6 @@ public class SlotData<T extends ModularSlot> {
         this.data = data;
     }
 
-    public SlotData(SlotType<T> type, int x, int y) {
-        this(type, x, y, type.getTexture(), type.getOverlay());
-    }
-
     public SlotData(SlotType<T> type, int x, int y, UITexture baseTexture, UITexture overlayTexture) {
         this.type = type;
         this.x = x;
@@ -52,30 +48,46 @@ public class SlotData<T extends ModularSlot> {
         this.overlayTexture = overlayTexture;
     }
 
-    public SlotData(SlotType<T> type, int x, int y, int data) {
-        this(type, x, y);
-        this.data = data;
-    }
-
     public static <T extends ModularSlot> SlotDataBuilder<T> builder(){
         return new CustomSlotDataBuilder<>();
     }
 
     public static class CustomSlotDataBuilder<T extends ModularSlot> extends SlotDataBuilder<T> {
-        boolean xSet = false;
-        boolean ySet = false;
+        boolean xSet = false, ySet = false, jeiXSet = false, jeiYSet = false, baseTextureSet = false, overlayTextureSet = false;
 
         @Override
         public SlotDataBuilder<T> x(int x) {
-            SlotDataBuilder<T> b = super.x(x);
             xSet = true;
-            return b;
+            return super.x(x);
         }
         @Override
         public SlotDataBuilder<T> y(int x) {
-            SlotDataBuilder<T> b = super.y(x);
             ySet = true;
-            return b;
+            return super.y(x);
+        }
+
+        @Override
+        public SlotDataBuilder<T> jeiX(int jeiX) {
+            jeiXSet = true;
+            return super.jeiX(jeiX);
+        }
+
+        @Override
+        public SlotDataBuilder<T> jeiY(int jeiY) {
+            jeiYSet = true;
+            return super.jeiY(jeiY);
+        }
+
+        @Override
+        public SlotDataBuilder<T> baseTexture(UITexture baseTexture) {
+            baseTextureSet = true;
+            return super.baseTexture(baseTexture);
+        }
+
+        @Override
+        public SlotDataBuilder<T> overlayTexture(UITexture overlayTexture) {
+            overlayTextureSet = true;
+            return super.overlayTexture(overlayTexture);
         }
 
         @Override
@@ -90,6 +102,10 @@ public class SlotData<T extends ModularSlot> {
             if (!ySet){
                 throw new IllegalStateException("Y must be set");
             }
+            if (!jeiXSet) slotData.jeiX = slotData.x;
+            if (!jeiYSet) slotData.jeiY = slotData.y;
+            if (!baseTextureSet) slotData.baseTexture = slotData.type.getTexture();
+            if (!overlayTextureSet) slotData.overlayTexture = slotData.type.getOverlay();
             return slotData;
         }
     }
