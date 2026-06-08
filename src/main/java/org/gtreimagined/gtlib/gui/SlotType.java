@@ -80,7 +80,7 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
             }
         }
         return FluidTanks.EMPTY_TANK;
-    }).overlay(GTGuiTextures.FLUID_IN_SLOT_OVERLAY).build();
+    }).texture(GTGuiTextures.FLUID_SLOT).overlay(GTGuiTextures.FLUID_IN_SLOT_OVERLAY).build();
     //Cheat using same ID to get working counter.
     public static SlotType<ModularSlot> FL_OUT = SlotType.builder().id("fluid_out").fluidHandlerSupplier(g -> {
         if (g instanceof BlockEntityMachine<?> machine) {
@@ -92,7 +92,7 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
             }
         }
         return FluidTanks.EMPTY_TANK;
-    }).overlay(GTGuiTextures.FLUID_OUT_SLOT_OVERLAY).build();
+    }).texture(GTGuiTextures.FLUID_SLOT).overlay(GTGuiTextures.FLUID_OUT_SLOT_OVERLAY).build();
     public static SlotType<ModularSlot> FL_PHANTOM = SlotType.builder().id("fluid_phantom").fluidHandlerSupplier(g -> {
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getPhantomTanks).orElse(FluidTanks.EMPTY_TANK);
