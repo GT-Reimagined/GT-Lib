@@ -29,25 +29,6 @@ public class SlotData<T extends ModularSlot> {
     @Default
     private int data = -1;
 
-    public SlotData(SlotType<T> type, int x, int y, int jeiX, int jeiY, UITexture baseTexture, UITexture overlayTexture, int data){
-        this.type = type;
-        this.x = x;
-        this.y = y;
-        this.jeiX = jeiX;
-        this.jeiY = jeiY;
-        this.baseTexture = baseTexture;
-        this.overlayTexture = overlayTexture;
-        this.data = data;
-    }
-
-    public SlotData(SlotType<T> type, int x, int y, UITexture baseTexture, UITexture overlayTexture) {
-        this.type = type;
-        this.x = x;
-        this.y = y;
-        this.baseTexture = baseTexture;
-        this.overlayTexture = overlayTexture;
-    }
-
     public static <T extends ModularSlot> SlotDataBuilder<T> builder(){
         return new CustomSlotDataBuilder<>();
     }
