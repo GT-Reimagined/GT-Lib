@@ -3,18 +3,19 @@ package org.gtreimagined.gtlib.gui.slot;
 
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.widgets.slot.ModularSlot;
-import it.unimi.dsi.fastutil.Function;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.SlotData;
+import org.gtreimagined.gtlib.gui.SlotData.SlotDataBuilder;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.machine.Tier;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public interface ISlotProvider<T extends ISlotProvider<T>> {
     Map<String, Object2IntOpenHashMap<SlotType<?>>> getCountLookup();
@@ -47,24 +48,8 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     /**
      * Adds a slot for ANY using builder
      **/
-    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, Function<SlotData.SlotDataBuilder<U>, SlotData<U>> slotFunction){
+    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, Function<SlotDataBuilder<U>, SlotData<U>> slotFunction){
         return add(tier.getId(), slotFunction.apply(SlotData.<U>builder().type(type)));
-    }
-
-    /**
-     * Adds a slot for ANY with special texture
-     **/
-    default T add(SlotType<?> type, int x, int y, UITexture overlay) {
-        return add("", new SlotData<>(type, x, y, type.getTexture(), overlay));
-    }
-
-
-
-    /**
-     * Adds a slot for the given Tier with special texture
-     **/
-    default T add(Tier tier, SlotType<?> type, int x, int y, UITexture overlay) {
-        return add(tier.getId(), new SlotData<>(type, x, y, type.getTexture(), overlay));
     }
 
     /**
