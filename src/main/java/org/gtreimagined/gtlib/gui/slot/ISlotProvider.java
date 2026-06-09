@@ -23,8 +23,8 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     /**
      * Adds a slot for ANY
      **/
-    default T add(SlotType<?> type, int x, int y) {
-        return add("", SlotData.builder().type((SlotType<ModularSlot>) type).x(x).y(y).build());
+    default <U extends ModularSlot> T add(SlotType<U> type, int x, int y) {
+        return add("", SlotData.<U>builder().type(type).x(x).y(y).build());
     }
 
 
@@ -32,8 +32,8 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     /**
      * Adds a slot for the given Tier
      **/
-    default T add(Tier tier, SlotType<?> type, int x, int y) {
-        return add(tier.getId(), SlotData.builder().type((SlotType<ModularSlot>) type).x(x).y(y).build());
+    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, int x, int y) {
+        return add(tier.getId(), SlotData.<U>builder().type(type).x(x).y(y).build());
     }
 
     /**
