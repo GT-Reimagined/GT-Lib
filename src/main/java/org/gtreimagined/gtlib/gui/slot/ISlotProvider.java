@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.gui.slot;
 
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.widgets.slot.ModularSlot;
+import it.unimi.dsi.fastutil.Function;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -34,6 +35,20 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
      **/
     default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, int x, int y) {
         return add(tier.getId(), SlotData.<U>builder().type(type).x(x).y(y).build());
+    }
+
+    /**
+     * Adds a slot for ANY using builder
+     **/
+    default <U extends ModularSlot> T add(SlotType<U> type, Function<SlotData.SlotDataBuilder<U>, SlotData<U>> slotFunction){
+        return add("", slotFunction.apply(SlotData.<U>builder().type(type)));
+    }
+
+    /**
+     * Adds a slot for ANY using builder
+     **/
+    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, Function<SlotData.SlotDataBuilder<U>, SlotData<U>> slotFunction){
+        return add(tier.getId(), slotFunction.apply(SlotData.<U>builder().type(type)));
     }
 
     /**
