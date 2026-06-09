@@ -34,7 +34,7 @@ public class GuiProperties {
     @Getter
     protected boolean enablePlayerSlots = true;
     @Getter
-    protected int4 area = new int4(4, 4, 170, 80);
+    protected int4 area = new int4(3, 3, 170, 80);
 
     @Getter
     protected MachineWidgetData machineData = new MachineWidgetData(this);
