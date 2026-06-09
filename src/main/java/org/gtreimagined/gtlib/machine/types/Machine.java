@@ -159,7 +159,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
             slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
             if (item){
                 ModularSlot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
-                if (slotData.getType().isSlotGroup()){
+                if (slotData.isSlotGroup()){
                     slotGroupList.add(slotData.getType().getId());
                     slot.slotGroup(slotData.getType().getId());
                 }

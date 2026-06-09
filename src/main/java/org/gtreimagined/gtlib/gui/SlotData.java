@@ -26,6 +26,8 @@ public class SlotData<T extends ModularSlot> {
     @Getter
     private UITexture overlayTexture;
     @Getter
+    private boolean slotGroup;
+    @Getter
     @Default
     private int data = -1;
 
@@ -34,7 +36,7 @@ public class SlotData<T extends ModularSlot> {
     }
 
     public static class CustomSlotDataBuilder<T extends ModularSlot> extends SlotDataBuilder<T> {
-        boolean xSet = false, ySet = false, jeiXSet = false, jeiYSet = false, baseTextureSet = false, overlayTextureSet = false;
+        boolean xSet = false, ySet = false, jeiXSet = false, jeiYSet = false, baseTextureSet = false, overlayTextureSet = false, slotGroupSet;
 
         @Override
         public SlotDataBuilder<T> x(int x) {
@@ -72,6 +74,12 @@ public class SlotData<T extends ModularSlot> {
         }
 
         @Override
+        public SlotDataBuilder<T> slotGroup(boolean slotGroup) {
+            slotGroupSet = true;
+            return super.slotGroup(slotGroup);
+        }
+
+        @Override
         public SlotData<T> build() {
             SlotData<T> slotData = super.build();
             if (slotData.getType() == null){
@@ -87,6 +95,7 @@ public class SlotData<T extends ModularSlot> {
             if (!jeiYSet) slotData.jeiY = slotData.y;
             if (!baseTextureSet) slotData.baseTexture = slotData.type.getTexture();
             if (!overlayTextureSet) slotData.overlayTexture = slotData.type.getOverlay();
+            if (!slotGroupSet) slotData.slotGroup = slotData.type.isSlotGroup();
             return slotData;
         }
     }
