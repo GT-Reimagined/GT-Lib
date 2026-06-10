@@ -1,7 +1,9 @@
 package org.gtreimagined.gtlib.machine.types;
 
 import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.utils.Alignment;
 import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.widgets.TextWidget;
 import brachy.modularui.widgets.slot.ItemSlot;
 import brachy.modularui.widgets.slot.ModularSlot;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -145,6 +147,9 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         }
         if (guiProperties.enablePlayerSlots()) {
             modularPanel.bindPlayerInventory();
+        }
+        if (guiProperties.isTitleDrawingAllowed()){
+            modularPanel.child(new TextWidget<>(machine.getDisplayName()).posRel(Alignment.TopCenter).paddingTop(4));
         }
 
     };
