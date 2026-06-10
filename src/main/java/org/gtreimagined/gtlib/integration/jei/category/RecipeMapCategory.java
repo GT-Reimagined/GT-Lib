@@ -165,7 +165,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 if (!inputs.isEmpty()) {
                     slotCount = Math.min(slotCount, inputs.size());
                     for (; s < slotCount; s++) {
-                        IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
+                        IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1));
                         List<ItemStack> input = inputs.get(s);
                         if (input.isEmpty()) {
                             List<ItemStack> st = new ObjectArrayList<>(1);
@@ -205,7 +205,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             if (slotCount > 0) {
                 slotCount = Math.min(slotCount, outputs.size());
                 for (int s = 0; s < slotCount; s++) {
-                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
+                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1));
                     slot.addIngredient(VanillaTypes.ITEM_STACK, outputs.get(s));
                     final int ss = s;
                     slot.addTooltipCallback((ing, list) -> {
@@ -226,7 +226,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 List<FluidIngredient> fluids = recipe.getInputFluids();
                 slotCount = Math.min(slotCount, fluids.size());
                 for (int s = 0; s < slotCount; s++) {
-                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
+                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1));
                     slot.addIngredients(ForgeTypes.FLUID_STACK, Arrays.asList(fluids.get(s).getStacks()));
                     slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                     int finalS = s;
@@ -245,7 +245,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                 FluidStack[] fluids = recipe.getOutputFluids();
                 slotCount = Math.min(slotCount, fluids.length);
                 for (int s = 0; s < slotCount; s++) {
-                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
+                    IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1));
                     slot.setFluidRenderer(fluids[s].getAmount(), true, 16, 16);
                     slot.addIngredients(ForgeTypes.FLUID_STACK, Collections.singletonList(fluids[s]));
                     int finalS = s;
@@ -320,10 +320,10 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             progressBar.draw(graphics, gui.getMachineData().getProgressPos().x + gui.getArea().x, gui.getMachineData().getProgressPos().y + gui.getArea().y);
         gui.getSlots().getRecipeSlots(this.guiTier).forEach(s -> {
             IDrawable drawable = GTLibJEIPlugin.guiHelper.drawableBuilder(s.getBaseTexture().location(), 0, 0, 18, 18).setTextureSize(18, 18).build();
-            drawable.draw(graphics, s.getX() - 4,s.getY() - 4);
+            drawable.draw(graphics, s.getJeiX() - 4,s.getJeiY() - 4);
             if (s.getOverlayTexture() != null){
                 drawable = GTLibJEIPlugin.guiHelper.drawableBuilder(s.getOverlayTexture().location(), 0, 0, 18, 18).setTextureSize(18, 18).build();
-                drawable.draw(graphics, s.getX() - 4,s.getY() - 4);
+                drawable.draw(graphics, s.getJeiX() - 4,s.getJeiY() - 4);
             }
         });
         infoRenderer.render(graphics, recipe, Minecraft.getInstance().font, JEI_OFFSET_X, gui.getArea().y + JEI_OFFSET_Y + gui.getArea().z / 2);
@@ -341,7 +341,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                     graphics.pose().pushPose();
                     graphics.pose().scale(0.5f, 0.5f, 1);
                     String ch = (recipe.getOutputChances()[i] / 100) + "%";
-                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00, true);
+                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getJeiX() - (offsetX - 1)), 2*((float) slots.get(i).getJeiY() - (offsetY - 1)), 0xFFFF00, true);
 
                     graphics.pose().popPose();
                     RenderSystem.enableBlend();
@@ -360,7 +360,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
                     graphics.pose().pushPose();
                     graphics.pose().scale(0.5f, 0.5f, 1);
                     String ch = (recipe.getInputChances()[i] / 100) + "%";
-                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getX() - (offsetX - 1)), 2*((float) slots.get(i).getY() - (offsetY - 1)), 0xFFFF00, true);
+                    graphics.drawString(Minecraft.getInstance().font, ch, 2*((float)slots.get(i).getJeiX() - (offsetX - 1)), 2*((float) slots.get(i).getJeiY() - (offsetY - 1)), 0xFFFF00, true);
 
                     graphics.pose().popPose();
                     RenderSystem.enableBlend();

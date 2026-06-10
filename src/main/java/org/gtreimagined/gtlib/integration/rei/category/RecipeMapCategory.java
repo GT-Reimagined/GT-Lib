@@ -126,14 +126,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         }
                     }));
                     if (inputs.size() > 0){
                         if (s < inputs.size()){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             Slot slot = Widgets.createSlot(point).disableBackground();
                             List<ItemStack> input = inputs.get(s);
                             if (input.size() == 0) {
@@ -157,14 +157,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         }
                     }));
                     if (outputs.size() > 0){
                         if (s < outputs.size()){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getOutput(display, s)).disableBackground().markOutput());
                         }
                     }
@@ -182,14 +182,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         }
                     }));
                     if (fluids.size() > 0){
                         if (s < fluids.size()){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getInput(display, s + inputFluidOffset)).disableBackground().markInput());
                             /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                             slot.addTooltipCallback((ing, list) -> {
@@ -212,14 +212,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         }
                     }));
                     if (fluids != null && fluids.length > 0){
                         if (s < fluids.length){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getOutput(display, s + outputFluidOffset)).disableBackground().markOutput());
                             /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                             slot.addTooltipCallback((ing, list) -> {

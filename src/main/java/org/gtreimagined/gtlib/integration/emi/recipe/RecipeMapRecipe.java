@@ -106,9 +106,9 @@ public class RecipeMapRecipe implements EmiRecipe {
                     for (; s < slotCount; s++) {
                         SlotWidget slot;
                         if (s < recipeSlotCount){
-                            slot = widgetHolder.addSlot(inputs.get(s), slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
+                            slot = widgetHolder.addSlot(inputs.get(s), slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1));
                         } else {
-                            widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1));
+                            widgetHolder.addSlot(slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1));
                             continue;
                         }
                         if (recipe.getInputItems().size() > s && recipe.getInputItems().get(s) instanceof RecipeIngredient ri) {
@@ -140,9 +140,9 @@ public class RecipeMapRecipe implements EmiRecipe {
                 for (int s = 0; s < slotCount; s++) {
                     SlotWidget slot;
                     if (s < recipeSlotCount){
-                        slot = widgetHolder.addSlot(outputs.get(s), slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
+                        slot = widgetHolder.addSlot(outputs.get(s), slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1)).recipeContext(this);
                     } else {
-                        widgetHolder.addSlot(slots.get(s).getX() - (offsetX - 1), slots.get(s).getY() - (offsetY - 1)).recipeContext(this);
+                        widgetHolder.addSlot(slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1)).recipeContext(this);
                         continue;
                     }
                     if (recipe.hasOutputChances() && recipe.getOutputChances()[s] < 10000){
@@ -158,12 +158,12 @@ public class RecipeMapRecipe implements EmiRecipe {
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {
                     int offsetIndex = s + fluidInputOffset;
-                    widgetHolder.addTexture(slots.get(s).getBaseTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    widgetHolder.addTexture(slots.get(s).getBaseTexture().location(), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
                     if (slots.get(s).getOverlayTexture() != null){
-                        widgetHolder.addTexture(slots.get(s).getOverlayTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                        widgetHolder.addTexture(slots.get(s).getOverlayTexture().location(), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
                     }
                     if (offsetIndex < inputs.size()){
-                        widgetHolder.addTank(inputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getInputFluids().get(s).getAmount()).drawBack(false);
+                        widgetHolder.addTank(inputs.get(offsetIndex), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, recipe.getInputFluids().get(s).getAmount()).drawBack(false);
                     }
                 }
             }
@@ -175,12 +175,12 @@ public class RecipeMapRecipe implements EmiRecipe {
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {
                     int offsetIndex = s + fluidOutputOffset;
-                    widgetHolder.addTexture(slots.get(s).getBaseTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                    widgetHolder.addTexture(slots.get(s).getBaseTexture().location(), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
                     if (slots.get(s).getOverlayTexture() != null){
-                        widgetHolder.addTexture(slots.get(s).getOverlayTexture().location(), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
+                        widgetHolder.addTexture(slots.get(s).getOverlayTexture().location(), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
                     }
                     if (offsetIndex < outputs.size()){
-                        widgetHolder.addTank(outputs.get(offsetIndex), slots.get(s).getX() - (offsetX), slots.get(s).getY() - (offsetY), 18, 18, recipe.getOutputFluids()[s].getAmount()).drawBack(false).recipeContext(this);
+                        widgetHolder.addTank(outputs.get(offsetIndex), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, recipe.getOutputFluids()[s].getAmount()).drawBack(false).recipeContext(this);
                     }
                 }
             }
