@@ -123,9 +123,6 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
     @Default
     @Getter
     private boolean slotGroup = true;
-    @Getter
-    @Default
-    private ResourceLocation textureName = new ResourceLocation(Ref.ID, "item");
     @Default
     @Getter
     private UITexture texture = GTGuiTextures.ITEM_SLOT;
