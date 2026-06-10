@@ -1,21 +1,21 @@
 package org.gtreimagined.gtlib.machine.types;
 
-import org.gtreimagined.gtlib.Data;
+import brachy.modularui.drawable.UITexture;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTank;
-import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.ICanSyncData;
-import org.gtreimagined.gtlib.gui.IGuiElement;
-import org.gtreimagined.gtlib.gui.widget.InfoRenderWidget;
-import org.gtreimagined.gtlib.gui.widget.WidgetSupplier;
-import org.gtreimagined.gtlib.integration.xei.renderer.IInfoRenderer;
+import org.gtreimagined.gtlib.machine.IPanelFunction;
+import org.gtreimagined.gtlib.mui.IInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.widgets.GTInfoRenderWidget;
 import org.gtreimagined.gtlib.util.Utils;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.function.Function;
 
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 
+@Accessors(chain = true)
 public class TankMachine extends Machine<TankMachine> {
     final Function<Tier, Integer> capacityPerTier;
 
@@ -31,7 +31,6 @@ public class TankMachine extends Machine<TankMachine> {
             tooltip.add(Utils.translatable("machine.tank.capacity", capacityPerTier.apply(machine.getTier())));
         });
         addFlags(ITEM, FLUID, COVERABLE);
-        setGUI(Data.BASIC_MENU_HANDLER);
         setAllowsFrontCovers();
         setAllowsFrontIO();
     }
@@ -43,26 +42,14 @@ public class TankMachine extends Machine<TankMachine> {
     @Override
     protected void setupGui() {
         super.setupGui();
-        addGuiCallback(t -> t.addWidget(TankRenderWidget.build().onlyIf(h -> h.handler instanceof BlockEntityTank)));
+        getGuiFunctions().add(((modularPanel, machine, guiData, syncManager, settings) -> {
+            if (machine instanceof IInfoRenderer renderer){
+                renderer.registerSyncHandlers(syncManager);
+                modularPanel.child(new GTInfoRenderWidget(renderer)
+                        .pos(renderer.getPos().x, renderer.getPos().y)
+                        .size(renderer.getSize().x, renderer.getSize().y));
+            }
+        }));
     }
 
-    public static class TankRenderWidget extends InfoRenderWidget<TankRenderWidget> {
-
-        public FluidStack stack = FluidStack.EMPTY;
-
-        protected TankRenderWidget(GuiInstance gui, IGuiElement parent, IInfoRenderer<TankRenderWidget> renderer) {
-            super(gui, parent, renderer);
-        }
-
-        @Override
-        public void init() {
-            super.init();
-            BlockEntityTank<?> tank = (BlockEntityTank<?>) gui.handler;
-            gui.syncFluidStack(() -> tank.fluidHandler.map(t -> t.getFluidInTank(0)).orElse(FluidStack.EMPTY), f -> this.stack = f, ICanSyncData.SyncDirection.SERVER_TO_CLIENT);
-        }
-
-        public static WidgetSupplier build() {
-            return builder((a, b) -> new TankRenderWidget(a, b, (IInfoRenderer<TankRenderWidget>) a.handler));
-        }
-    }
 }

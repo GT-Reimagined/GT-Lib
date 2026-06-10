@@ -261,9 +261,7 @@ public class GTLibJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
-            registration.addRecipeTransferHandler(new MachineTransferHandler(tuple.map.getLoc()));
-        });
+
     }
 
     public static <T> void addModDescriptor(List<Component> tooltip, T t) {

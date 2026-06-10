@@ -112,6 +112,7 @@ dependencies {
     modImplementation(jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
     //modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
     modImplementation(jarJar("dev.engine-room.flywheel:flywheel-forge-${project.minecraft_version}:${project.flywheel_version}"))
+    modImplementation(jarJar("brachy.modularui:modularui-mc${project.minecraft_version}:${project.mui_version}"))
     //optional dependencies
     modCompileOnly("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}")

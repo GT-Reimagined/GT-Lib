@@ -1,12 +1,13 @@
 package org.gtreimagined.gtlib;
 
+import brachy.modularui.factory.GuiManager;
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
-import org.gtreimagined.gtlib.client.ClientData;
 import org.gtreimagined.gtlib.common.event.ARRPEvents;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTTools;
@@ -42,6 +43,8 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.material.SubTag;
+import org.gtreimagined.gtlib.mui.GTGuiThemes;
+import org.gtreimagined.gtlib.mui.factory.CoverUIFactory;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.ore.BlockOre;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -128,8 +131,10 @@ public class GTLib extends GTMod {
         GTCreativeTabs.init();
         GTLibNetwork.register();
         GTLibConfig.createConfig();
+        GuiManager.registerFactory(CoverUIFactory.INSTANCE);
         /* Lifecycle events */
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::modConstructionEvent);
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::commonSetup);
         eventBus.addListener(this::serverSetup);
@@ -255,7 +260,6 @@ public class GTLib extends GTMod {
             });
         } else if (event == RegistrationEvent.CLIENT_DATA_INIT){
             GTLibModelManager.init();
-            ClientData.init();
         }
     }
 
@@ -269,6 +273,10 @@ public class GTLib extends GTMod {
         return Ref.ID;
     }
 
+
+    private void modConstructionEvent(FMLConstructModEvent event){
+        GTGuiThemes.registerThemes();
+    }
 
     private void clientSetup(final FMLClientSetupEvent e) {
         ClientHandler.setup();

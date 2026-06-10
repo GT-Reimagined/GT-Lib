@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 public class SlotFake extends AbstractSlot<SlotFake> implements IClickableSlot {
     final boolean settable;
 
-    public SlotFake(SlotType<SlotFake> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y, boolean settable) {
-        super(type, tile, stackHandler, index, x, y);
+    public SlotFake(SlotType<SlotFake> type, IGuiHandler tile, IItemHandler stackHandler, int index, boolean settable) {
+        super(type, tile, stackHandler, index);
         this.settable = settable;
     }
 

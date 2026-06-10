@@ -1,15 +1,13 @@
 package org.gtreimagined.gtlib.capability;
 
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.IGuiElement;
-import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
+import brachy.modularui.factory.SidedPosGuiData;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.value.sync.PanelSyncManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.List;
-import java.util.function.Consumer;
+import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 
 public interface IGuiHandler {
 
@@ -17,50 +15,12 @@ public interface IGuiHandler {
         // NOOP
     }
 
-    GuiData getGui();
+    GuiProperties getGuiProperties();
 
     boolean isRemote();
 
-    default void addWidgets(GuiInstance instance, IGuiElement parent) {
-        if (this instanceof IHaveWidgets) {
-            ((IHaveWidgets) this).getCallbacks().forEach(t -> t.accept(instance));
-        }
+    default void addWidgets(ModularPanel<?> panel, SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
+
     }
 
-    ResourceLocation getGuiTexture();
-
-    default int guiSize() {
-        return getGui().getXSize();
-    }
-
-    default int guiHeight() {
-        return getGui().getYSize();
-    }
-
-    default int guiTextureSize() {
-        return getGui().getTextureXSize();
-    }
-
-    default int guiTextureHeight() {
-        return getGui().getTextureYSize();
-    }
-
-    /**
-     * Creates a gui packet, depending on the type of gui handler.
-     *
-     * @param event the event container.
-     * @return a packet to send.
-     */
-    AbstractGuiEventPacket createGuiPacket(IGuiEvent event);
-
-    String handlerDomain();
-
-    interface IHaveWidgets {
-        List<Consumer<GuiInstance>> getCallbacks();
-
-        default IHaveWidgets addGuiCallback(Consumer<GuiInstance> gui) {
-            getCallbacks().add(gui);
-            return this;
-        }
-    }
 }

@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
  * Array of multiple instances of FluidTank
  */
 public class FluidTanks implements IFluidHandler {
+    public static final FluidTanks EMPTY_TANK = new FluidTanks(0, 0);
 
     public static <T extends BlockEntityBase<T> & IMachineHandler> FluidTanks create(T tile, IMachineEvent contentEvent,
                                                                                      UnaryOperator<Builder<T>> builder) {
@@ -114,6 +115,12 @@ public class FluidTanks implements IFluidHandler {
             }
         }
         return !hasFluid;
+    }
+
+    public void clearContent(){
+        for (FluidTank tank : tanks){
+            tank.setFluid(FluidStack.EMPTY);
+        }
     }
 
     @NotNull

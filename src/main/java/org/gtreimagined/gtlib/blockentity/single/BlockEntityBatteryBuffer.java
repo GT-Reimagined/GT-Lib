@@ -80,7 +80,7 @@ public class BlockEntityBatteryBuffer<T extends BlockEntityBatteryBuffer<T>> ext
             protected TrackedItemHandler<T> createTrackedHandler(SlotType<?> type, T tile) {
                 int count = tile.getMachineType().getCount(tile.getMachineTier(), type);
                 if (type == SlotType.ENERGY){
-                    return new TrackedItemHandler<>(tile, type, count, true, type.input, type.tester);
+                    return new TrackedItemHandler<>(tile, type, count, true, type.isInput(), type.getTester());
                 }
                 return super.createTrackedHandler(type, tile);
             }

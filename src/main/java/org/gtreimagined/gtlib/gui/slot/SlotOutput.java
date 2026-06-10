@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class SlotOutput extends AbstractSlot<SlotOutput> {
 
-    public SlotOutput(SlotType<SlotOutput> type, IGuiHandler tile, IItemHandler stackHandler, int index, int x, int y) {
-        super(type, tile, stackHandler, index, x, y);
+    public SlotOutput(SlotType<SlotOutput> type, IGuiHandler tile, IItemHandler stackHandler, int index) {
+        super(type, tile, stackHandler, index);
     }
 
     @Override

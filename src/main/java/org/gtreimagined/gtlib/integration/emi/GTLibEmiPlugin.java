@@ -3,31 +3,24 @@ package org.gtreimagined.gtlib.integration.emi;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
-import dev.emi.emi.api.forge.ForgeEmiStack;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
-import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.integration.emi.recipe.RecipeMapRecipe;
-import org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
-import org.gtreimagined.gtlib.recipe.map.SubCategory;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.int4;
 
@@ -55,7 +48,7 @@ public class GTLibEmiPlugin implements EmiPlugin {
         }
 
         GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
-            GuiData gui = tuple.gui;
+            GuiProperties gui = tuple.gui;
             int4 area = gui.getArea();
             Tier tier = tuple.map.getGuiTier() != null ? tuple.map.getGuiTier() : tuple.tier;
             EmiRecipeCategory mainCategory = new EmiRecipeCategory(tuple.map.getLoc(),

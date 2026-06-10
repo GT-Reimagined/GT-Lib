@@ -1,52 +1,102 @@
 package org.gtreimagined.gtlib.gui;
 
+import brachy.modularui.drawable.UITexture;
+import brachy.modularui.widgets.slot.ModularSlot;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 
-public class SlotData<T extends Slot> {
+@Builder
+public class SlotData<T extends ModularSlot> {
 
-    private final SlotType<T> type;
-    private final int x;
-    private final int y;
-    private final ResourceLocation texture;
+    @Getter
+    private SlotType<T> type;
+    @Getter
+    private int x;
+    @Getter
+    private int y;
+    @Getter
+    private int jeiX;
+    @Getter
+    private int jeiY;
+    @Getter
+    private UITexture baseTexture;
+    @Getter
+    private UITexture overlayTexture;
+    @Getter
+    private boolean slotGroup;
+    @Getter
+    @Default
     private int data = -1;
 
-    public SlotData(SlotType<T> type, int x, int y) {
-        this.type = type;
-        this.x = x;
-        this.y = y;
-        texture = new ResourceLocation(type.textureName.getNamespace(), "textures/gui/slots/" + type.textureName.getPath() + ".png");
+    public static <T extends ModularSlot> SlotDataBuilder<T> builder(){
+        return new CustomSlotDataBuilder<>();
     }
 
-    public SlotData(SlotType<T> type, int x, int y, ResourceLocation texture){
-        this.type = type;
-        this.x = x;
-        this.y = y;
-        this.texture = texture;
-    }
+    public static class CustomSlotDataBuilder<T extends ModularSlot> extends SlotDataBuilder<T> {
+        boolean xSet = false, ySet = false, jeiXSet = false, jeiYSet = false, baseTextureSet = false, overlayTextureSet = false, slotGroupSet;
 
-    public SlotData(SlotType<T> type, int x, int y, int data) {
-        this(type, x, y);
-        this.data = data;
-    }
+        @Override
+        public SlotDataBuilder<T> x(int x) {
+            xSet = true;
+            return super.x(x);
+        }
+        @Override
+        public SlotDataBuilder<T> y(int x) {
+            ySet = true;
+            return super.y(x);
+        }
 
-    public SlotType<T> getType() {
-        return type;
-    }
+        @Override
+        public SlotDataBuilder<T> jeiX(int jeiX) {
+            jeiXSet = true;
+            return super.jeiX(jeiX);
+        }
 
-    public int getX() {
-        return x;
-    }
+        @Override
+        public SlotDataBuilder<T> jeiY(int jeiY) {
+            jeiYSet = true;
+            return super.jeiY(jeiY);
+        }
 
-    public int getY() {
-        return y;
-    }
+        @Override
+        public SlotDataBuilder<T> baseTexture(UITexture baseTexture) {
+            baseTextureSet = true;
+            return super.baseTexture(baseTexture);
+        }
 
-    public int getData() {
-        return data;
-    }
+        @Override
+        public SlotDataBuilder<T> overlayTexture(UITexture overlayTexture) {
+            overlayTextureSet = true;
+            return super.overlayTexture(overlayTexture);
+        }
 
-    public ResourceLocation getTexture() {
-        return texture;
+        @Override
+        public SlotDataBuilder<T> slotGroup(boolean slotGroup) {
+            slotGroupSet = true;
+            return super.slotGroup(slotGroup);
+        }
+
+        @Override
+        public SlotData<T> build() {
+            SlotData<T> slotData = super.build();
+            if (slotData.getType() == null){
+                throw new IllegalStateException("Slot Data must call type!");
+            }
+            if (!xSet){
+                throw new IllegalStateException("X must be set");
+            }
+            if (!ySet){
+                throw new IllegalStateException("Y must be set");
+            }
+            if (!jeiXSet) slotData.jeiX = slotData.x;
+            if (!jeiYSet) slotData.jeiY = slotData.y;
+            if (!baseTextureSet) slotData.baseTexture = slotData.type.getTexture();
+            if (!overlayTextureSet) slotData.overlayTexture = slotData.type.getOverlay();
+            if (!slotGroupSet) slotData.slotGroup = slotData.type.isSlotGroup();
+            return slotData;
+        }
     }
 }

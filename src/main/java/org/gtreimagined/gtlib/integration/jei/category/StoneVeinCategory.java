@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.jei.category;
 
+import brachy.modularui.drawable.GuiTextures;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -31,7 +32,7 @@ import static org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory.
 
 public class StoneVeinCategory implements IRecipeCategory<StoneVein> {
     IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
-    IDrawable background = GTLibJEIPlugin.guiHelper.drawableBuilder(new ResourceLocation(Ref.ID, "textures/gui/background/machine_basic.png"), 3, 3, 170, 60).addPadding(0, 60, 0,0).build();
+    IDrawable background = GTLibJEIPlugin.guiHelper.drawableBuilder(GuiTextures.MC_BACKGROUND.location(), 4, 3, 170, 60).setTextureSize(195, 136).addPadding(0, 60, 0,0).build();
     public static final RecipeType<StoneVein> STONE_VEINS = new RecipeType<>(new ResourceLocation(Ref.ID, "stone_veins"), StoneVein.class);
     public StoneVeinCategory() {
 

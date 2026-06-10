@@ -1,7 +1,6 @@
 package org.gtreimagined.gtlib.integration.rei.category;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import brachy.modularui.drawable.GuiTextures;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -15,8 +14,8 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Data;
-import org.gtreimagined.gtlib.gui.BarDir;
-import org.gtreimagined.gtlib.gui.GuiData;
+import org.gtreimagined.gtlib.mui.BarDir;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.integration.xei.renderer.IRecipeInfoRenderer;
@@ -26,7 +25,6 @@ import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.int4;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -46,16 +44,16 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
     protected final CategoryIdentifier<RecipeMapDisplay> loc;
     protected Renderer icon;
     protected Parameters progressBar;
-    protected GuiData gui;
+    protected GuiProperties gui;
     protected Tier guiTier;
     private final IRecipeInfoRenderer infoRenderer;
 
-    public RecipeMapCategory(IRecipeMap map, GuiData gui, Tier defaultTier, ResourceLocation iconId) {
+    public RecipeMapCategory(IRecipeMap map, GuiProperties gui, Tier defaultTier, ResourceLocation iconId) {
         loc = CategoryIdentifier.of(map.getLoc());
         this.guiTier = map.getGuiTier() == null ? defaultTier : map.getGuiTier();
         title = map.getDisplayName();
         int4 progress = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
-        progressBar = new Parameters(gui.getMachineData().getProgressTexture(this.guiTier), gui.getMachineData().getProgressPos().x + 6, gui.getMachineData().getProgressPos().y + 6, progress.z, progress.w, progress.x, progress.y, gui.getMachineData().getDir(), gui.getMachineData().doesBarFill());
+        progressBar = new Parameters(gui.getMachineData().getProgressTexture(this.guiTier).location(), gui.getMachineData().getProgressPos().x + 6, gui.getMachineData().getProgressPos().y + 6, progress.z, progress.w, progress.x, progress.y, gui.getMachineData().getDir(), gui.getMachineData().doesBarFill());
         Object icon = map.getIcon();
         if (icon != null) {
             if (icon instanceof ItemStack stack) {
@@ -90,10 +88,10 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
         widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
             int ySize = Math.min(bounds.getHeight() - 6, 79);
             int extraPixels = (bounds.getHeight() - 6) - ySize;
-            drawTexture(graphics, gui.getTexture(guiTier, "machine"), bounds.x + 3, bounds.y + 3, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, ySize, 256, 256);
+            drawTexture(graphics, GuiTextures.MC_BACKGROUND.location(), bounds.x + 3, bounds.y + 3, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, ySize, 256, 256);
             if (extraPixels > 0){
                 for (int i = 0; i < extraPixels; i++){
-                    drawTexture(graphics, gui.getTexture(guiTier, ""), bounds.x + 3, bounds.y + 3 + ySize + i, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, 1, 256, 256);
+                    drawTexture(graphics, GuiTextures.MC_BACKGROUND.location(), bounds.x + 3, bounds.y + 3 + ySize + i, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, 1, 256, 256);
                 }
             }
         }));
@@ -128,11 +126,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (inputs.size() > 0){
                         if (s < inputs.size()){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             Slot slot = Widgets.createSlot(point).disableBackground();
                             List<ItemStack> input = inputs.get(s);
                             if (input.size() == 0) {
@@ -156,11 +157,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (outputs.size() > 0){
                         if (s < outputs.size()){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getOutput(display, s)).disableBackground().markOutput());
                         }
                     }
@@ -178,11 +182,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (fluids.size() > 0){
                         if (s < fluids.size()){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getInput(display, s + inputFluidOffset)).disableBackground().markInput());
                             /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                             slot.addTooltipCallback((ing, list) -> {
@@ -205,11 +212,14 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getTexture(), finalSlots.get(finalSlot).getX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
+                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
+                        }
                     }));
                     if (fluids != null && fluids.length > 0){
                         if (s < fluids.length){
-                            Point point = new Point(slots.get(s).getX() - (offsetX) + bounds.x, slots.get(s).getY() - (offsetY) + bounds.y);
+                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getOutput(display, s + outputFluidOffset)).disableBackground().markOutput());
                             /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
                             slot.addTooltipCallback((ing, list) -> {
@@ -230,7 +240,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
         int realX = bounds.x + params.x - 1, realY = bounds.y + params.y - 1;
         int x = realX, y = realY, xLocation = params.posX, yLocation = params.posY, length = params.length, width = params.width;
         switch (params.dir) {
-            case TOP -> {
+            case UP -> {
                 progressTime = (int) (params.width * percent);
                 if (!params.fill) {
                     progressTime = width - progressTime;
@@ -247,7 +257,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                     length = length - progressTime;
                 }
             }
-            case BOTTOM -> {
+            case DOWN -> {
                 progressTime = (int) (params.width * percent);
                 if (params.fill) {
                     width = progressTime;

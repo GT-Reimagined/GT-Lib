@@ -1,22 +1,26 @@
 package org.gtreimagined.gtlib.machine.types;
 
+import brachy.modularui.drawable.UITexture;
+import brachy.modularui.drawable.progress.CompositeProgress;
+import brachy.modularui.value.sync.DoubleSyncValue;
 import lombok.Getter;
-import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.gui.widget.ProgressWidget;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.machine.ITooltipArgs;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.BarDir;
+import org.gtreimagined.gtlib.mui.widgets.GTProgressWidget;
 import org.gtreimagined.gtlib.structure.Pattern;
 import org.gtreimagined.gtlib.structure.PatternBuilder;
 import org.gtreimagined.gtlib.integration.ponder.PonderUtils;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.gtreimagined.gtlib.util.int2;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +41,6 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
         setItemBlockClass(() -> BlockMultiMachine.class);
         addFlags(MULTI, COVERABLE);
         setClientTicking();
-        setGUI(Data.BASIC_MENU_HANDLER);
         setOutputCover(ICover.emptyFactory);
         addTooltipInfo((machine, stack, world, tooltip, flag) -> {
             if (machine.getType().getStructure(machine.getTier()) != null) {
@@ -51,11 +54,32 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     protected void setupGui() {
         super.setupGui();
         if (!(this instanceof MultiMachine)) {
-            addGuiCallback(t -> {
-                if (this.has(RECIPE)) {
-                    t.addWidget(ProgressWidget.build());
+            guiFunctions.add(((modularPanel, machine, guiData1, syncManager, settings) -> {
+                if (has(RECIPE)) {
+                    int2 size = guiProperties.getMachineData().getMachineStateSize();
+                    modularPanel.child(new org.gtreimagined.gtlib.mui.widgets.MachineStateWidget(machine.getMachineTier(), this.has(RECIPE), machine::getMachineState,
+                            guiProperties.getMachineData().getMachineStateTexture(machine.getMachineTier()))
+                            .pos(guiProperties.getMachineData().getMachineStatePos().x, guiProperties.getMachineData().getMachineStatePos().y)
+                            .size(size.x, size.y));
+
+                    syncManager.syncValue("progress", new DoubleSyncValue(() -> machine.recipeHandler.map(r -> guiProperties.getMachineData().getProgressPercentFunction().apply(r.getCurrentProgress(), r.getMaxProgress())).orElse(0f)));
+                    BarDir direction = guiProperties.getMachineData().getDir();
+                    UITexture texture = guiProperties.getMachineData().getProgressTexture(machine.getMachineTier());
+                    brachy.modularui.widgets.ProgressWidget progressWidget = new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
+                            .syncHandler("progress")
+                            .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6);
+                    modularPanel.child(progressWidget);
+                    if (!direction.isCircular()) {
+                        progressWidget.texture(texture, direction.toRegularDirection());
+                    } else {
+                        progressWidget.progress(CompositeProgress.circularLike4Slice(
+                                texture.getSubArea(0.0f, 0.0f, 1f, 0.5f),
+                                texture.getSubArea(0f, 0.5f,1f, 1f),
+                                direction.toCircularDirection()
+                        ));
+                    }
                 }
-            });
+            }));
         }
     }
 
