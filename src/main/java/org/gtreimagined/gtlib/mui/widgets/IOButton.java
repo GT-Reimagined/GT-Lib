@@ -24,9 +24,16 @@ public class IOButton extends ToggleButton {
         String prefix = item ? "item" : "fluid";
         syncManager.syncValue(prefix + "_output",
                 new BooleanSyncValue(() -> machine.coverHandler.map(
-                        t -> ((CoverOutput) t.getOutputCover()).shouldOutputItems()).orElse(false), b -> {
+                        t -> {
+                            if (t.getOutputCover() instanceof CoverOutput coverOutput){
+                                return item ? coverOutput.shouldOutputItems() : coverOutput.shouldOutputFluids();
+                            }
+                            return false;
+                        }).orElse(false), b -> {
                     machine.coverHandler.ifPresent(t -> {
-                        if (t.getOutputCover() instanceof CoverOutput output) output.setEjects(output.shouldOutputFluids(), b);
+                        if (t.getOutputCover() instanceof CoverOutput output) {
+                            output.setEjects(item ? output.shouldOutputFluids() : b, item ? b : output.shouldOutputItems());
+                        }
                     });
                 }).allowC2S());
         GuiEvents event = item ? GuiEvents.ITEM_EJECT : GuiEvents.FLUID_EJECT;
