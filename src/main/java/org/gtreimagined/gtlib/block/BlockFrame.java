@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.block;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import net.minecraft.util.RandomSource;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -95,7 +96,8 @@ public class BlockFrame extends BlockStorage implements IItemBlockProvider, Simp
         return blockState;
     }
 
-    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, Random randomSource) {
+    @Override
+    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         int i = getDistance(serverLevel, blockPos);
         BlockState blockState2 = blockState.setValue(PROPERTIES.get(maxRange), i);
         if (blockState2.getValue(PROPERTIES.get(maxRange)) == maxRange) {
