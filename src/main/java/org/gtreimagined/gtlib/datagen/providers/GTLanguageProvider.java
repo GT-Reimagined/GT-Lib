@@ -371,6 +371,8 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add(GTCreativeTabs.MACHINES.get(), "GT Machines");
         add(GTCreativeTabs.MATERIALS.get(), "GT Material Items");
         add(GTCreativeTabs.TOOLS.get(), "GT Tools");
+        add("death.attack.radiation", "%1$s died from Radiation Sickness");
+        add("death.attack.radiation.player", "%1$s died from Radiation Sickness whilst trying to escape %2$s");
     }
 
     @Override
