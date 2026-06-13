@@ -3,7 +3,6 @@ package org.gtreimagined.gtlib.client;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.baked.PipeFullBakedModel;
 import org.gtreimagined.gtlib.client.model.loader.DefaultModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.DynamicModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.MachineModelLoader;
@@ -43,8 +42,6 @@ public class GTLibModelManager {
     public static final ResourceLocation LOADER_PROXY = new ResourceLocation(Ref.ID, "proxy");
 
     public static void init() {
-        GTLibModelManager.registerStaticConfigMap("pipe", () -> PipeFullBakedModel.CONFIGS);
-
         new DefaultModelLoader(LOADER_MAIN);
         new MachineModelLoader.CoverModelLoader(LOADER_COVER);
         new MachineModelLoader.SideModelLoader(LOADER_MACHINE_SIDE);
