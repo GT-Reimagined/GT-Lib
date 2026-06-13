@@ -39,7 +39,7 @@ public class GTGuiTextures {
     public static final UITexture STANDARD_BUTTON_DISABLED = UITexture.builder().name(IDs.STANDARD_BUTTON_DISABLED).location(Ref.ID, "gui/button/standard_disabled").build();
     public static final UITexture STANDARD_BUTTON_HOVER = UITexture.builder().name(IDs.STANDARD_BUTTON_HOVER).location(Ref.ID, "gui/button/standard_hover").build();
     public static final UITexture DEFAULT_PROGRESS = UITexture.builder().location(new ResourceLocation(Ref.ID, "gui/progress_bars/default")).imageSize(20, 36).build();
-    public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "gui/button/tank"), null);
+    public static final UITexture TANK_ICON = UITexture.fullImage(new ResourceLocation(Ref.ID, "gui/icons/tank"), null);
     public static final UITexture CREATIVE_GENERATOR_OVERLAY = UITexture.builder().location(Ref.ID, "gui/widgets/creative_generator_overlay").imageSize(158, 61).colorType(null).build();
 
     public static final UITexture IO_ITEM = UITexture.fullImage(Ref.ID, "gui/button/io_item", null);
