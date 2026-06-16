@@ -117,11 +117,11 @@ public class BlockEntityMultiMachine<T extends BlockEntityMultiMachine<T>> exten
         } else {
             widget.drawText(context, widgetTheme, 0, 8, Utils.literal("Progress: " +
                     widget.getSyncedValue("progress", Integer.class).orElse(0) + "/" +
-                    widget.getSyncedValue("maxProgress", Integer.class)), 0xFAFAFF);
+                    widget.getSyncedValue("maxProgress", Integer.class).orElse(0)), 0xFAFAFF);
             widget.drawText(context, widgetTheme, 0, 16, Utils.literal("Overclock: " +
-                    widget.getSyncedValue("overclock", Integer.class)), 0xFAFAFF);
+                    widget.getSyncedValue("overclock", Integer.class).orElse(0)), 0xFAFAFF);
             widget.drawText(context, widgetTheme, 0, 24, Utils.literal("EU/t: " +
-                    widget.getSyncedValue("eut", Long.class)), 0xFAFAFF);
+                    widget.getSyncedValue("eut", Long.class).orElse(0L)), 0xFAFAFF);
         }
     }
 
