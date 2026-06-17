@@ -94,8 +94,8 @@ dependencies {
 
     //MIXIN
     annotationProcessor 'net.fabricmc:sponge-mixin:0.11.4+mixin.0.8.5'
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.4"))
     implementation("org.jetbrains:annotations:26.0.1")
     //required dependencies
     modImplementation(jarJar("dev.trinsdar:arrp-forge:${project.arrp_version}"))
@@ -125,6 +125,7 @@ dependencies {
     modCompileOnly("curse.maven:the-one-probe-245211:${project.top_forge_version}")
     modImplementation("curse.maven:curios-309927:${project.curios_version}")
     modCompileOnly("curse.maven:jade-324717:${project.jade_version}")
+    modImplementation("curse.maven:mouse-tweaks-60089:5338457")
     //runtime deps
     switch (project.runtime_itemviewer) {
         case "emi":
