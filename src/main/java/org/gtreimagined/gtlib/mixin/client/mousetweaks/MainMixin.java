@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.mixin.client;
+package org.gtreimagined.gtlib.mixin.client.mousetweaks;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
