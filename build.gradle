@@ -95,7 +95,8 @@ dependencies {
     //MIXIN
     annotationProcessor 'net.fabricmc:sponge-mixin:0.11.4+mixin.0.8.5'
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.4"))
+    jarJar("io.github.llamalad7:mixinextras-forge:0.5.4:slim")
+    implementation("io.github.llamalad7:mixinextras-forge:0.5.4")
     implementation("org.jetbrains:annotations:26.0.1")
     //required dependencies
     modImplementation(jarJar("dev.trinsdar:arrp-forge:${project.arrp_version}"))
