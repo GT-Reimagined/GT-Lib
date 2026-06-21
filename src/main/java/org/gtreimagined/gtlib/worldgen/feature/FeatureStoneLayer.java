@@ -138,6 +138,13 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                                 }
 
                             }
+                        } else {
+                            setStone = true;
+                            StoneType type = layers[3].type();
+                            lastMaterialAndStone = type != null ? Pair.of(type, type.getMaterial()) : null;
+                            if (type != null){
+                                topStoneType = type;
+                            }
                         }
                     }
 
