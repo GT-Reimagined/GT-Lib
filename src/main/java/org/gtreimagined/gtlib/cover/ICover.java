@@ -114,8 +114,24 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
 
     }
 
-    // Called on update of the world.
-    default void onUpdate() {
+    /**
+     * Called before the Block does its own Tick. So for example before it checks a Recipe or something.
+     */
+    default void onTickPre(){
+
+    }
+
+    /**
+     * Called after the Block does its own Tick. So for example after it has processed a Recipe or something.
+     */
+    default void onTickPost() {
+
+    }
+
+    /**
+     * Called whe the block does a client Tick.
+     */
+    default void onClientTick(){
 
     }
 

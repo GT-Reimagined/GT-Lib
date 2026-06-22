@@ -72,7 +72,7 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         covers.forEach((s, c) -> {
             if (c.ticks()) {
-                c.onUpdate();
+                c.onTickPost();
             }
         });
     }

@@ -48,9 +48,8 @@ public class CoverOutput extends BaseCover {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        if (handler.getTile().getLevel().isClientSide) return;
+    public void onTickPost() {
+        super.onTickPost();
         manualOutput();
     }
 

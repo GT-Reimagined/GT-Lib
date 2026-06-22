@@ -149,10 +149,28 @@ public class CoverHandler<T extends BlockEntity> implements ICoverHandler<T> {
     }
 
     @Override
-    public void onUpdate() {
+    public void onTickPre() {
         covers.forEach((s, c) -> {
             if (c.ticks()) {
-                c.onUpdate();
+                c.onTickPre();
+            }
+        });
+    }
+
+    @Override
+    public void onTickPost() {
+        covers.forEach((s, c) -> {
+            if (c.ticks()) {
+                c.onTickPost();
+            }
+        });
+    }
+
+    @Override
+    public void onClientTick() {
+        covers.forEach((s, c) -> {
+            if (c.ticks()) {
+                c.onClientTick();
             }
         });
     }

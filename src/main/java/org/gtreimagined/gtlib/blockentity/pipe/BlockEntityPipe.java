@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -360,7 +359,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
         super.serverTick(level, pos, state);
-        coverHandler.ifPresent(CoverHandler::onUpdate);
+        coverHandler.ifPresent(CoverHandler::onTickPost);
     }
 
     public CoverFactory[] getValidCovers() {

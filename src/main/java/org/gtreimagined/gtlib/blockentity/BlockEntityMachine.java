@@ -13,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -281,15 +280,16 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
+        coverHandler.ifPresent(MachineCoverHandler::onTickPre);
         itemHandler.ifPresent(MachineItemHandler::onUpdate);
         energyHandler.ifPresent(MachineEnergyHandler::onUpdate);
         feHandler.ifPresent(MachineFEHandler::onUpdate);
         heatHandler.ifPresent(handler -> handler.update(getMachineState() == MachineState.ACTIVE));
         fluidHandler.ifPresent(MachineFluidHandler::onUpdate);
-        coverHandler.ifPresent(MachineCoverHandler::onUpdate);
         if (this.getMachineState() != MachineState.DISABLED && this.getMachineState() != MachineState.INVALID_STRUCTURE) {
             this.recipeHandler.ifPresent(MachineRecipeHandler::onServerUpdate);
         }
+        coverHandler.ifPresent(MachineCoverHandler::onTickPost);
 
         if (allowExplosionsInRain()) {
             double d = Ref.RNG.nextDouble();
@@ -308,7 +308,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @Override
     public void clientTick(Level level, BlockPos pos, BlockState state) {
-        coverHandler.ifPresent(MachineCoverHandler::onUpdate);
+        coverHandler.ifPresent(MachineCoverHandler::onClientTick);
     }
 
     @Override
