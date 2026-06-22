@@ -18,9 +18,4 @@ public class SlotOutput extends AbstractSlot<SlotOutput> {
     public boolean mayPickup(Player player) {
         return true;
     }
-
-    @Override
-    public boolean mayPlace(@NotNull ItemStack stack) {
-        return false;
-    }
 }

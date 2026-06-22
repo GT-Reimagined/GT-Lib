@@ -113,9 +113,9 @@ public abstract class BaseCover implements ICover {
                     if (type.getSlotSupplier() == null) continue;
                     int count = gui.getSlots().getCount(tier, entry.getKey());
                     if (type.isPhantom()) {
-                        inventories.put(type, new FakeTrackedItemHandler<>(this, type, count, type.isOutput(), type.isInput(), type.getTester()));
+                        inventories.put(type, new FakeTrackedItemHandler<>(this, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester()));
                     } else {
-                        inventories.put(type, new TrackedItemHandler<>(this, type, count, type.isOutput(), type.isInput(), type.getTester()));
+                        inventories.put(type, new TrackedItemHandler<>(this, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester()));
                     }
 
                 }

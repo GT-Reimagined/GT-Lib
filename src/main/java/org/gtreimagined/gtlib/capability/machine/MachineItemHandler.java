@@ -71,9 +71,9 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     protected TrackedItemHandler<T> createTrackedHandler(SlotType<?> type, T tile){
         int count = tile.getMachineType().getCount(tile.getMachineTier(), type);
         if (type.isPhantom()) {
-            return new FakeTrackedItemHandler<>(tile, type, count, type.isOutput(), type.isInput(), type.getTester());
+            return new FakeTrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester());
         } else {
-            return new TrackedItemHandler<>(tile, type, count, type.isOutput(), type.isInput(), type.getTester());
+            return new TrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester());
         }
     }
 

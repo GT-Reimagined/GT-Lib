@@ -46,6 +46,7 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
         IItemHandler handler = getHandlerFromIndex(index);
         int slot2 = getSlotFromIndex(slot, index);
         if (handler instanceof TrackedItemHandler<?> trackedItemHandler){
+            if (!trackedItemHandler.allowExternalInput()) return stack;
             if (trackedItemHandler.hasSlotDiversity()){
                 for (int i = 0; i < trackedItemHandler.getSize(); i++){
                     if (i == slot2) continue;
@@ -63,6 +64,9 @@ public class SidedCombinedInvWrapper extends CombinedInvWrapper implements IItem
         if (!outputFunction.test(side)) return ItemStack.EMPTY;
         if (coverHandler != null && (coverHandler.blocksOutput(IItemHandler.class, side) || coverHandler.onTransfer(getStackInSlot(slot), side, false, simulate)))
             return ItemStack.EMPTY;
+        int index = getIndexForSlot(slot);
+        IItemHandler handler = getHandlerFromIndex(index);
+        if (handler instanceof TrackedItemHandler<?> trackedItemHandler && !trackedItemHandler.allowExternalOutput()) return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 

@@ -54,7 +54,7 @@ public class AbstractSlot<T extends ModularSlot> extends ModularSlot {
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return !MachineItemHandler.extractFromInput(this.container, index, 1, true).isEmpty();
+        return !MachineItemHandler.extractFromInput(this.container, index, 1, true).isEmpty() && type.mayPickup();
     }
 
     @Override
@@ -63,6 +63,6 @@ public class AbstractSlot<T extends ModularSlot> extends ModularSlot {
         if (this.holder instanceof IFilterableHandler handler){
             filter = handler.test(type, index, stack);
         }
-        return filter && this.type.getTester().test(this.holder, stack);
+        return filter && this.type.getTester().test(this.holder, stack) && type.mayPlace();
     }
 }

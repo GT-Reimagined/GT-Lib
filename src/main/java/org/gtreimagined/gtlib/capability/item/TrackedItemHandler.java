@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.capability.item;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityHatch;
 import org.gtreimagined.gtlib.capability.IFilterableHandler;
@@ -19,22 +20,24 @@ import java.util.function.BiPredicate;
 public class TrackedItemHandler<T extends IGuiHandler> extends ItemStackHandler implements ITrackedHandler {
 
     private final T tile;
-    private final boolean output;
-    private final boolean input;
+    @Accessors(fluent = true)
+    private final boolean allowExternalOutput;
+    @Accessors(fluent = true)
+    private final boolean allowExternalInput;
     private final BiPredicate<IGuiHandler, ItemStack> validator;
     private final int limit;
     private final int size;
     private final SlotType<?> type;
 
-    public TrackedItemHandler(T tile, SlotType<?> type, int size, boolean output, boolean input, BiPredicate<IGuiHandler, ItemStack> validator) {
-        this(tile, type, size, output, input, validator, 64);
+    public TrackedItemHandler(T tile, SlotType<?> type, int size, boolean allowExternalOutput, boolean allowExternalInput, BiPredicate<IGuiHandler, ItemStack> validator) {
+        this(tile, type, size, allowExternalOutput, allowExternalInput, validator, 64);
     }
 
-    public TrackedItemHandler(T tile, SlotType<?> type, int size, boolean output, boolean input, BiPredicate<IGuiHandler, ItemStack> validator, int limit) {
+    public TrackedItemHandler(T tile, SlotType<?> type, int size, boolean allowExternalOutput, boolean allowExternalInput, BiPredicate<IGuiHandler, ItemStack> validator, int limit) {
         super(size);
         this.tile = tile;
-        this.output = output;
-        this.input = input;
+        this.allowExternalOutput = allowExternalOutput;
+        this.allowExternalInput = allowExternalInput;
         this.validator = validator;
         this.limit = limit;
         this.size = size;
@@ -66,8 +69,6 @@ public class TrackedItemHandler<T extends IGuiHandler> extends ItemStackHandler 
     @NotNull
     @Override
     public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (!input)
-            return stack;
         boolean validate = !(tile instanceof IFilterableHandler filterableHandler) || filterableHandler.test(type, slot, stack);
         validate = validate && validator.test(tile, stack);
         if (!validate)
@@ -86,8 +87,6 @@ public class TrackedItemHandler<T extends IGuiHandler> extends ItemStackHandler 
     @NotNull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (!output)
-            return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 

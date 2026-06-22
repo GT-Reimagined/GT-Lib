@@ -5,6 +5,7 @@ import brachy.modularui.widgets.slot.ModularSlot;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
@@ -40,25 +41,25 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
 
     public static SlotType<SlotInput> IT_IN = SlotType.<SlotInput>builder().id("item_in")
             .slotSupplier((type, gui, inv, i, d) -> new SlotInput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
-            .tester(new ItIn()).output(false).build();
+            .tester(new ItIn()).allowExternalOutput(false).build();
     public static SlotType<SlotOutput> IT_OUT = SlotType.<SlotOutput>builder().id("item_out")
             .slotSupplier((type, gui, inv, i, d) -> new SlotOutput(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
-            .tester(NO_INPUT).slotGroup(false).input(false).build();
+            .tester(NO_INPUT).slotGroup(false).allowExternalInput(false).mayPlace(false).build();
 
     public static SlotType<SlotFake> DISPLAY = SlotType.<SlotFake>builder().id("display")
             .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, false))
-            .tester(NO_INPUT).slotGroup(false).input(false).output(false).phantom(true).build();
+            .tester(NO_INPUT).slotGroup(false).allowExternalInput(false).allowExternalOutput(false).mayPlace(false).mayPickup(false).phantom(true).build();
     public static SlotType<SlotFake> DISPLAY_SETTABLE = SlotType.<SlotFake>builder().id("display_settable")
             .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, new EmptyHandler()), i, true))
-            .tester(NO_INPUT).slotGroup(false).output(false).phantom(true).build();
+            .tester(NO_INPUT).slotGroup(false).allowExternalInput(false).allowExternalOutput(false).phantom(true).build();
     public static SlotType<AbstractSlot<?>> STORAGE = SlotType.<AbstractSlot<?>>builder().id("storage").slotSupplier((type, gui, item, i, d) -> new AbstractSlot<>(type, gui, item.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> true).build();
     public static SlotType<SlotCell> CELL_IN = SlotType.<SlotCell>builder().id("cell_in").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
-            .output(false).overlay(GTGuiTextures.CELL_IN_SLOT_OVERLAY).build();
+            .allowExternalOutput(false).overlay(GTGuiTextures.CELL_IN_SLOT_OVERLAY).build();
     public static SlotType<SlotCell> CELL_OUT = SlotType.<SlotCell>builder().id("cell_out").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent())
-            .input(false).slotGroup(false).overlay(GTGuiTextures.CELL_OUT_SLOT_OVERLAY).build();
+            .allowExternalInput(false).mayPlace(false).slotGroup(false).overlay(GTGuiTextures.CELL_OUT_SLOT_OVERLAY).build();
     public static SlotType<SlotEnergy> ENERGY = SlotType.<SlotEnergy>builder().id("energy").slotSupplier((type, gui, inv, i, d) -> new SlotEnergy(type, gui, inv.getOrDefault(type, new EmptyHandler()), i))
             .tester((t, i) -> {
                 if (t instanceof BlockEntityMachine<?> machine) {
@@ -69,7 +70,7 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
                     }).orElse(false);
                 }
                 return true;
-            }).output(false).overlay(GTGuiTextures.ENERGY_SLOT_OVERLAY).build();
+            }).allowExternalOutput(false).overlay(GTGuiTextures.ENERGY_SLOT_OVERLAY).build();
     public static SlotType<ModularSlot> FL_IN = SlotType.builder().id("fluid_in").fluidHandlerSupplier(g -> {
         if (g instanceof BlockEntityMachine<?> machine) {
             return machine.fluidHandler.map(FluidHandler::getInputTanks).orElse(FluidTanks.EMPTY_TANK);
@@ -111,12 +112,22 @@ public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent
     private ISlotSupplier<T> slotSupplier;
     @Getter
     private Function<IGuiHandler, FluidTanks> fluidHandlerSupplier;
+    @Accessors(fluent = true)
     @Default
     @Getter
-    private boolean output = true;
+    private boolean mayPickup = true;
+    @Accessors(fluent = true)
     @Default
     @Getter
-    private boolean input = true;
+    private boolean mayPlace = true;
+    @Accessors(fluent = true)
+    @Default
+    @Getter
+    private boolean allowExternalOutput = true;
+    @Accessors(fluent = true)
+    @Default
+    @Getter
+    private boolean allowExternalInput = true;
     @Default
     @Getter
     private boolean phantom = false;
