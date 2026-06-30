@@ -126,7 +126,6 @@ dependencies {
     modCompileOnly("curse.maven:the-one-probe-245211:${project.top_forge_version}")
     modImplementation("curse.maven:curios-309927:${project.curios_version}")
     modCompileOnly("curse.maven:jade-324717:${project.jade_version}")
-    modImplementation("curse.maven:mouse-tweaks-60089:5338457")
     //runtime deps
     switch (project.runtime_itemviewer) {
         case "emi":
