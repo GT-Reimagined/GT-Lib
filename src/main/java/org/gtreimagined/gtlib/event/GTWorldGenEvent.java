@@ -2,8 +2,10 @@ package org.gtreimagined.gtlib.event;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollision;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
@@ -25,7 +27,7 @@ public class GTWorldGenEvent extends GTEvent {
 
     public final List<VanillaVein> VANILLA_ORES = new ObjectArrayList<>();
     public final List<BedrockVein> BEDROCK_VEINS = new ObjectArrayList<>();
-    public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
+    public final List<StoneLayerCollision> COLLISIONS = new ObjectArrayList<>();
 
     public GTWorldGenEvent(IGTRegistrar registrar) {
         super(registrar);
@@ -71,12 +73,12 @@ public class GTWorldGenEvent extends GTEvent {
         BEDROCK_VEINS.add(veins);
     }
 
-    public void addCollisionTopBottom(BlockState top, BlockState bottom, StoneLayerOre... oresToAdd) {
-        COLLISION_MAP.computeIfAbsent(Objects.hash(top, bottom), k -> new ObjectArrayList<>()).addAll(Arrays.asList(oresToAdd));
+    public void addCollisionTopBottom(ResourceLocation id, BlockState top, BlockState bottom, StoneLayerOre... oresToAdd) {
+        COLLISIONS.add(new StoneLayerCollision(id, top, bottom, List.of(oresToAdd)));
     }
 
-    public void addCollisionBothSides(BlockState first, BlockState second, StoneLayerOre... oresToAdd) {
-        COLLISION_MAP.computeIfAbsent(Objects.hash(first, second), k -> new ObjectArrayList<>()).addAll(Arrays.asList(oresToAdd));
-        COLLISION_MAP.computeIfAbsent(Objects.hash(second, first), k -> new ObjectArrayList<>()).addAll(Arrays.asList(oresToAdd));
+    public void addCollisionBothSides(ResourceLocation baseID, BlockState first, BlockState second, StoneLayerOre... oresToAdd) {
+        COLLISIONS.add(new StoneLayerCollision(new ResourceLocation(baseID.getNamespace(), baseID.getPath() + "_top"), first, second, List.of(oresToAdd)));
+        COLLISIONS.add(new StoneLayerCollision(new ResourceLocation(baseID.getNamespace(), baseID.getPath() + "_bottom"), second, first, List.of(oresToAdd)));
     }
 }

@@ -21,6 +21,7 @@ import org.gtreimagined.gtlib.ore.BlockOreStone;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.worldgen.GTLibConfiguredFeatures;
 import org.gtreimagined.gtlib.worldgen.NoiseGenerator;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollisionData;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import net.minecraft.core.BlockPos;
@@ -159,7 +160,7 @@ public class FeatureStoneLayer extends GTFeature<NoneFeatureConfiguration> {
                         } else {
                             StoneType type = layers[3].type() != null ? layers[3].type() : rockType;
                             if (type != null && type.doesGenerateOre()) {
-                                for (StoneLayerOre ore : StoneLayer.getCollision(type, layers[5].block().defaultBlockState(), layers[1].block().defaultBlockState())) {
+                                for (StoneLayerOre ore : StoneLayerCollisionData.INSTANCE.getCollisions(world.getLevel(), layers[5].block().defaultBlockState(), layers[1].block().defaultBlockState())) {
                                     if (ore.canPlace(offset, rand, world) && WorldGenHelper.addOre(world, offset, ore.material(), true)) {
                                         lastMaterialAndStone = Pair.of(type, ore.material());
                                         break;

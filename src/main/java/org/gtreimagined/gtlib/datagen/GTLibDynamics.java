@@ -27,6 +27,7 @@ import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.recipe.map.RecipeBuilder;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.registration.IGTRegistrar;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollision;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
@@ -239,6 +240,7 @@ public class GTLibDynamics {
         List<SmallOre> smallOres = new ObjectArrayList<>();
         List<VanillaVein> vanillaVeins = new ObjectArrayList<>();
         List<BedrockVein> bedrockVeins = new ObjectArrayList<>();
+        List<StoneLayerCollision> collisions = new ObjectArrayList<>();
         Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
@@ -252,9 +254,7 @@ public class GTLibDynamics {
             stoneLayers.addAll(ev.STONE_LAYERS);
             vanillaVeins.addAll(ev.VANILLA_ORES);
             bedrockVeins.addAll(ev.BEDROCK_VEINS);
-            ev.COLLISION_MAP.forEach((i, l) -> {
-                collisionMap.computeIfAbsent(i, i2 -> new ArrayList<>()).addAll(l);
-            });
+            collisions.addAll(ev.COLLISIONS);
         }
         for (Vein vein : veins) {
             GTDynamicDataPack.addWorldgenObject(vein);
@@ -262,7 +262,9 @@ public class GTLibDynamics {
         for (StoneLayer stoneLayer : stoneLayers) {
             GTDynamicDataPack.addWorldgenObject(stoneLayer);
         }
-        StoneLayer.setCollisionMap(collisionMap);
+        for (StoneLayerCollision collision : collisions){
+            GTDynamicDataPack.addWorldgenObject(collision);
+        }
         for (SmallOre smallOre : smallOres){
             GTDynamicDataPack.addWorldgenObject(smallOre);
         }
