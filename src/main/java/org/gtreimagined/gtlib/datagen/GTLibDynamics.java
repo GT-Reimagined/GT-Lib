@@ -241,10 +241,9 @@ public class GTLibDynamics {
         List<VanillaVein> vanillaVeins = new ObjectArrayList<>();
         List<BedrockVein> bedrockVeins = new ObjectArrayList<>();
         List<StoneLayerCollision> collisions = new ObjectArrayList<>();
-        Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap = new Int2ObjectOpenHashMap<>();
         boolean runRegular = true;
         if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
-            runRegular = KubeJSRegistrar.postWorldgenEvent(veins, stoneLayers, collisionMap);
+            runRegular = KubeJSRegistrar.postWorldgenEvent(veins, stoneLayers, collisions);
         }
         if (runRegular) {
             GTWorldGenEvent ev = new GTWorldGenEvent(GTLib.INSTANCE);

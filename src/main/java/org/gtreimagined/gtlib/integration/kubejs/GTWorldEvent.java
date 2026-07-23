@@ -8,12 +8,12 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollision;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerBuilder;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 import org.gtreimagined.gtlib.worldgen.vein.VeinBuilder;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -28,7 +28,7 @@ public class GTWorldEvent extends EventJS {
     public final List<Vein> VEINS = new ObjectArrayList<>();
     public final List<StoneLayer> STONE_LAYERS = new ObjectArrayList<>();
 
-    public final Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
+    public final List<StoneLayerCollision> COLLISIONS = new ObjectArrayList<>();
     public boolean disableBuiltin = false;
 
     public final void vein(String id, int minY, int maxY, int weight, int density, int size, Material primary,
@@ -71,7 +71,7 @@ public class GTWorldEvent extends EventJS {
         this.disableBuiltin = true;
     }
 
-    public void addCollision(BlockState top, BlockState bottom, StoneLayerOre... oresToAdd) {
-        COLLISION_MAP.computeIfAbsent(Objects.hash(top, bottom), k -> new ObjectArrayList<>()).addAll(Arrays.asList(oresToAdd));
+    public void addCollision(String id, BlockState top, BlockState bottom, StoneLayerOre... oresToAdd) {
+        COLLISIONS.add(new StoneLayerCollision(new ResourceLocation(Ref.MOD_KJS, id), top, bottom, List.of(oresToAdd)));
     }
 }

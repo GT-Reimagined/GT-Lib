@@ -18,6 +18,7 @@ import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.registration.RegistrationEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollision;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 
@@ -84,12 +85,12 @@ public class KubeJSRegistrar extends GTMod {
         return ev.forLoaders;
     }
 
-    public static boolean postWorldgenEvent(List<Vein> veins, List<StoneLayer> stoneLayers, Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap){
+    public static boolean postWorldgenEvent(List<Vein> veins, List<StoneLayer> stoneLayers, List<StoneLayerCollision> collisions){
         GTWorldEvent ev = new GTWorldEvent();
         GTLibKubeJS.WORLDGEN.post(ev);
         veins.addAll(ev.VEINS);
         stoneLayers.addAll(ev.STONE_LAYERS);
-        collisionMap.putAll(ev.COLLISION_MAP);
+        collisions.addAll(ev.COLLISIONS);
         return  !ev.disableBuiltin;
     }
 }
