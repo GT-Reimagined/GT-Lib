@@ -77,8 +77,8 @@ public class GTWorldGenEvent extends GTEvent {
         COLLISIONS.add(new StoneLayerCollision(id, top, bottom, List.of(oresToAdd)));
     }
 
-    public void addCollisionBothSides(ResourceLocation baseID, BlockState first, BlockState second, StoneLayerOre... oresToAdd) {
-        COLLISIONS.add(new StoneLayerCollision(new ResourceLocation(baseID.getNamespace(), baseID.getPath() + "_top"), first, second, List.of(oresToAdd)));
-        COLLISIONS.add(new StoneLayerCollision(new ResourceLocation(baseID.getNamespace(), baseID.getPath() + "_bottom"), second, first, List.of(oresToAdd)));
+    public void addCollisionBothSides(ResourceLocation topId, ResourceLocation bottomId, BlockState first, BlockState second, StoneLayerOre... oresToAdd) {
+        COLLISIONS.add(new StoneLayerCollision(topId, first, second, List.of(oresToAdd)));
+        COLLISIONS.add(new StoneLayerCollision(bottomId, second, first, List.of(oresToAdd)));
     }
 }
