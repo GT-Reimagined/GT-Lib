@@ -23,7 +23,6 @@ import java.util.Objects;
 
 public record StoneLayer(ResourceLocation id, @Nullable StoneType type, Block block, int weight, StoneLayerRestrictions restrictions,
                          List<ResourceKey<Level>> dimensions, List<StoneLayerOre> ores) implements IWorldgenObject<StoneLayer> {
-    private static Int2ObjectOpenHashMap<List<StoneLayerOre>> COLLISION_MAP = new Int2ObjectOpenHashMap<>();
     public static final Codec<StoneLayer> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(StoneLayer::id),
             BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").forGetter(StoneLayer::block),
@@ -57,14 +56,4 @@ public record StoneLayer(ResourceLocation id, @Nullable StoneType type, Block bl
         return dimensions;
     }
 
-    public static void setCollisionMap(Int2ObjectOpenHashMap<List<StoneLayerOre>> collisionMap) {
-        COLLISION_MAP = collisionMap;
-    }
-
-    public static List<StoneLayerOre> getCollision(StoneType middle, BlockState top, BlockState bottom) {
-        if (middle == null) return Collections.emptyList();
-        List<StoneLayerOre> list = COLLISION_MAP.get(Objects.hash(top, bottom));
-        if (list == null) return Collections.emptyList();
-        return list;
-    }
 }
