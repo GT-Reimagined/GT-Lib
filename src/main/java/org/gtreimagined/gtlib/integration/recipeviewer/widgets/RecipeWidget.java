@@ -5,6 +5,8 @@ import brachy.modularui.drawable.progress.CompositeProgress;
 import brachy.modularui.integration.recipeviewer.RecipeSlotRole;
 import brachy.modularui.integration.recipeviewer.RecipeViewerSlotWidget;
 import brachy.modularui.integration.recipeviewer.entry.item.ItemStackList;
+import brachy.modularui.screen.viewport.ModularGuiContext;
+import brachy.modularui.theme.WidgetThemeEntry;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
 import brachy.modularui.widgets.TextWidget;
@@ -34,13 +36,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class RecipeWidget extends ParentWidget<RecipeWidget> {
+    int progress = 0;
+    int maxProgress = 50;
     public RecipeWidget(IRecipe recipe, IRecipeMap map, GuiProperties gui, Tier guiTier){
         IRecipeInfoRenderer infoRenderer = map.getInfoRenderer();
         this.size(170, 80 + (infoRenderer.getRows() <= 0 ? 0 : 7 + (10 * infoRenderer.getRows())));
         BarDir direction = gui.getMachineData().getDir();
         UITexture texture = gui.getMachineData().getProgressTexture(guiTier);
         ProgressWidget progressWidget = new ProgressWidget()
-                //.syncHandler("progress")
+                .clientValue(() -> (double)progress / maxProgress)
                 .pos(gui.getMachineData().getProgressPos().x + 6, gui.getMachineData().getProgressPos().y + 6);
         this.child(progressWidget);
         if (!direction.isCircular()) {
@@ -126,6 +130,15 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 }
                 this.child(itemStackGroup);
             }
+        }
+    }
+
+    @Override
+    public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+        super.draw(context, widgetTheme);
+        progress++;
+        if (progress >= maxProgress){
+            progress = 0;
         }
     }
 }
