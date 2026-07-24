@@ -19,7 +19,7 @@ import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
-import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.extension.REIMaterialRecipeExtension;
@@ -95,10 +95,10 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
     @Override
     public void registerBasicEntryFiltering(BasicFilteringRule<?> rule) {
         List<ItemLike> list = new ArrayList<>();
-        GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));
+        GTLibRecipeViewerPlugin.getItemsToHide().forEach(c -> c.accept(list));
         list.forEach(i -> rule.hide(EntryStack.of(VanillaEntryTypes.ITEM, i.asItem().getDefaultInstance())));
         List<Fluid> fluidList = new ArrayList<>();
-        GTLibXEIPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
+        GTLibRecipeViewerPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
         fluidList.forEach(f -> {
             rule.hide(EntryStack.of(VanillaEntryTypes.FLUID, FluidStack.create(f, 1)));
             rule.hide(EntryStack.of(VanillaEntryTypes.ITEM, f.getBucket().getDefaultInstance()));
@@ -109,7 +109,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
     public void registerCategories(CategoryRegistry registry) {
         Set<ResourceLocation> registeredMachineCats = new ObjectOpenHashSet<>();
 
-        GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
+        GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (!registeredMachineCats.contains(tuple.map.getLoc())) {
                 RecipeMapCategory category = new RecipeMapCategory(tuple.map, tuple.gui, tuple.tier, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0));
                 registry.add(category);
@@ -130,7 +130,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
     public void registerDisplays(DisplayRegistry registry) {
         // regular recipes
         registry.registerRecipeFiller(IRecipe.class, type -> RecipeMap.getRecipeTypes().contains(type), r -> !r.isHidden(), RecipeMapDisplay::new);
-        GTLibXEIPlugin.getREGISTRY().values().forEach(t -> {
+        GTLibRecipeViewerPlugin.getREGISTRY().values().forEach(t -> {
             var m = t.map;
             if (m instanceof RecipeMap<?> rm){
                 if (m.getProxy() != null){

@@ -18,7 +18,7 @@ import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.RecipeMapRecipe;
-import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
@@ -35,19 +35,19 @@ public class GTLibEmiPlugin implements EmiPlugin {
     public void register(EmiRegistry emiRegistry) {
         if (FMLEnvironment.production) return;
         List<ItemLike> list = new ArrayList<>();
-        GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));
+        GTLibRecipeViewerPlugin.getItemsToHide().forEach(c -> c.accept(list));
         if (!list.isEmpty()) {
             emiRegistry.removeEmiStacks(s -> s.getKey() instanceof Item i && list.contains(i));
         }
         List<Fluid> fluidList = new ArrayList<>();
-        GTLibXEIPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
+        GTLibRecipeViewerPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
         List<Item> buckets = fluidList.stream().map(Fluid::getBucket).toList();
         if (!fluidList.isEmpty()){
             emiRegistry.removeEmiStacks(s -> s.getKey() instanceof Fluid f && fluidList.contains(f));
             emiRegistry.removeEmiStacks(s -> s.getKey() instanceof Item i && buckets.contains(i));
         }
 
-        GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
+        GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
             GuiProperties gui = tuple.gui;
             int4 area = gui.getArea();
             Tier tier = tuple.map.getGuiTier() != null ? tuple.map.getGuiTier() : tuple.tier;
@@ -73,12 +73,12 @@ public class GTLibEmiPlugin implements EmiPlugin {
                 }
             });
             if (tuple.map.getSubCategories().isEmpty()) {
-                List<IRecipe> recipes = GTLibXEIPlugin.getRecipes(tuple.map, emiRegistry.getRecipeManager());
+                List<IRecipe> recipes = GTLibRecipeViewerPlugin.getRecipes(tuple.map, emiRegistry.getRecipeManager());
                 recipes.forEach(r -> {
                     emiRegistry.addRecipe(new RecipeMapRecipe(mainCategory, r, gui, tier));
                 });
             } else {
-                List<IRecipe> recipes = GTLibXEIPlugin.getRecipes(tuple.map, emiRegistry.getRecipeManager());
+                List<IRecipe> recipes = GTLibRecipeViewerPlugin.getRecipes(tuple.map, emiRegistry.getRecipeManager());
                 List<IRecipe> mainRecipes = new ArrayList<>();
                 Map<String, List<IRecipe>> recipeMap = new HashMap<>();
                 for (IRecipe recipe : recipes) {

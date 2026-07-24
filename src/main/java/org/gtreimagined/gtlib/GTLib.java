@@ -33,7 +33,7 @@ import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.integration.Integrations;
-import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
 import org.gtreimagined.gtlib.item.interaction.CauldronInteractions;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -213,9 +213,9 @@ public class GTLib extends GTMod {
         } else if (event == RegistrationEvent.DATA_READY) {
             CauldronInteractions.init();
             if (GTAPI.isModLoaded(Ref.MOD_JEI) || GTAPI.isModLoaded(Ref.MOD_REI)){
-                GTLibXEIPlugin.registerMissingMaps();
+                GTLibRecipeViewerPlugin.registerMissingMaps();
             }
-            GTLibXEIPlugin.addItemsToHide(l -> {
+            GTLibRecipeViewerPlugin.addItemsToHide(l -> {
                 if (!GTLibConfig.SHOW_ALL_ORES.get()){
                     GTAPI.all(StoneType.class, s -> {
                         if (s != VanillaStoneTypes.STONE && s != VanillaStoneTypes.SAND && s.doesGenerateOre()){

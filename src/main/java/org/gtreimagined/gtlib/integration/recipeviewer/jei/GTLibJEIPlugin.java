@@ -34,7 +34,7 @@ import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.extension.JEIMaterialRecipeExtension;
-import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.IRecipe;
@@ -98,12 +98,12 @@ public class GTLibJEIPlugin implements IModPlugin {
         if (GTAPI.isModLoaded(Ref.MOD_REI) || (GTAPI.isModLoaded(Ref.MOD_EMI) && !FMLEnvironment.production)) return;
         //Remove fluid "blocks".
         List<ItemLike> list = new ArrayList<>();
-        GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));
+        GTLibRecipeViewerPlugin.getItemsToHide().forEach(c -> c.accept(list));
         if (!list.isEmpty()) {
             runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, list.stream().map(i -> i.asItem().getDefaultInstance()).toList());
         }
         List<Fluid> fluidList = new ArrayList<>();
-        GTLibXEIPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
+        GTLibRecipeViewerPlugin.getFluidsToHide().forEach(c -> c.accept(fluidList));
         // wish there was a better way to do this
         if (!fluidList.isEmpty()){
             runtime.getIngredientManager().removeIngredientsAtRuntime(ForgeTypes.FLUID_STACK,  fluidList.stream().map(f -> new FluidStack(f, 1)).toList());
@@ -120,7 +120,7 @@ public class GTLibJEIPlugin implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         List<ItemLike> list = new ArrayList<>();
-        GTLibXEIPlugin.getItemsToHide().forEach(c -> c.accept(list));
+        GTLibRecipeViewerPlugin.getItemsToHide().forEach(c -> c.accept(list));
         GTAPI.all(Item.class).forEach(i -> {
             if (list.contains(i)) return;
             if (i instanceof IEnergyItem energyItem && energyItem.canCreate(new ItemStackWrapper(i.getDefaultInstance()))) {
@@ -142,7 +142,7 @@ public class GTLibJEIPlugin implements IModPlugin {
         if (helpers == null) helpers = registry.getJeiHelpers();
         Set<ResourceLocation> registeredMachineCats = new ObjectOpenHashSet<>();
 
-        GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
+        GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (!registeredMachineCats.contains(tuple.map.getLoc())) {
                 RecipeType<IRecipe> type = new RecipeType<>(tuple.map.getLoc(), IRecipe.class);
                 RECIPE_TYPES.put(type.getUid().toString(), type);
@@ -173,11 +173,11 @@ public class GTLibJEIPlugin implements IModPlugin {
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
         if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
         if (helpers == null) helpers = registration.getJeiHelpers();
-        GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
+        GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (tuple.map.getSubCategories().isEmpty()) {
-                registration.addRecipes(RECIPE_TYPES.get(id.toString()), GTLibXEIPlugin.getRecipes(tuple.map, getRecipeManager()));
+                registration.addRecipes(RECIPE_TYPES.get(id.toString()), GTLibRecipeViewerPlugin.getRecipes(tuple.map, getRecipeManager()));
             } else {
-                List<IRecipe> recipes = GTLibXEIPlugin.getRecipes(tuple.map, getRecipeManager());
+                List<IRecipe> recipes = GTLibRecipeViewerPlugin.getRecipes(tuple.map, getRecipeManager());
                 List<IRecipe> mainRecipes = new ArrayList<>();
                 Map<String, List<IRecipe>> recipeMap = new HashMap<>();
                 for (IRecipe recipe : recipes) {
@@ -263,7 +263,7 @@ public class GTLibJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(@NotNull IRecipeCatalystRegistration registration) {
         if (GTAPI.isModLoaded(Ref.MOD_REI)) return;
-        GTLibXEIPlugin.getREGISTRY().forEach((id, tuple) -> {
+        GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (tuple.workstations.isEmpty()) return;
             tuple.workstations.forEach(s -> {
                 ItemLike item = RegistryUtils.getItemFromID(s);
@@ -274,7 +274,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 }
             });
         });
-        GTLibXEIPlugin.getWORKSTATIONS().forEach((r, l) -> {
+        GTLibRecipeViewerPlugin.getWORKSTATIONS().forEach((r, l) -> {
             List<Item> list = new ArrayList<>();
             l.forEach(l2 -> l2.accept(list));
             list.forEach(i -> {

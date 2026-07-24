@@ -7,7 +7,7 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.machine.ITooltipArgs;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -102,7 +102,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     public final void setStructurePattern(Pattern... patterns) {
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
-            GTLibXEIPlugin.registerPatternForJei(this, Arrays.stream(patterns).collect(Collectors.toList()));
+            GTLibRecipeViewerPlugin.registerPatternForJei(this, Arrays.stream(patterns).collect(Collectors.toList()));
             this.tiers.forEach(t -> {
                 PonderUtils.registerMultiblock(this, t, Arrays.asList(patterns));
             });
@@ -116,7 +116,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     public final void setStructurePattern(Tier tier,  Pattern... patterns) {
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
-            GTLibXEIPlugin.registerPatternForJei(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
+            GTLibRecipeViewerPlugin.registerPatternForJei(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
             PonderUtils.registerMultiblock(this, tier, Arrays.asList(patterns));
         }
     }

@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTTextureStitcher;
 import org.gtreimagined.gtlib.client.ModelUtils;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
-import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.Utils;
@@ -69,7 +69,7 @@ public class ItemFluidIcon extends ItemBasic<ItemFluidIcon> implements IFluidIte
             str.add(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(fluid.getFluid())).withStyle(ChatFormatting.RED));
             String liquid = !FluidUtils.isFluidGaseous(fluid.getFluid()) ? "liquid" : "gas";
             str.add(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
-            GTLibXEIPlugin.addModDescriptor(str, fluid);
+            GTLibRecipeViewerPlugin.addModDescriptor(str, fluid);
             tooltip.addAll(str);
         });
     }

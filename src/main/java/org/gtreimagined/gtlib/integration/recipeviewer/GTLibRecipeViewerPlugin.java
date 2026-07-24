@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 import static org.gtreimagined.gtlib.gui.SlotType.*;
 import static org.gtreimagined.gtlib.machine.MachineFlag.RECIPE;
 
-public class GTLibXEIPlugin {
+public class GTLibRecipeViewerPlugin {
     private static final List<Consumer<List<ItemLike>>> ITEMS_TO_HIDE = new ArrayList<>();
     private static final List<Consumer<List<Fluid>>> FLUIDS_TO_HIDE = new ArrayList<>();
     @Getter
