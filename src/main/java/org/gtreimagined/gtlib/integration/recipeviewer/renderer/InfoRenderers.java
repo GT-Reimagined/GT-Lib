@@ -1,6 +1,5 @@
-package org.gtreimagined.gtlib.integration.xei.renderer;
+package org.gtreimagined.gtlib.integration.recipeviewer.renderer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;

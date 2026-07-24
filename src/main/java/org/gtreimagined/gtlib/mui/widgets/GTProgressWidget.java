@@ -1,13 +1,10 @@
 package org.gtreimagined.gtlib.mui.widgets;
 
 import brachy.modularui.api.widget.Interactable;
-import brachy.modularui.screen.RichTooltip;
-import brachy.modularui.screen.viewport.GuiContext;
 import brachy.modularui.widgets.ProgressWidget;
-import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;
-import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 public class GTProgressWidget extends ProgressWidget implements Interactable {

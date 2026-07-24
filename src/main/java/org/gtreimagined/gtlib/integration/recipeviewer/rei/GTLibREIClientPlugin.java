@@ -19,7 +19,7 @@ import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
-import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.extension.REIMaterialRecipeExtension;

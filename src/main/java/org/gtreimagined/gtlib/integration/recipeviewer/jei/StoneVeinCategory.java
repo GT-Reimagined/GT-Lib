@@ -12,7 +12,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
-import org.gtreimagined.gtlib.integration.xei.StoneVein;
+import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.client.Minecraft;

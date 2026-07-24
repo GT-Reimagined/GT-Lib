@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.xei;
+package org.gtreimagined.gtlib.integration.recipeviewer;
 
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;

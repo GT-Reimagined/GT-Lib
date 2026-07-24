@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.xei;
+package org.gtreimagined.gtlib.integration.recipeviewer;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;

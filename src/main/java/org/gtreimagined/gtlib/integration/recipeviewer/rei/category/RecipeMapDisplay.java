@@ -30,7 +30,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin.intToSuperScript;
+import static org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin.intToSuperScript;
 
 public class RecipeMapDisplay implements Display {
     private final CategoryIdentifier<RecipeMapDisplay> id;

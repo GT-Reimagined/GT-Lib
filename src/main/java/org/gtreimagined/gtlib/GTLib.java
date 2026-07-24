@@ -33,7 +33,7 @@ import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.integration.Integrations;
-import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
 import org.gtreimagined.gtlib.item.interaction.CauldronInteractions;
 import org.gtreimagined.gtlib.machine.MachineState;
