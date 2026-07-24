@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.rei.category;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei.category;
 
 import com.google.common.collect.ImmutableList;
 import dev.architectury.fluid.FluidStack;
@@ -8,8 +8,7 @@ import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.integration.rei.REIUtils;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.REIUtils;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;

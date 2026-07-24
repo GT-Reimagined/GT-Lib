@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.jei.category;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei;
 
 import brachy.modularui.drawable.GuiTextures;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -23,7 +23,6 @@ import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.integration.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.xei.renderer.IRecipeInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;

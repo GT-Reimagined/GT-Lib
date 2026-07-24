@@ -1,6 +1,5 @@
-package org.gtreimagined.gtlib.integration.emi;
+package org.gtreimagined.gtlib.integration.recipeviewer.emi;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.emi.emi.api.forge.ForgeEmiStack;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;

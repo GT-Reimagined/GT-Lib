@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.emi;
+package org.gtreimagined.gtlib.integration.recipeviewer.emi;
 
 import dev.emi.emi.api.stack.FluidEmiStack;
 import net.minecraft.ChatFormatting;

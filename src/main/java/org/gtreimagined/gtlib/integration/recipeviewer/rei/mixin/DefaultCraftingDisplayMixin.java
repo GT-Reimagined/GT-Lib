@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.rei.mixin;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei.mixin;
 
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;

@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.rei.mixin;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei.mixin;
 
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;

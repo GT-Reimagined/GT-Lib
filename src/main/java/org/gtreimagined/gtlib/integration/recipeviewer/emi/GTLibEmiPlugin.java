@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.emi;
+package org.gtreimagined.gtlib.integration.recipeviewer.emi;
 
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiProperties;
-import org.gtreimagined.gtlib.integration.emi.recipe.RecipeMapRecipe;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.RecipeMapRecipe;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;

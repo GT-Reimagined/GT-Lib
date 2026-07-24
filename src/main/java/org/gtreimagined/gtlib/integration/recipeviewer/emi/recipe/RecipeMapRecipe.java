@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.emi.recipe;
+package org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -14,8 +14,8 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.integration.emi.GTEMIFluidIngredient;
-import org.gtreimagined.gtlib.integration.emi.GTFluidEmiStack;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.GTEMIFluidIngredient;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.GTFluidEmiStack;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;

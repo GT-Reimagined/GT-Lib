@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.jei;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei;
 
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -33,23 +33,15 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
-import org.gtreimagined.gtlib.integration.jei.category.MultiMachineInfoCategory;
-import org.gtreimagined.gtlib.integration.jei.category.RecipeMapCategory;
-import org.gtreimagined.gtlib.integration.jei.category.SmallOreCategory;
-import org.gtreimagined.gtlib.integration.jei.category.StoneVeinCategory;
-import org.gtreimagined.gtlib.integration.jei.category.VeinCategory;
-import org.gtreimagined.gtlib.integration.jei.extension.JEIMaterialRecipeExtension;
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.extension.JEIMaterialRecipeExtension;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
 import org.gtreimagined.gtlib.integration.xei.StoneVein;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.IRecipe;
-import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
-import org.gtreimagined.gtlib.recipe.map.RecipeMap;
 import org.gtreimagined.gtlib.recipe.material.MaterialRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
-import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 import net.minecraft.client.Minecraft;
@@ -75,11 +67,9 @@ import org.gtreimagined.tesseract.api.eu.IEnergyItem;
 import org.gtreimagined.tesseract.api.wrapper.ItemStackWrapper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 

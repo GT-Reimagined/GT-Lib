@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.rei.category;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei.category;
 
 import brachy.modularui.drawable.GuiTextures;
 import me.shedaniel.math.Point;

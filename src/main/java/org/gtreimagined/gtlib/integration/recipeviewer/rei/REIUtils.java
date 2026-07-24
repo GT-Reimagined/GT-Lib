@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.rei;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei;
 
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;

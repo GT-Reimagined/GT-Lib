@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.rei.extension;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei.extension;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import me.shedaniel.rei.api.client.gui.screen.DisplayScreen;

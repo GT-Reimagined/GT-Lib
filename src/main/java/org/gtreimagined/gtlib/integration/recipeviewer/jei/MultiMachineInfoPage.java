@@ -1,42 +1,4 @@
-package org.gtreimagined.gtlib.integration.jei.category;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.helpers.IGuiHelper;
-import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
-import org.gtreimagined.gtlib.client.RenderHelper;
-import org.gtreimagined.gtlib.client.event.ClientEvents;
-import org.gtreimagined.gtlib.client.scene.ImmediateWorldSceneRenderer;
-import org.gtreimagined.gtlib.client.scene.TrackedDummyWorld;
-import org.gtreimagined.gtlib.client.scene.WorldSceneRenderer;
-import org.gtreimagined.gtlib.machine.types.BasicMultiMachine;
-import org.gtreimagined.gtlib.structure.BlockInfo;
-import org.gtreimagined.gtlib.structure.Pattern;
-import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei;
 
 @SuppressWarnings("removal")
 public class MultiMachineInfoPage {

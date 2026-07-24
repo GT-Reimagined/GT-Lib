@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.jei.extension;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei.extension;
 
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;

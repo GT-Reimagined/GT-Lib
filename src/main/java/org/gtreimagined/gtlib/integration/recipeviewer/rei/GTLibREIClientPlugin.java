@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.rei;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei;
 
 import dev.architectury.fluid.FluidStack;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -20,9 +20,9 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
-import org.gtreimagined.gtlib.integration.rei.category.RecipeMapCategory;
-import org.gtreimagined.gtlib.integration.rei.category.RecipeMapDisplay;
-import org.gtreimagined.gtlib.integration.rei.extension.REIMaterialRecipeExtension;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapCategory;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.extension.REIMaterialRecipeExtension;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
