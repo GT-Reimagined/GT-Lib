@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.recipeviewer.jei;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
 import brachy.modularui.drawable.GuiTextures;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import org.gtreimagined.gtlib.Data;
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;

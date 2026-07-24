@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.recipeviewer.jei;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
 import brachy.modularui.drawable.GuiTextures;
 import mezz.jei.api.constants.VanillaTypes;
@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
@@ -25,8 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.ORE;
-import static org.gtreimagined.gtlib.integration.recipeviewer.jei.RecipeMapCategory.JEI_OFFSET_X;
-import static org.gtreimagined.gtlib.integration.recipeviewer.jei.RecipeMapCategory.JEI_OFFSET_Y;
+import static org.gtreimagined.gtlib.integration.recipeviewer.jei.category.RecipeMapCategory.JEI_OFFSET_X;
+import static org.gtreimagined.gtlib.integration.recipeviewer.jei.category.RecipeMapCategory.JEI_OFFSET_Y;
 
 public class VeinCategory implements IRecipeCategory<Vein> {
     IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());

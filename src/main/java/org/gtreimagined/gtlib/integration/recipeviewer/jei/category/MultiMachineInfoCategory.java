@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.recipeviewer.jei;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
 import com.google.common.collect.Sets;
 import mezz.jei.api.constants.VanillaTypes;

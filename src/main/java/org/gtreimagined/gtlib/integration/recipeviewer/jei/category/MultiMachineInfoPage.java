@@ -1,4 +1,4 @@
-package org.gtreimagined.gtlib.integration.recipeviewer.jei;
+package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
 @SuppressWarnings("removal")
 public class MultiMachineInfoPage {
