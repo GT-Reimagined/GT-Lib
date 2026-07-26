@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.gui.GuiProperties;
-import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.material.Material;
@@ -469,21 +469,21 @@ public final class GTAPI {
     public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Tier tier, ResourceLocation model,
                                            boolean override) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            GTLibXEIPlugin.registerCategory(map, gui, tier, model, override);
+            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier, model, override);
         }
     }
 
     public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Machine<?> machine, @Nullable Tier tier, boolean override) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
             if (tier == null) tier = machine.getFirstTier();
-            GTLibXEIPlugin.registerCategory(map, gui, tier,
+            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier,
                     new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier)), override);
         }
     }
 
     public static void registerJEICategoryWorkstation(IRecipeMap map, Machine<?> machine, @Nullable Tier tier) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            GTLibXEIPlugin.registerCategoryWorkstation(map,
+            GTLibRecipeViewerPlugin.registerCategoryWorkstation(map,
                     new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier != null ? tier : machine.getFirstTier())));
         }
     }
