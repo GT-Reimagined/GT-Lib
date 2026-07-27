@@ -69,10 +69,9 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 int s = 0;
                 List<List<ItemStack>> inputs = recipe.getInputItems().stream().map(t -> Arrays.asList(t.getItems())).toList();
                 if (!inputs.isEmpty()){
-                    int slotCount = Math.min(slots.size(), inputs.size());
-                    for (; s < slotCount; s++) {
+                    for (; s < slots.size(); s++) {
                         final int ss = s;
-                        List<ItemStack> input = inputs.get(s);
+                        List<ItemStack> input = s >= inputs.size() ? List.of() : inputs.get(s);
                         itemStackGroup.child(RecipeViewerSlotWidget.create()
                                 .recipeSlotRole(RecipeSlotRole.INPUT)
                                 .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY())
@@ -99,7 +98,8 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                                         }
                                     }
                                 })
-                                .value(new ItemStackList(input.isEmpty() ? List.of(new ItemStack(Data.DEBUG_SCANNER)) : input)));
+                                .value(new ItemStackList(input.isEmpty() ?
+                                        List.of(s >= inputs.size() ? ItemStack.EMPTY : new ItemStack(Data.DEBUG_SCANNER)) : input)));
                     }
                 }
                 this.child(itemStackGroup);
@@ -112,8 +112,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             if (!slots.isEmpty()) {
                 ParentWidget<?> itemStackGroup = new ParentWidget<>().sizeRel(1f);
                 List<ItemStack> outputs = Arrays.stream(recipe.getOutputItems(false)).toList();
-                int slotCount = Math.min(slots.size(), outputs.size());
-                for (int s = 0; s < slotCount; s++) {
+                for (int s = 0; s < slots.size(); s++) {
                     final int ss = s;
                     RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                             .recipeSlotRole(RecipeSlotRole.OUTPUT)
@@ -125,13 +124,14 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                                     }
                                 }
                             })
-                            .value(outputs.get(s));
+                            .value(s >= outputs.size() ? ItemStack.EMPTY : outputs.get(s));
                     if (recipe.hasOutputChances()){
                         if (recipe.getOutputChances()[s] < 10000){
                             widget.backgroundOverlay(new ChanceOverlay(Utils.literal("Output Chance: " + ((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE),
                                     slots.get(s).getJeiX(), slots.get(s).getJeiY()));
                         }
                     }
+                    itemStackGroup.child(widget);
                 }
                 this.child(itemStackGroup);
             }
