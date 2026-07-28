@@ -71,35 +71,38 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 if (!inputs.isEmpty()){
                     for (; s < slots.size(); s++) {
                         final int ss = s;
-                        List<ItemStack> input = s >= inputs.size() ? List.of() : inputs.get(s);
-                        itemStackGroup.child(RecipeViewerSlotWidget.create()
+                        RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                                 .recipeSlotRole(RecipeSlotRole.INPUT)
-                                .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY())
-                                .tooltipBuilder(r -> {
-                                    if (input.isEmpty()){
-                                        r.addLine(Utils.literal("Empty Tag"));
-                                        return;
+                                .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                        if (s < inputs.size()) {
+                            List<ItemStack> input = inputs.get(s);
+                            widget.tooltipBuilder(r -> {
+                                if (input.isEmpty()){
+                                    r.addLine(Utils.literal("Empty Tag"));
+                                    return;
+                                }
+                                if (recipe.getInputItems().get(ss) instanceof RecipeIngredient ri) {
+                                    if (ri.ignoreConsume()) {
+                                        r.addLine(Utils.literal("Does not get consumed in the process.").withStyle(ChatFormatting.WHITE));
                                     }
-                                    if (recipe.getInputItems().get(ss) instanceof RecipeIngredient ri) {
-                                        if (ri.ignoreConsume()) {
-                                            r.addLine(Utils.literal("Does not get consumed in the process.").withStyle(ChatFormatting.WHITE));
-                                        }
-                                        if (ri.ignoreNbt()) {
-                                            r.addLine(Utils.literal("Ignores NBT.").withStyle(ChatFormatting.WHITE));
-                                        }
-                                        Ingredient i = recipe.getInputItems().get(ss);
-                                        if (RecipeMap.isIngredientSpecial(i)) {
-                                            r.addLine(Utils.literal("Special ingredient. Class name: ").withStyle(ChatFormatting.GRAY).append(Utils.literal(i.getClass().getSimpleName()).withStyle(ChatFormatting.GOLD)));
-                                        }
+                                    if (ri.ignoreNbt()) {
+                                        r.addLine(Utils.literal("Ignores NBT.").withStyle(ChatFormatting.WHITE));
                                     }
-                                    if (recipe.hasInputChances()) {
-                                        if (recipe.getInputChances()[ss] < 10000) {
-                                            r.addLine(Utils.literal("Consumption Chance: " + ((float)recipe.getInputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE));
-                                        }
+                                    Ingredient i = recipe.getInputItems().get(ss);
+                                    if (RecipeMap.isIngredientSpecial(i)) {
+                                        r.addLine(Utils.literal("Special ingredient. Class name: ").withStyle(ChatFormatting.GRAY).append(Utils.literal(i.getClass().getSimpleName()).withStyle(ChatFormatting.GOLD)));
                                     }
-                                })
-                                .value(new ItemStackList(input.isEmpty() ?
-                                        List.of(s >= inputs.size() ? ItemStack.EMPTY : new ItemStack(Data.DEBUG_SCANNER)) : input)));
+                                }
+                                if (recipe.hasInputChances()) {
+                                    if (recipe.getInputChances()[ss] < 10000) {
+                                        r.addLine(Utils.literal("Consumption Chance: " + ((float)recipe.getInputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE));
+                                    }
+                                }
+                            })
+                            .value(new ItemStackList(input.isEmpty() ?
+                                    List.of(new ItemStack(Data.DEBUG_SCANNER)) : input));
+                        }
+                        itemStackGroup.child(widget);
                     }
                 }
                 this.child(itemStackGroup);
@@ -116,19 +119,21 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                     final int ss = s;
                     RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                             .recipeSlotRole(RecipeSlotRole.OUTPUT)
-                            .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY())
-                            .tooltipBuilder(r -> {
-                                if (recipe.hasOutputChances()) {
-                                    if (recipe.getOutputChances()[ss] < 10000) {
-                                        r.addLine(Utils.literal("Output Chance: " + ((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE));
-                                    }
+                            .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                    if (s < outputs.size()) {
+                        widget.tooltipBuilder(r -> {
+                            if (recipe.hasOutputChances()) {
+                                if (recipe.getOutputChances()[ss] < 10000) {
+                                    r.addLine(Utils.literal("Output Chance: " + ((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE));
                                 }
-                            })
-                            .value(s >= outputs.size() ? ItemStack.EMPTY : outputs.get(s));
-                    if (recipe.hasOutputChances()){
-                        if (recipe.getOutputChances()[s] < 10000){
-                            widget.backgroundOverlay(new ChanceOverlay(Utils.literal("Output Chance: " + ((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE),
-                                    slots.get(s).getJeiX(), slots.get(s).getJeiY()));
+                            }
+                        })
+                        .value(outputs.get(s));
+                        if (recipe.hasOutputChances()){
+                            if (recipe.getOutputChances()[s] < 10000){
+                                widget.backgroundOverlay(new ChanceOverlay(Utils.literal("Output Chance: " + ((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE),
+                                        slots.get(s).getJeiX(), slots.get(s).getJeiY()));
+                            }
                         }
                     }
                     itemStackGroup.child(widget);
@@ -141,17 +146,18 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             if (!slots.isEmpty()) {
                 ParentWidget<?> fluidStackGroup = new ParentWidget<>().sizeRel(1f);
                 List<FluidIngredient> fluids = recipe.getInputFluids();
-                int slotCount = Math.min(slots.size(), fluids.size());
-                for (int s = 0; s < slotCount; s++) {
+                for (int s = 0; s < slots.size(); s++) {
                     final int ss = s;
                     RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                             .recipeSlotRole(RecipeSlotRole.INPUT)
-                            .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY())
-                            .tooltip(r -> {
-                                FluidStack stack = fluids.get(ss).getStacks()[0];
-                                createFluidTooltip(r, stack);
-                            })
-                            .value(FluidStackList.of(Arrays.asList(fluids.get(s).getStacks())));
+                            .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                    if (s < fluids.size()) {
+                        widget.tooltip(r -> {
+                            FluidStack stack = fluids.get(ss).getStacks()[0];
+                            createFluidTooltip(r, stack);
+                        })
+                        .value(FluidStackList.of(Arrays.asList(fluids.get(s).getStacks())));
+                    }
                     fluidStackGroup.child(widget);
                 }
                 this.child(fluidStackGroup);
@@ -162,17 +168,18 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             if (!slots.isEmpty()) {
                 ParentWidget<?> fluidStackGroup = new ParentWidget<>().sizeRel(1f);
                 FluidStack[] fluids = recipe.getOutputFluids();
-                int slotCount = Math.min(slots.size(), fluids.length);
-                for (int s = 0; s < slotCount; s++) {
+                for (int s = 0; s < slots.size(); s++) {
                     final int ss = s;
                     RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                             .recipeSlotRole(RecipeSlotRole.OUTPUT)
-                            .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY())
-                            .tooltip(r -> {
+                            .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                    if (s < fluids.length) {
+                        widget.tooltip(r -> {
                                 FluidStack stack = fluids[ss];
                                 createFluidTooltip(r, stack);
                             })
                             .value(fluids[s]);
+                    }
                     fluidStackGroup.child(widget);
                 }
                 this.child(fluidStackGroup);
