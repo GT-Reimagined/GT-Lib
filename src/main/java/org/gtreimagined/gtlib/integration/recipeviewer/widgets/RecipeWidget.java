@@ -131,8 +131,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                         .value(outputs.get(s));
                         if (recipe.hasOutputChances()){
                             if (recipe.getOutputChances()[s] < 10000){
-                                widget.backgroundOverlay(new ChanceOverlay(Utils.literal("Output Chance: " + ((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.WHITE),
-                                        slots.get(s).getJeiX(), slots.get(s).getJeiY()));
+                                widget.overlay(new ChanceOverlay(Utils.literal(((float)recipe.getOutputChances()[ss] / 100) + "%").withStyle(ChatFormatting.YELLOW)));
                             }
                         }
                     }
