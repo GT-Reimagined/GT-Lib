@@ -157,6 +157,8 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                             createFluidTooltip(r, stack);
                         })
                         .value(FluidStackList.of(Arrays.asList(fluids.get(s).getStacks())));
+                    } else {
+                        widget.value(FluidStack.EMPTY);
                     }
                     fluidStackGroup.child(widget);
                 }
@@ -179,6 +181,8 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                                 createFluidTooltip(r, stack);
                             })
                             .value(fluids[s]);
+                    } else {
+                        widget.value(FluidStack.EMPTY);
                     }
                     fluidStackGroup.child(widget);
                 }
