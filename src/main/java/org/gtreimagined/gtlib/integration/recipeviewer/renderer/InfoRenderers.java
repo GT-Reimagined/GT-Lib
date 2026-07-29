@@ -12,29 +12,7 @@ import java.util.Objects;
  There is most likely a better way but I cba...
  */
 public class InfoRenderers {
-    public static final IRecipeInfoRenderer BLASTING_RENDERER = new IRecipeInfoRenderer() {
-        @Override
-        public void render(GuiGraphics graphics, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY) {
-            if (recipe.getDuration() == 0 && recipe.getPower() == 0) return;
-            String additional = recipe.getDuration() < 1200 ? "" : recipe.getDuration() < 36000 ? " (" + (recipe.getDuration() / 20.0f) + " secs)" : " (" + (recipe.getDuration() / 1200.0f) + " mins)";
-            String power = "Duration: " + recipe.getDuration() + " ticks" + additional;
-            String euT = "EU/t: " + recipe.getPower();
-            String total = "Total: " + recipe.getPower() * recipe.getDuration() + " EU";
-            String temperature = "Temperature: " + recipe.getSpecialValue() + " K";
-            Tier tier = Tier.getTier((recipe.getPower() / recipe.getAmps()));
-            String formattedText = " (" + tier.getId().toUpperCase() + ")";
-            renderString(graphics, power, font, 5, 0, guiOffsetX, guiOffsetY);
-            renderString(graphics, euT, font, 5, 10, guiOffsetX, guiOffsetY);
-            renderString(graphics, formattedText, font, 5 + stringWidth(euT, font), 10, Tier.EV.getRarityFormatting().getColor(), guiOffsetX, guiOffsetY);
-            renderString(graphics, temperature, font, 5, 20, guiOffsetX, guiOffsetY);
-            renderString(graphics, total, font, 5, 30, guiOffsetX, guiOffsetY);
-        }
 
-        @Override
-        public int getRows() {
-            return 4;
-        }
-    };
 
     public static final IRecipeInfoRenderer BASIC_RENDERER = new IRecipeInfoRenderer() {
         @Override
@@ -109,21 +87,4 @@ public class InfoRenderers {
         }
     };
 
-    public static final IRecipeInfoRenderer STEAM_RENDERER = new IRecipeInfoRenderer() {
-        @Override
-        public void render(GuiGraphics graphics, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY) {
-            String additional = recipe.getDuration() < 1200 ? "" : recipe.getDuration() < 36000 ? " (" + (recipe.getDuration() / 20.0f) + " secs)" : " (" + (recipe.getDuration() / 1200.0f) + " mins)";
-            String power = "Duration: " + recipe.getDuration() + " ticks" + additional;
-            String euT = "Steam: ";
-            String total = "Total steam: " + recipe.getDuration() * recipe.getPower() + " mb";
-            renderString(graphics, power, font, 5, 0, guiOffsetX, guiOffsetY);
-            renderString(graphics, euT + recipe.getPower() + "mb/t", font, 5, 10, guiOffsetX, guiOffsetY);
-            renderString(graphics, total, font, 5, 20, guiOffsetX, guiOffsetY);
-        }
-
-        @Override
-        public int getRows() {
-            return 3;
-        }
-    };
 }
