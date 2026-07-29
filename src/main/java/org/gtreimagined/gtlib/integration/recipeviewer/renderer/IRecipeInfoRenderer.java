@@ -8,12 +8,13 @@ import net.minecraft.client.gui.Font;
 
 import java.util.List;
 
+@FunctionalInterface
 public interface IRecipeInfoRenderer {
-    void render(GuiGraphics stack, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY);
+    default void render(GuiGraphics stack, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY){
 
-    default List<Component> getLines(IRecipe recipe){
-        return List.of();
     }
+
+    List<Component> getLines(IRecipe recipe);
 
     default int getRows(){
         return 0;

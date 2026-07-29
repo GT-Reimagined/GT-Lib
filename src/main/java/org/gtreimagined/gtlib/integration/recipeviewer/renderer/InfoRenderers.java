@@ -1,10 +1,15 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.renderer;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import net.minecraft.client.gui.Font;
+import org.gtreimagined.gtlib.util.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /*
@@ -14,77 +19,63 @@ import java.util.Objects;
 public class InfoRenderers {
 
 
-    public static final IRecipeInfoRenderer BASIC_RENDERER = new IRecipeInfoRenderer() {
-        @Override
-        public void render(GuiGraphics graphics, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY) {
-            String additional = recipe.getDuration() < 1200 ? "" : recipe.getDuration() < 36000 ? " (" + (recipe.getDuration() / 20.0f) + " secs)" : " (" + (recipe.getDuration() / 1200.0f) + " mins)";
-            String duration = "Duration: " + recipe.getDuration() + " ticks" + additional;
-            renderString(graphics, duration, font, 5, 0, guiOffsetX, guiOffsetY);
+    public static final IRecipeInfoRenderer BASIC_RENDERER = r -> {
+        List<Component> list = new ArrayList<>();
+        if (r.getDuration() == 0) return list;
+        Component additional;
+        if (r.getDuration() < 1200) {
+            additional = Component.empty();
+        } else if (r.getDuration() < 36000) {
+            additional = Utils.translatable("recipe_info.gtlib.duration.seconds", (r.getDuration() / 20.0f));
+        } else {
+            additional = Utils.translatable("recipe_info.gtlib.duration.minutes", (r.getDuration() / 1200.0f));
         }
-
-        @Override
-        public int getRows() {
-            return 1;
-        }
+        list.add(Utils.translatable("recipe_info.gtlib.duration", r.getDuration(), additional));
+        return list;
     };
-    public static final IRecipeInfoRenderer EMPTY_RENDERER = (stack, recipe, fontRenderer, guiOffsetX, guiOffsetY) -> {
+    public static final IRecipeInfoRenderer EMPTY_RENDERER = r -> List.of();
 
-    };
-
-    public static final IRecipeInfoRenderer DEFAULT_RENDERER = new IRecipeInfoRenderer() {
-        public void render(GuiGraphics graphics, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY) {
-            if (recipe.getDuration() == 0 && recipe.getPower() == 0) return;
-            String additional = recipe.getDuration() < 1200 ? "" : recipe.getDuration() < 36000 ? " (" + (recipe.getDuration() / 20.0f) + " secs)" : " (" + (recipe.getDuration() / 1200.0f) + " mins)";
-            String power = "Duration: " + recipe.getDuration() + " ticks" + additional;
-            String euT = "EU/t: " + recipe.getPower();
-            String amps = "Amps: " + recipe.getAmps();
-            String total = "Total: " + recipe.getPower() * recipe.getDuration() + " EU";
-            Tier tier = Tier.getTier((recipe.getPower() / recipe.getAmps()));
-            String formattedText = " (" + tier.getId().toUpperCase() + ")";
-            renderString(graphics, power, font, 5, 0, guiOffsetX, guiOffsetY);
-            renderString(graphics, euT, font, 5, 10, guiOffsetX, guiOffsetY);
-            renderString(graphics, formattedText, font, 5 + stringWidth(euT, font), 10, Tier.EV.getRarityFormatting().getColor(), guiOffsetX, guiOffsetY);
-            renderString(graphics, amps, font, 5, 20, guiOffsetX, guiOffsetY);
-            renderString(graphics, total, font, 5, 30, guiOffsetX, guiOffsetY);
+    public static final IRecipeInfoRenderer DEFAULT_RENDERER = r -> {
+        if (r.getDuration() == 0 && r.getPower() == 0) return List.of();
+        List<Component> list = new ArrayList<>();
+        Component additional;
+        if (r.getDuration() < 1200) {
+            additional = Component.empty();
+        } else if (r.getDuration() < 36000) {
+            additional = Utils.translatable("recipe_info.gtlib.duration.seconds", (r.getDuration() / 20.0f));
+        } else {
+            additional = Utils.translatable("recipe_info.gtlib.duration.minutes", (r.getDuration() / 1200.0f));
         }
-
-        @Override
-        public int getRows() {
-            return 4;
-        }
+        list.add(Utils.translatable("recipe_info.gtlib.duration", r.getDuration(), additional));
+        Tier tier = Tier.getTier((r.getPower() / r.getAmps()));
+        list.add(Utils.translatable("recipe_info.gtlib.eut", r.getPower(), Utils.translatable("recipe_info.gtlib.eut.tier", tier.getId().toUpperCase(Locale.ROOT)).withStyle(tier.getRarityFormatting())));
+        list.add(Utils.translatable("recipe_info.gtlib.amps", r.getAmps()));
+        list.add(Utils.translatable("recipe_info.gtlib.total_eu", r.getDuration() * r.getPower() * r.getAmps()));
+        return list;
     };
 
-    public static final IRecipeInfoRenderer FE_RENDERER = new IRecipeInfoRenderer() {
-        public void render(GuiGraphics graphics, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY) {
-            if (recipe.getDuration() == 0 && recipe.getPower() == 0) return;
-            String additional = recipe.getDuration() < 1200 ? "" : recipe.getDuration() < 36000 ? " (" + (recipe.getDuration() / 20.0f) + " secs)" : " (" + (recipe.getDuration() / 1200.0f) + " mins)";
-            String power = "Duration: " + recipe.getDuration() + " ticks" + additional;
-            String euT = "FE/t: " + recipe.getPower();
-            String total = "Total: " + recipe.getPower() * recipe.getDuration() + " FE";
-            renderString(graphics, power, font, 5, 0, guiOffsetX, guiOffsetY);
-            renderString(graphics, euT, font, 5, 10, guiOffsetX, guiOffsetY);
-            renderString(graphics, total, font, 5, 20, guiOffsetX, guiOffsetY);
+    public static final IRecipeInfoRenderer FE_RENDERER = r ->  {
+        if (r.getDuration() == 0 && r.getPower() == 0) return List.of();
+        List<Component> list = new ArrayList<>();
+        Component additional;
+        if (r.getDuration() < 1200) {
+            additional = Component.empty();
+        } else if (r.getDuration() < 36000) {
+            additional = Utils.translatable("recipe_info.gtlib.duration.seconds", (r.getDuration() / 20.0f));
+        } else {
+            additional = Utils.translatable("recipe_info.gtlib.duration.minutes", (r.getDuration() / 1200.0f));
         }
-
-        @Override
-        public int getRows() {
-            return 3;
-        }
+        list.add(Utils.translatable("recipe_info.gtlib.duration", r.getDuration(), additional));
+        list.add(Utils.translatable("recipe_info.gtlib.fet", r.getPower()));
+        list.add(Utils.translatable("recipe_info.gtlib.total_fe", r.getDuration() * r.getPower()));
+        return list;
     };
 
-    public static final IRecipeInfoRenderer FUEL_RENDERER = new IRecipeInfoRenderer() {
-        @Override
-        public void render(GuiGraphics graphics, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY) {
-            String fuelPerMb = "EU/L: " + ((double) recipe.getPower() / (double) Objects.requireNonNull(recipe.getInputFluids()).get(0).getAmount());
-            String fuelPerB = "Fluid Amount / tick: " + Objects.requireNonNull(recipe.getInputFluids()).get(0).getAmount();
-            renderString(graphics, fuelPerMb, font, 5, 0, guiOffsetX, guiOffsetY);
-            renderString(graphics, fuelPerB, font, 5, 10, guiOffsetX, guiOffsetY);
-        }
-
-        @Override
-        public int getRows() {
-            return 2;
-        }
+    public static final IRecipeInfoRenderer FUEL_RENDERER = r -> {
+        List<Component> list = new ArrayList<>();
+        list.add(Utils.translatable("recipe_info.gtlib.eul", (double) r.getPower() / (double) Objects.requireNonNull(r.getInputFluids()).get(0).getAmount()));
+        list.add(Utils.translatable("recipe_info.gtlib.fluid_per_tick", Objects.requireNonNull(r.getInputFluids()).get(0).getAmount()));
+        return list;
     };
 
 }

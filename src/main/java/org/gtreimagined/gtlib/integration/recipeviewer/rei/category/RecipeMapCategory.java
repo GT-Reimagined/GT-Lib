@@ -73,7 +73,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
 
     @Override
     public int getDisplayHeight() {
-        return gui.getArea().w + 4 + (10 * infoRenderer.getRows());
+        return gui.getArea().w + 4 + (10 * (4));
     }
 
     @Override
@@ -104,9 +104,15 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
             renderProgress(graphics, bounds, progressBar,
                     (float) (System.currentTimeMillis() / finalRecipeMillis % 1.0));
         }));
-        widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-            infoRenderer.render(graphics, display.getRecipe(), Minecraft.getInstance().font, bounds.x + 1, bounds.y + bounds.getHeight() - 3 -(infoRenderer.getRows() * 10));
-        }));
+        List<Component> components = infoRenderer.getLines(display.getRecipe());
+        if (!components.isEmpty()) {
+            widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
+                for (int i = 0; i < components.size(); i++){
+                    int yOffset = bounds.y + bounds.getHeight() - 3 -(components.size() * 10);
+                    graphics.drawString(Minecraft.getInstance().font, components.get(i), bounds.x + 6, (i * 10) + yOffset, 0xFFFFFFF);
+                }
+            }));
+        }
         return widgets;
     }
 

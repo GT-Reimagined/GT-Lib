@@ -39,7 +39,8 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
     int maxProgress = 50;
     public RecipeWidget(IRecipe recipe, IRecipeMap map, GuiProperties gui, Tier guiTier){
         IRecipeInfoRenderer infoRenderer = map.getInfoRenderer();
-        this.size(170, 80 + (infoRenderer.getRows() <= 0 ? 0 : 7 + (10 * infoRenderer.getRows())));
+        List<Component> infoComponents = infoRenderer.getLines(recipe);
+        this.size(170, 80 + (infoComponents.isEmpty() ? 0 : 7 + (10 * infoComponents.size())));
         BarDir direction = gui.getMachineData().getDir();
         UITexture texture = gui.getMachineData().getProgressTexture(guiTier);
         ProgressWidget progressWidget = new ProgressWidget()

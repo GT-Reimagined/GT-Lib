@@ -353,7 +353,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("recipe_info.gtlib.eut", "EU/t: %s%s");
         add("recipe_info.gtlib.eut.tier", " (%s)");
         add("recipe_info.gtlib.amps", "Amps: %s");
+        add("recipe_info.gtlib.total_eu", "Total: %s EU");
         add("recipe_info.gtlib.fet", "FE/t: %s");
+        add("recipe_info.gtlib.total_fe", "Total: %s FE");
+        add("recipe_info.gtlib.eul", "EU/L: %s");
+        add("recipe_info.gtlib.fluid_per_tick", "Fluid Amount / tick: %s");
         add("jei.category.gtlib.veins", "Vein Stats");
         add("jei.category.gtlib.small_ores", "Small Ore Stats");
         add("jei.category.gtlib.stone_veins", "Stone Layer Vein Stats");
