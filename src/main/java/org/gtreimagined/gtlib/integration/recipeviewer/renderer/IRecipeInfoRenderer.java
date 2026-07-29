@@ -2,11 +2,18 @@ package org.gtreimagined.gtlib.integration.recipeviewer.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import net.minecraft.client.gui.Font;
 
+import java.util.List;
+
 public interface IRecipeInfoRenderer {
     void render(GuiGraphics stack, IRecipe recipe, Font font, int guiOffsetX, int guiOffsetY);
+
+    default List<Component> getLines(IRecipe recipe){
+        return List.of();
+    }
 
     default int getRows(){
         return 0;
