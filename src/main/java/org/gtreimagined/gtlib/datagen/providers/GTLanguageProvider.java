@@ -347,6 +347,13 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("gtlib.tooltip.io_widget.item", "Item Auto-Output");
         add("gtlib.behaviour.3x3", "3x3 Mining");
         add("gtlib.behaviour.1x0x2", "1x2 Mining");
+        add("recipe_info.gtlib.duration", "Duration: %s ticks%s");
+        add("recipe_info.gtlib.duration.seconds", " (%s Secs)");
+        add("recipe_info.gtlib.duration.minutes", " (%s Mins)");
+        add("recipe_info.gtlib.eut", "EU/t: %s%s");
+        add("recipe_info.gtlib.eut.tier", " (%s)");
+        add("recipe_info.gtlib.amps", "Amps: %s");
+        add("recipe_info.gtlib.fet", "FE/t: %s");
         add("jei.category.gtlib.veins", "Vein Stats");
         add("jei.category.gtlib.small_ores", "Small Ore Stats");
         add("jei.category.gtlib.stone_veins", "Stone Layer Vein Stats");
