@@ -11,6 +11,7 @@ import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetThemeEntry;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
+import brachy.modularui.widgets.TextWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -185,6 +186,11 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 fluidStackGroup.child(widget);
             }
             this.child(fluidStackGroup);
+        }
+        if (!infoComponents.isEmpty()){
+            for (int i = 0; i < infoComponents.size(); i++) {
+                child(new TextWidget<>(infoComponents.get(i)).pos(5, 87 + (10 * i)));
+            }
         }
     }
 
