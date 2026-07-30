@@ -48,7 +48,7 @@ public class InfoRenderers {
         }
         list.add(Utils.translatable("recipe_info.gtlib.duration", r.getDuration(), additional));
         Tier tier = Tier.getTier((r.getPower() / r.getAmps()));
-        list.add(Utils.translatable("recipe_info.gtlib.eut", r.getPower(), Utils.translatable("recipe_info.gtlib.eut.tier", tier.getId().toUpperCase(Locale.ROOT)).withStyle(tier.getRarityFormatting())));
+        list.add(Utils.translatable("recipe_info.gtlib.eut", r.getPower(), Utils.translatable("recipe_info.gtlib.eut.tier", tier.getId().toUpperCase(Locale.ROOT)).withStyle(Tier.EV.getRarityFormatting())));
         list.add(Utils.translatable("recipe_info.gtlib.amps", r.getAmps()));
         list.add(Utils.translatable("recipe_info.gtlib.total_eu", r.getDuration() * r.getPower() * r.getAmps()));
         return list;
