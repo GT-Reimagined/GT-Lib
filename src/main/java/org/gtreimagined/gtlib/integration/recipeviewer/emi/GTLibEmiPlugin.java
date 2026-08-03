@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.emi;
 
+import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -25,6 +26,7 @@ import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.int4;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,5 +127,10 @@ public class GTLibEmiPlugin implements EmiPlugin {
             renderable = EmiStack.of(item);
         }
         return renderable;
+    }
+
+    public static void showRecipes(ResourceLocation... locations){
+        List<ResourceLocation> locations1 = List.of(locations);
+        EmiApi.getRecipeManager().getCategories().stream().filter(c -> locations1.contains(c.getId())).forEach(EmiApi::displayRecipeCategory);
     }
 }

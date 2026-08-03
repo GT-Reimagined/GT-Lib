@@ -35,6 +35,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.MultiMachineInfoCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.RecipeMapCategory;
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.RecipeMapCategoryMui;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.SmallOreCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.StoneVeinCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.VeinCategory;
@@ -151,7 +152,7 @@ public class GTLibJEIPlugin implements IModPlugin {
             if (!registeredMachineCats.contains(tuple.map.getLoc())) {
                 RecipeType<IRecipe> type = new RecipeType<>(tuple.map.getLoc(), IRecipe.class);
                 RECIPE_TYPES.put(type.getUid().toString(), type);
-                registry.addRecipeCategories(new RecipeMapCategory(tuple.map, type, tuple.gui, tuple.tier, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)));
+                registry.addRecipeCategories(new RecipeMapCategoryMui(tuple.map, type, tuple.gui, tuple.tier, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)));
                 registeredMachineCats.add(tuple.map.getLoc());
                 if (!tuple.map.getSubCategories().isEmpty()){
                     tuple.map.getSubCategories().forEach((s, subCategory) -> {
@@ -160,7 +161,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                             RecipeType<IRecipe> subType = new RecipeType<>(subCategoryId, IRecipe.class);
                             RECIPE_TYPES.put(subType.getUid().toString(), subType);
                             registeredMachineCats.add(subCategoryId);
-                            registry.addRecipeCategories(new RecipeMapCategory(tuple.map, subType, tuple.gui, tuple.tier, subCategoryId, subCategory));
+                            registry.addRecipeCategories(new RecipeMapCategoryMui(tuple.map, subType, tuple.gui, tuple.tier, subCategoryId, subCategory));
                         }
                     });
                 }
