@@ -65,6 +65,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 final int ss = s;
                 RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                         .recipeSlotRole(RecipeSlotRole.INPUT)
+                        .value(ItemStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
                 if (recipe.hasInputItems()){
                     List<Ingredient> inputs = recipe.getInputItems();
@@ -112,6 +113,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 final int ss = s;
                 RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
+                        .value(ItemStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
                 if (recipe.hasOutputItems()){
                     List<ItemStack> outputs = Arrays.stream(recipe.getOutputItems(false)).toList();
@@ -142,6 +144,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 final int ss = s;
                 RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                         .recipeSlotRole(RecipeSlotRole.INPUT)
+                        .value(FluidStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
                 if (recipe.hasInputFluids()){
                     List<FluidIngredient> fluids = recipe.getInputFluids();
@@ -151,11 +154,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                                     createFluidTooltip(r, stack);
                                 })
                                 .value(FluidStackList.of(Arrays.asList(fluids.get(s).getStacks())));
-                    } else {
-                        widget.value(FluidStack.EMPTY);
                     }
-                } else {
-                    widget.value(FluidStack.EMPTY);
                 }
                 fluidStackGroup.child(widget);
             }
@@ -168,6 +167,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 final int ss = s;
                 RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
+                        .value(FluidStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
                 if (recipe.hasOutputFluids()){
                     FluidStack[] fluids = recipe.getOutputFluids();
@@ -177,11 +177,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                                     createFluidTooltip(r, stack);
                                 })
                                 .value(fluids[s]);
-                    } else {
-                        widget.value(FluidStack.EMPTY);
                     }
-                } else {
-                    widget.value(FluidStack.EMPTY);
                 }
                 fluidStackGroup.child(widget);
             }
