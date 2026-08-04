@@ -27,6 +27,7 @@ public class RecipeMapRecipe extends ModularUIEmiRecipe {
         super(id(recipe), () -> new RecipeWidget(recipe, GTAPI.get(RecipeMap.class, recipe.getMapLoc()), gui, guiTier));
         this.category = category;
         this.recipe = recipe;
+        calculateSize();
     }
 
     private static ResourceLocation id(IRecipe recipe){
