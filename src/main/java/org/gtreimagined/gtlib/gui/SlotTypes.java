@@ -1,11 +1,13 @@
 package org.gtreimagined.gtlib.gui;
 
 import brachy.modularui.widgets.slot.ModularSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.FluidHandler;
 import org.gtreimagined.gtlib.capability.FluidHandler.FluidTankType;
+import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.SlotType.ItIn;
@@ -18,19 +20,22 @@ import org.gtreimagined.gtlib.gui.slot.SlotOutput;
 import org.gtreimagined.gtlib.mui.GTGuiTextures;
 import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 
+import java.util.function.BiPredicate;
+
 public class SlotTypes {
+    static final BiPredicate<IGuiHandler, ItemStack> NO_INPUT = (gu, stack) -> false;
     public static SlotType<SlotInput> IT_IN = SlotType.<SlotInput>builder().id("item_in")
             .slotSupplier((type, gui, inv, i, d) -> new SlotInput(type, gui, inv.getOrDefault(type, EmptyHandler.INSTANCE), i))
             .tester(new ItIn()).allowExternalOutput(false).build();
     public static SlotType<SlotOutput> IT_OUT = SlotType.<SlotOutput>builder().id("item_out")
             .slotSupplier((type, gui, inv, i, d) -> new SlotOutput(type, gui, inv.getOrDefault(type, EmptyHandler.INSTANCE), i))
-            .tester(SlotType.NO_INPUT).slotGroup(false).allowExternalInput(false).mayPlace(false).build();
+            .tester(NO_INPUT).slotGroup(false).allowExternalInput(false).mayPlace(false).build();
     public static SlotType<SlotFake> DISPLAY = SlotType.<SlotFake>builder().id("display")
             .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, EmptyHandler.INSTANCE), i, false))
-            .tester(SlotType.NO_INPUT).slotGroup(false).allowExternalInput(false).allowExternalOutput(false).mayPlace(false).mayPickup(false).phantom(true).build();
+            .tester(NO_INPUT).slotGroup(false).allowExternalInput(false).allowExternalOutput(false).mayPlace(false).mayPickup(false).phantom(true).build();
     public static SlotType<SlotFake> DISPLAY_SETTABLE = SlotType.<SlotFake>builder().id("display_settable")
             .slotSupplier((type, gui, item, i, d) -> new SlotFake(type, gui, item.getOrDefault(type, EmptyHandler.INSTANCE), i, true))
-            .tester(SlotType.NO_INPUT).slotGroup(false).allowExternalInput(false).allowExternalOutput(false).phantom(true).build();
+            .tester(NO_INPUT).slotGroup(false).allowExternalInput(false).allowExternalOutput(false).phantom(true).build();
     public static SlotType<AbstractSlot<?>> STORAGE = SlotType.<AbstractSlot<?>>builder().id("storage").slotSupplier((type, gui, item, i, d) -> new AbstractSlot<>(type, gui, item.getOrDefault(type, EmptyHandler.INSTANCE), i))
             .tester((t, i) -> true).build();
     public static SlotType<SlotCell> CELL_IN = SlotType.<SlotCell>builder().id("cell_in").slotSupplier((type, gui, inv, i, d) -> new SlotCell(type, gui, inv.getOrDefault(type, EmptyHandler.INSTANCE), i))

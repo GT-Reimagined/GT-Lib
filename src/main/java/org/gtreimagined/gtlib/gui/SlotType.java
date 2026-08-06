@@ -23,8 +23,6 @@ import java.util.function.Function;
 @Builder
 public class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent {
 
-    static final BiPredicate<IGuiHandler, ItemStack> NO_INPUT = (gu, stack) -> false;
-
     @Getter
     private String id;
     @Getter
