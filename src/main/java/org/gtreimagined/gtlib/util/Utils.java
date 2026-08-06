@@ -1313,7 +1313,7 @@ public class Utils {
      * @return an empty instance of Recipe
      */
     public static IRecipe getEmptyRecipe() {
-        return new Recipe(Collections.emptyList(), new ItemStack[0], Collections.emptyList(), new FluidStack[0], 1, 1, 0, 1);
+        return new Recipe(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), 1, 1, 0, 1);
     }
 
     /**

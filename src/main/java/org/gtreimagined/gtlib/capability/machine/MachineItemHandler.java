@@ -39,6 +39,7 @@ import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -344,6 +345,19 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         if (outputHandler == null || outputs == null || outputs.length == 0) {
             return;
         }
+        addOutputs(Arrays.asList(outputs));
+    }
+
+    /**
+     * Fill the output slots with @outputs items.
+     *
+     * @param outputs the outputs to add.
+     */
+    public void addOutputs(List<ItemStack> outputs) {
+        IItemHandler outputHandler = getOutputHandler();
+        if (outputHandler == null || outputs.isEmpty()) {
+            return;
+        }
         for (ItemStack output : outputs) {
             for (int i = 0; i < outputHandler.getSlots(); i++) {
                 output = insertIntoOutput(outputHandler, i, output.copy(), false);
@@ -359,13 +373,19 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      **/
     public boolean canOutputsFit(ItemStack[] a) {
         if (a == null) return true;
+        return canOutputsFit(Arrays.asList(a));
+    }
+
+
+    public boolean canOutputsFit(List<ItemStack> a) {
+        if (a.isEmpty()) return true;
         IItemHandler outputHandler = getOutputHandler();
-        boolean[] results = new boolean[a.length];
+        boolean[] results = new boolean[a.size()];
         List<Integer> slotsTaken = new ArrayList<>();
-        for (int i = 0; i < a.length; i++) {
+        for (int i = 0; i < a.size(); i++) {
             for (int j = 0; j < outputHandler.getSlots(); j++) {
                 if (slotsTaken.contains(j)) continue;
-                results[i] |= insertIntoOutput(outputHandler, j, a[i], true).isEmpty();
+                results[i] |= insertIntoOutput(outputHandler, j, a.get(i), true).isEmpty();
                 if (results[i]){
                     slotsTaken.add(j);
                     break;
@@ -378,7 +398,6 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             }
         }
         return true;
-        // return getSpaceForOutputs(a) >= a.length;
     }
 
     public int getSpaceForOutputs(ItemStack[] a) {

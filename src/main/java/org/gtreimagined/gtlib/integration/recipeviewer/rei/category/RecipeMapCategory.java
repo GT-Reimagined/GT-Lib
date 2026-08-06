@@ -119,7 +119,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
     private List<Widget> setupSlots(RecipeMapDisplay display, Rectangle bounds){
         List<Widget> widgets = new ArrayList<>();
         List<List<ItemStack>> inputs = display.getRecipe().hasInputItems() ? display.getRecipe().getInputItems().stream().map(t -> Arrays.asList(t.getItems())).toList() : Collections.emptyList();
-        List<ItemStack> outputs = display.getRecipe().hasOutputItems() ? Arrays.stream(display.getRecipe().getOutputItems(false)).toList() : Collections.emptyList();
+        List<ItemStack> outputs = display.getRecipe().getOutputItems(false);
         List<SlotData<?>> slots;
         int inputFluidOffset = 0, outputFluidOffset = 0, slotCount;
         int offsetX = gui.getArea().x - 2, offsetY = gui.getArea().y - 2;
@@ -168,7 +168,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                             drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         }
                     }));
-                    if (outputs.size() > 0){
+                    if (!outputs.isEmpty()){
                         if (s < outputs.size()){
                             Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getOutput(display, s)).disableBackground().markOutput());
@@ -214,7 +214,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
             List<SlotData<?>> finalSlots = slots;
             slotCount = slots.size();
             if (slotCount > 0) {
-                FluidStack[] fluids = display.getRecipe().hasOutputFluids() ? display.getRecipe().getOutputFluids() : null;
+                List<FluidStack> fluids = display.getRecipe().getOutputFluids();
                 for (int s = 0; s < slotCount; s++){
                     int finalSlot = s;
                     widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
@@ -223,8 +223,8 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
                             drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
                         }
                     }));
-                    if (fluids != null && fluids.length > 0){
-                        if (s < fluids.length){
+                    if (!fluids.isEmpty()){
+                        if (s < fluids.size()){
                             Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
                             widgets.add(Widgets.createSlot(point).entries(getOutput(display, s + outputFluidOffset)).disableBackground().markOutput());
                             /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);

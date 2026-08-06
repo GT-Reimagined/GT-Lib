@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -150,6 +151,14 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     }
 
     public int getSpaceForOutputs(FluidStack[] outputs) {
+        return getSpaceForOutputs(Arrays.asList(outputs));
+    }
+
+    public boolean canOutputsFit(List<FluidStack> outputs) {
+        return getSpaceForOutputs(outputs) >= outputs.size();
+    }
+
+    public int getSpaceForOutputs(List<FluidStack> outputs) {
         int matchCount = 0;
         if (getOutputTanks() != null) {
             for (FluidStack output : outputs) {
@@ -163,6 +172,12 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     }
 
     public void addOutputs(FluidStack... fluids) {
+        if (fluids != null) {
+            addOutputs(Arrays.asList(fluids));
+        }
+    }
+
+    public void addOutputs(List<FluidStack> fluids) {
         if (getOutputTanks() == null) {
             return;
         }
