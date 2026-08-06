@@ -98,8 +98,8 @@ public class RecipeMapCategoryMui extends ModularUIRecipeCategory<IRecipe> {
     public void setupRecipeIngredients(IRecipeLayoutBuilder builder, IRecipe recipe, IFocusGroup focuses) {
         super.setupRecipeIngredients(builder, recipe, focuses);
         if (recipe.hasInputItems()) recipe.getInputItems().forEach(i -> builder.addInputSlot().addIngredients(i));
-        if (recipe.hasOutputItems()) Arrays.stream(recipe.getOutputItems(false)).forEach(i -> builder.addOutputSlot().addItemStack(i));
+        if (recipe.hasOutputItems()) recipe.getOutputItems(false).forEach(i -> builder.addOutputSlot().addItemStack(i));
         if (recipe.hasInputFluids()) recipe.getInputFluids().forEach(f -> builder.addInputSlot().addIngredients(ForgeTypes.FLUID_STACK, List.of(f.getStacks())));
-        if (recipe.hasOutputFluids()) Arrays.stream(recipe.getOutputFluids()).forEach(f -> builder.addOutputSlot().addIngredient(ForgeTypes.FLUID_STACK, f));
+        if (recipe.hasOutputFluids()) recipe.getOutputFluids().forEach(f -> builder.addOutputSlot().addIngredient(ForgeTypes.FLUID_STACK, f));
     }
 }
