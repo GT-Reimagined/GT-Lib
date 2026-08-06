@@ -117,7 +117,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                         .value(ItemStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
                 if (recipe.hasOutputItems()){
-                    List<ItemStack> outputs = Arrays.stream(recipe.getOutputItems(false)).toList();
+                    List<ItemStack> outputs = recipe.getOutputItems(false);
                     if (s < outputs.size()) {
                         widget.tooltipBuilder(r -> {
                                     if (recipe.hasOutputChances()) {
@@ -171,13 +171,13 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                         .value(FluidStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
                 if (recipe.hasOutputFluids()){
-                    FluidStack[] fluids = recipe.getOutputFluids();
-                    if (s < fluids.length) {
+                    List<FluidStack> fluids = recipe.getOutputFluids();
+                    if (s < fluids.size()) {
                         widget.tooltipBuilder(r -> {
-                                    FluidStack stack = fluids[ss];
+                                    FluidStack stack = fluids.get(ss);
                                     createFluidTooltip(r, stack);
                                 })
-                                .value(fluids[s]);
+                                .value(fluids.get(s));
                     }
                 }
                 fluidStackGroup.child(widget);
