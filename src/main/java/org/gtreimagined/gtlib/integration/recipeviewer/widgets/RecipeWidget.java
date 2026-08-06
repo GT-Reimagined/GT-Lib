@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.widgets;
 
+import brachy.modularui.ModularUI.Mods;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.drawable.progress.CompositeProgress;
 import brachy.modularui.integration.recipeviewer.RecipeSlotRole;
@@ -149,7 +150,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 if (recipe.hasInputFluids()){
                     List<FluidIngredient> fluids = recipe.getInputFluids();
                     if (s < fluids.size()) {
-                        widget.tooltip(r -> {
+                        widget.tooltipBuilder(r -> {
                                     FluidStack stack = fluids.get(ss).getStacks()[0];
                                     createFluidTooltip(r, stack);
                                 })
@@ -172,7 +173,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 if (recipe.hasOutputFluids()){
                     FluidStack[] fluids = recipe.getOutputFluids();
                     if (s < fluids.length) {
-                        widget.tooltip(r -> {
+                        widget.tooltipBuilder(r -> {
                                     FluidStack stack = fluids[ss];
                                     createFluidTooltip(r, stack);
                                 })
