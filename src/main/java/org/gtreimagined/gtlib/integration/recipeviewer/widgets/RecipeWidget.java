@@ -111,7 +111,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
             if (!slots.isEmpty()) {
                 ParentWidget<?> itemStackGroup = new ParentWidget<>().sizeRel(1f);
-                List<ItemStack> outputs = Arrays.stream(recipe.getOutputItems(false)).toList();
+                List<ItemStack> outputs = recipe.getOutputItems(false);
                 int slotCount = Math.min(slots.size(), outputs.size());
                 for (int s = 0; s < slotCount; s++) {
                     final int ss = s;
@@ -161,18 +161,18 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
             if (!slots.isEmpty()) {
                 ParentWidget<?> fluidStackGroup = new ParentWidget<>().sizeRel(1f);
-                FluidStack[] fluids = recipe.getOutputFluids();
-                int slotCount = Math.min(slots.size(), fluids.length);
+                List<FluidStack> fluids = recipe.getOutputFluids();
+                int slotCount = Math.min(slots.size(), fluids.size());
                 for (int s = 0; s < slotCount; s++) {
                     final int ss = s;
                     RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
                             .recipeSlotRole(RecipeSlotRole.OUTPUT)
                             .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY())
                             .tooltip(r -> {
-                                FluidStack stack = fluids[ss];
+                                FluidStack stack = fluids.get(ss);
                                 createFluidTooltip(r, stack);
                             })
-                            .value(fluids[s]);
+                            .value(fluids.get(s));
                     fluidStackGroup.child(widget);
                 }
                 this.child(fluidStackGroup);

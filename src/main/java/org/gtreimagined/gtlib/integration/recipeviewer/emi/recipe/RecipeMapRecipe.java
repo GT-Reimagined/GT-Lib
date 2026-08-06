@@ -180,7 +180,7 @@ public class RecipeMapRecipe implements EmiRecipe {
                         widgetHolder.addTexture(slots.get(s).getOverlayTexture().location(), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, 0, 0, 18, 18, 18, 18);
                     }
                     if (offsetIndex < outputs.size()){
-                        widgetHolder.addTank(outputs.get(offsetIndex), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, recipe.getOutputFluids()[s].getAmount()).drawBack(false).recipeContext(this);
+                        widgetHolder.addTank(outputs.get(offsetIndex), slots.get(s).getJeiX() - (offsetX), slots.get(s).getJeiY() - (offsetY), 18, 18, recipe.getOutputFluids().get(s).getAmount()).drawBack(false).recipeContext(this);
                     }
                 }
             }
