@@ -26,7 +26,7 @@ public class MachineRecipeSerializer extends GTRecipeSerializer<Recipe> {
         return Recipe.RECIPE_TYPE;
     }
 
-    public Recipe createRecipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidStack[] fluidsOutput, int duration, long power, int special, int amps){
+    public Recipe createRecipe(@NotNull List<Ingredient> stacksInput, List<ItemStack> stacksOutput, @NotNull List<FluidIngredient> fluidsInput, List<FluidStack> fluidsOutput, int duration, long power, int special, int amps){
         return new Recipe(stacksInput, stacksOutput, fluidsInput, fluidsOutput, duration, power, special, amps);
     }
 }

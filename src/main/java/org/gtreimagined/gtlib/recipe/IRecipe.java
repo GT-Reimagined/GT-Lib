@@ -54,16 +54,16 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
 
     List<Ingredient> getInputItems();
 
-    ItemStack[] getOutputItems();
+    List<ItemStack> getOutputItems();
 
-    ItemStack[] getOutputItems(boolean chance);
+    List<ItemStack> getOutputItems(boolean chance);
 
     /**
      * Returns a list of items not bound by chances.
      *
      * @return list of items.
      */
-    ItemStack[] getFlatOutputItems();
+    List<ItemStack> getFlatOutputItems();
 
     //Note: does call get().
     boolean hasSpecialIngredients();
@@ -71,8 +71,7 @@ public interface IRecipe extends net.minecraft.world.item.crafting.Recipe<Contai
     @NotNull
     List<FluidIngredient> getInputFluids();
 
-    @Nullable
-    FluidStack[] getOutputFluids();
+    List<FluidStack> getOutputFluids();
 
     int getDuration();
 

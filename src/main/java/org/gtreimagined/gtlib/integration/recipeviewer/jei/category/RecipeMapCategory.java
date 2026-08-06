@@ -152,7 +152,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, IRecipe recipe, IFocusGroup focuses) {
         List<List<ItemStack>> inputs = recipe.hasInputItems() ? recipe.getInputItems().stream().map(t -> Arrays.asList(t.getItems())).toList() : Collections.emptyList();
-        List<ItemStack> outputs = recipe.hasOutputItems() ? Arrays.stream(recipe.getOutputItems(false)).toList() : Collections.emptyList();
+        List<ItemStack> outputs = recipe.getOutputItems(false);
         List<SlotData<?>> slots;
         int groupIndex = 0, slotCount;
         int offsetX = gui.getArea().x + JEI_OFFSET_X, offsetY = gui.getArea().y + JEI_OFFSET_Y;
@@ -242,15 +242,15 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
-                FluidStack[] fluids = recipe.getOutputFluids();
-                slotCount = Math.min(slotCount, fluids.length);
+                List<FluidStack> fluids = recipe.getOutputFluids();
+                slotCount = Math.min(slotCount, fluids.size());
                 for (int s = 0; s < slotCount; s++) {
                     IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, slots.get(s).getJeiX() - (offsetX - 1), slots.get(s).getJeiY() - (offsetY - 1));
-                    slot.setFluidRenderer(fluids[s].getAmount(), true, 16, 16);
-                    slot.addIngredients(ForgeTypes.FLUID_STACK, Collections.singletonList(fluids[s]));
+                    slot.setFluidRenderer(fluids.get(s).getAmount(), true, 16, 16);
+                    slot.addIngredients(ForgeTypes.FLUID_STACK, Collections.singletonList(fluids.get(s)));
                     int finalS = s;
                     slot.addTooltipCallback((ing, list) -> {
-                        FluidStack stack = fluids[finalS];
+                        FluidStack stack = fluids.get(finalS);
                         createFluidTooltip(ing, list, stack);
                     });
                 }

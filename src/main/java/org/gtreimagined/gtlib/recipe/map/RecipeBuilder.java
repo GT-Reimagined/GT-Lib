@@ -112,9 +112,9 @@ public class RecipeBuilder {
     protected IRecipe buildRecipe(){
         Recipe recipe = new Recipe(
                 ingredientInput,
-                itemsOutput != null ? itemsOutput.toArray(new ItemStack[0]) : null,
+                itemsOutput != null ? itemsOutput : Collections.emptyList(),
                 fluidsInput != null ? fluidsInput : Collections.emptyList(),
-                fluidsOutput != null ? fluidsOutput.toArray(new FluidStack[0]) : null,
+                fluidsOutput != null ? fluidsOutput : Collections.emptyList(),
                 duration, power, special, amps
         );
         if (outputChances != null) recipe.addOutputChances(outputChances);

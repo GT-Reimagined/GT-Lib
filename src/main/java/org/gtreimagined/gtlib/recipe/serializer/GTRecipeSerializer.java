@@ -26,6 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +42,7 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
     @Override
     public abstract RecipeType<T> getRecipeType();
 
-    public abstract T createRecipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidStack[] fluidsOutput, int duration, long power, int special, int amps);
+    public abstract T createRecipe(@NotNull List<Ingredient> stacksInput, List<ItemStack> stacksOutput, @NotNull List<FluidIngredient> fluidsInput, List<FluidStack> fluidsOutput, int duration, long power, int special, int amps);
 
     @Override
     public T fromJson(ResourceLocation recipeId, JsonObject json) {
@@ -57,9 +58,9 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
                     list.add(RecipeIngredient.fromJson(element));
                 }
             }
-            ItemStack[] outputs = null;
+            List<ItemStack> outputs = new ArrayList<>();
             if (json.has("outputItems")) {
-                outputs = Streams.stream(json.getAsJsonArray("outputItems")).map(t -> CraftingHelper.getItemStack(t.getAsJsonObject(), true)).toArray(ItemStack[]::new);
+                outputs = Streams.stream(json.getAsJsonArray("outputItems")).map(t -> CraftingHelper.getItemStack(t.getAsJsonObject(), true)).toList();
             }
             List<FluidIngredient> fluidInputs = new ObjectArrayList<>();
             if (json.has("inputFluids")) {
@@ -68,9 +69,9 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
                     fluidInputs.add(getFluidIngredient(element));
                 }
             }
-            FluidStack[] fluidOutputs = null;
+            List<FluidStack> fluidOutputs = new ArrayList<>();
             if (json.has("outputFluids")) {
-                fluidOutputs = Streams.stream(json.getAsJsonArray("outputFluids")).map(GTRecipeSerializer::getStack).toArray(FluidStack[]::new);
+                fluidOutputs = Streams.stream(json.getAsJsonArray("outputFluids")).map(GTRecipeSerializer::getStack).toList();
             }
             long eut = json.get("eu").getAsLong();
             int duration = json.get("duration").getAsInt();
@@ -159,10 +160,10 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
             }
         }
         size = buffer.readInt();
-        ItemStack[] out = new ItemStack[size];
+        List<ItemStack> out = new ObjectArrayList<>(size);
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                out[i] = buffer.readItem();
+                out.add(buffer.readItem());
             }
         }
         size = buffer.readInt();
@@ -173,10 +174,10 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
             }
         }
         size = buffer.readInt();
-        FluidStack[] outf = new FluidStack[size];
+        List<FluidStack> outf = new ObjectArrayList<>(size);
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                outf[i] = buffer.readFluidStack();
+                outf.add(buffer.readFluidStack());
             }
         }
         size = buffer.readInt();
@@ -209,9 +210,9 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
 
         T r = createRecipe(
                 ings,
-                out.length == 0 ? null : out,
+                out,
                 in,
-                outf.length == 0 ? null : outf,
+                outf,
                 dur,
                 power,
                 special,
@@ -238,17 +239,17 @@ public abstract class GTRecipeSerializer<T extends IRecipe> extends BaseRecipeSe
         if (recipe.hasInputItems()) {
             recipe.getInputItems().forEach(t -> CraftingHelper.write(buffer, t));
         }
-        buffer.writeInt(!recipe.hasOutputItems() ? 0 : recipe.getOutputItems(false).length);
+        buffer.writeInt(!recipe.hasOutputItems() ? 0 : recipe.getOutputItems(false).size());
         if (recipe.hasOutputItems()) {
-            Arrays.stream(recipe.getOutputItems(false)).forEach(buffer::writeItem);
+            recipe.getOutputItems(false).forEach(buffer::writeItem);
         }
         buffer.writeInt(!recipe.hasInputFluids() ? 0 : recipe.getInputFluids().size());
         if (recipe.hasInputFluids()) {
             recipe.getInputFluids().stream().forEach(t -> t.write(buffer));
         }
-        buffer.writeInt(!recipe.hasOutputFluids() ? 0 : recipe.getOutputFluids().length);
+        buffer.writeInt(!recipe.hasOutputFluids() ? 0 : recipe.getOutputFluids().size());
         if (recipe.hasOutputFluids()) {
-            Arrays.stream(recipe.getOutputFluids()).forEach(buffer::writeFluidStack);
+            recipe.getOutputFluids().forEach(buffer::writeFluidStack);
         }
         buffer.writeInt(recipe.hasOutputChances() ? recipe.getOutputChances().length : 0);
         if (recipe.hasOutputChances()) {
