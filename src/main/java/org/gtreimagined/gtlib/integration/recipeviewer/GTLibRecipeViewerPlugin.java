@@ -9,6 +9,7 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.REIUtils;
@@ -34,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static org.gtreimagined.gtlib.gui.SlotType.*;
 import static org.gtreimagined.gtlib.machine.MachineFlag.RECIPE;
 
 public class GTLibRecipeViewerPlugin {
@@ -46,10 +46,10 @@ public class GTLibRecipeViewerPlugin {
     private static final Map<BlockMachine, List<Pattern>> STRUCTURES = new Object2ObjectOpenHashMap<>();
     
     public static final GuiProperties BACKUP_MAP_GUI = new GuiProperties(Ref.ID, "backup_map").setSlots(ISlotProvider.DEFAULT()
-            .add(IT_IN, 17, 16).add(IT_IN, 35, 16).add(IT_IN, 53, 16).add(IT_IN, 17, 34).add(IT_IN, 35, 34)
-            .add(IT_IN, 53, 34).add(IT_OUT, 107, 16).add(IT_OUT, 125, 16).add(IT_OUT, 143, 16).add(IT_OUT, 107, 34)
-            .add(IT_OUT, 125, 34).add(IT_OUT, 143, 34).add(FL_IN, 17, 63).add(FL_IN, 35, 63).add(FL_IN, 53, 63)
-            .add(FL_OUT, 107, 63).add(FL_OUT, 125, 63).add(FL_OUT, 143, 63));
+            .add(SlotTypes.IT_IN, 17, 16).add(SlotTypes.IT_IN, 35, 16).add(SlotTypes.IT_IN, 53, 16).add(SlotTypes.IT_IN, 17, 34).add(SlotTypes.IT_IN, 35, 34)
+            .add(SlotTypes.IT_IN, 53, 34).add(SlotTypes.IT_OUT, 107, 16).add(SlotTypes.IT_OUT, 125, 16).add(SlotTypes.IT_OUT, 143, 16).add(SlotTypes.IT_OUT, 107, 34)
+            .add(SlotTypes.IT_OUT, 125, 34).add(SlotTypes.IT_OUT, 143, 34).add(SlotTypes.FL_IN, 17, 63).add(SlotTypes.FL_IN, 35, 63).add(SlotTypes.FL_IN, 53, 63)
+            .add(SlotTypes.FL_OUT, 107, 63).add(SlotTypes.FL_OUT, 125, 63).add(SlotTypes.FL_OUT, 143, 63));
     public static class RegistryValue {
         public IRecipeMap map;
         public GuiProperties gui;

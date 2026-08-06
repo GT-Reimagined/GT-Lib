@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.capability.fluid.IFluidNode;
-import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
         this.tile = tile;
         this.capacity = capacity;
         if (inputCount > 0) {
-            tanks.put(FluidTankType.INPUT, FluidTanks.create(tile, SlotType.FL_IN, b -> {
+            tanks.put(FluidTankType.INPUT, FluidTanks.create(tile, SlotTypes.FL_IN, b -> {
                 for (int i = 0; i < inputCount; i++) {
                     b.tank(capacity);
                 }
@@ -45,7 +45,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
             }));
         }
         if (outputCount > 0) {
-            tanks.put(FluidTankType.OUTPUT, FluidTanks.create(tile, SlotType.FL_OUT, b -> {
+            tanks.put(FluidTankType.OUTPUT, FluidTanks.create(tile, SlotTypes.FL_OUT, b -> {
                 for (int i = 0; i < outputCount; i++) {
                     b.tank(capacity);
                 }
@@ -53,7 +53,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
             }));
         }
         if (phantomCount > 0){
-            tanks.put(FluidTankType.PHANTOM, FluidTanks.create(tile, SlotType.FL_PHANTOM, b -> {
+            tanks.put(FluidTankType.PHANTOM, FluidTanks.create(tile, SlotTypes.FL_PHANTOM, b -> {
                 for (int i = 0; i < outputCount; i++) {
                     b.tank(1000);
                 }

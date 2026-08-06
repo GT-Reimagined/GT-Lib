@@ -11,20 +11,15 @@ import brachy.modularui.screen.viewport.ModularGuiContext;
 import brachy.modularui.theme.WidgetThemeEntry;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.ProgressWidget;
-import mezz.jei.api.forge.ForgeTypes;
-import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
-import mezz.jei.api.gui.ingredient.IRecipeSlotView;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.renderer.IRecipeInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.mui.BarDir;
@@ -37,7 +32,6 @@ import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.Utils;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class RecipeWidget extends ParentWidget<RecipeWidget> {
@@ -63,7 +57,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
         }
         List<SlotData<?>> slots;
         if (recipe.hasInputItems()){
-            slots = gui.getSlots().getSlots(SlotType.IT_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_IN, guiTier);
             if (!slots.isEmpty()){
                 ParentWidget<?> itemStackGroup = new ParentWidget<>().sizeRel(1f);
                 int s = 0;
@@ -108,7 +102,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
 
 
         if (recipe.hasOutputItems()) {
-            slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_OUT, guiTier);
             if (!slots.isEmpty()) {
                 ParentWidget<?> itemStackGroup = new ParentWidget<>().sizeRel(1f);
                 List<ItemStack> outputs = recipe.getOutputItems(false);
@@ -137,7 +131,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             }
         }
         if (recipe.hasInputFluids()) {
-            slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_IN, guiTier);
             if (!slots.isEmpty()) {
                 ParentWidget<?> fluidStackGroup = new ParentWidget<>().sizeRel(1f);
                 List<FluidIngredient> fluids = recipe.getInputFluids();
@@ -158,7 +152,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             }
         }
         if (recipe.hasOutputFluids()) {
-            slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_OUT, guiTier);
             if (!slots.isEmpty()) {
                 ParentWidget<?> fluidStackGroup = new ParentWidget<>().sizeRel(1f);
                 List<FluidStack> fluids = recipe.getOutputFluids();

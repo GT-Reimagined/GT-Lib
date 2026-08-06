@@ -1,7 +1,6 @@
 package org.gtreimagined.gtlib.gui.slot;
 
 
-import brachy.modularui.drawable.UITexture;
 import brachy.modularui.widgets.slot.ModularSlot;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -10,8 +9,8 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotData.SlotDataBuilder;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.Tier;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -137,7 +136,7 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     default List<SlotData<?>> getRecipeSlots(Tier tier) {
         List<SlotData<?>> slots = tier == null ? getAnySlots() : getSlotLookup().get(tier.getId());
         if (slots == null) slots = getSlotLookup().get("");
-        return slots != null ? slots.stream().filter(s -> s.getType() == SlotType.FL_IN || s.getType() == SlotType.FL_OUT || s.getType() == SlotType.IT_OUT || s.getType() == SlotType.IT_IN).toList() : new ObjectArrayList<>();
+        return slots != null ? slots.stream().filter(s -> s.getType() == SlotTypes.FL_IN || s.getType() == SlotTypes.FL_OUT || s.getType() == SlotTypes.IT_OUT || s.getType() == SlotTypes.IT_IN).toList() : new ObjectArrayList<>();
     }
 
     default List<SlotData<?>> getSlots(SlotType<?> type, Tier tier) {

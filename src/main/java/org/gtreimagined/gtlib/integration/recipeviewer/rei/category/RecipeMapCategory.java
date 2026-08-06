@@ -14,10 +14,10 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.gui.GuiGraphics;
 import org.gtreimagined.gtlib.Data;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.integration.recipeviewer.renderer.IRecipeInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
@@ -119,7 +119,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
         int offsetX = gui.getArea().x - 2, offsetY = gui.getArea().y - 2;
         int inputItems = 0, inputFluids = 0;
         {
-            slots = gui.getSlots().getSlots(SlotType.IT_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_IN, guiTier);
             slotCount = slots.size();
             List<SlotData<?>> finalSlots = slots;
             if (slotCount > 0) {
@@ -150,7 +150,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
             }
         }
         {
-            slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_OUT, guiTier);
             slotCount = slots.size();
             List<SlotData<?>> finalSlots = slots;
             if (slotCount > 0) {
@@ -174,7 +174,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
         }
 
         {
-            slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_IN, guiTier);
             List<SlotData<?>> finalSlots = slots;
             slotCount = slots.size();
             if (slotCount > 0) {
@@ -204,7 +204,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
         }
 
         {
-            slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_OUT, guiTier);
             List<SlotData<?>> finalSlots = slots;
             slotCount = slots.size();
             if (slotCount > 0) {

@@ -19,11 +19,11 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import org.gtreimagined.gtlib.Data;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.integration.recipeviewer.renderer.IRecipeInfoRenderer;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
@@ -158,7 +158,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         int offsetX = gui.getArea().x + JEI_OFFSET_X, offsetY = gui.getArea().y + JEI_OFFSET_Y;
         int inputItems = 0, inputFluids = 0;
         if (recipe.hasInputItems()) {
-            slots = gui.getSlots().getSlots(SlotType.IT_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_IN, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 int s = 0;
@@ -200,7 +200,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             }
         }
         if (recipe.hasOutputItems()) {
-            slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_OUT, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 slotCount = Math.min(slotCount, outputs.size());
@@ -220,7 +220,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         }
 
         if (recipe.hasInputFluids()) {
-            slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_IN, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 List<FluidIngredient> fluids = recipe.getInputFluids();
@@ -239,7 +239,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
             }
         }
         if (recipe.hasOutputFluids()) {
-            slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_OUT, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 List<FluidStack> fluids = recipe.getOutputFluids();
@@ -332,7 +332,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         //Draw chance overlay.
         if (recipe.hasOutputChances()) {
             List<IRecipeSlotView> views = recipeSlotsView.getSlotViews(RecipeIngredientRole.OUTPUT);
-            List<SlotData<?>> slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
+            List<SlotData<?>> slots = gui.getSlots().getSlots(SlotTypes.IT_OUT, guiTier);
             for (int i = 0; i < recipe.getOutputChances().length; i++) {
                 if (recipe.getOutputChances()[i] < 10000) {
                     if (i >= slots.size()) break;
@@ -351,7 +351,7 @@ public class RecipeMapCategory implements IRecipeCategory<IRecipe> {
         }
         if (recipe.hasInputChances()) {
             List<IRecipeSlotView> views = recipeSlotsView.getSlotViews(RecipeIngredientRole.INPUT);
-            List<SlotData<?>> slots = gui.getSlots().getSlots(SlotType.IT_IN, guiTier);
+            List<SlotData<?>> slots = gui.getSlots().getSlots(SlotTypes.IT_IN, guiTier);
             for (int i = 0; i < recipe.getInputChances().length; i++) {
                 if (recipe.getInputChances()[i] < 10000) {
                     if (i >= slots.size()) break;

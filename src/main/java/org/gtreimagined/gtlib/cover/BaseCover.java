@@ -2,7 +2,6 @@ package org.gtreimagined.gtlib.cover;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.Getter;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +17,7 @@ import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.texture.Texture;
@@ -98,14 +98,14 @@ public abstract class BaseCover implements ICover {
             }
             List<SlotData<?>> slots = tier == null ? gui.getSlots().getAnySlots() : gui.getSlots().getSlots(tier);
             Map<SlotType<?>, List<SlotData<?>>> map = slots.stream().collect(Collectors.groupingBy(SlotData::getType));
-            if (map.containsKey(SlotType.FL_IN)){
-                fluidTanks.put(FluidTankType.INPUT, new FluidTanks(map.get(SlotType.FL_IN).size(), 16000));
+            if (map.containsKey(SlotTypes.FL_IN)){
+                fluidTanks.put(FluidTankType.INPUT, new FluidTanks(map.get(SlotTypes.FL_IN).size(), 16000));
             }
-            if (map.containsKey(SlotType.FL_OUT)){
-                fluidTanks.put(FluidTankType.OUTPUT, new FluidTanks(map.get(SlotType.FL_OUT).size(), 16000));
+            if (map.containsKey(SlotTypes.FL_OUT)){
+                fluidTanks.put(FluidTankType.OUTPUT, new FluidTanks(map.get(SlotTypes.FL_OUT).size(), 16000));
             }
-            if (map.containsKey(SlotType.FL_PHANTOM)){
-                fluidTanks.put(FluidTankType.PHANTOM, new FluidTanks(map.get(SlotType.FL_PHANTOM).size(), 1000));
+            if (map.containsKey(SlotTypes.FL_PHANTOM)){
+                fluidTanks.put(FluidTankType.PHANTOM, new FluidTanks(map.get(SlotTypes.FL_PHANTOM).size(), 1000));
             }
             slots.forEach(s ->{
                 for (Map.Entry<SlotType<?>, List<SlotData<?>>> entry : map.entrySet()) {

@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.GTEMIFluidIngredient;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.GTFluidEmiStack;
 import org.gtreimagined.gtlib.machine.Tier;
@@ -97,7 +97,7 @@ public class RecipeMapRecipe implements EmiRecipe {
         int slotCount;
         int offsetX = gui.getArea().x, offsetY = gui.getArea().y;
         if (recipe.hasInputItems()) {
-            slots = gui.getSlots().getSlots(SlotType.IT_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_IN, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 int s = 0;
@@ -133,7 +133,7 @@ public class RecipeMapRecipe implements EmiRecipe {
             }
         }
         if (recipe.hasOutputItems()) {
-            slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.IT_OUT, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 int recipeSlotCount = Math.min(slotCount, fluidOutputOffset);
@@ -153,7 +153,7 @@ public class RecipeMapRecipe implements EmiRecipe {
         }
 
         if (recipe.hasInputFluids()){
-            slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_IN, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {
@@ -170,7 +170,7 @@ public class RecipeMapRecipe implements EmiRecipe {
         }
 
         if (recipe.hasOutputFluids()){
-            slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
+            slots = gui.getSlots().getSlots(SlotTypes.FL_OUT, guiTier);
             slotCount = slots.size();
             if (slotCount > 0) {
                 for (int s = 0; s < slotCount; s++) {

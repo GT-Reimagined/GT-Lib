@@ -8,6 +8,7 @@ import org.gtreimagined.gtlib.capability.fluid.FluidHandlerNullSideWrapper;
 import org.gtreimagined.gtlib.capability.fluid.FluidHandlerSidedWrapper;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.recipe.IRecipe;
@@ -39,8 +40,8 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     private int lastCellSlot = 0;
 
     public MachineFluidHandler(T tile, int capacity) {
-        this(tile, capacity, tile.has(GUI) ? tile.getMachineType().getSlots(SlotType.FL_IN, tile.getMachineTier()).size() : 0,
-                tile.has(GUI) ? tile.getMachineType().getSlots(SlotType.FL_OUT, tile.getMachineTier()).size() : 0, tile.has(GUI) ? tile.getMachineType().getSlots(SlotType.FL_PHANTOM, tile.getMachineTier()).size() : 0);
+        this(tile, capacity, tile.has(GUI) ? tile.getMachineType().getSlots(SlotTypes.FL_IN, tile.getMachineTier()).size() : 0,
+                tile.has(GUI) ? tile.getMachineType().getSlots(SlotTypes.FL_OUT, tile.getMachineTier()).size() : 0, tile.has(GUI) ? tile.getMachineType().getSlots(SlotTypes.FL_PHANTOM, tile.getMachineTier()).size() : 0);
     }
 
     public MachineFluidHandler(T tile, int capacity, int inputCount, int outputCount) {
@@ -126,9 +127,9 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
     public void onMachineEvent(IMachineEvent event, Object... data) {
         super.onMachineEvent(event, data);
         if (event instanceof SlotType<?>) {
-            if (event == SlotType.CELL_IN || event == SlotType.CELL_OUT) {
+            if (event == SlotTypes.CELL_IN || event == SlotTypes.CELL_OUT) {
                 if (data[0] instanceof Integer) tryFillCell((Integer) data[0], -1);
-            } else if (event == SlotType.FL_IN || event == SlotType.FL_OUT) {
+            } else if (event == SlotTypes.FL_IN || event == SlotTypes.FL_OUT) {
                 if (data[0] instanceof Integer integer) tryFillCell(integer, -1);
                 else {
                     for (int i = 0; i < tile.itemHandler.map(MachineItemHandler::getCellCount).orElse(0); i++) {
