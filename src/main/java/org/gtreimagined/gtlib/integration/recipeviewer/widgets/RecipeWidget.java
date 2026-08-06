@@ -207,6 +207,10 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
         if (list.size() > 1) list.remove(1);
 */
         int mb = stack.getAmount();
+        if (Mods.EMI.isLoaded()){
+            richTooltip.replace("mB", t -> null);
+            richTooltip.moveCursorBackward(4);
+        }
         richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
         richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidUtils.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
