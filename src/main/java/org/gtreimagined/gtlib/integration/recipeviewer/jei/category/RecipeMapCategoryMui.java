@@ -2,7 +2,10 @@ package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
 import brachy.modularui.integration.jei.recipe.ModularUIRecipeCategory;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +25,9 @@ import org.gtreimagined.gtlib.recipe.map.SubCategory;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class RecipeMapCategoryMui extends ModularUIRecipeCategory<IRecipe> {
     protected final RecipeType<IRecipe> type;
@@ -76,5 +82,24 @@ public class RecipeMapCategoryMui extends ModularUIRecipeCategory<IRecipe> {
     @Override
     public @Nullable IDrawable getIcon() {
         return icon;
+    }
+
+    @Override
+    public int getMaxHeight() {
+        return 170;
+    }
+
+    @Override
+    public int getMaxWidth() {
+        return 170;
+    }
+
+    @Override
+    public void setupRecipeIngredients(IRecipeLayoutBuilder builder, IRecipe recipe, IFocusGroup focuses) {
+        super.setupRecipeIngredients(builder, recipe, focuses);
+        if (recipe.hasInputItems()) recipe.getInputItems().forEach(i -> builder.addInputSlot().addIngredients(i));
+        if (recipe.hasOutputItems()) Arrays.stream(recipe.getOutputItems(false)).forEach(i -> builder.addOutputSlot().addItemStack(i));
+        if (recipe.hasInputFluids()) recipe.getInputFluids().forEach(f -> builder.addInputSlot().addIngredients(ForgeTypes.FLUID_STACK, List.of(f.getStacks())));
+        if (recipe.hasOutputFluids()) Arrays.stream(recipe.getOutputFluids()).forEach(f -> builder.addOutputSlot().addIngredient(ForgeTypes.FLUID_STACK, f));
     }
 }

@@ -64,7 +64,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             ParentWidget<?> itemStackGroup = new ParentWidget<>().sizeRel(1f);
             for (int s = 0; s < slots.size(); s++) {
                 final int ss = s;
-                RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
+                RecipeViewerSlotWidget<ItemStack, ?> widget = RecipeViewerSlotWidget.create(ItemStack.class)
                         .recipeSlotRole(RecipeSlotRole.INPUT)
                         .value(ItemStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
@@ -112,7 +112,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             ParentWidget<?> itemStackGroup = new ParentWidget<>().sizeRel(1f);
             for (int s = 0; s < slots.size(); s++) {
                 final int ss = s;
-                RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
+                RecipeViewerSlotWidget<ItemStack, ?> widget = RecipeViewerSlotWidget.create(ItemStack.class)
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
                         .value(ItemStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
@@ -143,7 +143,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             ParentWidget<?> fluidStackGroup = new ParentWidget<>().sizeRel(1f);
             for (int s = 0; s < slots.size(); s++) {
                 final int ss = s;
-                RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
+                RecipeViewerSlotWidget<FluidStack, ?> widget = RecipeViewerSlotWidget.create(FluidStack.class)
                         .recipeSlotRole(RecipeSlotRole.INPUT)
                         .value(FluidStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
@@ -166,7 +166,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
             ParentWidget<?> fluidStackGroup = new ParentWidget<>().sizeRel(1f);
             for (int s = 0; s < slots.size(); s++) {
                 final int ss = s;
-                RecipeViewerSlotWidget<?> widget = RecipeViewerSlotWidget.create()
+                RecipeViewerSlotWidget<FluidStack, ?> widget = RecipeViewerSlotWidget.create(FluidStack.class)
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
                         .value(FluidStack.EMPTY)
                         .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
