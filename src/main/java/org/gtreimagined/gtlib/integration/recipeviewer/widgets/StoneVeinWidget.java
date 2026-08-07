@@ -6,55 +6,51 @@ import brachy.modularui.integration.recipeviewer.RecipeViewerSlotWidget;
 import brachy.modularui.integration.recipeviewer.entry.item.ItemStackList;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.TextWidget;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.CHIPPED_GEM;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.CRUSHED_ORE;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.DUST;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.FLAWED_GEM;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.FLAWLESS_GEM;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.GEM;
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.IMPURE_DUST;
 
-public class SmallOreWidget extends ParentWidget<SmallOreWidget> {
-    public SmallOreWidget(SmallOre smallOre){
+public class StoneVeinWidget extends ParentWidget<StoneVeinWidget> {
+    public StoneVeinWidget(StoneVein stoneVein){
         this.size(170, 120);
         ParentWidget<?> itemOutputs = new ParentWidget<>();
+        ResourceLocation id = new ResourceLocation(stoneVein.stoneLayer().getDomain(), stoneVein.stoneLayer().getId() + "_with_" + stoneVein.ore().material().getId());
         this.child(itemOutputs);
-        List<List<ItemStack>> outputs = getOutputs(smallOre);
-        if (!outputs.isEmpty()){
-            itemOutputs.child(RecipeViewerSlotWidget.create(ItemStack.class)
-                    .recipeSlotRole(RecipeSlotRole.OUTPUT).pos(0, 0)
-                    .value(ItemStackList.of(outputs.get(0))).background(IDrawable.NONE));
-            for (int i = 1; i < 9 && i < outputs.size(); i++) {
-                int x = (i - 1) % 4;
-                int y = (i - 1) / 4;
-                itemOutputs.child(RecipeViewerSlotWidget.create(ItemStack.class)
-                        .recipeSlotRole(RecipeSlotRole.OUTPUT).pos(41 + (x * 18), 54 + (y * 18))
-                        .value(ItemStackList.of(outputs.get(i))).background(IDrawable.NONE));
-            }
-
-        }
-        this.child(WidgetUtils.getDimensionsWidget(smallOre.dimensions()));
-        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.vein_name", Utils.lowerUnderscoreToUpperSpaced(smallOre.getId())))
+        ItemStack ore = new ItemStack(ORE.get().get(stoneVein.ore().material(), VanillaStoneTypes.STONE).asItem());
+        ItemStack stone = new ItemStack(stoneVein.stoneLayer().block());
+        itemOutputs.child(RecipeViewerSlotWidget.create(ItemStack.class)
+                .recipeSlotRole(RecipeSlotRole.OUTPUT).pos(0, 0)
+                .value(ore).background(IDrawable.NONE));
+        itemOutputs.child(RecipeViewerSlotWidget.create(ItemStack.class)
+                .recipeSlotRole(RecipeSlotRole.OUTPUT).pos(18, 0)
+                .value(stone).background(IDrawable.NONE));
+        this.child(WidgetUtils.getDimensionsWidget(stoneVein.stoneLayer().dimensions()));
+        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.stone_layer_name", Utils.lowerUnderscoreToUpperSpaced(stoneVein.stoneLayer().getId())))
                 .pos(0, 18));
-        String minY = smallOre.minY() == Integer.MIN_VALUE ? "N/A" : String.valueOf(smallOre.minY());
-        String maxY = smallOre.minY() == Integer.MAX_VALUE ? "N/A" : String.valueOf(smallOre.maxY());
-        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.height_range", minY, maxY))
+        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.stone", Utils.translatable(stoneVein.stoneLayer().block().getDescriptionId())))
                 .pos(0, 28));
-        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.amount_per_chunk", smallOre.amountPerChunk()))
+        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.ore", stoneVein.ore().material().getDisplayName()))
                 .pos(0, 38));
-        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.drops"))
+        DecimalFormat format = new DecimalFormat("###.####");
+        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.stone_layer_chance", format.format(((double) stoneVein.stoneLayer().weight() / stoneVein.totalWeight()) * 100) + "%"))
                 .pos(0, 58));
+        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.height_range", stoneVein.ore().minY(), stoneVein.ore().maxY()))
+                .pos(0, 68));
+        this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.stone_layer.ore_chance", format.format(((double)stoneVein.ore().chance() / Ref.U) * 100) + "%"))
+                .pos(0, 78));
         this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.dimensions"))
                 .pos(0, 88));
     }

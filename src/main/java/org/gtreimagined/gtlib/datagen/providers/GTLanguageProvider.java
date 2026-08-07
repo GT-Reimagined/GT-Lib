@@ -359,6 +359,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("recipe_info.gtlib.eul", "EU/L: %s");
         add("recipe_info.gtlib.fluid_per_tick", "Fluid Amount / tick: %s");
         add("recipe_info.gtlib.worldgen.vein_name", "Vein name: %s");
+        add("recipe_info.gtlib.worldgen.stone_layer_name", "Stone Layer name: %s");
+        add("recipe_info.gtlib.worldgen.stone", "Stone: %s");
+        add("recipe_info.gtlib.worldgen.ore", "Ore: %s");
+        add("recipe_info.gtlib.worldgen.stone_layer_chance", "StoneLayerChance: %s");
+        add("recipe_info.gtlib.worldgen.stone_layer.ore_chance", "Ore Chance per stone: %s");
         add("recipe_info.gtlib.worldgen.height_range", "MinY: %s MaxY: %s");
         add("recipe_info.gtlib.worldgen.amount_per_chunk", "Amount per Chunk: %s");
         add("recipe_info.gtlib.worldgen.drops", "Drops:");

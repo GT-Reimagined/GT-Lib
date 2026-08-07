@@ -42,18 +42,18 @@ public class WidgetUtils {
         return markerItems;
     }
 
-    static IWidget getDimensionsWidget(SmallOre smallOre){
+    static IWidget getDimensionsWidget(List<ResourceKey<Level>> dimensions){
 
-        List<ItemStack> dimensions = WidgetUtils.getDimensionSlotItems(smallOre.dimensions());
+        List<ItemStack> stacks = WidgetUtils.getDimensionSlotItems(dimensions);
         ParentWidget<?> dimensionGroup = new ParentWidget<>();
-        if (!dimensions.isEmpty()){
-            if (dimensions.size() < 10){
-                for (int i = 0; i < 9 && i < dimensions.size(); i++){
+        if (!stacks.isEmpty()){
+            if (stacks.size() < 10){
+                for (int i = 0; i < 9 && i < stacks.size(); i++){
                     int y = i / 9;
                     int x = i % 9;
                     dimensionGroup.child(RecipeViewerSlotWidget.create(ItemStack.class)
                             .recipeSlotRole(RecipeSlotRole.INPUT).pos((x * 18), 101 + (y * 18))
-                            .value(dimensions.get(i)).background(IDrawable.NONE));
+                            .value(stacks.get(i)).background(IDrawable.NONE));
                 }
             } else {
                 //TODO: Scrolling dimension markers
