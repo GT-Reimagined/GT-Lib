@@ -1,38 +1,21 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
-import brachy.modularui.drawable.GuiTextures;
 import brachy.modularui.integration.jei.recipe.ModularUIRecipeCategory;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.widgets.SmallOreWidget;
 import org.gtreimagined.gtlib.integration.recipeviewer.widgets.WidgetUtils;
-import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
-import static org.gtreimagined.gtlib.integration.recipeviewer.jei.category.RecipeMapCategory.JEI_OFFSET_X;
-import static org.gtreimagined.gtlib.integration.recipeviewer.jei.category.RecipeMapCategory.JEI_OFFSET_Y;
 
 public class SmallOreCategory extends ModularUIRecipeCategory<SmallOre> {
     IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
