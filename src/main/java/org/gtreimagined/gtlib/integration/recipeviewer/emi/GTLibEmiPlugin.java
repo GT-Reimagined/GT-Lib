@@ -20,10 +20,12 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.RecipeMapRecipe;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.SmallOreRecipe;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.int4;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,6 +109,7 @@ public class GTLibEmiPlugin implements EmiPlugin {
                 }
             }
         });
+        SmallOreData.INSTANCE.getVeins().forEach((r, s) -> emiRegistry.addRecipe(new SmallOreRecipe(s)));
     }
 
     private EmiRenderable createIcon(Object icon, ResourceLocation iconId){

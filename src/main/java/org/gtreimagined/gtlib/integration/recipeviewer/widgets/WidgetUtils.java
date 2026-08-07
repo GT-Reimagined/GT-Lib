@@ -1,0 +1,64 @@
+package org.gtreimagined.gtlib.integration.recipeviewer.widgets;
+
+import brachy.modularui.api.drawable.IDrawable;
+import brachy.modularui.api.widget.IWidget;
+import brachy.modularui.integration.recipeviewer.RecipeSlotRole;
+import brachy.modularui.integration.recipeviewer.RecipeViewerSlotWidget;
+import brachy.modularui.widget.ParentWidget;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import org.gtreimagined.gtlib.GTAPI;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.block.BlockDimensionMarker;
+import org.gtreimagined.gtlib.util.Utils;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class WidgetUtils {
+
+    public static List<ItemStack> getDimensionSlotItems(List<ResourceKey<Level>> dimensions){
+        List<Block> markers = new ArrayList<>();
+        List<ItemStack> markerItems = new ArrayList<>();
+        for (ResourceLocation dimension : dimensions.stream().map(ResourceKey::location).toList()) {
+            Block dimensionMarker = GTAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
+            ItemStack world;
+            if (dimensionMarker != null){
+                if (markers.contains(dimensionMarker)) {
+                    continue;
+                }
+                markers.add(dimensionMarker);
+                world = new ItemStack(dimensionMarker);
+            } else {
+                world = new ItemStack(Items.BARRIER).setHoverName(Utils.literal(dimension.toString()));
+            }
+            markerItems.add(world);
+        }
+        return markerItems;
+    }
+
+    static IWidget getDimensionsWidget(SmallOre smallOre){
+
+        List<ItemStack> dimensions = WidgetUtils.getDimensionSlotItems(smallOre.dimensions());
+        ParentWidget<?> dimensionGroup = new ParentWidget<>();
+        if (!dimensions.isEmpty()){
+            if (dimensions.size() < 10){
+                for (int i = 0; i < 9 && i < dimensions.size(); i++){
+                    int y = i / 9;
+                    int x = i % 9;
+                    dimensionGroup.child(RecipeViewerSlotWidget.create(ItemStack.class)
+                            .recipeSlotRole(RecipeSlotRole.INPUT).pos((x * 18), 101 + (y * 18))
+                            .value(dimensions.get(i)).background(IDrawable.NONE));
+                }
+            } else {
+                //TODO: Scrolling dimension markers
+            }
+        }
+        return dimensionGroup;
+    }
+}

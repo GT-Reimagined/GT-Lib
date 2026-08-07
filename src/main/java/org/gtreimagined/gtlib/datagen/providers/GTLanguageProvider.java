@@ -358,9 +358,17 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("recipe_info.gtlib.total_fe", "Total: %s FE");
         add("recipe_info.gtlib.eul", "EU/L: %s");
         add("recipe_info.gtlib.fluid_per_tick", "Fluid Amount / tick: %s");
+        add("recipe_info.gtlib.worldgen.vein_name", "Vein name: %s");
+        add("recipe_info.gtlib.worldgen.height_range", "MinY: %s MaxY: %s");
+        add("recipe_info.gtlib.worldgen.amount_per_chunk", "Amount per Chunk: %s");
+        add("recipe_info.gtlib.worldgen.drops", "Drops:");
+        add("recipe_info.gtlib.worldgen.dimensions", "Generated worlds:");
         add("jei.category.gtlib.veins", "Vein Stats");
         add("jei.category.gtlib.small_ores", "Small Ore Stats");
         add("jei.category.gtlib.stone_veins", "Stone Layer Vein Stats");
+        add("emi.category.gtlib.veins", "Vein Stats");
+        add("emi.category.gtlib.small_ores", "Small Ore Stats");
+        add("emi.category.gtlib.stone_veins", "Stone Layer Vein Stats");
         add("config.jade.plugin_gtlib.eu_hu", "EU and HU Plugin for GT Lib");
         add("config.jade.plugin_gtlib.machine", "Machine Plugin for GT Lib");
     }
