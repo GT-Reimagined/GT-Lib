@@ -41,13 +41,11 @@ public class RecipeMapCategory extends ModularUIJeiCategory<IRecipe> {
 
     public RecipeMapCategory(IRecipeMap map, RecipeType<IRecipe> type, GuiProperties gui, Tier defaultTier, ResourceLocation iconId){
         this(map, type, gui, defaultTier);
-        title = map.getDisplayName();
         initIcon(map.getIcon(), iconId);
     }
 
     public RecipeMapCategory(IRecipeMap map, RecipeType<IRecipe> type, GuiProperties gui, Tier defaultTier, ResourceLocation subCategoryId, SubCategory subCategory){
         this(map, type, gui, defaultTier);
-        title = Utils.translatable(subCategory.langKey());
         initIcon(subCategory.icon().get(), null);
     }
 
@@ -73,11 +71,6 @@ public class RecipeMapCategory extends ModularUIJeiCategory<IRecipe> {
     @Override
     public RecipeType<IRecipe> getRecipeType() {
         return type;
-    }
-
-    @Override
-    public Component getTitle() {
-        return title;
     }
 
     @Override

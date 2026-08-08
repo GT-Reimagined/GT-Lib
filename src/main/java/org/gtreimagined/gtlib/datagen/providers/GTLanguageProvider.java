@@ -39,6 +39,7 @@ import org.gtreimagined.gtlib.pipe.BlockItemPipe;
 import org.gtreimagined.gtlib.pipe.BlockPipe;
 import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
+import org.gtreimagined.gtlib.recipe.map.SubCategory;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.tool.IGTArmor;
 import org.gtreimagined.gtlib.tool.IGTTool;
@@ -277,10 +278,13 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
             customTranslations();
             pipeTranslations();
             GTAPI.all(RecipeMap.class, t -> {
-                String id = "jei.category." + t.getId();
-                String emiID = "emi.category." + t.getLoc().toLanguageKey();
+                String id = "gui.recipeviewer.category." + t.getLoc().toLanguageKey();
                 add(id, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
-                add(emiID, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
+                for (Object object : t.getSubCategories().values()){
+                    SubCategory subCategory = (SubCategory) object;
+                    String id2 = "gui.recipeviewer.category." + t.getDomain() + "." + subCategory.langKey();
+                    add(id2, Utils.lowerUnderscoreToUpperSpaced(subCategory.langKey()));
+                }
             });
         }
     }
@@ -373,12 +377,9 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("recipe_info.gtlib.wordlgen.sporadic", "Sporadic: %s Ore");
         add("recipe_info.gtlib.worldgen.weight", "Weight: %s");
         add("recipe_info.gtlib.worldgen.dimensions", "Generated worlds:");
-        add("jei.category.gtlib.veins", "Vein Stats");
-        add("jei.category.gtlib.small_ores", "Small Ore Stats");
-        add("jei.category.gtlib.stone_veins", "Stone Layer Vein Stats");
-        add("emi.category.gtlib.veins", "Vein Stats");
-        add("emi.category.gtlib.small_ores", "Small Ore Stats");
-        add("emi.category.gtlib.stone_veins", "Stone Layer Vein Stats");
+        add("gui.recipeviewer.category.gtlib.veins", "Vein Stats");
+        add("gui.recipeviewer.category.gtlib.small_ores", "Small Ore Stats");
+        add("gui.recipeviewer.category.gtlib.stone_veins", "Stone Layer Vein Stats");
         add("config.jade.plugin_gtlib.eu_hu", "EU and HU Plugin for GT Lib");
         add("config.jade.plugin_gtlib.machine", "Machine Plugin for GT Lib");
     }

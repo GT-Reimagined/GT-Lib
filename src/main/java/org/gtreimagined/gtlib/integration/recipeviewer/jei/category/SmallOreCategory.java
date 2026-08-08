@@ -6,7 +6,6 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,7 +13,6 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.widgets.SmallOreWidget;
 import org.gtreimagined.gtlib.integration.recipeviewer.widgets.WidgetUtils;
-import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 
 public class SmallOreCategory extends ModularUIJeiCategory<SmallOre> {
@@ -22,11 +20,6 @@ public class SmallOreCategory extends ModularUIJeiCategory<SmallOre> {
     public static final RecipeType<SmallOre> SMALL_ORES = new RecipeType<>(new ResourceLocation(Ref.ID, "small_ores"), SmallOre.class);
     public SmallOreCategory() {
         super(SmallOreWidget::new, SmallOre::id);
-    }
-
-    @Override
-    public Component getTitle() {
-        return Utils.translatable("jei.category.gtlib.small_ores");
     }
 
     @Override

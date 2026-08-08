@@ -155,7 +155,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 registeredMachineCats.add(tuple.map.getLoc());
                 if (!tuple.map.getSubCategories().isEmpty()){
                     tuple.map.getSubCategories().forEach((s, subCategory) -> {
-                        ResourceLocation subCategoryId = new ResourceLocation(Ref.SHARED_ID, s);
+                        ResourceLocation subCategoryId = new ResourceLocation(tuple.map.getDomain(), s);
                         if (!registeredMachineCats.contains(subCategoryId)) {
                             RecipeType<IRecipe> subType = new RecipeType<>(subCategoryId, IRecipe.class);
                             RECIPE_TYPES.put(subType.getUid().toString(), subType);
@@ -275,7 +275,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 if (item == Items.AIR) return;
                 registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(tuple.map.getLoc().toString()));
                 if (!tuple.map.getSubCategories().isEmpty()){
-                    tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(new ResourceLocation(Ref.SHARED_ID, s1).toString())));
+                    tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(new ResourceLocation(tuple.map.getDomain(), s1).toString())));
                 }
             });
         });
