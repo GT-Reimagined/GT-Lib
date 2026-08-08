@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
-import brachy.modularui.integration.jei.recipe.ModularUIRecipeCategory;
+import brachy.modularui.integration.jei.recipe.ModularUIJeiCategory;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -17,7 +17,7 @@ import org.gtreimagined.gtlib.integration.recipeviewer.widgets.WidgetUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 
-public class SmallOreCategory extends ModularUIRecipeCategory<SmallOre> {
+public class SmallOreCategory extends ModularUIJeiCategory<SmallOre> {
     IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
     public static final RecipeType<SmallOre> SMALL_ORES = new RecipeType<>(new ResourceLocation(Ref.ID, "small_ores"), SmallOre.class);
     public SmallOreCategory() {
@@ -41,7 +41,6 @@ public class SmallOreCategory extends ModularUIRecipeCategory<SmallOre> {
 
     @Override
     public void setupRecipeIngredients(IRecipeLayoutBuilder builder, SmallOre recipe, IFocusGroup focuses) {
-        super.setupRecipeIngredients(builder, recipe, focuses);
         for (var list : SmallOreWidget.getOutputs(recipe)){
             builder.addOutputSlot().addItemStacks(list);
         }

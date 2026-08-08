@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.jei.category;
 
-import brachy.modularui.integration.jei.recipe.ModularUIRecipeCategory;
+import brachy.modularui.integration.jei.recipe.ModularUIJeiCategory;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RecipeMapCategory extends ModularUIRecipeCategory<IRecipe> {
+public class RecipeMapCategory extends ModularUIJeiCategory<IRecipe> {
     protected static int JEI_OFFSET_X = 1;
     protected static int JEI_OFFSET_Y = 1;
     protected final RecipeType<IRecipe> type;
@@ -97,7 +97,6 @@ public class RecipeMapCategory extends ModularUIRecipeCategory<IRecipe> {
 
     @Override
     public void setupRecipeIngredients(IRecipeLayoutBuilder builder, IRecipe recipe, IFocusGroup focuses) {
-        super.setupRecipeIngredients(builder, recipe, focuses);
         if (recipe.hasInputItems()) recipe.getInputItems().forEach(i -> builder.addInputSlot().addIngredients(i));
         if (recipe.hasOutputItems()) recipe.getOutputItems(false).forEach(i -> builder.addOutputSlot().addItemStack(i));
         if (recipe.hasInputFluids()) recipe.getInputFluids().forEach(f -> builder.addInputSlot().addIngredients(ForgeTypes.FLUID_STACK, List.of(f.getStacks())));
