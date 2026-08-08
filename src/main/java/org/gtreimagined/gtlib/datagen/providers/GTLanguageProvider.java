@@ -367,6 +367,11 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("recipe_info.gtlib.worldgen.height_range", "MinY: %s MaxY: %s");
         add("recipe_info.gtlib.worldgen.amount_per_chunk", "Amount per Chunk: %s");
         add("recipe_info.gtlib.worldgen.drops", "Drops:");
+        add("recipe_info.gtlib.wordlgen.primary", "Primary: %s Ore");
+        add("recipe_info.gtlib.wordlgen.scondary", "Secondary: %s Ore");
+        add("recipe_info.gtlib.wordlgen.between", "Between: %s Ore");
+        add("recipe_info.gtlib.wordlgen.sporadic", "Sporadic: %s Ore");
+        add("recipe_info.gtlib.worldgen.weight", "Weight: %s");
         add("recipe_info.gtlib.worldgen.dimensions", "Generated worlds:");
         add("jei.category.gtlib.veins", "Vein Stats");
         add("jei.category.gtlib.small_ores", "Small Ore Stats");
