@@ -8,6 +8,8 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,13 +21,19 @@ import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.RecipeMapRecipe;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.SmallOreRecipe;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.StoneVeinRecipe;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.VeinRecipe;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.int4;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,6 +118,19 @@ public class GTLibEmiPlugin implements EmiPlugin {
             }
         });
         SmallOreData.INSTANCE.getVeins().forEach((r, s) -> emiRegistry.addRecipe(new SmallOreRecipe(s)));
+        VeinData.INSTANCE.getVeins().forEach((r, s) -> emiRegistry.addRecipe(new VeinRecipe(s)));
+        Object2IntMap<StoneType> veinTotalWeights = new Object2IntOpenHashMap<>();
+        StoneLayerData.INSTANCE.getVeins().forEach((r, l) -> {
+            if (l.type() == null) return;
+            int currentWeight = veinTotalWeights.getOrDefault(l.type(), 0);
+            veinTotalWeights.put(l.type(), currentWeight + l.weight());
+        });
+        StoneLayerData.INSTANCE.getVeins().forEach((r, v) -> {
+            if (!veinTotalWeights.containsKey(v.type())) return;
+            v.ores().forEach(o -> {
+                emiRegistry.addRecipe(new StoneVeinRecipe(new StoneVein(v, o, veinTotalWeights.getOrDefault(v.type(), 0))));
+            });
+        });
     }
 
     private EmiRenderable createIcon(Object icon, ResourceLocation iconId){
