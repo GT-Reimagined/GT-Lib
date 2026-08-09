@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,12 +116,12 @@ public class GTLibRecipeViewerPlugin {
         }
     }
 
-    public static void registerPatternForJei(BasicMultiMachine<?> machine, List<Pattern> patternList){
+    public static void registerPatternForPreview(BasicMultiMachine<?> machine, List<Pattern> patternList){
         machine.getTiers().forEach(t -> {
-            registerPatternForJei(machine, t, patternList);
+            registerPatternForPreview(machine, t, patternList);
         });
     }
-    public static void registerPatternForJei(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
+    public static void registerPatternForPreview(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
         STRUCTURES.put(machine.getBlockState(tier), patternList);
     }
 
