@@ -277,14 +277,13 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
             });
             customTranslations();
             pipeTranslations();
-            GTAPI.all(RecipeMap.class, t -> {
+            GTAPI.all((Class<RecipeMap<?>>)(Class<?>) RecipeMap.class, t -> {
                 String id = "gui.recipeviewer.category." + t.getLoc().toLanguageKey();
                 add(id, Utils.lowerUnderscoreToUpperSpaced(t.getId().replace('.', '_'), 0));
-                for (Object object : t.getSubCategories().values()){
-                    SubCategory subCategory = (SubCategory) object;
-                    String id2 = "gui.recipeviewer.category." + t.getDomain() + "." + subCategory.langKey();
-                    add(id2, Utils.lowerUnderscoreToUpperSpaced(subCategory.langKey()));
-                }
+                t.getSubCategories().keySet().forEach(s -> {
+                    String id2 = "gui.recipeviewer.category." + t.getDomain() + "." + s;
+                    add(id2, Utils.lowerUnderscoreToUpperSpaced(s));
+                });
             });
         }
     }

@@ -70,10 +70,10 @@ public class GTLibEmiPlugin implements EmiPlugin {
             Map<String, EmiRecipeCategory> subCategories = new HashMap<>();
             if (!tuple.map.getSubCategories().isEmpty()){
                 tuple.map.getSubCategories().forEach((s, subCategory) -> {
-                    ResourceLocation subCategoryId = new ResourceLocation(Ref.SHARED_ID, s);
+                    ResourceLocation subCategoryId = new ResourceLocation(tuple.map.getDomain(), s);
                     EmiRecipeCategory subEmiCategory = new ModularUIEmiCategory(subCategoryId,
                             createIcon(subCategory.icon().get(), null));
-                    subCategories.put(s, subEmiCategory);
+                    subCategories.put(subCategoryId.toString(), subEmiCategory);
                     emiRegistry.addCategory(subEmiCategory);
                 });
             }
@@ -111,7 +111,7 @@ public class GTLibEmiPlugin implements EmiPlugin {
                     emiRegistry.addRecipe(new RecipeMapRecipe(mainCategory, r, gui, tier));
                 });
                 for (var entry : recipeMap.entrySet()) {
-                    EmiRecipeCategory recipeCategory = subCategories.get(entry.getKey());
+                    EmiRecipeCategory recipeCategory = subCategories.get(tuple.map.getDomain() + ":" + entry.getKey());
                     entry.getValue().forEach(r -> {
                         emiRegistry.addRecipe(new RecipeMapRecipe(recipeCategory, r, gui, tier));
                     });
