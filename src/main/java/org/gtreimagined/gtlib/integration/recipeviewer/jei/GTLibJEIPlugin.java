@@ -288,34 +288,11 @@ public class GTLibJEIPlugin implements IModPlugin {
         });
     }
 
-
-    public static void addDimensionSlots(IRecipeLayoutBuilder builder, List<ResourceKey<Level>> dimensions) {
-        int i = 0;
-        List<Block> markers = new ArrayList<>();
-        for (ResourceLocation dimension : dimensions.stream().map(ResourceKey::location).toList()) {
-            int y = i / 9;
-            int x = i % 9;
-            Block dimensionMarker = GTAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
-            ItemStack world;
-            if (dimensionMarker != null){
-                if (markers.contains(dimensionMarker)) {
-                    continue;
-                }
-                markers.add(dimensionMarker);
-                world = new ItemStack(dimensionMarker);
-            } else {
-                world = new ItemStack(Items.BARRIER).setHoverName(Utils.literal(dimension.toString()));
-            }
-            builder.addSlot(RecipeIngredientRole.INPUT, 1 + (x * 18), 102 + (y * 18)).addIngredients(VanillaTypes.ITEM_STACK, List.of(world));
-            i++;
-        }
-    }
-
     public static void uses(FluidStack val, boolean USE) {
         GTLibJEIPlugin.getRuntime().getRecipesGui().show(new IFocus<FluidStack>() {
             @Override
             public ITypedIngredient<FluidStack> getTypedValue() {
-                return new ITypedIngredient<>() {
+                return new ITypedIngredient<>() {e
                     @Override
                     public IIngredientType<FluidStack> getType() {
                         return ForgeTypes.FLUID_STACK;
