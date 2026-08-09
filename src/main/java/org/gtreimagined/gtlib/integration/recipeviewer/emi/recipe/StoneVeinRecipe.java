@@ -21,7 +21,7 @@ public class StoneVeinRecipe extends ModularUIEmiRecipe {
     static final EmiRecipeCategory CATEGORY = new EmiRecipeCategory(new ResourceLocation(Ref.ID, "stone_veins"), EmiStack.of(Items.IRON_ORE));
 
     public StoneVeinRecipe(StoneVein stoneVein) {
-        super(StoneVeinWidget.id(stoneVein, true), () -> new StoneVeinWidget(stoneVein));
+        super(StoneVeinWidget.id(stoneVein), () -> new StoneVeinWidget(stoneVein));
         inputs = WidgetUtils.getDimensionSlotItems(stoneVein.stoneLayer().dimensions()).stream().map(EmiStack::of).map(e -> (EmiIngredient)e).toList();
         outputs = StoneVeinWidget.getOutputs(stoneVein).stream().map(EmiStack::of).toList();
         calculateSize();

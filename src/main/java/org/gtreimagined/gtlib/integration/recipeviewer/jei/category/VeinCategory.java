@@ -19,7 +19,7 @@ public class VeinCategory extends ModularUIJeiCategory<Vein> {
     IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
     public static final RecipeType<Vein> VEINS = new RecipeType<>(new ResourceLocation(Ref.ID, "veins"), Vein.class);
     public VeinCategory() {
-        super(VeinWidget::new, Vein::id);
+        super(VeinWidget::new, VeinWidget::id);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class SmallOreRecipe extends ModularUIEmiRecipe {
     static final EmiRecipeCategory CATEGORY = new EmiRecipeCategory(new ResourceLocation(Ref.ID, "small_ores"), EmiStack.of(Items.IRON_ORE));
 
     public SmallOreRecipe(SmallOre smallOre) {
-        super(new ResourceLocation(smallOre.getDomain(), "/" + smallOre.getId()), () -> new SmallOreWidget(smallOre));
+        super(SmallOreWidget.id(smallOre), () -> new SmallOreWidget(smallOre));
         inputs = WidgetUtils.getDimensionSlotItems(smallOre.dimensions()).stream().map(EmiStack::of).map(e -> (EmiIngredient)e).toList();
         outputs = SmallOreWidget.getOutputs(smallOre).stream().flatMap(l -> l.stream().map(EmiStack::of)).toList();
         calculateSize();

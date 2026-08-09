@@ -23,7 +23,7 @@ public class StoneVeinCategory extends ModularUIJeiCategory<StoneVein> {
     IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
     public static final RecipeType<StoneVein> STONE_VEINS = new RecipeType<>(new ResourceLocation(Ref.ID, "stone_veins"), StoneVein.class);
     public StoneVeinCategory() {
-        super(StoneVeinWidget::new, r -> StoneVeinWidget.id(r, false));
+        super(StoneVeinWidget::new, StoneVeinWidget::id);
     }
 
     @Override

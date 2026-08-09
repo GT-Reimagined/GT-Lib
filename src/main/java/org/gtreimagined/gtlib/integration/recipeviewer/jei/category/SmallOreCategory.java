@@ -19,7 +19,7 @@ public class SmallOreCategory extends ModularUIJeiCategory<SmallOre> {
     IDrawable icon = GTLibJEIPlugin.guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Items.IRON_ORE.getDefaultInstance());
     public static final RecipeType<SmallOre> SMALL_ORES = new RecipeType<>(new ResourceLocation(Ref.ID, "small_ores"), SmallOre.class);
     public SmallOreCategory() {
-        super(SmallOreWidget::new, SmallOre::id);
+        super(SmallOreWidget::new, SmallOreWidget::id);
     }
 
     @Override

@@ -1,17 +1,20 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.widgets;
 
+import brachy.modularui.ModularUI.Mods;
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.integration.recipeviewer.RecipeSlotRole;
 import brachy.modularui.integration.recipeviewer.RecipeViewerSlotWidget;
 import brachy.modularui.integration.recipeviewer.entry.item.ItemStackList;
 import brachy.modularui.widget.ParentWidget;
 import brachy.modularui.widgets.TextWidget;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.util.Utils;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import org.gtreimagined.gtlib.worldgen.vein.Vein;
 
 import java.util.ArrayList;
@@ -67,5 +70,10 @@ public class VeinWidget extends ParentWidget<VeinWidget> {
                             .map(ItemStack::new).toList());
         }
         return list;
+    }
+
+    public static ResourceLocation id(Vein vein){
+        String slash = Mods.EMI.isLoaded() ? "/" : "";
+        return new ResourceLocation(vein.getDomain(), slash + "veins/" + vein.getId());
     }
 }

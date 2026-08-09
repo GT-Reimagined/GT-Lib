@@ -21,7 +21,7 @@ public class VeinRecipe extends ModularUIEmiRecipe {
     static final EmiRecipeCategory CATEGORY = new EmiRecipeCategory(new ResourceLocation(Ref.ID, "veins"), EmiStack.of(Items.IRON_ORE));
 
     public VeinRecipe(Vein vein) {
-        super(new ResourceLocation(vein.getDomain(), "/" + vein.getId()), () -> new VeinWidget(vein));
+        super(VeinWidget.id(vein), () -> new VeinWidget(vein));
         inputs = WidgetUtils.getDimensionSlotItems(vein.dimensions()).stream().map(EmiStack::of).map(e -> (EmiIngredient)e).toList();
         outputs = VeinWidget.getStacks(vein).stream().flatMap(l -> l.stream().map(EmiStack::of)).toList();
         calculateSize();

@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.widgets;
 
+import brachy.modularui.ModularUI.Mods;
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.integration.recipeviewer.RecipeSlotRole;
 import brachy.modularui.integration.recipeviewer.RecipeViewerSlotWidget;
@@ -60,8 +61,8 @@ public class StoneVeinWidget extends ParentWidget<StoneVeinWidget> {
         return List.of(ore, stone);
     }
 
-    public static ResourceLocation id(StoneVein stoneVein, boolean emi){
-        String slash = emi ? "/" : "";
-        return new ResourceLocation(stoneVein.stoneLayer().getDomain(), slash + stoneVein.stoneLayer().getId() + "_with_" + stoneVein.ore().material().getId());
+    public static ResourceLocation id(StoneVein stoneVein){
+        String slash = Mods.EMI.isLoaded() ? "/" : "";
+        return new ResourceLocation(stoneVein.stoneLayer().getDomain(), slash + "stone_veins/" + stoneVein.stoneLayer().getId() + "_with_" + stoneVein.ore().material().getId());
     }
 }
