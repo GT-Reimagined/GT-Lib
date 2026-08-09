@@ -1,10 +1,13 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.widgets;
 
+import brachy.modularui.api.GuiAxis;
 import brachy.modularui.api.drawable.IDrawable;
 import brachy.modularui.api.widget.IWidget;
 import brachy.modularui.integration.recipeviewer.RecipeSlotRole;
 import brachy.modularui.integration.recipeviewer.RecipeViewerSlotWidget;
 import brachy.modularui.widget.ParentWidget;
+import brachy.modularui.widgets.ListWidget;
+import brachy.modularui.widgets.layout.Flow;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -45,19 +48,13 @@ public class WidgetUtils {
     static IWidget getDimensionsWidget(List<ResourceKey<Level>> dimensions){
 
         List<ItemStack> stacks = WidgetUtils.getDimensionSlotItems(dimensions);
-        ParentWidget<?> dimensionGroup = new ParentWidget<>();
+        IWidget dimensionGroup = new ParentWidget<>();
         if (!stacks.isEmpty()){
-            if (stacks.size() < 10){
-                for (int i = 0; i < 9 && i < stacks.size(); i++){
-                    int y = i / 9;
-                    int x = i % 9;
-                    dimensionGroup.child(RecipeViewerSlotWidget.create(ItemStack.class)
-                            .recipeSlotRole(RecipeSlotRole.INPUT).pos((x * 18), 101 + (y * 18))
-                            .value(stacks.get(i)).background(IDrawable.NONE));
-                }
-            } else {
-                //TODO: Scrolling dimension markers
-            }
+            dimensionGroup = new ListWidget<>().scrollDirection(GuiAxis.X).pos(0, 101).width(170).coverChildrenHeight(18).children(stacks, s -> {
+                return RecipeViewerSlotWidget.create(ItemStack.class)
+                        .recipeSlotRole(RecipeSlotRole.INPUT)
+                        .value(s).background(IDrawable.NONE);
+            });
         }
         return dimensionGroup;
     }
