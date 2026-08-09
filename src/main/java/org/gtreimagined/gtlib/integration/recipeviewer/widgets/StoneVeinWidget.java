@@ -39,7 +39,7 @@ public class StoneVeinWidget extends ParentWidget<StoneVeinWidget> {
                 .value(stone).background(IDrawable.NONE));
         this.child(WidgetUtils.getDimensionsWidget(stoneVein.stoneLayer().dimensions()));
         this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.stone_layer_name", Utils.lowerUnderscoreToUpperSpaced(stoneVein.stoneLayer().getId())))
-                .pos(0, 18));
+                .pos(0, 18).maxWidth(Integer.MAX_VALUE));
         this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.stone", Utils.translatable(stoneVein.stoneLayer().block().getDescriptionId())))
                 .pos(0, 28));
         this.child(new TextWidget<>(Utils.translatable("recipe_info.gtlib.worldgen.ore", stoneVein.ore().material().getDisplayName()))

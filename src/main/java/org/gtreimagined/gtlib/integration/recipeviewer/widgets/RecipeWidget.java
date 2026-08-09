@@ -187,7 +187,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
         }
         if (!infoComponents.isEmpty()){
             for (int i = 0; i < infoComponents.size(); i++) {
-                child(new TextWidget<>(infoComponents.get(i)).pos(5, 87 + (10 * i)));
+                child(new TextWidget<>(infoComponents.get(i)).pos(5, 87 + (10 * i)).maxWidth(Integer.MAX_VALUE));
             }
         }
     }
