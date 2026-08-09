@@ -200,7 +200,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 }
                 registration.addRecipes(RECIPE_TYPES.get(id.toString()), mainRecipes);
                 for (var entry : recipeMap.entrySet()) {
-                    registration.addRecipes(RECIPE_TYPES.get(Ref.SHARED_ID + ":" + entry.getKey()), entry.getValue());
+                    registration.addRecipes(RECIPE_TYPES.get(id.getNamespace() + ":" + entry.getKey()), entry.getValue());
                 }
             }
         });
