@@ -287,40 +287,4 @@ public class GTLibJEIPlugin implements IModPlugin {
             });
         });
     }
-
-    public static void uses(FluidStack val, boolean USE) {
-        GTLibJEIPlugin.getRuntime().getRecipesGui().show(new IFocus<FluidStack>() {
-            @Override
-            public ITypedIngredient<FluidStack> getTypedValue() {
-                return new ITypedIngredient<>() {e
-                    @Override
-                    public IIngredientType<FluidStack> getType() {
-                        return ForgeTypes.FLUID_STACK;
-                    }
-
-                    @Override
-                    public FluidStack getIngredient() {
-                        return val;
-                    }
-
-                    @Override
-                    public <V> Optional<V> getIngredient(IIngredientType<V> ingredientType) {
-                        if (ingredientType == ForgeTypes.FLUID_STACK) return ((Optional<V>) Optional.of(val));
-                        return Optional.empty();
-                    }
-                };
-            }
-
-            @Override
-            public RecipeIngredientRole getRole() {
-                return USE ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT;
-            }
-
-            @Override
-            public <T> Optional<IFocus<T>> checkedCast(IIngredientType<T> ingredientType) {
-                return Optional.empty();
-            }
-
-        });
-    }
 }

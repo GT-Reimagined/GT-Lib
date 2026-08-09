@@ -173,15 +173,6 @@ public class GTLibRecipeViewerPlugin {
         }
     }
 
-    //To perform a JEI lookup for fluid. Use defines direction.
-
-    public static void uses(FluidStack val, boolean USE) {
-        if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){
-            GTLibJEIPlugin.uses(val, USE);
-        } else if (GTAPI.isModLoaded(Ref.MOD_REI)){
-            REIUtils.uses(val, USE);
-        }
-    }
 
     public static <T> void addModDescriptor(List<Component> tooltip, T t) {
         if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){
