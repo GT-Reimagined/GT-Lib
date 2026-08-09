@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe;
 
+import brachy.modularui.integration.emi.recipe.ModularUIEmiCategory;
 import brachy.modularui.integration.emi.recipe.ModularUIEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -18,7 +19,7 @@ import java.util.List;
 public class StoneVeinRecipe extends ModularUIEmiRecipe {
     final List<EmiIngredient> inputs;
     final List<EmiStack> outputs;
-    static final EmiRecipeCategory CATEGORY = new EmiRecipeCategory(new ResourceLocation(Ref.ID, "stone_veins"), EmiStack.of(Items.IRON_ORE));
+    static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "stone_veins"), EmiStack.of(Items.IRON_ORE));
 
     public StoneVeinRecipe(StoneVein stoneVein) {
         super(StoneVeinWidget.id(stoneVein), () -> new StoneVeinWidget(stoneVein));

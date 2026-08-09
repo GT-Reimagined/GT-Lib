@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe;
 
 import brachy.modularui.api.widget.IWidget;
+import brachy.modularui.integration.emi.recipe.ModularUIEmiCategory;
 import brachy.modularui.integration.emi.recipe.ModularUIEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 public class SmallOreRecipe extends ModularUIEmiRecipe {
     final List<EmiIngredient> inputs;
     final List<EmiStack> outputs;
-    static final EmiRecipeCategory CATEGORY = new EmiRecipeCategory(new ResourceLocation(Ref.ID, "small_ores"), EmiStack.of(Items.IRON_ORE));
+    static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "small_ores"), EmiStack.of(Items.IRON_ORE));
 
     public SmallOreRecipe(SmallOre smallOre) {
         super(SmallOreWidget.id(smallOre), () -> new SmallOreWidget(smallOre));

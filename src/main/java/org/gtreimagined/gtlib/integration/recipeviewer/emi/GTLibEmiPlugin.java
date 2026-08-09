@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.emi;
 
+import brachy.modularui.integration.emi.recipe.ModularUIEmiCategory;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
@@ -63,14 +64,14 @@ public class GTLibEmiPlugin implements EmiPlugin {
             GuiProperties gui = tuple.gui;
             int4 area = gui.getArea();
             Tier tier = tuple.map.getGuiTier() != null ? tuple.map.getGuiTier() : tuple.tier;
-            EmiRecipeCategory mainCategory = new EmiRecipeCategory(tuple.map.getLoc(),
+            EmiRecipeCategory mainCategory = new ModularUIEmiCategory(tuple.map.getLoc(),
                     createIcon(tuple.map.getIcon(), tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)));
             emiRegistry.addCategory(mainCategory);
             Map<String, EmiRecipeCategory> subCategories = new HashMap<>();
             if (!tuple.map.getSubCategories().isEmpty()){
                 tuple.map.getSubCategories().forEach((s, subCategory) -> {
                     ResourceLocation subCategoryId = new ResourceLocation(Ref.SHARED_ID, s);
-                    EmiRecipeCategory subEmiCategory = new EmiRecipeCategory(subCategoryId,
+                    EmiRecipeCategory subEmiCategory = new ModularUIEmiCategory(subCategoryId,
                             createIcon(subCategory.icon().get(), null));
                     subCategories.put(s, subEmiCategory);
                     emiRegistry.addCategory(subEmiCategory);
