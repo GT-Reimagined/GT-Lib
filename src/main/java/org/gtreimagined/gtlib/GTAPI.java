@@ -290,7 +290,7 @@ public final class GTAPI {
     private static <T> Stream<T> allInternal(Class<T> c) {
         Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
         return map == null ? Stream.empty()
-                : new Object2ObjectArrayMap<>(map).values().stream().flatMap(t -> t.map(Stream::of, right -> right.values().stream())).map(c::cast);
+                : map.values().stream().flatMap(t -> t.map(Stream::of, right -> right.values().stream())).map(c::cast);
     }
 
     private static <T> Stream<T> allInternal(Class<T> c, @NotNull String domain) {
@@ -302,7 +302,7 @@ public final class GTAPI {
         synchronized (OBJECTS){
             Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
             if (map != null) {
-                new Object2ObjectArrayMap<>(map).forEach((d, e) -> {
+                map.forEach((d, e) -> {
                     if (e.left().isPresent()) {
                         e.left().ifPresent(o -> consumer.accept(c.cast(o), o.getDomain(), o.getId()));
                     } else {
@@ -319,7 +319,7 @@ public final class GTAPI {
         synchronized (OBJECTS){
             Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
             if (map != null) {
-                new Object2ObjectArrayMap<>(map).forEach((d, e) -> {
+                map.forEach((d, e) -> {
                     if (e.left().isPresent()) {
                         if (domain.equals(Ref.SHARED_ID)) {
                             e.left().ifPresent(o -> consumer.accept(c.cast(o), o.getDomain(), o.getId()));
