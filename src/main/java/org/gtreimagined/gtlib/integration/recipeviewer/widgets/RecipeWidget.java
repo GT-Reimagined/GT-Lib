@@ -48,7 +48,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
         UITexture texture = gui.getMachineData().getProgressTexture(guiTier);
         ProgressWidget progressWidget = new ProgressWidget()
                 .clientValue(() -> (double)progress / maxProgress)
-                .pos(gui.getMachineData().getProgressPos().x + 6, gui.getMachineData().getProgressPos().y + 6);
+                .pos(gui.getMachineData().getProgressPos().x - 3, gui.getMachineData().getProgressPos().y);
         this.child(progressWidget);
         if (!direction.isCircular()) {
             progressWidget.texture(texture, direction.toRegularDirection());
@@ -68,7 +68,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<ItemStack, ?> widget = RecipeViewerSlotWidget.create(ItemStack.class)
                         .recipeSlotRole(RecipeSlotRole.INPUT)
                         .value(ItemStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
                 if (recipe.hasInputItems()){
                     List<Ingredient> inputs = recipe.getInputItems();
                     if (s < inputs.size()) {
@@ -116,7 +116,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<ItemStack, ?> widget = RecipeViewerSlotWidget.create(ItemStack.class)
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
                         .value(ItemStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
                 if (recipe.hasOutputItems()){
                     List<ItemStack> outputs = recipe.getOutputItems(false);
                     if (s < outputs.size()) {
@@ -147,7 +147,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<FluidStack, ?> widget = RecipeViewerSlotWidget.create(FluidStack.class)
                         .recipeSlotRole(RecipeSlotRole.INPUT)
                         .value(FluidStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
                 if (recipe.hasInputFluids()){
                     List<FluidIngredient> fluids = recipe.getInputFluids();
                     if (s < fluids.size()) {
@@ -170,7 +170,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<FluidStack, ?> widget = RecipeViewerSlotWidget.create(FluidStack.class)
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
                         .value(FluidStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX(), slots.get(s).getJeiY());
+                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
                 if (recipe.hasOutputFluids()){
                     List<FluidStack> fluids = recipe.getOutputFluids();
                     if (s < fluids.size()) {
