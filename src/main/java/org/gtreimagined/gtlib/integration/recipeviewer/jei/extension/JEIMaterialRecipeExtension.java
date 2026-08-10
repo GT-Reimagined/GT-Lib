@@ -62,13 +62,13 @@ public record JEIMaterialRecipeExtension(MaterialRecipe recipe) implements ICraf
                         continue;
                     }
                     List<ItemStack> st = Arrays.stream(ing.getItems()).filter(t -> Objects.equals(ing.getMat(t), mat)).collect(Collectors.toList());
-                    if (st.size() > 0) {
+                    if (!st.isEmpty()) {
                         newInputs.set(i, st);
                     }
                     i++;
                 }
 
-                IRecipeSlotBuilder outputSlot = recipeLayout.addSlot(RecipeIngredientRole.OUTPUT, 95, 19);
+                IRecipeSlotBuilder outputSlot = recipeLayout.addSlot(RecipeIngredientRole.OUTPUT, 95, 19).setOutputSlotBackground();
                 outputSlot.addTooltipCallback((a, b) -> {
                     if (a.isEmpty()) return;
                     a.getDisplayedIngredient().flatMap(t -> t.getIngredient(VanillaTypes.ITEM_STACK)).ifPresent(ing -> {
@@ -92,7 +92,7 @@ public record JEIMaterialRecipeExtension(MaterialRecipe recipe) implements ICraf
                         }
                         if (inner.getId().equals(id)) {
                             List<ItemStack> st = Arrays.stream(inner.getItems()).filter(t -> Objects.equals(inner.getMat(t), mat)).collect(Collectors.toList());
-                            if (st.size() > 0) {
+                            if (!st.isEmpty()) {
                                 newInputs.set(i, st);
                                 out.put(id, mat);
                             }
@@ -122,7 +122,7 @@ public record JEIMaterialRecipeExtension(MaterialRecipe recipe) implements ICraf
                     }).collect(Collectors.toList());
                 }
 
-                IRecipeSlotBuilder outputSlot = recipeLayout.addSlot(RecipeIngredientRole.OUTPUT, 95, 19);
+                IRecipeSlotBuilder outputSlot = recipeLayout.addSlot(RecipeIngredientRole.OUTPUT, 95, 19).setOutputSlotBackground();
                 outputSlot.addTooltipCallback((a, b) -> {
                     if (a.isEmpty()) return;
                     a.getDisplayedIngredient().flatMap(t -> t.getIngredient(VanillaTypes.ITEM_STACK)).ifPresent(ing -> {
@@ -131,7 +131,7 @@ public record JEIMaterialRecipeExtension(MaterialRecipe recipe) implements ICraf
                         o.forEach((k, v) -> b.add(Utils.literal(k.substring(0, 1).toUpperCase() + k.substring(1)).append(Utils.literal(" - " + v.toString()))));
                     });
                 });
-                if (result.size() > 0) {
+                if (!result.isEmpty()) {
                     outputSlot.addIngredients(VanillaTypes.ITEM_STACK, result);
                 } else {
                     outputSlot.addIngredients(VanillaTypes.ITEM_STACK, outputs);
@@ -139,19 +139,21 @@ public record JEIMaterialRecipeExtension(MaterialRecipe recipe) implements ICraf
             }
 
             int i = 0;
-            for (int y = 0; y < recipe.getHeight(); ++y) {
-                for (int x = 0; x < recipe.getWidth(); ++x) {
-                    IRecipeSlotBuilder slot = recipeLayout.addSlot(RecipeIngredientRole.INPUT, x * 18 + 1, y * 18 + 1);
-                    slot.addIngredients(VanillaTypes.ITEM_STACK, newInputs.get(i++));
-                    IntSet set = new IntOpenHashSet();
-                    recipe.materialSlots.values().forEach(set::addAll);
-                    if (set.contains(i - 1)) {
-                        final int j = i;
-                        slot.addTooltipCallback((a, b) -> {
-                            if (recipe.getIngredients().get(j - 1) instanceof PropertyIngredient p) {
-                                b.add(Utils.literal("Property: ").append(Utils.literal(p.getId().substring(0, 1).toUpperCase() + p.getId().substring(1)).withStyle(GOLD)));
-                            }
-                        });
+            for (int y = 0; y < 3; ++y) {
+                for (int x = 0; x < 3; ++x) {
+                    IRecipeSlotBuilder slot = recipeLayout.addSlot(RecipeIngredientRole.INPUT, x * 18 + 1, y * 18 + 1).setStandardSlotBackground();
+                    if (x < recipe.getWidth() && y < recipe.getHeight()) {
+                        slot.addIngredients(VanillaTypes.ITEM_STACK, newInputs.get(i++));
+                        IntSet set = new IntOpenHashSet();
+                        recipe.materialSlots.values().forEach(set::addAll);
+                        if (set.contains(i - 1)) {
+                            final int j = i;
+                            slot.addTooltipCallback((a, b) -> {
+                                if (recipe.getIngredients().get(j - 1) instanceof PropertyIngredient p) {
+                                    b.add(Utils.literal("Property: ").append(Utils.literal(p.getId().substring(0, 1).toUpperCase() + p.getId().substring(1)).withStyle(GOLD)));
+                                }
+                            });
+                        }
                     }
                 }
             }
