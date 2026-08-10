@@ -67,7 +67,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
                     UITexture texture = guiProperties.getMachineData().getProgressTexture(machine.getMachineTier());
                     brachy.modularui.widgets.ProgressWidget progressWidget = new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
                             .syncHandler("progress")
-                            .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6);
+                            .pos(guiProperties.getMachineData().getProgressPos().x, guiProperties.getMachineData().getProgressPos().y);
                     modularPanel.child(progressWidget);
                     if (!direction.isCircular()) {
                         progressWidget.texture(texture, direction.toRegularDirection());
