@@ -31,6 +31,7 @@ import org.gtreimagined.gtlib.ore.CobbleStoneType;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.map.RecipeMap;
+import org.gtreimagined.gtlib.recipe.map.SubCategory;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.resources.ResourceLocation;
@@ -111,7 +112,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
 
         GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (!registeredMachineCats.contains(tuple.map.getLoc())) {
-                RecipeMapCategory category = new RecipeMapCategory(tuple.map, tuple.gui, tuple.tier, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0));
+                RecipeMapCategory category = new RecipeMapCategory(tuple.map, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0));
                 registry.add(category);
                 if (!tuple.workstations.isEmpty()){
                     tuple.workstations.forEach(s -> {
@@ -119,6 +120,17 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                         if (item == Items.AIR) return;
                         registry.addWorkstations(category.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, new ItemStack(item)));
                     });
+                }
+                for (var e : tuple.map.getSubCategories().entrySet()){
+                    RecipeMapCategory subCategory = new RecipeMapCategory(new ResourceLocation(tuple.map.getDomain(), e.getKey()), e.getValue());
+                    registry.add(subCategory);
+                    if (!tuple.workstations.isEmpty()){
+                        tuple.workstations.forEach(s -> {
+                            ItemLike item = RegistryUtils.getItemFromID(s);
+                            if (item == Items.AIR) return;
+                            registry.addWorkstations(subCategory.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, new ItemStack(item)));
+                        });
+                    }
                 }
                 registeredMachineCats.add(tuple.map.getLoc());
             }
@@ -129,7 +141,6 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
     @Override
     public void registerDisplays(DisplayRegistry registry) {
         // regular recipes
-        registry.registerRecipeFiller(IRecipe.class, type -> RecipeMap.getRecipeTypes().contains(type), r -> !r.isHidden(), RecipeMapDisplay::new);
         GTLibRecipeViewerPlugin.getREGISTRY().values().forEach(t -> {
             var m = t.map;
             if (m instanceof RecipeMap<?> rm){
@@ -138,7 +149,20 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                         IRecipe recipe = m.getProxy().handler().apply(r, rm.RB());
                         if (recipe == null) return null;
                         if (recipe.isHidden()) return null;
-                        return new RecipeMapDisplay(recipe);
+                        return new RecipeMapDisplay(recipe, m, t.gui, t.tier);
+                    });
+                } else {
+                    registry.registerRecipeFiller(IRecipe.class, type -> RecipeMap.getRecipeTypes().contains(type), r -> !r.isHidden() && r.getMapLoc().equals(m.getLoc()), r -> {
+                        ResourceLocation categoryId = m.getLoc();
+                        if (!m.getSubCategories().isEmpty()){
+                            for (var e : m.getSubCategories().entrySet()){
+                                if (e.getValue().predicate().test(r)){
+                                    categoryId = new ResourceLocation(m.getDomain(), e.getKey());
+                                    break;
+                                }
+                            }
+                        }
+                        return new RecipeMapDisplay(r, m, t.gui, t.tier, categoryId);
                     });
                 }
             }

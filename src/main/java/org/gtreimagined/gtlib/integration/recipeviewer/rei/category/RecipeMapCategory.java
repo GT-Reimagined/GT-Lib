@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.rei.category;
 
 import brachy.modularui.drawable.GuiTextures;
+import brachy.modularui.integration.rei.recipe.ModularUIReiCategory;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -12,8 +13,11 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import mezz.jei.api.constants.VanillaTypes;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.Item;
 import org.gtreimagined.gtlib.Data;
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.mui.BarDir;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
@@ -22,6 +26,7 @@ import org.gtreimagined.gtlib.integration.recipeviewer.renderer.IRecipeInfoRende
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.ingredient.FluidIngredient;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
+import org.gtreimagined.gtlib.recipe.map.SubCategory;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.int4;
 import net.minecraft.client.Minecraft;
@@ -37,266 +42,42 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
+public class RecipeMapCategory extends ModularUIReiCategory<RecipeMapDisplay> {
 
-    protected static int JEI_OFFSET_X = 1, JEI_OFFSET_Y = 1;
-    protected Component title;
     protected final CategoryIdentifier<RecipeMapDisplay> loc;
     protected Renderer icon;
-    protected Parameters progressBar;
-    protected GuiProperties gui;
-    protected Tier guiTier;
-    private final IRecipeInfoRenderer infoRenderer;
 
-    public RecipeMapCategory(IRecipeMap map, GuiProperties gui, Tier defaultTier, ResourceLocation iconId) {
+    public RecipeMapCategory(IRecipeMap map, ResourceLocation iconId) {
         loc = CategoryIdentifier.of(map.getLoc());
-        this.guiTier = map.getGuiTier() == null ? defaultTier : map.getGuiTier();
-        title = map.getDisplayName();
-        int4 progress = new int4(0, gui.getMachineData().getProgressSize().y, gui.getMachineData().getProgressSize().x, gui.getMachineData().getProgressSize().y);
-        progressBar = new Parameters(gui.getMachineData().getProgressTexture(this.guiTier).location(), gui.getMachineData().getProgressPos().x + 6, gui.getMachineData().getProgressPos().y + 6, progress.z, progress.w, progress.x, progress.y, gui.getMachineData().getDir(), gui.getMachineData().doesBarFill());
-        Object icon = map.getIcon();
+        initIcon(map.getIcon(), iconId);
+    }
+
+    public RecipeMapCategory(ResourceLocation subCategoryID, SubCategory subCategory) {
+        loc = CategoryIdentifier.of(subCategoryID);
+        initIcon(subCategory.icon().get(), null);
+    }
+
+    private void initIcon(Object icon, ResourceLocation iconId){
         if (icon != null) {
-            if (icon instanceof ItemStack stack) {
-                this.icon = EntryStacks.of(stack);
+            if (icon instanceof ItemStack itemStack) {
+                this.icon = EntryStacks.of(itemStack);
             }
-            if (icon instanceof ItemLike itemLike) {
-                this.icon = EntryStacks.of(itemLike);
+            if (icon instanceof ItemLike item) {
+                this.icon = EntryStacks.of(item);
+            }
+            if (icon instanceof ResourceLocation resourceLocation){
+                this.icon = Widgets.createTexturedWidget(resourceLocation, 0, 0, 0, 0, 16, 16, 16, 16);
             }
         } else {
-            ItemLike item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
+            Item item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
             if (item == Items.AIR) item = Data.DEBUG_SCANNER;
             this.icon = EntryStacks.of(item);
         }
-        this.gui = gui;
-        this.infoRenderer = map.getInfoRenderer();
     }
 
     @Override
-    public int getDisplayHeight() {
-        return gui.getArea().w + 4 + (10 * (4));
-    }
-
-    @Override
-    public int getDisplayWidth(RecipeMapDisplay display) {
-        return gui.getArea().z + 4;
-    }
-
-    @Override
-    public List<Widget> setupDisplay(RecipeMapDisplay display, Rectangle bounds) {
-        List<Widget> widgets = new ArrayList<>();
-        widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-            int ySize = Math.min(bounds.getHeight() - 6, 79);
-            int extraPixels = (bounds.getHeight() - 6) - ySize;
-            drawTexture(graphics, GuiTextures.MC_BACKGROUND.location(), bounds.x + 3, bounds.y + 3, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, ySize, 256, 256);
-            if (extraPixels > 0){
-                for (int i = 0; i < extraPixels; i++){
-                    drawTexture(graphics, GuiTextures.MC_BACKGROUND.location(), bounds.x + 3, bounds.y + 3 + ySize + i, gui.getArea().x + 1, gui.getArea().y + 1, bounds.getWidth() - 6, 1, 256, 256);
-                }
-            }
-        }));
-        widgets.addAll(setupSlots(display, bounds));
-        double recipeMillis = (double) display.getRecipe().getDuration() * 50;
-        if (recipeMillis < 250)
-            recipeMillis = 250;
-        double finalRecipeMillis = recipeMillis;
-        widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-            renderProgress(graphics, bounds, progressBar,
-                    (float) (System.currentTimeMillis() / finalRecipeMillis % 1.0));
-        }));
-        List<Component> components = infoRenderer.getLines(display.getRecipe());
-        if (!components.isEmpty()) {
-            widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                for (int i = 0; i < components.size(); i++){
-                    int yOffset = bounds.y + bounds.getHeight() - 3 -(components.size() * 10);
-                    graphics.drawString(Minecraft.getInstance().font, components.get(i), bounds.x + 6, (i * 10) + yOffset, 0xFFFFFFF);
-                }
-            }));
-        }
-        return widgets;
-    }
-
-    private List<Widget> setupSlots(RecipeMapDisplay display, Rectangle bounds){
-        List<Widget> widgets = new ArrayList<>();
-        List<List<ItemStack>> inputs = display.getRecipe().hasInputItems() ? display.getRecipe().getInputItems().stream().map(t -> Arrays.asList(t.getItems())).toList() : Collections.emptyList();
-        List<ItemStack> outputs = display.getRecipe().getOutputItems(false);
-        List<SlotData<?>> slots;
-        int inputFluidOffset = 0, outputFluidOffset = 0, slotCount;
-        int offsetX = gui.getArea().x - 2, offsetY = gui.getArea().y - 2;
-        int inputItems = 0, inputFluids = 0;
-        {
-            slots = gui.getSlots().getSlots(SlotType.IT_IN, guiTier);
-            slotCount = slots.size();
-            List<SlotData<?>> finalSlots = slots;
-            if (slotCount > 0) {
-                for (int s = 0; s < slotCount; s++){
-                    int finalSlot = s;
-                    widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        }
-                    }));
-                    if (inputs.size() > 0){
-                        if (s < inputs.size()){
-                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
-                            Slot slot = Widgets.createSlot(point).disableBackground();
-                            List<ItemStack> input = inputs.get(s);
-                            if (input.size() == 0) {
-                                slot.entries(EntryIngredients.of(Data.DEBUG_SCANNER));
-                            } else {
-                                slot.entries(getInput(display, s));
-                                inputItems++;
-                            }
-                            widgets.add(slot.markInput());
-                        }
-                    }
-                }
-                inputFluidOffset = Math.min(slotCount, inputs.size());
-            }
-        }
-        {
-            slots = gui.getSlots().getSlots(SlotType.IT_OUT, guiTier);
-            slotCount = slots.size();
-            List<SlotData<?>> finalSlots = slots;
-            if (slotCount > 0) {
-                for (int s = 0; s < slotCount; s++){
-                    int finalSlot = s;
-                    widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        }
-                    }));
-                    if (!outputs.isEmpty()){
-                        if (s < outputs.size()){
-                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
-                            widgets.add(Widgets.createSlot(point).entries(getOutput(display, s)).disableBackground().markOutput());
-                        }
-                    }
-                }
-                outputFluidOffset = Math.min(slotCount, outputs.size());
-            }
-        }
-
-        {
-            slots = gui.getSlots().getSlots(SlotType.FL_IN, guiTier);
-            List<SlotData<?>> finalSlots = slots;
-            slotCount = slots.size();
-            if (slotCount > 0) {
-                List<FluidIngredient> fluids = display.getRecipe().hasInputFluids() ? display.getRecipe().getInputFluids() : List.of();
-                for (int s = 0; s < slotCount; s++){
-                    int finalSlot = s;
-                    widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        }
-                    }));
-                    if (fluids.size() > 0){
-                        if (s < fluids.size()){
-                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
-                            widgets.add(Widgets.createSlot(point).entries(getInput(display, s + inputFluidOffset)).disableBackground().markInput());
-                            /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
-                            slot.addTooltipCallback((ing, list) -> {
-                            if (Utils.hasNoConsumeTag(GTLibJEIPlugin.getIngredient(ing.getDisplayedIngredient().get())))
-                                list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
-                            });*/
-                            inputFluids++;
-                        }
-                    }
-                }
-            }
-        }
-
-        {
-            slots = gui.getSlots().getSlots(SlotType.FL_OUT, guiTier);
-            List<SlotData<?>> finalSlots = slots;
-            slotCount = slots.size();
-            if (slotCount > 0) {
-                List<FluidStack> fluids = display.getRecipe().getOutputFluids();
-                for (int s = 0; s < slotCount; s++){
-                    int finalSlot = s;
-                    widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
-                        drawTexture(graphics, finalSlots.get(finalSlot).getBaseTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        if (finalSlots.get(finalSlot).getOverlayTexture() != null){
-                            drawTexture(graphics, finalSlots.get(finalSlot).getOverlayTexture().location(), finalSlots.get(finalSlot).getJeiX() - (offsetX) + bounds.x - 1, finalSlots.get(finalSlot).getJeiY() - (offsetY) + bounds.y - 1, 0, 0, 18, 18, 18, 18);
-                        }
-                    }));
-                    if (!fluids.isEmpty()){
-                        if (s < fluids.size()){
-                            Point point = new Point(slots.get(s).getJeiX() - (offsetX) + bounds.x, slots.get(s).getJeiY() - (offsetY) + bounds.y);
-                            widgets.add(Widgets.createSlot(point).entries(getOutput(display, s + outputFluidOffset)).disableBackground().markOutput());
-                            /*slot.setFluidRenderer((int)fluids.get(s).getAmount(), true, 16, 16);
-                            slot.addTooltipCallback((ing, list) -> {
-                            if (Utils.hasNoConsumeTag(GTLibJEIPlugin.getIngredient(ing.getDisplayedIngredient().get())))
-                                list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
-                            });*/
-                            inputFluids++;
-                        }
-                    }
-                }
-            }
-        }
-        return widgets;
-    }
-
-    public static void renderProgress(GuiGraphics graphics, Rectangle bounds, Parameters params, float percent) {
-        int progressTime;
-        int realX = bounds.x + params.x - 1, realY = bounds.y + params.y - 1;
-        int x = realX, y = realY, xLocation = params.posX, yLocation = params.posY, length = params.length, width = params.width;
-        switch (params.dir) {
-            case UP -> {
-                progressTime = (int) (params.width * percent);
-                if (!params.fill) {
-                    progressTime = width - progressTime;
-                }
-                y = (y + width) - progressTime;
-                yLocation = (yLocation + width) - progressTime;
-                width = progressTime;
-            }
-            case LEFT -> {
-                progressTime = (int) (params.length * percent);
-                if (params.fill) {
-                    length = progressTime;
-                } else {
-                    length = length - progressTime;
-                }
-            }
-            case DOWN -> {
-                progressTime = (int) (params.width * percent);
-                if (params.fill) {
-                    width = progressTime;
-                } else {
-                    width = width - progressTime;
-                }
-            }
-            default -> {
-                progressTime = (int) (params.length * percent);
-                if (!params.fill) {
-                    progressTime = length - progressTime;
-                }
-                x = (x + length) - progressTime;
-                xLocation = (xLocation + length) - progressTime;
-                length = progressTime;
-            }
-        }
-        drawTexture(graphics, params.texture, realX,  realY, 0, 0, params.length, params.width, params.length, params.width * 2);
-        if (percent > 0) {
-            drawTexture(graphics, params.texture, realX,  realY, xLocation, yLocation, length, width, params.length, params.width * 2);
-        }
-    }
-
-    private static void drawTexture(GuiGraphics stack, ResourceLocation loc, int left, int top, int x, int y, int sizeX, int sizeY, int textureHeight, int textureWidth) {
-        //RenderSystem.setShaderColor(1, 1, 1, 1);
-        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        //RenderSystem.setShaderTexture(0, loc);
-        //AbstractGui.blit(stack, left, top, x, y, sizeX, sizeY);
-        stack.blit(loc, left, top, 0, x, y, sizeX, sizeY, textureHeight, textureWidth);
-    }
-
-    public record Parameters(ResourceLocation texture, int x, int y, int length, int width, int posX, int posY, BarDir dir, boolean fill){
-
+    public int getMaxDisplayHeight() {
+        return 170;
     }
 
     @Override
@@ -305,22 +86,7 @@ public class RecipeMapCategory implements DisplayCategory<RecipeMapDisplay> {
     }
 
     @Override
-    public Component getTitle() {
-        return title;
-    }
-
-    @Override
     public CategoryIdentifier<? extends RecipeMapDisplay> getCategoryIdentifier() {
         return loc;
-    }
-
-    public EntryIngredient getInput(RecipeMapDisplay recipeDisplay, int index) {
-        List<EntryIngredient> inputs = recipeDisplay.getInputEntries();
-        return inputs.size() > index ? inputs.get(index) : EntryIngredient.empty();
-    }
-
-    public EntryIngredient getOutput(RecipeMapDisplay recipeDisplay, int index) {
-        List<EntryIngredient> outputs = recipeDisplay.getOutputEntries();
-        return outputs.size() > index ? outputs.get(index) : EntryIngredient.empty();
     }
 }
