@@ -66,7 +66,9 @@ public class RecipeMapCategory extends ModularUIReiCategory<RecipeMapDisplay> {
                 this.icon = EntryStacks.of(item);
             }
             if (icon instanceof ResourceLocation resourceLocation){
-                this.icon = Widgets.createTexturedWidget(resourceLocation, 0, 0, 0, 0, 16, 16, 16, 16);
+                this.icon = (guiGraphics, rectangle, mouseX, mouseY, delta) -> {
+                    guiGraphics.blit(resourceLocation, rectangle.x, rectangle.y, 0, 0, 0, 16, 16, 16, 16);
+                };
             }
         } else {
             Item item = iconId == null ? Data.DEBUG_SCANNER : RegistryUtils.getItemFromID(iconId);
