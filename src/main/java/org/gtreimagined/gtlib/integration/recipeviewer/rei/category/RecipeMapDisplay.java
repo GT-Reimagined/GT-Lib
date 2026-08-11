@@ -46,7 +46,7 @@ public class RecipeMapDisplay extends ModularUIReiDisplay {
     private final IRecipe recipe;
 
     public RecipeMapDisplay(IRecipe recipe, IRecipeMap map, GuiProperties gui, Tier tier, ResourceLocation categoryId){
-        super(recipe.getId(), () -> new RecipeWidget(recipe, map, gui, tier), CategoryIdentifier.of(categoryId));
+        super(recipe.getId(), () -> new RecipeWidget(recipe, map, gui, map.getGuiTier() == null ? tier : map.getGuiTier()), CategoryIdentifier.of(categoryId));
         this.recipe = recipe;
         this.input = new ArrayList<>(recipe.getInputItems().size() + recipe.getInputFluids().size());
         this.input.addAll(recipe.getInputItems().stream().map(EntryIngredients::ofIngredient).toList());
