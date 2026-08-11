@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.widgets;
 
-import brachy.modularui.ModularUI.Mods;
+import brachy.modularui.api.drawable.Text;
 import brachy.modularui.drawable.UITexture;
 import brachy.modularui.drawable.progress.CompositeProgress;
 import brachy.modularui.integration.recipeviewer.RecipeSlotRole;
@@ -194,31 +194,14 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
 
 
     private void createFluidTooltip(RichTooltip richTooltip, FluidStack stack) {
-        Component component = null;
-/*
-        for (Component comp : list) {
-            if (comp.getContents() instanceof TranslatableContents translatable){
-                if (translatable.getKey().equals("jei.tooltip.recipe.by")){
-                    component = comp;
-                    break;
-                }
-            }
-        }
-        if (list.size() > 2) list.remove(2);
-        if (list.size() > 1) list.remove(1);
-*/
         int mb = stack.getAmount();
-        if (Mods.EMI.isLoaded()){
-            richTooltip.replace("mB", t -> null);
-            richTooltip.moveCursorBackward(4);
-        }
-        richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE));
+        richTooltip.moveCursorToStart();
+        Component amount = Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE);
+        richTooltip.replace("mB", t -> Text.comp(amount));
+        richTooltip.moveCursorForward(2);
         richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidUtils.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
         richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
-        //if (Utils.hasNoConsumeTag(ing.getDisplayedIngredient().get().getIngredient(ForgeTypes.FLUID_STACK).get()))
-        //    list.add(Utils.literal("Does not get consumed in the process").withStyle(ChatFormatting.WHITE));
-        //if (component != null) list.add(component);
     }
 
     @Override
