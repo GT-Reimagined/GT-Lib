@@ -1,14 +1,9 @@
-package org.gtreimagined.gtlib.integration.recipeviewer.rei.category;
+package org.gtreimagined.gtlib.integration.recipeviewer.rei.display;
 
 import brachy.modularui.integration.rei.recipe.ModularUIReiDisplay;
-import com.google.common.collect.ImmutableList;
-import dev.architectury.fluid.FluidStack;
 import lombok.Getter;
-import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.resources.ResourceLocation;
@@ -17,28 +12,11 @@ import org.gtreimagined.gtlib.integration.recipeviewer.rei.REIUtils;
 import org.gtreimagined.gtlib.integration.recipeviewer.widgets.RecipeWidget;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
-import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
-import org.gtreimagined.gtlib.recipe.map.RecipeMap;
-import org.gtreimagined.gtlib.util.FluidUtils;
-import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-
-import static org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin.intToSuperScript;
 
 public class RecipeMapDisplay extends ModularUIReiDisplay {
     private final List<EntryIngredient> input, output;
