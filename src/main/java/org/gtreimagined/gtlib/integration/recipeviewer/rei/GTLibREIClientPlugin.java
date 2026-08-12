@@ -21,7 +21,11 @@ import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapCategory;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.SmallOreCategory;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.VeinCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.RecipeMapDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.SmallOreDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.VeinDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.extension.REIMaterialRecipeExtension;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -38,6 +42,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +141,8 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                 registeredMachineCats.add(tuple.map.getLoc());
             }
         });
+        registry.add(new SmallOreCategory());
+        registry.add(new VeinCategory());
         REIUtils.EXTRA_CATEGORIES.forEach(c -> c.accept(registry));
     }
 
@@ -166,6 +175,8 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                 }
             }
         });
+        SmallOreData.INSTANCE.getVeins().values().stream().map(SmallOreDisplay::new).forEach(registry::add);
+        VeinData.INSTANCE.getVeins().values().stream().map(VeinDisplay::new).forEach(registry::add);
         REIUtils.EXTRA_DISPLAYS.forEach(c -> c.accept(registry));
     }
 
