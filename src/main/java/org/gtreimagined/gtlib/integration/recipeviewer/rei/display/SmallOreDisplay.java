@@ -14,7 +14,7 @@ import java.util.List;
 public class SmallOreDisplay extends ModularUIReiDisplay {
     private final List<EntryIngredient> input, output;
     public SmallOreDisplay(SmallOre smallOre) {
-        super(smallOre.id(), () -> new SmallOreWidget(smallOre), SmallOreCategory.ID);
+        super(SmallOreWidget.id(smallOre), () -> new SmallOreWidget(smallOre), SmallOreCategory.ID);
         input = WidgetUtils.getDimensionSlotItems(smallOre.dimensions()).stream().map(EntryIngredients::of).toList();
         output = SmallOreWidget.getOutputs(smallOre).stream().map(l -> l.stream().map(EntryStacks::of).toList()).map(EntryIngredient::of).toList();
     }

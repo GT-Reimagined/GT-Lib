@@ -15,10 +15,9 @@ import java.util.List;
 public class VeinDisplay extends ModularUIReiDisplay {
     private final List<EntryIngredient> input, output;
     public VeinDisplay(Vein vein){
-        super(vein.id(), () -> new VeinWidget(vein), VeinCategory.ID);
+        super(VeinWidget.id(vein), () -> new VeinWidget(vein), VeinCategory.ID);
         input = WidgetUtils.getDimensionSlotItems(vein.dimensions()).stream().map(EntryIngredients::of).toList();
         output = VeinWidget.getStacks(vein).stream().map(l -> l.stream().map(EntryStacks::of).toList()).map(EntryIngredient::of).toList();
-
     }
 
     @Override
