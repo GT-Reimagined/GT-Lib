@@ -11,21 +11,29 @@ import net.minecraft.world.item.Items;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.SmallOreDisplay;
 
-public class SmallOreCategory extends ModularUIReiCategory<SmallOreDisplay> {
+public class BasicReiCategory extends ModularUIReiCategory<ModularUIReiDisplay> {
     static final EntryStack<ItemStack> ICON = EntryStacks.of(Items.IRON_ORE);
     public static final CategoryIdentifier<SmallOreDisplay> ID = CategoryIdentifier.of(Ref.ID, "small_ores");
+    private final CategoryIdentifier<? extends ModularUIReiDisplay> id;
+    private final Renderer icon;
+
+    public BasicReiCategory(CategoryIdentifier<? extends ModularUIReiDisplay> id, Renderer icon){
+        this.id = id;
+        this.icon = icon;
+    }
+
     @Override
     public int getMaxDisplayHeight() {
         return 120;
     }
 
     @Override
-    public CategoryIdentifier<? extends SmallOreDisplay> getCategoryIdentifier() {
-        return ID;
+    public CategoryIdentifier<? extends ModularUIReiDisplay> getCategoryIdentifier() {
+        return id;
     }
 
     @Override
     public Renderer getIcon() {
-        return ICON;
+        return icon;
     }
 }

@@ -7,11 +7,13 @@ import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.CollapsibleEntryRegistry;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.settings.EntrySettingsAdapterRegistry;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.plugins.PluginManager;
 import me.shedaniel.rei.api.common.registry.ReloadStage;
+import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import org.gtreimagined.gtlib.GTAPI;
@@ -21,8 +23,7 @@ import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapCategory;
-import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.SmallOreCategory;
-import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.VeinCategory;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.BasicReiCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.RecipeMapDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.SmallOreDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.VeinDisplay;
@@ -42,7 +43,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
@@ -53,6 +53,9 @@ import java.util.function.Function;
 
 @REIPluginClient()
 public class GTLibREIClientPlugin implements REIClientPlugin {
+
+    public static final CategoryIdentifier<VeinDisplay> VEIN_ID = CategoryIdentifier.of(Ref.ID, "veins");
+    public static final CategoryIdentifier<VeinDisplay> SMALL_ORE_ID = CategoryIdentifier.of(Ref.ID, "small_ores");
     @Override
     public String getPluginProviderName() {
         return Ref.ID + ":rei";
@@ -141,8 +144,8 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                 registeredMachineCats.add(tuple.map.getLoc());
             }
         });
-        registry.add(new SmallOreCategory());
-        registry.add(new VeinCategory());
+        registry.add(new BasicReiCategory(SMALL_ORE_ID, EntryStacks.of(Items.IRON_ORE)));
+        registry.add(new BasicReiCategory(VEIN_ID, EntryStacks.of(Items.IRON_ORE)));
         REIUtils.EXTRA_CATEGORIES.forEach(c -> c.accept(registry));
     }
 
