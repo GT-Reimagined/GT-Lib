@@ -1,6 +1,8 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.rei;
 
 import dev.architectury.fluid.FluidStack;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.shedaniel.rei.api.client.entry.filtering.base.BasicFilteringRule;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
@@ -22,10 +24,13 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.StoneVeinRecipe;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.BasicReiCategory;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.RecipeMapDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.SmallOreDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.StoneVeinDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.VeinDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.extension.REIMaterialRecipeExtension;
 import org.gtreimagined.gtlib.material.Material;
@@ -44,6 +49,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 import java.util.ArrayList;
@@ -55,7 +61,8 @@ import java.util.function.Function;
 public class GTLibREIClientPlugin implements REIClientPlugin {
 
     public static final CategoryIdentifier<VeinDisplay> VEIN_ID = CategoryIdentifier.of(Ref.ID, "veins");
-    public static final CategoryIdentifier<VeinDisplay> SMALL_ORE_ID = CategoryIdentifier.of(Ref.ID, "small_ores");
+    public static final CategoryIdentifier<SmallOreDisplay> SMALL_ORE_ID = CategoryIdentifier.of(Ref.ID, "small_ores");
+    public static final CategoryIdentifier<StoneVeinDisplay> STONE_VEIN_ID = CategoryIdentifier.of(Ref.ID, "stone_veins");
     @Override
     public String getPluginProviderName() {
         return Ref.ID + ":rei";
@@ -146,6 +153,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
         });
         registry.add(new BasicReiCategory(SMALL_ORE_ID, EntryStacks.of(Items.IRON_ORE)));
         registry.add(new BasicReiCategory(VEIN_ID, EntryStacks.of(Items.IRON_ORE)));
+        registry.add(new BasicReiCategory(STONE_VEIN_ID, EntryStacks.of(Items.IRON_ORE)));
         REIUtils.EXTRA_CATEGORIES.forEach(c -> c.accept(registry));
     }
 
@@ -180,6 +188,18 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
         });
         SmallOreData.INSTANCE.getVeins().values().stream().map(SmallOreDisplay::new).forEach(registry::add);
         VeinData.INSTANCE.getVeins().values().stream().map(VeinDisplay::new).forEach(registry::add);
+        Object2IntMap<StoneType> veinTotalWeights = new Object2IntOpenHashMap<>();
+        StoneLayerData.INSTANCE.getVeins().forEach((r, l) -> {
+            if (l.type() == null) return;
+            int currentWeight = veinTotalWeights.getOrDefault(l.type(), 0);
+            veinTotalWeights.put(l.type(), currentWeight + l.weight());
+        });
+        StoneLayerData.INSTANCE.getVeins().forEach((r, v) -> {
+            if (!veinTotalWeights.containsKey(v.type())) return;
+            v.ores().forEach(o -> {
+                registry.add(new StoneVeinDisplay(new StoneVein(v, o, veinTotalWeights.getOrDefault(v.type(), 0))));
+            });
+        });
         REIUtils.EXTRA_DISPLAYS.forEach(c -> c.accept(registry));
     }
 
