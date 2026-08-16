@@ -19,7 +19,7 @@ import java.util.List;
 public class VeinRecipe extends ModularUIEmiRecipe {
     final List<EmiIngredient> inputs;
     final List<EmiStack> outputs;
-    static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "veins"), EmiStack.of(Items.IRON_ORE));
+    public static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "veins"), EmiStack.of(Items.IRON_ORE));
 
     public VeinRecipe(Vein vein) {
         super(VeinWidget.id(vein), () -> new VeinWidget(vein));

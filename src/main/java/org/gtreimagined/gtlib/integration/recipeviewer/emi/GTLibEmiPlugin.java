@@ -118,6 +118,9 @@ public class GTLibEmiPlugin implements EmiPlugin {
                 }
             }
         });
+        emiRegistry.addCategory(SmallOreRecipe.CATEGORY);
+        emiRegistry.addCategory(VeinRecipe.CATEGORY);
+        emiRegistry.addCategory(StoneVeinRecipe.CATEGORY);
         SmallOreData.INSTANCE.getVeins().values().stream().map(SmallOreRecipe::new).forEach(emiRegistry::addRecipe);
         VeinData.INSTANCE.getVeins().values().stream().map(VeinRecipe::new).forEach(emiRegistry::addRecipe);
         Object2IntMap<StoneType> veinTotalWeights = new Object2IntOpenHashMap<>();

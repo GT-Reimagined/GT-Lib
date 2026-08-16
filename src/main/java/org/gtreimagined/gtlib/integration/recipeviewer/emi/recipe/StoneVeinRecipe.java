@@ -19,7 +19,7 @@ import java.util.List;
 public class StoneVeinRecipe extends ModularUIEmiRecipe {
     final List<EmiIngredient> inputs;
     final List<EmiStack> outputs;
-    static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "stone_veins"), EmiStack.of(Items.IRON_ORE));
+    public static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "stone_veins"), EmiStack.of(Items.IRON_ORE));
 
     public StoneVeinRecipe(StoneVein stoneVein) {
         super(StoneVeinWidget.id(stoneVein), () -> new StoneVeinWidget(stoneVein));

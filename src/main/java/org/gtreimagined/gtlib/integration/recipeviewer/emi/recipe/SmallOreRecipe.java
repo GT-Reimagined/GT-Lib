@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class SmallOreRecipe extends ModularUIEmiRecipe {
     final List<EmiIngredient> inputs;
     final List<EmiStack> outputs;
-    static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "small_ores"), EmiStack.of(Items.IRON_ORE));
+    public static final EmiRecipeCategory CATEGORY = new ModularUIEmiCategory(new ResourceLocation(Ref.ID, "small_ores"), EmiStack.of(Items.IRON_ORE));
 
     public SmallOreRecipe(SmallOre smallOre) {
         super(SmallOreWidget.id(smallOre), () -> new SmallOreWidget(smallOre));
