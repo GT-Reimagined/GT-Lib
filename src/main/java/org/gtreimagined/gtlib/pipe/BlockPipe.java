@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
+import net.minecraft.world.Containers;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTLib;
@@ -77,6 +78,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -179,6 +181,21 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
             pipe.addInventoryDrops(list);
         }
         return list;
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        List<ItemStack> stacks = new ArrayList<>();
+        if (level.getBlockEntity(pos) instanceof BlockEntityPipe<?> pipe){
+            pipe.addInventoryDrops(stacks);
+        }
+        boolean destroy = super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        if (destroy && !willHarvest){
+            stacks.forEach(i -> {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), i);
+            });
+        }
+        return destroy;
     }
 
     @Override
