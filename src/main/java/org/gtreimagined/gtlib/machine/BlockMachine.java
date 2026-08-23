@@ -6,6 +6,8 @@ import lombok.Getter;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTRemapping;
@@ -285,6 +287,22 @@ public class BlockMachine extends BlockBasic implements IItemBlockProvider, Enti
             }
         }
         super.onRemove(state, worldIn, pos, newState, isMoving);
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        BlockEntity be = level.getBlockEntity(pos);
+        List<ItemStack> stacks = new ArrayList<>();
+        if (be instanceof BlockEntityMachine<?> machine){
+            machine.itemHandler.ifPresent(t -> stacks.addAll(t.getAllItems()));
+        }
+        boolean destroy = super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        if (destroy && !willHarvest){
+            stacks.forEach(i -> {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), i);
+            });
+        }
+        return destroy;
     }
 
     @Override
