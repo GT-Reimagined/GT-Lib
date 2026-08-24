@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.minecraft.client.Minecraft;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
@@ -438,6 +439,25 @@ public final class GTAPI {
             return LoadingModList.get().getMods().stream().map(ModInfo::getModId).anyMatch(modid::equals);
         }
         return ModList.get().isLoaded(modid);
+    }
+
+    /**
+     * For async stuff use this, otherwise use {@link GTAPI isClientSide}
+     *
+     * @return if the current thread is the client thread
+     */
+    public static boolean isClientThread() {
+        return isClientSide() && Minecraft.getInstance().isSameThread();
+    }
+
+    /**
+     * @return if the game is the <strong>PHYSICAL</strong> client, e.g. not a dedicated server.
+     * @apiNote Do not use this to check if you're currently on the server thread for side-specific actions!
+     *          It does <strong>NOT</strong> work for that. Use {@link #isClientThread()} instead.
+     * @see #isClientThread()
+     */
+    public static boolean isClientSide(){
+        return FMLEnvironment.dist.isClient();
     }
 
     public static void runOnEvent(RegistrationEvent event, Runnable runnable) {

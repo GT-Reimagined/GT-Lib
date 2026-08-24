@@ -155,7 +155,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 registeredMachineCats.add(tuple.map.getLoc());
                 if (!tuple.map.getSubCategories().isEmpty()){
                     tuple.map.getSubCategories().forEach((s, subCategory) -> {
-                        ResourceLocation subCategoryId = new ResourceLocation(Ref.SHARED_ID, s);
+                        ResourceLocation subCategoryId = new ResourceLocation(tuple.map.getDomain(), s);
                         if (!registeredMachineCats.contains(subCategoryId)) {
                             RecipeType<IRecipe> subType = new RecipeType<>(subCategoryId, IRecipe.class);
                             RECIPE_TYPES.put(subType.getUid().toString(), subType);
@@ -200,7 +200,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 }
                 registration.addRecipes(RECIPE_TYPES.get(id.toString()), mainRecipes);
                 for (var entry : recipeMap.entrySet()) {
-                    registration.addRecipes(RECIPE_TYPES.get(Ref.SHARED_ID + ":" + entry.getKey()), entry.getValue());
+                    registration.addRecipes(RECIPE_TYPES.get(id.getNamespace() + ":" + entry.getKey()), entry.getValue());
                 }
             }
         });
@@ -275,7 +275,7 @@ public class GTLibJEIPlugin implements IModPlugin {
                 if (item == Items.AIR) return;
                 registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(tuple.map.getLoc().toString()));
                 if (!tuple.map.getSubCategories().isEmpty()){
-                    tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(new ResourceLocation(Ref.SHARED_ID, s1).toString())));
+                    tuple.map.getSubCategories().keySet().forEach(s1 -> registration.addRecipeCatalyst(new ItemStack(item), RECIPE_TYPES.get(new ResourceLocation(tuple.map.getDomain(), s1).toString())));
                 }
             });
         });
@@ -285,64 +285,6 @@ public class GTLibJEIPlugin implements IModPlugin {
             list.forEach(i -> {
                 registration.addRecipeCatalyst(new ItemStack(i), RecipeType.create(r.getNamespace(), r.getPath(), Recipe.class));
             });
-        });
-    }
-
-    public static void addDimensionSlots(IRecipeLayoutBuilder builder, List<ResourceKey<Level>> dimensions) {
-        int i = 0;
-        List<Block> markers = new ArrayList<>();
-        for (ResourceLocation dimension : dimensions.stream().map(ResourceKey::location).toList()) {
-            int y = i / 9;
-            int x = i % 9;
-            Block dimensionMarker = GTAPI.get(BlockDimensionMarker.class, dimension.getPath() + "_marker", Ref.ID);
-            ItemStack world;
-            if (dimensionMarker != null){
-                if (markers.contains(dimensionMarker)) {
-                    continue;
-                }
-                markers.add(dimensionMarker);
-                world = new ItemStack(dimensionMarker);
-            } else {
-                world = new ItemStack(Items.BARRIER).setHoverName(Utils.literal(dimension.toString()));
-            }
-            builder.addSlot(RecipeIngredientRole.INPUT, 1 + (x * 18), 102 + (y * 18)).addIngredients(VanillaTypes.ITEM_STACK, List.of(world));
-            i++;
-        }
-    }
-
-    public static void uses(FluidStack val, boolean USE) {
-        GTLibJEIPlugin.getRuntime().getRecipesGui().show(new IFocus<FluidStack>() {
-            @Override
-            public ITypedIngredient<FluidStack> getTypedValue() {
-                return new ITypedIngredient<>() {
-                    @Override
-                    public IIngredientType<FluidStack> getType() {
-                        return ForgeTypes.FLUID_STACK;
-                    }
-
-                    @Override
-                    public FluidStack getIngredient() {
-                        return val;
-                    }
-
-                    @Override
-                    public <V> Optional<V> getIngredient(IIngredientType<V> ingredientType) {
-                        if (ingredientType == ForgeTypes.FLUID_STACK) return ((Optional<V>) Optional.of(val));
-                        return Optional.empty();
-                    }
-                };
-            }
-
-            @Override
-            public RecipeIngredientRole getRole() {
-                return USE ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT;
-            }
-
-            @Override
-            public <T> Optional<IFocus<T>> checkedCast(IIngredientType<T> ingredientType) {
-                return Optional.empty();
-            }
-
         });
     }
 }

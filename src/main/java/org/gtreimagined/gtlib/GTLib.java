@@ -243,7 +243,6 @@ public class GTLib extends GTMod {
                 });
                 GTAPI.all(IGTTool.class).stream().filter(t -> t.getGTToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
                 GTAPI.all(GTFluid.class).forEach(t -> l.add(t.getFluidBlock()));
-                GTAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
             });
             GTAPI.all(Material.class).forEach(m -> {
                 Map<MaterialType<?>, Integer> map = MaterialTags.FURNACE_FUELS.getMap(m);

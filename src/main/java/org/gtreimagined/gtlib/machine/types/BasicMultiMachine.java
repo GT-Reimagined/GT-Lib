@@ -67,7 +67,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
                     UITexture texture = guiProperties.getMachineData().getProgressTexture(machine.getMachineTier());
                     brachy.modularui.widgets.ProgressWidget progressWidget = new GTProgressWidget(machine.getMachineType(), machine.getMachineTier())
                             .syncHandler("progress")
-                            .pos(guiProperties.getMachineData().getProgressPos().x + 6, guiProperties.getMachineData().getProgressPos().y + 6);
+                            .pos(guiProperties.getMachineData().getProgressPos().x, guiProperties.getMachineData().getProgressPos().y);
                     modularPanel.child(progressWidget);
                     if (!direction.isCircular()) {
                         progressWidget.texture(texture, direction.toRegularDirection());
@@ -102,7 +102,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     public final void setStructurePattern(Pattern... patterns) {
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
-            GTLibRecipeViewerPlugin.registerPatternForJei(this, Arrays.stream(patterns).collect(Collectors.toList()));
+            GTLibRecipeViewerPlugin.registerPatternForPreview(this, Arrays.stream(patterns).collect(Collectors.toList()));
             this.tiers.forEach(t -> {
                 PonderUtils.registerMultiblock(this, t, Arrays.asList(patterns));
             });
@@ -116,7 +116,7 @@ public class BasicMultiMachine<T extends BasicMultiMachine<T>> extends Machine<T
     public final void setStructurePattern(Tier tier,  Pattern... patterns) {
         if (FMLEnvironment.dist.isClient()) {
             if (patterns.length == 0) return;
-            GTLibRecipeViewerPlugin.registerPatternForJei(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
+            GTLibRecipeViewerPlugin.registerPatternForPreview(this, tier, Arrays.stream(patterns).collect(Collectors.toList()));
             PonderUtils.registerMultiblock(this, tier, Arrays.asList(patterns));
         }
     }
