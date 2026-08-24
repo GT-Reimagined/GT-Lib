@@ -29,6 +29,7 @@ import org.gtreimagined.gtlib.pipe.types.Cable;
 import org.gtreimagined.gtlib.pipe.types.Wire;
 import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.tool.IGTTool;
+import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.TagUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -150,6 +151,13 @@ public class GTItemTagProvider extends GTTagProvider<Item> implements IGTLibProv
                 this.tag(tool.getGTToolType().getTag()).add(tool.getItem()).replace(replace);
                 this.tag(tool.getGTToolType().getForgeTag()).add(tool.getItem()).replace(replace);
             });
+            if (GTAPI.isModLoaded("railcraft")){
+                TagKey<Item> rcCrowbar = TagUtils.getItemTag(new ResourceLocation("railcraft", "crowbar"));
+                this.tag(rcCrowbar).addTag(GTTools.CROWBAR.getTag());
+                this.tag(GTTools.CROWBAR.getTag()).add(RegistryUtils.getItemFromID("railcraft", "iron_crowbar"));
+                this.tag(GTTools.CROWBAR.getTag()).add(RegistryUtils.getItemFromID("railcraft", "steel_crowbar"));
+                this.tag(GTTools.CROWBAR.getTag()).add(RegistryUtils.getItemFromID("railcraft", "diamond_crowbar"));
+            }
         }
 
 
