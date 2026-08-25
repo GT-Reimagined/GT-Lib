@@ -59,6 +59,7 @@ public class EnergyHandler implements IEnergyHandler {
     public long extractEu(long voltage, boolean simulate) {
         long toDrain = Math.min(voltage, this.energy);
         if (!simulate) this.energy -= toDrain;
+        this.state.extract(simulate, 1);
         return toDrain;
     }
 
@@ -69,6 +70,7 @@ public class EnergyHandler implements IEnergyHandler {
         if (!simulate && !checkVoltage(voltage)) return voltage;
         long toAdd = Math.min(voltage, this.capacity - this.energy);
         if (!simulate) this.energy += toAdd;
+        this.state.receive(simulate, 1);
         return toAdd;
     }
 
