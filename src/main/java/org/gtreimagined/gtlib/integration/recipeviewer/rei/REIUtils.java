@@ -40,12 +40,6 @@ public class REIUtils {
         EXTRA_CATEGORIES.add(registry);
     }
 
-    public static void uses(FluidStack val, boolean USE) {
-        EntryStack<?> stack = EntryStack.of(VanillaEntryTypes.FLUID, toREIFLuidStack(val));
-        if (USE) ViewSearchBuilder.builder().addUsagesFor(stack).open();
-        else ViewSearchBuilder.builder().addRecipesFor(stack).open();
-    }
-
     public static void showCategories(ResourceLocation... categories) {
         ViewSearchBuilder.builder().addCategories(Arrays.stream(categories).map(CategoryIdentifier::of).collect(Collectors.toList())).open();
     }

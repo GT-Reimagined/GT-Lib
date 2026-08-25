@@ -531,6 +531,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     public boolean toggleMachine() {
+        if (!canBeDisabled()) return false;
         if (getMachineState() == MachineState.DISABLED) {
             setMachineState(disabledState);
             disabledState = null;
@@ -541,6 +542,10 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             disableMachine();
         }
         return true;
+    }
+
+    protected boolean canBeDisabled(){
+        return recipeHandler.isPresent();
     }
 
     protected void disableMachine() {

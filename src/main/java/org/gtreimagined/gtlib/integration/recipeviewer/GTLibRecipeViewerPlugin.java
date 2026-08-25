@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.integration.recipeviewer;
 
+import brachy.modularui.ModularUI.Mods;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -11,6 +12,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.GTLibEmiPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.GTLibJEIPlugin;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.REIUtils;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -26,7 +28,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,12 +116,12 @@ public class GTLibRecipeViewerPlugin {
         }
     }
 
-    public static void registerPatternForJei(BasicMultiMachine<?> machine, List<Pattern> patternList){
+    public static void registerPatternForPreview(BasicMultiMachine<?> machine, List<Pattern> patternList){
         machine.getTiers().forEach(t -> {
-            registerPatternForJei(machine, t, patternList);
+            registerPatternForPreview(machine, t, patternList);
         });
     }
-    public static void registerPatternForJei(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
+    public static void registerPatternForPreview(BasicMultiMachine<?> machine, Tier tier, List<Pattern> patternList){
         STRUCTURES.put(machine.getBlockState(tier), patternList);
     }
 
@@ -162,22 +163,15 @@ public class GTLibRecipeViewerPlugin {
     }
 
     public static void showCategories(ResourceLocation... categories){
-        if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){
-            GTLibJEIPlugin.showCategories(categories);
-        } else if (GTAPI.isModLoaded(Ref.MOD_REI)){
+        if (Mods.EMI.isLoaded()){
+            GTLibEmiPlugin.showRecipes(categories);
+        } else if (Mods.REI.isLoaded()){
             REIUtils.showCategories(categories);
+        } else if (Mods.JEI.isLoaded()){
+            GTLibJEIPlugin.showCategories(categories);
         }
     }
 
-    //To perform a JEI lookup for fluid. Use defines direction.
-
-    public static void uses(FluidStack val, boolean USE) {
-        if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){
-            GTLibJEIPlugin.uses(val, USE);
-        } else if (GTAPI.isModLoaded(Ref.MOD_REI)){
-            REIUtils.uses(val, USE);
-        }
-    }
 
     public static <T> void addModDescriptor(List<Component> tooltip, T t) {
         if (GTAPI.isModLoaded(Ref.MOD_JEI) && !GTAPI.isModLoaded(Ref.MOD_REI)){

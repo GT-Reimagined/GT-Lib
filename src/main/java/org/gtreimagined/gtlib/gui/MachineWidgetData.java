@@ -24,7 +24,7 @@ public class MachineWidgetData {
     @Setter
     public boolean barFill = true;
     @Getter
-    protected int2 progressSize = new int2(20, 18), progressPos = new int2(72, 18);
+    protected int2 progressSize = new int2(20, 18), progressPos = new int2(78, 24);
     @Accessors(fluent = true)
     @Getter
     protected boolean hasProgressWidget = true, hasMachineStateWidget = true, hasIOWidgets = true;

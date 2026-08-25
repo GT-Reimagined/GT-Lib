@@ -1,5 +1,7 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.emi;
 
+import brachy.modularui.integration.emi.recipe.ModularUIEmiCategory;
+import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -7,6 +9,8 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,14 +21,23 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.gui.GuiProperties;
-import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.RecipeMapRecipe;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.RecipeMapRecipe;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.SmallOreRecipe;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.StoneVeinRecipe;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.VeinRecipe;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.util.RegistryUtils;
 import org.gtreimagined.gtlib.util.int4;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,16 +64,16 @@ public class GTLibEmiPlugin implements EmiPlugin {
             GuiProperties gui = tuple.gui;
             int4 area = gui.getArea();
             Tier tier = tuple.map.getGuiTier() != null ? tuple.map.getGuiTier() : tuple.tier;
-            EmiRecipeCategory mainCategory = new EmiRecipeCategory(tuple.map.getLoc(),
+            EmiRecipeCategory mainCategory = new ModularUIEmiCategory(tuple.map.getLoc(),
                     createIcon(tuple.map.getIcon(), tuple.workstations.isEmpty() ? null : tuple.workstations.get(0)));
             emiRegistry.addCategory(mainCategory);
             Map<String, EmiRecipeCategory> subCategories = new HashMap<>();
             if (!tuple.map.getSubCategories().isEmpty()){
                 tuple.map.getSubCategories().forEach((s, subCategory) -> {
-                    ResourceLocation subCategoryId = new ResourceLocation(Ref.SHARED_ID, s);
-                    EmiRecipeCategory subEmiCategory = new EmiRecipeCategory(subCategoryId,
+                    ResourceLocation subCategoryId = new ResourceLocation(tuple.map.getDomain(), s);
+                    EmiRecipeCategory subEmiCategory = new ModularUIEmiCategory(subCategoryId,
                             createIcon(subCategory.icon().get(), null));
-                    subCategories.put(s, subEmiCategory);
+                    subCategories.put(subCategoryId.toString(), subEmiCategory);
                     emiRegistry.addCategory(subEmiCategory);
                 });
             }
@@ -98,12 +111,29 @@ public class GTLibEmiPlugin implements EmiPlugin {
                     emiRegistry.addRecipe(new RecipeMapRecipe(mainCategory, r, gui, tier));
                 });
                 for (var entry : recipeMap.entrySet()) {
-                    EmiRecipeCategory recipeCategory = subCategories.get(entry.getKey());
+                    EmiRecipeCategory recipeCategory = subCategories.get(tuple.map.getDomain() + ":" + entry.getKey());
                     entry.getValue().forEach(r -> {
                         emiRegistry.addRecipe(new RecipeMapRecipe(recipeCategory, r, gui, tier));
                     });
                 }
             }
+        });
+        emiRegistry.addCategory(SmallOreRecipe.CATEGORY);
+        emiRegistry.addCategory(VeinRecipe.CATEGORY);
+        emiRegistry.addCategory(StoneVeinRecipe.CATEGORY);
+        SmallOreData.INSTANCE.getVeins().values().stream().map(SmallOreRecipe::new).forEach(emiRegistry::addRecipe);
+        VeinData.INSTANCE.getVeins().values().stream().map(VeinRecipe::new).forEach(emiRegistry::addRecipe);
+        Object2IntMap<StoneType> veinTotalWeights = new Object2IntOpenHashMap<>();
+        StoneLayerData.INSTANCE.getVeins().forEach((r, l) -> {
+            if (l.type() == null) return;
+            int currentWeight = veinTotalWeights.getOrDefault(l.type(), 0);
+            veinTotalWeights.put(l.type(), currentWeight + l.weight());
+        });
+        StoneLayerData.INSTANCE.getVeins().forEach((r, v) -> {
+            if (!veinTotalWeights.containsKey(v.type())) return;
+            v.ores().forEach(o -> {
+                emiRegistry.addRecipe(new StoneVeinRecipe(new StoneVein(v, o, veinTotalWeights.getOrDefault(v.type(), 0))));
+            });
         });
     }
 
@@ -125,5 +155,10 @@ public class GTLibEmiPlugin implements EmiPlugin {
             renderable = EmiStack.of(item);
         }
         return renderable;
+    }
+
+    public static void showRecipes(ResourceLocation... locations){
+        List<ResourceLocation> locations1 = List.of(locations);
+        EmiApi.getRecipeManager().getCategories().stream().filter(c -> locations1.contains(c.getId())).forEach(EmiApi::displayRecipeCategory);
     }
 }

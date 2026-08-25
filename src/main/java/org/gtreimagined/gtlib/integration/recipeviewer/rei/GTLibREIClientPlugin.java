@@ -1,17 +1,21 @@
 package org.gtreimagined.gtlib.integration.recipeviewer.rei;
 
 import dev.architectury.fluid.FluidStack;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.shedaniel.rei.api.client.entry.filtering.base.BasicFilteringRule;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.CollapsibleEntryRegistry;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.settings.EntrySettingsAdapterRegistry;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.plugins.PluginManager;
 import me.shedaniel.rei.api.common.registry.ReloadStage;
+import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import org.gtreimagined.gtlib.GTAPI;
@@ -20,8 +24,14 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein;
+import org.gtreimagined.gtlib.integration.recipeviewer.emi.recipe.StoneVeinRecipe;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapCategory;
-import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.RecipeMapDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.category.BasicReiCategory;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.RecipeMapDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.SmallOreDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.StoneVeinDisplay;
+import org.gtreimagined.gtlib.integration.recipeviewer.rei.display.VeinDisplay;
 import org.gtreimagined.gtlib.integration.recipeviewer.rei.extension.REIMaterialRecipeExtension;
 import org.gtreimagined.gtlib.material.Material;
 import org.gtreimagined.gtlib.material.MaterialType;
@@ -38,6 +48,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
+import org.gtreimagined.gtlib.worldgen.vein.VeinData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +59,10 @@ import java.util.function.Function;
 
 @REIPluginClient()
 public class GTLibREIClientPlugin implements REIClientPlugin {
+
+    public static final CategoryIdentifier<VeinDisplay> VEIN_ID = CategoryIdentifier.of(Ref.ID, "veins");
+    public static final CategoryIdentifier<SmallOreDisplay> SMALL_ORE_ID = CategoryIdentifier.of(Ref.ID, "small_ores");
+    public static final CategoryIdentifier<StoneVeinDisplay> STONE_VEIN_ID = CategoryIdentifier.of(Ref.ID, "stone_veins");
     @Override
     public String getPluginProviderName() {
         return Ref.ID + ":rei";
@@ -111,7 +128,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
 
         GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
             if (!registeredMachineCats.contains(tuple.map.getLoc())) {
-                RecipeMapCategory category = new RecipeMapCategory(tuple.map, tuple.gui, tuple.tier, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0));
+                RecipeMapCategory category = new RecipeMapCategory(tuple.map, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0));
                 registry.add(category);
                 if (!tuple.workstations.isEmpty()){
                     tuple.workstations.forEach(s -> {
@@ -120,16 +137,29 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                         registry.addWorkstations(category.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, new ItemStack(item)));
                     });
                 }
+                for (var e : tuple.map.getSubCategories().entrySet()){
+                    RecipeMapCategory subCategory = new RecipeMapCategory(new ResourceLocation(tuple.map.getDomain(), e.getKey()), e.getValue());
+                    registry.add(subCategory);
+                    if (!tuple.workstations.isEmpty()){
+                        tuple.workstations.forEach(s -> {
+                            ItemLike item = RegistryUtils.getItemFromID(s);
+                            if (item == Items.AIR) return;
+                            registry.addWorkstations(subCategory.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, new ItemStack(item)));
+                        });
+                    }
+                }
                 registeredMachineCats.add(tuple.map.getLoc());
             }
         });
+        registry.add(new BasicReiCategory(SMALL_ORE_ID, EntryStacks.of(Items.IRON_ORE)));
+        registry.add(new BasicReiCategory(VEIN_ID, EntryStacks.of(Items.IRON_ORE)));
+        registry.add(new BasicReiCategory(STONE_VEIN_ID, EntryStacks.of(Items.IRON_ORE)));
         REIUtils.EXTRA_CATEGORIES.forEach(c -> c.accept(registry));
     }
 
     @Override
     public void registerDisplays(DisplayRegistry registry) {
         // regular recipes
-        registry.registerRecipeFiller(IRecipe.class, type -> RecipeMap.getRecipeTypes().contains(type), r -> !r.isHidden(), RecipeMapDisplay::new);
         GTLibRecipeViewerPlugin.getREGISTRY().values().forEach(t -> {
             var m = t.map;
             if (m instanceof RecipeMap<?> rm){
@@ -138,10 +168,37 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
                         IRecipe recipe = m.getProxy().handler().apply(r, rm.RB());
                         if (recipe == null) return null;
                         if (recipe.isHidden()) return null;
-                        return new RecipeMapDisplay(recipe);
+                        return new RecipeMapDisplay(recipe, m, t.gui, t.tier);
+                    });
+                } else {
+                    registry.registerRecipeFiller(IRecipe.class, type -> RecipeMap.getRecipeTypes().contains(type), r -> !r.isHidden() && r.getMapLoc().equals(m.getLoc()), r -> {
+                        ResourceLocation categoryId = m.getLoc();
+                        if (!m.getSubCategories().isEmpty()){
+                            for (var e : m.getSubCategories().entrySet()){
+                                if (e.getValue().predicate().test(r)){
+                                    categoryId = new ResourceLocation(m.getDomain(), e.getKey());
+                                    break;
+                                }
+                            }
+                        }
+                        return new RecipeMapDisplay(r, m, t.gui, t.tier, categoryId);
                     });
                 }
             }
+        });
+        SmallOreData.INSTANCE.getVeins().values().stream().map(SmallOreDisplay::new).forEach(registry::add);
+        VeinData.INSTANCE.getVeins().values().stream().map(VeinDisplay::new).forEach(registry::add);
+        Object2IntMap<StoneType> veinTotalWeights = new Object2IntOpenHashMap<>();
+        StoneLayerData.INSTANCE.getVeins().forEach((r, l) -> {
+            if (l.type() == null) return;
+            int currentWeight = veinTotalWeights.getOrDefault(l.type(), 0);
+            veinTotalWeights.put(l.type(), currentWeight + l.weight());
+        });
+        StoneLayerData.INSTANCE.getVeins().forEach((r, v) -> {
+            if (!veinTotalWeights.containsKey(v.type())) return;
+            v.ores().forEach(o -> {
+                registry.add(new StoneVeinDisplay(new StoneVein(v, o, veinTotalWeights.getOrDefault(v.type(), 0))));
+            });
         });
         REIUtils.EXTRA_DISPLAYS.forEach(c -> c.accept(registry));
     }
