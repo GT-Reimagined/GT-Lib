@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.IGuiHandler;
 import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
@@ -20,52 +19,13 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public final class SlotType<T extends ModularSlot> implements IGTObject, IMachineEvent {
-
-    @Getter
-    private final String id;
-    @Getter
-    private final ISlotSupplier<T> slotSupplier;
-    @Getter
-    private final Function<IGuiHandler, FluidTanks> fluidHandlerSupplier;
-    @Accessors(fluent = true)
-    @Getter
-    private final boolean mayPickup;
-    @Accessors(fluent = true)
-    @Getter
-    private final boolean mayPlace;
-    @Accessors(fluent = true)
-    @Getter
-    private final boolean allowExternalOutput;
-    @Accessors(fluent = true)
-    @Getter
-    private final boolean allowExternalInput;
-    @Getter
-    private final boolean phantom;
-    @Getter
-    private final boolean slotGroup;
-    @Getter
-    private final UITexture texture;
-    @Getter
-    private final UITexture overlay;
-    @Getter
-    private final BiPredicate<IGuiHandler, ItemStack> tester;
-
-    private SlotType(String id, ISlotSupplier<T> slotSupplier, Function<IGuiHandler, FluidTanks> fluidHandlerSupplier,
-                    boolean mayPickup, boolean mayPlace, boolean allowExternalOutput, boolean allowExternalInput,
-                    boolean phantom, boolean slotGroup, UITexture texture, UITexture overlay, BiPredicate<IGuiHandler, ItemStack> tester) {
-        this.id = id;
-        this.slotSupplier = slotSupplier;
-        this.fluidHandlerSupplier = fluidHandlerSupplier;
-        this.mayPickup = mayPickup;
-        this.mayPlace = mayPlace;
-        this.allowExternalOutput = allowExternalOutput;
-        this.allowExternalInput = allowExternalInput;
-        this.phantom = phantom;
-        this.slotGroup = slotGroup;
-        this.texture = texture;
-        this.overlay = overlay;
-        this.tester = tester;
+public record SlotType<T extends ModularSlot>(
+        String id, ISlotSupplier<T> slotSupplier, Function<IGuiHandler, FluidTanks> fluidHandlerSupplier,
+        boolean mayPickup, boolean mayPlace, boolean allowExternalOutput, boolean allowExternalInput,
+        boolean phantom, boolean slotGroup, UITexture background, UITexture overlay, BiPredicate<IGuiHandler, ItemStack> tester
+) implements IGTObject, IMachineEvent {
+    public String getId() {
+        return id;
     }
 
     public interface ISlotSupplier<T extends ModularSlot> {

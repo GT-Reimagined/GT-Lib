@@ -5,8 +5,6 @@ import brachy.modularui.widgets.slot.ModularSlot;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.Slot;
 
 @Builder
 public class SlotData<T extends ModularSlot> {
@@ -93,9 +91,9 @@ public class SlotData<T extends ModularSlot> {
             }
             if (!jeiXSet) slotData.jeiX = slotData.x;
             if (!jeiYSet) slotData.jeiY = slotData.y;
-            if (!baseTextureSet) slotData.baseTexture = slotData.type.getTexture();
-            if (!overlayTextureSet) slotData.overlayTexture = slotData.type.getOverlay();
-            if (!slotGroupSet) slotData.slotGroup = slotData.type.isSlotGroup();
+            if (!baseTextureSet) slotData.baseTexture = slotData.type.background();
+            if (!overlayTextureSet) slotData.overlayTexture = slotData.type.overlay();
+            if (!slotGroupSet) slotData.slotGroup = slotData.type.slotGroup();
             return slotData;
         }
     }

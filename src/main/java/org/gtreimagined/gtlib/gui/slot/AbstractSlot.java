@@ -63,6 +63,6 @@ public class AbstractSlot<T extends ModularSlot> extends ModularSlot {
         if (this.holder instanceof IFilterableHandler handler){
             filter = handler.test(type, index, stack);
         }
-        return filter && this.type.getTester().test(this.holder, stack) && type.mayPlace();
+        return filter && this.type.tester().test(this.holder, stack) && type.mayPlace();
     }
 }

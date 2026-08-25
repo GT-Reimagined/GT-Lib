@@ -293,21 +293,21 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
             }
             Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
             for (SlotData<?> slotData : guiProperties.getSlots().getSlots(this.getTier())){
-                boolean item = slotData.getType().getSlotSupplier() != null;
-                boolean fluid = slotData.getType().getFluidHandlerSupplier() != null;
+                boolean item = slotData.getType().slotSupplier() != null;
+                boolean fluid = slotData.getType().fluidHandlerSupplier() != null;
                 slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
                 if (item){
-                    ModularSlot slot = slotData.getType().getSlotSupplier().get((SlotType) slotData.getType(), this, this.getAll(), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
-                    ItemSlot itemSlot = ItemSlot.create(slotData.getType().isPhantom());
+                    ModularSlot slot = slotData.getType().slotSupplier().get((SlotType) slotData.getType(), this, this.getAll(), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
+                    ItemSlot itemSlot = ItemSlot.create(slotData.getType().phantom());
                     itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
                     itemSlot.background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.ITEM_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
                     itemSlot.slot(slot);
                     modularPanel.child(itemSlot);
                 } else if (fluid){
-                    FluidTanks tanks = slotData.getType().getFluidHandlerSupplier().apply(this);
+                    FluidTanks tanks = slotData.getType().fluidHandlerSupplier().apply(this);
                     GTFluidSlot fluidSlot = new GTFluidSlot();
                     fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
-                            .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))).phantom(slotData.getType().isPhantom()));
+                            .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId()))).phantom(slotData.getType().phantom()));
                     fluidSlot.background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.FLUID_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
                     modularPanel.child(fluidSlot);
                 }

@@ -110,12 +110,12 @@ public abstract class BaseCover implements ICover {
             slots.forEach(s ->{
                 for (Map.Entry<SlotType<?>, List<SlotData<?>>> entry : map.entrySet()) {
                     SlotType<?> type = entry.getKey();
-                    if (type.getSlotSupplier() == null) continue;
+                    if (type.slotSupplier() == null) continue;
                     int count = gui.getSlots().getCount(tier, entry.getKey());
-                    if (type.isPhantom()) {
-                        inventories.put(type, new FakeTrackedItemHandler<>(this, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester()));
+                    if (type.phantom()) {
+                        inventories.put(type, new FakeTrackedItemHandler<>(this, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.tester()));
                     } else {
-                        inventories.put(type, new TrackedItemHandler<>(this, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester()));
+                        inventories.put(type, new TrackedItemHandler<>(this, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.tester()));
                     }
 
                 }
