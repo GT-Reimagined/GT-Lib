@@ -34,6 +34,7 @@ import org.gtreimagined.gtlib.util.FluidUtils;
 import org.gtreimagined.gtlib.util.Utils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class RecipeWidget extends ParentWidget<RecipeWidget> {

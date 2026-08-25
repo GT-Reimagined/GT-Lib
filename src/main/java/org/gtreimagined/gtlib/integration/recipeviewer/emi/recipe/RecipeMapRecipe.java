@@ -9,8 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.GuiProperties;
-import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.GTEMIFluidIngredient;
 import org.gtreimagined.gtlib.integration.recipeviewer.emi.GTFluidEmiStack;
 import org.gtreimagined.gtlib.integration.recipeviewer.widgets.RecipeWidget;
