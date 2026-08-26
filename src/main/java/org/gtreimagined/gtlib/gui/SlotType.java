@@ -46,19 +46,22 @@ public record SlotType<T extends ModularSlot>(
         return slotType;
     }
 
+    @Accessors(chain = true, fluent = false)
+    @Getter
+    @Setter
     public static class SlotTypeBuilder<T extends ModularSlot> {
-        @Setter private String id;
-        @Setter private ISlotSupplier<T> slotSupplier;
-        @Setter private Function<IGuiHandler, FluidTanks> fluidHandlerSupplier;
-        @Setter private boolean mayPickup = true;
-        @Setter private boolean mayPlace = true;
-        @Setter private boolean allowExternalOutput = true;
-        @Setter private boolean allowExternalInput = true;
-        @Setter private boolean phantom = false;
-        @Setter private boolean slotGroup = true;
-        @Setter private UITexture texture = GTGuiTextures.ITEM_SLOT;
-        @Setter private UITexture overlay;
-        @Setter private BiPredicate<IGuiHandler, ItemStack> tester = (g, i) -> true;
+        private String id;
+        private ISlotSupplier<T> slotSupplier;
+        private Function<IGuiHandler, FluidTanks> fluidHandlerSupplier;
+        private boolean mayPickup = true;
+        private boolean mayPlace = true;
+        private boolean allowExternalOutput = true;
+        private boolean allowExternalInput = true;
+        private boolean phantom = false;
+        private boolean slotGroup = true;
+        private UITexture texture = GTGuiTextures.ITEM_SLOT;
+        private UITexture overlay;
+        private BiPredicate<IGuiHandler, ItemStack> tester = (g, i) -> true;
 
         private SlotType<T> build(){
             return new SlotType<>(
@@ -77,6 +80,4 @@ public record SlotType<T extends ModularSlot>(
             );
         }
     }
-
-
 }
