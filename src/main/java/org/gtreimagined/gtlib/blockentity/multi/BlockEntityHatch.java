@@ -16,6 +16,7 @@ import org.gtreimagined.gtlib.cover.CoverEnergy;
 import org.gtreimagined.gtlib.cover.CoverOutput;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.machine.event.MachineEvent;
 import org.gtreimagined.gtlib.machine.types.HatchMachine;
@@ -27,7 +28,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -137,7 +137,7 @@ public class BlockEntityHatch<T extends BlockEntityHatch<T>> extends BlockEntity
         if (event instanceof SlotType<?>) {
             componentHandler.map(ComponentHandler::getControllers).orElse(Collections.emptyList())
                     .forEach(controller -> {
-                        if (event == SlotType.IT_IN || event == SlotType.IT_OUT || event == SlotType.CELL_IN || event == SlotType.CELL_OUT || event == SlotType.FL_IN || event == SlotType.FL_OUT) {
+                        if (event == SlotTypes.IT_IN || event == SlotTypes.IT_OUT || event == SlotTypes.CELL_IN || event == SlotTypes.CELL_OUT || event == SlotTypes.FL_IN || event == SlotTypes.FL_OUT) {
                             controller.onMachineEvent(event, data);
                         }
                     });

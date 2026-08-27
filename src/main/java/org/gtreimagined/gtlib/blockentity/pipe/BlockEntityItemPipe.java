@@ -7,7 +7,7 @@ import org.gtreimagined.gtlib.capability.item.ROCombinedInvWrapper;
 import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
 import org.gtreimagined.gtlib.capability.pipe.PipeItemHandler;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.pipe.BlockItemPipe;
 import org.gtreimagined.gtlib.pipe.TileTicker;
 import org.gtreimagined.gtlib.pipe.types.ItemPipe;
@@ -44,7 +44,7 @@ public class BlockEntityItemPipe<T extends ItemPipe<T>> extends BlockEntityPipe<
 
     public BlockEntityItemPipe(T type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        inventory = new TrackedItemHandler<>(this, SlotType.STORAGE, type.getCapacity(getPipeSize()), true, true, (g, i) -> true){
+        inventory = new TrackedItemHandler<>(this, SlotTypes.STORAGE, type.getCapacity(getPipeSize()), true, true, (g, i) -> true){
             @Override
             public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
                 ItemStack superInsert = super.insertItem(slot, stack, simulate);

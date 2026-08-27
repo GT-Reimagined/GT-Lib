@@ -22,6 +22,7 @@ import org.gtreimagined.gtlib.capability.item.SidedCombinedInvWrapper;
 import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.util.Utils;
@@ -57,24 +58,24 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public MachineItemHandler(T tile) {
         this.tile = tile;
         if (tile.has(GUI)) {
-            Map<SlotType<?>, List<SlotData<?>>> map = tile.getMachineType().getSlots(tile.getMachineTier()).stream().collect(Collectors.groupingBy(SlotData::getType));
+            Map<SlotType<?>, List<SlotData<?>>> map = tile.getMachineType().getSlots(tile.getMachineTier()).stream().collect(Collectors.groupingBy(SlotData::type));
             for (var entry : map.entrySet()) {
                 SlotType<?> type = entry.getKey();
-                if (type.getSlotSupplier() != null) {
+                if (type.slotSupplier() != null) {
                     inventories.put(type, this.createTrackedHandler(type, tile));
                 }
 
             }
         }
-        inventories.defaultReturnValue(new TrackedItemHandler<>(tile, SlotType.STORAGE, 0, false, false, (a, b) -> false));
+        inventories.defaultReturnValue(new TrackedItemHandler<>(tile, SlotTypes.STORAGE, 0, false, false, (a, b) -> false));
     }
 
     protected TrackedItemHandler<T> createTrackedHandler(SlotType<?> type, T tile){
         int count = tile.getMachineType().getCount(tile.getMachineTier(), type);
-        if (type.isPhantom()) {
-            return new FakeTrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester());
+        if (type.phantom()) {
+            return new FakeTrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.tester());
         } else {
-            return new TrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.getTester());
+            return new TrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.tester());
         }
     }
 
@@ -149,23 +150,23 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      * Handler Access
      **/
     public ITrackedHandler getInputHandler() {
-        return inventories.get(SlotType.IT_IN);
+        return inventories.get(SlotTypes.IT_IN);
     }
 
     public ITrackedHandler getOutputHandler() {
-        return inventories.get(SlotType.IT_OUT);
+        return inventories.get(SlotTypes.IT_OUT);
     }
 
     public ITrackedHandler getCellInputHandler() {
-        return inventories.get(SlotType.CELL_IN);
+        return inventories.get(SlotTypes.CELL_IN);
     }
 
     public ITrackedHandler getCellOutputHandler() {
-        return inventories.get(SlotType.CELL_OUT);
+        return inventories.get(SlotTypes.CELL_OUT);
     }
 
     public ITrackedHandler getChargeHandler() {
-        return inventories.get(SlotType.ENERGY);
+        return inventories.get(SlotTypes.ENERGY);
     }
 
     public ITrackedHandler getHandler(SlotType<?> type) {
