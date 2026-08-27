@@ -28,7 +28,6 @@ public class GTGuiTextures {
     public static final UITexture ENERGY_SLOT_OVERLAY = UITexture.builder().location(Ref.ID, "gui/slots/overlays/energy").defaultColorType().build();
     public static final UITexture FLUID_IN_SLOT_OVERLAY = UITexture.builder().location(Ref.ID, "gui/slots/overlays/fluid_in").colorType(null).build();
     public static final UITexture FLUID_OUT_SLOT_OVERLAY = UITexture.builder().location(Ref.ID, "gui/slots/overlays/fluid_out").colorType(null).build();
-    public static final UITexture BLANK_SLOT = UITexture.fullImage(Ref.ID, "gui/slots/blank", null);
     public static final UITexture ITEM_SLOT = UITexture.builder().location(Ref.ID, "gui/slots/item").defaultColorType().build();
     public static final UITexture FLUID_SLOT = UITexture.builder().location(Ref.ID, "gui/slots/fluid").defaultColorType().build();
 
