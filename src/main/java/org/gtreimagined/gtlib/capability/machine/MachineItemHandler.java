@@ -58,7 +58,7 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public MachineItemHandler(T tile) {
         this.tile = tile;
         if (tile.has(GUI)) {
-            Map<SlotType<?>, List<SlotData<?>>> map = tile.getMachineType().getSlots(tile.getMachineTier()).stream().collect(Collectors.groupingBy(SlotData::getType));
+            Map<SlotType<?>, List<SlotData<?>>> map = tile.getMachineType().getSlots(tile.getMachineTier()).stream().collect(Collectors.groupingBy(SlotData::type));
             for (var entry : map.entrySet()) {
                 SlotType<?> type = entry.getKey();
                 if (type.slotSupplier() != null) {

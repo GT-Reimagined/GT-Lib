@@ -1,100 +1,59 @@
-package org.gtreimagined.gtlib.gui;
+package org.gtreimagined.gtlib.gui
 
-import brachy.modularui.drawable.UITexture;
-import brachy.modularui.widgets.slot.ModularSlot;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.Getter;
+import brachy.modularui.drawable.UITexture
+import brachy.modularui.widgets.slot.ModularSlot
+import java.util.function.Consumer
 
-@Builder
-public class SlotData<T extends ModularSlot> {
+@JvmRecord
+data class SlotData<T: ModularSlot>(
+    val type: SlotType<T>,
+    val x: Int,
+    val y: Int,
+    val jeiX: Int,
+    val jeiY: Int,
+    val baseTexture: UITexture?,
+    val overlayTexture: UITexture?,
+    val slotGroup: Boolean,
+    val data: Int
+) {
 
-    @Getter
-    private SlotType<T> type;
-    @Getter
-    private int x;
-    @Getter
-    private int y;
-    @Getter
-    private int jeiX;
-    @Getter
-    private int jeiY;
-    @Getter
-    private UITexture baseTexture;
-    @Getter
-    private UITexture overlayTexture;
-    @Getter
-    private boolean slotGroup;
-    @Getter
-    @Default
-    private int data = -1;
 
-    public static <T extends ModularSlot> SlotDataBuilder<T> builder(){
-        return new CustomSlotDataBuilder<>();
+    companion object {
+        @JvmStatic
+        fun <T: ModularSlot> create(consumer: Consumer<SlotDataBuilder<T>>): SlotData<T>{
+            val builder = SlotDataBuilder<T>()
+            consumer.accept(builder)
+            val type = requireNotNull(builder.type) { "Must Specify a SlotType for SlotData"}
+            val x = requireNotNull(builder.x) { "X must be set"}
+            val y = requireNotNull(builder.y) { "Y must be set"}
+            val jeiX = builder.jeiX ?: x
+            val jeiY = builder.jeiY ?: y
+            val baseTexture = builder.baseTexture ?: type.background
+            val overlay = builder.overlayTexture ?: type.overlay
+            val slotGroup = builder.slotGroup ?: type.slotGroup
+            return SlotData(type, x, y, jeiX, jeiY, baseTexture, overlay, slotGroup, builder.data)
+        }
     }
 
-    public static class CustomSlotDataBuilder<T extends ModularSlot> extends SlotDataBuilder<T> {
-        boolean xSet = false, ySet = false, jeiXSet = false, jeiYSet = false, baseTextureSet = false, overlayTextureSet = false, slotGroupSet;
+    class SlotDataBuilder<T: ModularSlot> {
+        var type: SlotType<T>? = null
+        var x: Int? = null
+        var y: Int? = null
+        var jeiX: Int? = null
+        var jeiY: Int? = null
+        var baseTexture: UITexture? = null
+        var overlayTexture: UITexture? = null
+        var slotGroup: Boolean? = null
+        var data: Int = -1
 
-        @Override
-        public SlotDataBuilder<T> x(int x) {
-            xSet = true;
-            return super.x(x);
-        }
-        @Override
-        public SlotDataBuilder<T> y(int x) {
-            ySet = true;
-            return super.y(x);
-        }
-
-        @Override
-        public SlotDataBuilder<T> jeiX(int jeiX) {
-            jeiXSet = true;
-            return super.jeiX(jeiX);
-        }
-
-        @Override
-        public SlotDataBuilder<T> jeiY(int jeiY) {
-            jeiYSet = true;
-            return super.jeiY(jeiY);
-        }
-
-        @Override
-        public SlotDataBuilder<T> baseTexture(UITexture baseTexture) {
-            baseTextureSet = true;
-            return super.baseTexture(baseTexture);
-        }
-
-        @Override
-        public SlotDataBuilder<T> overlayTexture(UITexture overlayTexture) {
-            overlayTextureSet = true;
-            return super.overlayTexture(overlayTexture);
-        }
-
-        @Override
-        public SlotDataBuilder<T> slotGroup(boolean slotGroup) {
-            slotGroupSet = true;
-            return super.slotGroup(slotGroup);
-        }
-
-        @Override
-        public SlotData<T> build() {
-            SlotData<T> slotData = super.build();
-            if (slotData.getType() == null){
-                throw new IllegalStateException("Slot Data must call type!");
-            }
-            if (!xSet){
-                throw new IllegalStateException("X must be set");
-            }
-            if (!ySet){
-                throw new IllegalStateException("Y must be set");
-            }
-            if (!jeiXSet) slotData.jeiX = slotData.x;
-            if (!jeiYSet) slotData.jeiY = slotData.y;
-            if (!baseTextureSet) slotData.baseTexture = slotData.type.background();
-            if (!overlayTextureSet) slotData.overlayTexture = slotData.type.overlay();
-            if (!slotGroupSet) slotData.slotGroup = slotData.type.slotGroup();
-            return slotData;
-        }
+        fun type(type: SlotType<T>): SlotDataBuilder<T>  = apply { this.type = type }
+        fun x(x: Int): SlotDataBuilder<T> = apply { this.x = x }
+        fun y(y: Int): SlotDataBuilder<T> = apply { this.y = y }
+        fun jeiX(jeiX: Int): SlotDataBuilder<T> = apply { this.jeiX = jeiX }
+        fun jeiY(jeiY: Int): SlotDataBuilder<T> = apply {this.jeiY = jeiY }
+        fun baseTexture(baseTexture: UITexture?): SlotDataBuilder<T> = apply { this.baseTexture = baseTexture }
+        fun overlayTexture(overlayTexture: UITexture): SlotDataBuilder<T> = apply { this.overlayTexture = overlayTexture }
+        fun slotGroup(slotGroup: Boolean): SlotDataBuilder<T> = apply { this.slotGroup = slotGroup }
+        fun data(data: Int): SlotDataBuilder<T> = apply { this.data = data }
     }
 }

@@ -68,7 +68,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<ItemStack, ?> widget = RecipeViewerSlotWidget.create(ItemStack.class)
                         .recipeSlotRole(RecipeSlotRole.INPUT)
                         .value(ItemStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
+                        .pos(slots.get(s).jeiX() - 4, slots.get(s).jeiY() - 1);
                 if (recipe.hasInputItems()){
                     List<Ingredient> inputs = recipe.getInputItems();
                     if (s < inputs.size()) {
@@ -116,7 +116,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<ItemStack, ?> widget = RecipeViewerSlotWidget.create(ItemStack.class)
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
                         .value(ItemStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
+                        .pos(slots.get(s).jeiX() - 4, slots.get(s).jeiY() - 1);
                 if (recipe.hasOutputItems()){
                     List<ItemStack> outputs = recipe.getOutputItems(false);
                     if (s < outputs.size()) {
@@ -147,7 +147,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<FluidStack, ?> widget = RecipeViewerSlotWidget.create(FluidStack.class)
                         .recipeSlotRole(RecipeSlotRole.INPUT)
                         .value(FluidStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
+                        .pos(slots.get(s).jeiX() - 4, slots.get(s).jeiY() - 1);
                 if (recipe.hasInputFluids()){
                     List<FluidIngredient> fluids = recipe.getInputFluids();
                     if (s < fluids.size()) {
@@ -170,7 +170,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
                 RecipeViewerSlotWidget<FluidStack, ?> widget = RecipeViewerSlotWidget.create(FluidStack.class)
                         .recipeSlotRole(RecipeSlotRole.OUTPUT)
                         .value(FluidStackList.of(Collections.emptyList()))
-                        .pos(slots.get(s).getJeiX() - 4, slots.get(s).getJeiY() - 1);
+                        .pos(slots.get(s).jeiX() - 4, slots.get(s).jeiY() - 1);
                 if (recipe.hasOutputFluids()){
                     List<FluidStack> fluids = recipe.getOutputFluids();
                     if (s < fluids.size()) {

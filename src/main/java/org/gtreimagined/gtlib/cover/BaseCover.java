@@ -97,7 +97,7 @@ public abstract class BaseCover implements ICover {
                 fluidTanks = new Object2ObjectOpenHashMap<>();
             }
             List<SlotData<?>> slots = tier == null ? gui.getSlots().getAnySlots() : gui.getSlots().getSlots(tier);
-            Map<SlotType<?>, List<SlotData<?>>> map = slots.stream().collect(Collectors.groupingBy(SlotData::getType));
+            Map<SlotType<?>, List<SlotData<?>>> map = slots.stream().collect(Collectors.groupingBy(SlotData::type));
             if (map.containsKey(SlotTypes.FL_IN)){
                 fluidTanks.put(FluidTankType.INPUT, new FluidTanks(map.get(SlotTypes.FL_IN).size(), 16000));
             }

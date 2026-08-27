@@ -159,30 +159,30 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
         Set<String> slotGroupList = new HashSet<>();
         for (SlotData<?> slotData : getSlots(machine.getMachineTier())){
-            boolean item = slotData.getType().slotSupplier() != null;
-            boolean fluid = slotData.getType().fluidHandlerSupplier() != null;
-            slotIndexMap.computeIntIfAbsent(slotData.getType().getId(), k -> 0);
+            boolean item = slotData.type().slotSupplier() != null;
+            boolean fluid = slotData.type().fluidHandlerSupplier() != null;
+            slotIndexMap.computeIntIfAbsent(slotData.type().getId(), k -> 0);
             if (item){
-                ModularSlot slot = slotData.getType().slotSupplier().get((SlotType) slotData.getType(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.getType().getId()), (SlotData) slotData);
-                if (slotData.isSlotGroup()){
-                    slotGroupList.add(slotData.getType().getId());
-                    slot.slotGroup(slotData.getType().getId());
+                ModularSlot slot = slotData.type().slotSupplier().get((SlotType) slotData.type(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.type().getId()), (SlotData) slotData);
+                if (slotData.slotGroup()){
+                    slotGroupList.add(slotData.type().getId());
+                    slot.slotGroup(slotData.type().getId());
                 }
-                ItemSlot itemSlot = ItemSlot.create(slotData.getType().phantom());
-                itemSlot.pos(slotData.getX() - 1, slotData.getY() - 1);
+                ItemSlot itemSlot = ItemSlot.create(slotData.type().phantom());
+                itemSlot.pos(slotData.x() - 1, slotData.y() - 1);
                 itemSlot.slot(slot);
-                itemSlot.background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.ITEM_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
+                itemSlot.background(new GTDrawableStack(slotData.baseTexture() == GTGuiTextures.ITEM_SLOT ? null :  slotData.baseTexture(), slotData.overlayTexture()));
                 modularPanel.child(itemSlot);
             } else if (fluid){
-                FluidTanks tanks = slotData.getType().fluidHandlerSupplier().apply(machine);
+                FluidTanks tanks = slotData.type().fluidHandlerSupplier().apply(machine);
                 GTFluidSlot fluidSlot = new GTFluidSlot();
-                fluidSlot.pos(slotData.getX() - 1, slotData.getY() - 1).alwaysShowFull(true)
-                        .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.getType().getId())))
-                                .phantom(slotData.getType().phantom()))
-                        .background(new GTDrawableStack(slotData.getBaseTexture() == GTGuiTextures.FLUID_SLOT ? null :  slotData.getBaseTexture(), slotData.getOverlayTexture()));
+                fluidSlot.pos(slotData.x() - 1, slotData.y() - 1).alwaysShowFull(true)
+                        .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.type().getId())))
+                                .phantom(slotData.type().phantom()))
+                        .background(new GTDrawableStack(slotData.baseTexture() == GTGuiTextures.FLUID_SLOT ? null :  slotData.baseTexture(), slotData.overlayTexture()));
                 modularPanel.child(fluidSlot);
             }
-            slotIndexMap.computeInt(slotData.getType().getId(), (a, b) -> {
+            slotIndexMap.computeInt(slotData.type().getId(), (a, b) -> {
                 if (b == null) return 0;
                 return b + 1;
             });
