@@ -33,7 +33,7 @@ data class SlotType<T : ModularSlot>(
     }
 
     fun interface ISlotSupplier<T : ModularSlot> {
-        fun get(type: SlotType<T>, tile: IGuiHandler, slots: Map<SlotType<*>, IItemHandler>, index: Int, data: SlotData<T>): T
+        fun get(type: SlotType<T>, tile: IGuiHandler, slots: Map<SlotType<*>, @JvmSuppressWildcards IItemHandler>, index: Int, data: SlotData<T>): T
     }
 
     companion object {
