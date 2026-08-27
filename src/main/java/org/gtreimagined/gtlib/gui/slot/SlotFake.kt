@@ -1,96 +1,84 @@
-package org.gtreimagined.gtlib.gui.slot;
+package org.gtreimagined.gtlib.gui.slot
 
-import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.capability.item.FakeTrackedItemHandler;
-import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
-import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.item.ItemStack
+import net.minecraftforge.items.IItemHandler
+import org.gtreimagined.gtlib.capability.IGuiHandler
+import org.gtreimagined.gtlib.capability.item.FakeTrackedItemHandler
+import org.gtreimagined.gtlib.capability.machine.MachineItemHandler
+import org.gtreimagined.gtlib.gui.SlotType
+import org.gtreimagined.gtlib.util.Utils
+import kotlin.math.min
 
-
-public class SlotFake extends AbstractSlot<SlotFake> implements IClickableSlot {
-    final boolean settable;
-
-    public SlotFake(SlotType<SlotFake> type, IGuiHandler tile, IItemHandler stackHandler, int index, boolean settable) {
-        super(type, tile, stackHandler, index);
-        this.settable = settable;
+class SlotFake(
+    type: SlotType<SlotFake>,
+    tile: IGuiHandler,
+    stackHandler: IItemHandler,
+    index: Int,
+    val isSettable: Boolean
+) : AbstractSlot<SlotFake>(type, tile, stackHandler, index), IClickableSlot {
+    override fun mayPlace(stack: ItemStack): Boolean {
+        return this.isSettable
     }
 
-    @Override
-    public boolean mayPlace(@NotNull ItemStack stack) {
-        return settable;
+    override fun mayPickup(playerIn: Player): Boolean {
+        return this.isSettable
     }
 
-    @Override
-    public boolean mayPickup(Player playerIn) {
-        return settable;
-    }
-
-    @Override
-    public int getMaxStackSize(@NotNull ItemStack stack) {
-        if (settable) {
-            return 1;
+    override fun getMaxStackSize(stack: ItemStack): Int {
+        if (this.isSettable) {
+            return 1
         }
-        return super.getMaxStackSize(stack);
+        return super.getMaxStackSize(stack)
     }
 
-    @Override
-    @NotNull
-    public ItemStack remove(int amount) {
-        if (!settable || !(this.getContainer() instanceof FakeTrackedItemHandler)) return super.remove(amount);
-        return MachineItemHandler.extractFromInput(this.getContainer(), index, amount, false);
+    override fun remove(amount: Int): ItemStack {
+        if (!this.isSettable || this.container !is FakeTrackedItemHandler<*>) return super.remove(amount)
+        return MachineItemHandler.extractFromInput(this.container, index, amount, false)
     }
 
-    @Override
-    public void onQuickCraft(@NotNull ItemStack p_75220_1_, @NotNull ItemStack p_75220_2_) {
+    override fun onQuickCraft(p_75220_1_: ItemStack, p_75220_2_: ItemStack) {
     }
 
-    @Override
-    public void setChanged() {
-
+    override fun setChanged() {
     }
 
-    @Override
-    public void set(@NotNull ItemStack stack) {
-        super.set(stack);
+    override fun set(stack: ItemStack) {
+        super.set(stack)
     }
 
-    @Override
-    public ItemStack safeInsert(ItemStack p_150657_, int p_150658_) {
-        ItemStack st = p_150657_.copy();
-        p_150657_ = st.copy();
-        if (!p_150657_.isEmpty() && this.mayPlace(p_150657_)) {
-           ItemStack itemstack = this.getItem();
-           int i = Math.min(Math.min(p_150658_, p_150657_.getCount()), this.getMaxStackSize(p_150657_) - itemstack.getCount());
-           if (itemstack.isEmpty()) {
-              this.set(p_150657_.split(i));
-           }
-  
-           return st;
+    override fun safeInsert(stack: ItemStack, slot: Int): ItemStack {
+        val copy1 = stack.copy()
+        var copy2 = stack.copy()
+        if (!copy2.isEmpty && this.mayPlace(copy2)) {
+            val itemstack = this.item
+            val i = min(min(slot, copy2.count), this.getMaxStackSize(copy2) - itemstack.count)
+            if (itemstack.isEmpty) {
+                this.set(copy2.split(i))
+            }
+
+            return copy1
         } else {
-           return st;
+            return copy1
         }
-     }
-
-    public boolean isSettable() {
-        return settable;
     }
 
-    public ItemStack clickSlot(int clickedButton, ClickType clickType, Player playerEntity, AbstractContainerMenu container) {
-        if (!settable) return ItemStack.EMPTY;
-        Inventory playerinventory = playerEntity.getInventory();
-        ItemStack itemstack = container.getCarried().copy();
+    override fun clickSlot(
+        clickedButton: Int,
+        clickType: ClickType?,
+        playerEntity: Player,
+        container: AbstractContainerMenu
+    ): ItemStack {
+        if (!this.isSettable) return ItemStack.EMPTY
+        val playerinventory = playerEntity.inventory
+        val itemstack = container.carried.copy()
         if ((clickType == ClickType.PICKUP || clickType == ClickType.SWAP) && (clickedButton == 0 || clickedButton == 1)) {
-            ItemStack heldStack = container.getCarried().copy();
-            this.set(heldStack.isEmpty() ? ItemStack.EMPTY : Utils.ca(this.getMaxStackSize(heldStack), heldStack));
-            this.setChanged();
+            val heldStack = container.carried.copy()
+            this.set(if (heldStack.isEmpty) ItemStack.EMPTY else Utils.ca(this.getMaxStackSize(heldStack), heldStack))
+            this.setChanged()
         }
-        return itemstack;
+        return itemstack
     }
 }

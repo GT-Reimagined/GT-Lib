@@ -1,30 +1,22 @@
-package org.gtreimagined.gtlib.gui.slot;
+package org.gtreimagined.gtlib.gui.slot
 
-import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.gui.SlotType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraftforge.items.IItemHandler
+import org.gtreimagined.gtlib.capability.IGuiHandler
+import org.gtreimagined.gtlib.gui.SlotType
 
-
-public class SlotEnergy extends AbstractSlot<SlotEnergy> {
-    public SlotEnergy(SlotType<SlotEnergy> type, IGuiHandler tile, IItemHandler itemHandler, int index) {
-        super(type, tile, itemHandler, index);
+class SlotEnergy(type: SlotType<SlotEnergy>?, tile: IGuiHandler?, itemHandler: IItemHandler?, index: Int) :
+    AbstractSlot<SlotEnergy?>(type, tile, itemHandler, index) {
+    override fun getMaxStackSize(): Int {
+        return 1
     }
 
-    @Override
-    public int getMaxStackSize() {
-        return 1;
+    override fun getMaxStackSize(stack: ItemStack): Int {
+        return 1
     }
 
-    @Override
-    public int getMaxStackSize(@NotNull ItemStack stack) {
-        return 1;
-    }
-
-    @Override
-    public boolean mayPickup(Player playerIn) {
-        return true;
+    override fun mayPickup(playerIn: Player): Boolean {
+        return true
     }
 }

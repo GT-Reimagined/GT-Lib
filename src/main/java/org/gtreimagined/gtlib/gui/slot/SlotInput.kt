@@ -1,18 +1,13 @@
-package org.gtreimagined.gtlib.gui.slot;
+package org.gtreimagined.gtlib.gui.slot
 
-import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.gui.SlotType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraft.world.entity.player.Player
+import net.minecraftforge.items.IItemHandler
+import org.gtreimagined.gtlib.capability.IGuiHandler
+import org.gtreimagined.gtlib.gui.SlotType
 
-public class SlotInput extends AbstractSlot<SlotInput> {
-
-    public SlotInput(SlotType<SlotInput> type, IGuiHandler tile, IItemHandler stackHandler, int index) {
-        super(type, tile, stackHandler, index);
-    }
-
-    @Override
-    public boolean mayPickup(Player player) {
-        return true;
+class SlotInput(type: SlotType<SlotInput>, tile: IGuiHandler, stackHandler: IItemHandler, index: Int) :
+    AbstractSlot<SlotInput>(type, tile, stackHandler, index) {
+    override fun mayPickup(player: Player): Boolean {
+        return true
     }
 }

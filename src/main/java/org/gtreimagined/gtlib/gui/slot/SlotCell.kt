@@ -1,13 +1,8 @@
-package org.gtreimagined.gtlib.gui.slot;
+package org.gtreimagined.gtlib.gui.slot
 
-import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.gui.SlotType;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler
+import org.gtreimagined.gtlib.capability.IGuiHandler
+import org.gtreimagined.gtlib.gui.SlotType
 
-public class SlotCell extends AbstractSlot<SlotCell> {
-
-    public SlotCell(SlotType<SlotCell> type, IGuiHandler tile, IItemHandler stackHandler, int index) {
-        super(type, tile, stackHandler, index);
-    }
-
-}
+class SlotCell(type: SlotType<SlotCell>?, tile: IGuiHandler?, stackHandler: IItemHandler?, index: Int) :
+    AbstractSlot<SlotCell?>(type, tile, stackHandler, index)
