@@ -17,12 +17,12 @@ import java.util.function.Function
 @JvmRecord
 data class SlotType<T : ModularSlot>(
     val id: String,
-    @JvmField val slotSupplier: ISlotSupplier<T>?,
-    @JvmField val fluidHandlerSupplier: Function<IGuiHandler, FluidTanks>?,
-    @JvmField val mayPickup: Boolean, @JvmField val mayPlace: Boolean, @JvmField val allowExternalOutput: Boolean,
-    @JvmField val allowExternalInput: Boolean, @JvmField val phantom: Boolean, @JvmField val slotGroup: Boolean,
-    @JvmField val background: UITexture?, @JvmField val overlay: UITexture?,
-    @JvmField val tester: BiPredicate<IGuiHandler, ItemStack>?
+    val slotSupplier: ISlotSupplier<T>?,
+    val fluidHandlerSupplier: Function<IGuiHandler, FluidTanks>?,
+    val mayPickup: Boolean, val mayPlace: Boolean, val allowExternalOutput: Boolean,
+    val allowExternalInput: Boolean, val phantom: Boolean, val slotGroup: Boolean,
+    val background: UITexture?, val overlay: UITexture?,
+    val tester: BiPredicate<IGuiHandler, ItemStack>?
 ) : IGTObject, IMachineEvent {
     init {
         require(!(slotSupplier == null && fluidHandlerSupplier == null)) { "Slot Type must have either a fluid handler supplier or item slot supplier!" }
