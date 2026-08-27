@@ -6,6 +6,7 @@ import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
 import org.gtreimagined.gtlib.capability.machine.MachineEnergyHandler;
 import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.util.Utils;
@@ -79,8 +80,8 @@ public class BlockEntityBatteryBuffer<T extends BlockEntityBatteryBuffer<T>> ext
             @Override
             protected TrackedItemHandler<T> createTrackedHandler(SlotType<?> type, T tile) {
                 int count = tile.getMachineType().getCount(tile.getMachineTier(), type);
-                if (type == SlotType.ENERGY){
-                    return new TrackedItemHandler<>(tile, type, count, true, type.allowExternalInput(), type.getTester());
+                if (type == SlotTypes.ENERGY){
+                    return new TrackedItemHandler<>(tile, type, count, true, type.allowExternalInput(), type.tester());
                 }
                 return super.createTrackedHandler(type, tile);
             }

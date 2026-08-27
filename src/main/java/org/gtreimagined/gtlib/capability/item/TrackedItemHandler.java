@@ -11,6 +11,7 @@ import org.gtreimagined.gtlib.gui.SlotType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiPredicate;
@@ -45,7 +46,7 @@ public class TrackedItemHandler<T extends IGuiHandler> extends ItemStackHandler 
     }
 
     public boolean hasSlotDiversity(){
-        return this.type == SlotType.IT_IN && !(tile instanceof BlockEntityHatch<?>);
+        return this.type == SlotTypes.IT_IN && !(tile instanceof BlockEntityHatch<?>);
     }
 
     @Override

@@ -61,7 +61,7 @@ import org.gtreimagined.gtlib.client.tesr.MachineTESR;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.gui.GuiProperties;
-import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
 import org.gtreimagined.gtlib.machine.BlockMachine;
@@ -756,14 +756,14 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             info.add("State: " + getMachineState().getId());
             String slots = "";
             if (getMachineType().has(ITEM)) {
-                int inputs = getMachineType().getSlots(SlotType.IT_IN, getMachineTier()).size();
-                int outputs = getMachineType().getSlots(SlotType.IT_OUT, getMachineTier()).size();
+                int inputs = getMachineType().getSlots(SlotTypes.IT_IN, getMachineTier()).size();
+                int outputs = getMachineType().getSlots(SlotTypes.IT_OUT, getMachineTier()).size();
                 if (inputs > 0) slots += (" IT_IN: " + inputs + ",");
                 if (outputs > 0) slots += (" IT_OUT: " + outputs + ",");
             }
             if (getMachineType().has(FLUID) && getMachineType().has(GUI)) {
-                int inputs = getMachineType().getSlots(SlotType.FL_IN, getMachineTier()).size();
-                int outputs = getMachineType().getSlots(SlotType.FL_OUT, getMachineTier()).size();
+                int inputs = getMachineType().getSlots(SlotTypes.FL_IN, getMachineTier()).size();
+                int outputs = getMachineType().getSlots(SlotTypes.FL_OUT, getMachineTier()).size();
                 if (inputs > 0) slots += (" FL_IN: " + inputs + ",");
                 if (outputs > 0) slots += (" FL_OUT: " + outputs + ",");
             }

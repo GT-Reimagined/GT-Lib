@@ -43,7 +43,7 @@ import org.gtreimagined.gtlib.datagen.providers.GTTagProvider
 import org.gtreimagined.gtlib.event.GTCraftingEvent
 import org.gtreimagined.gtlib.event.GTProvidersEvent
 import org.gtreimagined.gtlib.fluid.GTFluid
-import org.gtreimagined.gtlib.gui.SlotType
+import org.gtreimagined.gtlib.gui.SlotTypes
 import org.gtreimagined.gtlib.gui.event.GuiEvents
 import org.gtreimagined.gtlib.integration.Integrations
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar
@@ -177,7 +177,7 @@ object GTLib : GTMod() {
         if (event == RegistrationEvent.DATA_INIT) {
             Recipe.init()
             GTLoot.RandomWeightLootFunction.init()
-            SlotType.init()
+            SlotTypes.init()
             RecipeBuilders.init()
             MachineState.init()
             GTLibMaterials.init()

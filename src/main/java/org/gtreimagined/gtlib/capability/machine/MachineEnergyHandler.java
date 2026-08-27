@@ -11,7 +11,7 @@ import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.Dispatch;
 import org.gtreimagined.gtlib.capability.EnergyHandler;
 import org.gtreimagined.gtlib.capability.IMachineHandler;
-import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.MachineFlag;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.machine.event.MachineEvent;
@@ -19,7 +19,6 @@ import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import org.gtreimagined.tesseract.api.forge.TesseractCaps;
@@ -285,7 +284,7 @@ public class MachineEnergyHandler<T extends BlockEntityMachine<T>> extends Energ
 
     @Override
     public void onMachineEvent(IMachineEvent event, Object... data) {
-        if (event == SlotType.ENERGY) {
+        if (event == SlotTypes.ENERGY) {
             tile.itemHandler.ifPresent(h -> {
                 cachedItems = h.getChargeableItems();
                 offsetInsert = 0;
