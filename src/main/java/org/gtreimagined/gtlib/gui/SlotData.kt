@@ -1,6 +1,6 @@
 package org.gtreimagined.gtlib.gui
 
-import brachy.modularui.drawable.UITexture
+import brachy.modularui.api.drawable.IDrawable
 import brachy.modularui.widgets.slot.ModularSlot
 import java.util.function.Consumer
 
@@ -11,8 +11,8 @@ data class SlotData<T: ModularSlot>(
     val y: Int,
     val jeiX: Int,
     val jeiY: Int,
-    val baseTexture: UITexture?,
-    val overlayTexture: UITexture?,
+    val background: IDrawable,
+    val overlay: IDrawable,
     val slotGroup: Boolean,
     val data: Int
 ) {
@@ -28,8 +28,8 @@ data class SlotData<T: ModularSlot>(
             val y = requireNotNull(builder.y) { "Y must be set"}
             val jeiX = builder.jeiX ?: x
             val jeiY = builder.jeiY ?: y
-            val baseTexture = builder.baseTexture ?: type.background
-            val overlay = builder.overlayTexture ?: type.overlay
+            val baseTexture = builder.background ?: type.background
+            val overlay = builder.overlay ?: type.overlay
             val slotGroup = builder.slotGroup ?: type.slotGroup
             return SlotData(type, x, y, jeiX, jeiY, baseTexture, overlay, slotGroup, builder.data)
         }
@@ -41,8 +41,8 @@ data class SlotData<T: ModularSlot>(
         var y: Int? = null
         var jeiX: Int? = null
         var jeiY: Int? = null
-        var baseTexture: UITexture? = null
-        var overlayTexture: UITexture? = null
+        var background: IDrawable? = null
+        var overlay: IDrawable? = null
         var slotGroup: Boolean? = null
         var data: Int = -1
 
@@ -51,8 +51,8 @@ data class SlotData<T: ModularSlot>(
         fun y(y: Int): SlotDataBuilder<T> = apply { this.y = y }
         fun jeiX(jeiX: Int): SlotDataBuilder<T> = apply { this.jeiX = jeiX }
         fun jeiY(jeiY: Int): SlotDataBuilder<T> = apply {this.jeiY = jeiY }
-        fun baseTexture(baseTexture: UITexture?): SlotDataBuilder<T> = apply { this.baseTexture = baseTexture }
-        fun overlayTexture(overlayTexture: UITexture): SlotDataBuilder<T> = apply { this.overlayTexture = overlayTexture }
+        fun background(baseTexture: IDrawable): SlotDataBuilder<T> = apply { this.background = baseTexture }
+        fun overlay(overlayTexture: IDrawable): SlotDataBuilder<T> = apply { this.overlay = overlayTexture }
         fun slotGroup(slotGroup: Boolean): SlotDataBuilder<T> = apply { this.slotGroup = slotGroup }
         fun data(data: Int): SlotDataBuilder<T> = apply { this.data = data }
     }

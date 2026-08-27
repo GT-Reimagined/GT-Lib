@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.gui
 
+import brachy.modularui.api.drawable.IDrawable
 import brachy.modularui.drawable.UITexture
 import brachy.modularui.widgets.slot.ModularSlot
 import net.minecraft.world.item.ItemStack
@@ -21,7 +22,7 @@ data class SlotType<T : ModularSlot>(
     val fluidHandlerSupplier: Function<IGuiHandler, FluidTanks>?,
     val mayPickup: Boolean, val mayPlace: Boolean, val allowExternalOutput: Boolean,
     val allowExternalInput: Boolean, val phantom: Boolean, val slotGroup: Boolean,
-    val background: UITexture?, val overlay: UITexture?,
+    val background: IDrawable, val overlay: IDrawable,
     val tester: BiPredicate<IGuiHandler, ItemStack>
 ) : IGTObject, IMachineEvent {
     init {
@@ -37,7 +38,18 @@ data class SlotType<T : ModularSlot>(
     }
 
     companion object {
-        @JvmStatic fun <T : ModularSlot> create(consumer: Consumer<SlotTypeBuilder<T>>): SlotType<T>  = SlotTypeBuilder.create(consumer)
+        @JvmStatic fun <T : ModularSlot> create(consumer: Consumer<SlotTypeBuilder<T>>): SlotType<T> {
+            val b = SlotTypeBuilder<T>()
+            consumer.accept(b)
+            val id = requireNotNull(b.id) { "Missing id for slot type" }
+            val slotType = SlotType(
+                id, b.slotSupplier, b.fluidHandlerSupplier, b.mayPickup, b.mayPlace, b.allowExternalOutput,
+                b.phantom, b.allowExternalInput, b.slotGroup,
+                b.background, b.overlay, b.tester
+            )
+            GTAPI.register(SlotType::class.java, slotType)
+            return slotType
+        }
     }
 
     class SlotTypeBuilder<T : ModularSlot> {
@@ -50,8 +62,8 @@ data class SlotType<T : ModularSlot>(
         var allowExternalInput = true
         var phantom = false
         var slotGroup = true
-        var background: UITexture? = GTGuiTextures.ITEM_SLOT
-        var overlay: UITexture? = null
+        var background: IDrawable = GTGuiTextures.ITEM_SLOT
+        var overlay: IDrawable = IDrawable.EMPTY
         var tester = BiPredicate { g: IGuiHandler, i: ItemStack -> true }
 
         fun id(id: String): SlotTypeBuilder<T>  = apply { this.id = id }
@@ -65,32 +77,5 @@ data class SlotType<T : ModularSlot>(
         fun slotGroup(slotGroup: Boolean) = apply { this.slotGroup = slotGroup }
         fun background(background: UITexture) = apply { this.background = background }
         fun overlay(overlay: UITexture) = apply { this.overlay = overlay }
-
-        private fun build(id: String): SlotType<T> {
-            return SlotType(
-                id,
-                slotSupplier,
-                fluidHandlerSupplier,
-                mayPickup,
-                mayPlace,
-                allowExternalOutput,
-                allowExternalInput,
-                phantom,
-                slotGroup,
-                background,
-                overlay,
-                tester
-            )
-        }
-        companion object {
-            fun <T : ModularSlot> create(consumer: Consumer<SlotTypeBuilder<T>>): SlotType<T> {
-                val b = SlotTypeBuilder<T>()
-                consumer.accept(b)
-                val id = requireNotNull(b.id) { "Missing id for slot type" }
-                val slotType = b.build(id)
-                GTAPI.register(SlotType::class.java, slotType)
-                return slotType
-            }
-        }
     }
 }
