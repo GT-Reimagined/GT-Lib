@@ -22,7 +22,7 @@ data class SlotType<T : ModularSlot>(
     val mayPickup: Boolean, val mayPlace: Boolean, val allowExternalOutput: Boolean,
     val allowExternalInput: Boolean, val phantom: Boolean, val slotGroup: Boolean,
     val background: UITexture?, val overlay: UITexture?,
-    val tester: BiPredicate<IGuiHandler, ItemStack>?
+    val tester: BiPredicate<IGuiHandler, ItemStack>
 ) : IGTObject, IMachineEvent {
     init {
         require(!(slotSupplier == null && fluidHandlerSupplier == null)) { "Slot Type must have either a fluid handler supplier or item slot supplier!" }

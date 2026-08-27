@@ -35,8 +35,8 @@ class SlotFake(
     }
 
     override fun remove(amount: Int): ItemStack {
-        if (!this.isSettable || this.container !is FakeTrackedItemHandler<*>) return super.remove(amount)
-        return MachineItemHandler.extractFromInput(this.container, index, amount, false)
+        if (!this.isSettable || this.itemHandler !is FakeTrackedItemHandler<*>) return super.remove(amount)
+        return MachineItemHandler.extractFromInput(this.itemHandler, index, amount, false)
     }
 
     override fun onQuickCraft(p_75220_1_: ItemStack, p_75220_2_: ItemStack) {

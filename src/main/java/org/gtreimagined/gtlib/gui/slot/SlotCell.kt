@@ -4,5 +4,5 @@ import net.minecraftforge.items.IItemHandler
 import org.gtreimagined.gtlib.capability.IGuiHandler
 import org.gtreimagined.gtlib.gui.SlotType
 
-class SlotCell(type: SlotType<SlotCell>?, tile: IGuiHandler?, stackHandler: IItemHandler?, index: Int) :
-    AbstractSlot<SlotCell?>(type, tile, stackHandler, index)
+class SlotCell(type: SlotType<SlotCell>, tile: IGuiHandler, stackHandler: IItemHandler, index: Int) :
+    AbstractSlot<SlotCell>(type, tile, stackHandler, index)
