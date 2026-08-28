@@ -110,11 +110,6 @@ dependencies {
     modImplementation(jarJar("com.teamresourceful.resourcefullib:resourcefullib-forge-${project.minecraft_version}:${project.resourcefullib_version}"))
     implementation("com.teamresourceful:yabn:${project.yabn_version}")
     modImplementation("maven.modrinth:carbon-config:${project.carbon_config_version}")
-    jarJar("maven.modrinth:carbon-config:${project.carbon_config_version}"){
-        version {
-            prefer(project.carbon_config_version)
-        }
-    }
     modImplementation(jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
     //modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
     modImplementation(jarJar("dev.engine-room.flywheel:flywheel-forge-${project.minecraft_version}:${project.flywheel_version}"))
