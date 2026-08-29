@@ -44,7 +44,7 @@ data class SlotType<T : ModularSlot>(
             val id = requireNotNull(b.id) { "Missing id for slot type" }
             val slotType = SlotType(
                 id, b.slotSupplier, b.fluidHandlerSupplier, b.mayPickup, b.mayPlace, b.allowExternalOutput,
-                b.phantom, b.allowExternalInput, b.slotGroup,
+                b.allowExternalInput, b.phantom, b.slotGroup,
                 b.background, b.overlay, b.tester
             )
             GTAPI.register(SlotType::class.java, slotType)
