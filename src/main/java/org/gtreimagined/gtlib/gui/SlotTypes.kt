@@ -28,7 +28,7 @@ object SlotTypes {
         if (g is BlockEntityMachine<*>) {
             return@BiPredicate g.recipeHandler.map {
                 it.accepts(stack)
-            }.orElse(false)!!
+            }.orElse(true)!!
         }
         true
     }
