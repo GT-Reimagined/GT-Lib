@@ -12,6 +12,7 @@ import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.RegistryObject
 import org.gtreimagined.gtlib.registration.ICreativeTabProvider
 import org.gtreimagined.gtlib.util.Utils
+import thedarkcolour.kotlinforforge.forge.MOD_BUS
 import java.util.function.Consumer
 import java.util.function.Supplier
 
@@ -57,9 +58,8 @@ object GTCreativeTabs {
     }
 
     fun init() {
-        TABS.register(FMLJavaModLoadingContext.get().modEventBus)
-        FMLJavaModLoadingContext.get().modEventBus
-            .addListener(GTCreativeTabs::buildContentsEvent)
+        TABS.register(MOD_BUS)
+        MOD_BUS.addListener(GTCreativeTabs::buildContentsEvent)
     }
 
     fun buildContentsEvent(event: BuildCreativeModeTabContentsEvent) {
