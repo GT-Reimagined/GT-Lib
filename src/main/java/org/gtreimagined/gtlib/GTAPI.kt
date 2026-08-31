@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectFunction
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.*
+import net.ccbluex.fastutil.invoke
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
@@ -33,10 +34,10 @@ import org.gtreimagined.gtlib.util.Utils
 import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
 import java.util.*
 import java.util.function.Consumer
-import java.util.function.Function
 import java.util.function.Supplier
 import java.util.stream.Collectors
 import java.util.stream.Stream
+import kotlin.collections.forEach
 
 object GTAPI {
     private val OBJECTS: MutableMap<Class<*>, MutableMap<String, Either<ISharedGTObject, MutableMap<String, Any>>>> =
@@ -196,7 +197,7 @@ object GTAPI {
     }
 
     @JvmStatic
-    fun <T> getOrDefault(c: Class<T>, id: String, domain: String, supplier: () -> T): T {
+    fun <T> getOrDefault(c: Class<T>, id: String, domain: String, supplier: Supplier<T>): T {
         val obj: Any? = get(c, id, domain)
         return if (obj != null) c.cast(obj) else supplier()
     }
@@ -211,7 +212,7 @@ object GTAPI {
         if (obj != null) {
             return c.cast(obj)
         }
-        throw supplier.get()
+        throw supplier()
     }
 
     inline fun <reified T> getOrThrow(id: String, domain: String, crossinline supplier: () -> RuntimeException): T {
@@ -250,6 +251,10 @@ object GTAPI {
         return false
     }
 
+    inline fun <reified T> has(id: String, domain: String): Boolean = has(T::class.java, id, domain)
+
+    inline fun <reified T> has(id: String): Boolean = has(T::class.java, id)
+
     @JvmStatic
     fun <T> getFromClassName(className: String, domain: String, id: String): T? {
         val map = CLASS_LOOKUP[domain] ?: return null
@@ -273,9 +278,9 @@ object GTAPI {
     }
 
     @JvmStatic
-    fun <T> all(c: Class<T>): MutableList<T> {
+    fun <T> all(c: Class<T>): List<T> {
         if (!allowRegistration()) {
-            val list: MutableList<T>
+            val list: List<T>
             synchronized(OBJECTS) {
                 list = allInternal(c).collect(Collectors.toList())
             }
@@ -285,9 +290,9 @@ object GTAPI {
     }
 
     @JvmStatic
-    fun <T> all(c: Class<T>, domain: String): MutableList<T> {
+    fun <T> all(c: Class<T>, domain: String): List<T> {
         if (!allowRegistration()) {
-            val list: MutableList<T>
+            val list: List<T>
             synchronized(OBJECTS) {
                 list = allInternal(c, domain).collect(Collectors.toList())
             }
@@ -296,13 +301,17 @@ object GTAPI {
         return allInternal(c, domain).collect(Collectors.toList())
     }
 
+    inline fun <reified T> all(): List<T> = all(T::class.java)
+
+    inline fun <reified T> all(domain: String): List<T> = all(T::class.java, domain)
+
     private fun <T> allInternal(c: Class<T>): Stream<T> {
         val map = OBJECTS[c]
         return if (map == null)
             Stream.empty<T>()
         else
             map.values.stream().flatMap { t ->
-                t.map({ t -> Stream.of(t) }) { right -> right.values.stream() }
+                t.map({ Stream.of(it) }) { right -> right.values.stream() }
             }.map<T> { c.cast(it) }
     }
 
@@ -392,20 +401,33 @@ object GTAPI {
         }
     }
 
+    inline fun <reified T> all(crossinline consumer: (T, String, String) -> Unit) = all(T::class.java){p1, p2, p3 -> consumer(p1, p2, p3)}
+
+    inline fun <reified T> all(domain: String,  crossinline consumer: (T, String, String) -> Unit) = all(T::class.java, domain){p1, p2, p3 -> consumer(p1, p2, p3)}
+
+    inline fun <reified T> all(crossinline consumer: (T) -> Unit) = all(T::class.java){consumer(it)}
+
+    inline fun <reified T> all(domain: String, crossinline consumer: (T) -> Unit) = all(T::class.java, domain){consumer(it)}
+
+    inline fun <reified T> all(domains: Array<String>, crossinline consumer: (T) -> Unit) = all(T::class.java, domains) {consumer(it)}
+
     private fun runProvider(provider: IGTLibProvider) {
         LogManager.getLogger().debug("Running " + provider.name)
         provider.run()
     }
 
+    @JvmStatic
     val commonDeferredQueue: Optional<Deque<Runnable>>
         /**
          * DeferredWorkQueue Section
          */
         get() = Optional.ofNullable<Deque<Runnable>>(DEFERRED_QUEUE.get(0))
 
+    @JvmStatic
     val clientDeferredQueue: Optional<Deque<Runnable>>
         get() = Optional.ofNullable<Deque<Runnable>>(DEFERRED_QUEUE.get(1))
 
+    @JvmStatic
     val serverDeferredQueue: Optional<Deque<Runnable>>
         get() = Optional.ofNullable<Deque<Runnable>>(DEFERRED_QUEUE.get(2))
 
@@ -481,9 +503,9 @@ object GTAPI {
          * 
          * @return if the current thread is the client thread
          */
-        @JvmStatic
         get() = isClientSide && Minecraft.getInstance().isSameThread
 
+    @JvmStatic
     val isClientSide: Boolean
         /**
          * @return if the game is the **PHYSICAL** client, e.g. not a dedicated server.
@@ -491,7 +513,6 @@ object GTAPI {
          * It does **NOT** work for that. Use [.isClientThread] instead.
          * @see .isClientThread
          */
-        @JvmStatic
         get() = FMLEnvironment.dist.isClient
 
     @JvmStatic
@@ -511,22 +532,23 @@ object GTAPI {
     }
 
     @JvmStatic
-    fun getRegistrar(id: String?): Optional<IGTRegistrar?> {
+    fun getRegistrar(id: String?): Optional<IGTRegistrar> {
         return allInternal(IGTRegistrar::class.java)
-            .filter { t: IGTRegistrar -> t.getId() == id }.findFirst()
+            .filter { it.getId() == id }.findFirst()
     }
 
     @JvmStatic
     fun isRegistrarEnabled(id: String): Boolean {
-        return getRegistrar(id).map(Function { obj: IGTRegistrar? -> obj!!.isEnabled }).orElse(false)
+        return getRegistrar(id).map { it.isEnabled }.orElse(false)!!
     }
 
     /**
      * JEI Registry Section
      */
     @JvmOverloads
+    @JvmStatic
     fun registerJEICategory(
-        map: IRecipeMap, gui: GuiProperties?, tier: Tier? = Tier.LV, model: ResourceLocation? = null,
+        map: IRecipeMap, gui: GuiProperties, tier: Tier = Tier.LV, model: ResourceLocation? = null,
         override: Boolean = true
     ) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
@@ -534,54 +556,34 @@ object GTAPI {
         }
     }
 
-    fun registerJEICategory(map: IRecipeMap, gui: GuiProperties?, machine: Machine<*>, tier: Tier?, override: Boolean) {
-        var tier = tier
+    @JvmStatic
+    fun registerJEICategory(map: IRecipeMap, gui: GuiProperties, machine: Machine<*>, tier: Tier?, override: Boolean) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            if (tier == null) tier = machine.firstTier
-            GTLibRecipeViewerPlugin.registerCategory(
-                map, gui, tier,
-                ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier)), override
-            )
+            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier ?: machine.firstTier, ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier)), override)
         }
     }
 
+    @JvmStatic
     fun registerJEICategoryWorkstation(map: IRecipeMap, machine: Machine<*>, tier: Tier?) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            GTLibRecipeViewerPlugin.registerCategoryWorkstation(
-                map,
-                ResourceLocation(
-                    machine.getDomain(),
-                    machine.getIdFromTier(if (tier != null) tier else machine.firstTier)
-                )
-            )
+            GTLibRecipeViewerPlugin.registerCategoryWorkstation(map, ResourceLocation(machine.getDomain(),
+                machine.getIdFromTier(tier ?: machine.firstTier)))
         }
     }
 
     // TODO: Allow other than item.
-    fun getReplacement(type: MaterialType<*>, material: Material, vararg namespaces: String?): Item? {
+    @JvmStatic
+    fun getReplacement(type: MaterialType<*>, material: Material, vararg namespaces: String): Item? {
         if (type.getId().contains("liquid")) return null
         val tag = type.getMaterialTag(material)
-        return getReplacement<Item?>(null, tag, *namespaces)
+        return getReplacement(null, tag, *namespaces)
     }
 
-    fun getReplacement(
-        type: MaterialType<*>,
-        material: Material,
-        stone: StoneType,
-        vararg namespaces: String?
-    ): Item? {
+    @JvmStatic
+    fun getReplacement(type: MaterialType<*>, material: Material, stone: StoneType, vararg namespaces: String): Item? {
         if (type.getId().contains("liquid")) return null
         val tag = TagUtils
-            .getForgelikeItemTag(
-                String.join(
-                    "",
-                    stone.id,
-                    "_",
-                    Utils.getConventionalMaterialType(type),
-                    "/",
-                    material.id
-                )
-            )
+            .getForgelikeItemTag("${stone.id}_${Utils.getConventionalMaterialType(type)}/${material.id}")
         return getReplacement<Item?>(null, tag, *namespaces)
     }
 
@@ -599,9 +601,9 @@ object GTAPI {
      * @return originalItem if there's nothing found, null if there is no
      * originalItem, or an replacement
      */
-    fun <T> getReplacement(originalItem: T?, tag: TagKey<T?>, vararg namespaces: String?): T? {
-        requireNotNull(tag) { "GTAPI#getReplacement received a null tag!" }
-        if (REPLACEMENTS.containsKey(tag.location())) return REPLACEMENTS[tag.location()]!!.get() as T? // return
+    @JvmStatic
+    fun <T> getReplacement(originalItem: T?, tag: TagKey<T>, vararg namespaces: String): T? {
+        if (REPLACEMENTS.containsKey(tag.location())) return REPLACEMENTS[tag.location()]!!.get() as T // return
 
         // RecipeIngredient.of(REPLACEMENTS.get(tag.getName().getPath().hashCode()),1);
         return originalItem
@@ -616,20 +618,23 @@ object GTAPI {
          */
     }
 
-    fun <T> addReplacement(tag: ResourceLocation?, obj: Supplier<T?>) {
-        REPLACEMENTS.put(tag, Supplier { obj.get() })
+    @JvmStatic
+    fun <T : Any> addReplacement(tag: ResourceLocation, obj: Supplier<T>) {
+        REPLACEMENTS[tag] = Supplier { obj.get() }
     }
 
-    fun <T> addReplacement(tag: TagKey<Item?>, obj: Supplier<T?>) {
-        REPLACEMENTS.put(tag.location(), Supplier { obj.get() })
+    @JvmStatic
+    fun <T : Any> addReplacement(tag: TagKey<Item>, obj: Supplier<T>) {
+        REPLACEMENTS[tag.location()] = Supplier { obj.get() }
     }
 
-    fun hasReplacement(tag: TagKey<Item?>): Boolean {
+    @JvmStatic
+    fun hasReplacement(tag: TagKey<Item>): Boolean {
         return REPLACEMENTS.containsKey(tag.location())
     }
 
     @JvmStatic
-    fun registerBlockUpdateHandler(handler: IBlockUpdateEvent?) {
+    fun registerBlockUpdateHandler(handler: IBlockUpdateEvent) {
         BLOCK_UPDATE_HANDLERS.add(handler)
     }
 
@@ -640,22 +645,13 @@ object GTAPI {
      */
     @JvmStatic
     @Suppress("unused")
-    fun onNotifyBlockUpdate(
-        world: Level?, pos: BlockPos?, oldState: BlockState?, newState: BlockState?,
-        flags: Int
-    ) {
-        BLOCK_UPDATE_HANDLERS.forEach(Consumer { h: IBlockUpdateEvent? ->
-            h!!.onNotifyBlockUpdate(
-                world,
-                pos,
-                oldState,
-                newState,
-                flags
-            )
-        })
+    fun onNotifyBlockUpdate(world: Level?, pos: BlockPos, oldState: BlockState, newState: BlockState, flags: Int) {
+        BLOCK_UPDATE_HANDLERS.forEach {
+            it.onNotifyBlockUpdate(world, pos, oldState, newState, flags)
+        }
     }
 
     interface IBlockUpdateEvent {
-        fun onNotifyBlockUpdate(world: Level?, pos: BlockPos?, oldState: BlockState?, newState: BlockState?, flags: Int)
+        fun onNotifyBlockUpdate(world: Level?, pos: BlockPos, oldState: BlockState, newState: BlockState, flags: Int)
     }
 }
