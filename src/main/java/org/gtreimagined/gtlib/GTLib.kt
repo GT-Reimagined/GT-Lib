@@ -347,3 +347,6 @@ object GTLib : GTMod() {
     private fun loadComplete(event: FMLLoadCompleteEvent) {
     }
 }
+
+@Mod(Ref.SHARED_ID)
+object GTShared
