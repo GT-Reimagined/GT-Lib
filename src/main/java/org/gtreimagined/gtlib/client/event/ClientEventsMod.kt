@@ -1,56 +1,52 @@
-package org.gtreimagined.gtlib.client.event;
+package org.gtreimagined.gtlib.client.event
 
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.GTTextureStitcher;
-import org.gtreimagined.gtlib.client.model.loader.IGTModelLoader;
-import org.gtreimagined.gtlib.proxy.ClientHandler;
-import org.gtreimagined.gtlib.registration.RegistrationEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.event.ModelEvent
+import net.minecraftforge.client.event.RegisterColorHandlersEvent
+import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.ModContainer
+import net.minecraftforge.fml.ModList
+import org.gtreimagined.gtlib.GTAPI
+import org.gtreimagined.gtlib.Ref
+import org.gtreimagined.gtlib.client.model.loader.IGTModelLoader
+import org.gtreimagined.gtlib.proxy.ClientHandler
+import org.gtreimagined.gtlib.registration.RegistrationEvent
+import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
+import java.util.function.Consumer
 
-@Mod.EventBusSubscriber(modid = Ref.ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ClientEventsMod {
+object ClientEventsMod {
     /*@SubscribeEvent
     public static void onTextureStitch(final TextureStitchEvent.Pre event) {
         GTTextureStitcher.onTextureStitch(event.getAtlas(), event::addSprite);
     }*/
-
     @SubscribeEvent
-    public static void onBlockColorHandler(RegisterColorHandlersEvent.Block e) {
-        ClientHandler.onBlockColorHandler(e.getBlockColors());
+    fun onBlockColorHandler(e: RegisterColorHandlersEvent.Block) {
+        ClientHandler.onBlockColorHandler(e.blockColors)
     }
 
     @SubscribeEvent
-    public static void onItemColorHandler(RegisterColorHandlersEvent.Item e) {
-        ClientHandler.onItemColorHandler(e.getItemColors());
+    fun onItemColorHandler(e: RegisterColorHandlersEvent.Item) {
+        ClientHandler.onItemColorHandler(e.itemColors)
     }
 
+    @Suppress("removal", "DEPRECATION")
     @SubscribeEvent
-    public static void preResourceRegistration(ModelEvent.RegisterGeometryLoaders ev) {
-        GTAPI.onRegistration(RegistrationEvent.CLIENT_DATA_INIT);
-        GTAPI.all(IGTModelLoader.class).forEach(l -> {
-            String domain = l.getDomain();
-            ModContainer previous = ModLoadingContext.get().getActiveContainer();
-            ModContainer newContainer = ModList.get().getModContainerById(domain).orElse(null);
-            if (newContainer != null){
-                if (!domain.equals(Ref.ID)){
-                    ModLoadingContext.get().setActiveContainer(newContainer);
+    fun preResourceRegistration(ev: ModelEvent.RegisterGeometryLoaders) {
+        GTAPI.onRegistration(RegistrationEvent.CLIENT_DATA_INIT)
+        GTAPI.all(IGTModelLoader::class.java).forEach(Consumer { l: IGTModelLoader<*>? ->
+            val domain = l!!.domain
+            val previous = LOADING_CONTEXT.activeContainer
+            val newContainer: ModContainer? = ModList.get().getModContainerById(domain).orElse(null)
+            if (newContainer != null) {
+                if (domain != Ref.ID) {
+                    LOADING_CONTEXT.setActiveContainer(newContainer)
                 }
             }
-            ev.register(l.getId(), l);
-            if (newContainer != null){
-                if (!domain.equals(Ref.ID)){
-                    ModLoadingContext.get().setActiveContainer(previous);
+            ev.register(l.getId(), l)
+            if (newContainer != null) {
+                if (domain != Ref.ID) {
+                    LOADING_CONTEXT.setActiveContainer(previous)
                 }
             }
-        });
+        })
     }
 }

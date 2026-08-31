@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib
 import brachy.modularui.factory.GuiManager
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry
 import net.devtech.arrp.ARRP
+import net.devtech.arrp.api.RRPInitEvent
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.ItemLike
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.gtreimagined.gtlib.client.GTLibModelManager
+import org.gtreimagined.gtlib.client.event.ClientEventsMod
 import org.gtreimagined.gtlib.common.event.ARRPEvents
 import org.gtreimagined.gtlib.cover.ICover
 import org.gtreimagined.gtlib.data.GTLibBlocks
@@ -71,6 +73,7 @@ import org.gtreimagined.gtlib.recipe.ingredient.IngredientSerializer
 import org.gtreimagined.gtlib.recipe.ingredient.PropertyIngredient
 import org.gtreimagined.gtlib.recipe.material.MaterialSerializer
 import org.gtreimagined.gtlib.recipe.serializer.MachineRecipeSerializer
+import org.gtreimagined.gtlib.registration.GTRegistration
 import org.gtreimagined.gtlib.registration.RegistrationEvent
 import org.gtreimagined.gtlib.tool.IGTTool
 import org.gtreimagined.gtlib.util.TagUtils
@@ -80,7 +83,10 @@ import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVeinData
 import org.gtreimagined.gtlib.worldgen.vein.VeinData
+import thedarkcolour.kotlinforforge.forge.DIST
+import thedarkcolour.kotlinforforge.forge.FORGE_BUS
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
+import thedarkcolour.kotlinforforge.forge.callWhenOn
 import java.awt.image.BufferedImage
 import java.io.IOException
 import java.util.function.Supplier
@@ -115,16 +121,20 @@ object GTLib : GTMod() {
         GTLibConfig.createConfig()
         GuiManager.registerFactory(CoverUIFactory.INSTANCE)
         /* Lifecycle events */
-        val eventBus = MOD_BUS
-        eventBus.addListener(this::modConstructionEvent)
-        eventBus.addListener(this::clientSetup)
-        eventBus.addListener(this::commonSetup)
-        eventBus.addListener(this::serverSetup)
-        eventBus.addListener(this::loadComplete)
+        MOD_BUS.addListener(this::modConstructionEvent)
+        MOD_BUS.addListener(this::clientSetup)
+        MOD_BUS.addListener(this::commonSetup)
+        MOD_BUS.addListener(this::serverSetup)
+        MOD_BUS.addListener(this::loadComplete)
+        MOD_BUS.addListener(GTRegistration::onRegister)
+        if (DIST.isClient) MOD_BUS.addListener(this::onRRPInit)
 
-        eventBus.addListener(this::addCraftingLoaders)
-        eventBus.addListener(this::providers)
-        MinecraftForge.EVENT_BUS.addListener(this::onServerReloadListeners)
+        MOD_BUS.addListener(this::addCraftingLoaders)
+        MOD_BUS.addListener(this::providers)
+        callWhenOn(Dist.CLIENT){
+            MOD_BUS.register(ClientEventsMod)
+        }
+        FORGE_BUS.addListener(this::onServerReloadListeners)
         ARRP.EVENT_BUS.register(ARRPEvents::class.java)
     }
 
@@ -310,8 +320,7 @@ object GTLib : GTMod() {
             }
         }
 
-        val modEventBus = MOD_BUS
-        modEventBus.addListener(Integrations::enqueueIMC)
+        MOD_BUS.addListener(Integrations::enqueueIMC)
     }
 
     private fun serverSetup(e: FMLDedicatedServerSetupEvent) {
@@ -329,6 +338,10 @@ object GTLib : GTMod() {
                 }
             }
         }
+    }
+
+    fun onRRPInit(event: RRPInitEvent?) {
+        GTLibDynamics.runAssetProvidersDynamically()
     }
 
     private fun loadComplete(event: FMLLoadCompleteEvent) {
