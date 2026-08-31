@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib
 
 import com.mojang.datafixers.util.Either
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.*
@@ -13,10 +14,8 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.fml.ModList
-import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.fml.loading.LoadingModList
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.TriConsumer
 import org.gtreimagined.gtlib.datagen.IGTLibProvider
@@ -29,31 +28,15 @@ import org.gtreimagined.gtlib.material.MaterialType
 import org.gtreimagined.gtlib.ore.StoneType
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap
 import org.gtreimagined.gtlib.registration.*
-import org.gtreimagined.gtlib.util.NonNullSupplier
 import org.gtreimagined.gtlib.util.TagUtils
 import org.gtreimagined.gtlib.util.Utils
+import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Supplier
 import java.util.stream.Collectors
 import java.util.stream.Stream
-import kotlin.Any
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.IllegalStateException
-import kotlin.Int
-import kotlin.RuntimeException
-import kotlin.Suppress
-import kotlin.check
-import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.forEach
-import kotlin.collections.get
-import kotlin.requireNotNull
-import kotlin.synchronized
 
 object GTAPI {
     private val OBJECTS: MutableMap<Class<*>, MutableMap<String, Either<ISharedGTObject, MutableMap<String, Any>>>> =
@@ -128,7 +111,7 @@ object GTAPI {
 
     @JvmStatic
     fun <T> register(c: Class<T>, o: IGTObject): T {
-        return register<T>(c, o.getId(), o.domain, o)
+        return register(c, o.getId(), o.domain, o)
     }
 
     inline fun <reified T> register(o: IGTObject): T {
@@ -139,8 +122,8 @@ object GTAPI {
         return register(T::class.java, id, domain, o)
     }
 
-    private fun notRegistered(c: Class<*>, id: String, domain: String): Boolean {
-        return !GTAPI.has(c, id, domain)
+    private fun <T> notRegistered(c: Class<T>, id: String, domain: String): Boolean {
+        return !has(c, id, domain)
     }
 
     private fun <T> getInternal(c: Class<T>, id: String, domain: String?): T? {
@@ -160,12 +143,30 @@ object GTAPI {
     @JvmStatic
     fun <T> get(c: Class<T>, id: String, domain: String): T? {
         val obj = getInternal(c, id, domain)
+        if (obj == null) {
+            val sharedClazz = ISharedGTObject::class.java
+            if (sharedClazz.isAssignableFrom(c)){
+                val clazz: Class<out ISharedGTObject> = c as Class<out ISharedGTObject>
+                if (domain.equals(Ref.SHARED_ID)) {
+                    val o: Any? = get(clazz, id)
+                    return if (o == null) null else c.cast(o)
+                }
+            }
+        }
         return obj
     }
 
     @JvmStatic
     fun <T> get(c: Class<T>, location: ResourceLocation): T? {
         return get(c, location.path, location.namespace)
+    }
+
+    inline fun <reified T> get(location: ResourceLocation): T? {
+        return get(T::class.java, location)
+    }
+
+    inline fun <reified T> get(id: String, domain: String): T? {
+        return get(T::class.java, id, domain)
     }
 
     fun allowRegistration(): Boolean {
@@ -190,10 +191,18 @@ object GTAPI {
         return getInternal(c, id)
     }
 
+    inline fun <reified T: ISharedGTObject> get(id: String): T? {
+        return get(T::class.java, id)
+    }
+
     @JvmStatic
-    fun <T> getOrDefault(c: Class<T>, id: String, domain: String, supplier: NonNullSupplier<out T>): T {
+    fun <T> getOrDefault(c: Class<T>, id: String, domain: String, supplier: () -> T): T {
         val obj: Any? = get(c, id, domain)
-        return if (obj != null) c.cast(obj) else supplier.get()
+        return if (obj != null) c.cast(obj) else supplier()
+    }
+
+    inline fun <reified T> getOrDefault(id: String, domain: String, crossinline supplier: () -> T): T {
+        return getOrDefault(T::class.java, id, domain, ){supplier()}
     }
 
     @JvmStatic
@@ -205,6 +214,10 @@ object GTAPI {
         throw supplier.get()
     }
 
+    inline fun <reified T> getOrThrow(id: String, domain: String, crossinline supplier: () -> RuntimeException): T {
+        return getOrThrow(T::class.java, id, domain) {supplier()}
+    }
+
     fun <T : ISharedGTObject> getOrThrow(c: Class<T>, id: String, supplier: Supplier<out RuntimeException>): T {
         val obj: Any? = get(c, id)
         if (obj != null) {
@@ -213,20 +226,23 @@ object GTAPI {
         throw supplier.get()
     }
 
-    fun <T> has(c: Class<T?>?, id: String?, domain: String?): Boolean {
-        val map = OBJECTS.get(c)
+    inline fun <reified T: ISharedGTObject> getOrThrow(id: String, crossinline supplier: () -> RuntimeException): T {
+        return getOrThrow(T::class.java, id) {supplier()}
+    }
+
+    @JvmStatic
+    fun <T> has(c: Class<T>, id: String, domain: String): Boolean {
+        val map = OBJECTS[c]
         if (map != null) {
-            val either = map[domain]
-            if (either == null) return false
-            return either.map<Boolean?>(
-                Function { t: ISharedGTObject? -> true },
-                Function { t: MutableMap<String?, Any?>? -> t!!.containsKey(id) })
+            val either = map[domain] ?: return false
+            return either.map({ true }) { it.containsKey(id) }
         }
         return false
     }
 
-    fun <T> has(c: Class<T?>?, id: String?): Boolean {
-        val map = OBJECTS.get(c)
+    @JvmStatic
+    fun <T> has(c: Class<T>, id: String): Boolean {
+        val map = OBJECTS[c]
         if (map != null) {
             val inner = map[id]
             return inner != null && inner.left().isPresent
@@ -234,155 +250,144 @@ object GTAPI {
         return false
     }
 
-    fun <T> get(className: String?, domain: String, id: String?): T? {
-        val map = CLASS_LOOKUP[domain]
-        if (map == null) return null
-        val clazz = map[className] as Class<out T?>?
-        if (clazz == null) return null
-        return GTAPI.get(clazz, id, domain)
+    @JvmStatic
+    fun <T> getFromClassName(className: String, domain: String, id: String): T? {
+        val map = CLASS_LOOKUP[domain] ?: return null
+        val clazz = map[className] as? Class<out T?> ?: return null
+        return get(clazz, id, domain)
     }
 
-    fun <T> all(className: String?, domain: String?, consumer: Consumer<T?>?) {
+
+    @JvmStatic
+    fun <T> getFromClassName(className: String, id: String): T? {
+        return getFromClassName(className, Ref.SHARED_ID, id)
+    }
+
+    @JvmStatic
+    fun <T> all(className: String, domain: String, consumer: Consumer<T>) {
         synchronized(OBJECTS) {
-            val map = CLASS_LOOKUP[domain]
-            if (map == null) return
-            val clazz = map[className] as Class<out T?>?
-            if (clazz == null) return
-            if (domain == null) {
-                GTAPI.allInternal(clazz).forEach(consumer)
-            } else {
-                GTAPI.allInternal(clazz, domain)!!.forEach(consumer)
-            }
+            val map = CLASS_LOOKUP[domain] ?: return
+            val clazz = map[className] as? Class<out T> ?: return
+            allInternal(clazz, domain).forEach(consumer)
         }
     }
 
-    fun <T> get(className: String?, id: String?): T? {
-        return get<T?>(className, Ref.SHARED_ID, id)
-    }
-
-    fun <T> all(c: Class<T?>): MutableList<T?> {
+    @JvmStatic
+    fun <T> all(c: Class<T>): MutableList<T> {
         if (!allowRegistration()) {
-            val list: MutableList<T?>
+            val list: MutableList<T>
             synchronized(OBJECTS) {
-                list = allInternal<T?>(c).collect(Collectors.toList())
+                list = allInternal(c).collect(Collectors.toList())
             }
             return list
         }
-        return allInternal<T?>(c).collect(Collectors.toList())
+        return allInternal(c).collect(Collectors.toList())
     }
 
-    fun <T> all(c: Class<T?>, domain: String): MutableList<T?> {
+    @JvmStatic
+    fun <T> all(c: Class<T>, domain: String): MutableList<T> {
         if (!allowRegistration()) {
-            val list: MutableList<T?>
+            val list: MutableList<T>
             synchronized(OBJECTS) {
-                list = allInternal<T?>(c, domain)!!.collect(Collectors.toList())
+                list = allInternal(c, domain).collect(Collectors.toList())
             }
             return list
         }
-        return allInternal<T?>(c, domain)!!.collect(Collectors.toList())
+        return allInternal(c, domain).collect(Collectors.toList())
     }
 
-    private fun <T> allInternal(c: Class<T?>): Stream<T?> {
+    private fun <T> allInternal(c: Class<T>): Stream<T> {
         val map = OBJECTS[c]
         return if (map == null)
-            Stream.empty<T?>()
+            Stream.empty<T>()
         else
-            map.values.stream().flatMap<Any?> { t: Either<ISharedGTObject?, MutableMap<String?, Any?>?>? ->
-                t!!.map<Stream<out Any?>?>(
-                    Function { t: ISharedGTObject? -> Stream.of(t) },
-                    Function { right: MutableMap<String?, Any?>? -> right!!.values.stream() })
-            }.map<T?> { obj: Any? -> c.cast(obj) }
+            map.values.stream().flatMap { t ->
+                t.map({ t -> Stream.of(t) }) { right -> right.values.stream() }
+            }.map<T> { c.cast(it) }
     }
 
-    private fun <T> allInternal(c: Class<T?>, domain: String): Stream<T?>? {
-        return allInternal<T?>(c)
+    private fun <T> allInternal(c: Class<T>, domain: String): Stream<T> {
+        return allInternal(c)
             .filter { o: T? -> o is IGTObject && (o as IGTObject).domain == domain }
     }
 
-    fun <T> all(c: Class<T?>, consumer: TriConsumer<T?, String?, String?>) {
+    @JvmStatic
+    fun <T> all(c: Class<T>, consumer: TriConsumer<T, String, String>) {
         synchronized(OBJECTS) {
             val map = OBJECTS[c]
-            if (map != null) {
-                map.forEach { (d: String?, e: String<ISharedGTObject?, MutableMap<String?, Any?>?>?) ->
-                    if (e!!.left().isPresent()) {
-                        e.left().ifPresent(Consumer { o: ISharedGTObject? ->
-                            consumer.accept(
-                                c.cast(o),
-                                o!!.domain,
-                                o.getId()
-                            )
-                        })
-                    } else {
-                        e.right().ifPresent(Consumer { m: MutableMap<String?, Any?>? ->
-                            m!!.forEach { (i: String?, o: Any?) ->
+            map?.forEach { (d, e) ->
+                if (e.left().isPresent) {
+                    e.left().ifPresent { o ->
+                        consumer.accept(c.cast(o), o.domain, o.getId())
+                    }
+                } else {
+                    e.right().ifPresent { m ->
+                        m.forEach { (i, o) ->
+                            consumer.accept(c.cast(o), d, i)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @JvmStatic
+    fun <T> all(c: Class<T>, domain: String, consumer: TriConsumer<T, String, String>) {
+        synchronized(OBJECTS) {
+            val map = OBJECTS[c]
+            map?.forEach { (d, e) ->
+                if (e.left().isPresent) {
+                    if (domain == Ref.SHARED_ID) {
+                        e.left().ifPresent { o ->
+                            consumer.accept(c.cast(o), o.domain, o.getId())
+                        }
+                    }
+                } else {
+                    e.right().ifPresent { m ->
+                        m.forEach { (i, o) ->
+                            if (d == domain) {
                                 consumer.accept(c.cast(o), d, i)
                             }
-                        })
-                    }
-                }
-            }
-        }
-    }
-
-    fun <T> all(c: Class<T?>, domain: String, consumer: TriConsumer<T?, String?, String?>) {
-        synchronized(OBJECTS) {
-            val map = OBJECTS[c]
-            if (map != null) {
-                map.forEach { (d: String?, e: String<ISharedGTObject?, MutableMap<String?, Any?>?>?) ->
-                    if (e!!.left().isPresent()) {
-                        if (domain == Ref.SHARED_ID) {
-                            e.left().ifPresent(Consumer { o: ISharedGTObject? ->
-                                consumer.accept(
-                                    c.cast(o),
-                                    o!!.domain,
-                                    o.getId()
-                                )
-                            })
                         }
-                    } else {
-                        e.right().ifPresent(Consumer { m: MutableMap<String?, Any?>? ->
-                            m!!.forEach { (i: String?, o: Any?) ->
-                                if (d == domain) {
-                                    consumer.accept(c.cast(o), d, i)
-                                }
-                            }
-                        })
                     }
                 }
             }
         }
     }
 
-    fun <T> all(c: Class<T?>, consumer: Consumer<T?>?) {
+    @JvmStatic
+    fun <T> all(c: Class<T>, consumer: Consumer<T>) {
         if (!allowRegistration()) {
             synchronized(OBJECTS) {
-                allInternal<T?>(c).forEach(consumer)
+                allInternal(c).forEach(consumer)
             }
         } else {
-            allInternal<T?>(c).forEach(consumer)
+            allInternal(c).forEach(consumer)
         }
     }
 
-    fun <T> all(c: Class<T?>, domain: String, consumer: Consumer<T?>?) {
+    @JvmStatic
+    fun <T> all(c: Class<T>, domain: String, consumer: Consumer<T>) {
         if (allowRegistration()) {
             synchronized(OBJECTS) {
-                allInternal<T?>(c, domain)!!.forEach(consumer)
+                allInternal(c, domain).forEach(consumer)
             }
         } else {
-            allInternal<T?>(c, domain)!!.forEach(consumer)
+            allInternal(c, domain).forEach(consumer)
         }
     }
 
-    fun <T> all(c: Class<T?>, domains: Array<String>, consumer: Consumer<T?>?) {
+    @JvmStatic
+    fun <T> all(c: Class<T>, domains: Array<String>, consumer: Consumer<T>) {
         if (allowRegistration()) {
             synchronized(OBJECTS) {
                 for (domain in domains) {
-                    allInternal<T?>(c, domain)!!.forEach(consumer)
+                    allInternal(c, domain).forEach(consumer)
                 }
             }
         } else {
             for (domain in domains) {
-                allInternal<T?>(c, domain)!!.forEach(consumer)
+                allInternal(c, domain).forEach(consumer)
             }
         }
     }
@@ -392,40 +397,26 @@ object GTAPI {
         provider.run()
     }
 
-    val commonDeferredQueue: Optional<Deque<Runnable?>?>
+    val commonDeferredQueue: Optional<Deque<Runnable>>
         /**
          * DeferredWorkQueue Section
          */
-        get() = Optional.ofNullable<Deque<Runnable?>?>(
-            DEFERRED_QUEUE.get(
-                0
-            )
-        )
+        get() = Optional.ofNullable<Deque<Runnable>>(DEFERRED_QUEUE.get(0))
 
-    val clientDeferredQueue: Optional<Deque<Runnable?>?>
-        get() = Optional.ofNullable<Deque<Runnable?>?>(
-            DEFERRED_QUEUE.get(
-                1
-            )
-        )
+    val clientDeferredQueue: Optional<Deque<Runnable>>
+        get() = Optional.ofNullable<Deque<Runnable>>(DEFERRED_QUEUE.get(1))
 
-    val serverDeferredQueue: Optional<Deque<Runnable?>?>
-        get() = Optional.ofNullable<Deque<Runnable?>?>(
-            DEFERRED_QUEUE.get(
-                2
-            )
-        )
+    val serverDeferredQueue: Optional<Deque<Runnable>>
+        get() = Optional.ofNullable<Deque<Runnable>>(DEFERRED_QUEUE.get(2))
 
     @JvmStatic
-    fun runLaterCommon(vararg r: Runnable?) {
+    fun runLaterCommon(vararg r: Runnable) {
         synchronized(DEFERRED_QUEUE) {
             DEFERRED_QUEUE.computeIfAbsent(
                 0,
-                it.unimi.dsi.fastutil.ints.Int2ObjectFunction { q: Int ->
-                    LinkedList<Runnable?>(
-                        Arrays.asList<Runnable?>(*r)
-                    )
-                })!!.addAll(Arrays.asList<Runnable?>(*r))
+                Int2ObjectFunction {
+                    LinkedList(listOf(*r))
+                })!!.addAll(listOf(*r))
         }
     }
 
@@ -434,22 +425,21 @@ object GTAPI {
         synchronized(DEFERRED_QUEUE) {
             DEFERRED_QUEUE.computeIfAbsent(
                 1,
-                it.unimi.dsi.fastutil.ints.Int2ObjectFunction { q: Int -> LinkedList<Runnable?>() })!!
+                Int2ObjectFunction { q: Int -> LinkedList() })!!
                 .addAll(
-                    Arrays.asList<Runnable?>(*r)
+                    listOf(*r)
                 )
         }
     }
 
-    fun runLaterServer(vararg r: Runnable?) {
+    @JvmStatic
+    fun runLaterServer(vararg r: Runnable) {
         synchronized(DEFERRED_QUEUE) {
             DEFERRED_QUEUE.computeIfAbsent(
                 2,
-                it.unimi.dsi.fastutil.ints.Int2ObjectFunction { q: Int ->
-                    LinkedList<Runnable?>(
-                        Arrays.asList<Runnable?>(*r)
-                    )
-                })!!.addAll(Arrays.asList<Runnable?>(*r))
+                Int2ObjectFunction {
+                    LinkedList(listOf(*r))
+                }).addAll(listOf(*r))
         }
     }
 
@@ -463,23 +453,23 @@ object GTAPI {
         GTLib.LOGGER.info("Registration event " + event)
         val side = FMLEnvironment.dist
         if (!REGISTRATION_EVENTS_HANDLED.add(event)) {
-            if (ModLoadingContext.get().activeNamespace == Ref.ID) return
+            if (LOADING_CONTEXT.activeNamespace == Ref.ID) return
             throw IllegalStateException("The RegistrationEvent " + event.name + " has already been handled")
         }
         INTERNAL_REGISTRAR!!.onRegistrationEvent(event, side)
-        val list = GTAPI.all<IGTRegistrar?>(IGTRegistrar::class.java).stream()
-            .sorted { c1: IGTRegistrar?, c2: IGTRegistrar? -> Integer.compare(c2!!.priority, c1!!.priority) }
-            .filter { obj: IGTRegistrar? -> obj!!.isEnabled }.toList()
-        list.forEach(Consumer { r: IGTRegistrar? -> r!!.onRegistrationEvent(event, side) })
-        if (CALLBACKS.containsKey(event)) CALLBACKS[event]!!.forEach(Consumer { obj: Runnable? -> obj!!.run() })
+        val list = all(IGTRegistrar::class.java).stream()
+            .sorted { c1, c2 -> c2.priority.compareTo(c1.priority) }
+            .filter { it.isEnabled }.toList()
+        list.forEach { it.onRegistrationEvent(event, side) }
+        if (CALLBACKS.containsKey(event)) CALLBACKS[event]?.forEach { it.run() }
         if (event == RegistrationEvent.CLIENT_DATA_INIT) phase = previous
     }
 
     @JvmStatic
     fun isModLoaded(modid: String): Boolean {
         if (ModList.get() == null) {
-            return LoadingModList.get().mods.stream().map<String?> { obj: ModInfo? -> obj!!.modId }
-                .anyMatch { anObject: String? -> modid.equals(anObject) }
+            return LoadingModList.get().mods.stream().map { it.modId }
+                .anyMatch { modid == it }
         }
         return ModList.get().isLoaded(modid)
     }
@@ -491,6 +481,7 @@ object GTAPI {
          * 
          * @return if the current thread is the client thread
          */
+        @JvmStatic
         get() = isClientSide && Minecraft.getInstance().isSameThread
 
     val isClientSide: Boolean
@@ -500,10 +491,12 @@ object GTAPI {
          * It does **NOT** work for that. Use [.isClientThread] instead.
          * @see .isClientThread
          */
+        @JvmStatic
         get() = FMLEnvironment.dist.isClient
 
-    fun runOnEvent(event: RegistrationEvent?, runnable: Runnable?) {
-        CALLBACKS.computeIfAbsent(event) { k: RegistrationEvent? -> ObjectArrayList<Runnable?>() }!!
+    @JvmStatic
+    fun runOnEvent(event: RegistrationEvent, runnable: Runnable) {
+        CALLBACKS.computeIfAbsent(event) { k: RegistrationEvent? -> ObjectArrayList() }!!
             .add(runnable)
     }
 
@@ -517,13 +510,15 @@ object GTAPI {
         }
     }
 
+    @JvmStatic
     fun getRegistrar(id: String?): Optional<IGTRegistrar?> {
-        return GTAPI.allInternal<IGTRegistrar?>(IGTRegistrar::class.java)
-            .filter { t: IGTRegistrar? -> t!!.getId() == id }.findFirst()
+        return allInternal(IGTRegistrar::class.java)
+            .filter { t: IGTRegistrar -> t.getId() == id }.findFirst()
     }
 
-    fun isRegistrarEnabled(id: String?): Boolean {
-        return getRegistrar(id).map<Boolean?>(Function { obj: IGTRegistrar? -> obj!!.isEnabled }).orElse(false)
+    @JvmStatic
+    fun isRegistrarEnabled(id: String): Boolean {
+        return getRegistrar(id).map(Function { obj: IGTRegistrar? -> obj!!.isEnabled }).orElse(false)
     }
 
     /**
