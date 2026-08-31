@@ -1,4 +1,4 @@
-modLoader="javafml"
+modLoader="kotlinforforge"
 license="LGPLv3"
 loaderVersion="${loader_version_range}"
 issueTrackerURL="https://github.com/GT-Reimagined/GT-Lib/issues"
@@ -21,12 +21,6 @@ side="BOTH"
 modId="minecraft"
 mandatory=true
 versionRange="${minecraft_version_range}"
-ordering="AFTER"
-side="BOTH"
-[[dependencies.gtlib]]
-modId="kotlinforforge"
-mandatory=true
-versionRange="${kff_version_range}"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.gtlib]]
