@@ -292,7 +292,7 @@ object GTLib : GTMod() {
         GTAPI.onRegistration(RegistrationEvent.DATA_READY)
         GTLibDynamics.runDataProvidersDynamically()
         e.enqueueWork {
-            GTAPI.getClientDeferredQueue().ifPresent { t ->
+            GTAPI.clientDeferredQueue.ifPresent { t ->
                 for (r in t) {
                     try {
                         r.run()
@@ -309,7 +309,7 @@ object GTLib : GTMod() {
         GTLibDynamics.setInitialized()
         LOGGER.info("GTLib Data Processing has Finished. All Data Objects can now be Modified!")
         e.enqueueWork {
-            GTAPI.getCommonDeferredQueue().ifPresent { t ->
+            GTAPI.commonDeferredQueue.ifPresent { t ->
                 for (r in t) {
                     try {
                         r.run()
@@ -328,7 +328,7 @@ object GTLib : GTMod() {
         GTAPI.onRegistration(RegistrationEvent.DATA_READY)
         GTLibDynamics.runDataProvidersDynamically()
         e.enqueueWork {
-            GTAPI.getServerDeferredQueue().ifPresent { t ->
+            GTAPI.serverDeferredQueue.ifPresent { t ->
                 for (r in t) {
                     try {
                         r.run()
