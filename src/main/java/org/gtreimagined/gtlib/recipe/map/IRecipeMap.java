@@ -86,6 +86,6 @@ public interface IRecipeMap extends IGTObject {
     }
 
     default Component getDisplayName() {
-        return Utils.translatable("jei.category." + getLoc().getPath());
+        return Utils.translatable("gui.recipeviewer.category." + getLoc().toLanguageKey());
     }
 }

@@ -28,7 +28,7 @@ object SlotTypes {
         if (g is BlockEntityMachine<*>) {
             return@BiPredicate g.recipeHandler.map {
                 it.accepts(stack)
-            }.orElse(false)!!
+            }.orElse(true)!!
         }
         true
     }
@@ -36,12 +36,10 @@ object SlotTypes {
     @JvmField
     var IT_IN: SlotType<SlotInput> = SlotType.create { b ->
         b.id = "item_in"
-        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, d ->
+        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, _ ->
             SlotInput(
-                type,
-                gui,
-                inv.getOrDefault(type, EmptyHandler.INSTANCE),
-                i
+                type, gui,
+                inv.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = ITEM_IN_PRED
@@ -51,12 +49,10 @@ object SlotTypes {
     @JvmField
     val IT_OUT: SlotType<SlotOutput> = SlotType.create { b ->
         b.id = "item_out"
-        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, d ->
+        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, _ ->
             SlotOutput(
-                type,
-                gui,
-                inv.getOrDefault(type, EmptyHandler.INSTANCE),
-                i
+                type, gui,
+                inv.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = NO_INPUT
@@ -70,11 +66,8 @@ object SlotTypes {
         b.id = "display"
         b.slotSupplier = SlotType.ISlotSupplier { type, gui, item, i, d ->
             SlotFake(
-                type,
-                gui,
-                item.getOrDefault(type, EmptyHandler.INSTANCE),
-                i,
-                false
+                type, gui,
+                item.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = NO_INPUT
@@ -89,13 +82,10 @@ object SlotTypes {
     @JvmField
     val DISPLAY_SETTABLE: SlotType<SlotFake> = SlotType.create { b ->
         b.id = "display_settable"
-        b.slotSupplier = SlotType.ISlotSupplier { type, gui, item, i, d ->
+        b.slotSupplier = SlotType.ISlotSupplier { type, gui, item, i, _ ->
             SlotFake(
-                type,
-                gui,
-                item.getOrDefault(type, EmptyHandler.INSTANCE),
-                i,
-                true
+                type,gui,
+                item.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = NO_INPUT
@@ -108,12 +98,10 @@ object SlotTypes {
     @JvmField
     val STORAGE: SlotType<AbstractSlot<*>> = SlotType.create { b ->
         b.id = "storage"
-        b.slotSupplier = SlotType.ISlotSupplier { type, gui, item, i, d ->
+        b.slotSupplier = SlotType.ISlotSupplier { type, gui, item, i, _ ->
             AbstractSlot(
-                type,
-                gui,
-                item.getOrDefault(type, EmptyHandler.INSTANCE),
-                i
+                type, gui,
+                item.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = BiPredicate { _, _ -> true }
@@ -122,12 +110,10 @@ object SlotTypes {
     @JvmField
     val CELL_IN: SlotType<SlotCell> = SlotType.create { b ->
         b.id = "cell_in"
-        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, d ->
+        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, _ ->
             SlotCell(
-                type,
-                gui,
-                inv.getOrDefault(type, EmptyHandler.INSTANCE),
-                i
+                type, gui,
+                inv.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = BiPredicate { _, i -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent }
@@ -138,12 +124,10 @@ object SlotTypes {
     @JvmField
     val CELL_OUT: SlotType<SlotCell> = SlotType.create { b ->
         b.id = "cell_out"
-        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, d ->
+        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, _ ->
             SlotCell(
-                type,
-                gui,
-                inv.getOrDefault(type, EmptyHandler.INSTANCE),
-                i
+                type, gui,
+                inv.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = BiPredicate { _, i -> i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent }
@@ -156,12 +140,10 @@ object SlotTypes {
     @JvmField
     val ENERGY: SlotType<SlotEnergy> = SlotType.create { b ->
         b.id = "energy"
-        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, d ->
+        b.slotSupplier = SlotType.ISlotSupplier { type, gui, inv, i, _ ->
             SlotEnergy(
-                type,
-                gui,
-                inv.getOrDefault(type, EmptyHandler.INSTANCE),
-                i
+                type, gui,
+                inv.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
         b.tester = BiPredicate { t, i ->

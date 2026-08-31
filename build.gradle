@@ -103,6 +103,7 @@ dependencies {
     implementation("io.github.llamalad7:mixinextras-forge:0.5.4")
     implementation("org.jetbrains:annotations:26.0.1")
     //required dependencies
+    compileOnly(jarJar("net.ccbluex:fastutil4k-extensions-only:${project.fastutil4k_version}"))
     implementation "thedarkcolour:kotlinforforge:${project.kff_version}"
     modImplementation(jarJar("dev.trinsdar:arrp-forge:${project.arrp_version}"))
     modImplementation(jarJar("dev.trinsdar:terraform-utils-v1:${terraform_version}"))
@@ -110,11 +111,6 @@ dependencies {
     modImplementation(jarJar("com.teamresourceful.resourcefullib:resourcefullib-forge-${project.minecraft_version}:${project.resourcefullib_version}"))
     implementation("com.teamresourceful:yabn:${project.yabn_version}")
     modImplementation("maven.modrinth:carbon-config:${project.carbon_config_version}")
-    jarJar("maven.modrinth:carbon-config:${project.carbon_config_version}"){
-        version {
-            prefer(project.carbon_config_version)
-        }
-    }
     modImplementation(jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
     //modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
     modImplementation(jarJar("dev.engine-room.flywheel:flywheel-forge-${project.minecraft_version}:${project.flywheel_version}"))
@@ -162,7 +158,8 @@ processResources {
     var replaceProperties = [
         minecraft_version_range  : project.minecraft_version_range,
         forge_version_range      : project.forge_version_range,
-        loader_version_range     : project.kff_version_range,
+        loader_version_range     : project.loader_version_range,
+        kff_version_range        : project.kff_version_range,
         version                  : project.mod_version
     ]
     inputs.properties replaceProperties

@@ -14,7 +14,7 @@ open class AbstractSlot<T : ModularSlot>(
     val type: SlotType<T>,
     protected val holder: IGuiHandler,
     private val itemHandler: IItemHandler,
-    protected val index: Int
+    val index: Int
 ) : ModularSlot(
     itemHandler,
     index
