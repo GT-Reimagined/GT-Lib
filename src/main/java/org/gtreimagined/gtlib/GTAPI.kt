@@ -1,554 +1,615 @@
-package org.gtreimagined.gtlib;
+package org.gtreimagined.gtlib
 
-import com.mojang.datafixers.util.Either;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
-import net.minecraft.client.Minecraft;
-import org.gtreimagined.gtlib.datagen.IGTLibProvider;
-import org.gtreimagined.gtlib.gui.GuiProperties;
-import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
-import org.gtreimagined.gtlib.machine.Tier;
-import org.gtreimagined.gtlib.machine.types.Machine;
-import org.gtreimagined.gtlib.material.Material;
-import org.gtreimagined.gtlib.material.MaterialType;
-import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
-import org.gtreimagined.gtlib.registration.IGTObject;
-import org.gtreimagined.gtlib.registration.IGTRegistrar;
-import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
-import org.gtreimagined.gtlib.registration.ISharedGTObject;
-import org.gtreimagined.gtlib.registration.RegistrationEvent;
-import org.gtreimagined.gtlib.util.NonNullSupplier;
-import org.gtreimagined.gtlib.util.TagUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.LoadingModList;
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.util.TriConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.mojang.datafixers.util.Either
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.*
+import net.minecraft.client.Minecraft
+import net.minecraft.core.BlockPos
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraftforge.fml.ModList
+import net.minecraftforge.fml.ModLoadingContext
+import net.minecraftforge.fml.loading.FMLEnvironment
+import net.minecraftforge.fml.loading.LoadingModList
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.util.TriConsumer
+import org.gtreimagined.gtlib.datagen.IGTLibProvider
+import org.gtreimagined.gtlib.gui.GuiProperties
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin
+import org.gtreimagined.gtlib.machine.Tier
+import org.gtreimagined.gtlib.machine.types.Machine
+import org.gtreimagined.gtlib.material.Material
+import org.gtreimagined.gtlib.material.MaterialType
+import org.gtreimagined.gtlib.ore.StoneType
+import org.gtreimagined.gtlib.recipe.map.IRecipeMap
+import org.gtreimagined.gtlib.registration.*
+import org.gtreimagined.gtlib.util.NonNullSupplier
+import org.gtreimagined.gtlib.util.TagUtils
+import org.gtreimagined.gtlib.util.Utils
+import java.util.*
+import java.util.function.Consumer
+import java.util.function.Function
+import java.util.function.Supplier
+import java.util.stream.Collectors
+import java.util.stream.Stream
+import kotlin.Any
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.IllegalStateException
+import kotlin.Int
+import kotlin.RuntimeException
+import kotlin.Suppress
+import kotlin.check
+import kotlin.collections.MutableList
+import kotlin.collections.MutableMap
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.forEach
+import kotlin.collections.get
+import kotlin.requireNotNull
+import kotlin.synchronized
 
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+object GTAPI {
+    private val OBJECTS: MutableMap<Class<*>, MutableMap<String, Either<ISharedGTObject, MutableMap<String, Any>>>> =
+        Object2ObjectOpenHashMap()
+    private val CALLBACKS = EnumMap<RegistrationEvent, MutableList<Runnable>>(RegistrationEvent::class.java)
+    private val REGISTRATION_EVENTS_HANDLED: EnumSet<RegistrationEvent> = EnumSet
+        .noneOf(RegistrationEvent::class.java)
+    private val BLOCK_UPDATE_HANDLERS: ObjectList<IBlockUpdateEvent> = ObjectArrayList()
+    private val DEFERRED_QUEUE: Int2ObjectMap<Deque<Runnable>> = Int2ObjectOpenHashMap()
+    private val REPLACEMENTS: Object2ObjectMap<ResourceLocation, Supplier<Any>> =
+        Object2ObjectOpenHashMap()
+    private val CLASS_LOOKUP: MutableMap<String, MutableMap<String, Class<*>>> =
+        Object2ObjectOpenHashMap()
 
-import static org.gtreimagined.gtlib.util.Utils.getConventionalMaterialType;
+    var phase: RegistrationEvent? = null
+        private set
 
-public final class GTAPI {
+    private var INTERNAL_REGISTRAR: IGTRegistrar? = null
 
-    private static final Map<Class<?>, Map<String, Either<ISharedGTObject, Map<String, Object>>>> OBJECTS = new Object2ObjectOpenHashMap<>();
-    private static final EnumMap<RegistrationEvent, List<Runnable>> CALLBACKS = new EnumMap<>(RegistrationEvent.class);
-    private static final EnumSet<RegistrationEvent> REGISTRATION_EVENTS_HANDLED = EnumSet
-            .noneOf(RegistrationEvent.class);
-    private static final ObjectList<IBlockUpdateEvent> BLOCK_UPDATE_HANDLERS = new ObjectArrayList<>();
-    private static final Int2ObjectMap<Deque<Runnable>> DEFERRED_QUEUE = new Int2ObjectOpenHashMap<>();
-    private static final Object2ObjectMap<ResourceLocation, Supplier<Object>> REPLACEMENTS = new Object2ObjectOpenHashMap<>();
-    private static final Map<String, Map<String, Class<?>>> CLASS_LOOKUP = new Object2ObjectOpenHashMap<>();
-
-    private static RegistrationEvent PHASE = null;
-
-    private static IGTRegistrar INTERNAL_REGISTRAR;
-
-    public static void init() {
-
+    fun init() {
     }
 
     /**
      * Internal Registry Section
-     **/
-
-    private static void registerInternal(Class<?> c, String id, @Nullable String domain, Object o) {
-        Object present;
+     */
+    private fun registerInternal(c: Class<*>, id: String, domain: String?, o: Any) {
+        val present: Any?
         if (domain != null) {
-            if ((present = OBJECTS.computeIfAbsent(c, t -> new Object2ObjectLinkedOpenHashMap<>())
-                    .computeIfAbsent(domain, t -> Either.right(new Object2ObjectLinkedOpenHashMap<>()))
-                    .map(t -> null, t -> t.put(id, o))) != null) {
-                throw new IllegalStateException(String.join("", "Class ", c.getName(), "'s object: ", id,
-                        " has already been registered by: ", present.toString()));
-            }
+            present = OBJECTS.computeIfAbsent(c) { Object2ObjectLinkedOpenHashMap() }
+            check(
+                present
+                    .computeIfAbsent(domain) { Either.right(Object2ObjectLinkedOpenHashMap()) }
+                    .map<Any?>({ null }) { t ->
+                        t.put(id, o) } == null
+            ) { "Class ${c.getName()}'s object: $id has already been registered by: $present" }
         } else {
-            Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.computeIfAbsent(c,
-                    t -> new Object2ObjectLinkedOpenHashMap<>());
-            if ((present = map.put(id, Either.left((ISharedGTObject) o))) != null) {
-                throw new IllegalStateException(String.join("", "Class ", c.getName(), "'s object: ", id,
-                        " has already been registered by: ", present.toString()));
+            check(o is ISharedGTObject){
+                "Class ${c.getName()} is not an ISharedGTObject"
+            }
+            val map = OBJECTS.computeIfAbsent(c) { Object2ObjectLinkedOpenHashMap() }
+            val present = map.put(id, Either.left(o))
+            check(present == null) {
+                "Class ${c.getName()}'s object: $id has already been registered by: $present"
             }
         }
-        String name = c.getSimpleName();
-        CLASS_LOOKUP.computeIfAbsent(domain, k -> new Object2ObjectOpenHashMap<>()).putIfAbsent(name, c);
+        val name = c.getSimpleName()
+        CLASS_LOOKUP.computeIfAbsent(domain ?: (o as ISharedGTObject).domain) { Object2ObjectOpenHashMap() }
+            .putIfAbsent(name, c)
     }
 
-    public static RegistrationEvent getPhase() {
-        return PHASE;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T register(Class<?> c, String id, String domain, Object o) {
-        synchronized (OBJECTS) {
-            if (!allowRegistration()) {
-                throw new IllegalStateException("Registering after DataDone in GTAPI - badbad!");
+    @JvmStatic
+    @Suppress("UNCHECKED_CAST")
+    fun <T> register(c: Class<T>, id: String, domain: String, o: Any): T {
+        synchronized(OBJECTS) {
+            check(allowRegistration()) { "Registering after DataDone in GTAPI - badbad!" }
+            if (o is IGTObject && !o.shouldRegister()) return o as T
+            if (o is ISharedGTObject && getInternal(c as Class<out ISharedGTObject>, id) != null) {
+                return getInternal<ISharedGTObject?>(c, id) as T
             }
-            if (o instanceof IGTObject && !((IGTObject) o).shouldRegister())
-                return (T) o;
-            if (o instanceof ISharedGTObject && getInternal((Class) c, id) != null) {
-                return (T) getInternal((Class) c, id);
-            }
-            registerInternal(c, id, o instanceof ISharedGTObject ? null : domain, o);
-            if (o instanceof Block && notRegistered(Block.class, id, domain))
-                registerInternal(Block.class, id, domain, o);
-            else if (o instanceof Item && notRegistered(Item.class, id, domain))
-                registerInternal(Item.class, id, domain, o);
-            else if (o instanceof IRegistryEntryProvider) {
-                String changedId = o instanceof Material ? "material_" + id : o instanceof StoneType ? "stone_" + id : id;
-                if (notRegistered(IRegistryEntryProvider.class, changedId, domain))
-                    registerInternal(IRegistryEntryProvider.class, changedId, domain, o);
-            }
-            return (T) o;
-        }
-    }
-
-    public static <T> T register(Class<T> c, IGTObject o) {
-        return register(c, o.getId(), o.getDomain(), o);
-    }
-
-    private static boolean notRegistered(Class<?> c, String id, String domain) {
-        return !has(c, id, domain);
-    }
-
-    private static <T> T getInternal(Class<T> c, String id, String domain) {
-        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
-        if (map != null) {
-            Either<ISharedGTObject, Map<String, Object>> inner = map.get(domain);
-            if (inner != null) {
-                return inner.map(t -> null, t -> {
-                    Object o = t.get(id);
-                    return o == null ? null : c.cast(o);
-                });
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static <T> T get(Class<T> c, String id, String domain) {
-        T obj = getInternal(c, id, domain);
-        if (obj == null) {
-            Class clazz = c;
-            if (domain.equals(Ref.SHARED_ID)) {
-                Object o = get(clazz, id);
-                return o == null ? null : c.cast(o);
-            }
-        }
-        return obj;
-    }
-
-    public static <T> T get(Class<T> c, ResourceLocation location) {
-        return get(c, location.getPath(), location.getNamespace());
-    }
-
-    static boolean allowRegistration() {
-        return PHASE == RegistrationEvent.DATA_INIT || PHASE == RegistrationEvent.CLIENT_DATA_INIT || PHASE == RegistrationEvent.WORLDGEN_INIT;
-    }
-
-    private static <T extends ISharedGTObject> T getInternal(Class<? extends T> c, String id) {
-        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
-        if (map == null)
-            return null;
-        Either<ISharedGTObject, Map<String, Object>> obj = map.get(id);
-        return obj == null ? null : c.cast(obj.map(t -> t, t -> null));
-    }
-
-    public static <T extends ISharedGTObject> T get(Class<? extends T> c, String id) {
-        if (!allowRegistration()) {
-            synchronized (OBJECTS) {
-                return getInternal(c, id);
-            }
-        }
-        return getInternal(c, id);
-    }
-
-    @NotNull
-    public static <T> T getOrDefault(Class<T> c, String id, String domain, NonNullSupplier<? extends T> supplier) {
-        Object obj = get(c, id, domain);
-        return obj != null ? c.cast(obj) : supplier.get();
-    }
-
-    @NotNull
-    public static <T> T getOrThrow(Class<T> c, String id, String domain,
-                                   Supplier<? extends RuntimeException> supplier) {
-        Object obj = get(c, id, domain);
-        if (obj != null) {
-            return c.cast(obj);
-        }
-        throw supplier.get();
-    }
-
-    @NotNull
-    public static <T extends ISharedGTObject> T getOrThrow(Class<T> c, String id,
-                                                           Supplier<? extends RuntimeException> supplier) {
-        Object obj = get(c, id);
-        if (obj != null) {
-            return c.cast(obj);
-        }
-        throw supplier.get();
-    }
-
-    public static <T> boolean has(Class<T> c, String id, String domain) {
-        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
-        if (map != null) {
-            Either<ISharedGTObject, Map<String, Object>> either = map.get(domain);
-            if (either == null)
-                return false;
-            return either.map(t -> true, t -> t.containsKey(id));
-        }
-        return false;
-    }
-
-    public static <T> boolean has(Class<T> c, String id) {
-        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
-        if (map != null) {
-            Either<ISharedGTObject, Map<String, Object>> inner = map.get(id);
-            return inner != null && inner.left().isPresent();
-        }
-        return false;
-    }
-
-    @Nullable
-    public static <T> T get(String className, String domain, String id) {
-        Map<String, Class<?>> map = CLASS_LOOKUP.get(domain);
-        if (map == null) return null;
-        Class<? extends T> clazz = (Class<? extends T>) map.get(className);
-        if (clazz == null) return null;
-        return get(clazz, id, domain);
-    }
-
-    public static <T> void all(String className, String domain, Consumer<T> consumer) {
-        synchronized (OBJECTS){
-            Map<String, Class<?>> map = CLASS_LOOKUP.get(domain);
-            if (map == null) return;
-            Class<? extends T> clazz = (Class<? extends T>) map.get(className);
-            if (clazz == null) return;
-            if (domain == null) {
-                allInternal(clazz).forEach(consumer);
-            } else {
-                allInternal(clazz, domain).forEach(consumer);
-            }
-        }
-    }
-
-    @Nullable
-    public static <T> T get(String className, String id) {
-        return get(className, Ref.SHARED_ID, id);
-    }
-
-    public static <T> List<T> all(Class<T> c) {
-        if (!allowRegistration()) {
-            List<T> list;
-            synchronized (OBJECTS) {
-                list = allInternal(c).collect(Collectors.toList());
-            }
-            return list;
-        }
-        return allInternal(c).collect(Collectors.toList());
-    }
-
-    public static <T> List<T> all(Class<T> c, String domain) {
-        if (!allowRegistration()) {
-            List<T> list;
-            synchronized (OBJECTS) {
-                list = allInternal(c, domain).collect(Collectors.toList());
-            }
-            return list;
-        }
-        return allInternal(c, domain).collect(Collectors.toList());
-    }
-
-    private static <T> Stream<T> allInternal(Class<T> c) {
-        Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
-        return map == null ? Stream.empty()
-                : map.values().stream().flatMap(t -> t.map(Stream::of, right -> right.values().stream())).map(c::cast);
-    }
-
-    private static <T> Stream<T> allInternal(Class<T> c, @NotNull String domain) {
-        return allInternal(c)
-                .filter(o -> o instanceof IGTObject && ((IGTObject) o).getDomain().equals(domain));
-    }
-
-    public static <T> void all(Class<T> c, TriConsumer<T, String, String> consumer){
-        synchronized (OBJECTS){
-            Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
-            if (map != null) {
-                map.forEach((d, e) -> {
-                    if (e.left().isPresent()) {
-                        e.left().ifPresent(o -> consumer.accept(c.cast(o), o.getDomain(), o.getId()));
-                    } else {
-                        e.right().ifPresent(m -> m.forEach((i, o) -> {
-                            consumer.accept(c.cast(o), d, i);
-                        }));
-                    }
-                });
-            }
-        }
-    }
-
-    public static <T> void all(Class<T> c, String domain, TriConsumer<T, String, String> consumer){
-        synchronized (OBJECTS){
-            Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
-            if (map != null) {
-                map.forEach((d, e) -> {
-                    if (e.left().isPresent()) {
-                        if (domain.equals(Ref.SHARED_ID)) {
-                            e.left().ifPresent(o -> consumer.accept(c.cast(o), o.getDomain(), o.getId()));
-                        }
-                    } else {
-                        e.right().ifPresent(m -> m.forEach((i, o) -> {
-                            if (d.equals(domain)) {
-                                consumer.accept(c.cast(o), d, i);
-                            }
-                        }));
-                    }
-                });
-            }
-        }
-    }
-
-    public static <T> void all(Class<T> c, Consumer<T> consumer) {
-        if (!allowRegistration()) {
-            synchronized (OBJECTS) {
-                allInternal(c).forEach(consumer);
-            }
-        } else {
-            allInternal(c).forEach(consumer);
-        }
-    }
-
-    public static <T> void all(Class<T> c, String domain, Consumer<T> consumer) {
-        if (allowRegistration()) {
-            synchronized (OBJECTS) {
-                allInternal(c, domain).forEach(consumer);
-            }
-        } else {
-            allInternal(c, domain).forEach(consumer);
-        }
-    }
-
-    public static <T> void all(Class<T> c, String[] domains, Consumer<T> consumer) {
-         if (allowRegistration()) {
-            synchronized (OBJECTS) {
-                for (String domain : domains) {
-                    allInternal(c, domain).forEach(consumer);
+            registerInternal(c, id, if (o is ISharedGTObject) null else domain, o)
+            if (o is Block && notRegistered(Block::class.java, id, domain)) registerInternal(Block::class.java, id, domain, o)
+            else if (o is Item && notRegistered(Item::class.java, id, domain)) registerInternal(Item::class.java, id, domain, o)
+            else if (o is IRegistryEntryProvider) {
+                val changedId = if (o is Material) "material_$id" else if (o is StoneType) "stone_$id" else id
+                if (notRegistered(IRegistryEntryProvider::class.java, changedId, domain)) {
+                    registerInternal(IRegistryEntryProvider::class.java, changedId, domain, o)
                 }
             }
-         } else {
-            for (String domain : domains) {
-                allInternal(c, domain).forEach(consumer);
+            return o as T
+        }
+    }
+
+    @JvmStatic
+    fun <T> register(c: Class<T>, o: IGTObject): T {
+        return register<T>(c, o.getId(), o.domain, o)
+    }
+
+    inline fun <reified T> register(o: IGTObject): T {
+        return register(T::class.java, o)
+    }
+
+    inline fun <reified T> register(id: String, domain: String, o: Any) : T{
+        return register(T::class.java, id, domain, o)
+    }
+
+    private fun notRegistered(c: Class<*>, id: String, domain: String): Boolean {
+        return !GTAPI.has(c, id, domain)
+    }
+
+    private fun <T> getInternal(c: Class<T>, id: String, domain: String?): T? {
+        val map = OBJECTS[c]
+        if (map != null) {
+            val inner = map[domain]
+            if (inner != null) {
+                return inner.map<T?>({ null }) { t ->
+                    val o = t[id]
+                    if (o == null) null else c.cast(o)
+                }
             }
-         }
+        }
+        return null
     }
 
-    private static void runProvider(IGTLibProvider provider) {
-        LogManager.getLogger().debug("Running " + provider.getName());
-        provider.run();
+    @JvmStatic
+    fun <T> get(c: Class<T>, id: String, domain: String): T? {
+        val obj = getInternal(c, id, domain)
+        return obj
     }
 
-    /**
-     * DeferredWorkQueue Section
-     **/
-
-    public static Optional<Deque<Runnable>> getCommonDeferredQueue() {
-        return Optional.ofNullable(DEFERRED_QUEUE.get(0));
+    @JvmStatic
+    fun <T> get(c: Class<T>, location: ResourceLocation): T? {
+        return get(c, location.path, location.namespace)
     }
 
-    public static Optional<Deque<Runnable>> getClientDeferredQueue() {
-        return Optional.ofNullable(DEFERRED_QUEUE.get(1));
+    fun allowRegistration(): Boolean {
+        return phase == RegistrationEvent.DATA_INIT || phase == RegistrationEvent.CLIENT_DATA_INIT || phase == RegistrationEvent.WORLDGEN_INIT
     }
 
-    public static Optional<Deque<Runnable>> getServerDeferredQueue() {
-        return Optional.ofNullable(DEFERRED_QUEUE.get(2));
+    private fun <T : ISharedGTObject?> getInternal(c: Class<out T>, id: String): T? {
+        val map = OBJECTS[c] ?: return null
+        val obj = map[id]
+        return if (obj == null) null else c.cast(
+            obj.map<ISharedGTObject>({ it }) { null }
+        )
     }
 
-    public static void runLaterCommon(Runnable... r) {
-        synchronized (DEFERRED_QUEUE) {
-            DEFERRED_QUEUE.computeIfAbsent(0, q -> new LinkedList<>(Arrays.asList(r))).addAll(Arrays.asList(r));
+    @JvmStatic
+    fun <T : ISharedGTObject> get(c: Class<out T>, id: String): T? {
+        if (!allowRegistration()) {
+            synchronized(OBJECTS) {
+                return getInternal(c, id)
+            }
+        }
+        return getInternal(c, id)
+    }
+
+    @JvmStatic
+    fun <T> getOrDefault(c: Class<T>, id: String, domain: String, supplier: NonNullSupplier<out T>): T {
+        val obj: Any? = get(c, id, domain)
+        return if (obj != null) c.cast(obj) else supplier.get()
+    }
+
+    @JvmStatic
+    fun <T> getOrThrow(c: Class<T>, id: String, domain: String, supplier: Supplier<out RuntimeException>): T {
+        val obj: Any? = get(c, id, domain)
+        if (obj != null) {
+            return c.cast(obj)
+        }
+        throw supplier.get()
+    }
+
+    fun <T : ISharedGTObject> getOrThrow(c: Class<T>, id: String, supplier: Supplier<out RuntimeException>): T {
+        val obj: Any? = get(c, id)
+        if (obj != null) {
+            return c.cast(obj)
+        }
+        throw supplier.get()
+    }
+
+    fun <T> has(c: Class<T?>?, id: String?, domain: String?): Boolean {
+        val map = OBJECTS.get(c)
+        if (map != null) {
+            val either = map[domain]
+            if (either == null) return false
+            return either.map<Boolean?>(
+                Function { t: ISharedGTObject? -> true },
+                Function { t: MutableMap<String?, Any?>? -> t!!.containsKey(id) })
+        }
+        return false
+    }
+
+    fun <T> has(c: Class<T?>?, id: String?): Boolean {
+        val map = OBJECTS.get(c)
+        if (map != null) {
+            val inner = map[id]
+            return inner != null && inner.left().isPresent
+        }
+        return false
+    }
+
+    fun <T> get(className: String?, domain: String, id: String?): T? {
+        val map = CLASS_LOOKUP[domain]
+        if (map == null) return null
+        val clazz = map[className] as Class<out T?>?
+        if (clazz == null) return null
+        return GTAPI.get(clazz, id, domain)
+    }
+
+    fun <T> all(className: String?, domain: String?, consumer: Consumer<T?>?) {
+        synchronized(OBJECTS) {
+            val map = CLASS_LOOKUP[domain]
+            if (map == null) return
+            val clazz = map[className] as Class<out T?>?
+            if (clazz == null) return
+            if (domain == null) {
+                GTAPI.allInternal(clazz).forEach(consumer)
+            } else {
+                GTAPI.allInternal(clazz, domain)!!.forEach(consumer)
+            }
         }
     }
 
-    public static void runLaterClient(Runnable... r) {
-        synchronized (DEFERRED_QUEUE) {
-            DEFERRED_QUEUE.computeIfAbsent(1, q -> new LinkedList<>()).addAll(Arrays.asList(r));
+    fun <T> get(className: String?, id: String?): T? {
+        return get<T?>(className, Ref.SHARED_ID, id)
+    }
+
+    fun <T> all(c: Class<T?>): MutableList<T?> {
+        if (!allowRegistration()) {
+            val list: MutableList<T?>
+            synchronized(OBJECTS) {
+                list = allInternal<T?>(c).collect(Collectors.toList())
+            }
+            return list
+        }
+        return allInternal<T?>(c).collect(Collectors.toList())
+    }
+
+    fun <T> all(c: Class<T?>, domain: String): MutableList<T?> {
+        if (!allowRegistration()) {
+            val list: MutableList<T?>
+            synchronized(OBJECTS) {
+                list = allInternal<T?>(c, domain)!!.collect(Collectors.toList())
+            }
+            return list
+        }
+        return allInternal<T?>(c, domain)!!.collect(Collectors.toList())
+    }
+
+    private fun <T> allInternal(c: Class<T?>): Stream<T?> {
+        val map = OBJECTS[c]
+        return if (map == null)
+            Stream.empty<T?>()
+        else
+            map.values.stream().flatMap<Any?> { t: Either<ISharedGTObject?, MutableMap<String?, Any?>?>? ->
+                t!!.map<Stream<out Any?>?>(
+                    Function { t: ISharedGTObject? -> Stream.of(t) },
+                    Function { right: MutableMap<String?, Any?>? -> right!!.values.stream() })
+            }.map<T?> { obj: Any? -> c.cast(obj) }
+    }
+
+    private fun <T> allInternal(c: Class<T?>, domain: String): Stream<T?>? {
+        return allInternal<T?>(c)
+            .filter { o: T? -> o is IGTObject && (o as IGTObject).domain == domain }
+    }
+
+    fun <T> all(c: Class<T?>, consumer: TriConsumer<T?, String?, String?>) {
+        synchronized(OBJECTS) {
+            val map = OBJECTS[c]
+            if (map != null) {
+                map.forEach { (d: String?, e: String<ISharedGTObject?, MutableMap<String?, Any?>?>?) ->
+                    if (e!!.left().isPresent()) {
+                        e.left().ifPresent(Consumer { o: ISharedGTObject? ->
+                            consumer.accept(
+                                c.cast(o),
+                                o!!.domain,
+                                o.getId()
+                            )
+                        })
+                    } else {
+                        e.right().ifPresent(Consumer { m: MutableMap<String?, Any?>? ->
+                            m!!.forEach { (i: String?, o: Any?) ->
+                                consumer.accept(c.cast(o), d, i)
+                            }
+                        })
+                    }
+                }
+            }
         }
     }
 
-    public static void runLaterServer(Runnable... r) {
-        synchronized (DEFERRED_QUEUE) {
-            DEFERRED_QUEUE.computeIfAbsent(2, q -> new LinkedList<>(Arrays.asList(r))).addAll(Arrays.asList(r));
+    fun <T> all(c: Class<T?>, domain: String, consumer: TriConsumer<T?, String?, String?>) {
+        synchronized(OBJECTS) {
+            val map = OBJECTS[c]
+            if (map != null) {
+                map.forEach { (d: String?, e: String<ISharedGTObject?, MutableMap<String?, Any?>?>?) ->
+                    if (e!!.left().isPresent()) {
+                        if (domain == Ref.SHARED_ID) {
+                            e.left().ifPresent(Consumer { o: ISharedGTObject? ->
+                                consumer.accept(
+                                    c.cast(o),
+                                    o!!.domain,
+                                    o.getId()
+                                )
+                            })
+                        }
+                    } else {
+                        e.right().ifPresent(Consumer { m: MutableMap<String?, Any?>? ->
+                            m!!.forEach { (i: String?, o: Any?) ->
+                                if (d == domain) {
+                                    consumer.accept(c.cast(o), d, i)
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+    fun <T> all(c: Class<T?>, consumer: Consumer<T?>?) {
+        if (!allowRegistration()) {
+            synchronized(OBJECTS) {
+                allInternal<T?>(c).forEach(consumer)
+            }
+        } else {
+            allInternal<T?>(c).forEach(consumer)
+        }
+    }
+
+    fun <T> all(c: Class<T?>, domain: String, consumer: Consumer<T?>?) {
+        if (allowRegistration()) {
+            synchronized(OBJECTS) {
+                allInternal<T?>(c, domain)!!.forEach(consumer)
+            }
+        } else {
+            allInternal<T?>(c, domain)!!.forEach(consumer)
+        }
+    }
+
+    fun <T> all(c: Class<T?>, domains: Array<String>, consumer: Consumer<T?>?) {
+        if (allowRegistration()) {
+            synchronized(OBJECTS) {
+                for (domain in domains) {
+                    allInternal<T?>(c, domain)!!.forEach(consumer)
+                }
+            }
+        } else {
+            for (domain in domains) {
+                allInternal<T?>(c, domain)!!.forEach(consumer)
+            }
+        }
+    }
+
+    private fun runProvider(provider: IGTLibProvider) {
+        LogManager.getLogger().debug("Running " + provider.name)
+        provider.run()
+    }
+
+    val commonDeferredQueue: Optional<Deque<Runnable?>?>
+        /**
+         * DeferredWorkQueue Section
+         */
+        get() = Optional.ofNullable<Deque<Runnable?>?>(
+            DEFERRED_QUEUE.get(
+                0
+            )
+        )
+
+    val clientDeferredQueue: Optional<Deque<Runnable?>?>
+        get() = Optional.ofNullable<Deque<Runnable?>?>(
+            DEFERRED_QUEUE.get(
+                1
+            )
+        )
+
+    val serverDeferredQueue: Optional<Deque<Runnable?>?>
+        get() = Optional.ofNullable<Deque<Runnable?>?>(
+            DEFERRED_QUEUE.get(
+                2
+            )
+        )
+
+    @JvmStatic
+    fun runLaterCommon(vararg r: Runnable?) {
+        synchronized(DEFERRED_QUEUE) {
+            DEFERRED_QUEUE.computeIfAbsent(
+                0,
+                it.unimi.dsi.fastutil.ints.Int2ObjectFunction { q: Int ->
+                    LinkedList<Runnable?>(
+                        Arrays.asList<Runnable?>(*r)
+                    )
+                })!!.addAll(Arrays.asList<Runnable?>(*r))
+        }
+    }
+
+    @JvmStatic
+    fun runLaterClient(vararg r: Runnable?) {
+        synchronized(DEFERRED_QUEUE) {
+            DEFERRED_QUEUE.computeIfAbsent(
+                1,
+                it.unimi.dsi.fastutil.ints.Int2ObjectFunction { q: Int -> LinkedList<Runnable?>() })!!
+                .addAll(
+                    Arrays.asList<Runnable?>(*r)
+                )
+        }
+    }
+
+    fun runLaterServer(vararg r: Runnable?) {
+        synchronized(DEFERRED_QUEUE) {
+            DEFERRED_QUEUE.computeIfAbsent(
+                2,
+                it.unimi.dsi.fastutil.ints.Int2ObjectFunction { q: Int ->
+                    LinkedList<Runnable?>(
+                        Arrays.asList<Runnable?>(*r)
+                    )
+                })!!.addAll(Arrays.asList<Runnable?>(*r))
         }
     }
 
     /**
      * Registrar Section
-     **/
-
-    public static void onRegistration(RegistrationEvent event) {
-        RegistrationEvent previous = PHASE;
-        PHASE = event;
-        GTLib.LOGGER.info("Registration event " + event);
-        Dist side = FMLEnvironment.dist;
+     */
+    @JvmStatic
+    fun onRegistration(event: RegistrationEvent) {
+        val previous: RegistrationEvent? = phase
+        phase = event
+        GTLib.LOGGER.info("Registration event " + event)
+        val side = FMLEnvironment.dist
         if (!REGISTRATION_EVENTS_HANDLED.add(event)) {
-            if (ModLoadingContext.get().getActiveNamespace().equals(Ref.ID))
-                return;
-            throw new IllegalStateException("The RegistrationEvent " + event.name() + " has already been handled");
+            if (ModLoadingContext.get().activeNamespace == Ref.ID) return
+            throw IllegalStateException("The RegistrationEvent " + event.name + " has already been handled")
         }
-        INTERNAL_REGISTRAR.onRegistrationEvent(event, side);
-        List<IGTRegistrar> list = all(IGTRegistrar.class).stream()
-                .sorted((c1, c2) -> Integer.compare(c2.getPriority(), c1.getPriority())).filter(IGTRegistrar::isEnabled).toList();
-        list.forEach(r -> r.onRegistrationEvent(event, side));
-        if (CALLBACKS.containsKey(event))
-            CALLBACKS.get(event).forEach(Runnable::run);
-        if (event == RegistrationEvent.CLIENT_DATA_INIT)
-            PHASE = previous;
+        INTERNAL_REGISTRAR!!.onRegistrationEvent(event, side)
+        val list = GTAPI.all<IGTRegistrar?>(IGTRegistrar::class.java).stream()
+            .sorted { c1: IGTRegistrar?, c2: IGTRegistrar? -> Integer.compare(c2!!.priority, c1!!.priority) }
+            .filter { obj: IGTRegistrar? -> obj!!.isEnabled }.toList()
+        list.forEach(Consumer { r: IGTRegistrar? -> r!!.onRegistrationEvent(event, side) })
+        if (CALLBACKS.containsKey(event)) CALLBACKS[event]!!.forEach(Consumer { obj: Runnable? -> obj!!.run() })
+        if (event == RegistrationEvent.CLIENT_DATA_INIT) phase = previous
     }
 
-    public static boolean isModLoaded(String modid) {
+    @JvmStatic
+    fun isModLoaded(modid: String): Boolean {
         if (ModList.get() == null) {
-            return LoadingModList.get().getMods().stream().map(ModInfo::getModId).anyMatch(modid::equals);
+            return LoadingModList.get().mods.stream().map<String?> { obj: ModInfo? -> obj!!.modId }
+                .anyMatch { anObject: String? -> modid.equals(anObject) }
         }
-        return ModList.get().isLoaded(modid);
+        return ModList.get().isLoaded(modid)
     }
 
-    /**
-     * For async stuff use this, otherwise use {@link GTAPI isClientSide}
-     *
-     * @return if the current thread is the client thread
-     */
-    public static boolean isClientThread() {
-        return isClientSide() && Minecraft.getInstance().isSameThread();
+    @JvmStatic
+    val isClientThread: Boolean
+        /**
+         * For async stuff use this, otherwise use [isClientSide][GTAPI]
+         * 
+         * @return if the current thread is the client thread
+         */
+        get() = isClientSide && Minecraft.getInstance().isSameThread
+
+    val isClientSide: Boolean
+        /**
+         * @return if the game is the **PHYSICAL** client, e.g. not a dedicated server.
+         * @apiNote Do not use this to check if you're currently on the server thread for side-specific actions!
+         * It does **NOT** work for that. Use [.isClientThread] instead.
+         * @see .isClientThread
+         */
+        get() = FMLEnvironment.dist.isClient
+
+    fun runOnEvent(event: RegistrationEvent?, runnable: Runnable?) {
+        CALLBACKS.computeIfAbsent(event) { k: RegistrationEvent? -> ObjectArrayList<Runnable?>() }!!
+            .add(runnable)
     }
 
-    /**
-     * @return if the game is the <strong>PHYSICAL</strong> client, e.g. not a dedicated server.
-     * @apiNote Do not use this to check if you're currently on the server thread for side-specific actions!
-     *          It does <strong>NOT</strong> work for that. Use {@link #isClientThread()} instead.
-     * @see #isClientThread()
-     */
-    public static boolean isClientSide(){
-        return FMLEnvironment.dist.isClient();
-    }
-
-    public static void runOnEvent(RegistrationEvent event, Runnable runnable) {
-        CALLBACKS.computeIfAbsent(event, k -> new ObjectArrayList<>()).add(runnable);
-    }
-
-    public static void addRegistrar(IGTRegistrar registrar) {
-        if (INTERNAL_REGISTRAR == null && registrar instanceof GTLib)
-            INTERNAL_REGISTRAR = registrar;
-        else if (registrar.isEnabled()) {
-            synchronized (OBJECTS){
-                registerInternal(IGTRegistrar.class, registrar.getId(), registrar.getDomain(), registrar);
+    @JvmStatic
+    fun addRegistrar(registrar: IGTRegistrar) {
+        if (INTERNAL_REGISTRAR == null && registrar is GTLib) INTERNAL_REGISTRAR = registrar
+        else if (registrar.isEnabled) {
+            synchronized(OBJECTS) {
+                registerInternal(IGTRegistrar::class.java, registrar.getId(), registrar.domain, registrar)
             }
         }
     }
 
-    public static Optional<IGTRegistrar> getRegistrar(String id) {
-        return allInternal(IGTRegistrar.class).filter(t -> t.getId().equals(id)).findFirst();
+    fun getRegistrar(id: String?): Optional<IGTRegistrar?> {
+        return GTAPI.allInternal<IGTRegistrar?>(IGTRegistrar::class.java)
+            .filter { t: IGTRegistrar? -> t!!.getId() == id }.findFirst()
     }
 
-    public static boolean isRegistrarEnabled(String id) {
-        return getRegistrar(id).map(IGTRegistrar::isEnabled).orElse(false);
+    fun isRegistrarEnabled(id: String?): Boolean {
+        return getRegistrar(id).map<Boolean?>(Function { obj: IGTRegistrar? -> obj!!.isEnabled }).orElse(false)
     }
 
     /**
      * JEI Registry Section
-     **/
-
-    public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Tier tier, ResourceLocation model,
-                                           boolean override) {
+     */
+    @JvmOverloads
+    fun registerJEICategory(
+        map: IRecipeMap, gui: GuiProperties?, tier: Tier? = Tier.LV, model: ResourceLocation? = null,
+        override: Boolean = true
+    ) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier, model, override);
+            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier, model, override)
         }
     }
 
-    public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Machine<?> machine, @Nullable Tier tier, boolean override) {
+    fun registerJEICategory(map: IRecipeMap, gui: GuiProperties?, machine: Machine<*>, tier: Tier?, override: Boolean) {
+        var tier = tier
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            if (tier == null) tier = machine.getFirstTier();
-            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier,
-                    new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier)), override);
+            if (tier == null) tier = machine.firstTier
+            GTLibRecipeViewerPlugin.registerCategory(
+                map, gui, tier,
+                ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier)), override
+            )
         }
     }
 
-    public static void registerJEICategoryWorkstation(IRecipeMap map, Machine<?> machine, @Nullable Tier tier) {
+    fun registerJEICategoryWorkstation(map: IRecipeMap, machine: Machine<*>, tier: Tier?) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            GTLibRecipeViewerPlugin.registerCategoryWorkstation(map,
-                    new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier != null ? tier : machine.getFirstTier())));
+            GTLibRecipeViewerPlugin.registerCategoryWorkstation(
+                map,
+                ResourceLocation(
+                    machine.getDomain(),
+                    machine.getIdFromTier(if (tier != null) tier else machine.firstTier)
+                )
+            )
         }
-    }
-
-    public static void registerJEICategory(IRecipeMap map, GuiProperties gui) {
-        registerJEICategory(map, gui, Tier.LV, null, true);
     }
 
     // TODO: Allow other than item.
-    public static Item getReplacement(MaterialType<?> type, Material material, String... namespaces) {
-        if (type.getId().contains("liquid"))
-            return null;
-        TagKey<Item> tag = type.getMaterialTag(material);
-        return getReplacement(null, tag, namespaces);
+    fun getReplacement(type: MaterialType<*>, material: Material, vararg namespaces: String?): Item? {
+        if (type.getId().contains("liquid")) return null
+        val tag = type.getMaterialTag(material)
+        return getReplacement<Item?>(null, tag, *namespaces)
     }
 
-    public static Item getReplacement(MaterialType<?> type, Material material, StoneType stone, String... namespaces) {
-        if (type.getId().contains("liquid"))
-            return null;
-        TagKey<Item> tag = TagUtils
-                .getForgelikeItemTag(String.join("", stone.getId(), "_", getConventionalMaterialType(type), "/", material.getId()));
-        return getReplacement(null, tag, namespaces);
+    fun getReplacement(
+        type: MaterialType<*>,
+        material: Material,
+        stone: StoneType,
+        vararg namespaces: String?
+    ): Item? {
+        if (type.getId().contains("liquid")) return null
+        val tag = TagUtils
+            .getForgelikeItemTag(
+                String.join(
+                    "",
+                    stone.id,
+                    "_",
+                    Utils.getConventionalMaterialType(type),
+                    "/",
+                    material.id
+                )
+            )
+        return getReplacement<Item?>(null, tag, *namespaces)
     }
 
     /**
      * This must run after DataGenerators have ran OR when the tag jsons are
      * acknowledged. Otherwise this is useless!
-     *
+     * 
      * @param originalItem Item that wants a replacement, may be null if only the
-     *                     tag should be the only query
+     * tag should be the only query
      * @param tag          Tag that wants a replacement (as the originalItem may
-     *                     have multiple tags to search from)
+     * have multiple tags to search from)
      * @param namespaces   Namespaces of the tags to check against, by default this
-     *                     only checks against 'minecraft' if no namespaces are
-     *                     defined
+     * only checks against 'minecraft' if no namespaces are
+     * defined
      * @return originalItem if there's nothing found, null if there is no
      * originalItem, or an replacement
      */
-    public static <T> T getReplacement(@Nullable T originalItem, TagKey<T> tag, String... namespaces) {
-        if (tag == null)
-            throw new IllegalArgumentException("GTAPI#getReplacement received a null tag!");
-        if (REPLACEMENTS.containsKey(tag.location()))
-            return (T) REPLACEMENTS.get(tag.location()).get();// return
+    fun <T> getReplacement(originalItem: T?, tag: TagKey<T?>, vararg namespaces: String?): T? {
+        requireNotNull(tag) { "GTAPI#getReplacement received a null tag!" }
+        if (REPLACEMENTS.containsKey(tag.location())) return REPLACEMENTS[tag.location()]!!.get() as T? // return
+
         // RecipeIngredient.of(REPLACEMENTS.get(tag.getName().getPath().hashCode()),1);
-        return originalItem;
+        return originalItem
         // if (replacementsFound) return originalItem;
         // Set<String> checks = Sets.newHashSet(namespaces);
         // if (checks.isEmpty()) checks.add("minecraft");
@@ -560,35 +621,46 @@ public final class GTAPI {
          */
     }
 
-    public static <T> void addReplacement(ResourceLocation tag, Supplier<T> obj) {
-        REPLACEMENTS.put(tag, obj::get);
+    fun <T> addReplacement(tag: ResourceLocation?, obj: Supplier<T?>) {
+        REPLACEMENTS.put(tag, Supplier { obj.get() })
     }
 
-    public static <T> void addReplacement(TagKey<Item> tag, Supplier<T> obj) {
-        REPLACEMENTS.put(tag.location(), obj::get);
+    fun <T> addReplacement(tag: TagKey<Item?>, obj: Supplier<T?>) {
+        REPLACEMENTS.put(tag.location(), Supplier { obj.get() })
     }
 
-    public static boolean hasReplacement(TagKey<Item> tag) {
-        return REPLACEMENTS.containsKey(tag.location());
+    fun hasReplacement(tag: TagKey<Item?>): Boolean {
+        return REPLACEMENTS.containsKey(tag.location())
     }
 
-    public static void registerBlockUpdateHandler(IBlockUpdateEvent handler) {
-        BLOCK_UPDATE_HANDLERS.add(handler);
+    @JvmStatic
+    fun registerBlockUpdateHandler(handler: IBlockUpdateEvent?) {
+        BLOCK_UPDATE_HANDLERS.add(handler)
     }
 
     /**
      * COREMOD METHOD INSERTION: Runs every time when this is called:
-     *
-   //  * @see ServerWorld#notifyBlockUpdate(BlockPos, BlockState, BlockState, int)
+     * 
+     * //  * @see ServerWorld#notifyBlockUpdate(BlockPos, BlockState, BlockState, int)
      */
-    @SuppressWarnings("unused")
-    public static void onNotifyBlockUpdate(Level world, BlockPos pos, BlockState oldState, BlockState newState,
-                                           int flags) {
-        BLOCK_UPDATE_HANDLERS.forEach(h -> h.onNotifyBlockUpdate(world, pos, oldState, newState, flags));
+    @JvmStatic
+    @Suppress("unused")
+    fun onNotifyBlockUpdate(
+        world: Level?, pos: BlockPos?, oldState: BlockState?, newState: BlockState?,
+        flags: Int
+    ) {
+        BLOCK_UPDATE_HANDLERS.forEach(Consumer { h: IBlockUpdateEvent? ->
+            h!!.onNotifyBlockUpdate(
+                world,
+                pos,
+                oldState,
+                newState,
+                flags
+            )
+        })
     }
 
-    public interface IBlockUpdateEvent {
-
-        void onNotifyBlockUpdate(Level world, BlockPos pos, BlockState oldState, BlockState newState, int flags);
+    interface IBlockUpdateEvent {
+        fun onNotifyBlockUpdate(world: Level?, pos: BlockPos?, oldState: BlockState?, newState: BlockState?, flags: Int)
     }
 }
