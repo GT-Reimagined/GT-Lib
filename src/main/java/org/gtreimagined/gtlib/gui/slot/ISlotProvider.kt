@@ -1,186 +1,184 @@
-package org.gtreimagined.gtlib.gui.slot;
+package org.gtreimagined.gtlib.gui.slot
+
+import brachy.modularui.widgets.slot.ModularSlot
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.ObjectArrayList
+import org.gtreimagined.gtlib.GTAPI.get
+import org.gtreimagined.gtlib.gui.SlotData
+import org.gtreimagined.gtlib.gui.SlotType
+import org.gtreimagined.gtlib.gui.SlotTypes
+import org.gtreimagined.gtlib.machine.Tier
+import java.util.function.Consumer
 
 
-import brachy.modularui.widgets.slot.ModularSlot;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotData.SlotDataBuilder;
-import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.gui.SlotTypes;
-import org.gtreimagined.gtlib.machine.Tier;
+interface ISlotProvider<T : ISlotProvider<T>> {
+    val countLookup: MutableMap<String, Object2IntOpenHashMap<SlotType<*>>>
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-public interface ISlotProvider<T extends ISlotProvider<T>> {
-    Map<String, Object2IntOpenHashMap<SlotType<?>>> getCountLookup();
-
-    Map<String, List<SlotData<?>>> getSlotLookup();
+    val slotLookup: MutableMap<String, MutableList<SlotData<*>>>
 
     /**
      * Adds a slot for ANY
-     **/
-    default <U extends ModularSlot> T add(SlotType<U> type, int x, int y) {
-        return add(type, b -> b.x(x).y(y));
+     */
+    fun <U : ModularSlot> add(type: SlotType<U>, x: Int, y: Int): T {
+        return add(type) { b: SlotData.SlotDataBuilder<U> -> b.x(x).y(y) }
     }
-
 
 
     /**
      * Adds a slot for the given Tier
-     **/
-    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, int x, int y) {
-        return add(tier, type, b -> b.x(x).y(y));
+     */
+    fun <U : ModularSlot> add(tier: Tier, type: SlotType<U>, x: Int, y: Int): T {
+        return add(tier, type) { b -> b.x(x).y(y) }
     }
 
     /**
      * Adds a slot for ANY using builder
-     **/
-    default <U extends ModularSlot> T add(SlotType<U> type, Consumer<SlotDataBuilder<U>> slotConsumer){
-        return add("", SlotData.<U>create(b -> slotConsumer.accept(b.type(type))));
+     */
+    fun <U : ModularSlot> add(type: SlotType<U>, slotConsumer: Consumer<SlotData.SlotDataBuilder<U>>): T {
+        return add("", SlotData.create { b -> slotConsumer.accept(b.type(type)) })
     }
 
     /**
      * Adds a slot for ANY using builder
-     **/
-    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, Consumer<SlotDataBuilder<U>> slotConsumer){
-        return add(tier.getId(), SlotData.<U>create(b -> slotConsumer.accept(b.type(type))));
+     */
+    fun <U : ModularSlot> add(tier: Tier, type: SlotType<U>, slotConsumer: Consumer<SlotData.SlotDataBuilder<U>>): T {
+        return add(
+            tier.id,
+            SlotData.create { b -> slotConsumer.accept(b.type(type)) }
+        )
     }
 
     /**
      * Copies ALL slots from an existing Machine
-     **/
-    default T add(ISlotProvider<?> provider) {
-        List<SlotData<?>> list = provider.getAnySlots();
-        for (SlotData<?> slot : list) {
-            add("", slot);
+     */
+    fun add(provider: ISlotProvider<*>): T {
+        val list = provider.anySlots
+        for (slot in list) {
+            add("", slot)
         }
-        return (T) this;
+        return this as T
     }
 
     /**
      * Copies ALL slots from type into toTier slots
-     **/
-    default T add(Tier toTier, ISlotProvider<?> provider) {
-        List<SlotData<?>> list = provider.getAnySlots();
-        for (SlotData<?> slot : list) {
-            add(toTier.getId(), slot);
+     */
+    fun add(toTier: Tier, provider: ISlotProvider<*>): T {
+        val list = provider.anySlots
+        for (slot in list) {
+            add(toTier.id, slot)
         }
-        return (T) this;
+        return this as T
     }
 
     /**
      * Copies fromTier slots from type into toTier slots
-     **/
-    default T add(Tier toTier, ISlotProvider<?> type, Tier fromTier) {
-        List<SlotData<?>> list = type.getSlots(fromTier);
-        for (SlotData<?> slot : list) {
-            add(toTier.getId(), slot);
+     */
+    fun add(toTier: Tier, type: ISlotProvider<*>, fromTier: Tier): T {
+        val list = type.getSlots(fromTier)
+        for (slot in list) {
+            add(toTier.id, slot)
         }
-        return (T) this;
+        return this as T
     }
 
-    default T add(String key, SlotData<?> slot) {
-        Tier tier = GTAPI.get(Tier.class, key);
+    fun add(key: String, slot: SlotData<*>): T {
+        val tier = get<Tier>(key)
         //if (tier != null && tier.getVoltage() > h.getVoltage()) highestTier = tier;
-        Map<String, Object2IntOpenHashMap<SlotType<?>>> count = getCountLookup();
-        Map<String, List<SlotData<?>>> slotLookup = getSlotLookup();
-        if (!count.containsKey(key)) count.put(key, new Object2IntOpenHashMap<>());
+        val count =
+            this.countLookup
+        val slotLookup =
+            this.slotLookup
+        if (!count.containsKey(key)) count[key] = Object2IntOpenHashMap<SlotType<*>>()
 
-        count.get(key).addTo(slot.type(), 1);
+        count[key]!!.addTo(slot.type, 1)
         if (slotLookup.containsKey(key)) {
-            slotLookup.get(key).add(slot);
+            slotLookup[key]!!.add(slot)
         } else {
-            List<SlotData<?>> list = new ObjectArrayList<>();
-            list.add(slot);
-            slotLookup.put(key, list);
+            val list: MutableList<SlotData<*>> = ObjectArrayList()
+            list.add(slot)
+            slotLookup[key] = list
         }
-        return (T) this;
+        return this as T
     }
 
-    default boolean hasType(SlotType<?> type) {
-        return getCount(null, type) > 0;
+    fun hasType(type: SlotType<*>): Boolean {
+        return getCount(null, type) > 0
     }
 
-    //TODO broken
-    default int getCount(Tier tier, SlotType<?> type) {
-        String id = tier == null || !getCountLookup().containsKey(tier.getId()) ? "" : tier.getId();
-        return getCountLookup().get(id).getInt(type);
+    fun getCount(tier: Tier?, type: SlotType<*>): Int {
+        val id = if (tier == null || !this.countLookup.containsKey(tier.id)) "" else tier.id
+        val map = countLookup[id] ?: return 0
+        return map.getInt(type)
     }
 
-    default boolean hasSlots() {
-        List<SlotData<?>> slots = getSlotLookup().get("");
-        return slots != null && !slots.isEmpty();
+    fun hasSlots(): Boolean {
+        val slots = this.slotLookup[""]
+        return !slots.isNullOrEmpty()
     }
 
-    default boolean hasSlots(Tier tier) {
-        List<SlotData<?>> slots = getSlotLookup().get(tier.getId());
-        return slots != null && !slots.isEmpty();
+    fun hasSlots(tier: Tier): Boolean {
+        val slots = this.slotLookup[tier.id]
+        return !slots.isNullOrEmpty()
     }
 
-    default List<SlotData<?>> getAnySlots() {
-        List<SlotData<?>> slots =  getSlotLookup().get("");
-        return slots != null ? slots : new ObjectArrayList<>();
-    }
-
-    default List<SlotData<?>> getSlots(Tier tier) {
-        List<SlotData<?>> slots = tier == null ? getAnySlots() : getSlotLookup().get(tier.getId());
-        if (slots == null) slots = getSlotLookup().get("");
-        return slots != null ? slots : new ObjectArrayList<>();
-    }
-
-    default List<SlotData<?>> getRecipeSlots(Tier tier) {
-        List<SlotData<?>> slots = tier == null ? getAnySlots() : getSlotLookup().get(tier.getId());
-        if (slots == null) slots = getSlotLookup().get("");
-        return slots != null ? slots.stream().filter(s -> s.type() == SlotTypes.FL_IN || s.type() == SlotTypes.FL_OUT || s.type() == SlotTypes.IT_OUT || s.type() == SlotTypes.IT_IN).toList() : new ObjectArrayList<>();
-    }
-
-    default List<SlotData<?>> getSlots(SlotType<?> type, Tier tier) {
-        if (tier == null) return getSlots(type);
-        List<SlotData<?>> types = new ObjectArrayList<>();
-        List<SlotData<?>> slots = getSlotLookup().get(tier.getId());
-        if (slots == null) slots = getSlotLookup().get("");
-        if (slots == null) return types; //No slots found
-        for (SlotData<?> slot : slots) {
-            if (slot.type() == type) types.add(slot);
-        }
-        return types;
-    }
-
-    default List<SlotData<?>> getSlots(SlotType<?> type) {
-        List<SlotData<?>> types = new ObjectArrayList<>();
-        List<SlotData<?>> slots = getSlotLookup().get("");
-        if (slots == null) return types; //No slots found
-        for (SlotData<?> slot : slots) {
-            if (slot.type() == type) types.add(slot);
-        }
-        return types;
-    }
-
-    static ISlotProvider<?> DEFAULT() {
-        return new Provider();
-    }
-
-    class Provider implements ISlotProvider<Provider> {
-
-        protected Provider() {
+    val anySlots: MutableList<SlotData<*>>
+        get() {
+            val slots =
+                this.slotLookup[""]
+            return slots ?: ObjectArrayList()
         }
 
-        Map<String, Object2IntOpenHashMap<SlotType<?>>> count = new Object2ObjectOpenHashMap<>();
-        Map<String, List<SlotData<?>>> slot = new Object2ObjectOpenHashMap<>();
+    fun getSlots(tier: Tier?): MutableList<SlotData<*>> {
+        var slots = if (tier == null) this.anySlots else this.slotLookup[tier.id]
+        if (slots == null) slots = this.slotLookup[""]
+        return slots ?: ObjectArrayList()
+    }
 
-        @Override
-        public Map<String, Object2IntOpenHashMap<SlotType<?>>> getCountLookup() {
-            return count;
+    fun getRecipeSlots(tier: Tier?): MutableList<SlotData<*>> {
+        var slots = if (tier == null) this.anySlots else this.slotLookup[tier.id]
+        if (slots == null) slots = this.slotLookup[""]
+        return if (slots != null) slots.stream()
+            .filter { s: SlotData<*>? -> s!!.type === SlotTypes.FL_IN || s.type === SlotTypes.FL_OUT || s.type === SlotTypes.IT_OUT || s.type === SlotTypes.IT_IN }
+            .toList() else ObjectArrayList()
+    }
+
+    fun getSlots(type: SlotType<*>, tier: Tier?): MutableList<SlotData<*>> {
+        if (tier == null) return getSlots(type)
+        val types: MutableList<SlotData<*>> = ObjectArrayList()
+        var slots = this.slotLookup[tier.id]
+        if (slots == null) slots = this.slotLookup[""]
+        if (slots == null) return types //No slots found
+
+        for (slot in slots) {
+            if (slot.type === type) types.add(slot)
         }
+        return types
+    }
 
-        @Override
-        public Map<String, List<SlotData<?>>> getSlotLookup() {
-            return slot;
+    fun getSlots(type: SlotType<*>): MutableList<SlotData<*>> {
+        val types: MutableList<SlotData<*>> = ObjectArrayList()
+        val slots = this.slotLookup[""] ?: return types
+        //No slots found
+
+        for (slot in slots) {
+            if (slot.type === type) types.add(slot)
+        }
+        return types
+    }
+
+    class Provider : ISlotProvider<Provider> {
+        override val countLookup: MutableMap<String, Object2IntOpenHashMap<SlotType<*>>> =
+            Object2ObjectOpenHashMap()
+        override val slotLookup: MutableMap<String, MutableList<SlotData<*>>> =
+            Object2ObjectOpenHashMap()
+
+    }
+
+    companion object {
+        @JvmStatic
+        fun DEFAULT(): ISlotProvider<*> {
+            return Provider()
         }
     }
 }
