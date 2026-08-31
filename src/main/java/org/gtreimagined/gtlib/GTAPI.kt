@@ -148,7 +148,7 @@ object GTAPI {
             val sharedClazz = ISharedGTObject::class.java
             if (sharedClazz.isAssignableFrom(c)){
                 val clazz: Class<out ISharedGTObject> = c as Class<out ISharedGTObject>
-                if (domain.equals(Ref.SHARED_ID)) {
+                if (domain == Ref.SHARED_ID) {
                     val o: Any? = get(clazz, id)
                     return if (o == null) null else c.cast(o)
                 }

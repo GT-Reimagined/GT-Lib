@@ -6,11 +6,9 @@ import net.devtech.arrp.ARRP
 import net.devtech.arrp.api.RRPInitEvent
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.Biomes
 import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.AddReloadListenerEvent
 import net.minecraftforge.fml.DistExecutor
 import net.minecraftforge.fml.common.Mod
@@ -213,9 +211,9 @@ object GTLib : GTMod() {
             if (GTAPI.isModLoaded(Ref.MOD_JEI) || GTAPI.isModLoaded(Ref.MOD_REI)) {
                 GTLibRecipeViewerPlugin.registerMissingMaps()
             }
-            GTLibRecipeViewerPlugin.addItemsToHide { l: MutableList<ItemLike> ->
+            GTLibRecipeViewerPlugin.addItemsToHide { l ->
                 if (!GTLibConfig.SHOW_ALL_ORES.get()) {
-                    GTAPI.all(StoneType::class.java) { s ->
+                    GTAPI.all<StoneType> { s ->
                         if (s !== VanillaStoneTypes.STONE && s !== VanillaStoneTypes.SAND && s.doesGenerateOre()) {
                             GTMaterialTypes.ORE.all().forEach { m ->
                                 val ore = GTMaterialTypes.ORE.get().get(m, s).asBlock()
@@ -232,20 +230,19 @@ object GTLib : GTMod() {
                         }
                     }
                 }
-                GTAPI.all(MaterialTypeItem::class.java) { t ->
+                GTAPI.all<MaterialTypeItem<*>> { t ->
                     if (!t.hidden()) return@all
                     val stacks = t.all().stream().map { m -> t.get(m) }
                         .collect(Collectors.toList())
                     if (stacks.isEmpty()) return@all
                     l.addAll(stacks)
                 }
-                GTAPI.all(IGTTool::class.java).stream()
+                GTAPI.all<IGTTool>().stream()
                     .filter { t -> t.getGTToolType() === GTTools.WRENCH_ALT }
                     .forEach { tool -> l.add(tool.item) }
-                GTAPI.all(GTFluid::class.java)
-                    .forEach { t -> l.add(t.getFluidBlock()) }
+                GTAPI.all<GTFluid>{ l.add(it.getFluidBlock()) }
             }
-            GTAPI.all(Material::class.java).forEach { m ->
+            GTAPI.all<Material>{ m ->
                 val map = MaterialTags.FURNACE_FUELS.getMap(m)
                 map?.forEach { (t, i) ->
                     if (t is MaterialTypeItem<*>) {
