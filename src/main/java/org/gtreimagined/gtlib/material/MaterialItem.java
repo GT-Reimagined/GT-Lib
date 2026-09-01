@@ -309,25 +309,12 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
         public ColorChanger(Material material) {
             this.material = material;
-            this.rgb = material.has(RAINBOW_RGB) ? ChatFormatting.BLACK.getColor() : material.getRGB();
+            this.rgb = material.getRGB();
         }
 
         public void tick(){
             int rgb = this.rgb;
-            if (material.has(RAINBOW_RGB)){
-                switch(TIME % 50) {
-                    case   0 -> rgb = ChatFormatting.RED.getColor();
-                    case   5 -> rgb = ChatFormatting.GOLD.getColor();
-                    case  10 -> rgb = ChatFormatting.YELLOW.getColor();
-                    case  15 -> rgb = ChatFormatting.GREEN.getColor();
-                    case  20 -> rgb = ChatFormatting.AQUA.getColor();
-                    case  25 -> rgb = ChatFormatting.DARK_AQUA.getColor();
-                    case  30 -> rgb = ChatFormatting.DARK_BLUE.getColor();
-                    case  35 -> rgb = ChatFormatting.BLUE.getColor();
-                    case  40 -> rgb = ChatFormatting.DARK_PURPLE.getColor();
-                    case  45 -> rgb = ChatFormatting.LIGHT_PURPLE.getColor();
-                }
-            }
+
 
             int tDirection = (TIME % 100 < 50 ? +1 : -1);
             int r = CodeUtils.getR(rgb);
