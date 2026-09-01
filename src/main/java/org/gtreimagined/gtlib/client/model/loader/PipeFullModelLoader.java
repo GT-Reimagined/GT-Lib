@@ -2,34 +2,24 @@ package org.gtreimagined.gtlib.client.model.loader;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
-import org.gtreimagined.gtlib.client.baked.PipeFullBakedModel;
-import org.gtreimagined.gtlib.dynamic.DynamicModel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.resources.model.UnbakedModel;
+import org.gtreimagined.gtlib.client.model.PipeFullModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
-public class PipeFullModelLoader extends DynamicModelLoader{
+public class PipeFullModelLoader extends GTModelLoader<PipeFullModel>{
         public PipeFullModelLoader(ResourceLocation location) {
             super(location);
         }
 
         @NotNull
         @Override
-        public DynamicModel read(JsonObject json, JsonDeserializationContext context) {
-            return new DynamicModel(super.read(json, context)) {
-                @Override
-                public BakedModel bakeModel(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> getter, ModelState transform, ItemOverrides overrides, ResourceLocation loc) {
-                    return new PipeFullBakedModel(getter.apply(new Material(InventoryMenu.BLOCK_ATLAS, particle)), getBakedConfigs(owner, bakery, getter, transform, overrides, loc));
-                }
-            };
+        public PipeFullModel read(JsonObject json, JsonDeserializationContext context) {
+            ResourceLocation particle = json.has("particle") ? new ResourceLocation(json.get("particle").getAsString()) : MissingTextureAtlasSprite.getLocation();
+            UnbakedModel open = context.deserialize(json.get("open"), BlockModel.class);
+            UnbakedModel closed = context.deserialize(json.get("closed"), BlockModel.class);
+            return new PipeFullModel(open, closed, particle);
         }
     }

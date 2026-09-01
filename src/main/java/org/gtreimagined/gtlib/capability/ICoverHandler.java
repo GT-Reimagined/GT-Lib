@@ -31,7 +31,11 @@ public interface ICoverHandler<T extends BlockEntity> extends Serializable {
      **/
     void onRemove();
 
-    void onUpdate();
+    void onTickPre();
+
+    void onTickPost();
+
+    void onClientTick();
 
     void onFirstTick();
 
@@ -110,7 +114,17 @@ public interface ICoverHandler<T extends BlockEntity> extends Serializable {
         }
 
         @Override
-        public void onUpdate() {
+        public void onTickPre() {
+
+        }
+
+        @Override
+        public void onTickPost() {
+
+        }
+
+        @Override
+        public void onClientTick() {
 
         }
 

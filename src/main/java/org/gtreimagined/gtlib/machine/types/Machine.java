@@ -1,6 +1,12 @@
 package org.gtreimagined.gtlib.machine.types;
 
-import com.google.common.collect.ImmutableMap;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.utils.Alignment;
+import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.widgets.TextWidget;
+import brachy.modularui.widgets.slot.ItemSlot;
+import brachy.modularui.widgets.slot.ModularSlot;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -32,28 +38,31 @@ import org.gtreimagined.gtlib.block.GTItemBlock;
 import org.gtreimagined.gtlib.blockentity.BlockEntityBase;
 import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
-import org.gtreimagined.gtlib.capability.IGuiHandler;
+import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
+import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTTools;
-import org.gtreimagined.gtlib.gui.BarDir;
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.MenuHandler;
+import org.gtreimagined.gtlib.mui.BarDir;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.slot.ISlotProvider;
-import org.gtreimagined.gtlib.gui.widget.BackgroundWidget;
-import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.IMachineColorHandlerBlock;
 import org.gtreimagined.gtlib.machine.IMachineColorHandlerItem;
+import org.gtreimagined.gtlib.machine.IPanelFunction;
 import org.gtreimagined.gtlib.machine.IShapeGetter;
 import org.gtreimagined.gtlib.machine.ITooltipInfo;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
+import org.gtreimagined.gtlib.mui.GTGuiThemes;
+import org.gtreimagined.gtlib.mui.drawable.GTDrawableStack;
+import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
@@ -70,6 +79,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -77,14 +87,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.gtreimagined.gtlib.Data.COVEROUTPUT;
-import static org.gtreimagined.gtlib.machine.MachineFlag.RECIPE;
+import static org.gtreimagined.gtlib.machine.MachineFlag.*;
 import static org.gtreimagined.gtlib.machine.Tier.NONE;
 
 /**
@@ -93,7 +102,7 @@ import static org.gtreimagined.gtlib.machine.Tier.NONE;
  *
  * @param <T> this class as a generic argument.
  */
-public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryProvider, ISlotProvider<Machine<T>>, IGuiHandler.IHaveWidgets, IDynamicModelProvider {
+public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryProvider, ISlotProvider<Machine<T>>, IDynamicModelProvider {
 
     
     /**
@@ -127,7 +136,65 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * GUI Members
      **/
     @Getter
-    protected GuiData guiData;
+    protected GuiProperties guiProperties;
+    @Getter
+    protected Supplier<ModularPanel<?>> modularPanelSupplier = () -> ModularPanel.defaultPanel(this.getId(), guiProperties.getXSize(), guiProperties.getYSize());
+    @Getter
+    @Setter
+    protected IPanelFunction backgroundFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
+        if (guiProperties.hasGTIcon()) {
+            modularPanel.child(guiProperties.getGTIcon(machine.getMachineTier()).asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
+        }
+        if (guiProperties.enablePlayerSlots()) {
+            modularPanel.bindPlayerInventory();
+        }
+        if (guiProperties.isTitleDrawingAllowed()){
+            modularPanel.child(new TextWidget<>(machine.getDisplayName()).posRel(Alignment.TopCenter).paddingTop(4));
+        }
+
+    };
+    @Getter
+    @Setter
+    protected IPanelFunction slotFunction = (modularPanel, machine, guiData1, syncManager, settings) -> {
+        Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
+        Set<String> slotGroupList = new HashSet<>();
+        for (SlotData<?> slotData : getSlots(machine.getMachineTier())){
+            boolean item = slotData.type().slotSupplier() != null;
+            boolean fluid = slotData.type().fluidHandlerSupplier() != null;
+            slotIndexMap.computeIntIfAbsent(slotData.type().getId(), k -> 0);
+            if (item){
+                ModularSlot slot = slotData.type().slotSupplier().get((SlotType) slotData.type(), machine, machine.itemHandler.map(MachineItemHandler::getAll).orElse(null), slotIndexMap.getInt(slotData.type().getId()), (SlotData) slotData);
+                if (slotData.slotGroup()){
+                    slotGroupList.add(slotData.type().getId());
+                    slot.slotGroup(slotData.type().getId());
+                }
+                ItemSlot itemSlot = ItemSlot.create(slotData.type().phantom());
+                itemSlot.pos(slotData.x() - 1, slotData.y() - 1);
+                itemSlot.slot(slot);
+                itemSlot.background(new GTDrawableStack(slotData.background() == GTGuiTextures.ITEM_SLOT ? null :  slotData.background(), slotData.overlay()));
+                modularPanel.child(itemSlot);
+            } else if (fluid){
+                FluidTanks tanks = slotData.type().fluidHandlerSupplier().apply(machine);
+                GTFluidSlot fluidSlot = new GTFluidSlot();
+                fluidSlot.pos(slotData.x() - 1, slotData.y() - 1).alwaysShowFull(true)
+                        .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.type().getId())))
+                                .phantom(slotData.type().phantom()))
+                        .background(new GTDrawableStack(slotData.background() == GTGuiTextures.FLUID_SLOT ? null :  slotData.background(), slotData.overlay()));
+                modularPanel.child(fluidSlot);
+            }
+            slotIndexMap.computeInt(slotData.type().getId(), (a, b) -> {
+                if (b == null) return 0;
+                return b + 1;
+            });
+        }
+        for (String slotId : slotIndexMap.keySet()){
+            if (slotGroupList.contains(slotId)){
+                syncManager.registerSlotGroup(slotId, slotIndexMap.getInt(slotId));
+            }
+        }
+    };
+    @Getter
+    protected List<IPanelFunction> guiFunctions = new ArrayList<>();
     @Getter
     protected ResourceKey<CreativeModeTab> group = GTCreativeTabs.MACHINES.getKey();
 
@@ -225,8 +292,6 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
     @Getter
     private final Map<String, List<SlotData<?>>> slotLookup = new Object2ObjectOpenHashMap<>();
 
-    @Getter
-    private final List<Consumer<GuiInstance>> callbacks = new ObjectArrayList<>(1);
     private static final Map<String, Set<Machine<?>>> FLAG_MAP = new Object2ObjectOpenHashMap<>();
 
     public Machine(String domain, String id) {
@@ -251,14 +316,16 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         };
         itemModelParent = new ResourceLocation(Ref.ID, "block/preset/layered");
         tiers = Arrays.asList(Tier.getStandard());
+        guiProperties = new GuiProperties(domain, id);
+        guiProperties.setSlots(this);
         GTAPI.register(Machine.class, this);
+        guiProperties.setTheme(GTGuiThemes.STANDARD_THEME_ID);
         //if (FMLEnvironment.dist.isClient()) {
         setupGui();
         //}
     }
 
     protected void setupGui() {
-        addGuiCallback(t -> t.addWidget(BackgroundWidget.build(t.handler.getGuiTexture(), t.handler.guiSize(), t.handler.guiHeight(), t.handler.guiTextureSize(), t.handler.guiTextureHeight())));
     }
 
     public Direction handlePlacementFacing(BlockPlaceContext ctxt, Property<?> which, Direction dir) {
@@ -276,13 +343,13 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
      * Registers the recipemap into JEI. This can be overriden in RecipeMap::setGuiData.
      */
     public void registerJei() {
-        if (this.guiData != null) {
+        if (this.guiProperties != null) {
             tierRecipeMaps.forEach((s, r) -> {
                 if (s.isEmpty()){
                     for (int i = 0; i < tiers.size(); i++) {
                         Tier tier = tiers.get(i);
-                        if (i == 0 && r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)){
-                            GTAPI.registerJEICategory(r, this.guiData, this, tier, false);
+                        if (i == 0 && r.getGui() == null && !GTLibRecipeViewerPlugin.containsCategory(r)){
+                            GTAPI.registerJEICategory(r, this.guiProperties, this, tier, false);
                         } else {
                             GTAPI.registerJEICategoryWorkstation(r, this, tier);
                         }
@@ -291,8 +358,8 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 }
                 Tier t = GTAPI.get(Tier.class, s);
                 //If the recipe map has another GUI present don't register it.
-                if (r.getGui() == null && !GTLibXEIPlugin.containsCategory(r)) {
-                    GTAPI.registerJEICategory(r, this.guiData, this, t, false);
+                if (r.getGui() == null && !GTLibRecipeViewerPlugin.containsCategory(r)) {
+                    GTAPI.registerJEICategory(r, this.guiProperties, this, t, false);
                 } else {
                     GTAPI.registerJEICategoryWorkstation(r, this, t);
                 }
@@ -586,25 +653,9 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
         return (T) this;
     }
 
-    /**
-     * Sets this machines GUI handler which provides containers and screens.
-     *
-     * @param menuHandler the menu handler.
-     */
-    public void setGUI(MenuHandler<?> menuHandler) {
-        guiData = new GuiData(this, menuHandler);
-        guiData.setSlots(this);
-        registerJei();
-    }
-
     public T setGuiProgressBarForJEI(BarDir dir, boolean barFill){
-        guiData.getMachineData().setDir(dir);
-        guiData.getMachineData().setBarFill(barFill);
-        return (T) this;
-    }
-
-    public T setGuiTiers(ImmutableMap.Builder<Tier, Tier> tiers) {
-        guiData.setTieredGui(tiers);
+        guiProperties.getMachineData().setDir(dir);
+        guiProperties.getMachineData().setBarFill(barFill);
         return (T) this;
     }
 

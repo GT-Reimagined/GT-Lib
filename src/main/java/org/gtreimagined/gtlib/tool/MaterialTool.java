@@ -8,6 +8,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
@@ -225,6 +226,12 @@ public class MaterialTool extends DiggerItem implements IGTTool {
         }
         return super.use(level, player, usedHand);
     }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        genericInventoryTick(stack, level, entity, slotId, isSelected);
+    }
+
 
     public void handleRenderHighlight(Player entity, LevelRenderer levelRenderer, Camera camera, HitResult target, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource) {
         onGenericHighlight(entity, levelRenderer, camera, target, partialTicks, poseStack, multiBufferSource);

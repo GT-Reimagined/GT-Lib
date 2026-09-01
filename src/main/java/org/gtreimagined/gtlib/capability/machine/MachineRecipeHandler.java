@@ -9,6 +9,7 @@ import org.gtreimagined.gtlib.blockentity.BlockEntityMachine;
 import org.gtreimagined.gtlib.capability.Dispatch;
 import org.gtreimagined.gtlib.capability.IMachineHandler;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.MachineFlag;
 import org.gtreimagined.gtlib.machine.MachineState;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
@@ -109,6 +110,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         return tile.getMachineType().getRecipeMap(tile.getMachineTier());
     }
 
+    @Deprecated
     public float getClientProgress() {
         return ((float) currentProgress / (float) maxProgress);
     }
@@ -229,7 +231,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         if (activeRecipe.hasOutputItems()) {
             tile.itemHandler.ifPresent(h -> {
                 //Roll the chances here..
-                ItemStack[] out = activeRecipe.getOutputItems(true);
+                ItemStack[] out = activeRecipe.getOutputItems(true).toArray(ItemStack[]::new);
                 if (h.canOutputsFit(out)) {
                     h.addOutputs(out);
                 }
@@ -238,7 +240,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
         }
         if (activeRecipe.hasOutputFluids()) {
             tile.fluidHandler.ifPresent(h -> {
-                h.addOutputs(activeRecipe.getOutputFluids());
+                h.addOutputs(activeRecipe.getOutputFluids().toArray(FluidStack[]::new));
                 tile.onMachineEvent(MachineEvent.FLUIDS_OUTPUTTED);
             });
         }
@@ -506,7 +508,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
 
     public boolean canOutput() {
         //ignore chance for canOutput.
-        if (tile.itemHandler.isPresent() && activeRecipe.hasOutputItems() && !tile.itemHandler.map(t -> t.canOutputsFit(activeRecipe.getOutputItems(false))).orElse(false))
+        if (tile.itemHandler.isPresent() && activeRecipe.hasOutputItems() && !tile.itemHandler.map(t -> t.canOutputsFit(activeRecipe.getOutputItems(false).toArray(ItemStack[]::new))).orElse(false))
             return false;
         return !tile.fluidHandler.isPresent() || !activeRecipe.hasOutputFluids() || tile.fluidHandler.map(t -> t.canOutputsFit(activeRecipe.getOutputFluids())).orElse(false);
     }
@@ -576,12 +578,12 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
             if (activeRecipe != null && !consumePower(true)) {
                 return;
             }
-            if (event == SlotType.ENERGY) {
-                if (tile.itemHandler.map(t -> t.inventories.get(SlotType.ENERGY).getStackInSlot((int) data[0]).isEmpty()).orElse(true)) {
+            if (event == SlotTypes.ENERGY) {
+                if (tile.itemHandler.map(t -> t.inventories.get(SlotTypes.ENERGY).getStackInSlot((int) data[0]).isEmpty()).orElse(true)) {
                     return;
                 }
             }
-            if ((event == SlotType.IT_OUT || event == SlotType.FL_OUT) && tile.getMachineState() == OUTPUT_FULL && tickTimer == 0 && canOutput()) {
+            if ((event == SlotTypes.IT_OUT || event == SlotTypes.FL_OUT) && tile.getMachineState() == OUTPUT_FULL && tickTimer == 0 && canOutput()) {
                 tickingRecipe = true;
                 tile.setMachineState(recipeFinish());
                 tickingRecipe = false;
@@ -591,7 +593,7 @@ public class MachineRecipeHandler<T extends BlockEntityMachine<T>> implements IM
                 if (activeRecipe == null) {
                     if (tile.getMachineState() != POWER_LOSS && tickTimer == 0) {
                         checkRecipe();
-                    } else if (event == SlotType.IT_IN || event == SlotType.FL_IN) {
+                    } else if (event == SlotTypes.IT_IN || event == SlotTypes.FL_IN) {
                         checkRecipe();
                     }
                 }

@@ -9,9 +9,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.minecraft.client.Minecraft;
 import org.gtreimagined.gtlib.datagen.IGTLibProvider;
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.material.Material;
@@ -290,7 +291,7 @@ public final class GTAPI {
     private static <T> Stream<T> allInternal(Class<T> c) {
         Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
         return map == null ? Stream.empty()
-                : new Object2ObjectArrayMap<>(map).values().stream().flatMap(t -> t.map(Stream::of, right -> right.values().stream())).map(c::cast);
+                : map.values().stream().flatMap(t -> t.map(Stream::of, right -> right.values().stream())).map(c::cast);
     }
 
     private static <T> Stream<T> allInternal(Class<T> c, @NotNull String domain) {
@@ -302,7 +303,7 @@ public final class GTAPI {
         synchronized (OBJECTS){
             Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
             if (map != null) {
-                new Object2ObjectArrayMap<>(map).forEach((d, e) -> {
+                map.forEach((d, e) -> {
                     if (e.left().isPresent()) {
                         e.left().ifPresent(o -> consumer.accept(c.cast(o), o.getDomain(), o.getId()));
                     } else {
@@ -319,7 +320,7 @@ public final class GTAPI {
         synchronized (OBJECTS){
             Map<String, Either<ISharedGTObject, Map<String, Object>>> map = OBJECTS.get(c);
             if (map != null) {
-                new Object2ObjectArrayMap<>(map).forEach((d, e) -> {
+                map.forEach((d, e) -> {
                     if (e.left().isPresent()) {
                         if (domain.equals(Ref.SHARED_ID)) {
                             e.left().ifPresent(o -> consumer.accept(c.cast(o), o.getDomain(), o.getId()));
@@ -440,6 +441,25 @@ public final class GTAPI {
         return ModList.get().isLoaded(modid);
     }
 
+    /**
+     * For async stuff use this, otherwise use {@link GTAPI isClientSide}
+     *
+     * @return if the current thread is the client thread
+     */
+    public static boolean isClientThread() {
+        return isClientSide() && Minecraft.getInstance().isSameThread();
+    }
+
+    /**
+     * @return if the game is the <strong>PHYSICAL</strong> client, e.g. not a dedicated server.
+     * @apiNote Do not use this to check if you're currently on the server thread for side-specific actions!
+     *          It does <strong>NOT</strong> work for that. Use {@link #isClientThread()} instead.
+     * @see #isClientThread()
+     */
+    public static boolean isClientSide(){
+        return FMLEnvironment.dist.isClient();
+    }
+
     public static void runOnEvent(RegistrationEvent event, Runnable runnable) {
         CALLBACKS.computeIfAbsent(event, k -> new ObjectArrayList<>()).add(runnable);
     }
@@ -466,29 +486,29 @@ public final class GTAPI {
      * JEI Registry Section
      **/
 
-    public static void registerJEICategory(IRecipeMap map, GuiData gui, Tier tier, ResourceLocation model,
+    public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Tier tier, ResourceLocation model,
                                            boolean override) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            GTLibXEIPlugin.registerCategory(map, gui, tier, model, override);
+            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier, model, override);
         }
     }
 
-    public static void registerJEICategory(IRecipeMap map, GuiData gui, Machine<?> machine, @Nullable Tier tier, boolean override) {
+    public static void registerJEICategory(IRecipeMap map, GuiProperties gui, Machine<?> machine, @Nullable Tier tier, boolean override) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
             if (tier == null) tier = machine.getFirstTier();
-            GTLibXEIPlugin.registerCategory(map, gui, tier,
+            GTLibRecipeViewerPlugin.registerCategory(map, gui, tier,
                     new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier)), override);
         }
     }
 
     public static void registerJEICategoryWorkstation(IRecipeMap map, Machine<?> machine, @Nullable Tier tier) {
         if (isModLoaded(Ref.MOD_JEI) || isModLoaded(Ref.MOD_REI) || isModLoaded(Ref.MOD_EMI)) {
-            GTLibXEIPlugin.registerCategoryWorkstation(map,
+            GTLibRecipeViewerPlugin.registerCategoryWorkstation(map,
                     new ResourceLocation(machine.getDomain(), machine.getIdFromTier(tier != null ? tier : machine.getFirstTier())));
         }
     }
 
-    public static void registerJEICategory(IRecipeMap map, GuiData gui) {
+    public static void registerJEICategory(IRecipeMap map, GuiProperties gui) {
         registerJEICategory(map, gui, Tier.LV, null, true);
     }
 

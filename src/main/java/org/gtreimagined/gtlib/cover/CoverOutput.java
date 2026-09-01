@@ -48,9 +48,8 @@ public class CoverOutput extends BaseCover {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        if (handler.getTile().getLevel().isClientSide) return;
+    public void onTickPost() {
+        super.onTickPost();
         manualOutput();
     }
 
@@ -165,12 +164,10 @@ public class CoverOutput extends BaseCover {
     @Override
     public void onGuiEvent(IGuiEvent event, Player player) {
         if (event.getFactory() == GuiEvents.ITEM_EJECT) {
-            ejectItems = !ejectItems;
             if (ejectItems) processItemOutput();
             Utils.markTileForNBTSync(handler.getTile());
         }
         if (event.getFactory() == GuiEvents.FLUID_EJECT) {
-            ejectFluids = !ejectFluids;
             if (ejectFluids) processFluidOutput();
             Utils.markTileForNBTSync(handler.getTile());
         }

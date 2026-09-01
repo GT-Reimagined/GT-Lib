@@ -1,21 +1,18 @@
 package org.gtreimagined.gtlib.cover;
 
+import brachy.modularui.api.IUIHolder;
+import brachy.modularui.factory.SidedPosGuiData;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.ModularScreen;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.value.sync.FluidSlotSyncHandler;
+import brachy.modularui.value.sync.PanelSyncManager;
+import brachy.modularui.widgets.slot.ItemSlot;
+import brachy.modularui.widgets.slot.ModularSlot;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.capability.ICoverHandler;
-import org.gtreimagined.gtlib.capability.IGuiHandler;
-import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.machine.Tier;
-import org.gtreimagined.gtlib.machine.event.IMachineEvent;
-import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
-import org.gtreimagined.gtlib.registration.ITextureProvider;
-import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.tool.GTToolType;
-import org.gtreimagined.gtlib.util.Utils;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,17 +22,34 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.network.NetworkHooks;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.capability.FluidHandler.FluidTankType;
+import org.gtreimagined.gtlib.capability.ICoverHandler;
+import org.gtreimagined.gtlib.capability.IGuiHandler;
+import org.gtreimagined.gtlib.capability.fluid.FluidTanks;
+import org.gtreimagined.gtlib.client.dynamic.IDynamicModelProvider;
+import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.gui.SlotData;
+import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.event.GuiEvents;
+import org.gtreimagined.gtlib.gui.event.IGuiEvent;
+import org.gtreimagined.gtlib.machine.Tier;
+import org.gtreimagined.gtlib.machine.event.IMachineEvent;
+import org.gtreimagined.gtlib.mui.GTGuiTextures;
+import org.gtreimagined.gtlib.mui.drawable.GTDrawableStack;
+import org.gtreimagined.gtlib.mui.factory.CoverUIFactory;
+import org.gtreimagined.gtlib.mui.widgets.GTFluidSlot;
+import org.gtreimagined.gtlib.registration.ITextureProvider;
+import org.gtreimagined.gtlib.texture.Texture;
+import org.gtreimagined.gtlib.tool.GTToolType;
+import org.gtreimagined.gtlib.util.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +60,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuProvider, IGuiHandler {
+public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHandler, IUIHolder<SidedPosGuiData> {
     ResourceLocation PIPE_COVER_MODEL = new ResourceLocation(Ref.ID, "block/cover/cover_pipe");
     Cache<Direction, VoxelShape> DEFAULT_SHAPES = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
@@ -100,8 +114,24 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
 
     }
 
-    // Called on update of the world.
-    default void onUpdate() {
+    /**
+     * Called before the Block does its own Tick. So for example before it checks a Recipe or something.
+     */
+    default void onTickPre(){
+
+    }
+
+    /**
+     * Called after the Block does its own Tick. So for example after it has processed a Recipe or something.
+     */
+    default void onTickPost() {
+
+    }
+
+    /**
+     * Called whe the block does a client Tick.
+     */
+    default void onClientTick(){
 
     }
 
@@ -117,11 +147,6 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
 
     }
 
-    @Override
-    default String handlerDomain() {
-        return getDomain();
-    }
-
     default void onMachineEvent(IGuiHandler tile, IMachineEvent event, int... data) {
         // NOOP
     }
@@ -133,15 +158,20 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
     default boolean openGui(Player player, Direction side) {
         if (!hasGui())
             return false;
-        NetworkHooks.openScreen((ServerPlayer) player, this, packetBuffer -> {
+        CoverUIFactory.INSTANCE.open((ServerPlayer) player, this);
+        /*NetworkHooks.openScreen((ServerPlayer) player, this, packetBuffer -> {
             packetBuffer.writeBlockPos(this.source().getTile().getBlockPos());
             packetBuffer.writeInt(side.get3DDataValue());
-        });
+        });*/
         player.playNotifySound(Ref.WRENCH, SoundSource.BLOCKS, 1.0f, 2.0f);
         return true;
     }
 
     default Map<SlotType<?>, IItemHandler> getAll(){
+        return null;
+    }
+
+    default Map<FluidTankType, FluidTanks> getFluidTanks() {
         return null;
     }
 
@@ -225,7 +255,70 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
 
     ICoverHandler<?> source();
 
-    default GuiData getGui() {
+    default GuiProperties getGuiProperties() {
+        return null;
+    }
+
+
+    @Override
+    default ModularScreen createScreen(SidedPosGuiData sidedPosGuiData, ModularPanel<?> modularPanel){
+        ModularScreen modularScreen = new ModularScreen(this.getDomain(), modularPanel);
+        if (getTheme() != null){
+            modularScreen.useTheme(getTheme());
+        }
+        return modularScreen;
+    }
+
+    default String getTheme(){
+        return null;
+    }
+
+    default ModularPanel<?> createModularPanel(){
+        return ModularPanel.defaultPanel(this.getId(), getGuiProperties().getXSize(), getGuiProperties().getYSize());
+    }
+
+    @Override
+    default ModularPanel<?> buildUI(SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
+        if (hasGui() && getGuiProperties() != null){
+            ModularPanel<?> modularPanel = createModularPanel();
+            panelSyncManager.registerSyncedAction("extra_button_event", packet -> {
+                this.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), panelSyncManager.getPlayer());
+            });
+            GuiProperties guiProperties = getGuiProperties();
+            if (guiProperties.hasGTIcon()) {
+                modularPanel.child(guiProperties.getGTIcon(getTier()).asWidget().pos(guiProperties.getGtIconPos().x, guiProperties.getGtIconPos().y));
+            }
+            if (guiProperties.enablePlayerSlots()) {
+                modularPanel.bindPlayerInventory();
+            }
+            Object2IntMap<String> slotIndexMap = new Object2IntOpenHashMap<>();
+            for (SlotData<?> slotData : guiProperties.getSlots().getSlots(this.getTier())){
+                boolean item = slotData.type().slotSupplier() != null;
+                boolean fluid = slotData.type().fluidHandlerSupplier() != null;
+                slotIndexMap.computeIntIfAbsent(slotData.type().getId(), k -> 0);
+                if (item){
+                    ModularSlot slot = slotData.type().slotSupplier().get((SlotType) slotData.type(), this, this.getAll(), slotIndexMap.getInt(slotData.type().getId()), (SlotData) slotData);
+                    ItemSlot itemSlot = ItemSlot.create(slotData.type().phantom());
+                    itemSlot.pos(slotData.x() - 1, slotData.y() - 1);
+                    itemSlot.background(new GTDrawableStack(slotData.background() == GTGuiTextures.ITEM_SLOT ? null :  slotData.background(), slotData.overlay()));
+                    itemSlot.slot(slot);
+                    modularPanel.child(itemSlot);
+                } else if (fluid){
+                    FluidTanks tanks = slotData.type().fluidHandlerSupplier().apply(this);
+                    GTFluidSlot fluidSlot = new GTFluidSlot();
+                    fluidSlot.pos(slotData.x() - 1, slotData.y() - 1).alwaysShowFull(true)
+                            .syncHandler(new FluidSlotSyncHandler(tanks.getTank(slotIndexMap.getInt(slotData.type().getId()))).phantom(slotData.type().phantom()));
+                    fluidSlot.background(new GTDrawableStack(slotData.background() == GTGuiTextures.FLUID_SLOT ? null :  slotData.background(), slotData.overlay()));
+                    modularPanel.child(fluidSlot);
+                }
+                slotIndexMap.computeInt(slotData.type().getId(), (a, b) -> {
+                    if (b == null) return 0;
+                    return b + 1;
+                });
+            }
+            addWidgets(modularPanel, sidedPosGuiData, panelSyncManager, uiSettings);
+            return modularPanel;
+        }
         return null;
     }
 
@@ -322,16 +415,6 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
         }
 
         @Override
-        public ResourceLocation getGuiTexture() {
-            return null;
-        }
-
-        @Override
-        public AbstractGuiEventPacket createGuiPacket(IGuiEvent event) {
-            return null;
-        }
-
-        @Override
         public ResourceLocation getModel(String type, Direction dir) {
             return null;
         }
@@ -349,12 +432,6 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, MenuPro
         @Override
         public boolean ticks() {
             return false;
-        }
-
-        @Nullable
-        @Override
-        public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-            return null;
         }
     };
     CoverFactory emptyFactory = CoverFactory.builder((a, b, c, d) -> empty).build(Ref.ID, "none");

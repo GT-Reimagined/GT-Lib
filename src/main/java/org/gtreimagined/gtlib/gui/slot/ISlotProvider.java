@@ -1,17 +1,20 @@
 package org.gtreimagined.gtlib.gui.slot;
 
 
+import brachy.modularui.widgets.slot.ModularSlot;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.gui.SlotData;
+import org.gtreimagined.gtlib.gui.SlotData.SlotDataBuilder;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.machine.Tier;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public interface ISlotProvider<T extends ISlotProvider<T>> {
     Map<String, Object2IntOpenHashMap<SlotType<?>>> getCountLookup();
@@ -21,8 +24,8 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     /**
      * Adds a slot for ANY
      **/
-    default T add(SlotType<?> type, int x, int y) {
-        return add("", new SlotData<>(type, x, y));
+    default <U extends ModularSlot> T add(SlotType<U> type, int x, int y) {
+        return add(type, b -> b.x(x).y(y));
     }
 
 
@@ -30,24 +33,22 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     /**
      * Adds a slot for the given Tier
      **/
-    default T add(Tier tier, SlotType<?> type, int x, int y) {
-        return add(tier.getId(), new SlotData<>(type, x, y));
+    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, int x, int y) {
+        return add(tier, type, b -> b.x(x).y(y));
     }
 
     /**
-     * Adds a slot for ANY with special texture
+     * Adds a slot for ANY using builder
      **/
-    default T add(SlotType<?> type, int x, int y, ResourceLocation textureName) {
-        return add("", new SlotData<>(type, x, y, new ResourceLocation(textureName.getNamespace(), "textures/gui/slots/" + textureName.getPath() + ".png")));
+    default <U extends ModularSlot> T add(SlotType<U> type, Consumer<SlotDataBuilder<U>> slotConsumer){
+        return add("", SlotData.<U>create(b -> slotConsumer.accept(b.type(type))));
     }
 
-
-
     /**
-     * Adds a slot for the given Tier with special texture
+     * Adds a slot for ANY using builder
      **/
-    default T add(Tier tier, SlotType<?> type, int x, int y, ResourceLocation textureName) {
-        return add(tier.getId(), new SlotData<>(type, x, y, new ResourceLocation(textureName.getNamespace(), "textures/gui/slots/" + textureName.getPath() + ".png")));
+    default <U extends ModularSlot> T add(Tier tier, SlotType<U> type, Consumer<SlotDataBuilder<U>> slotConsumer){
+        return add(tier.getId(), SlotData.<U>create(b -> slotConsumer.accept(b.type(type))));
     }
 
     /**
@@ -90,7 +91,7 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
         Map<String, List<SlotData<?>>> slotLookup = getSlotLookup();
         if (!count.containsKey(key)) count.put(key, new Object2IntOpenHashMap<>());
 
-        count.get(key).addTo(slot.getType(), 1);
+        count.get(key).addTo(slot.type(), 1);
         if (slotLookup.containsKey(key)) {
             slotLookup.get(key).add(slot);
         } else {
@@ -127,24 +128,25 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
     }
 
     default List<SlotData<?>> getSlots(Tier tier) {
-        List<SlotData<?>> slots = getSlotLookup().get(tier.getId());
+        List<SlotData<?>> slots = tier == null ? getAnySlots() : getSlotLookup().get(tier.getId());
         if (slots == null) slots = getSlotLookup().get("");
         return slots != null ? slots : new ObjectArrayList<>();
     }
 
     default List<SlotData<?>> getRecipeSlots(Tier tier) {
-        List<SlotData<?>> slots = getSlotLookup().get(tier.getId());
+        List<SlotData<?>> slots = tier == null ? getAnySlots() : getSlotLookup().get(tier.getId());
         if (slots == null) slots = getSlotLookup().get("");
-        return slots != null ? slots.stream().filter(s -> s.getType() == SlotType.FL_IN || s.getType() == SlotType.FL_OUT || s.getType() == SlotType.IT_OUT || s.getType() == SlotType.IT_IN).toList() : new ObjectArrayList<>();
+        return slots != null ? slots.stream().filter(s -> s.type() == SlotTypes.FL_IN || s.type() == SlotTypes.FL_OUT || s.type() == SlotTypes.IT_OUT || s.type() == SlotTypes.IT_IN).toList() : new ObjectArrayList<>();
     }
 
     default List<SlotData<?>> getSlots(SlotType<?> type, Tier tier) {
+        if (tier == null) return getSlots(type);
         List<SlotData<?>> types = new ObjectArrayList<>();
         List<SlotData<?>> slots = getSlotLookup().get(tier.getId());
         if (slots == null) slots = getSlotLookup().get("");
         if (slots == null) return types; //No slots found
         for (SlotData<?> slot : slots) {
-            if (slot.getType() == type) types.add(slot);
+            if (slot.type() == type) types.add(slot);
         }
         return types;
     }
@@ -154,7 +156,7 @@ public interface ISlotProvider<T extends ISlotProvider<T>> {
         List<SlotData<?>> slots = getSlotLookup().get("");
         if (slots == null) return types; //No slots found
         for (SlotData<?> slot : slots) {
-            if (slot.getType() == type) types.add(slot);
+            if (slot.type() == type) types.add(slot);
         }
         return types;
     }

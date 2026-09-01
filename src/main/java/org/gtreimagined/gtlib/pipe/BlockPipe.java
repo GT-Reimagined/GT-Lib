@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
+import net.minecraft.world.Containers;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.gtreimagined.gtlib.GTLib;
@@ -77,6 +78,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -179,6 +181,21 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
             pipe.addInventoryDrops(list);
         }
         return list;
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        List<ItemStack> stacks = new ArrayList<>();
+        if (level.getBlockEntity(pos) instanceof BlockEntityPipe<?> pipe){
+            pipe.addInventoryDrops(stacks);
+        }
+        boolean destroy = super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        if (destroy && !willHarvest){
+            stacks.forEach(i -> {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), i);
+            });
+        }
+        return destroy;
     }
 
     @Override
@@ -537,94 +554,11 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     public GTBlockModelBuilder getPipeConfigForFullBlock(GTBlockModelBuilder builder) {
-        builder.model(SIMPLE, of("all", getFace()));
-        builder.staticConfigId("pipe");
+        JLoaderModel open = builder.addModelObject(JLoaderModel.model(), SIMPLE, of("all", getFace().toString()));
+        JLoaderModel closed = builder.addModelObject(JLoaderModel.model(), SIMPLE, of("all", getSide().toString()));
+        builder.property("open", open);
+        builder.property("closed", closed);
         builder.particle(getFace());
-
-        //Default Shape (0 Connections)
-        builder.config(getPipeID(0, 0), SIMPLE, c -> c.tex(of("all", getFace())));
-
-        //Single Shapes (1 Connections)
-        builder.config(getPipeID(1, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace())).rot(-90, 0, 0));
-        builder.config(getPipeID(2, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(4, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace())));
-        builder.config(getPipeID(8, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace())).rot(0, 180, 0));
-        builder.config(getPipeID(16, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(32, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace())).rot(0, -90, 0));
-
-        //Line Shapes (2 Connections)
-        builder.config(getPipeID(3, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(12, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace())));
-        builder.config(getPipeID(48, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace())).rot(0, 90, 0));
-
-        //Elbow Shapes (2 Connections)
-        builder.config(getPipeID(5, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(0, 0, -90));
-        builder.config(getPipeID(6, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(0, 0, 90));
-        builder.config(getPipeID(9, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(0, 180, -90));
-        builder.config(getPipeID(10, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(0, 180, 90));
-        builder.config(getPipeID(17, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(90, 180, 0));
-        builder.config(getPipeID(18, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(-90, 180, 0));
-        builder.config(getPipeID(20, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(24, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(0, -180, 0));
-        builder.config(getPipeID(33, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(-90, 0, 0));
-        builder.config(getPipeID(34, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(36, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())));
-        builder.config(getPipeID(40, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace())).rot(0, -90, 0));
-
-        //Side Shapes (3 Connections)
-        builder.config(getPipeID(7, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(-90, 0, 0));
-        builder.config(getPipeID(11, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(90, 0, 0));
-        builder.config(getPipeID(13, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(0, 0, 180));
-        builder.config(getPipeID(14, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())));
-        builder.config(getPipeID(19, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(90, 0, 90));
-        builder.config(getPipeID(28, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(0, 0, 90));
-        builder.config(getPipeID(35, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(90, 0, -90));
-        builder.config(getPipeID(44, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(0, 0, -90));
-        builder.config(getPipeID(49, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(0, 90, 180));
-        builder.config(getPipeID(50, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(52, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(0, 90, -90));
-        builder.config(getPipeID(56, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "south", getFace(), "up", getFace())).rot(0, 90, 90));
-
-        //Corner Shapes (3 Connections)
-        builder.config(getPipeID(21, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())).rot(0, 0, 180));
-        builder.config(getPipeID(22, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())).rot(0, 90, 0));
-        builder.config(getPipeID(25, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())).rot(0, -270, 180));
-        builder.config(getPipeID(26, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())).rot(0, 180, 0));
-        builder.config(getPipeID(41, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())).rot(0, -180, 180));
-        builder.config(getPipeID(42, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())).rot(0, -90, 0));
-        builder.config(getPipeID(37, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())).rot(0, -90, 180));
-        builder.config(getPipeID(38, 0), SIMPLE, c -> c.tex(of("all", getSide(), "north", getFace(), "east", getFace(), "up", getFace())));
-
-        //Arrow Shapes (4 Connections)
-        builder.config(getPipeID(23, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, 0, 90));
-        builder.config(getPipeID(27, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, -270, 90));
-        builder.config(getPipeID(29, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, 90, 180));
-        builder.config(getPipeID(30, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, 90, 0));
-        builder.config(getPipeID(39, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, -90, 90));
-        builder.config(getPipeID(43, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, -180, 90));
-        builder.config(getPipeID(45, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, -90, 180));
-        builder.config(getPipeID(46, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, -90, 0));
-        builder.config(getPipeID(53, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(180, 180, 0));
-        builder.config(getPipeID(54, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())));
-        builder.config(getPipeID(57, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(180, 0, 0));
-        builder.config(getPipeID(58, 0), SIMPLE, c -> c.tex(of("all", getFace(), "south", getSide(), "down", getSide())).rot(0, 180, 0));
-
-        //Cross Shapes (4 Connections)
-        builder.config(getPipeID(15, 0), SIMPLE, c -> c.tex(of("all", getFace(), "up", getSide(), "down", getSide())).rot(0, 0, 90));
-        builder.config(getPipeID(51, 0), SIMPLE, c -> c.tex(of("all", getFace(), "up", getSide(), "down", getSide())).rot(90, 0, 0));
-        builder.config(getPipeID(60, 0), SIMPLE, c -> c.tex(of("all", getFace(), "up", getSide(), "down", getSide())));
-
-        //Five Shapes (5 Connections)
-        builder.config(getPipeID(31, 0), SIMPLE, c -> c.tex(of("all", getFace(), "down", getSide())).rot(0, 0, 90));
-        builder.config(getPipeID(47, 0), SIMPLE, c -> c.tex(of("all", getFace(), "down", getSide())).rot(0, 0, -90));
-        builder.config(getPipeID(55, 0), SIMPLE, c -> c.tex(of("all", getFace(), "down", getSide())).rot(-90, 0, 0));
-        builder.config(getPipeID(59, 0), SIMPLE, c -> c.tex(of("all", getFace(), "down", getSide())).rot(90, 0, 0));
-        builder.config(getPipeID(61, 0), SIMPLE, c -> c.tex(of("all", getFace(), "down", getSide())).rot(180, 0, 0));
-        builder.config(getPipeID(62, 0), SIMPLE, c -> c.tex(of("all", getFace(), "down", getSide())));
-
-        //All Shapes (6 Connections)
-        builder.config(getPipeID(63, 0), SIMPLE, c -> c.tex(of("all", getFace())));
-
         return builder.loader(GTLibModelManager.LOADER_PIPE_FULL);
     }
 

@@ -1,8 +1,8 @@
 {
   "required": true,
-  "package": "org.gtreimagined.gtlib.integration.rei.mixin",
+  "package": "org.gtreimagined.gtlib.integration.recipeviewer.rei.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "org.gtreimagined.gtlib.integration.rei.mixin.REIMixinPlugin",
+  "plugin": "org.gtreimagined.gtlib.integration.recipeviewer.rei.mixin.REIMixinPlugin",
   "mixins": [
     "DefaultCraftingDisplayMixin"
   ],

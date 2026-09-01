@@ -3,9 +3,13 @@ plugins {
     id "maven-publish"
     id "idea"
     id "io.freefair.lombok" version "8.10.2" apply false
+    id "org.jetbrains.kotlin.jvm" version "${kotlin_version}" apply false
+    id "org.jetbrains.kotlin.plugin.lombok" version "${kotlin_version}" apply false
     id "net.neoforged.moddev.legacyforge" version "${mdg_version}" apply false
 }
 apply plugin: "net.neoforged.moddev.legacyforge"
+apply plugin: "org.jetbrains.kotlin.jvm"
+apply plugin: "org.jetbrains.kotlin.plugin.lombok"
 
 //Print out JVM information so that we know what version is running. Extreamly useful for people to know when helping you.
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -94,24 +98,23 @@ dependencies {
 
     //MIXIN
     annotationProcessor 'net.fabricmc:sponge-mixin:0.11.4+mixin.0.8.5'
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4"))
+    jarJar("io.github.llamalad7:mixinextras-forge:0.5.4:slim")
+    implementation("io.github.llamalad7:mixinextras-forge:0.5.4")
     implementation("org.jetbrains:annotations:26.0.1")
     //required dependencies
+    compileOnly(jarJar("net.ccbluex:fastutil4k-extensions-only:${project.fastutil4k_version}"))
+    implementation "thedarkcolour:kotlinforforge:${project.kff_version}"
     modImplementation(jarJar("dev.trinsdar:arrp-forge:${project.arrp_version}"))
     modImplementation(jarJar("dev.trinsdar:terraform-utils-v1:${terraform_version}"))
     modImplementation(jarJar("org.gt-reimagined:structurelib-forge:${project.structurelib_version}-${project.minecraft_version}"))
     modImplementation(jarJar("com.teamresourceful.resourcefullib:resourcefullib-forge-${project.minecraft_version}:${project.resourcefullib_version}"))
     implementation("com.teamresourceful:yabn:${project.yabn_version}")
     modImplementation("maven.modrinth:carbon-config:${project.carbon_config_version}")
-    jarJar("maven.modrinth:carbon-config:${project.carbon_config_version}"){
-        version {
-            prefer(project.carbon_config_version)
-        }
-    }
     modImplementation(jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
     //modImplementation(jarJar("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}"))
     modImplementation(jarJar("dev.engine-room.flywheel:flywheel-forge-${project.minecraft_version}:${project.flywheel_version}"))
+    modImplementation(jarJar("brachy.modularui:modularui-mc${project.minecraft_version}:${project.mui_version}"))
     //optional dependencies
     modCompileOnly("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}")
@@ -156,6 +159,7 @@ processResources {
         minecraft_version_range  : project.minecraft_version_range,
         forge_version_range      : project.forge_version_range,
         loader_version_range     : project.loader_version_range,
+        kff_version_range        : project.kff_version_range,
         version                  : project.mod_version
     ]
     inputs.properties replaceProperties
@@ -163,6 +167,10 @@ processResources {
     filesMatching("META-INF/mods.toml") {
         expand replaceProperties
     }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "17"
 }
 
 jar{

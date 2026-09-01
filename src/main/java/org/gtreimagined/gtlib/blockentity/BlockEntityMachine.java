@@ -1,20 +1,48 @@
 package org.gtreimagined.gtlib.blockentity;
 
+import brachy.modularui.api.IUIHolder;
+import brachy.modularui.factory.SidedPosGuiData;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.screen.ModularScreen;
+import brachy.modularui.screen.UISettings;
+import brachy.modularui.value.sync.PanelSyncManager;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Level.ExplosionInteraction;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityCable;
-import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.CoverHandler;
 import org.gtreimagined.gtlib.capability.EnergyHandler;
+import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.Holder;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.capability.ICoverHandlerProvider;
@@ -32,16 +60,10 @@ import org.gtreimagined.gtlib.client.tesr.Caches;
 import org.gtreimagined.gtlib.client.tesr.MachineTESR;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.IGuiElement;
-import org.gtreimagined.gtlib.gui.SlotData;
-import org.gtreimagined.gtlib.gui.SlotType;
-import org.gtreimagined.gtlib.gui.container.ContainerMachine;
+import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.gui.SlotTypes;
+import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.gui.event.SlotClickEvent;
-import org.gtreimagined.gtlib.gui.widget.FluidSlotWidget;
-import org.gtreimagined.gtlib.gui.widget.SlotWidget;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.MachineFlag;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -49,52 +71,22 @@ import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.machine.types.BasicMultiMachine;
 import org.gtreimagined.gtlib.machine.types.Machine;
-import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
-import org.gtreimagined.gtlib.network.packets.TileGuiEventPacket;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.structure.StructureCache;
 import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.tool.GTToolType;
 import org.gtreimagined.gtlib.util.Cache;
 import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.gtreimagined.tesseract.api.fe.IExtendedEnergyStorage;
-import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import org.gtreimagined.tesseract.api.eu.EUGrid;
 import org.gtreimagined.tesseract.api.eu.EUNetwork;
-import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
 import org.gtreimagined.tesseract.api.eu.IEUCable;
 import org.gtreimagined.tesseract.api.eu.IEUNode;
+import org.gtreimagined.tesseract.api.eu.IEnergyHandler;
+import org.gtreimagined.tesseract.api.fe.IExtendedEnergyStorage;
+import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import org.gtreimagined.tesseract.api.hu.IHeatHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -102,17 +94,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+import static net.minecraft.world.level.block.Blocks.AIR;
 import static org.gtreimagined.gtlib.gui.event.GuiEvents.FLUID_EJECT;
 import static org.gtreimagined.gtlib.gui.event.GuiEvents.ITEM_EJECT;
 import static org.gtreimagined.gtlib.machine.MachineFlag.*;
-import static net.minecraft.world.level.block.Blocks.AIR;
 
-public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements MenuProvider, IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode {
+public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEntityTickable<T> implements IMachineHandler, IGuiHandler, ICoverHandlerProvider<T>, IEUNode, IUIHolder<SidedPosGuiData> {
 
     /**
      * Open container. Allows for better syncing
      **/
-    protected final Set<ContainerMachine<T>> openContainers = new ObjectOpenHashSet<>();
+    protected final Set<Player> playersInGui = new ObjectOpenHashSet<>();
 
     /**
      * Machine Data
@@ -184,12 +176,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
         }
     }
 
-    public void addOpenContainer(ContainerMachine<T> c, Player player) {
-        this.openContainers.add(c);
+    public void onContainerOpen(Player player) {
+        this.playersInGui.add(player);
     }
 
-    public void onContainerClose(ContainerMachine<T> c, Player player) {
-        this.openContainers.remove(c);
+    public void onContainerClose(Player player) {
+        this.playersInGui.remove(player);
     }
 
     @Override
@@ -225,28 +217,31 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @Override
-    public void addWidgets(GuiInstance instance, IGuiElement parent) {
-        int index = 0;
-        for (SlotData<?> slot : this.getMachineType().getSlots(this.getMachineTier())) {
-            instance.addWidget(SlotWidget.build(slot));
-        }
-        for (SlotData<?> slot : this.getMachineType().getGuiData().getSlots().getSlots(SlotType.FL_IN, getMachineTier())) {
-            instance.addWidget(FluidSlotWidget.build(index++, slot));
-        }
-        for (SlotData<?> slot : this.getMachineType().getGuiData().getSlots().getSlots(SlotType.FL_OUT, getMachineTier())) {
-            instance.addWidget(FluidSlotWidget.build(index++, slot));
-        }
-        this.getMachineType().getCallbacks().forEach(t -> t.accept(instance));
+    public GuiProperties getGuiProperties() {
+        return getMachineType().getGuiProperties();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public ModularScreen createScreen(SidedPosGuiData posGuiData, ModularPanel<?> modularPanel) {
+        ModularScreen modularScreen = new ModularScreen(type.getDomain(), modularPanel);
+        if (type.getGuiProperties().getTheme(getMachineTier()) != null) modularScreen.useTheme(type.getGuiProperties().getTheme(getMachineTier()));
+        return modularScreen;
     }
 
     @Override
-    public ResourceLocation getGuiTexture() {
-        return getMachineType().getGuiData().getTexture(this.getMachineTier(), "machine");
-    }
-
-    @Override
-    public GuiData getGui() {
-        return getMachineType().getGuiData();
+    public ModularPanel<?> buildUI(SidedPosGuiData posGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
+        ModularPanel<?> panel = type.getModularPanelSupplier().get();
+        panelSyncManager.registerSyncedAction("extra_button_event", packet -> {
+            this.onGuiEvent(GuiEvents.EXTRA_BUTTON.factory().apply(GuiEvents.EXTRA_BUTTON, packet), panelSyncManager.getPlayer());
+        });
+        panelSyncManager.addOpenListener(this::onContainerOpen);
+        panelSyncManager.addCloseListener(this::onContainerClose);
+        type.getBackgroundFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
+        type.getSlotFunction().modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings);
+        type.getGuiFunctions().forEach(f -> f.modifyPanel(panel, this, posGuiData, panelSyncManager, uiSettings));
+        this.addWidgets(panel, posGuiData, panelSyncManager, uiSettings);
+        return panel;
     }
 
     /**
@@ -285,15 +280,16 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
+        coverHandler.ifPresent(MachineCoverHandler::onTickPre);
         itemHandler.ifPresent(MachineItemHandler::onUpdate);
         energyHandler.ifPresent(MachineEnergyHandler::onUpdate);
         feHandler.ifPresent(MachineFEHandler::onUpdate);
         heatHandler.ifPresent(handler -> handler.update(getMachineState() == MachineState.ACTIVE));
         fluidHandler.ifPresent(MachineFluidHandler::onUpdate);
-        coverHandler.ifPresent(MachineCoverHandler::onUpdate);
         if (this.getMachineState() != MachineState.DISABLED && this.getMachineState() != MachineState.INVALID_STRUCTURE) {
             this.recipeHandler.ifPresent(MachineRecipeHandler::onServerUpdate);
         }
+        coverHandler.ifPresent(MachineCoverHandler::onTickPost);
 
         if (allowExplosionsInRain()) {
             double d = Ref.RNG.nextDouble();
@@ -312,7 +308,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
 
     @Override
     public void clientTick(Level level, BlockPos pos, BlockState state) {
-        coverHandler.ifPresent(MachineCoverHandler::onUpdate);
+        coverHandler.ifPresent(MachineCoverHandler::onClientTick);
     }
 
     @Override
@@ -480,22 +476,6 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
                 ch.getOutputCover().onGuiEvent(event, player);
             });
         }
-        if (event.getFactory() == SlotClickEvent.SLOT_CLICKED) {
-            itemHandler.ifPresent(t -> {
-               // ItemStack stack = player.get;
-              //  GTLib.LOGGER.info("packet got");
-            });
-        }
-    }
-
-    @Override
-    public AbstractGuiEventPacket createGuiPacket(IGuiEvent event) {
-        return new TileGuiEventPacket(event, getBlockPos());
-    }
-
-    @Override
-    public String handlerDomain() {
-        return getDomain();
     }
 
     public void setMuffled(boolean muffled) {
@@ -551,6 +531,7 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     public boolean toggleMachine() {
+        if (!canBeDisabled()) return false;
         if (getMachineState() == MachineState.DISABLED) {
             setMachineState(disabledState);
             disabledState = null;
@@ -561,6 +542,10 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             disableMachine();
         }
         return true;
+    }
+
+    protected boolean canBeDisabled(){
+        return recipeHandler.isPresent();
     }
 
     protected void disableMachine() {
@@ -631,18 +616,12 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
     }
 
     @NotNull
-    @Override
     public Component getDisplayName() {
         return getMachineType().getDisplayName(getMachineTier());
     }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int windowId, @NotNull Inventory inv, @NotNull Player player) {
-        return getMachineType().has(GUI) ? getMachineType().getGuiData().getMenuHandler().menu(this, inv, windowId) : null;
-    }
 
-    public boolean canPlayerOpenGui(Player playerEntity) {
+    public boolean canPlayerOpenGui(Player playerEntity, Direction side) {
         return true;
     }
 
@@ -777,14 +756,14 @@ public class BlockEntityMachine<T extends BlockEntityMachine<T>> extends BlockEn
             info.add("State: " + getMachineState().getId());
             String slots = "";
             if (getMachineType().has(ITEM)) {
-                int inputs = getMachineType().getSlots(SlotType.IT_IN, getMachineTier()).size();
-                int outputs = getMachineType().getSlots(SlotType.IT_OUT, getMachineTier()).size();
+                int inputs = getMachineType().getSlots(SlotTypes.IT_IN, getMachineTier()).size();
+                int outputs = getMachineType().getSlots(SlotTypes.IT_OUT, getMachineTier()).size();
                 if (inputs > 0) slots += (" IT_IN: " + inputs + ",");
                 if (outputs > 0) slots += (" IT_OUT: " + outputs + ",");
             }
             if (getMachineType().has(FLUID) && getMachineType().has(GUI)) {
-                int inputs = getMachineType().getSlots(SlotType.FL_IN, getMachineTier()).size();
-                int outputs = getMachineType().getSlots(SlotType.FL_OUT, getMachineTier()).size();
+                int inputs = getMachineType().getSlots(SlotTypes.FL_IN, getMachineTier()).size();
+                int outputs = getMachineType().getSlots(SlotTypes.FL_OUT, getMachineTier()).size();
                 if (inputs > 0) slots += (" FL_IN: " + inputs + ",");
                 if (outputs > 0) slots += (" FL_OUT: " + outputs + ",");
             }

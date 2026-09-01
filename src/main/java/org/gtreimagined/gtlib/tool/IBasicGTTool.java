@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
@@ -11,6 +12,7 @@ import org.gtreimagined.gtlib.behaviour.IAddInformation;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
 import org.gtreimagined.gtlib.behaviour.IBlockDestroyed;
 import org.gtreimagined.gtlib.behaviour.IInteractEntity;
+import org.gtreimagined.gtlib.behaviour.IInventoryTick;
 import org.gtreimagined.gtlib.behaviour.IItemHighlight;
 import org.gtreimagined.gtlib.behaviour.IItemRightClick;
 import org.gtreimagined.gtlib.behaviour.IItemUse;
@@ -207,6 +209,14 @@ public interface IBasicGTTool extends IGTObject, IColorHandler, ITextureProvider
             }
         }
         return result;
+    }
+
+    default void genericInventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected){
+        for (Map.Entry<String, IBehaviour<IBasicGTTool>> e : getBehaviours(stack).entrySet()) {
+            IBehaviour<?> b = e.getValue();
+            if (!(b instanceof IInventoryTick<?>)) continue;
+            ((IInventoryTick) b).inventoryTick(this, stack, level, entity, slotId, isSelected);
+        }
     }
 
     default boolean hasEnoughDurability(ItemStack stack, int damage, boolean energy) {

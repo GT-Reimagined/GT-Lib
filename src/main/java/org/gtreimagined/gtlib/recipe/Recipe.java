@@ -22,18 +22,19 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Recipe implements IRecipe {
-    private final ItemStack[] itemsOutput;
+    private final List<ItemStack> itemsOutput;
     @NotNull
     private final List<Ingredient> itemsInput;
     @NotNull
     private final List<FluidIngredient> fluidsInput;
-    private final FluidStack[] fluidsOutput;
+    private final List<FluidStack> fluidsOutput;
     @Getter
     private final int duration;
     private final int special;
@@ -62,7 +63,7 @@ public class Recipe implements IRecipe {
 
     public static final RecipeType<Recipe> RECIPE_TYPE = RecipeType.simple(new ResourceLocation(Ref.ID, "machine"));
 
-    public Recipe(@NotNull List<Ingredient> stacksInput, ItemStack[] stacksOutput, @NotNull List<FluidIngredient> fluidsInput, FluidStack[] fluidsOutput, int duration, long power, int special, int amps) {
+    public Recipe(@NotNull List<Ingredient> stacksInput, List<ItemStack> stacksOutput, @NotNull List<FluidIngredient> fluidsInput, List<FluidStack> fluidsOutput, int duration, long power, int special, int amps) {
         this.itemsInput = ImmutableList.copyOf(stacksInput);
         this.itemsOutput = stacksOutput;
         this.duration = duration;
@@ -97,7 +98,7 @@ public class Recipe implements IRecipe {
     }
 
     public boolean hasOutputItems() {
-        return itemsOutput != null && itemsOutput.length > 0;
+        return !itemsOutput.isEmpty();
     }
 
     public boolean hasInputFluids() {
@@ -105,11 +106,11 @@ public class Recipe implements IRecipe {
     }
 
     public boolean hasOutputFluids() {
-        return fluidsOutput != null && fluidsOutput.length > 0;
+        return !fluidsOutput.isEmpty();
     }
 
     public boolean hasOutputChances() {
-        return outputChances != null && outputChances.length == itemsOutput.length;
+        return outputChances != null && outputChances.length == itemsOutput.size();
     }
 
     @Override
@@ -153,26 +154,25 @@ public class Recipe implements IRecipe {
     }
 
 
-    @Nullable
-    public ItemStack[] getOutputItems() {
+    public List<ItemStack> getOutputItems() {
         return getOutputItems(true);
     }
 
-    public ItemStack[] getOutputItems(boolean chance) {
+    public List<ItemStack> getOutputItems(boolean chance) {
         if (hasOutputItems()) {
-            ItemStack[] outputs = itemsOutput.clone();
+            List<ItemStack> outputs = new ArrayList<>(itemsOutput);
             if (outputChances != null) {
                 List<ItemStack> evaluated = new ObjectArrayList<>();
-                for (int i = 0; i < outputs.length; i++) {
+                for (int i = 0; i < outputs.size(); i++) {
                     if (!chance || Ref.RNG.nextInt(10000) < outputChances[i]) {
-                        evaluated.add(outputs[i].copy());
+                        evaluated.add(outputs.get(i).copy());
                     }
                 }
-                outputs = evaluated.toArray(new ItemStack[0]);
+                outputs = evaluated;
             }
             return outputs;
         }
-        return null;
+        return List.of();
     }
 
     /**
@@ -180,20 +180,20 @@ public class Recipe implements IRecipe {
      *
      * @return list of items.
      */
-    public ItemStack[] getFlatOutputItems() {
+    public List<ItemStack> getFlatOutputItems() {
         if (hasOutputItems()) {
-            ItemStack[] outputs = itemsOutput.clone();
+            List<ItemStack> outputs = new ArrayList<>(itemsOutput);
             if (outputChances != null) {
                 List<ItemStack> evaluated = new ObjectArrayList<>();
-                for (int i = 0; i < outputs.length; i++) {
+                for (int i = 0; i < outputs.size(); i++) {
                     if (outputChances[i] < 10000) continue;
-                    evaluated.add(outputs[i]);
+                    evaluated.add(outputs.get(i));
                 }
-                outputs = evaluated.toArray(new ItemStack[0]);
+                outputs = evaluated;
             }
             return outputs;
         }
-        return null;
+        return List.of();
     }
 
     //Note: does call get().
@@ -211,9 +211,8 @@ public class Recipe implements IRecipe {
         return fluidsInput;
     }
 
-    @Nullable
-    public FluidStack[] getOutputFluids() {
-        return hasOutputFluids() ? fluidsOutput.clone() : null;
+    public List<FluidStack> getOutputFluids() {
+        return fluidsOutput;
     }
 
     public int @Nullable [] getOutputChances() {
@@ -249,9 +248,9 @@ public class Recipe implements IRecipe {
         }
         if (itemsOutput != null) {
             builder.append("Output Items: { ");
-            for (int i = 0; i < itemsOutput.length; i++) {
-                builder.append(itemsOutput[i].getHoverName()).append(" x").append(itemsOutput[i].getCount());
-                if (i != itemsOutput.length - 1) builder.append(", ");
+            for (int i = 0; i < itemsOutput.size(); i++) {
+                builder.append(itemsOutput.get(i).getHoverName()).append(" x").append(itemsOutput.get(i).getCount());
+                if (i != itemsOutput.size() - 1) builder.append(", ");
             }
             builder.append(" }\n");
         }
@@ -265,9 +264,9 @@ public class Recipe implements IRecipe {
         }
         if (fluidsOutput != null) {
             builder.append("Output Fluids: { ");
-            for (int i = 0; i < fluidsOutput.length; i++) {
-                builder.append(RegistryUtils.getIdFromFluid(fluidsOutput[i].getFluid())).append(": ").append(fluidsOutput[i].getAmount()).append("mb");
-                if (i != fluidsOutput.length - 1) builder.append(", ");
+            for (int i = 0; i < fluidsOutput.size(); i++) {
+                builder.append(RegistryUtils.getIdFromFluid(fluidsOutput.get(i).getFluid())).append(": ").append(fluidsOutput.get(i).getAmount()).append("mb");
+                if (i != fluidsOutput.size() - 1) builder.append(", ");
             }
             builder.append(" }\n");
         }

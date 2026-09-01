@@ -25,8 +25,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-
 
 public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverHandler<T> implements IMachineHandler, Dispatch.Sided<ICoverHandler<?>> {
     @Getter
@@ -197,10 +195,24 @@ public class MachineCoverHandler<T extends BlockEntityMachine<T>> extends CoverH
     }
 
     @Override
-    public void onUpdate() {
-       super.onUpdate();
-       outputCover.onUpdate();
-       secondaryOutputCover.onUpdate();
+    public void onTickPre() {
+        super.onTickPre();
+        if (outputCover.ticks()) outputCover.onTickPre();
+        if (secondaryOutputCover.ticks()) secondaryOutputCover.onTickPre();
+    }
+
+    @Override
+    public void onTickPost() {
+       super.onTickPost();
+       if (outputCover.ticks()) outputCover.onTickPost();
+       if (secondaryOutputCover.ticks()) secondaryOutputCover.onTickPost();
+    }
+
+    @Override
+    public void onClientTick() {
+        super.onClientTick();
+        if (outputCover.ticks()) outputCover.onClientTick();
+        if (secondaryOutputCover.ticks()) secondaryOutputCover.onClientTick();
     }
 
     @Override

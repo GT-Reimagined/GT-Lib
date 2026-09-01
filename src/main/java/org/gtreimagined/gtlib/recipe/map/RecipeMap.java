@@ -8,10 +8,9 @@ import lombok.Getter;
 import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.integration.xei.renderer.IRecipeInfoRenderer;
-import org.gtreimagined.gtlib.integration.xei.renderer.InfoRenderers;
+import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.integration.recipeviewer.renderer.IRecipeInfoRenderer;
+import org.gtreimagined.gtlib.integration.recipeviewer.renderer.InfoRenderers;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.machine.types.Machine;
 import org.gtreimagined.gtlib.recipe.IRecipe;
@@ -26,7 +25,6 @@ import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.recipe.ingredient.SpecialIngredientWrapper;
 import org.gtreimagined.gtlib.recipe.serializer.IGTRecipeSerializer;
 import org.gtreimagined.gtlib.recipe.serializer.MachineRecipeSerializer;
-import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -69,7 +67,7 @@ public class RecipeMap<B extends RecipeBuilder> implements IRecipeMap {
     private final List<AbstractMapIngredient> ROOT_SPECIAL = new ObjectArrayList<>();
 
     @Nullable
-    private GuiData GUI;
+    private GuiProperties GUI;
     @Nullable
     private Tier guiTier;
     @Nullable
@@ -156,7 +154,7 @@ public class RecipeMap<B extends RecipeBuilder> implements IRecipeMap {
      * @param gui the guidata.
      * @return this
      */
-    public RecipeMap<B> setGuiData(GuiData gui) {
+    public RecipeMap<B> setGuiData(GuiProperties gui) {
         this.GUI = gui;
         GTAPI.registerJEICategory(this, this.GUI);
         return this;
@@ -169,7 +167,7 @@ public class RecipeMap<B extends RecipeBuilder> implements IRecipeMap {
      * @param machine the machine.
      * @return this
      */
-    public RecipeMap<B> setGuiData(GuiData gui, Machine<?> machine) {
+    public RecipeMap<B> setGuiData(GuiProperties gui, Machine<?> machine) {
         this.GUI = gui;
         GTAPI.registerJEICategory(this, this.GUI, machine, machine.getFirstTier(), true);
         return this;
@@ -188,7 +186,7 @@ public class RecipeMap<B extends RecipeBuilder> implements IRecipeMap {
     }
 
     @Nullable
-    public GuiData getGui() {
+    public GuiProperties getGui() {
         return GUI;
     }
 

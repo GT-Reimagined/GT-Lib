@@ -2,12 +2,20 @@ package org.gtreimagined.gtlib.blockentity.pipe;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.Data;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.blockentity.BlockEntityTickable;
-import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.CoverHandler;
+import org.gtreimagined.gtlib.capability.GTLibCaps;
 import org.gtreimagined.gtlib.capability.Holder;
 import org.gtreimagined.gtlib.capability.ICoverHandler;
 import org.gtreimagined.gtlib.capability.ICoverHandlerProvider;
@@ -16,35 +24,15 @@ import org.gtreimagined.gtlib.capability.IMachineHandler;
 import org.gtreimagined.gtlib.capability.pipe.PipeCoverHandler;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.gui.GuiInstance;
-import org.gtreimagined.gtlib.gui.IGuiElement;
-import org.gtreimagined.gtlib.gui.event.IGuiEvent;
-import org.gtreimagined.gtlib.gui.widget.BackgroundWidget;
-import org.gtreimagined.gtlib.network.packets.AbstractGuiEventPacket;
+import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.pipe.BlockPipe;
 import org.gtreimagined.gtlib.pipe.PipeSize;
 import org.gtreimagined.gtlib.pipe.types.PipeType;
 import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import org.gtreimagined.tesseract.api.Connectivity;
+import org.gtreimagined.tesseract.api.IConnectable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.gtreimagined.tesseract.api.IConnectable;
-import org.gtreimagined.tesseract.api.Connectivity;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +41,7 @@ import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HAN
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
 
-public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntityTickable<BlockEntityPipe<T>> implements IMachineHandler, MenuProvider, IGuiHandler, IConnectable, ICoverHandlerProvider<BlockEntityPipe<?>> {
+public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntityTickable<BlockEntityPipe<T>> implements IMachineHandler, IGuiHandler, IConnectable, ICoverHandlerProvider<BlockEntityPipe<?>> {
 
     /**
      * Pipe Data
@@ -90,12 +78,7 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     }
 
     @Override
-    public String handlerDomain() {
-        return getPipeType().domain;
-    }
-
-    @Override
-    public GuiData getGui() {
+    public GuiProperties getGuiProperties() {
         return null;
     }
 
@@ -375,8 +358,9 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
 
     @Override
     protected void serverTick(Level level, BlockPos pos, BlockState state) {
+        coverHandler.ifPresent(CoverHandler::onTickPre);
         super.serverTick(level, pos, state);
-        coverHandler.ifPresent(CoverHandler::onUpdate);
+        coverHandler.ifPresent(CoverHandler::onTickPost);
     }
 
     public CoverFactory[] getValidCovers() {
@@ -459,33 +443,6 @@ public abstract class BlockEntityPipe<T extends PipeType<T>> extends BlockEntity
     @Override
     public boolean isRemote() {
         return this.getLevel().isClientSide;
-    }
-
-    @Override
-    public ResourceLocation getGuiTexture() {
-        return new ResourceLocation(Ref.ID, "textures/gui/empty_multi.png");
-    }
-
-    @Override
-    public AbstractGuiEventPacket createGuiPacket(IGuiEvent event) {
-        return null;
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Utils.literal(this.type.getType());
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int p_createMenu_1_, Inventory p_createMenu_2_, Player p_createMenu_3_) {
-        return Data.PIPE_MENU_HANDLER.menu(this, p_createMenu_2_, p_createMenu_1_);
-    }
-
-    @Override
-    public void addWidgets(GuiInstance instance, IGuiElement parent) {
-        //instance.addWidget(WidgetSupplier.build((a, b) -> TextWidget.build(((GTContainerScreen<?>) b).getTitle().getString(), 4210752).build(a, b)).setPos(9, 5).clientSide());
-        instance.addWidget(BackgroundWidget.build(instance.handler.getGuiTexture(), instance.handler.guiSize(), instance.handler.guiHeight()));
     }
 
     @Override

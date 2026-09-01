@@ -10,8 +10,8 @@
     "client.ChunkReaderAccessor",
     "client.ClientBlockUpdateMixin",
     "client.ClientPackSourceAccessor",
+    "client.GuiGraphicsMixin",
     "client.GuiLightAccessor",
-    "client.ItemRendererMixin",
     "client.ItemTransformDeserializerAccessor",
     "client.LevelRendererAccessor",
     "client.ModelBakeryMixin",
@@ -47,5 +47,8 @@
     "TagLoaderMixin"
   ],
   "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.4"
+  },
   "refmap": "gtlib.refmap.json"
 }

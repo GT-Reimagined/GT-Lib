@@ -5,13 +5,12 @@ import org.gtreimagined.gtlib.capability.FluidHandler;
 import org.gtreimagined.gtlib.capability.Holder;
 import org.gtreimagined.gtlib.capability.machine.MachineFluidHandler;
 import org.gtreimagined.gtlib.capability.machine.MachineItemHandler;
-import org.gtreimagined.gtlib.gui.GuiData;
-import org.gtreimagined.gtlib.integration.xei.renderer.IRecipeInfoRenderer;
-import org.gtreimagined.gtlib.integration.xei.renderer.InfoRenderers;
+import org.gtreimagined.gtlib.gui.GuiProperties;
+import org.gtreimagined.gtlib.integration.recipeviewer.renderer.IRecipeInfoRenderer;
+import org.gtreimagined.gtlib.integration.recipeviewer.renderer.InfoRenderers;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.registration.IGTObject;
-import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -72,7 +71,7 @@ public interface IRecipeMap extends IGTObject {
                 fluidHandler.map(MachineFluidHandler::getInputs).orElse(EMPTY_FLUID), tier, validator);
     }
     @Nullable
-    default GuiData getGui() {
+    default GuiProperties getGui() {
         return null;
     }
 
@@ -87,6 +86,6 @@ public interface IRecipeMap extends IGTObject {
     }
 
     default Component getDisplayName() {
-        return Utils.translatable("jei.category." + getLoc().getPath());
+        return Utils.translatable("gui.recipeviewer.category." + getLoc().toLanguageKey());
     }
 }

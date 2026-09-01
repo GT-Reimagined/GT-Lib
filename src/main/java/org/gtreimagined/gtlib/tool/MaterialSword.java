@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.behaviour.IBehaviour;
@@ -210,6 +211,11 @@ public class MaterialSword extends SwordItem implements IGTTool {
             return result;
         }
         return super.use(level, player, usedHand);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        genericInventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     @Override

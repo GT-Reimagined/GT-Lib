@@ -1,12 +1,13 @@
 package org.gtreimagined.gtlib;
 
+import brachy.modularui.factory.GuiManager;
 import com.terraformersmc.terraform.utils.TerraformFuelRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
-import org.gtreimagined.gtlib.client.ClientData;
 import org.gtreimagined.gtlib.common.event.ARRPEvents;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTTools;
@@ -30,9 +31,10 @@ import org.gtreimagined.gtlib.event.GTCraftingEvent;
 import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.fluid.GTFluid;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.integration.Integrations;
-import org.gtreimagined.gtlib.integration.xei.GTLibXEIPlugin;
+import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin;
 import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
 import org.gtreimagined.gtlib.item.interaction.CauldronInteractions;
 import org.gtreimagined.gtlib.machine.MachineState;
@@ -42,6 +44,8 @@ import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.material.MaterialTypeBlock;
 import org.gtreimagined.gtlib.material.MaterialTypeItem;
 import org.gtreimagined.gtlib.material.SubTag;
+import org.gtreimagined.gtlib.mui.GTGuiThemes;
+import org.gtreimagined.gtlib.mui.factory.CoverUIFactory;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.ore.BlockOre;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -128,8 +132,10 @@ public class GTLib extends GTMod {
         GTCreativeTabs.init();
         GTLibNetwork.register();
         GTLibConfig.createConfig();
+        GuiManager.registerFactory(CoverUIFactory.INSTANCE);
         /* Lifecycle events */
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::modConstructionEvent);
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::commonSetup);
         eventBus.addListener(this::serverSetup);
@@ -184,7 +190,7 @@ public class GTLib extends GTMod {
         if (event == RegistrationEvent.DATA_INIT) {
             Recipe.init();
             GTLoot.RandomWeightLootFunction.init();
-            SlotType.init();
+            SlotTypes.init();
             RecipeBuilders.init();
             MachineState.init();
             GTLibMaterials.init();
@@ -208,9 +214,9 @@ public class GTLib extends GTMod {
         } else if (event == RegistrationEvent.DATA_READY) {
             CauldronInteractions.init();
             if (GTAPI.isModLoaded(Ref.MOD_JEI) || GTAPI.isModLoaded(Ref.MOD_REI)){
-                GTLibXEIPlugin.registerMissingMaps();
+                GTLibRecipeViewerPlugin.registerMissingMaps();
             }
-            GTLibXEIPlugin.addItemsToHide(l -> {
+            GTLibRecipeViewerPlugin.addItemsToHide(l -> {
                 if (!GTLibConfig.SHOW_ALL_ORES.get()){
                     GTAPI.all(StoneType.class, s -> {
                         if (s != VanillaStoneTypes.STONE && s != VanillaStoneTypes.SAND && s.doesGenerateOre()){
@@ -238,7 +244,6 @@ public class GTLib extends GTMod {
                 });
                 GTAPI.all(IGTTool.class).stream().filter(t -> t.getGTToolType() == GTTools.WRENCH_ALT).forEach(tool -> l.add(tool.getItem()));
                 GTAPI.all(GTFluid.class).forEach(t -> l.add(t.getFluidBlock()));
-                GTAPI.all(BlockDimensionMarker.class).forEach(b -> l.add(b.asItem()));
             });
             GTAPI.all(Material.class).forEach(m -> {
                 Map<MaterialType<?>, Integer> map = MaterialTags.FURNACE_FUELS.getMap(m);
@@ -255,7 +260,6 @@ public class GTLib extends GTMod {
             });
         } else if (event == RegistrationEvent.CLIENT_DATA_INIT){
             GTLibModelManager.init();
-            ClientData.init();
         }
     }
 
@@ -269,6 +273,10 @@ public class GTLib extends GTMod {
         return Ref.ID;
     }
 
+
+    private void modConstructionEvent(FMLConstructModEvent event){
+        GTGuiThemes.registerThemes();
+    }
 
     private void clientSetup(final FMLClientSetupEvent e) {
         ClientHandler.setup();

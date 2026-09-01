@@ -38,7 +38,7 @@ on:
         type: boolean
 
 env:
-  CHANGELOG_LOCATION: "CHANGELOG.md"
+  CHANGELOG_LOCATION: "build/gh_changelog.md"
   MC_VERSION: 1.20.1 # TODO get from properties
   JAVA: 17 # TODO get from properties
   MODRINTH_ID: ezjMui03
@@ -119,19 +119,19 @@ jobs:
 
       - name: Build Project
         run: ./gradlew build
-#      - name: Build Changelog
-#        id: github_release
-#        uses: mikepenz/release-changelog-builder-action@v6
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          ignorePreReleases: true
-#          outputFile: ${{ env.CHANGELOG_LOCATION }}
-#          configurationJson: |
-#            {
-#              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>\nFull Changelog: #{{RELEASE_DIFF}}",
-#              "empty_template": "Full Changelog: #{{RELEASE_DIFF}}"
-#            }
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          ignorePreReleases: true
+          outputFile: ${{ env.CHANGELOG_LOCATION }}
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>\nFull Changelog: #{{RELEASE_DIFF}}",
+              "empty_template": "Full Changelog: #{{RELEASE_DIFF}}"
+            }
       - name: Publish to GitHub
         if: env.publish-gh == 'true'
         uses: softprops/action-gh-release@v2

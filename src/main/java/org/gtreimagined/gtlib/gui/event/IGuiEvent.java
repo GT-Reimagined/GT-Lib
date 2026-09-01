@@ -1,11 +1,9 @@
 package org.gtreimagined.gtlib.gui.event;
 
 import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.gui.GuiInstance;
 import org.gtreimagined.gtlib.machine.event.IMachineEvent;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.function.BiFunction;
 
@@ -30,16 +28,6 @@ public interface IGuiEvent extends IMachineEvent {
      */
     default boolean forward() {
         return true;
-    }
-
-    /**
-     * If IGuiEvent#forward is false, this is called instead.
-     *
-     * @param player   the player causing this Gui event.
-     * @param instance the gui instance.
-     */
-    default void handle(Player player, GuiInstance instance) {
-
     }
 
     /**

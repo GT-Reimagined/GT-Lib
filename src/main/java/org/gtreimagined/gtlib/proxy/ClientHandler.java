@@ -13,7 +13,6 @@ import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.fluid.GTFluid;
-import org.gtreimagined.gtlib.gui.MenuHandler;
 import org.gtreimagined.gtlib.machine.BlockMachine;
 import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.machine.types.Machine;
@@ -63,16 +62,6 @@ public class ClientHandler implements IProxyHandler {
     public static void setup() {
         MaterialType.buildTooltips();
         GTAPI.all(Material.class, Material::setChemicalFormula);
-        /* Register screens. */
-        GTAPI.runLaterClient(() -> {
-            Set<ResourceLocation> registered = new ObjectOpenHashSet<>();
-            GTAPI.all(MenuHandler.class, h -> {
-                if (!registered.contains(ForgeRegistries.MENU_TYPES.getKey(h.getContainerType()))) {
-                    registered.add(ForgeRegistries.MENU_TYPES.getKey(h.getContainerType()));
-                    MenuScreens.register(h.getContainerType(), GTAPI.get(MenuScreens.ScreenConstructor.class, h.screenID(), h.screenDomain()));
-                }
-            });
-        });
         /* Set up render types. */
         GTAPI.runLaterClient(() -> {
             GTAPI.all(BlockMachine.class, b -> ModelUtils.setRenderLayer(b, RenderType.cutout()));

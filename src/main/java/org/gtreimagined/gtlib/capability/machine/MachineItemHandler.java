@@ -22,6 +22,7 @@ import org.gtreimagined.gtlib.capability.item.SidedCombinedInvWrapper;
 import org.gtreimagined.gtlib.capability.item.TrackedItemHandler;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotType;
+import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.recipe.IRecipe;
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
 import org.gtreimagined.gtlib.util.Utils;
@@ -39,6 +40,7 @@ import org.gtreimagined.tesseract.api.forge.TesseractCaps;
 import org.gtreimagined.tesseract.api.eu.IEnergyHandlerItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -56,22 +58,24 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
     public MachineItemHandler(T tile) {
         this.tile = tile;
         if (tile.has(GUI)) {
-            Map<SlotType<?>, List<SlotData<?>>> map = tile.getMachineType().getSlots(tile.getMachineTier()).stream().collect(Collectors.groupingBy(SlotData::getType));
+            Map<SlotType<?>, List<SlotData<?>>> map = tile.getMachineType().getSlots(tile.getMachineTier()).stream().collect(Collectors.groupingBy(SlotData::type));
             for (var entry : map.entrySet()) {
                 SlotType<?> type = entry.getKey();
-                inventories.put(type, this.createTrackedHandler(type, tile));
+                if (type.slotSupplier() != null) {
+                    inventories.put(type, this.createTrackedHandler(type, tile));
+                }
 
             }
         }
-        inventories.defaultReturnValue(new TrackedItemHandler<>(tile, SlotType.STORAGE, 0, false, false, (a, b) -> false));
+        inventories.defaultReturnValue(new TrackedItemHandler<>(tile, SlotTypes.STORAGE, 0, false, false, (a, b) -> false));
     }
 
     protected TrackedItemHandler<T> createTrackedHandler(SlotType<?> type, T tile){
         int count = tile.getMachineType().getCount(tile.getMachineTier(), type);
-        if (type == SlotType.DISPLAY_SETTABLE || type == SlotType.DISPLAY || type == SlotType.FLUID_DISPLAY_SETTABLE) {
-            return new FakeTrackedItemHandler<>(tile, type, count, type.output, type.input, type.tester);
+        if (type.phantom()) {
+            return new FakeTrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.tester());
         } else {
-            return new TrackedItemHandler<>(tile, type, count, type.output, type.input, type.tester);
+            return new TrackedItemHandler<>(tile, type, count, type.allowExternalOutput(), type.allowExternalInput(), type.tester());
         }
     }
 
@@ -146,23 +150,23 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      * Handler Access
      **/
     public ITrackedHandler getInputHandler() {
-        return inventories.get(SlotType.IT_IN);
+        return inventories.get(SlotTypes.IT_IN);
     }
 
     public ITrackedHandler getOutputHandler() {
-        return inventories.get(SlotType.IT_OUT);
+        return inventories.get(SlotTypes.IT_OUT);
     }
 
     public ITrackedHandler getCellInputHandler() {
-        return inventories.get(SlotType.CELL_IN);
+        return inventories.get(SlotTypes.CELL_IN);
     }
 
     public ITrackedHandler getCellOutputHandler() {
-        return inventories.get(SlotType.CELL_OUT);
+        return inventories.get(SlotTypes.CELL_OUT);
     }
 
     public ITrackedHandler getChargeHandler() {
-        return inventories.get(SlotType.ENERGY);
+        return inventories.get(SlotTypes.ENERGY);
     }
 
     public ITrackedHandler getHandler(SlotType<?> type) {
@@ -342,6 +346,19 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
         if (outputHandler == null || outputs == null || outputs.length == 0) {
             return;
         }
+        addOutputs(Arrays.asList(outputs));
+    }
+
+    /**
+     * Fill the output slots with @outputs items.
+     *
+     * @param outputs the outputs to add.
+     */
+    public void addOutputs(List<ItemStack> outputs) {
+        IItemHandler outputHandler = getOutputHandler();
+        if (outputHandler == null || outputs.isEmpty()) {
+            return;
+        }
         for (ItemStack output : outputs) {
             for (int i = 0; i < outputHandler.getSlots(); i++) {
                 output = insertIntoOutput(outputHandler, i, output.copy(), false);
@@ -357,13 +374,19 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
      **/
     public boolean canOutputsFit(ItemStack[] a) {
         if (a == null) return true;
+        return canOutputsFit(Arrays.asList(a));
+    }
+
+
+    public boolean canOutputsFit(List<ItemStack> a) {
+        if (a.isEmpty()) return true;
         IItemHandler outputHandler = getOutputHandler();
-        boolean[] results = new boolean[a.length];
+        boolean[] results = new boolean[a.size()];
         List<Integer> slotsTaken = new ArrayList<>();
-        for (int i = 0; i < a.length; i++) {
+        for (int i = 0; i < a.size(); i++) {
             for (int j = 0; j < outputHandler.getSlots(); j++) {
                 if (slotsTaken.contains(j)) continue;
-                results[i] |= insertIntoOutput(outputHandler, j, a[i], true).isEmpty();
+                results[i] |= insertIntoOutput(outputHandler, j, a.get(i), true).isEmpty();
                 if (results[i]){
                     slotsTaken.add(j);
                     break;
@@ -376,7 +399,6 @@ public class MachineItemHandler<T extends BlockEntityMachine<T>> implements IMac
             }
         }
         return true;
-        // return getSpaceForOutputs(a) >= a.length;
     }
 
     public int getSpaceForOutputs(ItemStack[] a) {
