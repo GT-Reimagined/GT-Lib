@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gtlib:item/material/bearing_rock",
+    "layer1": "gtlib:item/material/bearing_rock_overlay"
+  }
+}

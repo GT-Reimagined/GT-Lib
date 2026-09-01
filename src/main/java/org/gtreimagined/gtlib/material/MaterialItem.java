@@ -1,11 +1,15 @@
 package org.gtreimagined.gtlib.material;
 
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.item.ItemBasic;
 import org.gtreimagined.gtlib.material.data.ToolData;
 import org.gtreimagined.gtlib.ore.StoneType;
@@ -56,7 +60,7 @@ import java.util.List;
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.TOOLS;
 
-public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTObject, IColorHandler, ITextureProvider, IModelProvider, IMaterialObject {
+public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTObject, IColorHandler, IModelProvider, IMaterialObject {
 
     protected Material material;
     protected MaterialType<?> type;
@@ -306,7 +310,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     }
 
     @Override
-    public Texture[] getTextures() {
-        return getMaterial().getSet().getTextures(getType());
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
+        prov.getBuilder(item).parent(new ResourceLocation(getMaterial().getSet().getDomain(), "material/" + getMaterial().getId() + "/" + type.id));
     }
 }

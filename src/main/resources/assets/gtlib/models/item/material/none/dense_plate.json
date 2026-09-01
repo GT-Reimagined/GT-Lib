@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gtlib:item/material/none/dense_plate",
+    "layer1": "gtlib:item/material/none/dense_plate_overlay"
+  }
+}
