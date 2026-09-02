@@ -9,7 +9,7 @@ import java.util.function.IntSupplier
 @JvmRecord
 data class GTClientFluidTypeExtension(
     val stillTexture: ResourceLocation, val flowingTexture: ResourceLocation,
-    val tintColorGetter: IntSupplier, val overflowTexture: ResourceLocation?): IClientFluidTypeExtensions{
+    val tintColorGetter: IntSupplier, val overlayTexture: ResourceLocation?): IClientFluidTypeExtensions{
 
     override fun getStillTexture(): ResourceLocation {
         return stillTexture
