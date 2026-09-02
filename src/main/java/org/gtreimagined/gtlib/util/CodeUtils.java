@@ -47,6 +47,9 @@ public class CodeUtils {
     public static short getG(int rgb) {return (short)((rgb >>>  8) & 255);}
     public static short getB(int rgb) {return (short) (rgb         & 255);}
 
+    public static boolean inside(long aMin, long aMax, long aNumber) {return aMin < aMax ? aMin <= aNumber && aNumber <= aMax : aMax <= aNumber && aNumber <= aMin;}
+    public static boolean inside_(double aMin, double aMax, double aNumber) {return aMin < aMax ? aMin <= aNumber && aNumber <= aMax : aMax <= aNumber && aNumber <= aMin;}
+
     @SuppressWarnings("rawtypes")
     public static <X, Y extends Comparable> LinkedHashMap<X,Y> sortByValuesAcending(Map<X,Y> aMap) {
         List<Map.Entry<X,Y>> tEntrySet = new LinkedList<>(aMap.entrySet());

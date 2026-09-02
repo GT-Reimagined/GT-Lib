@@ -21,6 +21,7 @@ import org.gtreimagined.gtlib.dynamic.ModelConfig;
 import org.gtreimagined.gtlib.dynamic.ModelConfigRandom;
 import org.gtreimagined.gtlib.material.IMaterialObject;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
@@ -121,7 +122,7 @@ public class BlockSurfaceRock extends BlockDynamic implements SimpleWaterloggedB
 
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
-        return i == 1 ? material.getRGB() : -1;
+        return i == 1 ? MaterialColorChanger.getMaterialRgb(material) : -1;
     }
 
     //    @Override
