@@ -6,8 +6,8 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.level.LevelEvent;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.SoundHelper;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.material.MaterialItem;
-import org.gtreimagined.gtlib.material.MaterialItem.ColorChanger;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.world.entity.player.Player;
@@ -57,8 +57,8 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent event){
         if (event.phase == Phase.END){
-            MaterialItem.getRGB_CHANGING_MAP().forEach((m, t) -> t.tick());
-            ColorChanger.incrementTime();
+            MaterialColorChanger.RGB_CHANGING_MAP.forEach((m, t) -> t.tick());
+            MaterialColorChanger.incrementTime();
         }
     }
 

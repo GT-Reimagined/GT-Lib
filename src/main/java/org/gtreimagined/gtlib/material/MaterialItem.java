@@ -1,10 +1,7 @@
 package org.gtreimagined.gtlib.material;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.Getter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTCreativeTabs;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
@@ -16,12 +13,10 @@ import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
 import org.gtreimagined.gtlib.registration.ITextureProvider;
 import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.util.CodeUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -49,12 +44,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
@@ -63,16 +55,11 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     protected Material material;
     protected MaterialType<?> type;
-    @Getter
-    private static final Map<Material, ColorChanger> RGB_CHANGING_MAP = new Object2ObjectOpenHashMap<>();
 
     public MaterialItem(String domain, MaterialType<?> type, Material material, Properties properties) {
         super(domain, type.getIdGetter().apply(material), MaterialItem.class, properties);
         this.material = material;
         this.type = type;
-        if (material.has(RAINBOW_RGB) || material.has(NEGATIVE_CHANGING_RGB) || material.has(POSITIVE_CHANGING_RGB)){
-            RGB_CHANGING_MAP.computeIfAbsent(material, m -> new ColorChanger(material));
-        }
     }
 
     public MaterialItem(String domain, MaterialType<?> type, Material material) {
@@ -289,7 +276,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
         if (i == 0) {
             if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB) || material.has(RAINBOW_RGB)) && FMLEnvironment.dist.isClient()){
-                return RGB_CHANGING_MAP.computeIfAbsent(material, m -> new ColorChanger(material)).getRgb();
+                return MaterialColorChanger.getOrCreateColorChanger(material).getRgb();
             }
             return material.getRGB();
         }
@@ -301,57 +288,4 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
         return getMaterial().getSet().getTextures(getType());
     }
 
-    public static class ColorChanger {
-        private static int TIME = 0;
-        private final Material material;
-
-        int rgb;
-
-        public ColorChanger(Material material) {
-            this.material = material;
-            this.rgb = material.getRGB();
-        }
-
-        public void tick(){
-            int rgb = this.rgb;
-
-
-            int tDirection = (TIME % 100 < 50 ? +1 : -1);
-            int r = CodeUtils.getR(rgb);
-            int g = CodeUtils.getG(rgb);
-            int b = CodeUtils.getB(rgb);
-            if (material.has(POSITIVE_CHANGING_RGB)){
-                r = CodeUtils.bind8(r + tDirection);
-                g = CodeUtils.bind8(g + tDirection);
-                b = CodeUtils.bind8(b + tDirection);
-            } else if (material.has(NEGATIVE_CHANGING_RGB)){
-                r = CodeUtils.bind8(r - tDirection);
-                g = CodeUtils.bind8(g - tDirection);
-                b = CodeUtils.bind8(b - tDirection);
-            } else if (material.has(RAINBOW_RGB)){
-                boolean tNR = CodeUtils.inside(  0,  99, (TIME/2) % 300);
-                boolean tNG = CodeUtils.inside( 50, 149, (TIME/2) % 300);
-                boolean tNB = CodeUtils.inside(100, 199, (TIME/2) % 300);
-                boolean tPR = CodeUtils.inside(100, 199, (TIME/2) % 300);
-                boolean tPG = CodeUtils.inside(150, 249, (TIME/2) % 300);
-                boolean tPB = CodeUtils.inside(200, 299, (TIME/2) % 300);
-
-                if (tPR) r = CodeUtils.bind8(r + 1);
-                if (tPG) g = CodeUtils.bind8(g + 1);
-                if (tPB) b = CodeUtils.bind8(b + 1);
-                if (tNR) r = CodeUtils.bind8(r - 1);
-                if (tNG) g = CodeUtils.bind8(g - 1);
-                if (tNB) b = CodeUtils.bind8(b - 1);
-            }
-            this.rgb = CodeUtils.getRGB(r, g, b);
-        }
-
-        public static void incrementTime(){
-            TIME++;
-        }
-
-        int getRgb() {
-            return rgb;
-        }
-    }
 }
