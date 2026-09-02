@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.block;
 import lombok.Getter;
 import org.gtreimagined.gtlib.material.IMaterialObject;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.texture.Texture;
@@ -34,12 +35,12 @@ public class BlockMaterialType extends BlockBasic implements IColorHandler, IMat
 
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
-        return i == 0 ? material.getRGB() : -1;
+        return i == 0 ? MaterialColorChanger.getMaterialRgb(material) : -1;
     }
 
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
-        return i == 0 ? material.getRGB() : -1;
+        return i == 0 ? MaterialColorChanger.getMaterialRgb(material) : -1;
     }
 
     @Override

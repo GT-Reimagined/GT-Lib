@@ -275,10 +275,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
         if (i == 0) {
-            if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB) || material.has(RAINBOW_RGB)) && FMLEnvironment.dist.isClient()){
-                return MaterialColorChanger.getOrCreateColorChanger(material).getRgb();
-            }
-            return material.getRGB();
+            return MaterialColorChanger.getMaterialRgb(material);
         }
         return -1;
     }

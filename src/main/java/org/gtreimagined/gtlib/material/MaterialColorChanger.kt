@@ -1,9 +1,9 @@
 package org.gtreimagined.gtlib.material
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import net.minecraftforge.fml.loading.FMLEnvironment
 import org.gtreimagined.gtlib.material.MaterialTags.RAINBOW_RGB
 import org.gtreimagined.gtlib.util.CodeUtils
-import kotlin.collections.getOrPut
 
 class MaterialColorChanger(val material: Material) {
     var rgb: Int = material.rgb
@@ -47,10 +47,20 @@ class MaterialColorChanger(val material: Material) {
         @JvmField val RGB_CHANGING_MAP: MutableMap<Material, MaterialColorChanger> = Object2ObjectOpenHashMap()
         private var time: Int = 0
         @JvmStatic fun incrementTime() = time++
-        @JvmStatic fun getOrCreateColorChanger(material: Material): MaterialColorChanger {
+        @JvmStatic
+        fun getOrCreateColorChanger(material: Material): MaterialColorChanger {
             return RGB_CHANGING_MAP.getOrPut(material){
                 MaterialColorChanger(material)
             }
+        }
+
+        @JvmStatic
+        fun getMaterialRgb(material: Material): Int {
+            if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB)
+                        || material.has(RAINBOW_RGB)) && FMLEnvironment.dist.isClient) {
+                return getOrCreateColorChanger(material).rgb
+            }
+            return material.rgb
         }
     }
 }
