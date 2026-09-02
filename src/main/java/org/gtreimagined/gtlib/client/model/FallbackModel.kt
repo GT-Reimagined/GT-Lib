@@ -1,5 +1,6 @@
 package org.gtreimagined.gtlib.client.model
 
+import net.minecraft.client.renderer.block.model.BlockModel
 import net.minecraft.client.renderer.block.model.ItemOverrides
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.resources.model.BakedModel
@@ -10,15 +11,32 @@ import net.minecraft.client.resources.model.UnbakedModel
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext
 import org.gtreimagined.gtlib.client.IGTModel
+import org.gtreimagined.gtlib.client.ModelUtils
+import org.gtreimagined.gtlib.mixin.client.ModelBakeryAccessor
 import java.util.function.Function
 
-class WrappedModel(val model: UnbakedModel): IGTModel<WrappedModel> {
+class FallbackModel(val baseModel: UnbakedModel, val fallbackModel: UnbakedModel): IGTModel<FallbackModel> {
+    var useFallback = false
     override fun bakeModel(configuration: IGeometryBakingContext, bakery: ModelBaker, getter: Function<Material, TextureAtlasSprite>,
                            transform: ModelState, overrides: ItemOverrides, loc: ResourceLocation): BakedModel {
+        val model = if (useFallback) this.baseModel else fallbackModel
         return model.bake(bakery, getter, transform, loc)!!
     }
 
     override fun resolveParents(modelGetter: Function<ResourceLocation, UnbakedModel>, context: IGeometryBakingContext) {
-        model.resolveParents(modelGetter)
+        if (baseModel is BlockModel){
+            if (ModelUtils.getModelBakery() != null){
+                try {
+                    (ModelUtils.getModelBakery() as ModelBakeryAccessor).`gtlib$loadModel`(baseModel.parentLocation)
+                } catch (_: Exception){
+                    useFallback = true
+                }
+            }
+        }
+        if (useFallback) {
+            fallbackModel.resolveParents(modelGetter)
+        } else {
+            baseModel.resolveParents(modelGetter)
+        }
     }
 }
