@@ -61,12 +61,12 @@ public class GTMaterialFluid extends GTFluid {
 
     private static IClientFluidTypeExtensions prepareExtensions(Material material, MaterialType<?> type){
         if (type == GTMaterialTypes.GAS){
-            return GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(GAS_TEXTURE).flowingTexture(GAS_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).tintColorGetter(() -> {
+            return GTClientFluidTypeExtension.create(b -> b.stillTexture(GAS_TEXTURE).flowingTexture(GAS_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).tintColorGetter(() -> {
                 int rgb = MaterialColorChanger.getMaterialRgb(material);
                 return (70 << 24) | (rgb & 0x00ffffff);
             }));
         } else {
-            return GTClientFluidTypeExtension.createFluidTypeExtension(b -> {
+            return GTClientFluidTypeExtension.create(b -> {
                 b.overlayTexture(OVERLAY_TEXTURE);
                 if (material.has(MOLTEN)){
                     b.stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE);

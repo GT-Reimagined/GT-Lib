@@ -25,7 +25,7 @@ data class GTClientFluidTypeExtension(
 
     companion object {
         @JvmStatic
-        fun createFluidTypeExtension(consumer: Consumer<GTClientFluidTypeExtensionBuilder>): GTClientFluidTypeExtension {
+        fun create(consumer: Consumer<GTClientFluidTypeExtensionBuilder>): GTClientFluidTypeExtension {
             val builder = GTClientFluidTypeExtensionBuilder()
             consumer.accept(builder)
             val stillTexture = requireNotNull(builder.stillTexture){"Still Texture was not set!"}

@@ -87,7 +87,7 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     public GTFluid(String domain, String id, ResourceLocation stillLoc, ResourceLocation flowLoc) {
-        this(domain, id, getDefaultFluidTypeProperties(false), getDefaultBlockProperties(), GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(stillLoc).flowingTexture(flowLoc)));
+        this(domain, id, getDefaultFluidTypeProperties(false), getDefaultBlockProperties(), GTClientFluidTypeExtension.create(b -> b.stillTexture(stillLoc).flowingTexture(flowLoc)));
     }
 
     public GTFluid(String domain, String id, Block.Properties properties) {
@@ -160,8 +160,8 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
 
     protected static GTClientFluidTypeExtension getDefaultFluidTypeClientExtension(boolean hot){
         if (hot){
-            return GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE));
+            return GTClientFluidTypeExtension.create(b -> b.stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE));
         }
-        return GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(LIQUID_STILL_TEXTURE).flowingTexture(LIQUID_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE));
+        return GTClientFluidTypeExtension.create(b -> b.stillTexture(LIQUID_STILL_TEXTURE).flowingTexture(LIQUID_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE));
     }
 }
