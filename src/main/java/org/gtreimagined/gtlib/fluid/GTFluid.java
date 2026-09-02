@@ -12,11 +12,9 @@ import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
-import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +25,6 @@ import net.minecraftforge.fluids.ForgeFlowingFluid.Flowing;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Properties;
 import net.minecraftforge.fluids.ForgeFlowingFluid.Source;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Consumer;
 
@@ -90,7 +87,7 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
     }
 
     public GTFluid(String domain, String id, ResourceLocation stillLoc, ResourceLocation flowLoc) {
-        this(domain, id, getDefaultFluidTypeProperties(false), getDefaultBlockProperties(), GTClientFluidTypeExtension.builder().stillTexture(stillLoc).flowingTexture(flowLoc).build());
+        this(domain, id, getDefaultFluidTypeProperties(false), getDefaultBlockProperties(), GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(stillLoc).flowingTexture(flowLoc)));
     }
 
     public GTFluid(String domain, String id, Block.Properties properties) {
@@ -163,8 +160,8 @@ public class GTFluid implements ISharedGTObject, IRegistryEntryProvider {
 
     protected static GTClientFluidTypeExtension getDefaultFluidTypeClientExtension(boolean hot){
         if (hot){
-            return GTClientFluidTypeExtension.builder().stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).build();
+            return GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE));
         }
-        return GTClientFluidTypeExtension.builder().stillTexture(LIQUID_STILL_TEXTURE).flowingTexture(LIQUID_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).build();
+        return GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(LIQUID_STILL_TEXTURE).flowingTexture(LIQUID_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE));
     }
 }

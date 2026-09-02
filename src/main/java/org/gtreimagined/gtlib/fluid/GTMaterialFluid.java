@@ -1,16 +1,14 @@
 package org.gtreimagined.gtlib.fluid;
 
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.Tags.Fluids;
 import net.minecraftforge.fluids.FluidType;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.material.MaterialType;
 import net.minecraft.locale.Language;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Block;
 
 import static org.gtreimagined.gtlib.material.MaterialTags.MOLTEN;
@@ -63,18 +61,24 @@ public class GTMaterialFluid extends GTFluid {
 
     private static IClientFluidTypeExtensions prepareExtensions(Material material, MaterialType<?> type){
         if (type == GTMaterialTypes.GAS){
-            return GTClientFluidTypeExtension.builder().stillTexture(GAS_TEXTURE).flowingTexture(GAS_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).tintColor((70 << 24) | (material.getRGB() & 0x00ffffff)).build();
+            return GTClientFluidTypeExtension.createFluidTypeExtension(b -> b.stillTexture(GAS_TEXTURE).flowingTexture(GAS_FLOW_TEXTURE).overlayTexture(OVERLAY_TEXTURE).tintColorGetter(() -> {
+                int rgb = MaterialColorChanger.getMaterialRgb(material);
+                return (70 << 24) | (rgb & 0x00ffffff);
+            }));
         } else {
-            GTClientFluidTypeExtension.GTClientFluidTypeExtensionBuilder b = GTClientFluidTypeExtension.builder();
-            b.overlayTexture(OVERLAY_TEXTURE);
-            if (material.has(MOLTEN)){
-                b.stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE).build();
-            } else {
-                b.stillTexture(LIQUID_STILL_TEXTURE).flowingTexture(LIQUID_FLOW_TEXTURE).build();
-            }
-            int alpha = material.has(MOLTEN) ? 0xFF000000 : (155 << 24);
-            b.tintColor(alpha | (material.getRGB() & 0x00FFFFFF));
-            return b.build();
+            return GTClientFluidTypeExtension.createFluidTypeExtension(b -> {
+                b.overlayTexture(OVERLAY_TEXTURE);
+                if (material.has(MOLTEN)){
+                    b.stillTexture(LIQUID_HOT_STILL_TEXTURE).flowingTexture(LIQUID_HOT_FLOW_TEXTURE);
+                } else {
+                    b.stillTexture(LIQUID_STILL_TEXTURE).flowingTexture(LIQUID_FLOW_TEXTURE);
+                }
+                int alpha = material.has(MOLTEN) ? 0xFF000000 : (155 << 24);
+                b.tintColorGetter(() -> {
+                    int rgb = MaterialColorChanger.getMaterialRgb(material);
+                    return alpha | (rgb & 0x00FFFFFF);
+                });
+            });
         }
     }
 
