@@ -45,7 +45,7 @@ class MaterialColorChanger(val material: Material) {
 
     companion object {
         @JvmField val RGB_CHANGING_MAP: MutableMap<Material, MaterialColorChanger> = Object2ObjectOpenHashMap()
-        var time: Int = 0
+        private var time: Int = 0
         @JvmStatic fun incrementTime() = time++
         @JvmStatic fun getOrCreateColorChanger(material: Material): MaterialColorChanger {
             return RGB_CHANGING_MAP.getOrPut(material){
