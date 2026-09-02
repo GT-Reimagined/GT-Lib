@@ -5,6 +5,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.gtreimagined.gtlib.GTCreativeTabs;
+import org.gtreimagined.gtlib.GTLib;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
 import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
@@ -286,7 +289,9 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     @Override
     public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
-        prov.getBuilder(item).parent(new ResourceLocation(getMaterial().getSet().getDomain(), "material/" + getMaterial().getId() + "/" + type.id));
+        prov.getBuilder(item).loader(GTLibModelManager.LOADER_MATERIAL_ITEM)
+                .property("base", getMaterial().getSet().getDomain() + ":item/material/" + getMaterial().getSet().getId() + "/" + type.id)
+                .property("fallback", Ref.ID + ":item/material/none/" + type.id);
     }
 
 }

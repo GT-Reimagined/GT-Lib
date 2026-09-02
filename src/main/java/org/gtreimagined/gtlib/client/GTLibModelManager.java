@@ -6,6 +6,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.model.loader.DefaultModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.DynamicModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.MachineModelLoader;
+import org.gtreimagined.gtlib.client.model.loader.MaterialItemLoader;
 import org.gtreimagined.gtlib.client.model.loader.PipeFullModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.PipeModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.ProxyModelLoader;
@@ -41,6 +42,8 @@ public class GTLibModelManager {
 
     public static final ResourceLocation LOADER_PROXY = new ResourceLocation(Ref.ID, "proxy");
 
+    public static final ResourceLocation LOADER_MATERIAL_ITEM = new ResourceLocation(Ref.ID, "material_item");
+
     public static void init() {
         new DefaultModelLoader(LOADER_MAIN);
         new MachineModelLoader.CoverModelLoader(LOADER_COVER);
@@ -50,6 +53,7 @@ public class GTLibModelManager {
         new PipeFullModelLoader(LOADER_PIPE_FULL);
         new PipeModelLoader(LOADER_PIPE);
         new ProxyModelLoader(LOADER_PROXY);
+        new MaterialItemLoader(LOADER_MATERIAL_ITEM);
     }
 
     public static void registerStaticConfigMap(String staticMapId, Supplier<Int2ObjectOpenHashMap<BakedModel[]>> configMapSupplier) {
