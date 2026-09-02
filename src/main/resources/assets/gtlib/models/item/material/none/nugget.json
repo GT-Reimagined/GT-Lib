@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/none/nugget",
-    "layer1": "gtlib:item/material/none/nugget_overlay"
+    "layer0": "gtlib:item/material/none/nugget"
   }
 }

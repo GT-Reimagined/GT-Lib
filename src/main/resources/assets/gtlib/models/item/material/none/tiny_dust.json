@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/none/tiny_dust",
-    "layer1": "gtlib:item/material/none/tiny_dust_overlay"
+    "layer0": "gtlib:item/material/none/tiny_dust"
   }
 }

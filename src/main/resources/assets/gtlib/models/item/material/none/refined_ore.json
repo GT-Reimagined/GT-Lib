@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/none/refined_ore",
-    "layer1": "gtlib:item/material/none/refined_ore_overlay"
+    "layer0": "gtlib:item/material/none/refined_ore"
   }
 }
