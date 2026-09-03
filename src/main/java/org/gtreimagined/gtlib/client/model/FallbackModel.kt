@@ -1,5 +1,9 @@
 package org.gtreimagined.gtlib.client.model
 
+import com.google.common.cache.Cache
+import com.google.common.cache.CacheBuilder
+import com.ibm.icu.impl.LocaleUtility.fallback
+import me.shedaniel.rei.impl.client.search.argument.Argument.cache
 import net.minecraft.client.renderer.block.model.BlockModel
 import net.minecraft.client.renderer.block.model.ItemOverrides
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
@@ -13,6 +17,7 @@ import net.minecraftforge.client.model.geometry.IGeometryBakingContext
 import org.gtreimagined.gtlib.client.IGTModel
 import org.gtreimagined.gtlib.client.ModelUtils
 import org.gtreimagined.gtlib.mixin.client.ModelBakeryAccessor
+import java.util.concurrent.TimeUnit
 import java.util.function.Function
 
 class FallbackModel(val baseModel: UnbakedModel, val fallbackModel: UnbakedModel): IGTModel<FallbackModel> {
@@ -25,11 +30,18 @@ class FallbackModel(val baseModel: UnbakedModel, val fallbackModel: UnbakedModel
 
     override fun resolveParents(modelGetter: Function<ResourceLocation, UnbakedModel>, context: IGeometryBakingContext) {
         if (baseModel is BlockModel){
-            if (ModelUtils.getModelBakery() != null){
-                try {
-                    (ModelUtils.getModelBakery() as ModelBakeryAccessor).`gtlib$loadModel`(baseModel.parentLocation)
-                } catch (_: Exception){
-                    useFallback = true
+            val parentLocation = baseModel.parentLocation
+            if(parentLocation != null){
+                useFallback = cache.get(parentLocation.toString()){
+                    var fallback2 = false
+                    if (ModelUtils.getModelBakery() != null){
+                        try {
+                            (ModelUtils.getModelBakery() as ModelBakeryAccessor).`gtlib$loadModel`(baseModel.parentLocation)
+                        } catch (_: Exception){
+                            fallback2 = true
+                        }
+                    }
+                    fallback2
                 }
             }
         }
@@ -38,5 +50,9 @@ class FallbackModel(val baseModel: UnbakedModel, val fallbackModel: UnbakedModel
         } else {
             baseModel.resolveParents(modelGetter)
         }
+    }
+
+    companion object {
+        val cache: Cache<String, Boolean> = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build()
     }
 }
