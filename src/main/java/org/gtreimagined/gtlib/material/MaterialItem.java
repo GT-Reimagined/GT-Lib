@@ -1,16 +1,12 @@
 package org.gtreimagined.gtlib.material;
 
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.gtreimagined.gtlib.GTCreativeTabs;
-import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
-import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.item.ItemBasic;
 import org.gtreimagined.gtlib.material.data.ToolData;
@@ -18,8 +14,6 @@ import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
-import org.gtreimagined.gtlib.registration.ITextureProvider;
-import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import net.minecraft.ChatFormatting;
@@ -289,7 +283,7 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
 
     @Override
     public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
-        prov.getBuilder(item).loader(GTLibModelManager.LOADER_MATERIAL_ITEM)
+        prov.getBuilder(item).loader(GTLibModelManager.LOADER_FALLBACK)
                 .property("base", getMaterial().getSet().getDomain() + ":item/material/" + getMaterial().getSet().getId() + "/" + type.id)
                 .property("fallback", Ref.ID + ":item/material/none/" + type.id);
     }

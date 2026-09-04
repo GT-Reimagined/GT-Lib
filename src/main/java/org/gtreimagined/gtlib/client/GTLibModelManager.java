@@ -6,7 +6,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.model.loader.DefaultModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.DynamicModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.MachineModelLoader;
-import org.gtreimagined.gtlib.client.model.loader.MaterialItemLoader;
+import org.gtreimagined.gtlib.client.model.loader.FallbackModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.PipeFullModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.PipeModelLoader;
 import org.gtreimagined.gtlib.client.model.loader.ProxyModelLoader;
@@ -42,7 +42,7 @@ public class GTLibModelManager {
 
     public static final ResourceLocation LOADER_PROXY = new ResourceLocation(Ref.ID, "proxy");
 
-    public static final ResourceLocation LOADER_MATERIAL_ITEM = new ResourceLocation(Ref.ID, "material_item");
+    public static final ResourceLocation LOADER_FALLBACK = new ResourceLocation(Ref.ID, "fallback");
 
     public static void init() {
         new DefaultModelLoader(LOADER_MAIN);
@@ -53,7 +53,7 @@ public class GTLibModelManager {
         new PipeFullModelLoader(LOADER_PIPE_FULL);
         new PipeModelLoader(LOADER_PIPE);
         new ProxyModelLoader(LOADER_PROXY);
-        new MaterialItemLoader(LOADER_MATERIAL_ITEM);
+        new FallbackModelLoader(LOADER_FALLBACK);
     }
 
     public static void registerStaticConfigMap(String staticMapId, Supplier<Int2ObjectOpenHashMap<BakedModel[]>> configMapSupplier) {
