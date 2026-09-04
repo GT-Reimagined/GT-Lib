@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/screwdriver_tip"
+    "layer0": "gtlib:item/material/none/screwdriver_tip"
   }
 }

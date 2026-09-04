@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/scythe_blade"
+    "layer0": "gtlib:item/material/none/scythe_blade"
   }
 }

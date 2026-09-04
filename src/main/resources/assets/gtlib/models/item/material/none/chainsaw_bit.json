@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/chainsaw_bit"
+    "layer0": "gtlib:item/material/none/chainsaw_bit"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/hoe_head"
+    "layer0": "gtlib:item/material/none/hoe_head"
   }
 }

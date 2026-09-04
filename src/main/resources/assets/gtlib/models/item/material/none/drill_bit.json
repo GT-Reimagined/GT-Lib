@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/drill_bit"
+    "layer0": "gtlib:item/material/none/drill_bit"
   }
 }
