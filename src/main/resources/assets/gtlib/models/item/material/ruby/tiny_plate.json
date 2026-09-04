@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gtlib:item/material/ruby/tiny_plate",
+    "layer1": "gtlib:item/material/shiny/tiny_plate_overlay"
+  }
+}
