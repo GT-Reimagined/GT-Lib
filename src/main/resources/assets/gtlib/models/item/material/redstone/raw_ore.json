@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/rough/raw_ore",
-    "layer1": "gtlib:item/material/rough/raw_ore_overlay"
+    "layer0": "gtlib:item/material/redstone/raw_ore",
+    "layer1": "gtlib:item/material/redstone/raw_ore_overlay"
   }
 }
