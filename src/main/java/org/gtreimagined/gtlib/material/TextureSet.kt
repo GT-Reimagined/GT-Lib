@@ -26,10 +26,10 @@ class TextureSet @JvmOverloads constructor(
         val builder = StringBuilder()
         val prefix = if (type is MaterialTypeBlock<*> || type is MaterialTypeFluid<*>) "block" else "item"
         builder.append(prefix).append("/material/")
-        if (!type.ignoreTextureSets() || force) builder.append(id).append("/")
+        builder.append(id).append("/")
         //TODO return different numbered overlay based on current layer
         builder.append(type.getId()).append(if (layer == 0) "" else "_overlay" /*"_overlay_" + layer*/)
-        return Texture(if (type.ignoreTextureSets() && !force) Ref.ID else domain, builder.toString())
+        return Texture(domain, builder.toString())
     }
 
     val path: String
@@ -57,7 +57,7 @@ class TextureSet @JvmOverloads constructor(
         @JvmField
         val ROUGH: TextureSet = TextureSet(Ref.ID, "rough")
         @JvmField
-        val MAGNETIC: TextureSet = TextureSet(Ref.ID, "magnetic", true)
+        val MAGNETIC: TextureSet = TextureSet(Ref.ID, "magnetic")
         @JvmField
         val DIAMOND: TextureSet = TextureSet(Ref.ID, "diamond")
         @JvmField
