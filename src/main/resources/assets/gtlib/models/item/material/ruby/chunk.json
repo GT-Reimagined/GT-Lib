@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/ruby/chunk",
-    "layer1": "gtlib:item/material/ruby/chunk_overlay"
+    "layer0": "gtlib:item/material/diamond/chunk",
+    "layer1": "gtlib:item/material/diamond/chunk_overlay"
   }
 }

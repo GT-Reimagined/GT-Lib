@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtlib:item/material/lignite/raw_ore",
-    "layer1": "gtlib:item/material/lignite/raw_ore_overlay"
+    "layer0": "gtlib:item/material/diamond/raw_ore",
+    "layer1": "gtlib:item/material/diamond/raw_ore_overlay"
   }
 }
