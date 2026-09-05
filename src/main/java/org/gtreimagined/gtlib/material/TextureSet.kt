@@ -23,13 +23,10 @@ class TextureSet @JvmOverloads constructor(
     }
 
     fun getTexture(type: MaterialType<*>, layer: Int): Texture {
-        val builder = StringBuilder()
         val prefix = if (type is MaterialTypeBlock<*> || type is MaterialTypeFluid<*>) "block" else "item"
-        builder.append(prefix).append("/material/")
-        builder.append(id).append("/")
         //TODO return different numbered overlay based on current layer
-        builder.append(type.getId()).append(if (layer == 0) "" else "_overlay" /*"_overlay_" + layer*/)
-        return Texture(domain, builder.toString())
+        val suffix = if (layer == 0) "" else "_overlay" /*"_overlay_" + layer*/
+        return Texture(domain, "$prefix/material/$id/${type.getId()}$suffix")
     }
 
     val path: String
