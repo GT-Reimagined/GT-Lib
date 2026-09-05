@@ -1,81 +1,93 @@
-package org.gtreimagined.gtlib.material;
+package org.gtreimagined.gtlib.material
 
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.registration.IGTObject;
-import org.gtreimagined.gtlib.texture.Texture;
+import org.gtreimagined.gtlib.GTAPI
+import org.gtreimagined.gtlib.Ref
+import org.gtreimagined.gtlib.registration.IGTObject
+import org.gtreimagined.gtlib.texture.Texture
 
-public class TextureSet implements IGTObject {
-
-    public static final TextureSet NONE = new TextureSet(Ref.ID, "none");
-    public static final TextureSet CUBE = new TextureSet(Ref.ID, "cube");
-    public static final TextureSet DULL = new TextureSet(Ref.ID, "dull");
-    public static final TextureSet METALLIC = new TextureSet(Ref.ID, "metallic");
-    public static final TextureSet SHINY = new TextureSet(Ref.ID, "shiny");
-    public static final TextureSet ROUGH = new TextureSet(Ref.ID, "rough");
-    public static final TextureSet MAGNETIC = new TextureSet(Ref.ID, "magnetic", true);
-    public static final TextureSet DIAMOND = new TextureSet(Ref.ID, "diamond");
-    public static final TextureSet RUBY = new TextureSet(Ref.ID, "ruby");
-    public static final TextureSet LAPIS = new TextureSet(Ref.ID, "lapis");
-    public static final TextureSet GEM_H = new TextureSet(Ref.ID, "gem_h");
-    public static final TextureSet GEM_V = new TextureSet(Ref.ID, "gem_v");
-    public static final TextureSet GARNET = new TextureSet(Ref.ID, "garnet");
-    public static final TextureSet QUARTZ = new TextureSet(Ref.ID, "quartz");
-    public static final TextureSet FINE = new TextureSet(Ref.ID, "fine");
-    public static final TextureSet FLINT = new TextureSet(Ref.ID, "flint");
-    public static final TextureSet LIGNITE = new TextureSet(Ref.ID, "lignite");
-    public static final TextureSet WOOD = new TextureSet(Ref.ID, "wood");
-    public static final TextureSet REDSTONE = new TextureSet(Ref.ID, "redstone");
-    public static final TextureSet RAD = new TextureSet(Ref.ID, "rad");
-    public static final TextureSet RUBBER = new TextureSet(Ref.ID, "rubber");
-
-    private String domain, id;
-    private boolean force;
-
-    public TextureSet(String domain, String id) {
-        this(domain, id, false);
+class TextureSet @JvmOverloads constructor(
+    private val domain: String,
+    private val id: String,
+    private val force: Boolean = false
+) : IGTObject {
+    init {
+        GTAPI.register(TextureSet::class.java, this)
     }
 
-    public TextureSet(String domain, String id, boolean force){
-        this.domain = domain;
-        this.id = id;
-        this.force = force;
-        GTAPI.register(TextureSet.class, this);
+    override fun getDomain(): String {
+        return domain
     }
 
-    @Override
-    public String getDomain() {
-        return domain;
+    override fun getId(): String {
+        return id
     }
 
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public Texture getTexture(MaterialType<?> type, int layer) {
-        StringBuilder builder = new StringBuilder();
-        String prefix = type instanceof MaterialTypeBlock<?> || type instanceof MaterialTypeFluid<?> ? "block" : "item";
-        builder.append(prefix).append("/material/");
-        if (!type.ignoreTextureSets() || force) builder.append(id).append("/");
+    fun getTexture(type: MaterialType<*>, layer: Int): Texture {
+        val builder = StringBuilder()
+        val prefix = if (type is MaterialTypeBlock<*> || type is MaterialTypeFluid<*>) "block" else "item"
+        builder.append(prefix).append("/material/")
+        if (!type.ignoreTextureSets() || force) builder.append(id).append("/")
         //TODO return different numbered overlay based on current layer
-        builder.append(type.getId()).append(layer == 0 ? "" : "_overlay"/*"_overlay_" + layer*/);
-        return new Texture(type.ignoreTextureSets() && !force ? Ref.ID : domain, builder.toString());
+        builder.append(type.getId()).append(if (layer == 0) "" else "_overlay" /*"_overlay_" + layer*/)
+        return Texture(if (type.ignoreTextureSets() && !force) Ref.ID else domain, builder.toString())
     }
 
-    public String getPath() {
-        return "material/" + id;
-    }
+    val path: String
+        get() = "material/$id"
 
-    public Texture[] getTextures(MaterialType<?> type) {
-        Texture[] textures = new Texture[type.getLayers()];
-        for (int i = 0; i < type.getLayers(); i++) {
-            textures[i] = getTexture(type, i);
+    fun getTextures(type: MaterialType<*>): Array<Texture?> {
+        val textures = arrayOfNulls<Texture>(type.getLayers())
+        for (i in 0..<type.getLayers()) {
+            textures[i] = getTexture(type, i)
         }
-        return textures;
+        return textures
     }
 
-    public static void init() {
+    companion object {
+        @JvmField
+        val NONE: TextureSet = TextureSet(Ref.ID, "none")
+        @JvmField
+        val CUBE: TextureSet = TextureSet(Ref.ID, "cube")
+        @JvmField
+        val DULL: TextureSet = TextureSet(Ref.ID, "dull")
+        @JvmField
+        val METALLIC: TextureSet = TextureSet(Ref.ID, "metallic")
+        @JvmField
+        val SHINY: TextureSet = TextureSet(Ref.ID, "shiny")
+        @JvmField
+        val ROUGH: TextureSet = TextureSet(Ref.ID, "rough")
+        @JvmField
+        val MAGNETIC: TextureSet = TextureSet(Ref.ID, "magnetic", true)
+        @JvmField
+        val DIAMOND: TextureSet = TextureSet(Ref.ID, "diamond")
+        @JvmField
+        val RUBY: TextureSet = TextureSet(Ref.ID, "ruby")
+        @JvmField
+        val LAPIS: TextureSet = TextureSet(Ref.ID, "lapis")
+        @JvmField
+        val GEM_H: TextureSet = TextureSet(Ref.ID, "gem_h")
+        @JvmField
+        val GEM_V: TextureSet = TextureSet(Ref.ID, "gem_v")
+        @JvmField
+        val GARNET: TextureSet = TextureSet(Ref.ID, "garnet")
+        @JvmField
+        val QUARTZ: TextureSet = TextureSet(Ref.ID, "quartz")
+        @JvmField
+        val FINE: TextureSet = TextureSet(Ref.ID, "fine")
+        val FLINT: TextureSet = TextureSet(Ref.ID, "flint")
+        @JvmField
+        val LIGNITE: TextureSet = TextureSet(Ref.ID, "lignite")
+        @JvmField
+        val WOOD: TextureSet = TextureSet(Ref.ID, "wood")
+        @JvmField
+        val REDSTONE: TextureSet = TextureSet(Ref.ID, "redstone")
+        @JvmField
+        val RAD: TextureSet = TextureSet(Ref.ID, "rad")
+        @JvmField
+        val RUBBER: TextureSet = TextureSet(Ref.ID, "rubber")
 
+        @JvmStatic
+        fun init() {
+        }
     }
 }
