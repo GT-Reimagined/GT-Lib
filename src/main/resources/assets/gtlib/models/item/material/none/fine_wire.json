@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gtlib:item/material/none/fine_wire",
+    "layer1": "gtlib:item/material/none/fine_wire_overlay"
+  }
+}

@@ -1,18 +1,19 @@
 package org.gtreimagined.gtlib.material;
 
 import net.minecraft.resources.ResourceKey;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraft.world.level.ItemLike;
 import org.gtreimagined.gtlib.GTCreativeTabs;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.item.ItemBasic;
 import org.gtreimagined.gtlib.material.data.ToolData;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
-import org.gtreimagined.gtlib.registration.ITextureProvider;
-import org.gtreimagined.gtlib.texture.Texture;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import net.minecraft.ChatFormatting;
@@ -51,7 +52,7 @@ import java.util.List;
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
 import static org.gtreimagined.gtlib.material.MaterialTags.*;
 
-public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTObject, IColorHandler, ITextureProvider, IModelProvider, IMaterialObject {
+public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTObject, IColorHandler, IModelProvider, IMaterialObject {
 
     protected Material material;
     protected MaterialType<?> type;
@@ -281,8 +282,10 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     }
 
     @Override
-    public Texture[] getTextures() {
-        return getMaterial().getSet().getTextures(getType());
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
+        prov.getBuilder(item).loader(GTLibModelManager.LOADER_FALLBACK)
+                .property("base", getMaterial().getSet().getDomain() + ":item/material/" + getMaterial().getSet().getId() + "/" + type.id)
+                .property("fallback", Ref.ID + ":item/material/none/" + type.id);
     }
 
 }

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gtlib:item/material/metallic/ingot",
+    "layer1": "gtlib:item/material/none/hot_ingot_overlay"
+  }
+}
