@@ -1,6 +1,6 @@
 {
   "parent": "gtlib:block/preset/layered",
   "textures": {
-    "ovwrlay": "gtlib:block/material/none/ore"
+    "overlay": "gtlib:block/material/none/ore"
   }
 }
