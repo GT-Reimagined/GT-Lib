@@ -61,5 +61,6 @@ public class BlockMaterialType extends BlockBasic implements IColorHandler, IMat
             b.property("base", getMaterial().getSet().getDomain() + ":block/material/" + getMaterial().getSet().getId() + "/" + type.getId())
                     .property("fallback", Ref.ID + ":block/material/none/" + type.getId());
         }
+        prov.simpleBlock(block, b);
     }
 }
