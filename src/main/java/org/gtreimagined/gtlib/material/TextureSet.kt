@@ -32,14 +32,6 @@ class TextureSet @JvmOverloads constructor(
     val path: String
         get() = "material/$id"
 
-    fun getTextures(type: MaterialType<*>): Array<Texture?> {
-        val textures = arrayOfNulls<Texture>(type.getLayers())
-        for (i in 0..<type.getLayers()) {
-            textures[i] = getTexture(type, i)
-        }
-        return textures
-    }
-
     companion object {
         @JvmField
         val NONE: TextureSet = TextureSet(Ref.ID, "none")
