@@ -1,79 +1,68 @@
-package org.gtreimagined.gtlib.material;
+package org.gtreimagined.gtlib.material
 
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistries.Keys;
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
-import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraftforge.registries.ForgeRegistries
+import org.gtreimagined.gtlib.GTAPI
+import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient
+import org.gtreimagined.gtlib.util.Utils
+import kotlin.Boolean
+import kotlin.Int
+import kotlin.Long
 
-public class MaterialTypeItem<T> extends MaterialType<T> {
-
-    public interface ItemSupplier {
-        void createItems(String domain, MaterialType<?> type, Material material);
+class MaterialTypeItem<T> : MaterialType<T?> {
+    fun interface ItemSupplier {
+        fun createItems(domain: String?, type: MaterialType<*>?, material: Material?)
     }
 
-    private final ItemSupplier itemSupplier;
+    val supplier: ItemSupplier?
 
-    public MaterialTypeItem(String id, int layers, boolean visible, long unitValue) {
-        super(id, layers, visible, unitValue);
-        GTAPI.register(MaterialTypeItem.class, this);
-        this.itemSupplier = MaterialItem::new;
+    constructor(id: String, layers: Int, visible: Boolean, unitValue: Long) : super(id, layers, visible, unitValue) {
+        GTAPI.register(MaterialTypeItem::class.java, this)
+        this.supplier = ItemSupplier(::MaterialItem)
     }
 
-    public MaterialTypeItem(String id, int layers, boolean visible, long unitValue, ItemSupplier itemSupplier) {
-        super(id, layers, visible, unitValue);
-        GTAPI.register(MaterialTypeItem.class, this);
-        this.itemSupplier = itemSupplier;
+    constructor(id: String, layers: Int, visible: Boolean, unitValue: Long, itemSupplier: ItemSupplier?) : super(id, layers, visible, unitValue) {
+        GTAPI.register(MaterialTypeItem::class.java, this)
+        this.supplier = itemSupplier
     }
 
-    @Override
-    public MaterialTypeItem<T> unSplitName() {
-        return (MaterialTypeItem<T>) super.unSplitName();
+    override fun unSplitName(): MaterialTypeItem<T?>? {
+        return super.unSplitName() as MaterialTypeItem<T?>?
     }
 
-    public boolean allowItemGen(Material material) {
-        return !replacements.containsKey(material) && allowGen(material) && !blockType;
+    fun allowItemGen(material: Material?): Boolean {
+        return !replacements.containsKey(material) && allowGen(material) && !blockType
     }
 
-    public Item get(Material material) {
-        Item replacement = GTAPI.getReplacement(this, material);
+    fun get(material: Material): Item {
+        val replacement = GTAPI.getReplacement(this, material)
         if (replacement == null) {
-            if (!allowItemGen(material))
-                Utils.onInvalidData(String.join("", "GET ERROR - DOES NOT GENERATE: T(", id, ") M(", material.getId(), ")"));
-            else return GTAPI.get(MaterialItem.class, idGetter.apply(material));
+            if (!allowItemGen(material)) Utils.onInvalidData("GET ERROR - DOES NOT GENERATE: T($id) M(${material.id})")
+            else return GTAPI.get(MaterialItem::class.java, idGetter!!.apply(material))
         }
-        return replacement;
+        return replacement
     }
 
-    public ItemSupplier getSupplier() {
-        return itemSupplier;
+    fun get(material: Material, count: Int): ItemStack {
+        if (count < 1) Utils.onInvalidData("GET ERROR - MAT STACK EMPTY: T($id) M(${material.id})")
+        return ItemStack(get(material), count)
     }
 
-    public ItemStack get(Material material, int count) {
-        if (count < 1)
-            Utils.onInvalidData(String.join("", "GET ERROR - MAT STACK EMPTY: T(", id, ") M(", material.getId(), ")"));
-        return new ItemStack(get(material), count);
+    fun getIngredient(material: Material, count: Int): RecipeIngredient {
+        if (count < 1) Utils.onInvalidData("GET ERROR - MAT STACK EMPTY: T($id) M(${material.id})")
+        return RecipeIngredient.of(getMaterialTag(material), count)
     }
 
-    public RecipeIngredient getIngredient(Material material, int count) {
-        if (count < 1)
-            Utils.onInvalidData(String.join("", "GET ERROR - MAT STACK EMPTY: T(", id, ") M(", material.getId(), ")"));
-        return RecipeIngredient.of(getMaterialTag(material), count);
-    }
-
-    @Override
-    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
-        super.onRegistryBuild(registry);
-        if (registry != Keys.BLOCKS) return;
+    override fun onRegistryBuild(registry: ResourceKey<out Registry<*>?>?) {
+        super.onRegistryBuild(registry)
+        if (registry !== ForgeRegistries.Keys.BLOCKS) return
         if (doRegister()) {
-            for (Material material : this.materials) {
-                if (!material.enabled) continue;
-                if (allowItemGen(material)) getSupplier().createItems(material.materialDomain(), this, material);
+            for (material in this.materials) {
+                if (!material.enabled) continue
+                if (allowItemGen(material)) this.supplier!!.createItems(material.materialDomain(), this, material)
             }
         }
     }

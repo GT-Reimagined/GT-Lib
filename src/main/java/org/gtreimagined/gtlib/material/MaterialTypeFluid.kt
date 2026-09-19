@@ -1,58 +1,58 @@
-package org.gtreimagined.gtlib.material;
+package org.gtreimagined.gtlib.material
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.Getter;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.material.Fluid;
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.registration.IGTObject;
-import org.gtreimagined.gtlib.util.TagUtils;
-import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import lombok.Getter
+import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.material.Fluid
+import net.minecraft.world.level.material.Fluids
+import net.minecraftforge.fluids.FluidStack
+import org.gtreimagined.gtlib.GTAPI
+import org.gtreimagined.gtlib.registration.IGTObject
+import org.gtreimagined.gtlib.util.TagUtils
+import org.gtreimagined.gtlib.util.Utils
+import java.util.*
+import java.util.function.Supplier
 
-import java.util.Arrays;
-import java.util.function.Supplier;
+class MaterialTypeFluid<T>(id: String, layers: Int, visible: Boolean, unitValue: Long) :
+    MaterialType<T?>(id, layers, visible, unitValue) {
+    val fluidReplacements: Object2ObjectMap<Material, Supplier<Fluid>> = Object2ObjectOpenHashMap()
 
-public class MaterialTypeFluid<T> extends MaterialType<T> {
-
-    @Getter
-    private final Object2ObjectMap<Material, Supplier<Fluid>> fluidReplacements = new Object2ObjectOpenHashMap<>();
-
-    public MaterialTypeFluid(String id, int layers, boolean visible, long unitValue) {
-        super(id, layers, visible, unitValue);
-        GTAPI.register(MaterialTypeFluid.class, this);
+    init {
+        GTAPI.register(MaterialTypeFluid::class.java, this)
     }
 
-    public static FluidStack getEmptyFluidAndLog(MaterialType<?> type, IGTObject... objects) {
-        Utils.onInvalidData("Tried to create " + type.getId() + " for objects: " + Arrays.toString(Arrays.stream(objects).map(IGTObject::getId).toArray(String[]::new)));
-        return new FluidStack(Fluids.WATER, 1);
+    fun addReplacement(material: Material, fluidSupplier: Supplier<Fluid>) {
+        if (!material.enabled) return
+        fluidReplacements[material] = fluidSupplier
+        this.add(material)
     }
 
-    public void addReplacement(Material material, Supplier<Fluid> fluidSupplier){
-        if (!material.enabled) return;
-        fluidReplacements.put(material, fluidSupplier);
-        this.add(material);
+    override fun hasReplacement(mat: Material): Boolean {
+        return fluidReplacements.containsKey(mat)
     }
 
-    @Override
-    public boolean hasReplacement(Material mat) {
-        return fluidReplacements.containsKey(mat);
-    }
-
-    @Override
-    public void replacement(Material mat, Supplier<Item> replacement) {
+    override fun replacement(mat: Material, replacement: Supplier<Item>) {
         //NOOP
     }
 
-    @Override
-    protected TagKey<?> tagFromString(String name) {
-        return TagUtils.getForgelikeFluidTag(name);
+    override fun tagFromString(name: String?): TagKey<*>? {
+        return TagUtils.getForgelikeFluidTag(name)
     }
 
-    public interface IFluidGetter {
-        FluidStack get(Material m, int amount);
+    interface IFluidGetter {
+        fun get(m: Material?, amount: Int): FluidStack?
+    }
+
+    companion object {
+        @JvmStatic
+        fun getEmptyFluidAndLog(type: MaterialType<*>, vararg objects: IGTObject): FluidStack {
+            Utils.onInvalidData(
+                "Tried to create " + type.getId() + " for objects: " + Arrays.stream(objects)
+                    .map { it.getId() }.toList().toTypedArray()
+                    .contentToString())
+            return FluidStack(Fluids.WATER, 1)
+        }
     }
 }

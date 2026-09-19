@@ -1,136 +1,133 @@
-package org.gtreimagined.gtlib.material;
+package org.gtreimagined.gtlib.material
 
-import com.google.common.collect.HashBiMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import lombok.Getter;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraftforge.registries.ForgeRegistries.Keys;
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.ore.StoneType;
-import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient;
-import org.gtreimagined.gtlib.registration.IGTObject;
-import org.gtreimagined.gtlib.util.TagUtils;
-import org.gtreimagined.gtlib.util.Utils;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IForgeRegistry;
+import com.google.common.collect.HashBiMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap
+import lombok.Getter
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceKey
+import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraftforge.registries.ForgeRegistries
+import org.gtreimagined.gtlib.GTAPI
+import org.gtreimagined.gtlib.ore.StoneType
+import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient
+import org.gtreimagined.gtlib.registration.IGTObject
+import org.gtreimagined.gtlib.util.TagUtils
+import org.gtreimagined.gtlib.util.Utils
+import java.util.*
+import java.util.function.Supplier
+import kotlin.Boolean
+import kotlin.Int
+import kotlin.Long
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Supplier;
+class MaterialTypeBlock<T>(id: String, layers: Int, visible: Boolean, unitValue: Long, supplier: BlockSupplier) :
+    MaterialType<T>(id, layers, visible, unitValue) {
+    val oreReplacements: MutableMap<Material, MutableMap<StoneType, Supplier<Item>>> = HashBiMap.create()
 
-public class MaterialTypeBlock<T> extends MaterialType<T> {
-
-    @Getter
-    protected final Map<Material, Map<StoneType, Supplier<Item>>> oreReplacements = HashBiMap.create();
-
-    public interface BlockSupplier {
-        void createBlocks(String domain, MaterialType<?> type, Material material);
+    interface BlockSupplier {
+        fun createBlocks(domain: String?, type: MaterialType<*>?, material: Material?)
     }
 
-    private final BlockSupplier supplier;
+    private val supplier: BlockSupplier
 
-    public MaterialTypeBlock(String id, int layers, boolean visible, long unitValue, BlockSupplier supplier) {
-        super(id, layers, visible, unitValue);
-        GTAPI.register(MaterialTypeBlock.class, this);
-        this.supplier = supplier;
+    init {
+        GTAPI.register(MaterialTypeBlock::class.java, this)
+        this.supplier = supplier
     }
 
     /**
      * Forces these tags to not generate, assuming they have a replacement.
      */
-    public void replacement(Material mat, StoneType type, Supplier<Item> replacement) {
-        if (!mat.enabled) return;
-        if (get() instanceof IOreGetter){
-            Map<StoneType, Supplier<Item>> subMap = oreReplacements.computeIfAbsent(mat, m -> new Object2ObjectArrayMap<>());
-            subMap.put(type, replacement);
-            this.add(mat);
-            GTAPI.addReplacement(getMaterialTag(mat, type), replacement);
+    fun replacement(mat: Material, type: StoneType, replacement: Supplier<Item>) {
+        if (!mat.enabled) return
+        if (get() is IOreGetter) {
+            val subMap =
+                oreReplacements.computeIfAbsent(mat) { Object2ObjectArrayMap() }
+            subMap[type] = replacement
+            this.add(mat)
+            GTAPI.addReplacement(getMaterialTag(mat, type), replacement)
         }
-
     }
 
-    public static Container getEmptyBlockAndLog(MaterialType<?> type, IGTObject... objects) {
-        Utils.onInvalidData("Tried to create " + type.getId() + " for objects: " + Arrays.toString(Arrays.stream(objects).map(IGTObject::getId).toArray(String[]::new)));
-        return new Container(Blocks.AIR.defaultBlockState());
+    override fun getMaterialIngredient(m: Material, count: Int): RecipeIngredient {
+        return RecipeIngredient.of(getMaterialTag(m), count)
     }
 
-    public RecipeIngredient getMaterialIngredient(Material m, int count) {
-        return RecipeIngredient.of(getMaterialTag(m), count);
+    fun getMaterialIngredient(m: Material, s: StoneType, count: Int): RecipeIngredient {
+        return RecipeIngredient.of(getMaterialTag(m, s), count)
     }
 
-    public RecipeIngredient getMaterialIngredient(Material m, StoneType s, int count) {
-        return RecipeIngredient.of(getMaterialTag(m, s), count);
+    fun getBlockMaterialTag(m: Material): TagKey<Block?>? {
+        return TagUtils.getForgelikeBlockTag(
+            "${Utils.getConventionalMaterialType(this)}/${if (id == "raw_ore_block") "raw_" else ""}${m.id}"
+        )
     }
 
-    public TagKey<Block> getBlockMaterialTag(Material m){
-        return TagUtils.getForgelikeBlockTag(String.join("", Utils.getConventionalMaterialType(this), "/", (getId().equals("raw_ore_block") ? "raw_" : ""), m.getId()));
+    fun getMaterialTag(m: Material, s: StoneType): TagKey<Item> {
+        if (this.get() !is IOreGetter) return getMaterialTag(m)
+        return TagUtils.getForgelikeItemTag("${s.id}_${Utils.getConventionalMaterialType(this)}/${m.id}")
     }
 
-    public TagKey<Item> getMaterialTag(Material m, StoneType s){
-        if (!(this.get() instanceof IOreGetter)) return getMaterialTag(m);
-        return TagUtils.getForgelikeItemTag(s.getId() + "_" + Utils.getConventionalMaterialType(this) + "/" + m.getId());
+    fun allowBlockGen(material: Material?): Boolean {
+        return !replacements.containsKey(material) && allowGen(material)
     }
 
-    public boolean allowBlockGen(Material material) {
-        return !replacements.containsKey(material) && allowGen(material);
-    }
-
-    @Override
-    public void onRegistryBuild(ResourceKey<? extends Registry<?>> registry) {
-        super.onRegistryBuild(registry);
-        if (registry != Keys.BLOCKS) return;
+    override fun onRegistryBuild(registry: ResourceKey<out Registry<*>?>?) {
+        super.onRegistryBuild(registry)
+        if (registry !== ForgeRegistries.Keys.BLOCKS) return
         if (doRegister()) {
-            for (Material material : this.materials) {
-                if (!material.enabled) continue;
-                if (allowBlockGen(material)) supplier.createBlocks(material.materialDomain(), this, material);
+            for (material in this.materials) {
+                if (!material.enabled) continue
+                if (allowBlockGen(material)) supplier.createBlocks(material.materialDomain(), this, material)
             }
         }
     }
 
-    public interface IBlockGetter {
-        Container get(Material m);
+    interface IBlockGetter {
+        fun get(m: Material): Container
     }
 
-    public interface IOreGetter {
-        Container get(Material m, StoneType s);
+    interface IOreGetter {
+        fun get(m: Material, s: StoneType): Container
     }
 
-    public static class Container {
-
-        protected BlockState state;
-
-        public Container(BlockState state) {
-            this.state = state;
+    class Container(private var state: BlockState) {
+        fun asState(): BlockState {
+            return state
         }
 
-        public BlockState asState() {
-            return state;
+        fun asBlock(): Block {
+            return state.block
         }
 
-        public Block asBlock() {
-            return state.getBlock();
+        fun asItem(): Item {
+            return asBlock().asItem()
         }
 
-        public Item asItem() {
-            return asBlock().asItem();
+        @JvmOverloads
+        fun asStack(count: Int = 1): ItemStack {
+            return ItemStack(asItem(), count)
         }
 
-        public ItemStack asStack(int count) {
-            return new ItemStack(asItem(), count);
+        fun asIngredient(): RecipeIngredient {
+            return RecipeIngredient.of(asStack(1))
         }
+    }
 
-        public ItemStack asStack() {
-            return asStack(1);
-        }
-
-        public RecipeIngredient asIngredient() {
-            return RecipeIngredient.of(asStack(1));
+    companion object {
+        @JvmStatic
+        fun getEmptyBlockAndLog(type: MaterialType<*>, vararg objects: IGTObject): Container {
+            Utils.onInvalidData(
+                "Tried to create " + type.getId() + " for objects: " + Arrays.stream(objects)
+                    .map { it.getId() }
+                    .toList()
+                    .toTypedArray().contentToString()
+            )
+            return Container(Blocks.AIR.defaultBlockState())
         }
     }
 }
