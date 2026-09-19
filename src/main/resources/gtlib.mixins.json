@@ -14,6 +14,7 @@
     "client.GuiLightAccessor",
     "client.ItemTransformDeserializerAccessor",
     "client.LevelRendererAccessor",
+    "client.ModelBakeryAccessor",
     "client.ModelBakeryMixin",
     "client.MultiPlayerGameModeAccessor",
     "client.SimpleBakedModel$BuilderAccessor",

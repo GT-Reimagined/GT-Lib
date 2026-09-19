@@ -1,0 +1,6 @@
+{
+  "parent": "gtlib:block/preset/layered",
+  "textures": {
+    "overlay": "gtlib:block/material/metallic/small_ore"
+  }
+}

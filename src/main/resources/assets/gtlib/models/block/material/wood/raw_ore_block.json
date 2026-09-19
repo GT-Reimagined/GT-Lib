@@ -1,0 +1,6 @@
+{
+  "parent": "gtlib:block/preset/simple",
+  "textures": {
+    "all": "gtlib:block/material/wood/raw_ore_block"
+  }
+}
