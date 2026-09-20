@@ -28,8 +28,8 @@ class MaterialTypeBlock<T>(id: String, visible: Boolean, unitValue: Long, suppli
     MaterialType<T>(id, visible, unitValue) {
     val oreReplacements: MutableMap<Material, MutableMap<StoneType, Supplier<Item>>> = HashBiMap.create()
 
-    interface BlockSupplier {
-        fun createBlocks(domain: String?, type: MaterialType<*>?, material: Material?)
+    fun interface BlockSupplier {
+        fun createBlocks(domain: String, type: MaterialType<*>, material: Material)
     }
 
     private val supplier: BlockSupplier

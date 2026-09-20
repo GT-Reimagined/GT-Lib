@@ -14,7 +14,7 @@ import kotlin.Long
 
 class MaterialTypeItem<T> @JvmOverloads constructor(id: String, visible: Boolean, unitValue: Long, val supplier: ItemSupplier = ItemSupplier(::MaterialItem)) : MaterialType<T?>(id, visible, unitValue) {
     fun interface ItemSupplier {
-        fun createItems(domain: String?, type: MaterialType<*>?, material: Material?)
+        fun createItems(domain: String, type: MaterialType<*>, material: Material)
     }
 
     init {
