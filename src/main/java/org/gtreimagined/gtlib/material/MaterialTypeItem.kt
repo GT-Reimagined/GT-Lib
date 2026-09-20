@@ -12,25 +12,17 @@ import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
 
-class MaterialTypeItem<T> : MaterialType<T?> {
+class MaterialTypeItem<T> @JvmOverloads constructor(id: String, visible: Boolean, unitValue: Long, val supplier: ItemSupplier = ItemSupplier(::MaterialItem)) : MaterialType<T?>(id, visible, unitValue) {
     fun interface ItemSupplier {
         fun createItems(domain: String?, type: MaterialType<*>?, material: Material?)
     }
 
-    val supplier: ItemSupplier?
-
-    constructor(id: String, layers: Int, visible: Boolean, unitValue: Long) : super(id, layers, visible, unitValue) {
+    init {
         GTAPI.register(MaterialTypeItem::class.java, this)
-        this.supplier = ItemSupplier(::MaterialItem)
     }
 
-    constructor(id: String, layers: Int, visible: Boolean, unitValue: Long, itemSupplier: ItemSupplier?) : super(id, layers, visible, unitValue) {
-        GTAPI.register(MaterialTypeItem::class.java, this)
-        this.supplier = itemSupplier
-    }
-
-    override fun unSplitName(): MaterialTypeItem<T?>? {
-        return super.unSplitName() as MaterialTypeItem<T?>?
+    override fun unSplitName(): MaterialTypeItem<T> {
+        return super.unSplitName() as MaterialTypeItem<T>
     }
 
     fun allowItemGen(material: Material?): Boolean {
@@ -62,7 +54,7 @@ class MaterialTypeItem<T> : MaterialType<T?> {
         if (doRegister()) {
             for (material in this.materials) {
                 if (!material.enabled) continue
-                if (allowItemGen(material)) this.supplier!!.createItems(material.materialDomain(), this, material)
+                if (allowItemGen(material)) this.supplier.createItems(material.materialDomain(), this, material)
             }
         }
     }

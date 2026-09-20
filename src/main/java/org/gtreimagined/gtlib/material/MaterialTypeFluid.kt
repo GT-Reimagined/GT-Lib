@@ -15,8 +15,8 @@ import org.gtreimagined.gtlib.util.Utils
 import java.util.*
 import java.util.function.Supplier
 
-class MaterialTypeFluid<T>(id: String, layers: Int, visible: Boolean, unitValue: Long) :
-    MaterialType<T?>(id, layers, visible, unitValue) {
+class MaterialTypeFluid<T>(id: String, visible: Boolean, unitValue: Long) :
+    MaterialType<T?>(id, visible, unitValue) {
     val fluidReplacements: Object2ObjectMap<Material, Supplier<Fluid>> = Object2ObjectOpenHashMap()
 
     init {
@@ -41,7 +41,7 @@ class MaterialTypeFluid<T>(id: String, layers: Int, visible: Boolean, unitValue:
         return TagUtils.getForgelikeFluidTag(name)
     }
 
-    interface IFluidGetter {
+    fun interface IFluidGetter {
         fun get(m: Material?, amount: Int): FluidStack?
     }
 

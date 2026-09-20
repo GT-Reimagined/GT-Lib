@@ -40,7 +40,7 @@ import kotlin.text.contains
 import kotlin.text.lowercase
 import kotlin.text.replace
 
-open class MaterialType<T>(@JvmField val id: String, val layers: Int, var visible: Boolean, var unitValue: Long) : IMaterialTag, ISharedGTObject,
+open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var unitValue: Long) : IMaterialTag, ISharedGTObject,
     IRegistryEntryProvider {
 
     var generating: Boolean = true
@@ -52,13 +52,10 @@ open class MaterialType<T>(@JvmField val id: String, val layers: Int, var visibl
     protected val tagMap: MutableMap<MaterialType<*>?, TagKey<*>?> =
         Object2ObjectOpenHashMap<MaterialType<*>?, TagKey<*>?>()
 
-    @set:JvmName("tagPrefix")
     var tagPrefix: String
 
-    @set:JvmName("lang")
     var lang: Function<Material, String>
 
-    @set:JvmName("idGetter")
     var idGetter: Function<Material, String> = Function {
         m ->
         val split = Utils.getLocalizedMaterialType(this)
@@ -70,14 +67,13 @@ open class MaterialType<T>(@JvmField val id: String, val layers: Int, var visibl
         }
     }
     var getter: T? = null
-    var hidden = false
+    var isHidden = false
 
     val replacements: BiMap<Material, Supplier<Item>> = HashBiMap.create()
     val dependents: MutableSet<IMaterialTag> = ObjectLinkedOpenHashSet()
 
     //since we have two instances stored in gt lib.
     var hasRegistered: Boolean = false
-    var ignoreTextureSets: Boolean = false
 
     init {
         this.isSplitName = id.contains("_")
@@ -93,13 +89,9 @@ open class MaterialType<T>(@JvmField val id: String, val layers: Int, var visibl
         }
         register(MaterialType::class.java, id)
     }
+
     protected open fun tagFromString(name: String?): TagKey<*>? {
         return TagUtils.getForgelikeItemTag(name)
-    }
-
-    fun nonGen(): MaterialType<T> {
-        generating = false
-        return this
     }
 
     /**
@@ -156,17 +148,6 @@ open class MaterialType<T>(@JvmField val id: String, val layers: Int, var visibl
         return null
     }
 
-    fun hidden(): Boolean {
-        return hidden
-    }
-
-    fun setHidden(): MaterialType<T> {
-        this.hidden = true
-        return this
-    }
-
-    fun setIgnoreTextureSets(): MaterialType<T> = apply { ignoreTextureSets = true }
-
     fun getMaterialTag(m: Material): TagKey<Item> {
         return tagFromString("${this.tagPrefix}/${if (id == "raw_ore_block") "raw_" else ""}${m.id}") as TagKey<Item>
     }
@@ -175,34 +156,35 @@ open class MaterialType<T>(@JvmField val id: String, val layers: Int, var visibl
         return RecipeIngredient.of(getMaterialTag(m), count)
     }
 
+    fun nonGen(): MaterialType<T> = apply { generating = false }
+
+    fun hidden(): MaterialType<T> = apply {this.isHidden = true}
+
     fun blockType(): MaterialType<T> {
         blockType = true
-        this.tagMap.put(this, TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this)))
+        this.tagMap[this] = TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this))
         return this
     }
 
-    open fun unSplitName(): MaterialType<T>? {
+    open fun unSplitName(): MaterialType<T> {
         isSplitName = false
         this.tagPrefix = Utils.getConventionalMaterialType(this)
         this.tagMap[this] = tagFromString(tagPrefix)
         return this
     }
 
-    fun setLang(lang: Function<Material, String>): MaterialType<T> {
+    fun lang(lang: Function<Material, String>): MaterialType<T> {
         this.lang = lang
         return this
     }
 
-    fun setLang(lang: BiFunction<MaterialType<*>, Material, String>): MaterialType<T> {
-        return setLang { m -> lang.apply(this, m) }
+    fun lang(lang: BiFunction<MaterialType<*>, Material, String>): MaterialType<T> {
+        return lang { m -> lang.apply(this, m) }
     }
 
-    fun setIdGetter(idGetter: Function<Material, String>): MaterialType<T> {
-        this.idGetter = idGetter
-        return this
-    }
+    fun idGetter(idGetter: Function<Material, String>): MaterialType<T> = apply { this.idGetter = idGetter }
 
-    fun setTagPrefix(prefix: String): MaterialType<T> {
+    fun tagPrefix(prefix: String): MaterialType<T> {
         this.tagPrefix = prefix
         tagMap[this] = tagFromString(prefix)
         return this

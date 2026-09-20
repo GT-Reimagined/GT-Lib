@@ -24,8 +24,8 @@ import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
 
-class MaterialTypeBlock<T>(id: String, layers: Int, visible: Boolean, unitValue: Long, supplier: BlockSupplier) :
-    MaterialType<T>(id, layers, visible, unitValue) {
+class MaterialTypeBlock<T>(id: String, visible: Boolean, unitValue: Long, supplier: BlockSupplier) :
+    MaterialType<T>(id, visible, unitValue) {
     val oreReplacements: MutableMap<Material, MutableMap<StoneType, Supplier<Item>>> = HashBiMap.create()
 
     interface BlockSupplier {
@@ -87,11 +87,11 @@ class MaterialTypeBlock<T>(id: String, layers: Int, visible: Boolean, unitValue:
         }
     }
 
-    interface IBlockGetter {
+    fun interface IBlockGetter {
         fun get(m: Material): Container
     }
 
-    interface IOreGetter {
+    fun interface IOreGetter {
         fun get(m: Material, s: StoneType): Container
     }
 

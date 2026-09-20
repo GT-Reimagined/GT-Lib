@@ -6,7 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
-import org.gtreimagined.gtlib.block.BlockDimensionMarker;
 import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.common.event.ARRPEvents;
 import org.gtreimagined.gtlib.cover.ICover;
@@ -30,7 +29,6 @@ import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
 import org.gtreimagined.gtlib.event.GTCraftingEvent;
 import org.gtreimagined.gtlib.event.GTProvidersEvent;
 import org.gtreimagined.gtlib.fluid.GTFluid;
-import org.gtreimagined.gtlib.gui.SlotType;
 import org.gtreimagined.gtlib.gui.SlotTypes;
 import org.gtreimagined.gtlib.gui.event.GuiEvents;
 import org.gtreimagined.gtlib.integration.Integrations;
@@ -237,7 +235,7 @@ public class GTLib extends GTMod {
 
                 }
                 GTAPI.all(MaterialTypeItem.class, t -> {
-                    if (!t.hidden()) return;
+                    if (!t.isHidden()) return;
                     List<ItemLike> stacks = (List<ItemLike>) t.all().stream().map(obj -> t.get((Material)obj)).collect(Collectors.toList());
                     if (stacks.isEmpty()) return;
                     l.addAll(stacks);
