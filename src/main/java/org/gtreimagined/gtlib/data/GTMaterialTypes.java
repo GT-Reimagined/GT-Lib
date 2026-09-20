@@ -133,7 +133,7 @@ public class GTMaterialTypes {
             if (m == null || s == null || !s.doesGenerateOre() || !ORE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE, m, s);
             BlockOre block = GTAPI.get(BlockOre.class, BlockOre.getId(s, ORE, m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
-        }).blockType();
+        });
         SMALL_ORE.set((m, s) -> {
             if (m != null && s != null) {
                 Item item = GTAPI.getReplacement(SMALL_ORE, m, s);
@@ -145,12 +145,12 @@ public class GTMaterialTypes {
                 return MaterialTypeBlock.getEmptyBlockAndLog(SMALL_ORE, m, s);
             BlockOre block = GTAPI.get(BlockOre.class, BlockOre.getId(s, SMALL_ORE, m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
-        }).blockType();
+        });
         ORE_STONE.set(m -> {
             if (m == null || !ORE_STONE.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(ORE_STONE, m);
             BlockOreStone block = GTAPI.get(BlockOreStone.class, ORE_STONE.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
-        }).blockType();
+        });
         BLOCK.set(m -> {
             if (m != null) {
                 Item item = GTAPI.getReplacement(BLOCK, m);
@@ -161,7 +161,7 @@ public class GTMaterialTypes {
             if (m == null || !BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(BLOCK, m);
             BlockStorage block = GTAPI.get(BlockStorage.class, BLOCK.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
-        }).blockType();
+        });
         RAW_ORE_BLOCK.set(m -> {
             if (m != null) {
                 Item item = GTAPI.getReplacement(RAW_ORE_BLOCK, m);
@@ -172,12 +172,12 @@ public class GTMaterialTypes {
             if (m == null || !RAW_ORE_BLOCK.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(RAW_ORE_BLOCK, m);
             BlockStorage block = GTAPI.get(BlockStorage.class, RAW_ORE_BLOCK.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
-        }).blockType();
+        });
         FRAME.set(m -> {
             if (m == null || !FRAME.allowGen(m)) return MaterialTypeBlock.getEmptyBlockAndLog(FRAME, m);
             BlockFrame block = GTAPI.get(BlockFrame.class, FRAME.getIdGetter().apply(m));
             return new MaterialTypeBlock.Container(block != null ? block.defaultBlockState() : Blocks.AIR.defaultBlockState());
-        }).blockType();
+        });
 
         LIQUID.set((m, i) -> {
             if (m == null || !LIQUID.allowGen(m)) return MaterialTypeFluid.getEmptyFluidAndLog(LIQUID, m);

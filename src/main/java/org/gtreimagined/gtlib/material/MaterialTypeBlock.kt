@@ -37,6 +37,7 @@ class MaterialTypeBlock<T>(id: String, visible: Boolean, unitValue: Long, suppli
     init {
         GTAPI.register(MaterialTypeBlock::class.java, this)
         this.supplier = supplier
+        this.blockType()
     }
 
     /**
