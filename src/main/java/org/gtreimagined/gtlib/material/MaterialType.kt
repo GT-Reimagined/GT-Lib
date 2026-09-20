@@ -49,9 +49,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
     var isSplitName: Boolean
     protected val materials: MutableSet<Material> =
         ObjectLinkedOpenHashSet() //Linked to preserve insertion order for JEI
-    protected val tagMap: MutableMap<MaterialType<*>?, TagKey<*>?> =
-        Object2ObjectOpenHashMap<MaterialType<*>?, TagKey<*>?>()
-
+    protected var tag: TagKey<*>
     var tagPrefix: String
 
     var lang: Function<Material, String>
@@ -78,7 +76,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
     init {
         this.isSplitName = id.contains("_")
         this.tagPrefix = Utils.getConventionalMaterialType(this)
-        this.tagMap[this] = tagFromString(this.tagPrefix)
+        this.tag = tagFromString(this.tagPrefix)
         this.lang = Function { m ->
             val split = Utils.getLocalizedMaterialType(this)
             if (split.size > 1) {
@@ -90,7 +88,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         register(MaterialType::class.java, id)
     }
 
-    protected open fun tagFromString(name: String?): TagKey<*>? {
+    protected open fun tagFromString(name: String): TagKey<*> {
         return TagUtils.getForgelikeItemTag(name)
     }
 
@@ -135,8 +133,8 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         }
         // gets material from other mod items using the tags
         for (tagKey in stack.item.builtInRegistryHolder().tags().toList()) {
-            val prefix = this.getTag<Any?>()!!.location().path + "/"
-            if (tagKey.location().namespace == this.getTag<Any?>()!!.location().namespace && tagKey.location()
+            val prefix = this.getTag<Any>().location().path + "/"
+            if (tagKey.location().namespace == this.getTag<Any>().location().namespace && tagKey.location()
                     .path.contains(prefix)
             ) {
                 val material = Material.get(tagKey.location().path.replace(prefix, ""))
@@ -162,14 +160,14 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
 
     fun blockType(): MaterialType<T> {
         blockType = true
-        this.tagMap[this] = TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this))
+        this.tag = TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this))
         return this
     }
 
     open fun unSplitName(): MaterialType<T> {
         isSplitName = false
         this.tagPrefix = Utils.getConventionalMaterialType(this)
-        this.tagMap[this] = tagFromString(tagPrefix)
+        this.tag = tagFromString(tagPrefix)
         return this
     }
 
@@ -186,7 +184,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
 
     fun tagPrefix(prefix: String): MaterialType<T> {
         this.tagPrefix = prefix
-        tagMap[this] = tagFromString(prefix)
+        this.tag = tagFromString(prefix)
         return this
     }
 
@@ -210,8 +208,8 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         return id
     }
 
-    fun <T> getTag(): TagKey<T?>? {
-        return tagMap[this] as TagKey<T?>?
+    fun <T> getTag(): TagKey<T> {
+        return tag as TagKey<T>
     }
 
     fun set(getter: T): MaterialType<T> {
