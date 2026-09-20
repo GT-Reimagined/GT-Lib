@@ -37,7 +37,7 @@ class MaterialTypeFluid<T>(id: String, visible: Boolean, unitValue: Long) :
         //NOOP
     }
 
-    override fun tagFromString(name: String?): TagKey<*>? {
+    override fun tagFromString(name: String): TagKey<*> {
         return TagUtils.getForgelikeFluidTag(name)
     }
 
