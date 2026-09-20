@@ -31,73 +31,126 @@ object GTMaterialTypes {
     @JvmField
     val UNSPLIT_FUNCTION: BiFunction<MaterialType<*>, Material, String> = BiFunction { t, m ->
         "${m.displayNameString} ${Utils.lowerUnderscoreToUpperSpaced(t.getId())}" }
+    private val d: Function<Material, String> = Function { m -> if (m.has(MaterialTags.RUBBERTOOLS)) "Pulp" else "Dust" }
+    private val n: Function<Material, String> =
+        Function { m -> if (m.element != null) "Native " else "" }
+    private val p: Function<Material, String> = Function { m ->
+        if (m === GTLibMaterials.Wood) "Plank" else if (m.has(MaterialTags.RUBBERTOOLS)) "Sheet" else "Plate"
+    }
     //Item Types
     @JvmField
-    val DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("dust", true, Ref.U)
+    val DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("dust", true, Ref.U).apply {
+        lang = Function { m -> "${m.displayNameString} ${d(m)}" }
+    }
     @JvmField
-    val SMALL_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("small_dust", true, Ref.U4)
+    val SMALL_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("small_dust", true, Ref.U4).apply {
+        lang = Function { m -> "Small ${m.displayNameString} ${d(m)}" }
+        isHidden = true
+    }
     @JvmField
-    val TINY_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("tiny_dust", true, Ref.U9)
+    val TINY_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("tiny_dust", true, Ref.U9).apply {
+        lang = Function { m -> "Tiny ${m.displayNameString} ${d(m)}" }
+        isHidden = true
+    }
     @JvmField
-    val IMPURE_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("impure_dust", true, -1)
+    val IMPURE_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("impure_dust", true, -1).apply {
+        lang = Function { m -> "Impure ${m.displayNameString} ${d(m)}" }
+    }
     @JvmField
-    val PURE_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("pure_dust", true, -1)
+    val PURE_DUST: MaterialTypeItem<*> = MaterialTypeItem<Any?>("pure_dust", true, -1).apply {
+        lang = Function { m -> "Pure ${m.displayNameString} ${d(m)}" }
+    }
     @JvmField
-    val CRUSHED_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("crushed_ore", true, -1)
+    val CRUSHED_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("crushed_ore", true, -1).apply {
+        lang = Function { m -> "Crushed ${n(m)}${m.displayNameString} Ore" }
+    }
     @JvmField
-    val PURIFIED_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("purified_ore", true, -1)
+    val PURIFIED_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("purified_ore", true, -1).apply {
+        lang = Function { m -> "Purified ${n(m)}${m.displayNameString} Ore" }
+    }
     @JvmField
-    val REFINED_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("refined_ore", true, -1)
+    val REFINED_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("refined_ore", true, -1).apply {
+        lang = Function { m -> "Refined ${n(m)}${m.displayNameString} Ore" }
+    }
     @JvmField
-    val CHIPPED_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("chipped_gem", true, Ref.U4)
+    val CHIPPED_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("chipped_gem", true, Ref.U4).apply {
+        lang = Function{ m -> "Chipped ${m.displayNameString}" }
+    }
     @JvmField
-    val FLAWED_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("flawed_gem", true, Ref.U2)
+    val FLAWED_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("flawed_gem", true, Ref.U2).apply {
+        lang = Function { m -> "Flawed ${m.displayNameString}" }
+    }
     @JvmField
-    val GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("gem", true, Ref.U)
+    val GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("gem", true, Ref.U).apply {
+        lang = Function { it.displayNameString }
+    }
     @JvmField
-    val FLAWLESS_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("flawless_gem", true, Ref.U * 2)
+    val FLAWLESS_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("flawless_gem", true, Ref.U * 2).apply {
+        lang = Function { m -> "Flawless ${m.displayNameString}" }
+    }
     @JvmField
-    val EXQUISITE_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("exquisite_gem", true, Ref.U * 4)
+    val EXQUISITE_GEM: MaterialTypeItem<*> = MaterialTypeItem<Any?>("exquisite_gem", true, Ref.U * 4).apply {
+        lang = Function { m -> "Exquisite ${m.displayNameString}" }
+    }
     @JvmField
-    val NUGGET: MaterialTypeItem<*> = MaterialTypeItem<Any?>("nugget", true, Ref.U9)
+    val NUGGET: MaterialTypeItem<*> = MaterialTypeItem<Any?>("nugget", true, Ref.U9).apply {
+        lang = Function { m -> "${m.displayNameString} ${if (m.has(MaterialTags.RUBBERTOOLS)) "Chip" else "Nugget"}" }
+    }
     @JvmField
     val CHUNK: MaterialTypeItem<*> = MaterialTypeItem<Any?>("chunk", true, Ref.U4)
     @JvmField
-    val INGOT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("ingot", true, Ref.U)
+    val INGOT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("ingot", true, Ref.U).apply {
+        lang = Function { m -> "${m.displayNameString} ${if (m.has(MaterialTags.RUBBERTOOLS)) "Bar" else "Ingot"}" }
+    }
     @JvmField
     val HOT_INGOT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("hot_ingot", true, Ref.U)
     @JvmField
-    val TINY_PLATE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("tiny_plate", true, Ref.U9)
+    val TINY_PLATE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("tiny_plate", true, Ref.U9).apply {
+        lang = Function { m -> "Tiny ${m.displayNameString} ${p(m)}" }
+    }
     @JvmField
-    val PLATE: MaterialTypeItem<Any> = MaterialTypeItem("plate", true, Ref.U) { _, b, c ->
+    val PLATE: MaterialTypeItem<Any> = MaterialTypeItem<Any>("plate", true, Ref.U) { _, b, c ->
         CoverFactory.builder { u, v, t, w ->
             CoverPlate(u, v, t, w, b, c)
         }.item { u, _ -> CoverMaterialItem(u.getDomain(), b, u, c) }
             .build(Ref.ID, "plate_${c.id}")
+    }.apply {
+        lang = Function { m -> "${m.displayNameString} ${p(m)}" }
+
     }
 
     @JvmField
-    val DENSE_PLATE: MaterialTypeItem<*> = MaterialTypeItem<Any>("dense_plate", true, Ref.U * 9)
+    val DENSE_PLATE: MaterialTypeItem<*> = MaterialTypeItem<Any>("dense_plate", true, Ref.U * 9).apply {
+        lang = Function { m -> "Dense ${m.displayNameString} ${p(m)}" }
+    }
     @JvmField
-    val BEARING_ROCK: MaterialTypeItem<MaterialTypeBlock.IOreGetter> = MaterialTypeItem("bearing_rock", false, Ref.U4) { domain, type, mat ->
+    val BEARING_ROCK: MaterialTypeItem<MaterialTypeBlock.IOreGetter> = MaterialTypeItem<MaterialTypeBlock.IOreGetter>("bearing_rock", false, Ref.U4) { domain, type, mat ->
         GTAPI.all(StoneType::class.java).stream().filter { it.doesGenerateOre() }
             .forEach { s ->
                 GTAPI.register(BlockSurfaceRock::class.java, BlockSurfaceRock(domain, mat, s))
             }
         MaterialItem(domain, type, mat)
+    }.apply {
+        unSplitName()
+        lang = Function { m -> "${n(m)}${m.displayNameString} Bearing Rock" }
     }
 
     @JvmField
-    val ROCK: MaterialTypeItem<MaterialTypeBlock.IBlockGetter> = MaterialTypeItem("rock", false, Ref.U4) { domain, type, mat ->
+    val ROCK: MaterialTypeItem<MaterialTypeBlock.IBlockGetter> = MaterialTypeItem<MaterialTypeBlock.IBlockGetter>("rock", false, Ref.U4) { domain, type, mat ->
         val type1 = GTAPI.get(StoneType::class.java, mat.id)
         if (type1 != null) {
             GTAPI.register(BlockSurfaceRock::class.java, BlockSurfaceRock(domain, Material.NULL, type1))
         }
         MaterialItem(domain, type, mat)
-    }
+    }.unSplitName()
 
     @JvmField
-    val RAW_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("raw_ore", true, -1)
+    val RAW_ORE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("raw_ore", true, -1).apply {
+        unSplitName()
+        lang  = Function { m -> "Raw ${n(m)}${m.displayNameString}" }
+        idGetter = Function { m -> "raw_${m.id}" }
+        tagPrefix = "raw_materials"
+    }
     @JvmField
     val SMALL_GEAR: MaterialTypeItem<*> = MaterialTypeItem<Any?>("small_gear", true, Ref.U)
     @JvmField
@@ -119,41 +172,80 @@ object GTMaterialTypes {
     @JvmField
     val RING: MaterialTypeItem<*> = MaterialTypeItem<Any?>("ring", true, Ref.U4)
     @JvmField
-    val FOIL: MaterialTypeItem<*> = MaterialTypeItem<Any?>("foil", true, Ref.U4)
+    val FOIL: MaterialTypeItem<*> = MaterialTypeItem<Any?>("foil", true, Ref.U4).apply {
+        lang = Function{ m ->
+            val prefix = if (m.has(MaterialTags.RUBBERTOOLS))"Thin" else ""
+            val suffix = if (m.has(MaterialTags.RUBBERTOOLS))"Sheet" else "Foil"
+            "$prefix${m.displayNameString} $suffix"
+        }
+    }
     @JvmField
-    val ITEM_CASING: MaterialTypeItem<*> = MaterialTypeItem<Any?>("item_casing", true, Ref.U2)
+    val ITEM_CASING: MaterialTypeItem<*> = MaterialTypeItem<Any?>("item_casing", true, Ref.U2).apply {
+        unSplitName()
+        lang = Function { m -> "${m.displayNameString} Item Casings" }
+    }
     @JvmField
     val FINE_WIRE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("fine_wire", true, Ref.U8)
     @JvmField
-    val SWORD_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("sword_blade", true, Ref.U * 2)
+    val SWORD_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("sword_blade", true, Ref.U * 2).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val PICKAXE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("pickaxe_head", true, Ref.U * 3)
+    val PICKAXE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("pickaxe_head", true, Ref.U * 3).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val SHOVEL_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("shovel_head", true, Ref.U)
+    val SHOVEL_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("shovel_head", true, Ref.U).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val AXE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("axe_head", true, Ref.U * 3)
+    val AXE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("axe_head", true, Ref.U * 3).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val HOE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("hoe_head", true, Ref.U * 2)
+    val HOE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("hoe_head", true, Ref.U * 2).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val HAMMER_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("hammer_head", true, Ref.U * 6)
+    val HAMMER_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("hammer_head", true, Ref.U * 6).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val FILE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("file_head", true, Ref.U * 2)
+    val FILE_HEAD: MaterialTypeItem<*> = MaterialTypeItem<Any?>("file_head", true, Ref.U * 2).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val KNIFE_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("knife_blade", true, Ref.U)
+    val KNIFE_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("knife_blade", true, Ref.U).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val SAW_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("saw_blade", true, Ref.U * 2)
+    val SAW_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("saw_blade", true, Ref.U * 2).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val DRILL_BIT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("drill_bit", true, Ref.U * 4)
+    val DRILL_BIT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("drill_bit", true, Ref.U * 4).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val CHAINSAW_BIT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("chainsaw_bit", true, Ref.U * 2)
+    val CHAINSAW_BIT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("chainsaw_bit", true, Ref.U * 2).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val WRENCH_BIT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("wrench_bit", true, Ref.U * 4)
+    val WRENCH_BIT: MaterialTypeItem<*> = MaterialTypeItem<Any?>("wrench_bit", true, Ref.U * 4).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val SCREWDRIVER_TIP: MaterialTypeItem<*> = MaterialTypeItem<Any?>("screwdriver_tip", true, Ref.U)
+    val SCREWDRIVER_TIP: MaterialTypeItem<*> = MaterialTypeItem<Any?>("screwdriver_tip", true, Ref.U).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val SCYTHE_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("scythe_blade", true, Ref.U * 3)
+    val SCYTHE_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("scythe_blade", true, Ref.U * 3).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
     @JvmField
-    val BUZZSAW_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("buzzsaw_blade", true, Ref.U * 4)
+    val BUZZSAW_BLADE: MaterialTypeItem<*> = MaterialTypeItem<Any?>("buzzsaw_blade", true, Ref.U * 4).apply {
+        unSplitName().lang(UNSPLIT_FUNCTION)
+    }
 
     //Block Types
     @JvmField
@@ -176,10 +268,18 @@ object GTMaterialTypes {
     }
 
     @JvmField
-    val BLOCK: MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> = MaterialTypeBlock("block", false, Ref.U * 9, ::BlockStorage)
+    val BLOCK: MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> = MaterialTypeBlock<MaterialTypeBlock.IBlockGetter>("block", false, Ref.U * 9, ::BlockStorage).apply {
+        lang = Function { m: Material? -> "Block of " + m!!.displayNameString }
+        tagPrefix = "storage_blocks"
+    }
 
     @JvmField
-    val RAW_ORE_BLOCK: MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> = MaterialTypeBlock("raw_ore_block", false, -1, ::BlockStorage)
+    val RAW_ORE_BLOCK: MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> = MaterialTypeBlock<MaterialTypeBlock.IBlockGetter>("raw_ore_block", false, -1, ::BlockStorage).apply {
+        unSplitName()
+        lang = Function { m -> "Block of Raw ${n(m)}${m.displayNameString}" }
+        idGetter = Function { m -> "raw_${m.id}_block" }
+        tagPrefix = "storage_blocks"
+    }
 
     @JvmField
     val FRAME: MaterialTypeBlock<MaterialTypeBlock.IBlockGetter> = MaterialTypeBlock("frame", true, Ref.U * 2, ::BlockFrame)
@@ -263,7 +363,7 @@ object GTMaterialTypes {
         }
         GAS.set { m, i ->
             if (m == null || !GAS.allowGen(m)) return@set MaterialTypeFluid.getEmptyFluidAndLog(GAS, m!!)
-            if (GAS.fluidReplacements.containsKey(m)) return@set FluidStack(GAS.fluidReplacements.get(m)!!.get(), i)
+            if (GAS.fluidReplacements.containsKey(m)) return@set FluidStack(GAS.fluidReplacements[m]!!.get(), i)
             val fluid = GTAPI.get(GTFluid::class.java, "${GAS.getId()}_${m.id}")
             checkNotNull(fluid) { "Tried to get null fluid" }
             FluidStack(fluid.fluid, i)
@@ -273,64 +373,7 @@ object GTMaterialTypes {
     @JvmStatic
     fun init() {
         dependents()
-        defaults()
         replacements()
-    }
-
-    private fun defaults() {
-        val d: Function<Material, String> = Function { m -> if (m.has(MaterialTags.RUBBERTOOLS)) "Pulp" else "Dust" }
-        DUST.lang { m -> "${m.displayNameString} ${d(m)}" }
-        TINY_DUST.lang { m -> "Tiny ${m.displayNameString} ${d(m)}" }.hidden()
-        SMALL_DUST.lang { m -> "Small ${m.displayNameString} ${d(m)}" }.hidden()
-        IMPURE_DUST.lang { m -> "Impure ${m.displayNameString} ${d(m)}" }
-        PURE_DUST.lang { m -> "Pure ${m.displayNameString} ${d(m)}" }
-        val n: Function<Material, String> =
-            Function { m -> if (m.element != null) "Native " else "" }
-        BEARING_ROCK.unSplitName()
-            .lang { m -> "${n(m)}${m.displayNameString} Bearing Rock" }
-        ROCK.unSplitName()
-        CRUSHED_ORE.lang { m -> "Crushed ${n(m)}${m.displayNameString} Ore" }
-        PURIFIED_ORE.lang { m -> "Purified ${n(m)}${m.displayNameString} Ore" }
-        REFINED_ORE.lang { m -> "Refined ${n(m)}${m.displayNameString} Ore" }
-        RAW_ORE.unSplitName().lang { m -> "Raw ${n(m)}${m.displayNameString}" }
-            .idGetter { m -> "raw_${m.id}" }.tagPrefix("raw_materials")
-        INGOT.lang { m -> "${m.displayNameString} ${if (m.has(MaterialTags.RUBBERTOOLS)) "Bar" else "Ingot"}" }
-        NUGGET.lang { m -> "${m.displayNameString} ${if (m.has(MaterialTags.RUBBERTOOLS)) "Chip" else "Nugget"}" }
-        GEM.lang { obj -> obj.displayNameString }
-        EXQUISITE_GEM.lang { m -> "Exquisite ${m.displayNameString}" }
-        FLAWLESS_GEM.lang { m -> "Flawless ${m.displayNameString}" }
-        FLAWED_GEM.lang { m -> "Flawed ${m.displayNameString}" }
-        CHIPPED_GEM.lang { m -> "Chipped ${m.displayNameString}" }
-        val p: Function<Material, String> = Function { m ->
-            if (m === GTLibMaterials.Wood) "Plank" else if (m.has(MaterialTags.RUBBERTOOLS)) "Sheet" else "Plate"
-        }
-        PLATE.lang { m -> "${m.displayNameString} ${p(m)}" }
-        DENSE_PLATE.lang { m -> "Dense ${m.displayNameString} ${p(m)}" }
-        TINY_PLATE.lang { m -> "Tiny ${m.displayNameString} ${p(m)}" }
-        ITEM_CASING.unSplitName().lang { m -> "${m.displayNameString} Item Casings" }
-        FOIL.lang { m ->
-            (if (m.has(MaterialTags.RUBBERTOOLS)) "Thin " else "") + m.displayNameString + " " + (if (m.has(MaterialTags.RUBBERTOOLS)
-            ) "Sheet" else "Foil")
-        }
-        DRILL_BIT.unSplitName().lang(UNSPLIT_FUNCTION)
-        CHAINSAW_BIT.unSplitName().lang(UNSPLIT_FUNCTION)
-        WRENCH_BIT.unSplitName().lang(UNSPLIT_FUNCTION)
-        BUZZSAW_BLADE.unSplitName().lang(UNSPLIT_FUNCTION)
-        PICKAXE_HEAD.unSplitName().lang(UNSPLIT_FUNCTION)
-        SHOVEL_HEAD.unSplitName().lang(UNSPLIT_FUNCTION)
-        SWORD_BLADE.unSplitName().lang(UNSPLIT_FUNCTION)
-        AXE_HEAD.unSplitName().lang(UNSPLIT_FUNCTION)
-        HOE_HEAD.unSplitName().lang(UNSPLIT_FUNCTION)
-        KNIFE_BLADE.unSplitName().lang(UNSPLIT_FUNCTION)
-        HAMMER_HEAD.unSplitName().lang(UNSPLIT_FUNCTION)
-        FILE_HEAD.unSplitName().lang(UNSPLIT_FUNCTION)
-        SAW_BLADE.unSplitName().lang(UNSPLIT_FUNCTION)
-        SCREWDRIVER_TIP.unSplitName().lang(UNSPLIT_FUNCTION)
-        SCYTHE_BLADE.unSplitName().lang(UNSPLIT_FUNCTION)
-        RAW_ORE_BLOCK.unSplitName()
-            .lang { m -> "Block of Raw ${n(m)}${m.displayNameString}" }.idGetter { m -> "raw_${m.id}_block" }
-            .tagPrefix("storage_blocks")
-        BLOCK.lang { m: Material? -> "Block of " + m!!.displayNameString }.tagPrefix("storage_blocks")
     }
 
     private fun replacements() {
