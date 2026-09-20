@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableMap
 import com.mojang.serialization.Codec
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet
 import net.minecraft.core.Registry
 import net.minecraft.network.chat.Component
@@ -33,7 +32,6 @@ import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
 import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
 import kotlin.collections.MutableSet
 import kotlin.collections.iterator
 import kotlin.text.contains
@@ -49,7 +47,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
     var isSplitName: Boolean
     protected val materials: MutableSet<Material> =
         ObjectLinkedOpenHashSet() //Linked to preserve insertion order for JEI
-    protected var tag: TagKey<*>
+    protected var tagKey: TagKey<*>
     var tagPrefix: String
 
     var lang: Function<Material, String>
@@ -76,7 +74,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
     init {
         this.isSplitName = id.contains("_")
         this.tagPrefix = Utils.getConventionalMaterialType(this)
-        this.tag = tagFromString(this.tagPrefix)
+        this.tagKey = tagFromString(this.tagPrefix)
         this.lang = Function { m ->
             val split = Utils.getLocalizedMaterialType(this)
             if (split.size > 1) {
@@ -160,14 +158,14 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
 
     fun blockType(): MaterialType<T> {
         blockType = true
-        this.tag = TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this))
+        this.tagKey = TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this))
         return this
     }
 
     open fun unSplitName(): MaterialType<T> {
         isSplitName = false
         this.tagPrefix = Utils.getConventionalMaterialType(this)
-        this.tag = tagFromString(tagPrefix)
+        this.tagKey = tagFromString(tagPrefix)
         return this
     }
 
@@ -184,7 +182,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
 
     fun tagPrefix(prefix: String): MaterialType<T> {
         this.tagPrefix = prefix
-        this.tag = tagFromString(prefix)
+        this.tagKey = tagFromString(prefix)
         return this
     }
 
@@ -208,8 +206,8 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         return id
     }
 
-    fun <T> getTag(): TagKey<T> {
-        return tag as TagKey<T>
+    fun <U> getTag(): TagKey<U> {
+        return tagKey as TagKey<U>
     }
 
     fun set(getter: T): MaterialType<T> {
