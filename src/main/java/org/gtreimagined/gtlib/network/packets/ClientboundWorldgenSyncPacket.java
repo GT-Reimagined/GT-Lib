@@ -7,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData;
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollisionData;
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData;
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVeinData;
 import org.gtreimagined.gtlib.worldgen.vein.VeinData;
@@ -31,6 +32,7 @@ public class ClientboundWorldgenSyncPacket implements Packet<ClientboundWorldgen
             VanillaVeinData.INSTANCE.encodeVeins(friendlyByteBuf);
             SmallOreData.INSTANCE.encodeVeins(friendlyByteBuf);
             StoneLayerData.INSTANCE.encodeVeins(friendlyByteBuf);
+            StoneLayerCollisionData.INSTANCE.encodeVeins(friendlyByteBuf);
         }
 
         @Override
@@ -39,6 +41,7 @@ public class ClientboundWorldgenSyncPacket implements Packet<ClientboundWorldgen
             VanillaVeinData.INSTANCE.updateVeins(VanillaVeinData.INSTANCE.decodeVeins(friendlyByteBuf));
             SmallOreData.INSTANCE.updateVeins(SmallOreData.INSTANCE.decodeVeins(friendlyByteBuf));
             StoneLayerData.INSTANCE.updateVeins(StoneLayerData.INSTANCE.decodeVeins(friendlyByteBuf));
+            StoneLayerCollisionData.INSTANCE.updateVeins(StoneLayerCollisionData.INSTANCE.decodeVeins(friendlyByteBuf));
             return new ClientboundWorldgenSyncPacket();
         }
 
