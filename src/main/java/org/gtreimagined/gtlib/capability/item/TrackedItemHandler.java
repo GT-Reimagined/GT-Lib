@@ -31,7 +31,7 @@ public class TrackedItemHandler<T extends IGuiHandler> extends ItemStackHandler 
     private final SlotType<?> type;
 
     public TrackedItemHandler(T tile, SlotType<?> type, int size, boolean allowExternalOutput, boolean allowExternalInput, BiPredicate<IGuiHandler, ItemStack> validator) {
-        this(tile, type, size, allowExternalOutput, allowExternalInput, validator, 64);
+        this(tile, type, size, allowExternalOutput, allowExternalInput, validator, type.maxStackSize() == -1 ? 64 : type.maxStackSize());
     }
 
     public TrackedItemHandler(T tile, SlotType<?> type, int size, boolean allowExternalOutput, boolean allowExternalInput, BiPredicate<IGuiHandler, ItemStack> validator, int limit) {

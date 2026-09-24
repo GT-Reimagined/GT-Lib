@@ -8,6 +8,7 @@ import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.datagen.builder.GTItemModelBuilder;
 import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.registration.ICreativeTabProvider;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IColorHandler;
@@ -57,7 +58,7 @@ public interface IGTArmor extends IGTObject, IColorHandler, ITextureProvider, IM
 
     @Override
     default int getItemColor(ItemStack stack, @Nullable Block block, int i) {
-        return i == 0 && getMat() != null ? getMat().getRGB() : -1;
+        return i == 0 && getMat() != null ? MaterialColorChanger.getMaterialRgb(getMat()) : -1;
     }
 
     @Override

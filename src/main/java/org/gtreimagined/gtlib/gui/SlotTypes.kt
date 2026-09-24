@@ -12,7 +12,6 @@ import org.gtreimagined.gtlib.cover.ICover
 import org.gtreimagined.gtlib.gui.slot.AbstractSlot
 import org.gtreimagined.gtlib.gui.slot.SlotCell
 import org.gtreimagined.gtlib.gui.slot.SlotEnergy
-import org.gtreimagined.gtlib.gui.slot.SlotFake
 import org.gtreimagined.gtlib.gui.slot.SlotInput
 import org.gtreimagined.gtlib.gui.slot.SlotOutput
 import org.gtreimagined.gtlib.mui.GTGuiTextures
@@ -62,10 +61,10 @@ object SlotTypes {
     }
 
     @JvmField
-    val DISPLAY: SlotType<SlotFake> = SlotType.create { b ->
+    val DISPLAY: SlotType<AbstractSlot<*>> = SlotType.create { b ->
         b.id = "display"
         b.slotSupplier = SlotType.ISlotSupplier { type, gui, item, i, d ->
-            SlotFake(
+            AbstractSlot(
                 type, gui,
                 item.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
@@ -80,16 +79,16 @@ object SlotTypes {
     }
 
     @JvmField
-    val DISPLAY_SETTABLE: SlotType<SlotFake> = SlotType.create { b ->
+    val DISPLAY_SETTABLE: SlotType<AbstractSlot<*>> = SlotType.create { b ->
         b.id = "display_settable"
         b.slotSupplier = SlotType.ISlotSupplier { type, gui, item, i, _ ->
-            SlotFake(
+            AbstractSlot(
                 type,gui,
                 item.getOrDefault(type, EmptyHandler.INSTANCE), i
             )
         }
-        b.tester = NO_INPUT
         b.slotGroup = false
+        b.maxStackSize = 1
         b.allowExternalInput = false
         b.allowExternalOutput = false
         b.phantom = true

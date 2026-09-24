@@ -1,9 +1,13 @@
 package org.gtreimagined.gtlib.client.event;
 
 import net.minecraftforge.client.event.RenderHighlightEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.level.LevelEvent;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.client.SoundHelper;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
+import org.gtreimagined.gtlib.material.MaterialItem;
 import org.gtreimagined.gtlib.material.MaterialType;
 import org.gtreimagined.gtlib.tool.IGTTool;
 import net.minecraft.world.entity.player.Player;
@@ -47,6 +51,14 @@ public class ClientEventsForge {
                 item.getItem().onUseTick(player.level(), player, stack, stack.getCount());
                 //player.swingProgress = player.prevSwingProgress;
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent event){
+        if (event.phase == Phase.END){
+            MaterialColorChanger.RGB_CHANGING_MAP.forEach((m, t) -> t.tick());
+            MaterialColorChanger.incrementTime();
         }
     }
 

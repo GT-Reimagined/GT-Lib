@@ -1,25 +1,23 @@
 package org.gtreimagined.gtlib.material;
 
 import net.minecraft.resources.ResourceKey;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.gtreimagined.gtlib.GTAPI;
+import net.minecraft.world.level.ItemLike;
 import org.gtreimagined.gtlib.GTCreativeTabs;
+import org.gtreimagined.gtlib.Ref;
+import org.gtreimagined.gtlib.client.GTLibModelManager;
 import org.gtreimagined.gtlib.data.GTMaterialTypes;
 import org.gtreimagined.gtlib.data.VanillaStoneTypes;
+import org.gtreimagined.gtlib.datagen.providers.GTItemModelProvider;
 import org.gtreimagined.gtlib.item.ItemBasic;
 import org.gtreimagined.gtlib.material.data.ToolData;
 import org.gtreimagined.gtlib.ore.StoneType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IModelProvider;
 import org.gtreimagined.gtlib.registration.ISharedGTObject;
-import org.gtreimagined.gtlib.registration.ITextureProvider;
-import org.gtreimagined.gtlib.texture.Texture;
-import org.gtreimagined.gtlib.util.CodeUtils;
 import org.gtreimagined.gtlib.util.Utils;
 import org.gtreimagined.gtlib.worldgen.WorldGenHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -47,16 +45,14 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static org.gtreimagined.gtlib.data.GTMaterialTypes.*;
-import static org.gtreimagined.gtlib.material.MaterialTags.TOOLS;
+import static org.gtreimagined.gtlib.material.MaterialTags.*;
 
-public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTObject, IColorHandler, ITextureProvider, IModelProvider, IMaterialObject {
+public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTObject, IColorHandler, IModelProvider, IMaterialObject {
 
     protected Material material;
     protected MaterialType<?> type;
@@ -280,33 +276,16 @@ public class MaterialItem extends ItemBasic<MaterialItem> implements ISharedGTOb
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
         if (i == 0) {
-            if ((material.has(MaterialTags.NEGATIVE_CHANGING_RGB) || material.has(MaterialTags.POSITIVE_CHANGING_RGB)) && FMLEnvironment.dist.isClient()){
-                return getChangingMaterialColor();
-            }
-            return material.getRGB();
+            return MaterialColorChanger.getMaterialRgb(material);
         }
         return -1;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private int getChangingMaterialColor(){
-        long currentRemainder = Minecraft.getInstance().player != null ?  Minecraft.getInstance().player.level().getGameTime() % 100 : -1;
-        if (currentRemainder >= 0){
-            int direction = (int) (currentRemainder < 50 ? currentRemainder : -(currentRemainder - 50));
-            int rgb = material.getRGB();
-            int r = CodeUtils.getR(rgb);
-            int g = CodeUtils.getG(rgb);
-            int b = CodeUtils.getB(rgb);
-            int newR = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? r + direction : r - direction;
-            int newG = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? g + direction : g - direction;
-            int newB = material.has(MaterialTags.POSITIVE_CHANGING_RGB) ? b + direction : b - direction;
-            return CodeUtils.getRGB(newR, newG, newB);
-        }
-        return material.getRGB();
+    @Override
+    public void onItemModelBuild(ItemLike item, GTItemModelProvider prov) {
+        prov.getBuilder(item).loader(GTLibModelManager.LOADER_FALLBACK)
+                .property("base", getMaterial().getSet().getDomain() + ":item/material/" + getMaterial().getSet().getId() + "/" + type.id)
+                .property("fallback", Ref.ID + ":item/material/none/" + type.id);
     }
 
-    @Override
-    public Texture[] getTextures() {
-        return getMaterial().getSet().getTextures(getType());
-    }
 }

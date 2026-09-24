@@ -75,8 +75,7 @@ public class CoverPlate extends CoverMaterial {
 
     @Override
     public void setTextures(BiConsumer<String, Texture> texer) {
-        Texture[] tex = material.getSet().getTextures(GTMaterialTypes.BLOCK);
-        texer.accept("overlay", tex[0]);
+        texer.accept("overlay", material.getSet().getTexture(GTMaterialTypes.BLOCK, 0));
     }
 
     @Override
@@ -87,7 +86,7 @@ public class CoverPlate extends CoverMaterial {
 
     @Override
     public Texture[] getTextures() {
-        return new Texture[]{material.getSet().getTextures(GTMaterialTypes.BLOCK)[0]};
+        return new Texture[]{material.getSet().getTexture(GTMaterialTypes.BLOCK, 0)};
     }
 
     @Override

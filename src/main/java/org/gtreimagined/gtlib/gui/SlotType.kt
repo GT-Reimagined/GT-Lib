@@ -23,7 +23,7 @@ data class SlotType<T : ModularSlot>(
     val mayPickup: Boolean, val mayPlace: Boolean, val allowExternalOutput: Boolean,
     val allowExternalInput: Boolean, val phantom: Boolean, val slotGroup: Boolean,
     val background: IDrawable, val overlay: IDrawable,
-    val tester: BiPredicate<IGuiHandler, ItemStack>
+    val tester: BiPredicate<IGuiHandler, ItemStack>, val maxStackSize: Int
 ) : IGTObject, IMachineEvent {
     init {
         require(!(slotSupplier == null && fluidHandlerSupplier == null)) { "Slot Type must have either a fluid handler supplier or item slot supplier!" }
@@ -45,7 +45,7 @@ data class SlotType<T : ModularSlot>(
             val slotType = SlotType(
                 id, b.slotSupplier, b.fluidHandlerSupplier, b.mayPickup, b.mayPlace, b.allowExternalOutput,
                 b.allowExternalInput, b.phantom, b.slotGroup,
-                b.background, b.overlay, b.tester
+                b.background, b.overlay, b.tester, b.maxStackSize
             )
             GTAPI.register(SlotType::class.java, slotType)
             return slotType
@@ -64,7 +64,8 @@ data class SlotType<T : ModularSlot>(
         var slotGroup = true
         var background: IDrawable = GTGuiTextures.ITEM_SLOT
         var overlay: IDrawable = IDrawable.EMPTY
-        var tester = BiPredicate { g: IGuiHandler, i: ItemStack -> true }
+        var tester = BiPredicate { _: IGuiHandler, _: ItemStack -> true }
+        var maxStackSize: Int = -1
 
         fun id(id: String): SlotTypeBuilder<T>  = apply { this.id = id }
         fun slotSupplier(supplier: ISlotSupplier<T>?): SlotTypeBuilder<T> = apply {this.slotSupplier = supplier}
@@ -77,5 +78,6 @@ data class SlotType<T : ModularSlot>(
         fun slotGroup(slotGroup: Boolean) = apply { this.slotGroup = slotGroup }
         fun background(background: UITexture) = apply { this.background = background }
         fun overlay(overlay: UITexture) = apply { this.overlay = overlay }
+        fun maxStackSize(maxStackSize: Int) = apply { this.maxStackSize = maxStackSize }
     }
 }

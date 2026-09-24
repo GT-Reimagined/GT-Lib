@@ -78,6 +78,7 @@ import org.gtreimagined.gtlib.util.TagUtils
 import org.gtreimagined.gtlib.worldgen.GTLibWorldGenerator
 import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVeinData
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollisionData
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData
 import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVeinData
 import org.gtreimagined.gtlib.worldgen.vein.VeinData
@@ -142,6 +143,7 @@ object GTLib : GTMod() {
         event.addListener(SmallOreData.INSTANCE)
         event.addListener(BedrockVeinData.INSTANCE)
         event.addListener(StoneLayerData.INSTANCE)
+        event.addListener(StoneLayerCollisionData.INSTANCE)
     }
 
     fun addCraftingLoaders(ev: GTCraftingEvent) {
@@ -216,13 +218,13 @@ object GTLib : GTMod() {
                     GTAPI.all<StoneType> { s ->
                         if (s !== VanillaStoneTypes.STONE && s !== VanillaStoneTypes.SAND && s.doesGenerateOre()) {
                             GTMaterialTypes.ORE.all().forEach { m ->
-                                val ore = GTMaterialTypes.ORE.get().get(m, s).asBlock()
+                                val ore = GTMaterialTypes.ORE.get()?.get(m, s)?.asBlock()
                                 if (ore is BlockOre) {
                                     l.add(ore)
                                 }
                             }
                             GTMaterialTypes.SMALL_ORE.all().forEach { m ->
-                                val ore = GTMaterialTypes.SMALL_ORE.get().get(m, s).asBlock()
+                                val ore = GTMaterialTypes.SMALL_ORE.get()?.get(m, s)?.asBlock()
                                 if (ore is BlockOre) {
                                     l.add(ore)
                                 }
@@ -231,7 +233,7 @@ object GTLib : GTMod() {
                     }
                 }
                 GTAPI.all<MaterialTypeItem<*>> { t ->
-                    if (!t.hidden()) return@all
+                    if (!t.isHidden) return@all
                     val stacks = t.all().stream().map { m -> t.get(m) }
                         .collect(Collectors.toList())
                     if (stacks.isEmpty()) return@all

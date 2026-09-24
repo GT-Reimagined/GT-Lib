@@ -45,7 +45,6 @@ public class Material implements ISharedGTObject {
     @Getter
     @Setter
     private String displayNameString;
-    @Getter
     @Setter
     private int rgb;
     @Getter

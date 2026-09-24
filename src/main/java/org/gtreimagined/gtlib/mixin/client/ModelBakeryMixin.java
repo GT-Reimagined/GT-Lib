@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.mixin.client;
 
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.gtreimagined.gtlib.client.ModelUtils;
@@ -14,8 +15,10 @@ import java.util.Map;
 
 @Mixin(ModelBakery.class)
 public class ModelBakeryMixin {
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void gtlib$injectInit(BlockColors blockColors, ProfilerFiller profilerFiller, Map modelResources, Map blockStateResources, CallbackInfo ci){
-        ModelUtils.setModelBakery((ModelBakery) (Object) this);
+    @Inject(method = "loadTopLevel", at = @At("HEAD"))
+    private void gtlib$injectInit(ModelResourceLocation location, CallbackInfo ci){
+        if (ModelUtils.getModelBakery() == null) {
+            ModelUtils.setModelBakery((ModelBakery) (Object) this);
+        }
     }
 }

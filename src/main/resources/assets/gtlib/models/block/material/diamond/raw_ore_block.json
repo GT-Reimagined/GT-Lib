@@ -1,0 +1,7 @@
+{
+  "parent": "gtlib:block/preset/layered",
+  "textures": {
+    "base": "gtlib:block/material/diamond/raw_ore_block",
+    "overlay": "gtlib:block/material/diamond/raw_ore_block_overlay"
+  }
+}

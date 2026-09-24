@@ -32,6 +32,7 @@ import org.gtreimagined.gtlib.dynamic.BlockDynamic;
 import org.gtreimagined.gtlib.dynamic.ModelConfig;
 import org.gtreimagined.gtlib.machine.Tier;
 import org.gtreimagined.gtlib.material.IMaterialObject;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.pipe.types.PipeType;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
@@ -236,7 +237,7 @@ public abstract class BlockPipe<T extends PipeType<T>> extends BlockDynamic impl
     }
 
     public int getRGB() {
-        return type.getMaterial().getRGB();
+        return MaterialColorChanger.getMaterialRgb(type.getMaterial());
     }
 
     public Texture getFace() {

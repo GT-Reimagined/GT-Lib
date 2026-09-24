@@ -3,6 +3,7 @@ package org.gtreimagined.gtlib.ore;
 import org.gtreimagined.gtlib.block.BlockBasic;
 import org.gtreimagined.gtlib.material.IMaterialObject;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.registration.IColorHandler;
 import org.gtreimagined.gtlib.registration.IItemBlockProvider;
@@ -35,12 +36,12 @@ public abstract class BlockMaterialStone extends BlockBasic implements IGTObject
 
     @Override
     public int getBlockColor(BlockState state, @Nullable BlockGetter world, @Nullable BlockPos pos, int i) {
-        return i == 1 ? material.getRGB() : -1;
+        return i == 1 ? MaterialColorChanger.getMaterialRgb(material) : -1;
     }
 
     @Override
     public int getItemColor(ItemStack stack, @Nullable Block block, int i) {
-        return i == 1 ? material.getRGB() : -1;
+        return i == 1 ? MaterialColorChanger.getMaterialRgb(material) : -1;
     }
 
 }

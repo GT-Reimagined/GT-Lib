@@ -49,4 +49,8 @@ open class AbstractSlot<T : ModularSlot>(
         }
         return filter && this.type.tester.test(this.holder, stack) && type.mayPlace
     }
+
+    override fun getMaxStackSize(stack: ItemStack): Int {
+        return if (this.type.maxStackSize == -1) super.getMaxStackSize(stack) else this.type.maxStackSize
+    }
 }

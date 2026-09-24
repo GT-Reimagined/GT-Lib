@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "gtlib:item/material/shiny/tiny_dust",
+    "layer1": "gtlib:item/material/shiny/tiny_dust_overlay"
+  }
+}

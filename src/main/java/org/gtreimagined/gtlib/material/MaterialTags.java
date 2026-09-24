@@ -36,6 +36,7 @@ public class MaterialTags {
     public static final MaterialTag MAGIC = new MaterialTag("magic");
     public static final MaterialTag POSITIVE_CHANGING_RGB = new MaterialTag("positive_changing_rgb");
     public static final MaterialTag NEGATIVE_CHANGING_RGB = new MaterialTag("negative_changing_rgb");
+    public static final MaterialTag RAINBOW_RGB = new MaterialTag("rainbow_rgb");
     public static final NumberMaterialTag ORE_RGB = new NumberMaterialTag("ore_rgb");
 
     public static final MaterialTag QUARTZ_LIKE_BLOCKS = new MaterialTag("quartz_like_blocks");

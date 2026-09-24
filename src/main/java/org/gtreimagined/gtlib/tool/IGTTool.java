@@ -14,6 +14,7 @@ import org.gtreimagined.gtlib.integration.curios.CuriosHelper;
 import org.gtreimagined.gtlib.item.ICustomDurability;
 import org.gtreimagined.gtlib.item.ItemBattery;
 import org.gtreimagined.gtlib.material.Material;
+import org.gtreimagined.gtlib.material.MaterialColorChanger;
 import org.gtreimagined.gtlib.material.MaterialTags;
 import org.gtreimagined.gtlib.registration.IGTObject;
 import org.gtreimagined.gtlib.texture.Texture;
@@ -325,7 +326,7 @@ public interface IGTTool extends IGTObject, IBasicGTTool, IEnergyItem, ICustomDu
 
     @Override
     default int getItemColor(ItemStack stack, @Nullable Block block, int i) {
-        return i >= 2 ? -1 : i == 0 ? getPrimaryMaterial(stack).getRGB() : getSubColour(stack) == 0 ? getSecondaryMaterial(stack).getRGB() : getSubColour(stack);
+        return i >= 2 ? -1 : i == 0 ? MaterialColorChanger.getMaterialRgb(getPrimaryMaterial(stack)) : getSubColour(stack) == 0 ? MaterialColorChanger.getMaterialRgb(getSecondaryMaterial(stack)) : getSubColour(stack);
     }
 
     @Override
