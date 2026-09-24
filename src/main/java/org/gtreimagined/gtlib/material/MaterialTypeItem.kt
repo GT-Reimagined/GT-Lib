@@ -4,6 +4,7 @@ import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraftforge.registries.ForgeRegistries
 import org.gtreimagined.gtlib.GTAPI
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient
@@ -25,16 +26,15 @@ class MaterialTypeItem<T> @JvmOverloads constructor(id: String, visible: Boolean
         return super.unSplitName() as MaterialTypeItem<T>
     }
 
-    fun allowItemGen(material: Material?): Boolean {
+    fun allowItemGen(material: Material): Boolean {
         return !replacements.containsKey(material) && allowGen(material) && !blockType
     }
 
     fun get(material: Material): Item {
-        val replacement = GTAPI.getReplacement(this, material)
-        if (replacement == null) {
-            if (!allowItemGen(material)) Utils.onInvalidData("GET ERROR - DOES NOT GENERATE: T($id) M(${material.id})")
-            else return GTAPI.get(MaterialItem::class.java, idGetter!!.apply(material))
-        }
+        val replacement = GTAPI.getReplacement(this, material) ?: if (!allowItemGen(material)) {
+            Utils.onInvalidData("GET ERROR - DOES NOT GENERATE: T($id) M(${material.id})")
+            return Items.AIR
+        } else return GTAPI.get(MaterialItem::class.java, idGetter.apply(material))!!
         return replacement
     }
 

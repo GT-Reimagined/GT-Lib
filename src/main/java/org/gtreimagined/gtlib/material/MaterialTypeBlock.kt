@@ -73,7 +73,7 @@ class MaterialTypeBlock<T>(id: String, visible: Boolean, unitValue: Long, suppli
         return TagUtils.getForgelikeItemTag("${s.id}_${Utils.getConventionalMaterialType(this)}/${m.id}")
     }
 
-    fun allowBlockGen(material: Material?): Boolean {
+    fun allowBlockGen(material: Material): Boolean {
         return !replacements.containsKey(material) && allowGen(material)
     }
 
