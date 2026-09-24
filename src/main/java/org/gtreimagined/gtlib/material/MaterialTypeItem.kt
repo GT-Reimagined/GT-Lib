@@ -8,7 +8,7 @@ import net.minecraft.world.item.Items
 import net.minecraftforge.registries.ForgeRegistries
 import org.gtreimagined.gtlib.GTAPI
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient
-import org.gtreimagined.gtlib.util.Utils
+import org.gtreimagined.gtlib.util.onInvalidData
 import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
@@ -32,19 +32,19 @@ class MaterialTypeItem<T> @JvmOverloads constructor(id: String, visible: Boolean
 
     fun get(material: Material): Item {
         val replacement = GTAPI.getReplacement(this, material) ?: if (!allowItemGen(material)) {
-            Utils.onInvalidData("GET ERROR - DOES NOT GENERATE: T($id) M(${material.id})")
+            onInvalidData("GET ERROR - DOES NOT GENERATE: T($id) M(${material.id})")
             return Items.AIR
         } else return GTAPI.get(MaterialItem::class.java, idGetter.apply(material))!!
         return replacement
     }
 
     fun get(material: Material, count: Int): ItemStack {
-        if (count < 1) Utils.onInvalidData("GET ERROR - MAT STACK EMPTY: T($id) M(${material.id})")
+        if (count < 1) onInvalidData("GET ERROR - MAT STACK EMPTY: T($id) M(${material.id})")
         return ItemStack(get(material), count)
     }
 
     fun getIngredient(material: Material, count: Int): RecipeIngredient {
-        if (count < 1) Utils.onInvalidData("GET ERROR - MAT STACK EMPTY: T($id) M(${material.id})")
+        if (count < 1) onInvalidData("GET ERROR - MAT STACK EMPTY: T($id) M(${material.id})")
         return RecipeIngredient.of(getMaterialTag(material), count)
     }
 

@@ -30,7 +30,7 @@ import org.gtreimagined.gtlib.ore.StoneType
 import org.gtreimagined.gtlib.recipe.map.IRecipeMap
 import org.gtreimagined.gtlib.registration.*
 import org.gtreimagined.gtlib.util.TagUtils
-import org.gtreimagined.gtlib.util.Utils
+import org.gtreimagined.gtlib.util.getConventionalMaterialType
 import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
 import java.util.*
 import java.util.function.Consumer
@@ -583,7 +583,7 @@ object GTAPI {
     fun getReplacement(type: MaterialType<*>, material: Material, stone: StoneType, vararg namespaces: String): Item? {
         if (type.getId().contains("liquid")) return null
         val tag = TagUtils
-            .getForgelikeItemTag("${stone.id}_${Utils.getConventionalMaterialType(type)}/${material.id}")
+            .getForgelikeItemTag("${stone.id}_${getConventionalMaterialType(type)}/${material.id}")
         return getReplacement<Item?>(null, tag, *namespaces)
     }
 

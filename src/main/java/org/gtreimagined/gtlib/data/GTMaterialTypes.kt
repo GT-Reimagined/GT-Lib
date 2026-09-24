@@ -22,7 +22,7 @@ import org.gtreimagined.gtlib.ore.BlockOre
 import org.gtreimagined.gtlib.ore.BlockOreStone
 import org.gtreimagined.gtlib.ore.StoneType
 import org.gtreimagined.gtlib.texture.Texture
-import org.gtreimagined.gtlib.util.Utils
+import org.gtreimagined.gtlib.util.lowerUnderscoreToUpperSpaced
 import java.util.function.BiFunction
 import java.util.function.Consumer
 import java.util.function.Function
@@ -30,7 +30,7 @@ import java.util.function.Function
 object GTMaterialTypes {
     @JvmField
     val UNSPLIT_FUNCTION: BiFunction<MaterialType<*>, Material, String> = BiFunction { t, m ->
-        "${m.displayNameString} ${Utils.lowerUnderscoreToUpperSpaced(t.getId())}" }
+        "${m.displayNameString} ${lowerUnderscoreToUpperSpaced(t.getId())}" }
     private val d: Function<Material, String> = Function { m -> if (m.has(MaterialTags.RUBBERTOOLS)) "Pulp" else "Dust" }
     private val n: Function<Material, String> =
         Function { m -> if (m.element != null) "Native " else "" }

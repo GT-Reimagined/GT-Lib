@@ -17,7 +17,8 @@ import org.gtreimagined.gtlib.ore.StoneType
 import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient
 import org.gtreimagined.gtlib.registration.IGTObject
 import org.gtreimagined.gtlib.util.TagUtils
-import org.gtreimagined.gtlib.util.Utils
+import org.gtreimagined.gtlib.util.getConventionalMaterialType
+import org.gtreimagined.gtlib.util.onInvalidData
 import java.util.*
 import java.util.function.Supplier
 import kotlin.Boolean
@@ -64,13 +65,13 @@ class MaterialTypeBlock<T>(id: String, visible: Boolean, unitValue: Long, suppli
 
     fun getBlockMaterialTag(m: Material): TagKey<Block?>? {
         return TagUtils.getForgelikeBlockTag(
-            "${Utils.getConventionalMaterialType(this)}/${if (id == "raw_ore_block") "raw_" else ""}${m.id}"
+            "${getConventionalMaterialType(this)}/${if (id == "raw_ore_block") "raw_" else ""}${m.id}"
         )
     }
 
     fun getMaterialTag(m: Material, s: StoneType): TagKey<Item> {
         if (this.get() !is IOreGetter) return getMaterialTag(m)
-        return TagUtils.getForgelikeItemTag("${s.id}_${Utils.getConventionalMaterialType(this)}/${m.id}")
+        return TagUtils.getForgelikeItemTag("${s.id}_${getConventionalMaterialType(this)}/${m.id}")
     }
 
     fun allowBlockGen(material: Material): Boolean {
@@ -122,7 +123,7 @@ class MaterialTypeBlock<T>(id: String, visible: Boolean, unitValue: Long, suppli
     companion object {
         @JvmStatic
         fun getEmptyBlockAndLog(type: MaterialType<*>, vararg objects: IGTObject): Container {
-            Utils.onInvalidData(
+            onInvalidData(
                 "Tried to create " + type.getId() + " for objects: " + Arrays.stream(objects)
                     .map { it.getId() }
                     .toList()

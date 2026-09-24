@@ -22,7 +22,9 @@ import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider
 import org.gtreimagined.gtlib.registration.ISharedGTObject
 import org.gtreimagined.gtlib.util.TagUtils
-import org.gtreimagined.gtlib.util.Utils
+import org.gtreimagined.gtlib.util.getConventionalMaterialType
+import org.gtreimagined.gtlib.util.getLocalizedMaterialType
+import org.gtreimagined.gtlib.util.getLocalizedType
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
@@ -54,7 +56,7 @@ open class MaterialType<T: Any?>(@JvmField val id: String, var visible: Boolean,
 
     var idGetter: Function<Material, String> = Function {
         m ->
-        val split = Utils.getLocalizedMaterialType(this)
+        val split = getLocalizedMaterialType(this)
         if (split.size > 1) {
             return@Function "${split[0].lowercase(Locale.getDefault()).replace(" ", "_")}_" +
                     "${m.id}_${split[1].lowercase(Locale.getDefault()).replace(" ", "_")}"
@@ -73,14 +75,14 @@ open class MaterialType<T: Any?>(@JvmField val id: String, var visible: Boolean,
 
     init {
         this.isSplitName = id.contains("_")
-        this.tagPrefix = Utils.getConventionalMaterialType(this)
+        this.tagPrefix = getConventionalMaterialType(this)
         this.tagKey = tagFromString(this.tagPrefix)
         this.lang = Function { m ->
-            val split = Utils.getLocalizedMaterialType(this)
+            val split = getLocalizedMaterialType(this)
             if (split.size > 1) {
-                return@Function "${split[0]} ${Utils.getLocalizedType(m)} ${split[1]}"
+                return@Function "${split[0]} ${getLocalizedType(m)} ${split[1]}"
             } else {
-                return@Function "${Utils.getLocalizedType(m)} ${split[0]}"
+                return@Function "${getLocalizedType(m)} ${split[0]}"
             }
         }
         register(MaterialType::class.java, id)
@@ -158,13 +160,13 @@ open class MaterialType<T: Any?>(@JvmField val id: String, var visible: Boolean,
 
     fun blockType(): MaterialType<T> {
         blockType = true
-        this.tagKey = TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this))
+        this.tagKey = TagUtils.getForgelikeBlockTag(getConventionalMaterialType(this))
         return this
     }
 
     open fun unSplitName(): MaterialType<T> {
         isSplitName = false
-        this.tagPrefix = Utils.getConventionalMaterialType(this)
+        this.tagPrefix = getConventionalMaterialType(this)
         this.tagKey = tagFromString(tagPrefix)
         return this
     }
