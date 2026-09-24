@@ -138,12 +138,12 @@ object GTLib : GTMod() {
     }
 
     fun onServerReloadListeners(event: AddReloadListenerEvent) {
-        event.addListener(VanillaVeinData.INSTANCE)
-        event.addListener(VeinData.INSTANCE)
-        event.addListener(SmallOreData.INSTANCE)
-        event.addListener(BedrockVeinData.INSTANCE)
-        event.addListener(StoneLayerData.INSTANCE)
-        event.addListener(StoneLayerCollisionData.INSTANCE)
+        event.addListener(VanillaVeinData)
+        event.addListener(VeinData)
+        event.addListener(SmallOreData)
+        event.addListener(BedrockVeinData)
+        event.addListener(StoneLayerData)
+        event.addListener(StoneLayerCollisionData)
     }
 
     fun addCraftingLoaders(ev: GTCraftingEvent) {

@@ -1,16 +1,10 @@
-package org.gtreimagined.gtlib.worldgen.smallore;
+package org.gtreimagined.gtlib.worldgen.smallore
 
-import com.mojang.serialization.Codec;
-import org.gtreimagined.gtlib.worldgen.BaseWorldGenData;
+import com.mojang.serialization.Codec
+import org.gtreimagined.gtlib.worldgen.BaseWorldGenData
 
-public class SmallOreData extends BaseWorldGenData<SmallOre> {
-    public static final SmallOreData INSTANCE = new SmallOreData();
-    private SmallOreData() {
-        super("small_ores", "small_ore");
-    }
-
-    @Override
-    protected Codec<SmallOre> getCodec() {
-        return SmallOre.CODEC;
+object SmallOreData: BaseWorldGenData<SmallOre>("small_ores", "small_ore") {
+    override fun getCodec(): Codec<SmallOre> {
+        return SmallOre.CODEC
     }
 }
