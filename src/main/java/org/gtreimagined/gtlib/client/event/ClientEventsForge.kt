@@ -21,7 +21,7 @@ import org.gtreimagined.gtlib.tool.IGTTool
 object ClientEventsForge {
     @SubscribeEvent
     fun onBlockHighlight(event: RenderHighlightEvent.Block) {
-        if (ClientEvents.onBlockHighlight(event.levelRenderer, event.camera, event.target, event.partialTick, event.poseStack, event.multiBufferSource))
+        if (onBlockHighlight(event.levelRenderer, event.camera, event.target, event.partialTick, event.poseStack, event.multiBufferSource))
             event.setCanceled(true)
     }
 
@@ -29,7 +29,7 @@ object ClientEventsForge {
     @SubscribeEvent
     internal fun onTooltipAdd(ev: ItemTooltipEvent) {
         addTooltip(ev.itemStack, ev.toolTip, ev.entity, ev.flags)
-        ClientEvents.onItemTooltip(ev.itemStack, ev.toolTip, ev.entity, ev.flags)
+        onItemTooltip(ev.itemStack, ev.toolTip, ev.entity, ev.flags)
     }
 
     //TODO why is this client only?
@@ -63,17 +63,17 @@ object ClientEventsForge {
     }*/
     @SubscribeEvent
     fun onGuiMouseScrollPre(e: ScreenEvent.MouseScrolled) {
-        ClientEvents.onGuiMouseScrollPre(e.scrollDelta)
+        onGuiMouseScrollPre(e.scrollDelta)
     }
 
     @SubscribeEvent
     fun onGuiMouseClickPre(e: ScreenEvent.MouseButtonPressed) {
-        ClientEvents.onGuiMouseClickPre(e.button)
+        onGuiMouseClickPre(e.button)
     }
 
     @SubscribeEvent
     fun onGuiMouseReleasedPre(e: ScreenEvent.MouseButtonReleased) {
-        ClientEvents.onGuiMouseReleasedPre(e.button)
+        onGuiMouseReleasedPre(e.button)
     }
 
     @SubscribeEvent
