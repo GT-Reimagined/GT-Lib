@@ -20,8 +20,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.gtreimagined.gtlib.client.GTLibModelManager
+import org.gtreimagined.gtlib.client.event.ClientEventsForge
 import org.gtreimagined.gtlib.client.event.ClientEventsMod
 import org.gtreimagined.gtlib.common.event.ARRPEvents
+import org.gtreimagined.gtlib.common.event.ForgeCommonEvents
 import org.gtreimagined.gtlib.cover.ICover
 import org.gtreimagined.gtlib.data.GTLibBlocks
 import org.gtreimagined.gtlib.data.GTLibMaterials
@@ -132,7 +134,9 @@ object GTLib : GTMod() {
         MOD_BUS.addListener(this::providers)
         callWhenOn(Dist.CLIENT){
             MOD_BUS.register(ClientEventsMod)
+            FORGE_BUS.register(ClientEventsForge)
         }
+        FORGE_BUS.register(ForgeCommonEvents)
         FORGE_BUS.addListener(this::onServerReloadListeners)
         ARRP.EVENT_BUS.register(ARRPEvents::class.java)
     }

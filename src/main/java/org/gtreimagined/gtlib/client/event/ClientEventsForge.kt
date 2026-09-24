@@ -1,64 +1,59 @@
-package org.gtreimagined.gtlib.client.event;
+package org.gtreimagined.gtlib.client.event
 
-import net.minecraftforge.client.event.RenderHighlightEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.level.LevelEvent;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.client.SoundHelper;
-import org.gtreimagined.gtlib.material.MaterialColorChanger;
-import org.gtreimagined.gtlib.material.MaterialItem;
-import org.gtreimagined.gtlib.material.MaterialType;
-import org.gtreimagined.gtlib.tool.IGTTool;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.world.item.UseAnim
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
+import net.minecraftforge.client.event.RenderHighlightEvent
+import net.minecraftforge.client.event.ScreenEvent
+import net.minecraftforge.event.TickEvent
+import net.minecraftforge.event.entity.player.ItemTooltipEvent
+import net.minecraftforge.event.level.LevelEvent
+import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.common.Mod
+import org.gtreimagined.gtlib.Ref
+import org.gtreimagined.gtlib.client.SoundHelper
+import org.gtreimagined.gtlib.material.Material
+import org.gtreimagined.gtlib.material.MaterialColorChanger
+import org.gtreimagined.gtlib.material.MaterialColorChanger.Companion.incrementTime
+import org.gtreimagined.gtlib.material.MaterialType.Companion.addTooltip
+import org.gtreimagined.gtlib.tool.IGTTool
 
-@Mod.EventBusSubscriber(modid = Ref.ID, value = Dist.CLIENT)
-public class ClientEventsForge {
-
+object ClientEventsForge {
     @SubscribeEvent
-    public static void onBlockHighlight(RenderHighlightEvent.Block event) {
-        if (ClientEvents.onBlockHighlight(event.getLevelRenderer(), event.getCamera(), event.getTarget(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource()))
-            event.setCanceled(true);
+    fun onBlockHighlight(event: RenderHighlightEvent.Block) {
+        if (ClientEvents.onBlockHighlight(event.levelRenderer, event.camera, event.target, event.partialTick, event.poseStack, event.multiBufferSource))
+            event.setCanceled(true)
     }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    protected static void onTooltipAdd(final ItemTooltipEvent ev) {
-        MaterialType.addTooltip(ev.getItemStack(), ev.getToolTip(), ev.getEntity(), ev.getFlags());
-        ClientEvents.onItemTooltip(ev.getItemStack(), ev.getToolTip(), ev.getEntity(), ev.getFlags());
+    internal fun onTooltipAdd(ev: ItemTooltipEvent) {
+        addTooltip(ev.itemStack, ev.toolTip, ev.entity, ev.flags)
+        ClientEvents.onItemTooltip(ev.itemStack, ev.toolTip, ev.entity, ev.flags)
     }
 
     //TODO why is this client only?
     //Needs some work, won't work in 3rd person also, needs special ItemModel properties
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent e) {
+    fun onPlayerTick(e: TickEvent.PlayerTickEvent) {
         if (e.phase == TickEvent.Phase.END) {
-            Player player = e.player;
-            if (player == null || player.getMainHandItem().isEmpty()) return;
-            ItemStack stack = player.getMainHandItem();
-            if (!(stack.getItem() instanceof IGTTool)) return;
-            IGTTool item = (IGTTool) stack.getItem();
-            if (item.getGTToolType().getUseAction() != UseAnim.NONE && player.swinging) {
-                item.getItem().onUseTick(player.level(), player, stack, stack.getCount());
+            val player = e.player
+            if (player == null || player.mainHandItem.isEmpty) return
+            val stack = player.mainHandItem
+            if (stack.item !is IGTTool) return
+            val item = stack.item as IGTTool
+            if (item.getGTToolType().useAction != UseAnim.NONE && player.swinging) {
+                item.item.onUseTick(player.level(), player, stack, stack.count)
                 //player.swingProgress = player.prevSwingProgress;
             }
         }
     }
 
     @SubscribeEvent
-    public static void onClientTick(ClientTickEvent event){
-        if (event.phase == Phase.END){
-            MaterialColorChanger.RGB_CHANGING_MAP.forEach((m, t) -> t.tick());
-            MaterialColorChanger.incrementTime();
+    fun onClientTick(event: TickEvent.ClientTickEvent) {
+        if (event.phase == TickEvent.Phase.END) {
+            MaterialColorChanger.RGB_CHANGING_MAP.forEach { (m: Material?, t: MaterialColorChanger?) -> t!!.tick() }
+            incrementTime()
         }
     }
 
@@ -66,23 +61,23 @@ public class ClientEventsForge {
     public static void onRenderDebugInfo(RenderGameOverlayEvent.Text e) {
         ClientEvents.onRenderDebugInfo(e.getLeft());
     }*/
-
     @SubscribeEvent
-    public static void onGuiMouseScrollPre(ScreenEvent.MouseScrolled e) {
-        ClientEvents.onGuiMouseScrollPre(e.getScrollDelta());
-    }
-    @SubscribeEvent
-    public static void onGuiMouseClickPre(ScreenEvent.MouseButtonPressed e) {
-        ClientEvents.onGuiMouseClickPre(e.getButton());
+    fun onGuiMouseScrollPre(e: ScreenEvent.MouseScrolled) {
+        ClientEvents.onGuiMouseScrollPre(e.scrollDelta)
     }
 
     @SubscribeEvent
-    public static void onGuiMouseReleasedPre(ScreenEvent.MouseButtonReleased e) {
-        ClientEvents.onGuiMouseReleasedPre(e.getButton());
+    fun onGuiMouseClickPre(e: ScreenEvent.MouseButtonPressed) {
+        ClientEvents.onGuiMouseClickPre(e.button)
     }
 
     @SubscribeEvent
-    public static void worldUnload(LevelEvent.Unload ev) {
-        SoundHelper.worldUnload(ev.getLevel());
+    fun onGuiMouseReleasedPre(e: ScreenEvent.MouseButtonReleased) {
+        ClientEvents.onGuiMouseReleasedPre(e.button)
+    }
+
+    @SubscribeEvent
+    fun worldUnload(ev: LevelEvent.Unload) {
+        SoundHelper.worldUnload(ev.level)
     }
 }
