@@ -22,7 +22,9 @@ import org.gtreimagined.gtlib.recipe.ingredient.RecipeIngredient
 import org.gtreimagined.gtlib.registration.IRegistryEntryProvider
 import org.gtreimagined.gtlib.registration.ISharedGTObject
 import org.gtreimagined.gtlib.util.TagUtils
-import org.gtreimagined.gtlib.util.Utils
+import org.gtreimagined.gtlib.util.getConventionalMaterialType
+import org.gtreimagined.gtlib.util.getLocalizedMaterialType
+import org.gtreimagined.gtlib.util.getLocalizedType
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
@@ -54,7 +56,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
 
     var idGetter: Function<Material, String> = Function {
         m ->
-        val split = Utils.getLocalizedMaterialType(this)
+        val split = getLocalizedMaterialType(this)
         if (split.size > 1) {
             return@Function "${split[0].lowercase(Locale.getDefault()).replace(" ", "_")}_" +
                     "${m.id}_${split[1].lowercase(Locale.getDefault()).replace(" ", "_")}"
@@ -73,14 +75,14 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
 
     init {
         this.isSplitName = id.contains("_")
-        this.tagPrefix = Utils.getConventionalMaterialType(this)
+        this.tagPrefix = getConventionalMaterialType(this)
         this.tagKey = tagFromString(this.tagPrefix)
         this.lang = Function { m ->
-            val split = Utils.getLocalizedMaterialType(this)
+            val split = getLocalizedMaterialType(this)
             if (split.size > 1) {
-                return@Function "${split[0]} ${Utils.getLocalizedType(m)} ${split[1]}"
+                return@Function "${split[0]} ${getLocalizedType(m)} ${split[1]}"
             } else {
-                return@Function "${Utils.getLocalizedType(m)} ${split[0]}"
+                return@Function "${getLocalizedType(m)} ${split[0]}"
             }
         }
         register(MaterialType::class.java, id)
@@ -107,7 +109,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         if (!mat.enabled) return
         replacements[mat] = replacement
         this.add(mat)
-        GTAPI.addReplacement<Item?>(getMaterialTag(mat), replacement)
+        GTAPI.addReplacement(getMaterialTag(mat), replacement)
     }
 
     open fun hasReplacement(mat: Material): Boolean {
@@ -158,13 +160,13 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
 
     fun blockType(): MaterialType<T> {
         blockType = true
-        this.tagKey = TagUtils.getForgelikeBlockTag(Utils.getConventionalMaterialType(this))
+        this.tagKey = TagUtils.getForgelikeBlockTag(getConventionalMaterialType(this))
         return this
     }
 
     open fun unSplitName(): MaterialType<T> {
         isSplitName = false
-        this.tagPrefix = Utils.getConventionalMaterialType(this)
+        this.tagPrefix = getConventionalMaterialType(this)
         this.tagKey = tagFromString(tagPrefix)
         return this
     }
@@ -231,7 +233,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         return visible || GTLibConfig.SHOW_ALL_MATERIAL_ITEMS.get()
     }
 
-    fun allowGen(material: Material?): Boolean {
+    fun allowGen(material: Material): Boolean {
         return generating && materials.contains(material) && GTAPI.getReplacement(this, material) == null
     }
 
@@ -253,7 +255,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         @JvmField
         val CODEC: Codec<MaterialType<*>> = Codec.STRING.xmap(Function { s ->
             GTAPI.get(MaterialType::class.java, s)
-        }, Function { it.getId() })
+        }) { it.getId() }
 
         var tooltipCache: ImmutableMap<Item, Tuple<MaterialType<*>, Material>>? = null
 
@@ -273,8 +275,8 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         @JvmStatic
         fun addTooltip(stack: ItemStack, tooltips: MutableList<Component>, player: Player?, flag: TooltipFlag) {
             if (player == null) return
-            if (tooltipCache == null) return
-            val mat: Tuple<MaterialType<*>, Material>? = tooltipCache?.get(stack.item)
+            val tooltipCacheCopy = tooltipCache ?: return
+            val mat: Tuple<MaterialType<*>, Material>? = tooltipCacheCopy[stack.item]
             if (mat == null) {
                 val item = stack.item
                 if (item is MaterialItem) {

@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidStack
 import org.gtreimagined.gtlib.GTAPI
 import org.gtreimagined.gtlib.registration.IGTObject
 import org.gtreimagined.gtlib.util.TagUtils
-import org.gtreimagined.gtlib.util.Utils
+import org.gtreimagined.gtlib.util.onInvalidData
 import java.util.*
 import java.util.function.Supplier
 
@@ -48,7 +48,7 @@ class MaterialTypeFluid<T>(id: String, visible: Boolean, unitValue: Long) :
     companion object {
         @JvmStatic
         fun getEmptyFluidAndLog(type: MaterialType<*>, vararg objects: IGTObject): FluidStack {
-            Utils.onInvalidData(
+            onInvalidData(
                 "Tried to create " + type.getId() + " for objects: " + Arrays.stream(objects)
                     .map { it.getId() }.toList().toTypedArray()
                     .contentToString())
