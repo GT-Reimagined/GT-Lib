@@ -40,7 +40,7 @@ import kotlin.text.contains
 import kotlin.text.lowercase
 import kotlin.text.replace
 
-open class MaterialType<T: Any?>(@JvmField val id: String, var visible: Boolean, var unitValue: Long) : IMaterialTag, ISharedGTObject,
+open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var unitValue: Long) : IMaterialTag, ISharedGTObject,
     IRegistryEntryProvider {
 
     var generating: Boolean = true
@@ -255,7 +255,7 @@ open class MaterialType<T: Any?>(@JvmField val id: String, var visible: Boolean,
         @JvmField
         val CODEC: Codec<MaterialType<*>> = Codec.STRING.xmap(Function { s ->
             GTAPI.get(MaterialType::class.java, s)
-        }, Function { it?.getId() })
+        }) { it.getId() }
 
         var tooltipCache: ImmutableMap<Item, Tuple<MaterialType<*>, Material>>? = null
 
@@ -275,8 +275,8 @@ open class MaterialType<T: Any?>(@JvmField val id: String, var visible: Boolean,
         @JvmStatic
         fun addTooltip(stack: ItemStack, tooltips: MutableList<Component>, player: Player?, flag: TooltipFlag) {
             if (player == null) return
-            if (tooltipCache == null) return
-            val mat: Tuple<MaterialType<*>, Material>? = tooltipCache?.get(stack.item)
+            val tooltipCacheCopy = tooltipCache ?: return
+            val mat: Tuple<MaterialType<*>, Material>? = tooltipCacheCopy[stack.item]
             if (mat == null) {
                 val item = stack.item
                 if (item is MaterialItem) {
