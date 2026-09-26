@@ -150,7 +150,7 @@ open class MaterialType<T>(@JvmField val id: String, var visible: Boolean, var u
         return tagFromString("${this.tagPrefix}/${if (id == "raw_ore_block") "raw_" else ""}${m.id}") as TagKey<Item>
     }
 
-    open fun getMaterialIngredient(m: Material, count: Int): RecipeIngredient? {
+    open fun getMaterialIngredient(m: Material, count: Int): RecipeIngredient {
         return RecipeIngredient.of(getMaterialTag(m), count)
     }
 
