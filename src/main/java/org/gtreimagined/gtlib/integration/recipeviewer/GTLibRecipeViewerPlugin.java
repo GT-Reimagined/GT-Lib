@@ -138,7 +138,7 @@ public class GTLibRecipeViewerPlugin {
         List<ResourceLocation> categories = new ArrayList<>();
         categories.add(map.getLoc());
         if (!map.getSubCategories().isEmpty()){
-            map.getSubCategories().keySet().forEach(s -> categories.add(new ResourceLocation(Ref.SHARED_ID, s)));
+            map.getSubCategories().keySet().forEach(s -> categories.add(new ResourceLocation(map.getDomain(), s)));
         }
         showCategories(categories.toArray(ResourceLocation[]::new));
     }
