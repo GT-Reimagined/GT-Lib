@@ -51,25 +51,6 @@ public class GTLibRecipeViewerPlugin {
             .add(SlotTypes.IT_IN, 53, 34).add(SlotTypes.IT_OUT, 107, 16).add(SlotTypes.IT_OUT, 125, 16).add(SlotTypes.IT_OUT, 143, 16).add(SlotTypes.IT_OUT, 107, 34)
             .add(SlotTypes.IT_OUT, 125, 34).add(SlotTypes.IT_OUT, 143, 34).add(SlotTypes.FL_IN, 17, 63).add(SlotTypes.FL_IN, 35, 63).add(SlotTypes.FL_IN, 53, 63)
             .add(SlotTypes.FL_OUT, 107, 63).add(SlotTypes.FL_OUT, 125, 63).add(SlotTypes.FL_OUT, 143, 63));
-    public static class RegistryValue {
-        public IRecipeMap map;
-        public GuiProperties gui;
-        public Tier tier;
-        public List<ResourceLocation> workstations = new ArrayList<>();
-
-        public RegistryValue(IRecipeMap map, GuiProperties gui, Tier tier) {
-            this.map = map;
-            this.gui = gui;
-            this.tier = tier;
-        }
-
-        public RegistryValue addWorkstation(ResourceLocation supplier){
-            if (supplier != null && !workstations.contains(supplier)) {
-                workstations.add(supplier);
-            }
-            return this;
-        }
-    }
 
     @Getter
     private static final Object2ObjectMap<ResourceLocation, RegistryValue> REGISTRY = new Object2ObjectLinkedOpenHashMap<>();
