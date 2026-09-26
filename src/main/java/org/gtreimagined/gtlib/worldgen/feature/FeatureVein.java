@@ -115,13 +115,13 @@ public class FeatureVein extends GTFeature<NoneFeatureConfiguration> {
         // Search for a valid orevein for this dimension
         if (!VALID_VEINS.containsKey(oreVeinSeed)) {
             int veinCount = veins.size();
-            if (oreVeinPercentageRoll < GTLibConfig.ORE_VEIN_CHANCE.get() && VeinData.getTotalWeight() > 0 && veinCount > 0) {
+            if (oreVeinPercentageRoll < GTLibConfig.ORE_VEIN_CHANCE.get() && VeinData.INSTANCE.getTotalWeight() > 0 && veinCount > 0) {
                 int placementAttempts = 0;
                 boolean oreVeinFound = false;
                 int i;
 
                 for (i = 0; i < GTLibConfig.ORE_VEIN_FIND_ATTEMPTS.get() && !oreVeinFound && placementAttempts < GTLibConfig.ORE_VEIN_PLACE_ATTEMPTS.get(); i++) {
-                    int tRandomWeight = oreVeinRNG.nextInt(VeinData.getTotalWeight());
+                    int tRandomWeight = oreVeinRNG.nextInt(VeinData.INSTANCE.getTotalWeight());
                     for (var veinEntry : veins.entrySet()) {
                         Vein vein = veinEntry.getValue();
                         tRandomWeight -= vein.weight();
