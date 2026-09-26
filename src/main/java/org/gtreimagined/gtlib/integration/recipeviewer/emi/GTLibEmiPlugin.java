@@ -60,7 +60,7 @@ public class GTLibEmiPlugin implements EmiPlugin {
             emiRegistry.removeEmiStacks(s -> s.getKey() instanceof Item i && buckets.contains(i));
         }
 
-        GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
+        GTLibRecipeViewerPlugin.REGISTRY.forEach((id, tuple) -> {
             GuiProperties gui = tuple.gui;
             int4 area = gui.getArea();
             Tier tier = tuple.map.getGuiTier() != null ? tuple.map.getGuiTier() : tuple.tier;

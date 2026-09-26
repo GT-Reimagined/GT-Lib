@@ -126,7 +126,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
     public void registerCategories(CategoryRegistry registry) {
         Set<ResourceLocation> registeredMachineCats = new ObjectOpenHashSet<>();
 
-        GTLibRecipeViewerPlugin.getREGISTRY().forEach((id, tuple) -> {
+        GTLibRecipeViewerPlugin.REGISTRY.forEach((id, tuple) -> {
             if (!registeredMachineCats.contains(tuple.map.getLoc())) {
                 RecipeMapCategory category = new RecipeMapCategory(tuple.map, tuple.workstations.isEmpty() ? null : tuple.workstations.get(0));
                 registry.add(category);
@@ -160,7 +160,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
     @Override
     public void registerDisplays(DisplayRegistry registry) {
         // regular recipes
-        GTLibRecipeViewerPlugin.getREGISTRY().values().forEach(t -> {
+        GTLibRecipeViewerPlugin.REGISTRY.values().forEach(t -> {
             var m = t.map;
             if (m instanceof RecipeMap<?> rm){
                 if (m.getProxy() != null){

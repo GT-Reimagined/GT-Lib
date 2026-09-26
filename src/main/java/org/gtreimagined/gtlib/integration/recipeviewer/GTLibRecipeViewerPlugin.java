@@ -41,8 +41,7 @@ import static org.gtreimagined.gtlib.machine.MachineFlag.RECIPE;
 public class GTLibRecipeViewerPlugin {
     private static final List<Consumer<List<ItemLike>>> ITEMS_TO_HIDE = new ArrayList<>();
     private static final List<Consumer<List<Fluid>>> FLUIDS_TO_HIDE = new ArrayList<>();
-    @Getter
-    private static final Map<ResourceLocation, List<Consumer<List<Item>>>> WORKSTATIONS = new Object2ObjectOpenHashMap<>();
+    public static final Map<ResourceLocation, List<Consumer<List<Item>>>> WORKSTATIONS = new Object2ObjectOpenHashMap<>();
     @Getter
     private static final Map<BlockMachine, List<Pattern>> STRUCTURES = new Object2ObjectOpenHashMap<>();
     
@@ -52,8 +51,7 @@ public class GTLibRecipeViewerPlugin {
             .add(SlotTypes.IT_OUT, 125, 34).add(SlotTypes.IT_OUT, 143, 34).add(SlotTypes.FL_IN, 17, 63).add(SlotTypes.FL_IN, 35, 63).add(SlotTypes.FL_IN, 53, 63)
             .add(SlotTypes.FL_OUT, 107, 63).add(SlotTypes.FL_OUT, 125, 63).add(SlotTypes.FL_OUT, 143, 63));
 
-    @Getter
-    private static final Object2ObjectMap<ResourceLocation, RegistryValue> REGISTRY = new Object2ObjectLinkedOpenHashMap<>();
+    public static final Object2ObjectMap<ResourceLocation, RegistryValue> REGISTRY = new Object2ObjectLinkedOpenHashMap<>();
 
     public static void registerMissingMaps(){
         GTAPI.all(RecipeMap.class).forEach(r -> {
