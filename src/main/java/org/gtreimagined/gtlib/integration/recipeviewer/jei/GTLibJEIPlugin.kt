@@ -15,7 +15,6 @@ import mezz.jei.api.ingredients.subtypes.UidContext
 import mezz.jei.api.recipe.RecipeType
 import mezz.jei.api.registration.*
 import mezz.jei.api.runtime.IJeiRuntime
-import net.ccbluex.fastutil.invoke
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.network.chat.Component
@@ -37,7 +36,6 @@ import org.gtreimagined.gtlib.GTAPI.isModLoaded
 import org.gtreimagined.gtlib.GTLib
 import org.gtreimagined.gtlib.Ref
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin
-import org.gtreimagined.gtlib.integration.recipeviewer.RegistryValue
 import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.*
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.extension.JEIMaterialRecipeExtension
@@ -47,13 +45,13 @@ import org.gtreimagined.gtlib.recipe.material.MaterialRecipe
 import org.gtreimagined.gtlib.util.RegistryUtils
 import org.gtreimagined.gtlib.util.literal
 import org.gtreimagined.gtlib.worldgen.smallore.SmallOreData
-import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer
 import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerData
-import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre
 import org.gtreimagined.gtlib.worldgen.vein.VeinData
 import org.gtreimagined.tesseract.api.eu.IEnergyItem
 import org.gtreimagined.tesseract.api.forge.TesseractCaps
 import org.gtreimagined.tesseract.api.wrapper.ItemStackWrapper
+import thedarkcolour.kotlinforforge.forge.runForDist
+import thedarkcolour.kotlinforforge.forge.sidedDelegate
 import java.util.function.Consumer
 import java.util.function.Function
 
@@ -127,7 +125,7 @@ class GTLibJEIPlugin : IModPlugin {
         val registeredMachineCats: MutableSet<ResourceLocation?> = ObjectOpenHashSet<ResourceLocation?>()
 
         GTLibRecipeViewerPlugin.REGISTRY
-            .forEach { (id, tuple) ->
+            .forEach { (_, tuple) ->
                 val (map, gui, tier, workstations) = tuple
                 if (!registeredMachineCats.contains(map.loc)) {
                     val type = RecipeType(map.loc, IRecipe::class.java)
@@ -163,7 +161,7 @@ class GTLibJEIPlugin : IModPlugin {
         if (helpers == null) helpers = registration.jeiHelpers
         GTLibRecipeViewerPlugin.REGISTRY
             .forEach { (id, tuple) ->
-                val (map, gui, tier, workstations) = tuple
+                val (map, _, _, _) = tuple
                 if (map.getSubCategories().isEmpty()) {
                     registration.addRecipes(RECIPE_TYPES[id.toString()]!!, GTLibRecipeViewerPlugin.getRecipes(map, this.recipeManager))
                 } else {
@@ -184,9 +182,9 @@ class GTLibJEIPlugin : IModPlugin {
                             mainRecipes.add(recipe)
                         }
                     }
-                    registration.addRecipes(RECIPE_TYPES.get(id.toString())!!, mainRecipes)
+                    registration.addRecipes(RECIPE_TYPES[id.toString()]!!, mainRecipes)
                     for ((key, value) in recipeMap) {
-                        registration.addRecipes(RECIPE_TYPES.get(id!!.namespace + ":" + key)!!, value)
+                        registration.addRecipes(RECIPE_TYPES[id.namespace + ":" + key]!!, value)
                     }
                 }
             }
@@ -199,7 +197,7 @@ class GTLibJEIPlugin : IModPlugin {
             veinTotalWeights.put(value.type, currentWeight + value.weight)
         }
         val stoneVeins: MutableList<StoneVein> = ArrayList()
-        StoneLayerData.veins.forEach { (r, v) ->
+        StoneLayerData.veins.forEach { (_, v) ->
             if (!veinTotalWeights.containsKey(v.type)) return@forEach
             v.ores.forEach { o ->
                 stoneVeins.add(StoneVein(v, o, veinTotalWeights.getOrDefault(v.type, 0)))
@@ -211,22 +209,12 @@ class GTLibJEIPlugin : IModPlugin {
 
     private val recipeManager: RecipeManager?
         get() {
-            return if (FMLEnvironment.dist.isDedicatedServer) {
-                ServerLifecycleHooks.getCurrentServer().recipeManager
-            } else {
-                this.world?.recipeManager
-            }
+            return runForDist({ Minecraft.getInstance().level?.recipeManager}) { ServerLifecycleHooks.getCurrentServer().recipeManager }
         }
-
-    @get:OnlyIn(Dist.CLIENT)
-    inline val world: ClientLevel?
-        get() = Minecraft.getInstance().level
 
     override fun registerVanillaCategoryExtensions(registration: IVanillaCategoryExtensionRegistration) {
         if (isModLoaded(Ref.MOD_REI)) return
-        registration.craftingCategory.addCategoryExtension(
-            MaterialRecipe::class.java,
-            Function { recipe: MaterialRecipe? -> JEIMaterialRecipeExtension(recipe) })
+        registration.craftingCategory.addCategoryExtension(MaterialRecipe::class.java, Function(::JEIMaterialRecipeExtension))
     }
 
     override fun registerRecipeTransferHandlers(registration: IRecipeTransferRegistration) {
@@ -235,32 +223,28 @@ class GTLibJEIPlugin : IModPlugin {
     override fun registerRecipeCatalysts(registration: IRecipeCatalystRegistration) {
         if (isModLoaded(Ref.MOD_REI)) return
         GTLibRecipeViewerPlugin.REGISTRY
-            .forEach { (id, tuple) ->
-                if (tuple!!.workstations.isEmpty()) return@forEach
-                tuple.workstations.forEach { s ->
+            .forEach { (_, tuple) ->
+                val (map, _, _, workstations) = tuple
+                if (workstations.isEmpty()) return@forEach
+                workstations.forEach { s ->
                     val item: ItemLike = RegistryUtils.getItemFromID(s)
                     if (item === Items.AIR) return@forEach
-                    registration.addRecipeCatalyst(ItemStack(item), RECIPE_TYPES[tuple.map.loc.toString()])
+                    registration.addRecipeCatalyst(ItemStack(item), RECIPE_TYPES[map.loc.toString()])
                     if (tuple.map.getSubCategories().isNotEmpty()) {
                         tuple.map.getSubCategories().keys.forEach { s1 ->
-                            registration.addRecipeCatalyst(
-                                ItemStack(item),
-                                RECIPE_TYPES[ResourceLocation(tuple.map.domain, s1).toString()]
-                            )
+                            registration.addRecipeCatalyst(ItemStack(item),
+                                RECIPE_TYPES[ResourceLocation(map.domain, s1).toString()])
                         }
                     }
                 }
             }
         GTLibRecipeViewerPlugin.WORKSTATIONS
-            .forEach { (r: ResourceLocation?, l: MutableList<Consumer<MutableList<Item?>?>?>?) ->
-                val list: MutableList<Item?> = ArrayList()
-                l!!.forEach(Consumer { l2: Consumer<MutableList<Item?>?>? -> l2!!.accept(list) })
-                list.forEach(Consumer { i: Item? ->
-                    registration.addRecipeCatalyst(
-                        ItemStack(i),
-                        RecipeType.create(r!!.namespace, r.path, Recipe::class.java)
-                    )
-                })
+            .forEach { (r, l) ->
+                val list: MutableList<Item> = ArrayList()
+                l.forEach { it.accept(list) }
+                list.forEach { i ->
+                    registration.addRecipeCatalyst(ItemStack(i), RecipeType.create(r!!.namespace, r.path, Recipe::class.java))
+                }
             }
     }
 
