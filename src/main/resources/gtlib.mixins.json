@@ -29,6 +29,8 @@
     "BucketItemAccessor",
     "CapabilityManagerMixin",
     "ChestBlockMixin",
+    "EntityPlaceEventMixin",
+    "ForgeEventFactoryMixin",
     "GameDataMixin",
     "GrindstoneContainerMixin",
     "HopperBlockMixin",

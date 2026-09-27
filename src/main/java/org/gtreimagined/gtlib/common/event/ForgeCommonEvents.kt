@@ -1,6 +1,5 @@
 package org.gtreimagined.gtlib.common.event
 
-import com.blamejared.crafttweaker.natives.loot.param.ExpandLootContextParams.tool
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
@@ -33,7 +32,9 @@ import org.gtreimagined.gtlib.GTLibConfig
 import org.gtreimagined.gtlib.GTRemapping
 import org.gtreimagined.gtlib.Ref
 import org.gtreimagined.gtlib.blockentity.pipe.BlockEntityPipe
+import org.gtreimagined.gtlib.capability.CAP_MAP
 import org.gtreimagined.gtlib.capability.fluid.FluidHandlerItem
+import org.gtreimagined.gtlib.common.EntityPlaceEventExtension
 import org.gtreimagined.gtlib.data.GTTools
 import org.gtreimagined.gtlib.datagen.GTLibDynamics
 import org.gtreimagined.gtlib.datagen.GTLoot
@@ -47,7 +48,6 @@ import org.gtreimagined.gtlib.proxy.ClientHandler
 import org.gtreimagined.gtlib.structure.StructureCache
 import org.gtreimagined.gtlib.tool.IGTTool
 import org.gtreimagined.gtlib.util.RegistryUtils
-import java.util.function.Consumer
 
 object ForgeCommonEvents {
     @SubscribeEvent
@@ -74,11 +74,19 @@ object ForgeCommonEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     fun onBlockPlace(event: BlockEvent.EntityPlaceEvent) {
         if (event.placedAgainst.block is BlockPipe<*> && event.placedBlock.block !is BlockPipe<*>) {
-            if (event.entity is Player && !event.entity!!.isCrouching) {
-                val blockEntity =
-                    event.level.getBlockEntity(event.pos.relative(event.entity!!.direction))
-                if (blockEntity is BlockEntityPipe<*> && event.placedBlock.block is EntityBlock) {
-                    blockEntity.setConnection(event.entity!!.direction.opposite)
+            val entity = event.entity
+            if (entity is Player && !entity.isCrouching && event is EntityPlaceEventExtension) {
+                val direction = event.gtlib_getPlacedDirection()
+                if (direction != null) {
+                    val pipe = event.level.getBlockEntity(event.pos.relative(direction.opposite))
+                    val placedBlockEntity = event.level.getBlockEntity(event.pos)
+                    if (pipe is BlockEntityPipe<*> && placedBlockEntity != null && placedBlockEntity !is BlockEntityPipe<*>) {
+                        val capability = CAP_MAP[pipe.capClass]
+                        if (capability != null && placedBlockEntity.getCapability(capability, direction.opposite).isPresent) {
+                            pipe.setConnection(direction)
+                        }
+                    }
+
                 }
             }
         }
