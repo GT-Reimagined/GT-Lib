@@ -13,10 +13,14 @@ import mezz.jei.api.helpers.IGuiHelper
 import mezz.jei.api.helpers.IJeiHelpers
 import mezz.jei.api.ingredients.subtypes.UidContext
 import mezz.jei.api.recipe.RecipeType
-import mezz.jei.api.registration.*
+import mezz.jei.api.registration.IRecipeCatalystRegistration
+import mezz.jei.api.registration.IRecipeCategoryRegistration
+import mezz.jei.api.registration.IRecipeRegistration
+import mezz.jei.api.registration.IRecipeTransferRegistration
+import mezz.jei.api.registration.ISubtypeRegistration
+import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration
 import mezz.jei.api.runtime.IJeiRuntime
 import net.minecraft.client.Minecraft
-import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
@@ -26,8 +30,6 @@ import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeManager
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.material.Fluid
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.api.distmarker.OnlyIn
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.server.ServerLifecycleHooks
@@ -37,7 +39,11 @@ import org.gtreimagined.gtlib.GTLib
 import org.gtreimagined.gtlib.Ref
 import org.gtreimagined.gtlib.integration.recipeviewer.GTLibRecipeViewerPlugin
 import org.gtreimagined.gtlib.integration.recipeviewer.StoneVein
-import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.*
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.MultiMachineInfoCategory
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.RecipeMapCategory
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.SmallOreCategory
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.StoneVeinCategory
+import org.gtreimagined.gtlib.integration.recipeviewer.jei.category.VeinCategory
 import org.gtreimagined.gtlib.integration.recipeviewer.jei.extension.JEIMaterialRecipeExtension
 import org.gtreimagined.gtlib.ore.StoneType
 import org.gtreimagined.gtlib.recipe.IRecipe
@@ -51,16 +57,11 @@ import org.gtreimagined.tesseract.api.eu.IEnergyItem
 import org.gtreimagined.tesseract.api.forge.TesseractCaps
 import org.gtreimagined.tesseract.api.wrapper.ItemStackWrapper
 import thedarkcolour.kotlinforforge.forge.runForDist
-import thedarkcolour.kotlinforforge.forge.sidedDelegate
 import java.util.function.Consumer
 import java.util.function.Function
 
 @JeiPlugin
 class GTLibJEIPlugin : IModPlugin {
-    init {
-        GTLib.LOGGER.info("Creating GTAPI's JEI Plugin")
-    }
-
     override fun getPluginUid(): ResourceLocation {
         return ResourceLocation(Ref.ID, "jei")
     }
