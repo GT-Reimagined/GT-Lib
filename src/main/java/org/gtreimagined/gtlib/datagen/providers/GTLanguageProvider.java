@@ -307,6 +307,8 @@ public class GTLanguageProvider implements DataProvider, IGTLibProvider {
         add("gtlib.tooltip.fluid.temp", "Temperature: %s K");
         add("gtlib.tooltip.fluid.liquid", "State: Liquid");
         add("gtlib.tooltip.fluid.gas", "State: Gas");
+        add("gtlib.tooltip.fluid.acid", "Acidic! Handle with Care!");
+        add("gtlib.tooltip.fluid.magic", "Magical! Handle with Care!");
         add("gtlib.tooltip.cover.output.no_input", "Inputs blocked");
         add("gtlib.tooltip.cover.output.allow_input", "Inputs allowed");
         add("gtlib.tooltip.cover.covers_on_item", "Covers");

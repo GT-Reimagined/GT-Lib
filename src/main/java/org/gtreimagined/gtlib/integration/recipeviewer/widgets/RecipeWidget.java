@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import org.gtreimagined.gtlib.Data;
+import org.gtreimagined.gtlib.data.GTLibTags;
 import org.gtreimagined.gtlib.gui.GuiProperties;
 import org.gtreimagined.gtlib.gui.SlotData;
 import org.gtreimagined.gtlib.gui.SlotTypes;
@@ -193,7 +194,7 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
     }
 
 
-    private void createFluidTooltip(RichTooltip richTooltip, FluidStack stack) {
+    public static void createFluidTooltip(RichTooltip richTooltip, FluidStack stack) {
         int mb = stack.getAmount();
         richTooltip.moveCursorToStart();
         Component amount = Utils.translatable("gtlib.tooltip.fluid.amount", mb + " L").withStyle(ChatFormatting.BLUE);
@@ -202,6 +203,12 @@ public class RecipeWidget extends ParentWidget<RecipeWidget> {
         richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid.temp", FluidUtils.getFluidTemperature(stack.getFluid())).withStyle(ChatFormatting.RED));
         String liquid = !FluidUtils.isFluidGaseous(stack.getFluid()) ? "liquid" : "gas";
         richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid." + liquid).withStyle(ChatFormatting.GREEN));
+        if (stack.getFluid().is(GTLibTags.ACID)) {
+            richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid.acid").withStyle(ChatFormatting.GOLD));
+        }
+        if (stack.getFluid().is(GTLibTags.MAGIC)) {
+            richTooltip.addLine(Utils.translatable("gtlib.tooltip.fluid.magic").withStyle(ChatFormatting.GOLD));
+        }
     }
 
     @Override
