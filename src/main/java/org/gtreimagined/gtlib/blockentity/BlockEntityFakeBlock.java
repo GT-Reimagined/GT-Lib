@@ -2,6 +2,7 @@ package org.gtreimagined.gtlib.blockentity;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.gtreimagined.gtlib.Ref;
 import org.gtreimagined.gtlib.block.BlockFakeTile;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
@@ -10,6 +11,7 @@ import org.gtreimagined.gtlib.client.dynamic.DynamicTexturer;
 import org.gtreimagined.gtlib.client.dynamic.DynamicTexturers;
 import org.gtreimagined.gtlib.cover.CoverFactory;
 import org.gtreimagined.gtlib.cover.ICover;
+import org.gtreimagined.gtlib.machine.BlockMultiMachine;
 import org.gtreimagined.gtlib.network.GTLibNetwork;
 import org.gtreimagined.gtlib.network.packets.FakeTilePacket;
 import org.gtreimagined.gtlib.util.Utils;
@@ -27,7 +29,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +56,17 @@ public class BlockEntityFakeBlock extends BlockEntityTickable<BlockEntityFakeBlo
             if (controller != null && !level.isClientSide){
                 GTLibNetwork.NETWORK.sendToAllLoaded(new FakeTilePacket(this.getBlockPos(), controller.getBlockPos()), level, this.getBlockPos());
             }
-            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+            List<Direction> toUpdate = new ArrayList<>();
+            for (Direction direction : Direction.values()){
+                BlockState neighborState = level.getBlockState(getBlockPos().relative(direction));
+                if (neighborState.getBlock() != getBlockState().getBlock() && !(neighborState.getBlock() instanceof BlockMultiMachine)){
+                    toUpdate.add(direction);
+                }
+            }
+
+            if (!toUpdate.isEmpty()) {
+                ForgeEventFactory.onNeighborNotify(level, getBlockPos(), this.getBlockState(), EnumSet.copyOf(toUpdate), false).isCanceled();
+            }
             sidedSync(true);
         }
     }
