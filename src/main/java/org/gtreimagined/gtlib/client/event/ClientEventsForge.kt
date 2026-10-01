@@ -27,7 +27,7 @@ object ClientEventsForge {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    internal fun onTooltipAdd(ev: ItemTooltipEvent) {
+    fun onTooltipAdd(ev: ItemTooltipEvent) {
         addTooltip(ev.itemStack, ev.toolTip, ev.entity, ev.flags)
         onItemTooltip(ev.itemStack, ev.toolTip, ev.entity, ev.flags)
     }
