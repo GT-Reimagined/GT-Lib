@@ -32,6 +32,7 @@ public class GTFluidTagProvider extends GTTagProvider<Fluid> implements IGTLibPr
             tag(getForgelikeFluidTag(f.getId()))
                     .add(f.getFluid())
                     .replace(replace);
+            tag(GTLibTags.GT_FLUID).add(f.getFluid());
             if (f instanceof GTMaterialFluid mf) {
                 Material m = mf.getMaterial();
                 if (mf.getType() == GTMaterialTypes.GAS){

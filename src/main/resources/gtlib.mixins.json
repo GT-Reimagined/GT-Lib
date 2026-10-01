@@ -19,7 +19,8 @@
     "client.MultiPlayerGameModeAccessor",
     "client.SimpleBakedModel$BuilderAccessor",
     "client.TESRMixin",
-    "client.VertexFormatAccessor"
+    "client.VertexFormatAccessor",
+    "jei.FluidTankRendererMixin"
   ],
   "mixins": [
     "BiomeAccessor",
