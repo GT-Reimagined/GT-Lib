@@ -418,6 +418,7 @@ fun transferItems(from: IItemHandler, to: IItemHandler?, once: Boolean, filter: 
             if (once) break
         } else if (inserted.count < toInsert.count) {
             val actual = toInsert.count - inserted.count
+            if (from.extractItem(i, actual, true).isEmpty) continue
             toInsert.count -= inserted.count
             insertItem(to, toInsert, false)
             from.extractItem(i, actual, false)
