@@ -44,10 +44,6 @@ public class MachineFluidHandler<T extends BlockEntityMachine<T>> extends FluidH
                 tile.has(GUI) ? tile.getMachineType().getSlots(SlotTypes.FL_OUT, tile.getMachineTier()).size() : 0, tile.has(GUI) ? tile.getMachineType().getSlots(SlotTypes.FL_PHANTOM, tile.getMachineTier()).size() : 0);
     }
 
-    public MachineFluidHandler(T tile, int capacity, int inputCount, int outputCount) {
-        this(tile, capacity, inputCount, outputCount, 0);
-    }
-
     public MachineFluidHandler(T tile, int capacity, int inputCount, int outputCount, int phantomCount) {
         super(tile, capacity, inputCount, outputCount, phantomCount);
     }
