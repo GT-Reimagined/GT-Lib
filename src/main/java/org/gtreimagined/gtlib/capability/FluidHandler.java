@@ -54,7 +54,7 @@ public abstract class FluidHandler<T extends BlockEntityBase & IMachineHandler> 
         }
         if (phantomCount > 0){
             tanks.put(FluidTankType.PHANTOM, FluidTanks.create(tile, SlotTypes.FL_PHANTOM, b -> {
-                for (int i = 0; i < outputCount; i++) {
+                for (int i = 0; i < phantomCount; i++) {
                     b.tank(1000);
                 }
                 return b;
