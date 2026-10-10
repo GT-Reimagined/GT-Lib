@@ -119,16 +119,10 @@ public class GTShapelessRecipeBuilder {
     }
 
     /**
-     * Builds this recipe into an {@link IFinishedRecipe}. Use {@link #save(Consumer)} if save is the same as the ID for
-     * the result.
+     * Builds this recipe into an {@link IFinishedRecipe}.
      */
     public void save(Consumer<FinishedRecipe> consumerIn, String save) {
-        ResourceLocation resourcelocation = RegistryUtils.getIdFromItem(this.result.getItem());
-        if (new ResourceLocation(save).equals(resourcelocation)) {
-            throw new IllegalStateException("Shapeless Recipe " + save + " should remove its 'save' argument");
-        } else {
-            this.save(consumerIn, new ResourceLocation(save));
-        }
+        this.save(consumerIn, new ResourceLocation(save));
     }
 
     /**
