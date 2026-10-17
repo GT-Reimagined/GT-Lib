@@ -57,6 +57,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -178,7 +179,10 @@ public class GTLibDynamics {
         for (RecipeMap<?> m : GTAPI.all(RecipeMap.class)) {
             if (m.getProxy() != null) {
                 List<net.minecraft.world.item.crafting.Recipe<?>> recipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(m.getProxy().loc());
-                recipes.forEach(recipe -> m.compileRecipe(m.getProxy().handler().apply(recipe, m.RB())));
+                recipes.forEach(recipe -> {
+                    IRecipe r = m.getProxy().handler().apply(recipe, m.RB());
+                    if (r != null) m.compileRecipe(r);
+                });
             }
         }
 
@@ -189,7 +193,7 @@ public class GTLibDynamics {
             for (Map.Entry<String, List<IRecipe>> entry : map.entrySet()) {
                 IRecipeMap rmap = GTAPI.get(IRecipeMap.class, new ResourceLocation(entry.getKey()));
                 if (rmap != null){
-                    entry.getValue().forEach(rmap::compileRecipe);
+                    entry.getValue().stream().filter(Objects::nonNull).forEach(rmap::compileRecipe);
                     //entry.getValue().forEach(rmap::add);
                     //rmap.compile(manager);
                 }

@@ -134,8 +134,8 @@ class GTLibJEIPlugin : IModPlugin {
                     registry.addRecipeCategories(RecipeMapCategory(map, type, gui, tier,
                             if (workstations.isEmpty()) null else workstations[0]))
                     registeredMachineCats.add(map.loc)
-                    if (map.getSubCategories().isNotEmpty()) {
-                        map.getSubCategories().forEach { (s, subCategory) ->
+                    if (map.subCategories.isNotEmpty()) {
+                        map.subCategories.forEach { (s, subCategory) ->
                             val subCategoryId = ResourceLocation(map.domain, s)
                             if (!registeredMachineCats.contains(subCategoryId)) {
                                 val subType = RecipeType(subCategoryId, IRecipe::class.java)
@@ -163,7 +163,7 @@ class GTLibJEIPlugin : IModPlugin {
         GTLibRecipeViewerPlugin.REGISTRY
             .forEach { (id, tuple) ->
                 val (map, _, _, _) = tuple
-                if (map.getSubCategories().isEmpty()) {
+                if (map.subCategories.isEmpty()) {
                     registration.addRecipes(RECIPE_TYPES[id.toString()]!!, GTLibRecipeViewerPlugin.getRecipes(map, this.recipeManager))
                 } else {
                     val recipes = GTLibRecipeViewerPlugin.getRecipes(map, this.recipeManager)
@@ -171,7 +171,7 @@ class GTLibJEIPlugin : IModPlugin {
                     val recipeMap: MutableMap<String, MutableList<IRecipe>> = HashMap()
                     for (recipe in recipes) {
                         var found = false
-                        for ((key, value) in map.getSubCategories()) {
+                        for ((key, value) in map.subCategories) {
                             if (value.predicate.test(recipe)) {
                                 found = true
                                 recipeMap.computeIfAbsent(key) { ArrayList() }
@@ -231,8 +231,8 @@ class GTLibJEIPlugin : IModPlugin {
                     val item: ItemLike = RegistryUtils.getItemFromID(s)
                     if (item === Items.AIR) return@forEach
                     registration.addRecipeCatalyst(ItemStack(item), RECIPE_TYPES[map.loc.toString()])
-                    if (tuple.map.getSubCategories().isNotEmpty()) {
-                        tuple.map.getSubCategories().keys.forEach { s1 ->
+                    if (tuple.map.subCategories.isNotEmpty()) {
+                        tuple.map.subCategories.keys.forEach { s1 ->
                             registration.addRecipeCatalyst(ItemStack(item),
                                 RECIPE_TYPES[ResourceLocation(map.domain, s1).toString()])
                         }
