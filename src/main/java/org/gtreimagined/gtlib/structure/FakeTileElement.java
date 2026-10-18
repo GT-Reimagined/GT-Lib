@@ -1,6 +1,7 @@
 package org.gtreimagined.gtlib.structure;
 
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
+import org.gtreimagined.gtlib.block.BlockFakeTile;
 import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
 import org.gtreimagined.gtlib.blockentity.multi.BlockEntityBasicMultiMachine;
 import org.gtreimagined.gtlib.cover.CoverFactory;
@@ -29,20 +30,20 @@ public class FakeTileElement<T extends BlockEntityBasicMultiMachine<T>> implemen
     private BlockState state;
     private final EnumMap<Direction, CoverFactory> covers = new EnumMap<>(Direction.class);
 
-    public FakeTileElement(IBlockStatePredicate pred) {
+    public FakeTileElement(BlockState state, IBlockStatePredicate pred) {
+        this.state = state;
         this.pred = pred;
     }
 
-    public FakeTileElement(Block pred) {
-        this(pred.defaultBlockState());
+    public FakeTileElement(Block block) {
+        this(block.defaultBlockState(), ((reader, pos, state1) -> state1.getBlock() == block));
     }
 
-    public FakeTileElement(BlockState pred) {
-        this.state = pred;
-        this.pred = (reader, pos, state) -> state == this.state;
+    public FakeTileElement(BlockState state) {
+        this(state, (reader, pos, state1) -> state1 == state);
     }
 
-    public FakeTileElement cover(Direction side, CoverFactory cover) {
+    public FakeTileElement<T> cover(Direction side, CoverFactory cover) {
         this.covers.put(side, cover);
         return this;
     }
@@ -50,6 +51,10 @@ public class FakeTileElement<T extends BlockEntityBasicMultiMachine<T>> implemen
     @Override
     public void onStructureSuccess(T machine, Level world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
+        BlockState blockState = world.getBlockState(pos);
+        if (blockState.hasProperty(BlockFakeTile.HAS_BE) && !blockState.getValue(BlockFakeTile.HAS_BE)){
+            world.setBlock(pos, blockState.setValue(BlockFakeTile.HAS_BE, true), 3);
+        }
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof BlockEntityFakeBlock fakeBlock && StructureCache.refCount(world, pos) == 0){
             fakeBlock.setFacing(machine.getFacing()).setCovers(covers);
@@ -65,6 +70,10 @@ public class FakeTileElement<T extends BlockEntityBasicMultiMachine<T>> implemen
             if (be instanceof BlockEntityFakeBlock fakeBlock){
                 fakeBlock.setController(null);
             }
+            BlockState blockState = world.getBlockState(pos);
+            if (blockState.hasProperty(BlockFakeTile.HAS_BE) && blockState.getValue(BlockFakeTile.HAS_BE)){
+                world.setBlock(pos, blockState.setValue(BlockFakeTile.HAS_BE, false), 3);
+            }
         }
     }
 
@@ -78,11 +87,12 @@ public class FakeTileElement<T extends BlockEntityBasicMultiMachine<T>> implemen
         BlockPos pos = new BlockPos(x, y, z);
         BlockState state = world.getBlockState(pos);
         if (pred.evaluate(machine.getLevel(), pos, state)) {
+            boolean defaultReturn = state.hasProperty(BlockFakeTile.HAS_BE);
             BlockEntity tile = world.getBlockEntity(pos);
             if (tile instanceof BlockEntityFakeBlock fakeBlock) {
                 return fakeBlock.getController() == machine || StructureCache.refCount(world, pos) == 0;
             }
-            return false;
+            return defaultReturn;
         }
         return false;
     }

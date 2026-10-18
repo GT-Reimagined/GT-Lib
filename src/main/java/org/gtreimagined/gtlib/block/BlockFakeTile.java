@@ -3,6 +3,8 @@ package org.gtreimagined.gtlib.block;
 import brachy.modularui.factory.UIFactories;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.registries.ForgeRegistries.Keys;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.blockentity.BlockEntityFakeBlock;
@@ -32,10 +34,17 @@ import java.util.Set;
 
 public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider, EntityBlock {
     public static BlockEntityType<BlockEntityFakeBlock> TYPE;
+    public static final BooleanProperty HAS_BE = BooleanProperty.create("has_be");
     private static Set<Block> TILE_SET = new HashSet<>();
     public BlockFakeTile(String domain, String id, Properties properties) {
         super(domain, id, properties.isValidSpawn((blockState, blockGetter, blockPos, object) -> false));
         GTAPI.register(IRegistryEntryProvider.class, this);
+        this.registerDefaultState(this.getStateDefinition().any().setValue(HAS_BE, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        builder.add(HAS_BE);
     }
 
     @Override
@@ -74,7 +83,7 @@ public class BlockFakeTile extends BlockBasic implements IRegistryEntryProvider,
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return TYPE.create(pos, state);
+        return state.getValue(HAS_BE) ? TYPE.create(pos, state) : null;
     }
 
     @Nullable
