@@ -348,7 +348,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 if (s.isEmpty()){
                     for (int i = 0; i < tiers.size(); i++) {
                         Tier tier = tiers.get(i);
-                        if (i == 0 && r.getGui() == null && !GTLibRecipeViewerPlugin.containsCategory(r)){
+                        if (i == 0 && r.getGuiProperties() == null && !GTLibRecipeViewerPlugin.containsCategory(r)){
                             GTAPI.registerJEICategory(r, this.guiProperties, this, tier, false);
                         } else {
                             GTAPI.registerJEICategoryWorkstation(r, this, tier);
@@ -358,7 +358,7 @@ public class Machine<T extends Machine<T>> implements IGTObject, IRegistryEntryP
                 }
                 Tier t = GTAPI.get(Tier.class, s);
                 //If the recipe map has another GUI present don't register it.
-                if (r.getGui() == null && !GTLibRecipeViewerPlugin.containsCategory(r)) {
+                if (r.getGuiProperties() == null && !GTLibRecipeViewerPlugin.containsCategory(r)) {
                     GTAPI.registerJEICategory(r, this.guiProperties, this, t, false);
                 } else {
                     GTAPI.registerJEICategoryWorkstation(r, this, t);

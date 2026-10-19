@@ -7,7 +7,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.util.Tuple
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.Ingredient
@@ -48,12 +47,12 @@ import kotlin.arrayOfNulls
 
 open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, private val builder: B) : IRecipeMap {
     private val loc: ResourceLocation = ResourceLocation(domain, categoryId)
-    private val LOOKUP = Branch()
-    private val RECIPES_TO_COMPILE: MutableList<IRecipe> = ObjectArrayList<IRecipe>()
-    private val ROOT: MutableSet<AbstractMapIngredient> = ObjectOpenHashSet()
-    private val ROOT_SPECIAL: MutableList<AbstractMapIngredient> = ObjectArrayList()
+    private val lookup = Branch()
+    private val recipesToCompile: MutableList<IRecipe> = ObjectArrayList<IRecipe>()
+    private val root: MutableSet<AbstractMapIngredient> = ObjectOpenHashSet()
+    private val rootSpecial: MutableList<AbstractMapIngredient> = ObjectArrayList()
 
-    override var gui: GuiProperties? = null
+    override var guiProperties: GuiProperties? = null
     override var guiTier: Tier? = null
     override var proxy: Proxy? = null
     override val recipeType: RecipeType<out IRecipe>
@@ -79,15 +78,7 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
     }
 
     // Object can be an IDrawable or an ItemStack or an IItemProvider.
-    fun setIconSupplier(supplier: Supplier<Any?>?): RecipeMap<B> {
-        this.iconSupplier = supplier
-        return this
-    }
-
-    fun setIcon(supplier: Supplier<Any?>?): RecipeMap<B> {
-        this.iconSupplier = supplier
-        return this
-    }
+    fun iconSupplier(supplier: Supplier<Any?>?): RecipeMap<B> = apply { this.iconSupplier = supplier }
 
     fun guiTier(tier: Tier?): RecipeMap<B> = apply { this.guiTier = tier }
 
@@ -97,9 +88,9 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
      * @param gui the guidata.
      * @return this
      */
-    fun setGuiData(gui: GuiProperties?): RecipeMap<B> {
-        this.gui = gui
-        GTAPI.registerJEICategory(this, this.gui!!)
+    fun guiProperties(gui: GuiProperties?): RecipeMap<B> {
+        this.guiProperties = gui
+        GTAPI.registerJEICategory(this, this.guiProperties!!)
         return this
     }
 
@@ -110,9 +101,9 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
      * @param machine the machine.
      * @return this
      */
-    fun setGuiData(gui: GuiProperties?, machine: Machine<*>): RecipeMap<B> {
-        this.gui = gui
-        GTAPI.registerJEICategory(this, this.gui!!, machine, machine.firstTier, true)
+    fun guiProperties(gui: GuiProperties?, machine: Machine<*>): RecipeMap<B> {
+        this.guiProperties = gui
+        GTAPI.registerJEICategory(this, this.guiProperties!!, machine, machine.firstTier, true)
         return this
     }
 
@@ -160,13 +151,13 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
         // point to the same memory location
         // so == works to remove them.
         // Or maybe not, I'm not sure but let's make a set anyways
-        return LOOKUP.getRecipes(filterHidden)
+        return lookup.getRecipes(filterHidden)
             .sorted(Comparator.comparingLong<IRecipe?>(ToLongFunction { obj: IRecipe? -> obj!!.getPower() }))
             .collect(Collectors.toCollection(Supplier { LinkedHashSet() }))
     }
 
     override fun add(recipe: IRecipe) {
-        RECIPES_TO_COMPILE.add(recipe)
+        recipesToCompile.add(recipe)
     }
 
     /**
@@ -210,11 +201,11 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
         // GTLib.LOGGER.warn("Recipe collision, adding both but only first is
         // available.");
         // }
-        if (recurseItemTreeAdd(recipe, items, LOOKUP, 0, 0)) {
+        if (recurseItemTreeAdd(recipe, items, lookup, 0, 0)) {
             items.forEach { t ->
                 t.forEach { ing ->
-                    if (!ing.isSpecial) ROOT.add(ing)
-                    else ROOT_SPECIAL.add(ing)
+                    if (!ing.isSpecial) root.add(ing)
+                    else rootSpecial.add(ing)
                 }
             }
         }
@@ -309,7 +300,7 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
         for (obj in current) {
             if (!obj.isSpecial) {
                 // Either add the recipe or create a branch.
-                r = map.NODES.compute(obj) { k, v ->
+                r = map.nodes.compute(obj) { k, v ->
                     var v = v
                     if (count == ingredients.size - 1) {
                         if (v == null) {
@@ -335,12 +326,12 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
                         !recurseItemTreeAdd(recipe, ingredients, m, (index + 1) % ingredients.size, count + 1)
                     }.orElse(false)!!
                 ) {
-                    current.forEach(Consumer { key: AbstractMapIngredient? -> map.NODES.remove(key) })
+                    current.forEach(Consumer { key: AbstractMapIngredient? -> map.nodes.remove(key) })
                     return false
                 }
             } else {
                 if (count == ingredients.size - 1) {
-                    map.SPECIAL_NODES.add(Tuple(obj, Either.left(recipe)))
+                    map.specialNodes.add(Tuple(obj, Either.left(recipe)))
                 } else {
                     val branch = Branch()
                     val ok = recurseItemTreeAdd(
@@ -348,10 +339,10 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
                         count + 1
                     )
                     if (!ok) {
-                        current.forEach(Consumer { key: AbstractMapIngredient? -> map.NODES.remove(key) })
+                        current.forEach(Consumer { key: AbstractMapIngredient? -> map.nodes.remove(key) })
                         return false
                     } else {
-                        map.SPECIAL_NODES.add(Tuple(obj, Either.right(branch)))
+                        map.specialNodes.add(Tuple(obj, Either.right(branch)))
                     }
                 }
             }
@@ -395,7 +386,7 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
         val wr = items[index]
         // Iterate over current level of nodes.
         for (t in wr) {
-            val result = map.NODES[t]
+            val result = map.nodes[t]
             if (result != null) {
                 // Either return recipe or continue branch.
                 val r = result.map({ left ->
@@ -408,9 +399,9 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
                 }, { right -> callback(items, right!!, canHandle, index, count, skip) })
                 if (r != null) return r
             }
-            if (map.SPECIAL_NODES.isNotEmpty()) {
+            if (map.specialNodes.isNotEmpty()) {
                 // Iterate over special nodes.
-                for (tuple in map.SPECIAL_NODES) {
+                for (tuple in map.specialNodes) {
                     val special: AbstractMapIngredient = tuple.getA()
                     if (special == t) {
                         return tuple.getB().map<IRecipe?>(
@@ -466,7 +457,7 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
         if (list.isEmpty()) return null
         // Find recipe.
         // long current = System.nanoTime();
-        val r = recurseItemTreeFind(list, LOOKUP, canHandle)
+        val r = recurseItemTreeFind(list, lookup, canHandle)
 
         // GTLib.LOGGER.info("Time to lookup (µs): " + ((System.nanoTime() -
         // current) / 1000));
@@ -474,24 +465,24 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
     }
 
     fun reset() {
-        this.RECIPES_TO_COMPILE.clear()
+        this.recipesToCompile.clear()
     }
 
     override fun resetCompiled() {
         this.getRecipes(false).forEach(Consumer { obj: IRecipe? -> obj!!.invalidate() })
-        this.LOOKUP.clear()
-        this.ROOT.clear()
-        this.ROOT_SPECIAL.clear()
+        this.lookup.clear()
+        this.root.clear()
+        this.rootSpecial.clear()
     }
 
     override fun compile(manager: RecipeManager) {
         resetCompiled()
-        if (RECIPES_TO_COMPILE.isNotEmpty()) {
+        if (recipesToCompile.isNotEmpty()) {
             // Recipes with special ingredients have to be compiled first as you cannot
             // verify that a special recipe collides with a regular, but the opposite works.
-            val regular: MutableList<IRecipe> = ObjectArrayList(RECIPES_TO_COMPILE.size)
+            val regular: MutableList<IRecipe> = ObjectArrayList(recipesToCompile.size)
             val special: MutableList<IRecipe> = ObjectArrayList()
-            for (recipe in RECIPES_TO_COMPILE) {
+            for (recipe in recipesToCompile) {
                 if (recipe.hasSpecialIngredients()) {
                     special.add(recipe)
                 } else {
@@ -502,51 +493,51 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
             regular.forEach { recipe -> this.compileRecipe(recipe) }
         }
 
-        this.LOOKUP.finish()
+        this.lookup.finish()
     }
 
     override fun acceptsItem(item: ItemStack): Boolean {
         val i = MapItemStackIngredient(item, false)
         val j = MapItemIngredient(item.item, false)
-        if (ROOT.contains(i)) return true
-        if (ROOT.contains(j)) return true
+        if (root.contains(i)) return true
+        if (root.contains(j)) return true
         val tag = MapTagIngredient(null, false)
-        return item.item.builtInRegistryHolder().tags().anyMatch { t: TagKey<Item?>? ->
+        return item.item.builtInRegistryHolder().tags().anyMatch { t ->
             tag.setTag(t!!.location())
-            if (ROOT.contains(tag)) {
+            if (root.contains(tag)) {
                 return@anyMatch true
             }
-            ROOT_SPECIAL.contains(tag)
+            rootSpecial.contains(tag)
         }
     }
 
     override fun acceptsFluid(fluid: FluidStack): Boolean {
         val i = MapFluidIngredient(fluid, false)
-        if (ROOT.contains(i)) return true
+        if (root.contains(i)) return true
         val tag = MapTagIngredient(null, false)
         return fluid.fluid.builtInRegistryHolder().tags().anyMatch { t: TagKey<Fluid?>? ->
             tag.setTag(t!!.location())
-            ROOT.contains(tag)
+            root.contains(tag)
         }
     }
 
     protected class Branch {
-        internal var NODES: MutableMap<AbstractMapIngredient, Either<MutableList<IRecipe>, Branch>> =
+        internal var nodes: MutableMap<AbstractMapIngredient, Either<MutableList<IRecipe>, Branch>> =
             Object2ObjectOpenHashMap()
 
-        internal val SPECIAL_NODES: MutableList<Tuple<AbstractMapIngredient, Either<IRecipe, Branch>>> =
+        internal val specialNodes: MutableList<Tuple<AbstractMapIngredient, Either<IRecipe, Branch>>> =
             ObjectArrayList()
 
         fun getRecipes(filterHidden: Boolean): Stream<IRecipe?> {
-            var stream = NODES.values.stream()
+            var stream = nodes.values.stream()
                 .flatMap<IRecipe?> { t ->
                     t!!.map(
                         { obj -> obj!!.stream() },
                         { branch -> branch!!.getRecipes(filterHidden) })
                 }
-            if (SPECIAL_NODES.isNotEmpty()) {
+            if (specialNodes.isNotEmpty()) {
                 stream = Stream.concat(
-                    stream, SPECIAL_NODES.stream()
+                    stream, specialNodes.stream()
                         .flatMap { t ->
                             t!!.getB().map(
                                 Function { t -> Stream.of(t) },
@@ -558,8 +549,8 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
         }
 
         fun clear() {
-            NODES = Object2ObjectOpenHashMap()
-            SPECIAL_NODES.clear()
+            nodes = Object2ObjectOpenHashMap()
+            specialNodes.clear()
         }
 
         fun finish() {

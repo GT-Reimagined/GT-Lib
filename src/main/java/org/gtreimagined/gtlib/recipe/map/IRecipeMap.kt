@@ -22,7 +22,6 @@ import org.gtreimagined.gtlib.recipe.IRecipe
 import org.gtreimagined.gtlib.registration.IGTObject
 import org.gtreimagined.gtlib.util.translatable
 import java.util.*
-import java.util.function.Function
 import java.util.function.Predicate
 
 interface IRecipeMap : IGTObject {
@@ -64,7 +63,7 @@ interface IRecipeMap : IGTObject {
             tier, validator)
     }
 
-    val gui: GuiProperties?
+    val guiProperties: GuiProperties?
         get() = null
 
     val proxy: Proxy?

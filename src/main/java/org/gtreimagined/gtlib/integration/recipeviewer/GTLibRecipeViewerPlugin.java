@@ -81,7 +81,7 @@ public class GTLibRecipeViewerPlugin {
             GTLib.LOGGER.info("Attempted duplicate category registration: " + map.getId());
             return;
         }
-        REGISTRY.put(new ResourceLocation(map.getDomain(), map.getId()), new RegistryValue(map, map.getGui() == null ? gui : map.getGui(), tier).addWorkstation(model));//new Tuple<>(map, new Tuple<>(gui, tier)));
+        REGISTRY.put(new ResourceLocation(map.getDomain(), map.getId()), new RegistryValue(map, map.getGuiProperties() == null ? gui : map.getGuiProperties(), tier).addWorkstation(model));//new Tuple<>(map, new Tuple<>(gui, tier)));
     }
 
     public static boolean containsCategory(IRecipeMap map){
