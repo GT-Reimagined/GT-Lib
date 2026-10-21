@@ -298,6 +298,7 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
                 slotIndexMap.computeIntIfAbsent(slotData.type().getId(), k -> 0);
                 if (item){
                     ModularSlot slot = slotData.type().slotSupplier().get((SlotType) slotData.type(), this, this.getAll(), slotIndexMap.getInt(slotData.type().getId()), (SlotData) slotData);
+                    onSlotAdd(slot,modularPanel, sidedPosGuiData, panelSyncManager, uiSettings);
                     ItemSlot itemSlot = ItemSlot.create(slotData.type().phantom());
                     itemSlot.pos(slotData.x() - 1, slotData.y() - 1);
                     itemSlot.background(new GTDrawableStack(slotData.background() == GTGuiTextures.ITEM_SLOT ? null :  slotData.background(), slotData.overlay()));
@@ -320,6 +321,10 @@ public interface ICover extends ITextureProvider, IDynamicModelProvider, IGuiHan
             return modularPanel;
         }
         return null;
+    }
+
+    default void onSlotAdd(ModularSlot slot, ModularPanel<?> panel, SidedPosGuiData sidedPosGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings){
+
     }
 
     default List<BakedQuad> transformQuads(BlockState state, List<BakedQuad> quads) {
