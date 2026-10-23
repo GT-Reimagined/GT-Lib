@@ -52,7 +52,7 @@ public class GTTools {
     public static final GTToolType WIRE_CUTTER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "wire_cutter", 1, 3, 2, 0.0F, -1.5F, false)).setUseSound(Ref.WIRE_CUTTERS).setRepairable(false).addBlacklistedEnchantments(Enchantments.BLOCK_EFFICIENCY);
     public static final GTToolType BRANCH_CUTTER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "branch_cutter", 1, 3, 2, 0.0F, -1.5F, false)).addTags("grafter").setHasContainer(false).setDurabilityMultiplier(0.25f);
     public static final GTToolType KNIFE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "knife", 1, 2, 1, 2.1F, -2.0F, false)).addEffectiveBlocks(Blocks.COBWEB).setRepairable(false).setMaterialTypeItem(KNIFE_BLADE).setTag(new ResourceLocation(Ref.ID, "knives")).setOriginalTag(true);
-    public static final GTToolType SCISSORS = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "scissors", 1, 2, 2, 1.0f, -1.5f, false));
+    public static final GTToolType SCISSORS = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "scissors", 1, 2, 2, 1.0f, -1.5f, false).addEffectiveBlocks(Blocks.COBWEB));
     public static final GTToolType PLUNGER = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "plunger", 5, 5, 10, 0.0F, -2.9F, false)).setUseSound(SoundEvents.BUCKET_EMPTY).setHasSecondary(false).setRepairable(false);
     public static final GTToolType SCYTHE = GTAPI.register(GTToolType.class, new GTToolType(Ref.SHARED_ID, "scythe", 1, 2, 5, 6.5f, -3.1f, false)).setMaterialTypeItem(SCYTHE_BLADE);
     public static final GTArmorType HELMET = new GTArmorType(Ref.SHARED_ID, "helmet", 40, 0, 0.0F, 0.0F, Type.HELMET);
