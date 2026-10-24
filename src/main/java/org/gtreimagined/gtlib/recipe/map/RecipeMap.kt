@@ -62,7 +62,6 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
     override val icon: Any?
         get() = if (this.iconSupplier != null) this.iconSupplier!!.get() else null
 
-    @OnlyIn(Dist.CLIENT)
     override var infoRenderer: IRecipeInfoRenderer = InfoRenderers.DEFAULT_RENDERER
 
     override val subCategories: MutableMap<String, SubCategory> = Object2ObjectOpenHashMap()

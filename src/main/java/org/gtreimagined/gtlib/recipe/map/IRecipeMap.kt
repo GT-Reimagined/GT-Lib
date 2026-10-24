@@ -69,7 +69,6 @@ interface IRecipeMap : IGTObject {
     val proxy: Proxy?
         get() = null
 
-    @get:OnlyIn(Dist.CLIENT)
     val infoRenderer: IRecipeInfoRenderer?
         get() = InfoRenderers.DEFAULT_RENDERER
 
