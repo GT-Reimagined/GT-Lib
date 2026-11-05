@@ -1,155 +1,173 @@
-package org.gtreimagined.gtlib.datagen;
+package org.gtreimagined.gtlib.datagen
 
-import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.JsonSerializer;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.gtreimagined.gtlib.GTAPI;
-import org.gtreimagined.gtlib.GTLib;
-import org.gtreimagined.gtlib.GTLibConfig;
-import org.gtreimagined.gtlib.Ref;
-import org.gtreimagined.gtlib.datagen.json.JGTLibModel;
-import org.gtreimagined.gtlib.datagen.json.JGTLibModel.JGTLibModelSerializer;
-import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider;
-import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider;
-import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider;
-import org.gtreimagined.gtlib.datagen.providers.GTTagProvider;
-import org.gtreimagined.gtlib.event.GTCraftingEvent;
-import org.gtreimagined.gtlib.event.GTLoaderEvent;
-import org.gtreimagined.gtlib.event.GTProvidersEvent;
-import org.gtreimagined.gtlib.event.GTWorldGenEvent;
-import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar;
-import org.gtreimagined.gtlib.recipe.IRecipe;
-import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate;
-import org.gtreimagined.gtlib.recipe.map.IRecipeMap;
-import org.gtreimagined.gtlib.recipe.map.RecipeBuilder;
-import org.gtreimagined.gtlib.recipe.map.RecipeMap;
-import org.gtreimagined.gtlib.registration.IGTRegistrar;
-import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollision;
-import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerOre;
-import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein;
-import org.gtreimagined.gtlib.worldgen.smallore.SmallOre;
-import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer;
-import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein;
-import org.gtreimagined.gtlib.worldgen.vein.Vein;
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.loot.JCondition;
-import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.util.UnsafeByteArrayOutputStream;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.storage.loot.Deserializers;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModLoader;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLPaths;
+import com.google.common.collect.Sets
+import com.google.gson.Gson
+import com.google.gson.JsonSerializer
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.ObjectArrayList
+import net.devtech.arrp.api.RuntimeResourcePack
+import net.devtech.arrp.json.loot.JCondition
+import net.devtech.arrp.json.models.JTextures
+import net.devtech.arrp.util.UnsafeByteArrayOutputStream
+import net.minecraft.advancements.Advancement
+import net.minecraft.data.recipes.FinishedRecipe
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.PackResources
+import net.minecraft.world.Container
+import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeManager
+import net.minecraft.world.item.crafting.RecipeType
+import net.minecraft.world.level.storage.loot.Deserializers
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.fml.ModLoader
+import net.minecraftforge.fml.loading.FMLEnvironment
+import net.minecraftforge.fml.loading.FMLPaths
+import org.gtreimagined.gtlib.GTAPI
+import org.gtreimagined.gtlib.GTAPI.isModLoaded
+import org.gtreimagined.gtlib.GTLib
+import org.gtreimagined.gtlib.GTLibConfig
+import org.gtreimagined.gtlib.Ref
+import org.gtreimagined.gtlib.datagen.json.JGTLibModel
+import org.gtreimagined.gtlib.datagen.providers.GTBlockLootProvider
+import org.gtreimagined.gtlib.datagen.providers.GTLanguageProvider
+import org.gtreimagined.gtlib.datagen.providers.GTRecipeProvider
+import org.gtreimagined.gtlib.datagen.providers.GTTagProvider
+import org.gtreimagined.gtlib.event.GTCraftingEvent
+import org.gtreimagined.gtlib.event.GTLoaderEvent
+import org.gtreimagined.gtlib.event.GTProvidersEvent
+import org.gtreimagined.gtlib.event.GTWorldGenEvent
+import org.gtreimagined.gtlib.integration.kubejs.KubeJSRegistrar
+import org.gtreimagined.gtlib.recipe.IRecipe
+import org.gtreimagined.gtlib.recipe.loader.IRecipeRegistrate
+import org.gtreimagined.gtlib.recipe.map.IRecipeMap
+import org.gtreimagined.gtlib.recipe.map.RecipeBuilder
+import org.gtreimagined.gtlib.recipe.map.RecipeMap
+import org.gtreimagined.gtlib.recipe.map.RecipeMap.Companion.recipeTypes
+import org.gtreimagined.gtlib.registration.IGTRegistrar
+import org.gtreimagined.gtlib.worldgen.bedrockore.BedrockVein
+import org.gtreimagined.gtlib.worldgen.smallore.SmallOre
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayer
+import org.gtreimagined.gtlib.worldgen.stonelayer.StoneLayerCollision
+import org.gtreimagined.gtlib.worldgen.vanillaore.VanillaVein
+import org.gtreimagined.gtlib.worldgen.vein.Vein
+import java.io.IOException
+import java.io.OutputStreamWriter
+import java.util.function.Consumer
+import java.util.function.Function
+import java.util.function.Supplier
+import java.util.stream.Collectors
+import java.util.stream.Stream
+import kotlin.Any
+import kotlin.Boolean
+import kotlin.ByteArray
+import kotlin.Int
+import kotlin.Long
+import kotlin.RuntimeException
+import kotlin.plus
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+object GTLibDynamics {
+    @JvmField
+    val DYNAMIC_RESOURCE_PACK: RuntimeResourcePack = RuntimeResourcePack.create(ResourceLocation(Ref.ID, "dynamic"))
+    @JvmField
+    val RUNTIME_DATA_PACK: RuntimeResourcePack = RuntimeResourcePack.create(ResourceLocation(Ref.ID, "data"), 8)
 
-public class GTLibDynamics {
-    public static final RuntimeResourcePack DYNAMIC_RESOURCE_PACK = RuntimeResourcePack.create(new ResourceLocation(Ref.ID, "dynamic"));
-    public static final RuntimeResourcePack RUNTIME_DATA_PACK = RuntimeResourcePack.create(new ResourceLocation(Ref.ID, "data"), 8);
-    public static final Gson GSON = Deserializers.createLootTableSerializer()
-            .setPrettyPrinting()
-            .disableHtmlEscaping()
-            .registerTypeAdapter(Advancement.Builder.class, (JsonSerializer<Advancement.Builder>) (src, typeOfSrc, context) -> src.serializeToJson())
-            .registerTypeAdapter(FinishedRecipe.class, (JsonSerializer<FinishedRecipe>) (src, typeOfSrc, context) -> src.serializeRecipe())
-            .registerTypeAdapter(JGTLibModel.class, new JGTLibModelSerializer())
-            .registerTypeAdapter(JTextures.class, new JTextures.Serializer())
-            .registerTypeAdapter(JCondition.class, new JCondition.Serializer())
-            .create();
-    private static final boolean exportPack = true;
+    val GSON: Gson = Deserializers.createLootTableSerializer()
+        .setPrettyPrinting()
+        .disableHtmlEscaping()
+        .registerTypeAdapter(
+            Advancement.Builder::class.java,
+            JsonSerializer { src: Advancement.Builder, _, _ -> src.serializeToJson() })
+        .registerTypeAdapter(
+            FinishedRecipe::class.java,
+            JsonSerializer { src: FinishedRecipe, _, _ -> src.serializeRecipe() })
+        .registerTypeAdapter(JGTLibModel::class.java, JGTLibModel.JGTLibModelSerializer())
+        .registerTypeAdapter(JTextures::class.java, JTextures.Serializer())
+        .registerTypeAdapter(JCondition::class.java, JCondition.Serializer())
+        .create()
+    private const val exportPack = true
 
-    private static boolean initialized = false;
+    private var initialized = false
 
-    public static final Set<ResourceLocation> RECIPE_IDS = Sets.newHashSet();
+    val RECIPE_IDS: MutableSet<ResourceLocation> = Sets.newHashSet()
 
-    public static final Consumer<FinishedRecipe> FINISHED_RECIPE_CONSUMER = f -> {
-        if (RECIPE_IDS.add(f.getId())){
-            GTDynamicDataPack.addRecipe(f);
+    @JvmField
+    val FINISHED_RECIPE_CONSUMER: Consumer<FinishedRecipe> = Consumer { f ->
+        if (RECIPE_IDS.add(f.id)) {
+            GTDynamicDataPack.addRecipe(f)
         } else {
-            if (FMLEnvironment.production){
-                GTLib.LOGGER.warn("Recipe duplicated: " + f.getId());
+            if (FMLEnvironment.production) {
+                GTLib.LOGGER.warn("Recipe duplicated: ${f.id}")
             } else {
-                GTLib.LOGGER.catching(new RuntimeException("Recipe duplicated: " + f.getId()));
+                GTLib.LOGGER.catching(RuntimeException("Recipe duplicated: ${f.id}"))
             }
         }
-    };
-
-    private static final Object2ObjectOpenHashMap<String, List<Supplier<IGTLibProvider>>> PROVIDERS = new Object2ObjectOpenHashMap<>();
-
-    public static void addResourcePacks(Consumer<PackResources> function){
-        function.accept(DYNAMIC_RESOURCE_PACK);
     }
 
-    public static void setInitialized(){
-        initialized = true;
+    private val PROVIDERS: Object2ObjectOpenHashMap<String, MutableList<Supplier<IGTLibProvider>>> = Object2ObjectOpenHashMap()
+
+    @JvmStatic
+    fun addResourcePacks(function: Consumer<PackResources>) {
+        function.accept(DYNAMIC_RESOURCE_PACK)
     }
 
-    public static void addDataPacks(Consumer<PackResources> function){
+    @JvmStatic
+    fun setInitialized() {
+        initialized = true
+    }
+
+    @JvmStatic
+    fun addDataPacks(function: Consumer<PackResources>) {
         if (initialized) {
-            GTLibDynamics.onResourceReload(FMLEnvironment.dist.isDedicatedServer());
+            onResourceReload(FMLEnvironment.dist.isDedicatedServer)
         }
-        function.accept(RUNTIME_DATA_PACK);
-        function.accept(new GTDynamicDataPack("gtlib:recipes", GTAPI.all(IGTRegistrar.class).stream().map(IGTRegistrar::getDataPackDomains).flatMap(Collection::stream).collect(Collectors.toSet())));
-
+        function.accept(RUNTIME_DATA_PACK)
+        function.accept(GTDynamicDataPack("gtlib:recipes", GTAPI.all<IGTRegistrar>().stream()
+                    .map { it.dataPackDomains }
+                    .flatMap {  it.stream() }.collect(Collectors.toSet())))
     }
 
     /**
      * Providers and Dynamic Resource Pack Section
-     **/
-    public static void clientProvider(String domain, Supplier<IGTLibProvider> providerFunc) {
-        PROVIDERS.computeIfAbsent(domain, k -> new ObjectArrayList<>()).add(providerFunc);
+     */
+    @JvmStatic
+    fun clientProvider(domain: String, providerFunc: Supplier<IGTLibProvider>) {
+        PROVIDERS.computeIfAbsent(domain){ ObjectArrayList() }.add(providerFunc)
     }
 
-    public static void runDataProvidersDynamically() {
-        GTBlockLootProvider.init();
-        GTProvidersEvent ev = new GTProvidersEvent(GTLib.INSTANCE);
-        ModLoader.get().postEvent(ev);
-        Collection<IGTLibProvider> providers = ev.getProviders();
-        long time = System.currentTimeMillis();
-        Stream<IGTLibProvider> async = providers.stream().filter(IGTLibProvider::async).parallel();
-        Stream<IGTLibProvider> sync = providers.stream().filter(t -> !t.async());
-        Stream.concat(async, sync).forEach(IGTLibProvider::run);
-        providers.forEach(IGTLibProvider::onCompletion);
-        GTTagProvider.afterCompletion();
-        GTBlockLootProvider.afterCompletion();
-        GTLib.LOGGER.info("Time to run data providers: " + (System.currentTimeMillis() - time) + " ms.");
+    @JvmStatic
+    fun runDataProvidersDynamically() {
+        GTBlockLootProvider.init()
+        val ev = GTProvidersEvent(GTLib)
+        ModLoader.get().postEvent(ev)
+        val providers: MutableCollection<IGTLibProvider> = ev.providers
+        val time: Long = System.currentTimeMillis()
+        val async: Stream<IGTLibProvider> =
+            providers.stream().filter { it.async() }.parallel()
+        val sync: Stream<IGTLibProvider> = providers.stream().filter { !it.async() }
+        Stream.concat(async, sync).forEach { it.run() }
+        providers.forEach { it.onCompletion() }
+        GTTagProvider.afterCompletion()
+        GTBlockLootProvider.afterCompletion()
+        GTLib.LOGGER.info("Time to run data providers: ${System.currentTimeMillis() - time} ms.")
         if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()) {
-            RUNTIME_DATA_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
+            RUNTIME_DATA_PACK.dump(FMLPaths.CONFIGDIR.get().parent.resolve("dumped"))
         }
     }
 
-    public static void runAssetProvidersDynamically() {
-        List<IGTLibProvider> providers = PROVIDERS.object2ObjectEntrySet().stream()
-                .flatMap(v -> v.getValue().stream().map(Supplier::get)).toList();
-        long time = System.currentTimeMillis();
-        Stream<IGTLibProvider> async = providers.stream().filter(IGTLibProvider::async).parallel();
-        Stream<IGTLibProvider> sync = providers.stream().filter(t -> !t.async());
-        Stream.concat(async, sync).forEach(IGTLibProvider::run);
-        providers.forEach(IGTLibProvider::onCompletion);
-        GTLanguageProvider.postCompletion();
-        GTLib.LOGGER.info("Time to run asset providers: " + (System.currentTimeMillis() - time) + " ms.");
+    @JvmStatic
+    fun runAssetProvidersDynamically() {
+        val providers: List<IGTLibProvider> = PROVIDERS.object2ObjectEntrySet().stream()
+            .flatMap { v -> v.value.stream().map { it.get() } }.toList()
+        val time: Long = System.currentTimeMillis()
+        val async: Stream<IGTLibProvider> =
+            providers.stream().filter { it.async() }.parallel()
+        val sync: Stream<IGTLibProvider> = providers.stream().filter { !it.async() }
+        Stream.concat(async, sync).forEach { it.run() }
+        providers.forEach { it.onCompletion() }
+        GTLanguageProvider.postCompletion()
+        GTLib.LOGGER.info("Time to run asset providers: ${System.currentTimeMillis() - time} ms.")
         if (GTLibConfig.EXPORT_DEFAULT_DATA_AND_ASSETS.get()) {
-            DYNAMIC_RESOURCE_PACK.dump(FMLPaths.CONFIGDIR.get().getParent().resolve("dumped"));
+            DYNAMIC_RESOURCE_PACK.dump(FMLPaths.CONFIGDIR.get().parent.resolve("dumped"))
         }
     }
 
@@ -158,42 +176,48 @@ public class GTLibDynamics {
      *
      * @param rec consumer for IFinishedRecipe.
      */
-    public static void collectRecipes(GTRecipeProvider provider, Consumer<FinishedRecipe> rec) {
-        GTCraftingEvent event = new GTCraftingEvent(GTLib.INSTANCE);
-        ModLoader.get().postEvent(event);
-        for (ICraftingLoader loader : event.getLoaders()) {
-            loader.loadRecipes(rec, provider);
+    @JvmStatic
+    fun collectRecipes(provider: GTRecipeProvider, rec: Consumer<FinishedRecipe>) {
+        val event = GTCraftingEvent(GTLib)
+        ModLoader.get().postEvent(event)
+        for (loader in event.loaders) {
+            loader.loadRecipes(rec, provider)
         }
     }
 
-    public static void onRecipeManagerBuild(Consumer<FinishedRecipe> objectIn) {
-        GTLib.LOGGER.info("GTLib recipe manager running..");
-        collectRecipes(new GTRecipeProvider(Ref.ID, "provider"), objectIn);
-        GTLib.LOGGER.info("GTLib recipe manager done..");
+    @JvmStatic
+    fun onRecipeManagerBuild(objectIn: Consumer<FinishedRecipe>) {
+        GTLib.LOGGER.info("GTLib recipe manager running..")
+        collectRecipes(GTRecipeProvider(Ref.ID, "provider"), objectIn)
+        GTLib.LOGGER.info("GTLib recipe manager done..")
     }
 
-    public static void onRecipeCompile(boolean server, RecipeManager manager) {
-        GTLib.LOGGER.info("Compiling GT recipes");
-        long time = System.nanoTime();
+    @JvmStatic
+    fun onRecipeCompile(server: Boolean, manager: RecipeManager) {
+        GTLib.LOGGER.info("Compiling GT recipes")
+        var time: Long = System.nanoTime()
 
-        for (RecipeMap<?> m : GTAPI.all(RecipeMap.class)) {
-            if (m.getProxy() != null) {
-                List<net.minecraft.world.item.crafting.Recipe<?>> recipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(m.getProxy().loc());
-                recipes.forEach(recipe -> {
-                    IRecipe r = m.getProxy().handler().apply(recipe, m.RB());
-                    if (r != null) m.compileRecipe(r);
-                });
+        for (m in GTAPI.all<RecipeMap<*>>()) {
+            if (m.proxy != null) {
+                val recipes: MutableList<Recipe<*>> = manager.getAllRecipesFor(m.proxy!!.loc as RecipeType<Recipe<Container>>) as MutableList<Recipe<*>>
+                recipes.forEach { recipe ->
+                    val r: IRecipe = m.proxy!!.handler.apply(recipe, m.RB())
+                    m.compileRecipe(r)
+                }
             }
         }
 
-        for (RecipeType<? extends IRecipe> recipeType : RecipeMap.getRecipeTypes()) {
-            List<? extends IRecipe> recipes = manager.getAllRecipesFor(recipeType);
-            Map<String, List<IRecipe>> map = recipes.stream().collect(Collectors.groupingBy(IRecipe::getMapId));
+        for (recipeType: RecipeType<out IRecipe> in recipeTypes) {
+            val recipes: MutableList<out IRecipe> = manager.getAllRecipesFor(recipeType)
+            val map: MutableMap<String, MutableList<IRecipe>> = recipes.stream().collect(
+                Collectors.groupingBy(
+                    Function { it.getMapId() })
+            )
 
-            for (Map.Entry<String, List<IRecipe>> entry : map.entrySet()) {
-                IRecipeMap rmap = GTAPI.get(IRecipeMap.class, new ResourceLocation(entry.getKey()));
-                if (rmap != null){
-                    entry.getValue().stream().filter(Objects::nonNull).forEach(rmap::compileRecipe);
+            for ((key, value) in map) {
+                val rmap: IRecipeMap? = GTAPI.get<IRecipeMap>(ResourceLocation(key))
+                if (rmap != null) {
+                    value.stream().forEach { recipe -> rmap.compileRecipe(recipe) }
                     //entry.getValue().forEach(rmap::add);
                     //rmap.compile(manager);
                 }
@@ -201,12 +225,13 @@ public class GTLibDynamics {
         }
 
 
-        time = System.nanoTime() - time;
-        int size = GTAPI.all(IRecipeMap.class).stream().mapToInt(t -> t.getRecipes(false).size()).sum();
+        time = System.nanoTime() - time
+        val size: Int = GTAPI.all<IRecipeMap>().stream()
+            .mapToInt { it.getRecipes(false).size }.sum()
 
-        GTLib.LOGGER.info("Time to compile GT recipes: (ms) " + (time) / (1000 * 1000));
-        GTLib.LOGGER.info("No. of GT recipes: " + size);
-        GTLib.LOGGER.info("Average loading time / recipe: (µs) " + (size > 0 ? time / size : time) / 1000);
+        GTLib.LOGGER.info("Time to compile GT recipes: (ms) ${(time) / (1000 * 1000)}")
+        GTLib.LOGGER.info("No. of GT recipes: $size")
+        GTLib.LOGGER.info("Average loading time / recipe: (µs) ${(if (size > 0) time / size else time) / 1000}")
 
         /*
          * GTAPI.all(RecipeMap.class, t -> {
@@ -214,97 +239,102 @@ public class GTLibDynamics {
          * t.getRecipes(false).size() + " recipes."); });
          */
         // Invalidate old tag getter.
-       // TagUtils.resetSupplier();
+        // TagUtils.resetSupplier();
     }
+
     /**
      * Reloads dynamic assets during resource reload.
      */
-    public static void onResourceReload(boolean serverEvent) {
-        GTRecipeProvider provider = new GTRecipeProvider(Ref.ID, "provider");
-        GTDynamicDataPack.clearServer();
-        RECIPE_IDS.clear();
-        collectRecipes(provider , FINISHED_RECIPE_CONSUMER);
-        GTAPI.all(RecipeMap.class, RecipeMap::reset);
-        final Set<ResourceLocation> filter;
-        if (GTAPI.isModLoaded(Ref.MOD_KJS)) {
-           filter = KubeJSRegistrar.getFilter(serverEvent);
+    @JvmStatic
+    fun onResourceReload(serverEvent: Boolean) {
+        val provider = GTRecipeProvider(Ref.ID, "provider")
+        GTDynamicDataPack.clearServer()
+        RECIPE_IDS.clear()
+        collectRecipes(provider, FINISHED_RECIPE_CONSUMER)
+        GTAPI.all<RecipeMap<*>> { it.reset() }
+        val filter: MutableSet<ResourceLocation>
+        if (isModLoaded(Ref.MOD_KJS)) {
+            filter = KubeJSRegistrar.getFilter(serverEvent)
         } else {
-            filter = Collections.emptySet();
+            filter = mutableSetOf()
         }
-        Map<ResourceLocation, IRecipeRegistrate.IRecipeLoader> loaders = new Object2ObjectOpenHashMap<>(30);
-        MinecraftForge.EVENT_BUS.post(new GTLoaderEvent(GTLib.INSTANCE, (a, b, c) -> {
-            if (filter.contains(new ResourceLocation(a, b)))
-                return;
-            if (loaders.put(new ResourceLocation(a, b), c) != null) {
-                GTLib.LOGGER.warn("Duplicate recipe loader: " + new ResourceLocation(a, b));
+        val loaders: MutableMap<ResourceLocation, IRecipeRegistrate.IRecipeLoader> = Object2ObjectOpenHashMap(30)
+        MinecraftForge.EVENT_BUS.post(
+            GTLoaderEvent(GTLib) { a, b, c ->
+                if (filter.contains(ResourceLocation(a, b))) return@GTLoaderEvent
+                if (loaders.put(ResourceLocation(a, b), c) != null) {
+                    GTLib.LOGGER.warn("Duplicate recipe loader: ${ResourceLocation(a, b)}")
+                }
             }
-        }));
-        List<Vein> veins = new ObjectArrayList<>();
-        List<StoneLayer> stoneLayers = new ObjectArrayList<>();
-        List<SmallOre> smallOres = new ObjectArrayList<>();
-        List<VanillaVein> vanillaVeins = new ObjectArrayList<>();
-        List<BedrockVein> bedrockVeins = new ObjectArrayList<>();
-        List<StoneLayerCollision> collisions = new ObjectArrayList<>();
-        boolean runRegular = true;
-        if (GTAPI.isModLoaded(Ref.MOD_KJS) && serverEvent) {
-            runRegular = KubeJSRegistrar.postWorldgenEvent(veins, stoneLayers, collisions);
+        )
+        val veins: MutableList<Vein> = ObjectArrayList()
+        val stoneLayers: MutableList<StoneLayer> = ObjectArrayList()
+        val smallOres: MutableList<SmallOre> = ObjectArrayList()
+        val vanillaVeins: MutableList<VanillaVein> = ObjectArrayList()
+        val bedrockVeins: MutableList<BedrockVein> = ObjectArrayList()
+        val collisions: MutableList<StoneLayerCollision> = ObjectArrayList()
+        var runRegular = true
+        if (isModLoaded(Ref.MOD_KJS) && serverEvent) {
+            runRegular = KubeJSRegistrar.postWorldgenEvent(veins, stoneLayers, collisions)
         }
         if (runRegular) {
-            GTWorldGenEvent ev = new GTWorldGenEvent(GTLib.INSTANCE);
-            MinecraftForge.EVENT_BUS.post(ev);
-            veins.addAll(ev.VEINS);
-            smallOres.addAll(ev.SMALL_ORES);
-            stoneLayers.addAll(ev.STONE_LAYERS);
-            vanillaVeins.addAll(ev.VANILLA_ORES);
-            bedrockVeins.addAll(ev.BEDROCK_VEINS);
-            collisions.addAll(ev.COLLISIONS);
+            val ev = GTWorldGenEvent(GTLib)
+            MinecraftForge.EVENT_BUS.post(ev)
+            veins.addAll(ev.VEINS)
+            smallOres.addAll(ev.SMALL_ORES)
+            stoneLayers.addAll(ev.STONE_LAYERS)
+            vanillaVeins.addAll(ev.VANILLA_ORES)
+            bedrockVeins.addAll(ev.BEDROCK_VEINS)
+            collisions.addAll(ev.COLLISIONS)
         }
-        for (Vein vein : veins) {
-            GTDynamicDataPack.addWorldgenObject(vein);
+        for (vein in veins) {
+            GTDynamicDataPack.addWorldgenObject(vein)
         }
-        for (StoneLayer stoneLayer : stoneLayers) {
-            GTDynamicDataPack.addWorldgenObject(stoneLayer);
+        for (stoneLayer in stoneLayers) {
+            GTDynamicDataPack.addWorldgenObject(stoneLayer)
         }
-        for (StoneLayerCollision collision : collisions){
-            GTDynamicDataPack.addWorldgenObject(collision);
+        for (collision in collisions) {
+            GTDynamicDataPack.addWorldgenObject(collision)
         }
-        for (SmallOre smallOre : smallOres){
-            GTDynamicDataPack.addWorldgenObject(smallOre);
+        for (smallOre in smallOres) {
+            GTDynamicDataPack.addWorldgenObject(smallOre)
         }
-        for (VanillaVein vanillaVein : vanillaVeins){
-            GTDynamicDataPack.addWorldgenObject(vanillaVein);
+        for (vanillaVein in vanillaVeins) {
+            GTDynamicDataPack.addWorldgenObject(vanillaVein)
         }
-        for (BedrockVein vein : bedrockVeins){
-            GTDynamicDataPack.addWorldgenObject(vein);
+        for (vein in bedrockVeins) {
+            GTDynamicDataPack.addWorldgenObject(vein)
         }
-        loaders.forEach((r, l) -> {
-            RecipeBuilder.setCurrentModId(r.getNamespace());
-            l.init();
-            RecipeBuilder.setCurrentModId(Ref.SHARED_ID);
-        });
-        GTLib.LOGGER.info("Amount of GTLib Recipe Loaders registered: " + loaders.size());
+        loaders.forEach { (r, l) ->
+            RecipeBuilder.setCurrentModId(r.namespace)
+            l.init()
+            RecipeBuilder.setCurrentModId(Ref.SHARED_ID)
+        }
+        GTLib.LOGGER.info(/* message = */ "Amount of GTLib Recipe Loaders registered: " + loaders.size)
     }
 
-    public static ResourceLocation getTagLoc(String identifier, ResourceLocation tagId) {
-        return new ResourceLocation(tagId.getNamespace(), String.join("", identifier, "/", tagId.getPath()));
+    @JvmStatic
+    fun getTagLoc(identifier: String, tagId: ResourceLocation): ResourceLocation {
+        return ResourceLocation(tagId.namespace, "$identifier/${tagId.path}")
     }
 
-    public static byte[] serialize(Object object) {
-        UnsafeByteArrayOutputStream ubaos = new UnsafeByteArrayOutputStream();
-        OutputStreamWriter writer = new OutputStreamWriter(ubaos);
-        GSON.toJson(object, writer);
+    @JvmStatic
+    fun serialize(obj: Any): ByteArray {
+        val ubaos = UnsafeByteArrayOutputStream()
+        val writer = OutputStreamWriter(ubaos)
+        GSON.toJson(obj, writer)
         try {
-            writer.close();
-        } catch(IOException e) {
-            throw new RuntimeException(e);
+            writer.close()
+        } catch (e: IOException) {
+            throw RuntimeException(e)
         }
-        return ubaos.getBytes();
+        return ubaos.bytes
     }
 
-    public static ResourceLocation fix(ResourceLocation identifier, String prefix, String append) {
-        return new ResourceLocation(identifier.getNamespace(), prefix + '/' + identifier.getPath() + '.' + append);
-    }
-    /*
+    @JvmStatic
+    fun fix(identifier: ResourceLocation, prefix: String, append: String): ResourceLocation {
+        return ResourceLocation(identifier.namespace, "$prefix/${identifier.path}.$append")
+    } /*
      * public static void runBackgroundProviders() {
      * GTLib.LOGGER.info("Running DummyTagProviders...");
      * Ref.BACKGROUND_GEN.addProviders(DummyTagProviders.DUMMY_PROVIDERS); try {
