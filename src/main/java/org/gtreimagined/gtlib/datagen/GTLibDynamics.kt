@@ -84,8 +84,6 @@ object GTLibDynamics {
         .registerTypeAdapter(JTextures::class.java, JTextures.Serializer())
         .registerTypeAdapter(JCondition::class.java, JCondition.Serializer())
         .create()
-    private const val exportPack = true
-
     private var initialized = false
 
     val RECIPE_IDS: MutableSet<ResourceLocation> = Sets.newHashSet()
@@ -155,9 +153,9 @@ object GTLibDynamics {
     }
 
     @JvmStatic
-    fun runAssetProvidersDynamically() {
+    fun runAssetProvidersDynamically(server: Boolean) {
         val providers: List<IGTLibProvider> = PROVIDERS.object2ObjectEntrySet().stream()
-            .flatMap { v -> v.value.stream().map { it.get() } }.toList()
+            .flatMap { v -> v.value.stream().map { it.get() } }.filter { !server || it is GTLanguageProvider }.toList()
         val time: Long = System.currentTimeMillis()
         val async: Stream<IGTLibProvider> =
             providers.stream().filter { it.async() }.parallel()

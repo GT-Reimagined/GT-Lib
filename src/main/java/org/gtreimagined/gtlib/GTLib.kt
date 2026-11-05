@@ -330,6 +330,7 @@ object GTLib : GTMod() {
         ServerHandler.setup()
         GTAPI.onRegistration(RegistrationEvent.DATA_READY)
         GTLibDynamics.runDataProvidersDynamically()
+        GTLibDynamics.runAssetProvidersDynamically(true)
         e.enqueueWork {
             GTAPI.serverDeferredQueue.ifPresent { t ->
                 for (r in t) {
@@ -344,7 +345,7 @@ object GTLib : GTMod() {
     }
 
     fun onRRPInit(event: RRPInitEvent?) {
-        GTLibDynamics.runAssetProvidersDynamically()
+        GTLibDynamics.runAssetProvidersDynamically(false)
     }
 
     private fun loadComplete(event: FMLLoadCompleteEvent) {
