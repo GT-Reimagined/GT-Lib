@@ -45,7 +45,7 @@ import kotlin.RuntimeException
 import kotlin.String
 import kotlin.arrayOfNulls
 
-open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, private val builder: B) : IRecipeMap {
+open class RecipeMap<B : RecipeBuilder>(domain: String, categoryId: String, private val builder: B) : IRecipeMap {
     private val loc: ResourceLocation = ResourceLocation(domain, categoryId)
     private val lookup = Branch()
     private val recipesToCompile: MutableList<IRecipe> = ObjectArrayList<IRecipe>()
@@ -71,7 +71,7 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
     // Data allows you to set related data to the map, e.g. which tier the gui
     // displays.
     init {
-        this.builder!!.map = this
+        this.builder.map = this
         GTAPI.register<RecipeMap<*>>(this)
         GTAPI.register<IRecipeMap>(this)
     }
@@ -135,7 +135,7 @@ open class RecipeMap<B : RecipeBuilder?>(domain: String, categoryId: String, pri
     }
 
     fun RB(): B {
-        builder!!.clear()
+        builder.clear()
         return builder
     }
 

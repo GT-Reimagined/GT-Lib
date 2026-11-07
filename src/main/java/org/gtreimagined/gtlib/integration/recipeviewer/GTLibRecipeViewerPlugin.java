@@ -65,9 +65,9 @@ public class GTLibRecipeViewerPlugin {
         if (manager == null) return Collections.emptyList();
         List<IRecipe> recipes = new ArrayList<>(manager.getAllRecipesFor(recipeMap.getRecipeType()).stream().filter(r -> r.getMapId().equals(recipeMap.getLoc().toString()) && !r.isHidden()).toList());
         if (recipeMap.getProxy() != null && recipeMap instanceof RecipeMap<?> map) {
-            List<net.minecraft.world.item.crafting.Recipe<?>> proxyRecipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(recipeMap.getProxy().loc());
+            List<net.minecraft.world.item.crafting.Recipe<?>> proxyRecipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(recipeMap.getProxy().loc);
             proxyRecipes.forEach(recipe -> {
-                IRecipe recipe1 = recipeMap.getProxy().handler().apply(recipe, map.RB().tags("emi_proxy"));
+                IRecipe recipe1 = recipeMap.getProxy().handler.apply(recipe, map.RB().tags("emi_proxy"));
                 if (recipe1 != null && !recipe1.isHidden()){
                     recipes.add(recipe1);
                 }

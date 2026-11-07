@@ -164,8 +164,8 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
             var m = t.map;
             if (m instanceof RecipeMap<?> rm){
                 if (m.getProxy() != null){
-                    registry.registerRecipeFiller(net.minecraft.world.item.crafting.Recipe.class, m.getProxy().loc(), r -> {
-                        IRecipe recipe = m.getProxy().handler().apply(r, rm.RB());
+                    registry.registerRecipeFiller(net.minecraft.world.item.crafting.Recipe.class, m.getProxy().loc, r -> {
+                        IRecipe recipe = m.getProxy().handler.apply(r, rm.RB());
                         if (recipe == null) return null;
                         if (recipe.isHidden()) return null;
                         return new RecipeMapDisplay(recipe, m, t.gui, t.tier);

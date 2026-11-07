@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonSerializer
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
+import net.ccbluex.fastutil.invoke
 import net.devtech.arrp.api.RuntimeResourcePack
 import net.devtech.arrp.json.loot.JCondition
 import net.devtech.arrp.json.models.JTextures
@@ -196,11 +197,12 @@ object GTLibDynamics {
         var time: Long = System.nanoTime()
 
         for (m in GTAPI.all<RecipeMap<*>>()) {
-            if (m.proxy != null) {
+            val proxy = m.proxy
+            if (proxy != null) {
                 val recipes: MutableList<Recipe<*>> = manager.getAllRecipesFor(m.proxy!!.loc as RecipeType<Recipe<Container>>) as MutableList<Recipe<*>>
                 recipes.forEach { recipe ->
-                    val r: IRecipe = m.proxy!!.handler.apply(recipe, m.RB())
-                    m.compileRecipe(r)
+                    val r: IRecipe? = proxy.handler(recipe, m.RB())
+                    if (r != null) m.compileRecipe(r)
                 }
             }
         }
