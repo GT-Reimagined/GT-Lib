@@ -5,7 +5,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLib;
 import org.gtreimagined.gtlib.Ref;
@@ -65,7 +68,7 @@ public class GTLibRecipeViewerPlugin {
         if (manager == null) return Collections.emptyList();
         List<IRecipe> recipes = new ArrayList<>(manager.getAllRecipesFor(recipeMap.getRecipeType()).stream().filter(r -> r.getMapId().equals(recipeMap.getLoc().toString()) && !r.isHidden()).toList());
         if (recipeMap.getProxy() != null && recipeMap instanceof RecipeMap<?> map) {
-            List<net.minecraft.world.item.crafting.Recipe<?>> proxyRecipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor(recipeMap.getProxy().loc);
+            List<net.minecraft.world.item.crafting.Recipe<?>> proxyRecipes = (List<net.minecraft.world.item.crafting.Recipe<?>>) manager.getAllRecipesFor((RecipeType) recipeMap.getProxy().loc);
             proxyRecipes.forEach(recipe -> {
                 IRecipe recipe1 = recipeMap.getProxy().handler.apply(recipe, map.RB().tags("emi_proxy"));
                 if (recipe1 != null && !recipe1.isHidden()){

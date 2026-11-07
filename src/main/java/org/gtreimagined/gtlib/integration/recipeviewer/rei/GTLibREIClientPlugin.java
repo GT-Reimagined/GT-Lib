@@ -18,6 +18,8 @@ import me.shedaniel.rei.api.common.registry.ReloadStage;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.gtreimagined.gtlib.GTAPI;
 import org.gtreimagined.gtlib.GTLibConfig;
 import org.gtreimagined.gtlib.Ref;
@@ -164,7 +166,7 @@ public class GTLibREIClientPlugin implements REIClientPlugin {
             var m = t.map;
             if (m instanceof RecipeMap<?> rm){
                 if (m.getProxy() != null){
-                    registry.registerRecipeFiller(net.minecraft.world.item.crafting.Recipe.class, m.getProxy().loc, r -> {
+                    registry.registerRecipeFiller(net.minecraft.world.item.crafting.Recipe.class, (RecipeType) m.getProxy().loc, r -> {
                         IRecipe recipe = m.getProxy().handler.apply(r, rm.RB());
                         if (recipe == null) return null;
                         if (recipe.isHidden()) return null;
