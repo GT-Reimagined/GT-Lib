@@ -9,6 +9,10 @@ public class ARRPEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onResourcePackBeforeUser(RRPEvent.BetweenModsAndUser event){
         GTLibDynamics.addDataPacks(event::addPack);
+    }
+
+    @SubscribeEvent
+    public static void onResourcePackAfterVanilla(RRPEvent.AfterVanilla event){
         GTLibDynamics.addResourcePacks(event::addPack);
     }
 }
