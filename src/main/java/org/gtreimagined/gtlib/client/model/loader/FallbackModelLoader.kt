@@ -7,9 +7,10 @@ import com.ibm.icu.impl.LocaleUtility.fallback
 import net.minecraft.client.renderer.block.model.BlockModel
 import net.minecraft.client.resources.model.UnbakedModel
 import net.minecraft.resources.ResourceLocation
+import org.gtreimagined.gtlib.client.GTLibModelManager
 import org.gtreimagined.gtlib.client.model.FallbackModel
 
-class FallbackModelLoader(resourceLocation: ResourceLocation) : GTModelLoader<FallbackModel>(resourceLocation) {
+object FallbackModelLoader : GTModelLoader<FallbackModel>(GTLibModelManager.LOADER_FALLBACK) {
     override fun read(jsonObject: JsonObject, context: JsonDeserializationContext): FallbackModel {
         val baseElement: JsonElement = jsonObject["base"]
         val base = if (baseElement is JsonObject) baseElement else JsonObject().also {
@@ -24,4 +25,7 @@ class FallbackModelLoader(resourceLocation: ResourceLocation) : GTModelLoader<Fa
         return FallbackModel(baseModel, fallbackModel)
     }
 
+    @JvmStatic
+    fun init(){
+    }
 }

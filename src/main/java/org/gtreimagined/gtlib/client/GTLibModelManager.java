@@ -53,7 +53,7 @@ public class GTLibModelManager {
         new PipeFullModelLoader(LOADER_PIPE_FULL);
         new PipeModelLoader(LOADER_PIPE);
         new ProxyModelLoader(LOADER_PROXY);
-        new FallbackModelLoader(LOADER_FALLBACK);
+        FallbackModelLoader.init();
     }
 
     public static void registerStaticConfigMap(String staticMapId, Supplier<Int2ObjectOpenHashMap<BakedModel[]>> configMapSupplier) {
