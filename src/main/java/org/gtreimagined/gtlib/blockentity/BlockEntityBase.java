@@ -53,7 +53,7 @@ public abstract class BlockEntityBase<T extends BlockEntityBase<T>> extends Bloc
     protected BlockEntity findBlockEntity(Direction side) {
         BlockEntity entity;
         entity = level.getBlockEntity(this.getBlockPos().relative(side));
-        if (entity instanceof IExtendingBlockEntity extendingBlockEntity) {
+        if (entity instanceof IExtendingBlockEntity extendingBlockEntity && !(this instanceof IExtendingBlockEntity)) {
             entity = extendingBlockEntity.getExtendedBlockEntity(side);
         }
         return entity;
