@@ -4,21 +4,16 @@ import brachy.modularui.widgets.slot.ModularSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraftforge.items.IItemHandler
+import net.minecraftforge.items.IItemHandlerModifiable
+import net.minecraftforge.items.wrapper.EmptyHandler
 import org.gtreimagined.gtlib.capability.IFilterableHandler
 import org.gtreimagined.gtlib.capability.IGuiHandler
 import org.gtreimagined.gtlib.capability.item.TrackedItemHandler
 import org.gtreimagined.gtlib.capability.machine.MachineItemHandler
 import org.gtreimagined.gtlib.gui.SlotType
 
-open class AbstractSlot<T : ModularSlot>(
-    val type: SlotType<T>,
-    protected val holder: IGuiHandler,
-    private val itemHandler: IItemHandler,
-    val index: Int
-) : ModularSlot(
-    itemHandler,
-    index
-) {
+open class AbstractSlot<T : ModularSlot>(val type: SlotType<T>, protected val holder: IGuiHandler, private val itemHandler: IItemHandler, val index: Int) :
+    ModularSlot(itemHandler as? IItemHandlerModifiable ?: EmptyHandler.INSTANCE as IItemHandlerModifiable, index) {
     override fun onQuickCraft(oldStackIn: ItemStack, newStackIn: ItemStack) {
         super.onQuickCraft(oldStackIn, newStackIn)
         if (this.itemHandler is TrackedItemHandler<*>) {
